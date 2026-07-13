@@ -104,5 +104,55 @@
             document.getElementById('submenu-modal').classList.add('hidden');
         }
     </script>
+    <script>
+    // 1. TỰ ĐỘNG ẨN NÚT CÀI APP NẾU ĐÃ CÀI
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        // Tìm và ẩn nút cài app (dựa vào class hoặc ID)
+        const installBtn = document.querySelector('.animate-pulse');
+        if (installBtn) {
+            installBtn.parentElement.style.display = 'none';
+        }
+    }
+
+    // 2. Dữ liệu menu
+    const menuConfig = {
+        'chuyenmon': {
+            title: 'Chuyên môn',
+            links: [
+                { name: 'Kế hoạch chuyên môn', url: '#' },
+                { name: 'Phân phối chương trình', url: '#' },
+                { name: 'Sáng kiến kinh nghiệm', url: '#' }
+            ]
+        },
+        'baocao': {
+            title: 'Báo cáo trực tuyến',
+            links: [
+                { name: 'Báo cáo tuần', url: '#' },
+                { name: 'Báo cáo chuyên đề', url: '#' }
+            ]
+        }
+    };
+
+    // 3. Hàm mở và đóng popup
+    function openSubmenu(id) {
+        const data = menuConfig[id];
+        if (!data) return;
+        document.getElementById('modal-title').innerText = data.title;
+        const container = document.getElementById('modal-content');
+        container.innerHTML = '';
+        data.links.forEach(link => {
+            const btn = document.createElement('a');
+            btn.href = link.url;
+            btn.className = 'w-full p-4 bg-gray-50 hover:bg-blue-50 text-gray-700 font-medium rounded-xl border border-gray-100 text-center';
+            btn.innerText = link.name;
+            container.appendChild(btn);
+        });
+        document.getElementById('submenu-modal').classList.remove('hidden');
+    }
+
+    function closeSubmenu() {
+        document.getElementById('submenu-modal').classList.add('hidden');
+    }
+</script>
 </body>
 </html>
