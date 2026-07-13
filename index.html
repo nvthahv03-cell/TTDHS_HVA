@@ -5,111 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IOC Hòa Vang | Trung tâm Điều hành số</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1e3a8a"> <!-- Màu thanh trạng thái trên điện thoại -->
+    <meta name="theme-color" content="#1e3a8a">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .btn-card:hover { transform: translateY(-4px); transition: all 0.3s ease; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2); }
-    </style>
 </head>
-<!-- Nút cài đặt ứng dụng (Chỉ hiện trên trình duyệt) -->
-<div id="install-btn-container" class="hidden text-center mb-8">
-    <button id="install-btn" class="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-3 px-6 rounded-full shadow-lg flex items-center justify-center gap-2 mx-auto animate-bounce">
-        <span>📥</span> Bấm vào đây để cài App vào ĐT
-    </button>
-</div>
-
-<script>
-    let deferredPrompt;
-    const installBtn = document.getElementById('install-btn');
-    const container = document.getElementById('install-btn-container');
-
-    // Lắng nghe sự kiện cài đặt
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        container.classList.remove('hidden');
-    });
-
-    installBtn.addEventListener('click', () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    container.classList.add('hidden');
-                }
-                deferredPrompt = null;
-            });
-        } else {
-            // Trường hợp trình duyệt không hỗ trợ tự động prompt, hướng dẫn thủ công
-            alert("Để cài đặt: Nhấn vào menu trình duyệt (3 chấm) rồi chọn 'Thêm vào màn hình chính'.");
-        }
-    });
-
-<script>
-    // Kiểm tra nếu là thiết bị di động và chưa cài đặt
-    if (window.matchMedia('(display-mode: browser)').matches) {
-        document.getElementById('install-guide').classList.remove('hidden');
-        // Tự động ẩn hướng dẫn sau 10 giây
-        setTimeout(() => { document.getElementById('install-guide').classList.add('hidden'); }, 10000);
-    }
-</script>
-<!-- Nền trang: Màu xanh dương đậm (bg-blue-950) -->
 <body class="bg-blue-950 min-h-screen font-sans p-4 md:p-8">
     <div class="max-w-4xl mx-auto">
-        <!-- Header: Chữ màu trắng (text-white) -->
+        
+        <!-- NÚT CÀI ĐẶT CỐ ĐỊNH -->
+        <div class="text-center mb-8">
+            <button onclick="alert('Hướng dẫn: Nhấn vào dấu 3 chấm (trên cùng bên phải) hoặc nút Chia sẻ, sau đó chọn Thêm vào Màn hình chính.')" 
+                    class="bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-bold py-3 px-6 rounded-full shadow-lg transition animate-pulse flex items-center justify-center gap-2 mx-auto">
+                <span>📥</span> Bấm vào đây để cài App vào ĐT
+            </button>
+        </div>
+
+        <!-- Header -->
         <header class="text-center mb-10">
             <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">THPT HÒA VANG</h1>
             <p class="text-blue-200 font-medium mt-1">Trung tâm Điều hành số • Smart School</p>
         </header>
 
-        <!-- Dashboard Grid (8 nút): Nền trắng, chữ đen -->
+        <!-- Lưới nút -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            <button class="btn-card bg-white p-6 rounded-2xl shadow-lg border border-slate-200 text-center">
-                <div class="text-3xl mb-2">📄</div>
-                <div class="font-bold text-gray-800 text-sm">Văn bản</div>
-            </button>
-            <button class="btn-card bg-white p-6 rounded-2xl shadow-lg border border-slate-200 text-center">
-                <div class="text-3xl mb-2">📅</div>
-                <div class="font-bold text-gray-800 text-sm">Lịch công tác</div>
-            </button>
-            <button class="btn-card bg-white p-6 rounded-2xl shadow-lg border border-slate-200 text-center">
-                <div class="text-3xl mb-2">🎓</div>
-                <div class="font-bold text-gray-800 text-sm">Chuyên môn</div>
-            </button>
-            <button class="btn-card bg-white p-6 rounded-2xl shadow-lg border border-slate-200 text-center">
-                <div class="text-3xl mb-2">📚</div>
-                <div class="font-bold text-gray-800 text-sm">Học liệu số</div>
-            </button>
-            <button class="btn-card bg-white p-6 rounded-2xl shadow-lg border border-slate-200 text-center">
-                <div class="text-3xl mb-2">📊</div>
-                <div class="font-bold text-gray-800 text-sm">Báo cáo</div>
-            </button>
-            <button class="btn-card bg-white p-6 rounded-2xl shadow-lg border border-slate-200 text-center">
-                <div class="text-3xl mb-2">🤖</div>
-                <div class="font-bold text-gray-800 text-sm">HV Assistant</div>
-            </button>
-            <button class="btn-card bg-white p-6 rounded-2xl shadow-lg border border-slate-200 text-center">
-                <div class="text-3xl mb-2">🛠️</div>
-                <div class="font-bold text-gray-800 text-sm">Quản trị CSVC</div>
-            </button>
-            <button class="btn-card bg-white p-6 rounded-2xl shadow-lg border border-slate-200 text-center">
-                <div class="text-3xl mb-2">🌐</div>
-                <div class="font-bold text-gray-800 text-sm">Ứng dụng khác</div>
-            </button>
+            <!-- (Giữ nguyên các nút như cũ) -->
+            <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">📄</div><div class="font-bold text-sm">Văn bản</div></button>
+            <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">📅</div><div class="font-bold text-sm">Lịch công tác</div></button>
+            <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">🎓</div><div class="font-bold text-sm">Chuyên môn</div></button>
+            <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">📚</div><div class="font-bold text-sm">Học liệu số</div></button>
+            <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">📊</div><div class="font-bold text-sm">Báo cáo</div></button>
+            <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">🤖</div><div class="font-bold text-sm">HV Assistant</div></button>
+            <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">🛠️</div><div class="font-bold text-sm">Quản trị CSVC</div></button>
+            <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">🌐</div><div class="font-bold text-sm">Ứng dụng khác</div></button>
         </div>
 
-        <!-- Chat Area: Nền trắng, bo góc -->
+        <!-- Khung Chat -->
         <div class="bg-white p-6 rounded-3xl shadow-2xl border border-blue-100">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="text-2xl">🤖</div>
-                <h2 class="font-bold text-blue-900 text-lg">HV Assistant - Trợ lý số</h2>
-            </div>
-            <div class="flex gap-2">
-                <input type="text" placeholder="Thầy cần tra cứu thông tin gì ạ?" class="flex-1 p-4 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-blue-300 outline-none">
-                <button class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-4 rounded-xl font-bold transition">Gửi</button>
-            </div>
+            <div class="flex items-center gap-3 mb-4"><div class="text-2xl">🤖</div><h2 class="font-bold text-blue-900">HV Assistant</h2></div>
+            <div class="flex gap-2"><input type="text" placeholder="Thầy cần tra cứu gì ạ?" class="flex-1 p-4 rounded-xl border border-gray-200 bg-gray-50"><button class="bg-blue-700 text-white px-6 py-4 rounded-xl font-bold">Gửi</button></div>
         </div>
     </div>
 </body>
