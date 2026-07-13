@@ -3,130 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IOC Hòa Vang | Trung tâm Điều hành số chuyên sâu</title>
+    <title>IOC Hòa Vang | Trung tâm Điều hành số</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Tùy chỉnh thêm để tăng độ chuyên nghiệp cho App */
-        :root { --primary-bg: #0f2a58; --card-bg: #ffffff; }
-        body { background-color: var(--primary-bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .nav-btn {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            font-weight: 700;
-            color: #1e3a8a;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #e5e7eb;
+            background-color: white; padding: 1.5rem; border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); text-align: center;
+            font-weight: 700; color: #1e3a8a; transition: all 0.2s;
+            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
         }
-        .nav-btn:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); }
-        .modal-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); }
+        .nav-btn:hover { background-color: #f3f4f6; transform: scale(1.02); }
+        .icon-size { width: 32px; height: 32px; }
     </style>
 </head>
-<body>
-    <div class="max-w-4xl mx-auto p-4 md:p-8">
-        <!-- Header chính -->
-        <header class="text-center mb-10 border-b border-blue-800 pb-8">
-            <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight">THPT HÒA VANG</h1>
-            <p class="text-blue-200 mt-3 font-medium uppercase tracking-widest">Trung tâm Điều hành số • Smart School</p>
+<body class="bg-[#0f2a58] p-4">
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl font-extrabold text-white">THPT HÒA VANG</h1>
+            <p class="text-blue-200">Trung tâm Điều hành số</p>
         </header>
 
-        <!-- Khu vực thông báo chạy (Thêm tính năng cho đầy đủ) -->
-        <div class="bg-blue-900 rounded-lg p-3 mb-8 text-blue-200 text-sm flex items-center shadow-inner">
-            <span class="bg-yellow-500 text-blue-900 px-2 py-0.5 rounded font-bold mr-3 text-xs">MỚI</span>
-            <marquee>Hệ thống IOC đã cập nhật phân hệ Báo cáo chuyên đề và Sáng kiến kinh nghiệm khối 12.</marquee>
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Văn bản -->
+            <button onclick="window.location.href='#'" class="nav-btn">
+                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Văn bản
+            </button>
+            <!-- Lịch công tác -->
+            <button onclick="window.location.href='#'" class="nav-btn">
+                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Lịch công tác
+            </button>
+            <!-- Chuyên môn -->
+            <button onclick="openSubmenu('chuyenmon')" class="nav-btn">
+                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg>
+                Chuyên môn
+            </button>
+            <!-- Học liệu số -->
+            <button onclick="window.location.href='#'" class="nav-btn">
+                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                Học liệu số
+            </button>
+            <!-- Báo cáo TT -->
+            <button onclick="openSubmenu('baocao')" class="nav-btn">
+                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                Báo cáo TT
+            </button>
+            <!-- Thi đua -->
+            <button onclick="window.location.href='#'" class="nav-btn">
+                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                Thi đua
+            </button>
+            <!-- CSVC -->
+            <button onclick="window.location.href='#'" class="nav-btn">
+                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                CSVC
+            </button>
+            <!-- Đoàn TN -->
+            <button onclick="window.location.href='#'" class="nav-btn">
+                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                Đoàn TN
+            </button>
         </div>
-
-        <!-- Lưới menu chính -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            <button onclick="window.location.href='#'" class="nav-btn">Văn bản</button>
-            <button onclick="window.location.href='#'" class="nav-btn">Lịch công tác</button>
-            <button onclick="openSubmenu('chuyenmon')" class="nav-btn">Chuyên môn</button>
-            <button onclick="window.location.href='#'" class="nav-btn">Học liệu số</button>
-            <button onclick="openSubmenu('baocao')" class="nav-btn">Báo cáo TT</button>
-            <button onclick="window.location.href='#'" class="nav-btn">Thi đua</button>
-            <button onclick="window.location.href='#'" class="nav-btn">CSVC</button>
-            <button onclick="window.location.href='#'" class="nav-btn">Đoàn TN</button>
-        </div>
-
-        <!-- Footer thông tin -->
-        <footer class="text-center text-blue-400 text-xs mt-10">
-            © 2026 - Phát triển bởi Trung tâm Điều hành số THPT Hòa Vang
-        </footer>
     </div>
 
-    <!-- Modal cấu trúc -->
-    <div id="submenu-modal" class="modal-overlay fixed inset-0 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-in zoom-in duration-300">
-            <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
-                <h2 id="modal-title" class="text-xl font-bold text-gray-800">Tiêu đề</h2>
-                <button onclick="closeSubmenu()" class="text-gray-400 hover:text-red-500 text-2xl transition">&times;</button>
+    <!-- Modal giữ nguyên như cũ -->
+    <div id="submenu-modal" class="fixed inset-0 bg-black/70 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
+            <div class="flex justify-between mb-4 border-b pb-2">
+                <h2 id="modal-title" class="text-lg font-bold">Menu</h2>
+                <button onclick="closeSubmenu()" class="text-xl">&times;</button>
             </div>
-            <div id="modal-content" class="grid grid-cols-1 gap-3"></div>
+            <div id="modal-content" class="grid gap-2"></div>
         </div>
     </div>
 
     <script>
-        // Data cấu hình menu chính xác
         const menuConfig = {
-            'chuyenmon': {
-                title: 'Quản lý Chuyên môn',
-                links: [
-                    { name: 'Kế hoạch giáo dục', url: '#' },
-                    { name: 'Phân phối chương trình', url: '#' },
-                    { name: 'Sáng kiến kinh nghiệm', url: '#' },
-                    { name: 'Đăng ký thao giảng', url: '#' },
-                    { name: 'Thư viện bài giảng', url: '#' }
-                ]
-            },
-            'baocao': {
-                title: 'Báo cáo trực tuyến',
-                links: [
-                    { name: 'Báo cáo tuần (GV)', url: '#' },
-                    { name: 'Báo cáo chuyên đề', url: '#' },
-                    { name: 'Thống kê chất lượng', url: '#' },
-                    { name: 'Báo cáo CSVC', url: '#' }
-                ]
-            }
+            'chuyenmon': { title: 'Quản lý Chuyên môn', links: [{name:'Kế hoạch',url:'#'},{name:'Sáng kiến',url:'#'}] },
+            'baocao': { title: 'Báo cáo', links: [{name:'Báo cáo tuần',url:'#'},{name:'Báo cáo chuyên đề',url:'#'}] }
         };
-
-        // Hàm xử lý hiển thị
         function openSubmenu(id) {
             const data = menuConfig[id];
-            if (!data) return;
-            
             document.getElementById('modal-title').innerText = data.title;
             const container = document.getElementById('modal-content');
-            container.innerHTML = ''; // Làm sạch modal cũ
-            
-            data.links.forEach(link => {
+            container.innerHTML = '';
+            data.links.forEach(l => {
                 const a = document.createElement('a');
-                a.href = link.url;
-                a.className = 'block p-4 bg-gray-50 hover:bg-blue-50 rounded-xl text-center font-semibold text-gray-700 transition border border-gray-100 hover:border-blue-200';
-                a.innerText = link.name;
+                a.href = l.url; a.className = 'p-3 bg-gray-100 rounded text-center'; a.innerText = l.name;
                 container.appendChild(a);
             });
-            
             document.getElementById('submenu-modal').classList.remove('hidden');
         }
-
-        // Hàm xử lý đóng
-        function closeSubmenu() {
-            document.getElementById('submenu-modal').classList.add('hidden');
-        }
-
-        // Bắt sự kiện click ngoài modal
-        window.onclick = function(event) {
-            const modal = document.getElementById('submenu-modal');
-            if (event.target == modal) closeSubmenu();
-        }
-        
-        console.log("Hệ thống IOC Hòa Vang đã sẵn sàng!");
+        function closeSubmenu() { document.getElementById('submenu-modal').classList.add('hidden'); }
     </script>
 </body>
 </html>
