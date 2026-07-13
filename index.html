@@ -92,6 +92,53 @@
         <div id="modal-content" class="grid grid-cols-1 gap-3"></div>
     </div>
 </div>
+<script>
+    // 1. Cấu hình menu (Dữ liệu của nút Chuyên môn và Báo cáo)
+    const menuConfig = {
+        'chuyenmon': {
+            title: 'Chuyên môn',
+            links: [
+                { name: 'Kế hoạch chuyên môn', url: '#' },
+                { name: 'Phân phối chương trình', url: '#' },
+                { name: 'Sáng kiến kinh nghiệm', url: '#' }
+            ]
+        },
+        'baocao': {
+            title: 'Báo cáo trực tuyến',
+            links: [
+                { name: 'Báo cáo tuần', url: '#' },
+                { name: 'Báo cáo chuyên đề', url: '#' }
+            ]
+        }
+    };
+
+    // 2. Hàm mở popup
+    function openSubmenu(id) {
+        const data = menuConfig[id];
+        if (!data) return;
+        
+        // Đổi tiêu đề
+        document.getElementById('modal-title').innerText = data.title;
+        
+        // Tạo danh sách nút con
+        const container = document.getElementById('modal-content');
+        container.innerHTML = '';
+        data.links.forEach(link => {
+            const btn = document.createElement('a');
+            btn.href = link.url;
+            btn.className = 'w-full p-4 bg-gray-50 hover:bg-blue-50 text-gray-700 font-medium rounded-xl border border-gray-100 text-center';
+            btn.innerText = link.name;
+            container.appendChild(btn);
+        });
+        
+        // Hiện popup lên
+        document.getElementById('submenu-modal').classList.remove('hidden');
+    }
+
+    // 3. Hàm đóng popup
+    function closeSubmenu() {
+        document.getElementById('submenu-modal').classList.add('hidden');
+    }
 
 <script>
     // 1. Dữ liệu menu
