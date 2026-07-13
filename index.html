@@ -3,37 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IOC Hòa Vang</title>
+    <title>IOC Hòa Vang | Trung tâm Điều hành số</title>
+    <!-- Cấu hình PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e40af">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .btn-hover:hover { transform: translateY(-5px); transition: 0.3s; }
+        .btn-card:hover { transform: translateY(-4px); transition: all 0.3s ease; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
-<body class="bg-slate-100 p-6">
+<body class="bg-slate-50 min-h-screen font-sans p-4 md:p-8">
     <div class="max-w-4xl mx-auto">
+        <!-- Header -->
         <header class="text-center mb-10">
-            <h1 class="text-4xl font-extrabold text-blue-900">THPT HÒA VANG</h1>
-            <p class="text-blue-600 font-medium">Trung tâm Điều hành số • Smart School</p>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-blue-900 tracking-tight">THPT HÒA VANG</h1>
+            <p class="text-blue-700 font-medium mt-1">Trung tâm Điều hành số • Smart School</p>
         </header>
 
-        <!-- Lưới 4x2 với kích thước cố định -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
-            <button class="btn-hover bg-white p-6 rounded-2xl shadow-lg border-t-4 border-blue-500 text-center font-bold text-gray-700">Văn bản</button>
-            <button class="btn-hover bg-white p-6 rounded-2xl shadow-lg border-t-4 border-green-500 text-center font-bold text-gray-700">Lịch công tác</button>
-            <button class="btn-hover bg-white p-6 rounded-2xl shadow-lg border-t-4 border-indigo-500 text-center font-bold text-gray-700">Chuyên môn</button>
-            <button class="btn-hover bg-white p-6 rounded-2xl shadow-lg border-t-4 border-purple-500 text-center font-bold text-gray-700">Học liệu số</button>
-            <button class="btn-hover bg-white p-6 rounded-2xl shadow-lg border-t-4 border-yellow-500 text-center font-bold text-gray-700">Báo cáo</button>
-            <button class="btn-hover bg-white p-6 rounded-2xl shadow-lg border-t-4 border-sky-500 text-center font-bold text-gray-700">HV Assistant</button>
-            <button class="btn-hover bg-white p-6 rounded-2xl shadow-lg border-t-4 border-orange-500 text-center font-bold text-gray-700">Quản trị CSVC</button>
-            <button class="btn-hover bg-white p-6 rounded-2xl shadow-lg border-t-4 border-gray-500 text-center font-bold text-gray-700">Ứng dụng khác</button>
+        <!-- Dashboard Grid (8 nút) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+            <button class="btn-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                <div class="text-3xl mb-2">📄</div>
+                <div class="font-bold text-gray-800 text-sm">Văn bản</div>
+            </button>
+            <button class="btn-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                <div class="text-3xl mb-2">📅</div>
+                <div class="font-bold text-gray-800 text-sm">Lịch công tác</div>
+            </button>
+            <button class="btn-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                <div class="text-3xl mb-2">🎓</div>
+                <div class="font-bold text-gray-800 text-sm">Chuyên môn</div>
+            </button>
+            <button class="btn-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                <div class="text-3xl mb-2">📚</div>
+                <div class="font-bold text-gray-800 text-sm">Học liệu số</div>
+            </button>
+            <button class="btn-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                <div class="text-3xl mb-2">📊</div>
+                <div class="font-bold text-gray-800 text-sm">Báo cáo</div>
+            </button>
+            <button class="btn-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                <div class="text-3xl mb-2">🤖</div>
+                <div class="font-bold text-gray-800 text-sm">HV Assistant</div>
+            </button>
+            <button class="btn-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                <div class="text-3xl mb-2">🛠️</div>
+                <div class="font-bold text-gray-800 text-sm">Quản trị CSVC</div>
+            </button>
+            <button class="btn-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center">
+                <div class="text-3xl mb-2">🌐</div>
+                <div class="font-bold text-gray-800 text-sm">Ứng dụng khác</div>
+            </button>
         </div>
 
-        <!-- Khung chat -->
-        <div class="bg-white p-6 rounded-3xl shadow-xl border border-blue-100">
-            <h2 class="font-bold text-blue-900 mb-4 flex items-center gap-2">🤖 HV Assistant - Trợ lý số</h2>
+        <!-- Chat Area -->
+        <div class="bg-white p-6 rounded-3xl shadow-lg border border-blue-50">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="text-2xl">🤖</div>
+                <h2 class="font-bold text-blue-900 text-lg">HV Assistant - Trợ lý số</h2>
+            </div>
             <div class="flex gap-2">
-                <input type="text" placeholder="Thầy cần hỗ trợ gì ạ?" class="flex-1 p-4 rounded-xl border border-gray-200 bg-gray-50">
-                <button class="bg-blue-600 text-white px-6 py-4 rounded-xl font-bold">Gửi</button>
+                <input type="text" placeholder="Thầy cần tra cứu thông tin gì ạ?" class="flex-1 p-4 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-blue-400 outline-none">
+                <button class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-4 rounded-xl font-bold transition">Gửi</button>
             </div>
         </div>
     </div>
