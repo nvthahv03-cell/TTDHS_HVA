@@ -82,23 +82,58 @@
         document.querySelector('.text-center.mb-8').style.display = 'none';
     }
 </script>
+    <!-- Khung Popup (HTML) -->
+<div id="submenu-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="modal-title" class="text-xl font-bold text-gray-800">Chọn menu con</h2>
+            <button onclick="closeSubmenu()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+        </div>
+        <div id="modal-content" class="grid grid-cols-1 gap-3"></div>
+    </div>
+</div>
+
+<script>
+    // 1. Dữ liệu menu
     const menuConfig = {
-    'chuyenmon': {
-        title: 'Chuyên môn',
-        links: [
-            { name: 'Kế hoạch chuyên môn', url: '#' },
-            { name: 'Phân phối chương trình', url: '#' },
-            { name: 'Sáng kiến kinh nghiệm', url: '#' }
-        ]
-    },
-    'baocao': {
-        title: 'Báo cáo trực tuyến',
-        links: [
-            { name: 'Báo cáo tuần', url: '#' },
-            { name: 'Báo cáo chuyên đề', url: '#' }
-        ]
+        'chuyenmon': {
+            title: 'Chuyên môn',
+            links: [
+                { name: 'Kế hoạch chuyên môn', url: '#' },
+                { name: 'Phân phối chương trình', url: '#' },
+                { name: 'Sáng kiến kinh nghiệm', url: '#' }
+            ]
+        },
+        'baocao': {
+            title: 'Báo cáo trực tuyến',
+            links: [
+                { name: 'Báo cáo tuần', url: '#' },
+                { name: 'Báo cáo chuyên đề', url: '#' }
+            ]
+        }
+    };
+
+    // 2. Hàm mở và đóng
+    function openSubmenu(id) {
+        const data = menuConfig[id];
+        if (!data) return;
+        document.getElementById('modal-title').innerText = data.title;
+        const container = document.getElementById('modal-content');
+        container.innerHTML = '';
+        data.links.forEach(link => {
+            const btn = document.createElement('a');
+            btn.href = link.url;
+            btn.className = 'w-full p-4 bg-gray-50 hover:bg-blue-50 text-gray-700 font-medium rounded-xl border border-gray-100 text-center';
+            btn.innerText = link.name;
+            container.appendChild(btn);
+        });
+        document.getElementById('submenu-modal').classList.remove('hidden');
     }
-};
+
+    function closeSubmenu() {
+        document.getElementById('submenu-modal').classList.add('hidden');
+    }
+</script>
 </body>
     
 </html>
