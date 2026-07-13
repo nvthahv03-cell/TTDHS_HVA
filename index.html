@@ -4,155 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IOC Hòa Vang | Trung tâm Điều hành số</title>
-    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e3a8a">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-950 min-h-screen font-sans p-4 md:p-8">
+<body class="bg-blue-950 min-h-screen font-sans p-4">
     <div class="max-w-4xl mx-auto">
-        
-        <!-- NÚT CÀI ĐẶT -->
-        <div class="text-center mb-8">
-            <button onclick="alert('Hướng dẫn: Nhấn vào dấu 3 chấm (trên cùng bên phải) hoặc nút Chia sẻ, sau đó chọn Thêm vào Màn hình chính.')" 
-                    class="bg-yellow-400 text-blue-950 font-bold py-3 px-6 rounded-full shadow-lg transition animate-pulse flex items-center justify-center gap-2 mx-auto">
-                <span>📥</span> Bấm vào đây để cài App
-            </button>
-        </div>
-
         <!-- Header -->
-        <header class="text-center mb-10">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-white">THPT HÒA VANG</h1>
-            <p class="text-blue-200 font-medium mt-1">Trung tâm Điều hành số • Smart School</p>
+        <header class="text-center mb-8 pt-4">
+            <h1 class="text-3xl font-extrabold text-white">THPT HÒA VANG</h1>
+            <p class="text-blue-200 font-medium text-sm">Trung tâm Điều hành số • Smart School</p>
         </header>
 
-        <!-- Lưới nút -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/van-ban'" class="bg-white p-6 rounded-2xl shadow-lg text-center transition hover:scale-105">
-                <div class="font-bold text-gray-800 text-sm">Văn bản</div>
-            </button>
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/lich-cong-tac'" class="bg-white p-6 rounded-2xl shadow-lg text-center transition hover:scale-105">
-                <div class="font-bold text-gray-800 text-sm">Lịch công tác</div>
-            </button>
-            <button onclick="openSubmenu('chuyenmon')" class="bg-white p-6 rounded-2xl shadow-lg text-center transition hover:scale-105">
-                <div class="font-bold text-gray-800 text-sm">Chuyên môn</div>
-            </button>
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/hoc-lieu-so'" class="bg-white p-6 rounded-2xl shadow-lg text-center transition hover:scale-105">
-                <div class="font-bold text-gray-800 text-sm">Học liệu số</div>
-            </button>
-            <button onclick="openSubmenu('baocao')" class="bg-white p-6 rounded-2xl shadow-lg text-center transition hover:scale-105">
-                <div class="font-bold text-gray-800 text-sm">Báo cáo TT</div>
-            </button>
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/thi-dua'" class="bg-white p-6 rounded-2xl shadow-lg text-center transition hover:scale-105">
-                <div class="font-bold text-gray-800 text-sm">Thi đua</div>
-            </button>
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/csvc'" class="bg-white p-6 rounded-2xl shadow-lg text-center transition hover:scale-105">
-                <div class="font-bold text-gray-800 text-sm">CSVC</div>
-            </button>
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/doan-thanh-nien'" class="bg-white p-6 rounded-2xl shadow-lg text-center transition hover:scale-105">
-                <div class="font-bold text-gray-800 text-sm">Đoàn TN</div>
-            </button>
+        <!-- Lưới nút chính -->
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/van-ban'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Văn bản</button>
+            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/lich-cong-tac'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Lịch công tác</button>
+            
+            <!-- Nút có Popup -->
+            <button onclick="openSubmenu('chuyenmon')" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Chuyên môn</button>
+            
+            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/hoc-lieu-so'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Học liệu số</button>
+            
+            <!-- Nút có Popup -->
+            <button onclick="openSubmenu('baocao')" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Báo cáo TT</button>
+            
+            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/thi-dua'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Thi đua</button>
+            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/csvc'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">CSVC</button>
+            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/doan-thanh-nien'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Đoàn TN</button>
         </div>
     </div>
 
-    <!-- KHUNG POPUP (CẦN CÓ ĐỂ NÚT HOẠT ĐỘNG) -->
-    <div id="submenu-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="modal-title" class="text-xl font-bold text-gray-800">Chọn menu con</h2>
-                <button onclick="closeSubmenu()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+    <!-- KHUNG POPUP ĐA NĂNG -->
+    <div id="submenu-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-in fade-in duration-200">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="modal-title" class="text-xl font-bold text-gray-800">Menu</h2>
+                <button onclick="closeSubmenu()" class="text-gray-400 text-3xl font-light">&times;</button>
             </div>
             <div id="modal-content" class="grid grid-cols-1 gap-3"></div>
         </div>
     </div>
 
     <script>
+        // Cấu hình dữ liệu menu
         const menuConfig = {
             'chuyenmon': {
-                title: 'Chuyên môn',
+                title: 'Quản lý Chuyên môn',
                 links: [
-                    { name: 'Kế hoạch chuyên môn', url: '#' },
+                    { name: 'Kế hoạch giáo dục', url: '#' },
                     { name: 'Phân phối chương trình', url: '#' },
-                    { name: 'Sáng kiến kinh nghiệm', url: '#' }
+                    { name: 'Sáng kiến kinh nghiệm', url: '#' },
+                    { name: 'Đăng ký thao giảng', url: '#' },
+                    { name: 'Thư viện bài giảng', url: '#' }
                 ]
             },
             'baocao': {
                 title: 'Báo cáo trực tuyến',
                 links: [
-                    { name: 'Báo cáo tuần', url: '#' },
-                    { name: 'Báo cáo chuyên đề', url: '#' }
+                    { name: 'Báo cáo tuần (GV)', url: '#' },
+                    { name: 'Báo cáo chuyên đề', url: '#' },
+                    { name: 'Thống kê chất lượng', url: '#' },
+                    { name: 'Báo cáo cơ sở vật chất', url: '#' }
                 ]
             }
         };
 
+        // Hàm mở popup
         function openSubmenu(id) {
             const data = menuConfig[id];
             if (!data) return;
+            
             document.getElementById('modal-title').innerText = data.title;
             const container = document.getElementById('modal-content');
             container.innerHTML = '';
+            
             data.links.forEach(link => {
-                const btn = document.createElement('a');
-                btn.href = link.url;
-                btn.className = 'w-full p-4 bg-gray-50 hover:bg-blue-50 text-gray-700 font-medium rounded-xl border border-gray-100 text-center';
-                btn.innerText = link.name;
-                container.appendChild(btn);
+                const a = document.createElement('a');
+                a.href = link.url;
+                a.className = 'block p-4 bg-gray-50 hover:bg-blue-50 rounded-xl text-center font-semibold text-gray-700 transition border border-gray-100';
+                a.innerText = link.name;
+                container.appendChild(a);
             });
+            
             document.getElementById('submenu-modal').classList.remove('hidden');
         }
 
+        // Hàm đóng popup
         function closeSubmenu() {
             document.getElementById('submenu-modal').classList.add('hidden');
         }
-    </script>
-    <script>
-    // 1. TỰ ĐỘNG ẨN NÚT CÀI APP NẾU ĐÃ CÀI
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-        // Tìm và ẩn nút cài app (dựa vào class hoặc ID)
-        const installBtn = document.querySelector('.animate-pulse');
-        if (installBtn) {
-            installBtn.parentElement.style.display = 'none';
-        }
-    }
 
-    // 2. Dữ liệu menu
-    const menuConfig = {
-        'chuyenmon': {
-            title: 'Chuyên môn',
-            links: [
-                { name: 'Kế hoạch chuyên môn', url: '#' },
-                { name: 'Phân phối chương trình', url: '#' },
-                { name: 'Sáng kiến kinh nghiệm', url: '#' }
-            ]
-        },
-        'baocao': {
-            title: 'Báo cáo trực tuyến',
-            links: [
-                { name: 'Báo cáo tuần', url: '#' },
-                { name: 'Báo cáo chuyên đề', url: '#' }
-            ]
-        }
-    };
-
-    // 3. Hàm mở và đóng popup
-    function openSubmenu(id) {
-        const data = menuConfig[id];
-        if (!data) return;
-        document.getElementById('modal-title').innerText = data.title;
-        const container = document.getElementById('modal-content');
-        container.innerHTML = '';
-        data.links.forEach(link => {
-            const btn = document.createElement('a');
-            btn.href = link.url;
-            btn.className = 'w-full p-4 bg-gray-50 hover:bg-blue-50 text-gray-700 font-medium rounded-xl border border-gray-100 text-center';
-            btn.innerText = link.name;
-            container.appendChild(btn);
+        // Tự động đóng popup khi bấm ra ngoài vùng nội dung
+        document.getElementById('submenu-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeSubmenu();
         });
-        document.getElementById('submenu-modal').classList.remove('hidden');
-    }
-
-    function closeSubmenu() {
-        document.getElementById('submenu-modal').classList.add('hidden');
-    }
-</script>
+    </script>
 </body>
 </html>
