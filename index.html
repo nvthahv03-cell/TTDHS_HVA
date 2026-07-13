@@ -2,52 +2,77 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IOC Hòa Vang | Trung tâm Điều hành số</title>
-    <meta name="theme-color" content="#1e3a8a">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IOC Hòa Vang | Trung tâm Điều hành số chuyên sâu</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tùy chỉnh thêm để tăng độ chuyên nghiệp cho App */
+        :root { --primary-bg: #0f2a58; --card-bg: #ffffff; }
+        body { background-color: var(--primary-bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .nav-btn {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-weight: 700;
+            color: #1e3a8a;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e5e7eb;
+        }
+        .nav-btn:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); }
+        .modal-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); }
+    </style>
 </head>
-<body class="bg-blue-950 min-h-screen font-sans p-4">
-    <div class="max-w-4xl mx-auto">
-        <!-- Header -->
-        <header class="text-center mb-8 pt-4">
-            <h1 class="text-3xl font-extrabold text-white">THPT HÒA VANG</h1>
-            <p class="text-blue-200 font-medium text-sm">Trung tâm Điều hành số • Smart School</p>
+<body>
+    <div class="max-w-4xl mx-auto p-4 md:p-8">
+        <!-- Header chính -->
+        <header class="text-center mb-10 border-b border-blue-800 pb-8">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight">THPT HÒA VANG</h1>
+            <p class="text-blue-200 mt-3 font-medium uppercase tracking-widest">Trung tâm Điều hành số • Smart School</p>
         </header>
 
-        <!-- Lưới nút chính -->
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/van-ban'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Văn bản</button>
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/lich-cong-tac'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Lịch công tác</button>
-            
-            <!-- Nút có Popup -->
-            <button onclick="openSubmenu('chuyenmon')" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Chuyên môn</button>
-            
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/hoc-lieu-so'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Học liệu số</button>
-            
-            <!-- Nút có Popup -->
-            <button onclick="openSubmenu('baocao')" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Báo cáo TT</button>
-            
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/thi-dua'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Thi đua</button>
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/csvc'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">CSVC</button>
-            <button onclick="window.location.href='https://thpthovang.danang.edu.vn/doan-thanh-nien'" class="bg-white p-6 rounded-2xl shadow-lg text-center font-bold text-gray-800 transition hover:bg-blue-50">Đoàn TN</button>
+        <!-- Khu vực thông báo chạy (Thêm tính năng cho đầy đủ) -->
+        <div class="bg-blue-900 rounded-lg p-3 mb-8 text-blue-200 text-sm flex items-center shadow-inner">
+            <span class="bg-yellow-500 text-blue-900 px-2 py-0.5 rounded font-bold mr-3 text-xs">MỚI</span>
+            <marquee>Hệ thống IOC đã cập nhật phân hệ Báo cáo chuyên đề và Sáng kiến kinh nghiệm khối 12.</marquee>
         </div>
+
+        <!-- Lưới menu chính -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+            <button onclick="window.location.href='#'" class="nav-btn">Văn bản</button>
+            <button onclick="window.location.href='#'" class="nav-btn">Lịch công tác</button>
+            <button onclick="openSubmenu('chuyenmon')" class="nav-btn">Chuyên môn</button>
+            <button onclick="window.location.href='#'" class="nav-btn">Học liệu số</button>
+            <button onclick="openSubmenu('baocao')" class="nav-btn">Báo cáo TT</button>
+            <button onclick="window.location.href='#'" class="nav-btn">Thi đua</button>
+            <button onclick="window.location.href='#'" class="nav-btn">CSVC</button>
+            <button onclick="window.location.href='#'" class="nav-btn">Đoàn TN</button>
+        </div>
+
+        <!-- Footer thông tin -->
+        <footer class="text-center text-blue-400 text-xs mt-10">
+            © 2026 - Phát triển bởi Trung tâm Điều hành số THPT Hòa Vang
+        </footer>
     </div>
 
-    <!-- KHUNG POPUP ĐA NĂNG -->
-    <div id="submenu-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-in fade-in duration-200">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="modal-title" class="text-xl font-bold text-gray-800">Menu</h2>
-                <button onclick="closeSubmenu()" class="text-gray-400 text-3xl font-light">&times;</button>
+    <!-- Modal cấu trúc -->
+    <div id="submenu-modal" class="modal-overlay fixed inset-0 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl animate-in zoom-in duration-300">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                <h2 id="modal-title" class="text-xl font-bold text-gray-800">Tiêu đề</h2>
+                <button onclick="closeSubmenu()" class="text-gray-400 hover:text-red-500 text-2xl transition">&times;</button>
             </div>
             <div id="modal-content" class="grid grid-cols-1 gap-3"></div>
         </div>
     </div>
 
     <script>
-        // Cấu hình dữ liệu menu
+        // Data cấu hình menu chính xác
         const menuConfig = {
             'chuyenmon': {
                 title: 'Quản lý Chuyên môn',
@@ -65,24 +90,24 @@
                     { name: 'Báo cáo tuần (GV)', url: '#' },
                     { name: 'Báo cáo chuyên đề', url: '#' },
                     { name: 'Thống kê chất lượng', url: '#' },
-                    { name: 'Báo cáo cơ sở vật chất', url: '#' }
+                    { name: 'Báo cáo CSVC', url: '#' }
                 ]
             }
         };
 
-        // Hàm mở popup
+        // Hàm xử lý hiển thị
         function openSubmenu(id) {
             const data = menuConfig[id];
             if (!data) return;
             
             document.getElementById('modal-title').innerText = data.title;
             const container = document.getElementById('modal-content');
-            container.innerHTML = '';
+            container.innerHTML = ''; // Làm sạch modal cũ
             
             data.links.forEach(link => {
                 const a = document.createElement('a');
                 a.href = link.url;
-                a.className = 'block p-4 bg-gray-50 hover:bg-blue-50 rounded-xl text-center font-semibold text-gray-700 transition border border-gray-100';
+                a.className = 'block p-4 bg-gray-50 hover:bg-blue-50 rounded-xl text-center font-semibold text-gray-700 transition border border-gray-100 hover:border-blue-200';
                 a.innerText = link.name;
                 container.appendChild(a);
             });
@@ -90,15 +115,18 @@
             document.getElementById('submenu-modal').classList.remove('hidden');
         }
 
-        // Hàm đóng popup
+        // Hàm xử lý đóng
         function closeSubmenu() {
             document.getElementById('submenu-modal').classList.add('hidden');
         }
 
-        // Tự động đóng popup khi bấm ra ngoài vùng nội dung
-        document.getElementById('submenu-modal').addEventListener('click', function(e) {
-            if (e.target === this) closeSubmenu();
-        });
+        // Bắt sự kiện click ngoài modal
+        window.onclick = function(event) {
+            const modal = document.getElementById('submenu-modal');
+            if (event.target == modal) closeSubmenu();
+        }
+        
+        console.log("Hệ thống IOC Hòa Vang đã sẵn sàng!");
     </script>
 </body>
 </html>
