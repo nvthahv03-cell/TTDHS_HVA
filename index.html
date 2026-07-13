@@ -34,10 +34,15 @@
             <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">🎓</div><div class="font-bold text-sm">Chuyên môn</div></button>
             <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">📚</div><div class="font-bold text-sm">Học liệu số</div></button>
             <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">📊</div><div class="font-bold text-sm">Báo cáo</div></button>
-            <!-- Sửa nút số 8 thành Đoàn Thanh niên -->
-<button onclick="window.location.href='https://thpthovang.danang.edu.vn/doan-thanh-nien'" 
-        class="btn-card bg-white p-6 rounded-2xl shadow-lg border border-slate-200 text-center">
-    <div class="text-3xl mb-2">🔥</div> <!-- Icon ngọn lửa cho Đoàn -->
+            <!-- Nút Đoàn Thanh niên với Huy hiệu Đoàn -->
+<button onclick="openSubmenu('doan')" 
+        class="btn-card bg-white p-6 rounded-2xl shadow-lg border border-slate-200 text-center transition-all hover:scale-105">
+    <div class="mb-2 flex justify-center">
+        <!-- SVG Huy hiệu Đoàn -->
+        <svg class="w-10 h-10 text-red-600" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+        </svg>
+    </div>
     <div class="font-bold text-gray-800 text-sm">Đoàn Thanh niên</div>
 </button>
             <button class="bg-white p-6 rounded-2xl shadow-lg text-center"><div class="text-3xl mb-2">🛠️</div><div class="font-bold text-sm">Quản trị CSVC</div></button>
