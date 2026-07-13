@@ -45,5 +45,11 @@
             <div class="flex gap-2"><input type="text" placeholder="Thầy cần tra cứu gì ạ?" class="flex-1 p-4 rounded-xl border border-gray-200 bg-gray-50"><button class="bg-blue-700 text-white px-6 py-4 rounded-xl font-bold">Gửi</button></div>
         </div>
     </div>
+    <script>
+    // Kiểm tra nếu ứng dụng đang chạy ở chế độ standalone (đã cài trên ĐT)
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        document.querySelector('.text-center.mb-8').style.display = 'none';
+    }
+</script>
 </body>
 </html>
