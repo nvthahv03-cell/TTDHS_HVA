@@ -1,101 +1,564 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="h-full scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IOC Hòa Vang | Trung tâm Điều hành số</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>TTDHS_HVA - Trung tâm Điều hành số THPT Hòa Vang</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .nav-btn {
-            background-color: white; padding: 1.5rem; border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); text-align: center;
-            font-weight: 700; color: #1e3a8a; transition: all 0.2s;
-            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            deep: '#070A13',
+                            primary: '#0F172A',
+                            accent: '#1E293B',
+                            teal: '#0D9488',
+                            glow: '#2DD4BF'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
+                    }
+                }
+            }
         }
-        .nav-btn:hover { background-color: #f3f4f6; transform: scale(1.02); }
-        .icon-size { width: 32px; height: 32px; }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Tối ưu hóa cuộn mượt và vùng an toàn trên iOS */
+       .safe-pb {
+            padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+        }
+       .safe-pt {
+            padding-top: calc(1rem + env(safe-area-inset-top));
+        }
+        /* Hiệu ứng nhấp nháy phát sáng nhẹ */
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.03); }
+        }
+       .animate-glow {
+            animation: pulse-glow 4s infinite ease-in-out;
+        }
     </style>
 </head>
-<body class="bg-[#0f2a58] p-4">
-    <div class="max-w-4xl mx-auto">
-        <header class="text-center mb-10">
-            <h1 class="text-3xl font-extrabold text-white">THPT HÒA VANG</h1>
-            <p class="text-blue-200">Trung tâm Điều hành số</p>
-        </header>
+<body class="h-full bg-brand-deep text-slate-100 overflow-x-hidden antialiased select-none">
 
-        <div class="grid grid-cols-2 gap-4">
-            <!-- Văn bản -->
-            <button onclick="window.location.href='#'" class="nav-btn">
-                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Văn bản
-            </button>
-            <!-- Lịch công tác -->
-            <button onclick="window.location.href='#'" class="nav-btn">
-                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                Lịch công tác
-            </button>
-            <!-- Chuyên môn -->
-            <button onclick="openSubmenu('chuyenmon')" class="nav-btn">
-                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/></svg>
-                Chuyên môn
-            </button>
-            <!-- Học liệu số -->
-            <button onclick="window.location.href='#'" class="nav-btn">
-                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                Học liệu số
-            </button>
-            <!-- Báo cáo TT -->
-            <button onclick="openSubmenu('baocao')" class="nav-btn">
-                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                Báo cáo TT
-            </button>
-            <!-- Thi đua -->
-            <button onclick="window.location.href='#'" class="nav-btn">
-                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                Thi đua
-            </button>
-            <!-- CSVC -->
-            <button onclick="window.location.href='#'" class="nav-btn">
-                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                CSVC
-            </button>
-            <!-- Đoàn TN -->
-            <button onclick="window.location.href='#'" class="nav-btn">
-                <svg class="icon-size" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                Đoàn TN
-            </button>
-        </div>
+    <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-brand-deep via- to-">
+        <div class="absolute -top-[20%] -left-[10%] w-[80%] h-[60%] rounded-full bg-teal-500/10 blur-[120px] animate-glow"></div>
+        <div class="absolute top-[40%] -right-[20%] w-[90%] h-[70%] rounded-full bg-indigo-500/10 blur-[150px] animate-glow" style="animation-delay: 2s;"></div>
     </div>
 
-    <!-- Modal giữ nguyên như cũ -->
-    <div id="submenu-modal" class="fixed inset-0 bg-black/70 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
-            <div class="flex justify-between mb-4 border-b pb-2">
-                <h2 id="modal-title" class="text-lg font-bold">Menu</h2>
-                <button onclick="closeSubmenu()" class="text-xl">&times;</button>
+    <div class="flex flex-col min-h-screen">
+        
+        <header class="fixed top-0 left-0 right-0 z-40 bg-brand-deep/70 backdrop-blur-xl border-b border-white/5 px-4 py-3 safe-pt flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 shadow-lg shadow-brand-teal/20 flex items-center justify-center">
+                    <div class="w-full h-full bg-brand-deep rounded-[10px] flex items-center justify-center">
+                        <span class="text-brand-glow font-bold text-sm tracking-widest">HVA</span>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-none">Trung tâm Điều hành số</h1>
+                    <p class="text-sm font-bold text-white tracking-tight mt-0.5">TTDHS_HVA</p>
+                </div>
             </div>
-            <div id="modal-content" class="grid gap-2"></div>
+            <div class="flex items-center space-x-2">
+                <button onclick="openModal('contact-modal')" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all">
+                    <i class="bi bi-info-circle text-lg text-slate-300"></i>
+                </button>
+                <div class="w-10 h-10 rounded-full border border-white/10 overflow-hidden bg-slate-800">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" alt="Avatar" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto">
+            
+            <section class="mb-5 mt-2">
+                <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/10 to-indigo-500/10 border border-brand-teal/20 backdrop-blur-md">
+                    <div class="flex items-center space-x-2 text-brand-glow text-xs font-bold uppercase tracking-widest mb-1.5">
+                        <i class="bi bi-lightning-charge-fill animate-pulse"></i>
+                        <span>Phương châm hoạt động</span>
+                    </div>
+                    <p class="text-sm text-slate-200 italic font-medium">"Kết nối – Điều hành – Chia sẻ – Hiệu quả"</p>
+                </div>
+            </section>
+
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-sm font-bold text-slate-300 tracking-wider uppercase flex items-center gap-2">
+                    <i class="bi bi-grid-1x2-fill text-brand-glow"></i>
+                    Phân Hệ Điều Hành Chính
+                </h2>
+                <span class="text-xs text-brand-glow font-semibold">THPT Hòa Vang</span>
+            </div>
+
+            <section class="grid grid-cols-2 gap-3 mb-6">
+                
+                <div onclick="openModal('document-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-blue-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20 mb-3">
+                        <i class="bi bi-folder-fill text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Văn bản - Biểu mẫu</h3>
+                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Sở GD&ĐT, Quy chế, Mẫu</p>
+                </div>
+
+                <div onclick="openModal('academic-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-emerald-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 mb-3">
+                        <i class="bi bi-journal-bookmark-fill text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chuyên môn</h3>
+                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Kế hoạch, Sổ đầu bài, STEM</p>
+                </div>
+
+                <div onclick="openModal('competition-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-amber-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-500 flex items-center justify-center shadow-lg shadow-amber-500/20 mb-3">
+                        <i class="bi bi-trophy-fill text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Thi đua</h3>
+                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">HSG, NCKH, Sáng kiến</p>
+                </div>
+
+                <div onclick="openModal('digital-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-cyan-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-teal-400 flex items-center justify-center shadow-lg shadow-cyan-500/20 mb-3">
+                        <i class="bi bi-cpu-fill text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chuyển đổi số</h3>
+                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Trí tuệ nhân tạo AI, LMS</p>
+                </div>
+
+                <div onclick="openModal('quality-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-rose-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-orange-500 flex items-center justify-center shadow-lg shadow-rose-500/20 mb-3">
+                        <i class="bi bi-patch-check-fill text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chất lượng</h3>
+                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Đánh giá ngoài, TEMIS</p>
+                </div>
+
+                <div onclick="openModal('youth-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-red-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-500 to-pink-500 flex items-center justify-center shadow-lg shadow-red-500/20 mb-3">
+                        <i class="bi bi-flag-fill text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Đoàn trường</h3>
+                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Trải nghiệm, Phong trào</p>
+                </div>
+
+                <div onclick="openModal('team-modal')" class="group col-span-2 relative rounded-2xl bg-gradient-to-r from-violet-600/10 to-indigo-600/10 hover:from-violet-600/20 hover:to-indigo-600/20 active:scale-[0.98] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden flex items-center space-x-4">
+                    <div class="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
+                        <i class="bi bi-people-fill text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Đội ngũ cán bộ, giáo viên</h3>
+                        <p class="text-xs text-slate-400 mt-0.5 truncate">Quyết định 32, Bồi dưỡng thường xuyên BDTX, Hồ sơ viên chức</p>
+                    </div>
+                    <i class="bi bi-chevron-right text-slate-500 group-hover:text-brand-glow text-sm"></i>
+                </div>
+            </section>
+
+            <section class="mb-4">
+                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <i class="bi bi-activity text-brand-glow"></i>
+                    Bản tin điều hành nhanh
+                </h2>
+                <div class="space-y-2.5">
+                    <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="w-2 h-2 rounded-full bg-brand-glow mt-1.5 shrink-0 animate-ping"></div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[10px] font-bold text-slate-400">VĂN PHÒNG • VỪA CẬP NHẬT</p>
+                            <p class="text-xs text-slate-200 font-medium mt-0.5">Triển khai rà soát hồ sơ thi đua khen thưởng học kỳ mới.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="w-2 h-2 rounded-full bg-indigo-400 mt-1.5 shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[10px] font-bold text-slate-400">TỔ CHUYÊN MÔN • 1 GIỜ TRƯỚC</p>
+                            <p class="text-xs text-slate-200 font-medium mt-0.5">Đã đồng bộ hóa Sổ đầu bài điện tử của toàn bộ các khối lớp.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <nav class="fixed bottom-0 left-0 right-0 z-40 bg-brand-deep/80 backdrop-blur-2xl border-t border-white/5 pb-safe px-6 shadow-2xl">
+            <div class="flex items-center justify-between h-16 max-w-lg mx-auto">
+                <a href="#" class="flex flex-col items-center justify-center flex-1 text-brand-glow py-1">
+                    <i class="bi bi-house-door-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Trang chủ</span>
+                </a>
+                <a href="#" onclick="openModal('contact-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
+                    <i class="bi bi-telephone-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Liên hệ</span>
+                </a>
+                <a href="#" onclick="openModal('digital-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
+                    <i class="bi bi-cpu-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Trí tuệ AI</span>
+                </a>
+                <a href="#" onclick="openModal('team-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
+                    <i class="bi bi-person-lines-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Hồ sơ số</span>
+                </a>
+            </div>
+        </nav>
+
+        <div id="modal-backdrop" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+        <div id="contact-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
+            <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
+            <div class="px-6 pb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-teal-500/15 flex items-center justify-center text-brand-glow">
+                            <i class="bi bi-info-circle-fill text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-base font-bold text-white">THPT Hòa Vang</h4>
+                            <p class="text-[10px] text-slate-400">Thông tin liên hệ chính thức</p>
+                        </div>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
+                </div>
+                <div class="space-y-3.5">
+                    <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Địa chỉ hành chính</span>
+                        <p class="text-sm text-slate-200">Số 101 Ông Ích Đường, phường Cẩm Lệ, thành phố Đà Nẵng</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Điện thoại ban giám hiệu</span>
+                            <p class="text-sm text-slate-200 font-semibold">0236.3846.169</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                            <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Điện thoại văn phòng</span>
+                            <p class="text-sm text-slate-200 font-semibold">0236.3697.372</p>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Hòm thư điện tử chính thức</span>
+                        <p class="text-sm text-brand-glow font-medium">hoavang61@gmail.com</p>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <div id="document-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
+            <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
+            <div class="px-6 pb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center text-blue-400">
+                            <i class="bi bi-folder-fill text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white">Văn bản – Biểu mẫu</h4>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
+                </div>
+                <div class="space-y-2.5">
+                    <a href="#" class="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-all">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <i class="bi bi-file-earmark-text text-blue-400 text-lg"></i>
+                            <span class="text-xs font-semibold text-slate-200 truncate">Văn bản của Sở GD&ĐT Đà Nẵng</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-slate-500"></i>
+                    </a>
+                    <a href="#" class="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-all">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <i class="bi bi-file-earmark-lock text-indigo-400 text-lg"></i>
+                            <span class="text-xs font-semibold text-slate-200 truncate">Văn bản quản lý của nhà trường</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-slate-500"></i>
+                    </a>
+                    <a href="#" class="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-all">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <i class="bi bi-file-earmark-spreadsheet text-emerald-400 text-lg"></i>
+                            <span class="text-xs font-semibold text-slate-200 truncate">Biểu mẫu hành chính nhân sự</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-slate-500"></i>
+                    </a>
+                    <a href="#" class="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-all">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <i class="bi bi-shield-check text-amber-400 text-lg"></i>
+                            <span class="text-xs font-semibold text-slate-200 truncate">Quy chế hoạt động cơ quan</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-slate-500"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="academic-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
+            <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
+            <div class="px-6 pb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400">
+                            <i class="bi bi-journal-bookmark-fill text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white">Quản lý Chuyên môn</h4>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Kế hoạch GD</span>
+                        <p class="text-xs text-slate-200">Kế hoạch giáo dục các bộ môn</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Sổ đầu bài</span>
+                        <p class="text-xs text-slate-200">Ký duyệt Sổ đầu bài điện tử</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Chuyên môn</span>
+                        <p class="text-xs text-slate-200">Sinh hoạt chuyên môn tổ nhóm</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Đánh giá</span>
+                        <p class="text-xs text-slate-200">Kiểm tra đánh giá định kỳ</p>
+                    </div>
+                    <div class="p-4 rounded-xl col-span-2 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+                        <span class="text-[10px] text-brand-glow font-bold uppercase block mb-1">Giáo dục tích hợp</span>
+                        <p class="text-xs text-slate-200 font-semibold">Chương trình và Hoạt động giáo dục STEM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="competition-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
+            <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
+            <div class="px-6 pb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400">
+                            <i class="bi bi-trophy-fill text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white">Khen thưởng & Thi đua</h4>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
+                </div>
+                <div class="space-y-2.5">
+                    <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="flex items-center space-x-3">
+                            <i class="bi bi-star-fill text-amber-400"></i>
+                            <span class="text-xs font-semibold text-slate-200">Đào tạo học sinh giỏi (HSG) các cấp</span>
+                        </div>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="flex items-center space-x-3">
+                            <i class="bi bi-lightbulb-fill text-teal-400"></i>
+                            <span class="text-xs font-semibold text-slate-200">Nghiên cứu khoa học (NCKH) & Cuộc thi sáng tạo</span>
+                        </div>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="flex items-center space-x-3">
+                            <i class="bi bi-award-fill text-rose-400"></i>
+                            <span class="text-xs font-semibold text-slate-200">Sáng kiến kinh nghiệm & Cải tiến sư phạm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="digital-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
+            <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
+            <div class="px-6 pb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/15 flex items-center justify-center text-cyan-400">
+                            <i class="bi bi-cpu-fill text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white">Chuyển đổi số & AI</h4>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
+                </div>
+                <div class="space-y-3.5">
+                    <div class="p-4 rounded-2xl bg-gradient-to-r from-teal-500/20 to-cyan-500/10 border border-teal-500/30">
+                        <span class="inline-block px-2.5 py-0.5 rounded-full bg-brand-glow/10 text-brand-glow text-[9px] font-bold uppercase mb-2">Trợ lý sư phạm thông minh</span>
+                        <h5 class="text-xs font-bold text-white mb-1">Ứng dụng Trí tuệ nhân tạo (AI)</h5>
+                        <p class="text-[11px] text-slate-400 mb-3 leading-relaxed">Hỗ trợ giáo viên tối ưu hóa kế hoạch giảng dạy, tóm tắt văn bản quy chế và khởi tạo nhanh đề thi trắc nghiệm khách quan.</p>
+                        <button class="w-full py-2 bg-teal-600 hover:bg-teal-500 text-brand-deep font-bold text-xs rounded-lg active:scale-95 transition-all">Khởi chạy Trợ lý AI</button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="p-3 rounded-xl bg-white/[0.02] border border-white/5 text-center">
+                            <i class="bi bi-mortarboard-fill text-slate-300 text-lg"></i>
+                            <span class="text-[10px] font-semibold text-slate-300 block mt-1">LMS</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-white/[0.02] border border-white/5 text-center">
+                            <i class="bi bi-database-fill text-slate-300 text-lg"></i>
+                            <span class="text-[10px] font-semibold text-slate-300 block mt-1">CSDL Ngành</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-white/[0.02] border border-white/5 text-center">
+                            <i class="bi bi-graph-up-arrow text-slate-300 text-lg"></i>
+                            <span class="text-[10px] font-semibold text-slate-300 block mt-1">Báo cáo CĐS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quality-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
+            <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
+            <div class="px-6 pb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-rose-500/15 flex items-center justify-center text-rose-400">
+                            <i class="bi bi-patch-check-fill text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white">Đảm bảo chất lượng</h4>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
+                </div>
+                <div class="space-y-2.5">
+                    <a href="#" class="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-all">
+                        <div class="flex items-center space-x-3">
+                            <i class="bi bi-check-circle-fill text-rose-400"></i>
+                            <span class="text-xs font-semibold text-slate-200">Tự đánh giá & Đánh giá ngoài</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-slate-500"></i>
+                    </a>
+                    <a href="#" class="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-all">
+                        <div class="flex items-center space-x-3">
+                            <i class="bi bi-award-fill text-orange-400"></i>
+                            <span class="text-xs font-semibold text-slate-200">Hệ thống Đánh giá viên chức TEMIS</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-slate-500"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="youth-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
+            <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
+            <div class="px-6 pb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-red-500/15 flex items-center justify-center text-red-400">
+                            <i class="bi bi-flag-fill text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white">Đoàn Trường - Phong trào</h4>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
+                </div>
+                <div class="space-y-2.5">
+                    <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Chương trình trải nghiệm</span>
+                        <p class="text-xs text-slate-200 font-semibold">Hoạt động trải nghiệm sáng tạo & Hướng nghiệp</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase block mb-1">Phong trào thi đua</span>
+                        <p class="text-xs text-slate-200 font-semibold">Tổ chức và quản lý các phong trào thi đua Đoàn trường</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="team-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
+            <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
+            <div class="px-6 pb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-violet-500/15 flex items-center justify-center text-violet-400">
+                            <i class="bi bi-people-fill text-lg"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white">Đội ngũ & Nhân sự</h4>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
+                </div>
+                <div class="space-y-2.5">
+                    <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i class="bi bi-journal-check text-violet-400 text-lg"></i>
+                            <span class="text-xs font-semibold text-slate-200">Quyết định 32 (QĐ32) về chức năng nhiệm vụ</span>
+                        </div>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i class="bi bi- Mortarboard-fill text-indigo-400 text-lg"></i>
+                            <span class="text-xs font-semibold text-slate-200">Bồi dưỡng thường xuyên (BDTX) cán bộ</span>
+                        </div>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i class="bi bi-folder-symlink-fill text-teal-400 text-lg"></i>
+                            <span class="text-xs font-semibold text-slate-200">Hồ sơ viên chức & Khen thưởng nội bộ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        const menuConfig = {
-            'chuyenmon': { title: 'Quản lý Chuyên môn', links: [{name:'Kế hoạch',url:'#'},{name:'Sáng kiến',url:'#'}] },
-            'baocao': { title: 'Báo cáo', links: [{name:'Báo cáo tuần',url:'#'},{name:'Báo cáo chuyên đề',url:'#'}] }
-        };
-        function openSubmenu(id) {
-            const data = menuConfig[id];
-            document.getElementById('modal-title').innerText = data.title;
-            const container = document.getElementById('modal-content');
-            container.innerHTML = '';
-            data.links.forEach(l => {
-                const a = document.createElement('a');
-                a.href = l.url; a.className = 'p-3 bg-gray-100 rounded text-center'; a.innerText = l.name;
-                container.appendChild(a);
-            });
-            document.getElementById('submenu-modal').classList.remove('hidden');
+        let currentModalId = null;
+
+        function openModal(modalId) {
+            currentModalId = modalId;
+            const backdrop = document.getElementById('modal-backdrop');
+            const modal = document.getElementById(modalId);
+            
+            // Kích hoạt hiển thị nền mờ
+            backdrop.classList.remove('pointer-events-none');
+            backdrop.classList.add('opacity-100');
+            
+            // Trượt Bottom Sheet lên
+            modal.classList.remove('translate-y-full');
+            modal.classList.add('translate-y-0');
+            
+            // Ngăn chặn cuộn trang phía sau khi mở modal
+            document.body.style.overflow = 'hidden';
         }
-        function closeSubmenu() { document.getElementById('submenu-modal').classList.add('hidden'); }
+
+        function closeModal() {
+            if (!currentModalId) return;
+            const backdrop = document.getElementById('modal-backdrop');
+            const modal = document.getElementById(currentModalId);
+            
+            // Đóng nền mờ
+            backdrop.classList.add('pointer-events-none');
+            backdrop.classList.remove('opacity-100');
+            
+            // Trượt Bottom Sheet xuống ẩn đi
+            modal.classList.remove('translate-y-0');
+            modal.classList.add('translate-y-full');
+            
+            // Cho phép cuộn trang trở lại
+            document.body.style.overflow = 'auto';
+            currentModalId = null;
+        }
+
+        // Đóng khi nhấp ngoài vùng Bottom Sheet
+        document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+
+        // Hỗ trợ đóng nhanh bằng phím bấm vuốt xuống trên thiết bị di động
+        let touchStartY = 0;
+        let touchEndY = 0;
+        
+        document.querySelectorAll('[id$="-modal"]').forEach(modal => {
+            modal.addEventListener('touchstart', e => {
+                touchStartY = e.changedTouches.screenY;
+            }, { passive: true });
+
+            modal.addEventListener('touchend', e => {
+                touchEndY = e.changedTouches.screenY;
+                // Nếu vuốt xuống hơn 80px thì đóng modal
+                if (touchEndY - touchStartY > 80 && modal.scrollTop === 0) {
+                    closeModal();
+                }
+            }, { passive: true });
+        });
     </script>
 </body>
 </html>
