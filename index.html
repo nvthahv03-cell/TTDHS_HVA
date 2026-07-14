@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi" class="h-full scroll-smooth">
 <head>
+    <script>
+    // Kiểm tra xem đã đăng nhập chưa (cơ bản)
+    if (!sessionStorage.getItem('isLoggedIn')) {
+        window.location.href = 'login.html';
+    }
+</script>
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
