@@ -7,230 +7,162 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            content: [],
             theme: {
                 extend: {
                     colors: {
                         brand: {
-                            deep: '#070A13',
+                            deep: '#0A0F1C',
                             teal: '#0D9488',
-                            glow: '#2DD4BF',
-                            accent: '#22D3EE'
+                            glow: '#22D3EE',
+                            accent: '#67E8F9'
                         }
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
     <style>
-        body { 
-            font-family: 'Inter', sans-serif; 
-            -webkit-tap-highlight-color: transparent;
-        }
+        body { font-family: 'Inter', sans-serif; }
         
-        .card {
+        .menu-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 
-                       0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-
-        .modal-fixed {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 60;
-            background: #070A13;
-            border-top: 1px solid rgba(45, 212, 191, 0.2);
-            border-radius: 24px 24px 0 0;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-            max-height: 85vh;
-            overflow-y: auto;
+        .menu-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
         }
         
-        .modal-active {
-            transform: translateY(0);
+        .modal-fixed {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 60;
+            background: #0A0F1C;
+            border-top: 1px solid rgba(34, 211, 238, 0.3);
+            border-radius: 28px 28px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
         }
-
-        .nav-dot {
-            width: 6px;
-            height: 6px;
-            background: #2DD4BF;
-            border-radius: 50%;
-            animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-        }
+        .modal-active { transform: translateY(0); }
     </style>
 </head>
-<body class="h-full bg-brand-deep text-slate-100 overflow-x-hidden">
+<body class="h-full bg-[#0A0F1C] text-slate-100 overflow-x-hidden">
 
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-brand-deep/95 backdrop-blur-2xl border-b border-white/10">
-        <div class="px-5 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-x-3">
-                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-teal via-cyan-400 to-blue-500 p-1 flex items-center justify-center shadow-lg shadow-teal-500/30">
-                    <div class="w-full h-full bg-brand-deep rounded-xl flex items-center justify-center">
-                        <span class="font-bold text-2xl text-brand-glow tracking-tighter">HVA</span>
-                    </div>
+    <header class="fixed top-0 left-0 right-0 z-50 bg-[#0A0F1C]/95 backdrop-blur-2xl border-b border-white/10 px-5 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/50">
+                    <span class="text-2xl font-bold text-white">HVA</span>
                 </div>
                 <div>
-                    <h1 class="text-xs font-semibold text-teal-400 tracking-[2px] uppercase">TRUNG TÂM ĐIỀU HÀNH SỐ</h1>
-                    <p class="text-lg font-bold text-white tracking-tight">TTDHS_HVA</p>
+                    <p class="text-xs font-medium text-cyan-400 tracking-widest">TRUNG TÂM ĐIỀU HÀNH SỐ</p>
+                    <p class="text-xl font-bold text-white -mt-1">TTDHS_HVA</p>
                 </div>
             </div>
             
-            <div class="flex items-center gap-x-4">
-                <div class="w-9 h-9 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10">
-                    <i class="bi bi-bell text-xl"></i>
-                </div>
-                <div class="flex items-center gap-x-2">
+            <div class="flex items-center gap-4">
+                <button class="w-10 h-10 flex items-center justify-center text-2xl text-slate-300">
+                    <i class="bi bi-bell"></i>
+                </button>
+                <div class="flex items-center gap-3">
                     <div class="text-right">
-                        <p class="text-sm font-medium">GV. Minh Quân</p>
-                        <p class="text-[10px] text-slate-400">Quản trị viên</p>
+                        <p class="font-medium text-sm">GV. Minh Quân</p>
+                        <p class="text-xs text-slate-400">Quản trị viên</p>
                     </div>
-                    <div class="w-8 h-8 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-2xl flex items-center justify-center text-sm font-bold">MQ</div>
+                    <div class="w-9 h-9 bg-purple-600 rounded-2xl flex items-center justify-center text-sm font-bold">MQ</div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="pt-20 pb-24 px-5 min-h-screen">
+    <main class="pt-20 pb-28 px-5">
         <!-- Welcome -->
         <div class="mb-8">
-            <h2 class="text-2xl font-bold text-white">Chào buổi sáng, Thầy/Cô!</h2>
-            <p class="text-slate-400">Hôm nay là <span class="text-brand-glow font-medium">Thứ Sáu, 17/07/2026</span></p>
+            <h1 class="text-2xl font-semibold">Chào buổi sáng, Thầy/Cô!</h1>
+            <p class="text-slate-400">Hôm nay là <span class="text-cyan-400">Thứ Sáu, 17/07/2026</span></p>
         </div>
 
-        <!-- Quick Stats -->
+        <!-- Stats -->
         <div class="grid grid-cols-3 gap-3 mb-8">
-            <div class="bg-white/5 rounded-3xl p-4 border border-white/10">
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-4 text-center">
                 <p class="text-xs text-slate-400">Văn bản mới</p>
                 <p class="text-3xl font-bold text-white mt-1">12</p>
             </div>
-            <div class="bg-white/5 rounded-3xl p-4 border border-white/10">
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-4 text-center">
                 <p class="text-xs text-slate-400">Sự kiện</p>
-                <p class="text-3xl font-bold text-brand-glow mt-1">7</p>
+                <p class="text-3xl font-bold text-cyan-400 mt-1">7</p>
             </div>
-            <div class="bg-white/5 rounded-3xl p-4 border border-white/10">
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-4 text-center">
                 <p class="text-xs text-slate-400">Hoàn thành</p>
-                <p class="text-3xl font-bold text-teal-400 mt-1">94%</p>
+                <p class="text-3xl font-bold text-emerald-400 mt-1">94%</p>
             </div>
         </div>
 
-        <!-- Menu Grid -->
+        <!-- Menu -->
         <div class="grid grid-cols-2 gap-4">
-            <div onclick="openModal('document-modal')" class="card group p-6 rounded-3xl bg-gradient-to-br from-white/5 to-white/5 border border-white/10 hover:border-brand-glow cursor-pointer">
-                <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
-                    📄
-                </div>
-                <h3 class="font-bold text-lg">Văn bản & Biểu mẫu</h3>
-                <p class="text-slate-400 text-sm mt-1">Quản lý văn bản, công văn, biểu mẫu</p>
+            <div onclick="openModal('document-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
+                <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">📄</div>
+                <h3 class="font-semibold text-lg leading-tight">Văn bản &amp; Biểu mẫu</h3>
+                <p class="text-sm text-slate-400 mt-1 line-clamp-2">Quản lý văn bản, công văn, biểu mẫu</p>
             </div>
 
-            <div onclick="openModal('academic-modal')" class="card group p-6 rounded-3xl bg-gradient-to-br from-white/5 to-white/5 border border-white/10 hover:border-brand-glow cursor-pointer">
-                <div class="w-12 h-12 bg-teal-500/10 text-teal-400 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
-                    📚
-                </div>
-                <h3 class="font-bold text-lg">Chuyên môn</h3>
-                <p class="text-slate-400 text-sm mt-1">Kế hoạch dạy học, chuyên đề</p>
+            <div onclick="openModal('academic-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
+                <div class="w-14 h-14 bg-teal-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">📚</div>
+                <h3 class="font-semibold text-lg leading-tight">Chuyên môn</h3>
+                <p class="text-sm text-slate-400 mt-1 line-clamp-2">Kế hoạch dạy học, chuyên đề</p>
             </div>
 
-            <div onclick="openModal('competition-modal')" class="card group p-6 rounded-3xl bg-gradient-to-br from-white/5 to-white/5 border border-white/10 hover:border-brand-glow cursor-pointer">
-                <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
-                    🏆
-                </div>
-                <h3 class="font-bold text-lg">Thi đua - Khen thưởng</h3>
-                <p class="text-slate-400 text-sm mt-1">Phong trào thi đua</p>
+            <div onclick="openModal('competition-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
+                <div class="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">🏆</div>
+                <h3 class="font-semibold text-lg leading-tight">Thi đua - Khen thưởng</h3>
+                <p class="text-sm text-slate-400 mt-1 line-clamp-2">Phong trào thi đua</p>
             </div>
 
-            <div onclick="openModal('digital-modal')" class="card group p-6 rounded-3xl bg-gradient-to-br from-white/5 to-white/5 border border-white/10 hover:border-brand-glow cursor-pointer">
-                <div class="w-12 h-12 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
-                    💻
-                </div>
-                <h3 class="font-bold text-lg">Chuyển đổi số</h3>
-                <p class="text-slate-400 text-sm mt-1">Dữ liệu số, nền tảng số</p>
+            <div onclick="openModal('digital-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
+                <div class="w-14 h-14 bg-sky-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">💻</div>
+                <h3 class="font-semibold text-lg leading-tight">Chuyển đổi số</h3>
+                <p class="text-sm text-slate-400 mt-1 line-clamp-2">Dữ liệu số, nền tảng số</p>
             </div>
 
-            <div onclick="openModal('quality-modal')" class="card group p-6 rounded-3xl bg-gradient-to-br from-white/5 to-white/5 border border-white/10 hover:border-brand-glow cursor-pointer">
-                <div class="w-12 h-12 bg-rose-500/10 text-rose-400 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
-                    ✅
-                </div>
-                <h3 class="font-bold text-lg">Đảm bảo chất lượng</h3>
-                <p class="text-slate-400 text-sm mt-1">Kiểm định, tự đánh giá</p>
+            <div onclick="openModal('quality-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
+                <div class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">✅</div>
+                <h3 class="font-semibold text-lg leading-tight">Đảm bảo chất lượng</h3>
+                <p class="text-sm text-slate-400 mt-1 line-clamp-2">Kiểm định, tự đánh giá</p>
             </div>
 
-            <div onclick="openModal('youth-modal')" class="card group p-6 rounded-3xl bg-gradient-to-br from-white/5 to-white/5 border border-white/10 hover:border-brand-glow cursor-pointer">
-                <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
-                    🚩
-                </div>
-                <h3 class="font-bold text-lg">Đoàn Thanh niên</h3>
-                <p class="text-slate-400 text-sm mt-1">Hoạt động Đoàn - Đội</p>
-            </div>
-
-            <div onclick="openModal('report-modal')" class="card group p-6 rounded-3xl bg-gradient-to-br from-white/5 to-white/5 border border-white/10 hover:border-brand-glow cursor-pointer">
-                <div class="w-12 h-12 bg-orange-500/10 text-orange-400 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
-                    📊
-                </div>
-                <h3 class="font-bold text-lg">Báo cáo - Thống kê</h3>
-                <p class="text-slate-400 text-sm mt-1">Báo cáo định kỳ</p>
-            </div>
-
-            <div onclick="openModal('team-modal')" class="card group p-6 rounded-3xl bg-gradient-to-br from-white/5 to-white/5 border border-white/10 hover:border-brand-glow cursor-pointer">
-                <div class="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-2xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
-                    👥
-                </div>
-                <h3 class="font-bold text-lg">Đội ngũ & Nhân sự</h3>
-                <p class="text-slate-400 text-sm mt-1">Quản lý cán bộ, giáo viên</p>
+            <div onclick="openModal('youth-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
+                <div class="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">🚩</div>
+                <h3 class="font-semibold text-lg leading-tight">Đoàn Thanh niên</h3>
+                <p class="text-sm text-slate-400 mt-1 line-clamp-2">Hoạt động Đoàn - Đội</p>
             </div>
         </div>
     </main>
 
-    <!-- Modal Backdrop -->
-    <div id="modal-backdrop" onclick="closeModal()" 
-         class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <!-- Backdrop & Modal -->
+    <div id="modal-backdrop" onclick="closeModal()" class="fixed inset-0 bg-black/70 backdrop-blur-xl opacity-0 pointer-events-none transition-all z-50"></div>
 
-    <!-- Modals -->
     <div id="document-modal" class="modal-fixed">
         <div class="p-6">
-            <div class="flex justify-between items-center mb-6 sticky top-0 bg-brand-deep pb-4 border-b border-white/10">
-                <h2 class="text-2xl font-bold">Văn bản & Biểu mẫu</h2>
-                <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center text-3xl leading-none text-slate-400 hover:text-white">×</button>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold">Văn bản & Biểu mẫu</h2>
+                <button onclick="closeModal()" class="text-4xl text-slate-400 leading-none">×</button>
             </div>
-            <p class="text-slate-400">Nội dung chi tiết về Văn bản sẽ được hiển thị tại đây...</p>
+            <p class="text-slate-400">Nội dung chi tiết sẽ hiển thị tại đây...</p>
         </div>
     </div>
 
-    <!-- Các modal khác có thể copy-paste tương tự và thay id + nội dung -->
-    <!-- Ví dụ: academic-modal, competition-modal, ... -->
-
     <script>
         function openModal(id) {
-            const modal = document.getElementById(id);
-            const backdrop = document.getElementById('modal-backdrop');
-            
-            if (modal) {
-                modal.classList.add('modal-active');
-            }
-            backdrop.classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById(id).classList.add('modal-active');
+            document.getElementById('modal-backdrop').classList.remove('opacity-0', 'pointer-events-none');
         }
-
         function closeModal() {
-            document.querySelectorAll('.modal-fixed').forEach(modal => {
-                modal.classList.remove('modal-active');
-            });
+            document.querySelectorAll('.modal-fixed').forEach(m => m.classList.remove('modal-active'));
             document.getElementById('modal-backdrop').classList.add('opacity-0', 'pointer-events-none');
         }
-
-        // Đóng modal khi nhấn ESC
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape") closeModal();
-        });
     </script>
 </body>
 </html>
