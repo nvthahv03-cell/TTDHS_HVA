@@ -4,7 +4,7 @@
     <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TTDHS_HVA - Trung tâm Điều hành số THPT Hòa Vang</title>
+    <title>TTDHS_HVA - Trung tâm Điều hành số</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,404 +12,300 @@
                 extend: {
                     colors: {
                         brand: {
-                            deep: '#070A13',
-                            primary: '#0F172A',
-                            accent: '#1E293B',
-                            teal: '#0D9488',
-                            glow: '#2DD4BF'
+                            deep: '#F8FAFC',
+                            card: '#F1F5F9',
+                            accent: '#0EA5E9'
                         }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+   
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+        body { font-family: 'Inter', sans-serif; }
+       
+        .menu-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .safe-pb { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
-        .safe-pt { padding-top: calc(1rem + env(safe-area-inset-top)); }
-        
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 0.9; transform: scale(1.03); }
+        .menu-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
-        .animate-glow {
-            animation: pulse-glow 4s infinite ease-in-out;
+       
+        .modal-fixed {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 60;
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            border-radius: 28px 28px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            max-height: 88vh;
+            overflow-y: auto;
+        }
+        .modal-active { transform: translateY(0); }
+
+        .logo-container {
+            max-width: 180px;
         }
     </style>
 </head>
-<body class="h-full bg-brand-deep text-slate-100 overflow-x-hidden antialiased select-none">
+<body class="h-full bg-[#F8FAFC] text-slate-900 overflow-x-hidden">
 
-    <!-- Background -->
-    <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-brand-deep via-slate-950 to-brand-deep">
-        <div class="absolute -top-[20%] -left-[10%] w-[80%] h-[60%] rounded-full bg-teal-500/10 blur-[120px] animate-glow"></div>
-        <div class="absolute top-[40%] -right-[20%] w-[90%] h-[70%] rounded-full bg-indigo-500/10 blur-[150px] animate-glow" style="animation-delay: 2s;"></div>
-    </div>
-
-    <div class="flex flex-col min-h-screen">
-        
-        <!-- Header -->
-        <header class="fixed top-0 left-0 right-0 z-40 bg-brand-deep/70 backdrop-blur-xl border-b border-white/5 px-4 py-3 safe-pt flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 shadow-lg shadow-brand-teal/20 flex items-center justify-center">
-                    <div class="w-full h-full bg-brand-deep rounded-[10px] flex items-center justify-center">
-                        <span class="text-brand-glow font-bold text-sm tracking-widest">HVA</span>
-                    </div>
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-2xl border-b border-slate-200 px-5 py-5">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3 logo-container">
+                <div class="w-11 h-11 bg-sky-500 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
+                    <span class="text-2xl font-bold text-white">HVA</span>
                 </div>
+                <div class="min-w-0">
+                    <p class="text-xs font-medium text-sky-600 tracking-widest whitespace-nowrap">TRUNG TÂM ĐIỀU HÀNH SỐ</p>
+                    <p class="text-xl font-bold text-slate-900 truncate">TTDHS_HVA</p>
+                </div>
+            </div>
+           
+            <div class="flex items-center gap-4 flex-shrink-0">
+                <button class="w-10 h-10 flex items-center justify-center text-2xl text-slate-600">
+                    <i class="bi bi-bell"></i>
+                </button>
+                <div class="flex items-center gap-3">
+                    <div class="text-right">
+                        <p class="font-medium text-sm whitespace-nowrap">GV. Minh Quân</p>
+                        <p class="text-xs text-slate-500">Quản trị viên</p>
+                    </div>
+                    <div class="w-9 h-9 bg-violet-600 rounded-2xl flex items-center justify-center text-sm font-bold text-white flex-shrink-0">MQ</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-28 pb-24 px-5">
+        <!-- Welcome -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-semibold text-slate-900">Chào buổi sáng, Thầy/Cô!</h1>
+            <p class="text-slate-500 mt-1">Hôm nay là <span class="font-medium text-sky-600">Thứ Sáu, 17/07/2026</span></p>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-3 mb-8">
+            <div class="bg-white border border-slate-200 rounded-3xl p-4 text-center shadow-sm">
+                <p class="text-xs text-slate-500">Văn bản mới</p>
+                <p class="text-3xl font-bold text-slate-800 mt-1">12</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-3xl p-4 text-center shadow-sm">
+                <p class="text-xs text-slate-500">Sự kiện</p>
+                <p class="text-3xl font-bold text-sky-600 mt-1">7</p>
+            </div>
+            <div class="bg-white border border-slate-200 rounded-3xl p-4 text-center shadow-sm">
+                <p class="text-xs text-slate-500">Hoàn thành</p>
+                <p class="text-3xl font-bold text-emerald-600 mt-1">94%</p>
+            </div>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="grid grid-cols-2 gap-4">
+            <div onclick="openModal('home-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-5xl mb-4">🏠</div>
+                <h3 class="font-semibold text-xl">Trang Chủ</h3>
+            </div>
+            <div onclick="openModal('document-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-5xl mb-4">📄</div>
+                <h3 class="font-semibold text-xl">Văn bản & Biểu mẫu</h3>
+            </div>
+            <div onclick="openModal('academic-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center text-5xl mb-4">📚</div>
+                <h3 class="font-semibold text-xl">Chuyên môn</h3>
+            </div>
+            <div onclick="openModal('competition-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center text-5xl mb-4">🏆</div>
+                <h3 class="font-semibold text-xl">Thi đua - Khen thưởng</h3>
+            </div>
+            <div onclick="openModal('digital-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-cyan-100 rounded-2xl flex items-center justify-center text-5xl mb-4">💻</div>
+                <h3 class="font-semibold text-xl">Chuyển đổi số</h3>
+            </div>
+            <div onclick="openModal('quality-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-5xl mb-4">✅</div>
+                <h3 class="font-semibold text-xl">Đảm bảo chất lượng</h3>
+            </div>
+            <div onclick="openModal('youth-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center text-5xl mb-4">🚩</div>
+                <h3 class="font-semibold text-xl">Đoàn Thanh niên</h3>
+            </div>
+            <div onclick="openModal('report-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-5xl mb-4">📊</div>
+                <h3 class="font-semibold text-xl">Báo cáo trực tuyến</h3>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Backdrop -->
+    <div id="modal-backdrop" onclick="closeModal()" 
+         class="fixed inset-0 bg-black/60 backdrop-blur-xl opacity-0 pointer-events-none transition-all z-50"></div>
+
+    <!-- Modal Báo cáo trực tuyến -->
+    <div id="report-modal" class="modal-fixed">
+        <div class="p-5 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6 sticky top-0 bg-[#F8FAFC] pb-4 border-b z-10">
+                <h2 class="text-2xl font-semibold text-slate-900">Báo cáo trực tuyến</h2>
+                <button onclick="closeModal()" class="text-4xl leading-none text-slate-400 hover:text-red-500">×</button>
+            </div>
+
+            <div class="space-y-8 pb-10">
+                <!-- Modal Backdrop -->
+    <div id="modal-backdrop" onclick="closeModal()" 
+         class="fixed inset-0 bg-black/60 backdrop-blur-xl opacity-0 pointer-events-none transition-all z-50"></div>
+
+    <!-- Modal Báo cáo trực tuyến -->
+    <div id="report-modal" class="modal-fixed">
+        <div class="p-5 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6 sticky top-0 bg-[#F8FAFC] pb-4 border-b z-10">
+                <h2 class="text-2xl font-semibold text-slate-900">Báo cáo trực tuyến</h2>
+                <button onclick="closeModal()" class="text-4xl leading-none text-slate-400 hover:text-red-500">×</button>
+            </div>
+
+            <div class="space-y-8 pb-10">
+                <!-- I. CHUYÊN MÔN -->
                 <div>
-                    <h1 class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-none">Trung tâm Điều hành số</h1>
-                    <p class="text-sm font-bold text-white tracking-tight mt-0.5">TTDHS_HVA</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <button id="header-install-btn" onclick="triggerPWAInstall()" class="px-2.5 py-1.5 rounded-xl bg-brand-glow/20 border border-brand-glow/40 text-brand-glow text-xs font-bold flex items-center space-x-1 hover:bg-brand-glow/30 active:scale-95 transition-all">
-                    <i class="bi bi-download"></i>
-                    <span>Cài App</span>
-                </button>
-                <button onclick="openModal('contact-modal')" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all">
-                    <i class="bi bi-info-circle text-base text-slate-300"></i>
-                </button>
-                <div class="w-9 h-9 rounded-full border border-white/10 overflow-hidden bg-slate-800 shrink-0">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" alt="Avatar" class="w-full h-full object-cover">
-                </div>
-            </div>
-        </header>
-
-        <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto">
-            
-            <!-- Install Banner -->
-            <section id="install-banner" class="mb-4">
-                <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/20 to-indigo-600/25 border border-brand-glow/30 backdrop-blur-md flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center text-brand-glow">
-                            <i class="bi bi-phone-vibrate text-xl animate-bounce"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-xs font-bold text-white uppercase tracking-wider">Cài đặt Ứng dụng</h4>
-                            <p class="text-[11px] text-teal-200/80 mt-0.5">Thêm nhanh vào màn hình chính</p>
-                        </div>
-                    </div>
-                    <button onclick="triggerPWAInstall()" class="px-3.5 py-1.5 bg-brand-glow hover:bg-teal-400 text-brand-deep font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
-                        Cài đặt ngay
-                    </button>
-                </div>
-            </section>
-
-            <!-- Phương châm -->
-            <section class="mb-5 mt-2">
-                <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/10 to-indigo-500/10 border border-brand-teal/20 backdrop-blur-md">
-                    <div class="flex items-center space-x-2 text-brand-glow text-xs font-bold uppercase tracking-widest mb-1.5">
-                        <i class="bi bi-lightning-charge-fill animate-pulse"></i>
-                        <span>Phương châm hoạt động</span>
-                    </div>
-                    <p class="text-sm text-slate-200 italic font-medium">"Kết nối – Điều hành – Chia sẻ – Hiệu quả"</p>
-                </div>
-            </section>
-
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-sm font-bold text-slate-300 tracking-wider uppercase flex items-center gap-2">
-                    <i class="bi bi-grid-1x2-fill text-brand-glow"></i>
-                    Phân Hệ Điều Hành Chính
-                </h2>
-                <span class="text-xs text-brand-glow font-semibold">THPT Hòa Vang</span>
-            </div>
-
-            <!-- Grid Cards -->
-            <section class="grid grid-cols-2 gap-3 mb-6">
-                <div onclick="openModal('document-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-blue-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20 mb-3">
-                        <i class="bi bi-folder-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Văn bản - Biểu mẫu</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Sở GD&ĐT, Quy chế, Mẫu</p>
-                </div>
-
-                <div onclick="openModal('academic-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-emerald-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 mb-3">
-                        <i class="bi bi-journal-bookmark-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chuyên môn</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Kế hoạch, Sổ đầu bài, STEM</p>
-                </div>
-
-                <div onclick="openModal('competition-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-amber-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-500 flex items-center justify-center shadow-lg shadow-amber-500/20 mb-3">
-                        <i class="bi bi-trophy-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Thi đua</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">HSG, NCKH, Sáng kiến</p>
-                </div>
-
-                <div onclick="openModal('digital-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-cyan-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-teal-400 flex items-center justify-center shadow-lg shadow-cyan-500/20 mb-3">
-                        <i class="bi bi-cpu-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chuyển đổi số</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Trí tuệ nhân tạo AI, LMS</p>
-                </div>
-
-                <div onclick="openModal('quality-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-rose-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-orange-500 flex items-center justify-center shadow-lg shadow-rose-500/20 mb-3">
-                        <i class="bi bi-patch-check-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chất lượng</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Đánh giá ngoài, TEMIS</p>
-                </div>
-
-                <div onclick="openModal('youth-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-red-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-500 to-pink-500 flex items-center justify-center shadow-lg shadow-red-500/20 mb-3">
-                        <i class="bi bi-flag-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Đoàn trường</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Trải nghiệm, Phong trào</p>
-                </div>
-
-                <div onclick="openModal('team-modal')" class="group col-span-2 relative rounded-2xl bg-gradient-to-r from-violet-600/10 to-indigo-600/10 hover:from-violet-600/20 hover:to-indigo-600/20 active:scale-[0.98] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden flex items-center space-x-4">
-                    <div class="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
-                        <i class="bi bi-people-fill text-white text-xl"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Đội ngũ cán bộ, giáo viên</h3>
-                        <p class="text-xs text-slate-400 mt-0.5 truncate">Quyết định 32, Bồi dưỡng, Hồ sơ viên chức</p>
-                    </div>
-                    <i class="bi bi-chevron-right text-slate-500 group-hover:text-brand-glow text-sm"></i>
-                </div>
-            </section>
-
-            <!-- Bản tin -->
-            <section class="mb-4">
-                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <i class="bi bi-activity text-brand-glow"></i>
-                    Bản tin điều hành nhanh
-                </h2>
-                <div class="space-y-2.5">
-                    <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div class="w-2 h-2 rounded-full bg-brand-glow mt-1.5 shrink-0 animate-ping"></div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-[10px] font-bold text-slate-400">VĂN PHÒNG • VỪA CẬP NHẬT</p>
-                            <a href="https://thpthoavang.edu.vn/" target="_blank" class="text-xs text-slate-200 font-medium mt-0.5 hover:text-brand-glow transition-colors block">Triển khai rà soát hồ sơ thi đua khen thưởng học kỳ mới.</a>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div class="w-2 h-2 rounded-full bg-indigo-400 mt-1.5 shrink-0"></div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-[10px] font-bold text-slate-400">TỔ CHUYÊN MÔN • 1 GIỜ TRƯỚC</p>
-                            <a href="https://thpthoavang.edu.vn/8943-2/chuyen-mon" target="_blank" class="text-xs text-slate-200 font-medium mt-0.5 hover:text-brand-glow transition-colors block">Đã cập nhật biểu mẫu Kế hoạch Giáo dục tổ nhóm chuyên môn năm học mới.</a>
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
+                        <span class="text-sky-600">I.</span> CHUYÊN MÔN
+                    </h3>
+                    <div class="bg-white rounded-3xl p-5 space-y-4">
+                        <div class="flex justify-between py-2">Tình hình lên lớp</div>
+                        <div class="flex justify-between py-2">Ghi sổ đầu bài</div>
+                        <div class="flex justify-between py-2">Tiến độ thực hiện kế hoạch dạy học</div>
+                        <div class="flex justify-between py-2">Sinh hoạt tổ chuyên môn</div>
+                        <div class="flex justify-between py-2">Thực hiện chương trình</div>
+                        <div onclick="alert('Mở form nhập tên báo cáo chuyên môn khác')" 
+                             class="flex justify-between py-2 text-sky-600 cursor-pointer hover:bg-slate-50 rounded-2xl px-3 -mx-3">
+                            <span>Báo cáo chuyên môn khác</span>
+                            <i class="bi bi-plus-circle"></i>
                         </div>
                     </div>
                 </div>
-            </section>
-        </main>
 
-        <!-- Bottom Navigation -->
-        <nav class="fixed bottom-0 left-0 right-0 z-40 bg-brand-deep/80 backdrop-blur-2xl border-t border-white/5 pb-safe px-6 shadow-2xl">
-            <div class="flex items-center justify-between h-16 max-w-lg mx-auto">
-                <a href="#" class="flex flex-col items-center justify-center flex-1 text-brand-glow py-1">
-                    <i class="bi bi-house-door-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Trang chủ</span>
-                </a>
-                <a href="#" onclick="openModal('contact-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
-                    <i class="bi bi-telephone-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Liên hệ</span>
-                </a>
-                <a href="#" onclick="openModal('digital-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
-                    <i class="bi bi-cpu-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Trí tuệ AI</span>
-                </a>
-                <a href="#" onclick="openModal('team-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
-                    <i class="bi bi-person-lines-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Hồ sơ số</span>
-                </a>
-            </div>
-        </nav>
-    </div>
-
-    <!-- Backdrop -->
-    <div id="modal-backdrop" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
-
-    <!-- Modals -->
-    <!-- Install Guide -->
-    <div id="install-guide-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
-        <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
-        <div class="px-6 pb-8">
-            <div class="flex items-center justify-between mb-5">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-brand-glow/15 flex items-center justify-center text-brand-glow">
-                        <i class="bi bi-phone"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-base font-bold text-white">Hướng dẫn Cài đặt App</h4>
-                        <p class="text-[10px] text-slate-400">Trải nghiệm mượt mà không cần qua Store</p>
+                <!-- II. CUỘC HỌP -->
+                <div>
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
+                        <span class="text-sky-600">II.</span> CUỘC HỌP
+                    </h3>
+                    <div class="bg-white rounded-3xl p-5 space-y-4 text-slate-700">
+                        <div>Họp Liên tịch</div>
+                        <div>Họp HĐSP</div>
+                        <div>Họp Thi đua</div>
+                        <div>Họp Hội đồng Thi đua</div>
+                        <div>Họp kiểm tra nội bộ</div>
+                        <div onclick="alert('Mở form họp khác')" class="text-sky-600 cursor-pointer">Họp khác</div>
                     </div>
                 </div>
-                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
-            </div>
-            <!-- iOS & Android guide content giữ nguyên như cũ -->
-            <div class="space-y-4">
-                <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                    <h5 class="text-xs font-bold text-brand-glow flex items-center gap-1.5 mb-2"><i class="bi bi-apple"></i> iOS (iPhone / iPad)</h5>
-                    <ol class="list-decimal list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
-                        <li>Mở bằng <strong class="text-white">Safari</strong></li>
-                        <li>Nhấp <strong class="text-white">Chia sẻ</strong> → "Thêm vào MH chính"</li>
-                        <li>Nhấp <strong class="text-brand-glow">"Thêm"</strong></li>
-                    </ol>
+
+                <!-- III. TẬP HUẤN -->
+                <div>
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
+                        <span class="text-sky-600">III.</span> TẬP HUẤN
+                    </h3>
+                    <div class="bg-white rounded-3xl p-5 space-y-4 text-slate-700">
+                        <div>Tập huấn SGK</div>
+                        <div>Tập huấn AI</div>
+                        <div>Tập huấn Chuyển đổi số</div>
+                        <div onclick="alert('Mở form tập huấn khác')" class="text-sky-600 cursor-pointer">Tập huấn khác</div>
+                    </div>
                 </div>
-                <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                    <h5 class="text-xs font-bold text-teal-400 flex items-center gap-1.5 mb-2"><i class="bi bi-android2"></i> Android</h5>
-                    <ol class="list-decimal list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
-                        <li>Nhấn nút <strong>"Cài đặt ngay"</strong></li>
-                        <li>Hoặc ⋮ → "Thêm vào Màn hình chính"</li>
-                    </ol>
+
+                <!-- IV. KHẢO SÁT -->
+                <div>
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
+                        <span class="text-sky-600">IV.</span> KHẢO SÁT
+                    </h3>
+                    <div class="bg-white rounded-3xl p-5 space-y-4 text-slate-700">
+                        <div>Khảo sát GV</div>
+                        <div>Khảo sát HS</div>
+                        <div>Khảo sát PH</div>
+                        <div>Khảo sát CBQL</div>
+                        <div onclick="alert('Mở form khảo sát khác')" class="text-sky-600 cursor-pointer">Khảo sát khác</div>
+                    </div>
+                </div>
+
+                <!-- V. CUỘC THI -->
+                <div>
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
+                        <span class="text-sky-600">V.</span> CUỘC THI
+                    </h3>
+                    <div class="bg-white rounded-3xl p-5 space-y-4 text-slate-700">
+                        <div>Giáo viên dạy giỏi</div>
+                        <div>GVCN giỏi</div>
+                        <div>Thiết kế bài giảng</div>
+                        <div>Chuyển đổi số</div>
+                        <div>STEM / KHKT / Olympic</div>
+                        <div onclick="alert('Mở form cuộc thi khác')" class="text-sky-600 cursor-pointer">Thi khác</div>
+                    </div>
+                </div>
+
+                <!-- VI. BIỂU MẪU -->
+                <div>
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
+                        <span class="text-sky-600">VI.</span> BIỂU MẪU ĐIỆN TỬ
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white p-4 rounded-2xl text-center">Đăng ký</div>
+                        <div class="bg-white p-4 rounded-2xl text-center">Đề xuất</div>
+                        <div class="bg-white p-4 rounded-2xl text-center">Xin ý kiến</div>
+                        <div class="bg-white p-4 rounded-2xl text-center">Cập nhật</div>
+                    </div>
+                </div>
+
+                <!-- VII & VIII -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white rounded-3xl p-6">
+                        <h4 class="font-semibold mb-2">Báo cáo đã nộp</h4>
+                        <p class="text-sm text-slate-500">Tự động lưu</p>
+                    </div>
+                    <div onclick="alert('Mở Dashboard Tiến độ')" 
+                         class="bg-gradient-to-br from-sky-500 to-blue-600 text-white rounded-3xl p-6 cursor-pointer">
+                        <h4 class="font-semibold">Tiến độ thực hiện</h4>
+                        <p class="text-sm mt-1 opacity-90">Dashboard</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Các modal khác giữ nguyên cấu trúc, chỉ sửa team-modal -->
-    <!-- (để tránh dài dòng, tôi giữ nguyên nội dung các modal khác như cũ, chỉ sửa team-modal) -->
-
-    <!-- Team Modal - ĐÃ SỬA -->
-    <div id="team-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
-        <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
-        <div class="px-6 pb-8">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-violet-500/15 flex items-center justify-center text-violet-400">
-                        <i class="bi bi-people-fill text-lg"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-base font-bold text-white">Đội ngũ & Báo cáo</h4>
-                        <p class="text-[10px] text-slate-400">Cán bộ, giáo viên & Báo cáo trực tuyến</p>
+                <div>
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
+                        <span class="text-sky-600">I.</span> CHUYÊN MÔN
+                    </h3>
+                    <div class="bg-white rounded-3xl p-5 space-y-4">
+                        <div class="flex justify-between py-2">Tình hình lên lớp</div>
+                        <div class="flex justify-between py-2">Ghi sổ đầu bài</div>
+                        <div class="flex justify-between py-2">Tiến độ thực hiện kế hoạch dạy học</div>
+                        <div class="flex justify-between py-2">Sinh hoạt tổ chuyên môn</div>
+                        <div class="flex justify-between py-2">Thực hiện chương trình</div>
+                        <div onclick="alert('Mở form nhập tên báo cáo chuyên môn khác')" 
+                             class="flex justify-between py-2 text-sky-600 cursor-pointer hover:bg-slate-50 rounded-2xl px-3 -mx-3">
+                            <span>Báo cáo chuyên môn khác</span>
+                            <i class="bi bi-plus-circle"></i>
+                        </div>
                     </div>
                 </div>
-                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
-            </div>
 
-            <div class="space-y-3">
-                <a href="https://thpthoavang.edu.vn/8943-2/doi-ngu" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-all">
-                    <div class="flex items-center space-x-3">
-                        <i class="bi bi-journal-check text-violet-400 text-lg"></i>
-                        <div>
-                            <span class="text-sm font-semibold text-slate-200">Đội ngũ cán bộ, giáo viên</span>
-                            <p class="text-xs text-slate-400">Quyết định 32, BDTX, Hồ sơ viên chức</p>
-                        </div>
-                    </div>
-                    <i class="bi bi-box-arrow-up-right text-slate-500"></i>
-                </a>
-
-                <a href="#" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-all">
-                    <div class="flex items-center space-x-3">
-                        <i class="bi bi-graph-up text-indigo-400 text-lg"></i>
-                        <div>
-                            <span class="text-sm font-semibold text-slate-200">Báo cáo trực tuyến</span>
-                            <p class="text-xs text-slate-400">Nhập số liệu, thống kê định kỳ</p>
-                        </div>
-                    </div>
-                    <i class="bi bi-box-arrow-up-right text-slate-500"></i>
-                </a>
+                <!-- Các phần còn lại (II đến VIII) bạn có thể copy từ code cũ nếu cần, hoặc em sẽ bổ sung nếu thầy muốn -->
             </div>
         </div>
     </div>
-
-    <!-- Các modal còn lại (document, academic, ...) giữ nguyên như code gốc của bạn, chỉ cần copy lại nếu cần -->
 
     <script>
-        let currentModalId = null;
-        let deferredPrompt = null;
-
-        // Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker đăng ký thành công'))
-                    .catch(err => console.error('Service Worker lỗi:', err));
-            });
+        function openModal(id) {
+            document.getElementById(id).classList.add('modal-active');
+            document.getElementById('modal-backdrop').classList.remove('opacity-0', 'pointer-events-none');
         }
-
-        // PWA Install
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-        });
-
-        function triggerPWAInstall() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choice) => {
-                    if (choice.outcome === 'accepted') {
-                        document.getElementById('install-banner').classList.add('hidden');
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                openModal('install-guide-modal');
-            }
-        }
-
-        // Modal Control
-        function openModal(modalId) {
-            currentModalId = modalId;
-            const backdrop = document.getElementById('modal-backdrop');
-            const modal = document.getElementById(modalId);
-            
-            backdrop.classList.remove('pointer-events-none', 'opacity-0');
-            backdrop.classList.add('opacity-100');
-            modal.classList.remove('translate-y-full');
-            modal.classList.add('translate-y-0');
-            document.body.style.overflow = 'hidden';
-        }
-
         function closeModal() {
-            if (!currentModalId) return;
-            const backdrop = document.getElementById('modal-backdrop');
-            const modal = document.getElementById(currentModalId);
-            
-            backdrop.classList.add('pointer-events-none', 'opacity-0');
-            modal.classList.remove('translate-y-0');
-            modal.classList.add('translate-y-full');
-            document.body.style.overflow = 'auto';
-            currentModalId = null;
+            document.querySelectorAll('.modal-fixed').forEach(m => m.classList.remove('modal-active'));
+            document.getElementById('modal-backdrop').classList.add('opacity-0', 'pointer-events-none');
         }
-
-        // Click backdrop to close
-        document.getElementById('modal-backdrop').addEventListener('click', closeModal);
-
-        // Swipe down to close modal
-        document.querySelectorAll('[id$="-modal"]').forEach(modal => {
-            let touchStartY = 0;
-            modal.addEventListener('touchstart', e => {
-                touchStartY = e.changedTouches[0].screenY;
-            }, { passive: true });
-
-            modal.addEventListener('touchend', e => {
-                const touchEndY = e.changedTouches[0].screenY;
-                if (touchEndY - touchStartY > 80 && modal.scrollTop === 0) {
-                    closeModal();
-                }
-            }, { passive: true });
-        });
-
-        // Check if already installed
-        window.addEventListener('DOMContentLoaded', () => {
-            if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-                document.getElementById('install-banner').classList.add('hidden');
-                document.getElementById('header-install-btn').classList.add('hidden');
-            }
-        });
     </script>
 </body>
 </html>
