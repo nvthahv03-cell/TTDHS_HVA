@@ -1,163 +1,85 @@
 <!DOCTYPE html>
-<html lang="vi" class="h-full scroll-smooth">
+<html lang="vi" class="h-full">
 <head>
-    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TTDHS_HVA - Trung tâm Điều hành số</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            deep: '#F8FAFC',
-                            card: '#F1F5F9',
-                            accent: '#0EA5E9'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    
     <style>
         body { font-family: 'Inter', sans-serif; }
-        
-        .menu-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .menu-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-        
-        .modal-fixed {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            z-index: 60;
-            background: #F8FAFC;
-            border-top: 1px solid #E2E8F0;
-            border-radius: 28px 28px 0 0;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-            max-height: 88vh;
-            overflow-y: auto;
+        .modal-fixed { 
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; 
+            background: #F8FAFC; border-top: 1px solid #E2E8F0; 
+            border-radius: 28px 28px 0 0; transform: translateY(100%); 
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); 
+            max-height: 85vh; overflow-y: auto;
         }
         .modal-active { transform: translateY(0); }
     </style>
 </head>
-<body class="h-full bg-[#F8FAFC] text-slate-900 overflow-x-hidden">
+<body class="bg-[#F8FAFC] pb-20">
 
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-2xl border-b border-slate-200 px-5 py-4">
+    <header class="sticky top-0 bg-white/90 backdrop-blur-xl border-b border-slate-200 px-5 py-4 z-40">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-11 h-11 bg-sky-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <span class="text-2xl font-bold text-white">HVA</span>
-                </div>
-                <div>
-                    <p class="text-xs font-medium text-sky-600 tracking-widest">TRUNG TÂM ĐIỀU HÀNH SỐ</p>
-                    <p class="text-xl font-bold">TTDHS_HVA</p>
-                </div>
+                <div class="w-10 h-10 bg-sky-600 rounded-xl flex items-center justify-center text-white font-bold">HVA</div>
+                <h1 class="font-bold text-lg">TTDHS_HVA</h1>
             </div>
-            
-            <div class="flex items-center gap-4">
-                <button class="w-10 h-10 flex items-center justify-center text-2xl text-slate-600">
-                    <i class="bi bi-bell"></i>
-                </button>
-                <div class="flex items-center gap-3">
-                    <div class="text-right">
-                        <p class="font-medium text-sm">GV. Minh Quân</p>
-                        <p class="text-xs text-slate-500">Quản trị viên</p>
-                    </div>
-                    <div class="w-9 h-9 bg-violet-600 rounded-2xl flex items-center justify-center text-sm font-bold text-white">MQ</div>
-                </div>
-            </div>
+            <button onclick="openModal('settings-modal')" class="text-2xl text-slate-600"><i class="bi bi-gear"></i></button>
         </div>
     </header>
 
-    <main class="pt-24 pb-24 px-5">
-        <!-- Welcome -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-semibold text-slate-900">Chào buổi sáng, Thầy/Cô!</h1>
-            <p class="text-slate-500 mt-1">Hôm nay là <span class="font-medium text-sky-600">Thứ Sáu, 17/07/2026</span></p>
-        </div>
-
-        <!-- Stats -->
-        <div class="grid grid-cols-3 gap-3 mb-8">
-            <div class="bg-white border border-slate-200 rounded-3xl p-4 text-center shadow-sm">
-                <p class="text-xs text-slate-500">Văn bản mới</p>
-                <p class="text-3xl font-bold text-slate-800 mt-1">12</p>
-            </div>
-            <div class="bg-white border border-slate-200 rounded-3xl p-4 text-center shadow-sm">
-                <p class="text-xs text-slate-500">Sự kiện</p>
-                <p class="text-3xl font-bold text-sky-600 mt-1">7</p>
-            </div>
-            <div class="bg-white border border-slate-200 rounded-3xl p-4 text-center shadow-sm">
-                <p class="text-xs text-slate-500">Hoàn thành</p>
-                <p class="text-3xl font-bold text-emerald-600 mt-1">94%</p>
-            </div>
-        </div>
-
-        <!-- Menu Grid -->
+    <!-- Main Content -->
+    <main class="p-5">
+        <h2 class="text-2xl font-semibold mb-6">Chào Thầy/Cô!</h2>
         <div class="grid grid-cols-2 gap-4">
-            <div onclick="openModal('home-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
-                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-5xl mb-4">🏠</div>
-                <h3 class="font-semibold text-xl">Trang Chủ</h3>
-            </div>
-
-            <div onclick="openModal('document-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
-                <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-5xl mb-4">📄</div>
-                <h3 class="font-semibold text-xl">Văn bản & Biểu mẫu</h3>
-            </div>
-
-            <div onclick="openModal('academic-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
-                <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center text-5xl mb-4">📚</div>
-                <h3 class="font-semibold text-xl">Chuyên môn</h3>
-            </div>
-
-            <div onclick="openModal('competition-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
-                <div class="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center text-5xl mb-4">🏆</div>
-                <h3 class="font-semibold text-xl">Thi đua - Khen thưởng</h3>
-            </div>
-
-            <div onclick="openModal('digital-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
-                <div class="w-16 h-16 bg-cyan-100 rounded-2xl flex items-center justify-center text-5xl mb-4">💻</div>
-                <h3 class="font-semibold text-xl">Chuyển đổi số</h3>
-            </div>
-
-            <div onclick="openModal('quality-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
-                <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-5xl mb-4">✅</div>
-                <h3 class="font-semibold text-xl">Đảm bảo chất lượng</h3>
-            </div>
-
-            <div onclick="openModal('youth-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
-                <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center text-5xl mb-4">🚩</div>
-                <h3 class="font-semibold text-xl">Đoàn Thanh niên</h3>
-            </div>
-
-            <div onclick="openModal('report-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
-                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-5xl mb-4">📊</div>
-                <h3 class="font-semibold text-xl">Báo cáo trực tuyến</h3>
-            </div>
+            <button onclick="openModal('report-modal')" class="bg-white p-6 rounded-3xl border border-slate-200 text-left shadow-sm">
+                <div class="text-4xl mb-3">📊</div>
+                <span class="font-semibold">Báo cáo</span>
+            </button>
+            <button onclick="openModal('settings-modal')" class="bg-white p-6 rounded-3xl border border-slate-200 text-left shadow-sm">
+                <div class="text-4xl mb-3">⚙️</div>
+                <span class="font-semibold">Cài đặt</span>
+            </button>
         </div>
     </main>
 
     <!-- Modal Backdrop -->
-    <div id="modal-backdrop" onclick="closeModal()" class="fixed inset-0 bg-black/60 backdrop-blur-xl opacity-0 pointer-events-none transition-all z-50"></div>
+    <div id="modal-backdrop" onclick="closeModal()" class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity z-50"></div>
 
-    <!-- Modal mẫu -->
+    <!-- Modal Báo cáo -->
     <div id="report-modal" class="modal-fixed">
-        <div class="p-6">
+        <div class="p-5">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-semibold text-slate-900">Báo cáo trực tuyến</h2>
-                <button onclick="closeModal()" class="text-4xl text-slate-400">×</button>
+                <h2 class="text-xl font-bold">Báo cáo trực tuyến</h2>
+                <button onclick="closeModal()" class="text-2xl">×</button>
             </div>
-            <p class="text-slate-600">Nội dung báo cáo trực tuyến sẽ hiển thị tại đây...</p>
+            <div class="space-y-4">
+                <div class="p-4 bg-white rounded-2xl border">Tình hình lên lớp</div>
+                <div class="p-4 bg-white rounded-2xl border">Ghi sổ đầu bài</div>
+                <div class="p-4 bg-white rounded-2xl border">Tiến độ kế hoạch</div>
+                <button onclick="closeModal()" class="w-full py-3 bg-slate-200 rounded-xl font-bold">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cài đặt -->
+    <div id="settings-modal" class="modal-fixed">
+        <div class="p-5">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Cài đặt</h2>
+                <button onclick="closeModal()" class="text-2xl">×</button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex justify-between p-4 bg-white rounded-2xl border">
+                    <span>Thông báo</span>
+                    <input type="checkbox" checked class="w-6 h-6">
+                </div>
+                <button onclick="closeModal()" class="w-full py-3 bg-sky-600 text-white rounded-xl font-bold">Lưu</button>
+            </div>
         </div>
     </div>
 
