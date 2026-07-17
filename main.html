@@ -11,10 +11,9 @@
                 extend: {
                     colors: {
                         brand: {
-                            deep: '#0A0F1C',
-                            teal: '#0D9488',
-                            glow: '#22D3EE',
-                            accent: '#67E8F9'
+                            deep: '#F8FAFC',
+                            card: '#F1F5F9',
+                            accent: '#0EA5E9'
                         }
                     }
                 }
@@ -32,15 +31,15 @@
         }
         .menu-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
         
         .modal-fixed {
             position: fixed;
             bottom: 0; left: 0; right: 0;
             z-index: 60;
-            background: #0A0F1C;
-            border-top: 1px solid rgba(34, 211, 238, 0.3);
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
             border-radius: 28px 28px 0 0;
             transform: translateY(100%);
             transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
@@ -50,131 +49,114 @@
         .modal-active { transform: translateY(0); }
     </style>
 </head>
-<body class="h-full bg-[#0A0F1C] text-slate-100 overflow-x-hidden">
+<body class="h-full bg-[#F8FAFC] text-slate-900 overflow-x-hidden">
 
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-[#0A0F1C]/95 backdrop-blur-2xl border-b border-white/10 px-5 py-4">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-2xl border-b border-slate-200 px-5 py-4">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-11 h-11 bg-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/50">
+                <div class="w-11 h-11 bg-sky-500 rounded-2xl flex items-center justify-center shadow-lg">
                     <span class="text-2xl font-bold text-white">HVA</span>
                 </div>
                 <div>
-                    <p class="text-xs font-medium text-cyan-400 tracking-widest">TRUNG TÂM ĐIỀU HÀNH SỐ</p>
-                    <p class="text-xl font-bold text-white -mt-1">TTDHS_HVA</p>
+                    <p class="text-xs font-medium text-sky-600 tracking-widest">TRUNG TÂM ĐIỀU HÀNH SỐ</p>
+                    <p class="text-xl font-bold">TTDHS_HVA</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-4">
-                <button class="w-10 h-10 flex items-center justify-center text-2xl text-slate-300">
+                <button class="w-10 h-10 flex items-center justify-center text-2xl text-slate-600">
                     <i class="bi bi-bell"></i>
                 </button>
                 <div class="flex items-center gap-3">
                     <div class="text-right">
                         <p class="font-medium text-sm">GV. Minh Quân</p>
-                        <p class="text-xs text-slate-400">Quản trị viên</p>
+                        <p class="text-xs text-slate-500">Quản trị viên</p>
                     </div>
-                    <div class="w-9 h-9 bg-purple-600 rounded-2xl flex items-center justify-center text-sm font-bold">MQ</div>
+                    <div class="w-9 h-9 bg-violet-600 rounded-2xl flex items-center justify-center text-sm font-bold text-white">MQ</div>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="pt-20 pb-24 px-5">
+    <main class="pt-24 pb-24 px-5">
         <!-- Welcome -->
         <div class="mb-8">
-            <h1 class="text-2xl font-semibold">Chào buổi sáng, Thầy/Cô!</h1>
-            <p class="text-slate-400">Hôm nay là <span class="text-cyan-400">Thứ Sáu, 17/07/2026</span></p>
+            <h1 class="text-3xl font-semibold text-slate-900">Chào buổi sáng, Thầy/Cô!</h1>
+            <p class="text-slate-500 mt-1">Hôm nay là <span class="font-medium text-sky-600">Thứ Sáu, 17/07/2026</span></p>
         </div>
 
         <!-- Stats -->
         <div class="grid grid-cols-3 gap-3 mb-8">
-            <div class="bg-white/5 border border-white/10 rounded-3xl p-4 text-center">
-                <p class="text-xs text-slate-400">Văn bản mới</p>
-                <p class="text-3xl font-bold text-white mt-1">12</p>
+            <div class="bg-white border border-slate-200 rounded-3xl p-4 text-center shadow-sm">
+                <p class="text-xs text-slate-500">Văn bản mới</p>
+                <p class="text-3xl font-bold text-slate-800 mt-1">12</p>
             </div>
-            <div class="bg-white/5 border border-white/10 rounded-3xl p-4 text-center">
-                <p class="text-xs text-slate-400">Sự kiện</p>
-                <p class="text-3xl font-bold text-cyan-400 mt-1">7</p>
+            <div class="bg-white border border-slate-200 rounded-3xl p-4 text-center shadow-sm">
+                <p class="text-xs text-slate-500">Sự kiện</p>
+                <p class="text-3xl font-bold text-sky-600 mt-1">7</p>
             </div>
-            <div class="bg-white/5 border border-white/10 rounded-3xl p-4 text-center">
-                <p class="text-xs text-slate-400">Hoàn thành</p>
-                <p class="text-3xl font-bold text-emerald-400 mt-1">94%</p>
+            <div class="bg-white border border-slate-200 rounded-3xl p-4 text-center shadow-sm">
+                <p class="text-xs text-slate-500">Hoàn thành</p>
+                <p class="text-3xl font-bold text-emerald-600 mt-1">94%</p>
             </div>
         </div>
 
-        <!-- Menu Grid - 8 mục -->
+        <!-- Menu Grid -->
         <div class="grid grid-cols-2 gap-4">
-            <!-- Trang Chủ -->
-            <div onclick="openModal('home-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
-                <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">🏠</div>
-                <h3 class="font-semibold text-lg leading-tight">Trang Chủ</h3>
-                <p class="text-sm text-slate-400 mt-1">Tổng quan điều hành</p>
+            <div onclick="openModal('home-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-5xl mb-4">🏠</div>
+                <h3 class="font-semibold text-xl">Trang Chủ</h3>
             </div>
 
-            <!-- Văn bản -->
-            <div onclick="openModal('document-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
-                <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">📄</div>
-                <h3 class="font-semibold text-lg leading-tight">Văn bản & Biểu mẫu</h3>
-                <p class="text-sm text-slate-400 mt-1">Quản lý văn bản, công văn</p>
+            <div onclick="openModal('document-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-5xl mb-4">📄</div>
+                <h3 class="font-semibold text-xl">Văn bản & Biểu mẫu</h3>
             </div>
 
-            <!-- Chuyên môn -->
-            <div onclick="openModal('academic-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
-                <div class="w-14 h-14 bg-teal-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">📚</div>
-                <h3 class="font-semibold text-lg leading-tight">Chuyên môn</h3>
-                <p class="text-sm text-slate-400 mt-1">Kế hoạch dạy học</p>
+            <div onclick="openModal('academic-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-teal-100 rounded-2xl flex items-center justify-center text-5xl mb-4">📚</div>
+                <h3 class="font-semibold text-xl">Chuyên môn</h3>
             </div>
 
-            <!-- Thi đua -->
-            <div onclick="openModal('competition-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
-                <div class="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">🏆</div>
-                <h3 class="font-semibold text-lg leading-tight">Thi đua - Khen thưởng</h3>
-                <p class="text-sm text-slate-400 mt-1">Phong trào thi đua</p>
+            <div onclick="openModal('competition-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center text-5xl mb-4">🏆</div>
+                <h3 class="font-semibold text-xl">Thi đua - Khen thưởng</h3>
             </div>
 
-            <!-- Chuyển đổi số -->
-            <div onclick="openModal('digital-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
-                <div class="w-14 h-14 bg-sky-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">💻</div>
-                <h3 class="font-semibold text-lg leading-tight">Chuyển đổi số</h3>
-                <p class="text-sm text-slate-400 mt-1">Dữ liệu số, nền tảng</p>
+            <div onclick="openModal('digital-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-cyan-100 rounded-2xl flex items-center justify-center text-5xl mb-4">💻</div>
+                <h3 class="font-semibold text-xl">Chuyển đổi số</h3>
             </div>
 
-            <!-- Đảm bảo chất lượng -->
-            <div onclick="openModal('quality-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
-                <div class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">✅</div>
-                <h3 class="font-semibold text-lg leading-tight">Đảm bảo chất lượng</h3>
-                <p class="text-sm text-slate-400 mt-1">Kiểm định, đánh giá</p>
+            <div onclick="openModal('quality-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-5xl mb-4">✅</div>
+                <h3 class="font-semibold text-xl">Đảm bảo chất lượng</h3>
             </div>
 
-            <!-- Đoàn Thanh niên -->
-            <div onclick="openModal('youth-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
-                <div class="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">🚩</div>
-                <h3 class="font-semibold text-lg leading-tight">Đoàn Thanh niên</h3>
-                <p class="text-sm text-slate-400 mt-1">Hoạt động Đoàn - Đội</p>
+            <div onclick="openModal('youth-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center text-5xl mb-4">🚩</div>
+                <h3 class="font-semibold text-xl">Đoàn Thanh niên</h3>
             </div>
 
-            <!-- Báo cáo trực tuyến -->
-            <div onclick="openModal('report-modal')" class="menu-card bg-white/5 border border-white/10 hover:border-cyan-400 rounded-3xl p-5 cursor-pointer">
-                <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center text-4xl mb-4">📊</div>
-                <h3 class="font-semibold text-lg leading-tight">Báo cáo trực tuyến</h3>
-                <p class="text-sm text-slate-400 mt-1">Thống kê thời gian thực</p>
+            <div onclick="openModal('report-modal')" class="menu-card bg-white border border-slate-200 rounded-3xl p-6 cursor-pointer">
+                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-5xl mb-4">📊</div>
+                <h3 class="font-semibold text-xl">Báo cáo trực tuyến</h3>
             </div>
         </div>
     </main>
 
-    <!-- Backdrop -->
-    <div id="modal-backdrop" onclick="closeModal()" 
-         class="fixed inset-0 bg-black/70 backdrop-blur-xl opacity-0 pointer-events-none transition-all z-50"></div>
+    <!-- Modal Backdrop -->
+    <div id="modal-backdrop" onclick="closeModal()" class="fixed inset-0 bg-black/60 backdrop-blur-xl opacity-0 pointer-events-none transition-all z-50"></div>
 
-    <!-- Modal Example (Bạn có thể nhân bản cho các modal khác) -->
+    <!-- Modal mẫu -->
     <div id="report-modal" class="modal-fixed">
         <div class="p-6">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-semibold">Báo cáo trực tuyến</h2>
+                <h2 class="text-2xl font-semibold text-slate-900">Báo cáo trực tuyến</h2>
                 <button onclick="closeModal()" class="text-4xl text-slate-400">×</button>
             </div>
-            <p class="text-slate-400">Nội dung báo cáo trực tuyến sẽ hiển thị tại đây...</p>
+            <p class="text-slate-600">Nội dung báo cáo trực tuyến sẽ hiển thị tại đây...</p>
         </div>
     </div>
 
@@ -184,9 +166,7 @@
             document.getElementById('modal-backdrop').classList.remove('opacity-0', 'pointer-events-none');
         }
         function closeModal() {
-            document.querySelectorAll('.modal-fixed').forEach(m => {
-                m.classList.remove('modal-active');
-            });
+            document.querySelectorAll('.modal-fixed').forEach(m => m.classList.remove('modal-active'));
             document.getElementById('modal-backdrop').classList.add('opacity-0', 'pointer-events-none');
         }
     </script>
