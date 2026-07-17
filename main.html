@@ -139,152 +139,115 @@
                 <h3 class="font-semibold text-xl">Đoàn Thanh niên</h3>
             </div>
 
-            <!-- MODAL BÁO CÁO TRỰC TUYẾN -->
+              <!-- ==================== MODAL BÁO CÁO TRỰC TUYẾN ==================== -->
     <div id="report-modal" class="modal-fixed">
-        <div class="p-5">
-            <!-- Header Modal -->
-            <div class="flex justify-between items-center mb-6 sticky top-0 bg-[#F8FAFC] pb-4 border-b border-slate-200 z-10">
+        <div class="p-5 max-h-[85vh] overflow-y-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6 sticky top-0 bg-[#F8FAFC] pb-4 border-b z-10">
                 <h2 class="text-2xl font-semibold text-slate-900">Báo cáo trực tuyến</h2>
-                <button onclick="closeModal()" class="text-4xl text-slate-400 hover:text-slate-600">×</button>
+                <button onclick="closeModal()" class="text-4xl leading-none text-slate-400 hover:text-red-500">×</button>
             </div>
 
-            <div class="space-y-6">
-                
+            <div class="space-y-8 pb-10">
+
                 <!-- I. CHUYÊN MÔN -->
                 <div>
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
                         <span class="text-sky-600">I.</span> CHUYÊN MÔN
                     </h3>
-                    <div class="bg-white rounded-2xl p-4 space-y-3 text-slate-700">
-                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                            <span>Tình hình lên lớp</span>
-                            <i class="bi bi-chevron-right text-slate-400"></i>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                            <span>Ghi sổ đầu bài</span>
-                            <i class="bi bi-chevron-right text-slate-400"></i>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                            <span>Tiến độ thực hiện kế hoạch dạy học</span>
-                            <i class="bi bi-chevron-right text-slate-400"></i>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                            <span>Sinh hoạt tổ chuyên môn</span>
-                            <i class="bi bi-chevron-right text-slate-400"></i>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                            <span>Thực hiện chương trình</span>
-                            <i class="bi bi-chevron-right text-slate-400"></i>
-                        </div>
+                    <div class="bg-white rounded-3xl p-5 space-y-4">
+                        <div class="flex justify-between py-2">Tình hình lên lớp</div>
+                        <div class="flex justify-between py-2">Ghi sổ đầu bài</div>
+                        <div class="flex justify-between py-2">Tiến độ thực hiện kế hoạch dạy học</div>
+                        <div class="flex justify-between py-2">Sinh hoạt tổ chuyên môn</div>
+                        <div class="flex justify-between py-2">Thực hiện chương trình</div>
                         <div onclick="alert('Mở form nhập tên báo cáo chuyên môn khác')" 
-                             class="flex justify-between items-center py-2 cursor-pointer hover:bg-slate-50 rounded-xl px-2 -mx-2">
-                            <span class="text-sky-600 font-medium">Báo cáo chuyên môn khác</span>
-                            <i class="bi bi-plus-circle text-sky-500"></i>
+                             class="flex justify-between py-2 text-sky-600 cursor-pointer hover:bg-slate-50 rounded-2xl px-3 -mx-3">
+                            <span>Báo cáo chuyên môn khác</span>
+                            <i class="bi bi-plus-circle"></i>
                         </div>
                     </div>
                 </div>
 
                 <!-- II. CUỘC HỌP -->
                 <div>
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
                         <span class="text-sky-600">II.</span> CUỘC HỌP
                     </h3>
-                    <div class="bg-white rounded-2xl p-4 space-y-3 text-slate-700">
-                        <div class="flex justify-between items-center py-2"><span>Họp Liên tịch</span></div>
-                        <div class="flex justify-between items-center py-2"><span>Họp HĐSP</span></div>
-                        <div class="flex justify-between items-center py-2"><span>Họp Thi đua</span></div>
-                        <div class="flex justify-between items-center py-2"><span>Họp Hội đồng Thi đua</span></div>
-                        <div class="flex justify-between items-center py-2"><span>Họp kiểm tra nội bộ</span></div>
-                        <div onclick="alert('Mở form cuộc họp khác')" class="flex justify-between items-center py-2 text-sky-600 font-medium cursor-pointer">
-                            <span>Họp khác</span>
-                            <i class="bi bi-plus-circle"></i>
-                        </div>
+                    <div class="bg-white rounded-3xl p-5 space-y-4 text-slate-700">
+                        <div>Họp Liên tịch</div>
+                        <div>Họp HĐSP</div>
+                        <div>Họp Thi đua</div>
+                        <div>Họp Hội đồng Thi đua</div>
+                        <div>Họp kiểm tra nội bộ</div>
+                        <div onclick="alert('Mở form họp khác')" class="text-sky-600 cursor-pointer">Họp khác</div>
                     </div>
-                    <p class="text-xs text-slate-500 mt-3 pl-1">Workflow: Tạo → Xác nhận → Đăng Kết luận</p>
                 </div>
 
                 <!-- III. TẬP HUẤN -->
                 <div>
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
                         <span class="text-sky-600">III.</span> TẬP HUẤN
                     </h3>
-                    <div class="bg-white rounded-2xl p-4 space-y-3 text-slate-700">
+                    <div class="bg-white rounded-3xl p-5 space-y-4 text-slate-700">
                         <div>Tập huấn SGK</div>
                         <div>Tập huấn AI</div>
                         <div>Tập huấn Chuyển đổi số</div>
-                        <div onclick="alert('Mở form nhập tên tập huấn')" class="text-sky-600 font-medium cursor-pointer flex items-center gap-2">
-                            <span>Tập huấn khác</span>
-                            <i class="bi bi-plus-circle"></i>
-                        </div>
+                        <div onclick="alert('Mở form tập huấn khác')" class="text-sky-600 cursor-pointer">Tập huấn khác</div>
                     </div>
                 </div>
 
                 <!-- IV. KHẢO SÁT -->
                 <div>
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
                         <span class="text-sky-600">IV.</span> KHẢO SÁT
                     </h3>
-                    <div class="bg-white rounded-2xl p-4 space-y-3 text-slate-700">
+                    <div class="bg-white rounded-3xl p-5 space-y-4 text-slate-700">
                         <div>Khảo sát GV</div>
                         <div>Khảo sát HS</div>
                         <div>Khảo sát PH</div>
                         <div>Khảo sát CBQL</div>
-                        <div onclick="alert('Mở form khảo sát khác')" class="text-sky-600 font-medium cursor-pointer">Khảo sát khác</div>
+                        <div onclick="alert('Mở form khảo sát khác')" class="text-sky-600 cursor-pointer">Khảo sát khác</div>
                     </div>
                 </div>
 
                 <!-- V. CUỘC THI -->
                 <div>
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
                         <span class="text-sky-600">V.</span> CUỘC THI
                     </h3>
-                    <div class="bg-white rounded-2xl p-4 space-y-3 text-slate-700">
+                    <div class="bg-white rounded-3xl p-5 space-y-4 text-slate-700">
                         <div>Giáo viên dạy giỏi</div>
                         <div>GVCN giỏi</div>
                         <div>Thiết kế bài giảng</div>
                         <div>Chuyển đổi số</div>
                         <div>STEM / KHKT / Olympic</div>
-                        <div onclick="alert('Mở form cuộc thi khác')" class="text-sky-600 font-medium cursor-pointer">Thi khác</div>
+                        <div onclick="alert('Mở form cuộc thi khác')" class="text-sky-600 cursor-pointer">Thi khác</div>
                     </div>
                 </div>
 
-                <!-- VI. BIỂU MẪU ĐIỆN TỬ -->
+                <!-- VI. BIỂU MẪU -->
                 <div>
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <h3 class="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
                         <span class="text-sky-600">VI.</span> BIỂU MẪU ĐIỆN TỬ
                     </h3>
-                    <div class="bg-white rounded-2xl p-4 grid grid-cols-2 gap-3 text-sm">
-                        <div class="bg-slate-50 p-3 rounded-xl">Đăng ký</div>
-                        <div class="bg-slate-50 p-3 rounded-xl">Đề xuất</div>
-                        <div class="bg-slate-50 p-3 rounded-xl">Xin ý kiến</div>
-                        <div class="bg-slate-50 p-3 rounded-xl">Cập nhật thông tin</div>
-                        <div class="bg-slate-50 p-3 rounded-xl">Cam kết</div>
-                        <div class="bg-slate-50 p-3 rounded-xl">Xác nhận</div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white p-4 rounded-2xl text-center">Đăng ký</div>
+                        <div class="bg-white p-4 rounded-2xl text-center">Đề xuất</div>
+                        <div class="bg-white p-4 rounded-2xl text-center">Xin ý kiến</div>
+                        <div class="bg-white p-4 rounded-2xl text-center">Cập nhật</div>
                     </div>
                 </div>
 
-                <!-- VII. BÁO CÁO ĐÃ NỘP -->
-                <div>
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                        <span class="text-sky-600">VII.</span> BÁO CÁO ĐÃ NỘP
-                    </h3>
-                    <div class="bg-white rounded-2xl p-5 text-center text-slate-500">
-                        <p class="text-sm">Tự động lưu • Danh sách báo cáo đã nộp</p>
+                <!-- VII & VIII -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white rounded-3xl p-6">
+                        <h4 class="font-semibold mb-2">Báo cáo đã nộp</h4>
+                        <p class="text-sm text-slate-500">Tự động lưu</p>
                     </div>
-                </div>
-
-                <!-- VIII. TIẾN ĐỘ THỰC HIỆN -->
-                <div>
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                        <span class="text-sky-600">VIII.</span> TIẾN ĐỘ THỰC HIỆN
-                    </h3>
-                    <div class="bg-white rounded-3xl p-6 text-center">
-                        <p class="font-medium text-slate-700">Dashboard Tiến độ</p>
-                        <div class="grid grid-cols-3 gap-4 mt-6 text-sm">
-                            <div><span class="block text-emerald-600 font-bold">Đã hoàn thành</span></div>
-                            <div><span class="block text-amber-600 font-bold">Chưa hoàn thành</span></div>
-                            <div><span class="block text-red-600 font-bold">Quá hạn</span></div>
-                        </div>
+                    <div onclick="alert('Mở Dashboard Tiến độ')" class="bg-gradient-to-br from-sky-500 to-blue-600 text-white rounded-3xl p-6 cursor-pointer">
+                        <h4 class="font-semibold">Tiến độ thực hiện</h4>
+                        <p class="text-sm mt-1 opacity-90">Dashboard</p>
                     </div>
                 </div>
 
