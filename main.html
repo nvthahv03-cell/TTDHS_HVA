@@ -585,7 +585,42 @@
         </div>
 
     </div>
+<script>
+    const modalBackdrop = document.getElementById('modal-backdrop');
 
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('translate-y-full');
+        modalBackdrop.classList.remove('pointer-events-none', 'opacity-0');
+    }
+
+    function closeModal() {
+        const modals = document.querySelectorAll('[id$="-modal"]');
+        modals.forEach(m => m.classList.add('translate-y-full'));
+        modalBackdrop.classList.add('pointer-events-none', 'opacity-0');
+    }
+
+    modalBackdrop.addEventListener('click', closeModal);
+
+    // Xử lý PWA Install
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('install-banner').classList.remove('hidden');
+    });
+
+    function triggerPWAInstall() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    document.getElementById('install-banner').classList.add('hidden');
+                }
+            });
+        }
+    }
+</script>
     <script>
         let currentModalId = null;
         let deferredPrompt = null;
