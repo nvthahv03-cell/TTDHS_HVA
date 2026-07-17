@@ -504,10 +504,37 @@
                         <div class="w-10 h-10 rounded-xl bg-violet-500/15 flex items-center justify-center text-violet-400">
                             <i class="bi bi-people-fill text-lg"></i>
                         </div>
+                        <!-- Khối Báo cáo trực tuyến -->
+<div onclick="openModal('report-modal')" class="group relative rounded-2xl bg-gradient-to-br from-indigo-900/40 to-slate-900/40 border border-white/10 p-5 shadow-xl transition-all duration-300 hover:border-indigo-500/50 cursor-pointer overflow-hidden">
+    <div class="flex items-center space-x-4">
+        <div class="p-3 rounded-xl bg-indigo-500/20 text-indigo-400">
+            <i class="bi bi-bar-chart-line-fill text-xl"></i>
+        </div>
+        <div>
+            <h3 class="text-sm font-bold text-white">Báo cáo trực tuyến</h3>
+            <p class="text-[10px] text-slate-400">Số liệu, tiến độ, dữ liệu thống kê</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal tương ứng cho Báo cáo trực tuyến -->
+<div id="report-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300">
+    <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
+    <div class="px-6 pb-8">
+        <div class="flex items-center justify-between mb-6">
+            <h4 class="text-base font-bold text-white">Báo cáo trực tuyến</h4>
+            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                <i class="bi bi-x-lg text-slate-300"></i>
+            </button>
+        </div>
+        <!-- Nội dung báo cáo sẽ đặt ở đây -->
+   
+</div>
                         <h4 class="text-base font-bold text-white">Đội ngũ & Nhân sự</h4>
                     </div>
                     <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
                 </div>
+                     </div>
                 <div class="space-y-2.5">
                     <div class="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between">
                         <div class="flex items-center space-x-3">
