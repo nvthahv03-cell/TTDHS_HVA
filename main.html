@@ -180,25 +180,31 @@
                     <div class="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-orange-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
                     <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/20 shrink-0">
                         <i class="bi bi-file-earmark-bar-graph-fill text-white text-xl"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Báo cáo trực tuyến</h3>
-                        <p class="text-xs text-slate-400 mt-0.5 truncate">Dành cho GV & NV: Báo cáo tuần, Sự cố CSVC, Chuyên môn, Ý kiến...</p>
-                    </div>
-                    <i class="bi bi-chevron-right text-slate-500 group-hover:text-brand-glow text-sm animate-pulse"></i>
-                </div>
+                   <!-- Mục Báo cáo trực tuyến -->
+<div onclick="openModal('report-modal')" class="group relative rounded-2xl bg-gradient-to-r from-orange-600/10 to-amber-600/10 hover:from-orange-600/20 hover:to-amber-600/20 active:scale-[0.98] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden flex items-center space-x-4">
+    <div class="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-orange-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/20 shrink-0">
+        <i class="bi bi-file-earmark-text text-white text-xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+        <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Báo cáo trực tuyến</h3>
+        <p class="text-xs text-slate-400 mt-0.5 truncate">Dành cho GV & NV: Báo cáo tuần, Sự cố...</p>
+    </div>
+    <i class="bi bi-chevron-right text-slate-500 group-hover:text-brand-glow text-sm animate-pulse"></i>
+</div>
 
-                <div onclick="openModal('team-modal')" class="group col-span-2 relative rounded-2xl bg-gradient-to-r from-violet-600/10 to-indigo-600/10 hover:from-violet-600/20 hover:to-indigo-600/20 active:scale-[0.98] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden flex items-center space-x-4">
-                    <div class="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
-                        <i class="bi bi-people-fill text-white text-xl"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Đội ngũ cán bộ, giáo viên</h3>
-                        <p class="text-xs text-slate-400 mt-0.5 truncate">Quyết định 32, Bồi dưỡng thường xuyên BDTX, Hồ sơ viên chức</p>
-                    </div>
-                    <i class="bi bi-chevron-right text-slate-500 group-hover:text-brand-glow text-sm"></i>
-                </div>
+<!-- Mục Đội ngũ cán bộ -->
+<div onclick="openModal('team-modal')" class="group relative rounded-2xl bg-gradient-to-r from-violet-600/10 to-indigo-600/10 hover:from-violet-600/20 hover:to-indigo-600/20 active:scale-[0.98] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden flex items-center space-x-4">
+    <div class="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
+        <i class="bi bi-people-fill text-white text-xl"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+        <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Đội ngũ cán bộ, giáo viên</h3>
+        <p class="text-xs text-slate-400 mt-0.5 truncate">Quyết định 32, BDTX, Hồ sơ viên chức</p>
+    </div>
+    <i class="bi bi-chevron-right text-slate-500 group-hover:text-brand-glow text-sm"></i>
+</div>
             </section>
 
             <section class="mb-4">
