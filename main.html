@@ -432,54 +432,7 @@
         </div>
     </div>
 
-    <!-- Các modal khác giữ nguyên cấu trúc, chỉ sửa team-modal -->
-    <!-- (để tránh dài dòng, tôi giữ nguyên nội dung các modal khác như cũ, chỉ sửa team-modal) -->
-
-    <!-- Team Modal - ĐÃ SỬA -->
-    <div id="team-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
-        <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
-        <div class="px-6 pb-8">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-violet-500/15 flex items-center justify-center text-violet-400">
-                        <i class="bi bi-people-fill text-lg"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-base font-bold text-white">Đội ngũ & Báo cáo</h4>
-                        <p class="text-[10px] text-slate-400">Cán bộ, giáo viên & Báo cáo trực tuyến</p>
-                    </div>
-                </div>
-                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
-            </div>
-
-            <div class="space-y-3">
-                <a href="https://thpthoavang.edu.vn/8943-2/doi-ngu" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-all">
-                    <div class="flex items-center space-x-3">
-                        <i class="bi bi-journal-check text-violet-400 text-lg"></i>
-                        <div>
-                            <span class="text-sm font-semibold text-slate-200">Đội ngũ cán bộ, giáo viên</span>
-                            <p class="text-xs text-slate-400">Quyết định 32, BDTX, Hồ sơ viên chức</p>
-                        </div>
-                    </div>
-                    <i class="bi bi-box-arrow-up-right text-slate-500"></i>
-                </a>
-
-                <a href="#" target="_blank" class="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 transition-all">
-                    <div class="flex items-center space-x-3">
-                        <i class="bi bi-graph-up text-indigo-400 text-lg"></i>
-                        <div>
-                            <span class="text-sm font-semibold text-slate-200">Báo cáo trực tuyến</span>
-                            <p class="text-xs text-slate-400">Nhập số liệu, thống kê định kỳ</p>
-                        </div>
-                    </div>
-                    <i class="bi bi-box-arrow-up-right text-slate-500"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Các modal còn lại (document, academic, ...) giữ nguyên như code gốc của bạn, chỉ cần copy lại nếu cần -->
-
+    
     <script>
         let currentModalId = null;
         let deferredPrompt = null;
