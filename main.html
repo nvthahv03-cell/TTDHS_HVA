@@ -29,6 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
+        
         body {
             font-family: 'Inter', sans-serif;
             -webkit-tap-highlight-color: transparent;
@@ -216,7 +217,91 @@
                 </div>
             </section>
         </main>
+        <!-- CHÉP ĐOẠN NÀY DÁN VÀO NGAY TRƯỚC THẺ NÚT ĐÓNG </body> TRONG FILE INDEX.HTML CỦA THẦY -->
+<script>
+    // 1. Đăng ký Service Worker để trình duyệt nhận diện PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('PWA Service Worker đã đăng ký thành công!', reg.scope))
+                .catch(err => console.error('Lỗi đăng ký Service Worker:', err));
+        });
+    }
 
+    // 2. Xử lý sự kiện "Kích hoạt cài đặt ứng dụng" tự động
+    let deferredPrompt;
+    
+    // Tạo cấu trúc Banner cài đặt động bằng JS để không làm vỡ bố cục HTML gốc của Thầy
+    const installBanner = document.createElement('div');
+    installBanner.id = 'pwa-install-banner';
+    installBanner.className = 'fixed bottom-20 inset-x-4 z-50 p-4 rounded-2xl bg-brand-primary/95 border border-brand-teal/30 backdrop-blur-xl shadow-2xl flex items-center justify-between transform translate-y-[150%] transition-transform duration-500 max-w-md mx-auto';
+    installBanner.innerHTML = `
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 flex items-center justify-center shrink-0">
+                <div class="w-full h-full bg-brand-deep rounded-[10px] flex items-center justify-center">
+                    <span class="text-brand-glow font-bold text-xs tracking-wider">HVA</span>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold text-white">Cài đặt TTDHS_HVA</h4>
+                <p class="text-[10px] text-slate-300 mt-0.5">Trải nghiệm mượt mà như App di động</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2 shrink-0">
+            <button id="btn-pwa-install" class="px-3.5 py-1.5 bg-brand-teal hover:bg-brand-glow text-white hover:text-brand-deep font-bold text-xs rounded-lg transition-all active:scale-95 shadow-md shadow-brand-teal/20">
+                Cài đặt ngay
+            </button>
+            <button id="btn-pwa-close" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10">
+                <i class="bi bi-x-lg text-[10px] text-slate-400"></i>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(installBanner);
+
+    // Lắng nghe sự kiện cài đặt từ hệ thống (Chrome, Edge, Safari...)
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Ngăn trình duyệt tự hiển thị hộp thoại mặc định xấu xí
+        e.preventDefault();
+        // Lưu trữ sự kiện để kích hoạt sau
+        deferredPrompt = e;
+        // Trượt Banner cài đặt tuyệt đẹp lên màn hình
+        setTimeout(() => {
+            installBanner.classList.remove('translate-y-[150%]');
+        }, 1000);
+    });
+
+    // Xử lý khi Thầy bấm nút "Cài đặt ngay"
+    document.getElementById('btn-pwa-install').addEventListener('click', async () => {
+        if (deferredPrompt) {
+            // Kích hoạt hộp thoại cài đặt hệ thống
+            deferredPrompt.prompt();
+            // Chờ người dùng phản hồi
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`Lựa chọn của người dùng cài đặt: ${outcome}`);
+            // Xóa bộ nhớ đệm sự kiện
+            deferredPrompt = null;
+            // Ẩn banner đi
+            installBanner.classList.add('translate-y-[150%]');
+        }
+    });
+
+    // Xử lý nút đóng Banner cài đặt
+    document.getElementById('btn-pwa-close').addEventListener('click', () => {
+        installBanner.classList.add('translate-y-[150%]');
+    });
+
+    // Lắng nghe xem nếu ứng dụng đã được cài đặt thành công
+    window.addEventListener('appinstalled', (evt) => {
+        console.log('Ứng dụng TTDHS_HVA đã được cài đặt thành công vào máy!');
+        installBanner.classList.add('translate-y-[150%]');
+        // Tạo một thông báo toast nhỏ báo cài đặt thành công
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-6 inset-x-6 z-50 p-4 rounded-xl bg-emerald-500/90 text-white font-bold text-xs text-center shadow-lg backdrop-blur-md max-w-xs mx-auto animate-bounce';
+        toast.innerText = '🎉 Đã cài đặt ứng dụng thành công!';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    });
+</script>
         <!-- Bottom Navigation Bar -->
         <nav class="fixed bottom-0 left-0 right-0 z-40 bg-brand-deep/80 backdrop-blur-2xl border-t border-white/5 pb-safe px-6 shadow-2xl">
             <div class="flex items-center justify-between h-16 max-w-lg mx-auto">
