@@ -1,111 +1,53 @@
 <!DOCTYPE html>
-<html lang="vi" class="h-full">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TTDHS_HVA - Trung tâm Điều hành số</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - HVA</title>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .modal-fixed { 
-            position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; 
-            background: #F8FAFC; border-top: 1px solid #E2E8F0; 
-            border-radius: 28px 28px 0 0; transform: translateY(100%); 
-            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); 
-            max-height: 90vh; overflow-y: auto;
-        }
-        .modal-active { transform: translateY(0); }
-        .bg-brand-gradient { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .page-container { width: 100%; max-width: 400px; }
+        .login-card { background: #ffffff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
+        .logo { width: 80px; height: 80px; background: #3b82f6; border-radius: 50%; margin: 0 auto 20px; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; }
+        h1 { font-size: 24px; color: #1e293b; margin-bottom: 10px; }
+        p { color: #64748b; font-size: 14px; margin-bottom: 30px; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 10px; outline: none; }
+        input:focus { border-color: #3b82f6; }
+        button { width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #2563eb; }
     </style>
-</head>
-<body class="bg-[#F8FAFC] pb-20">
-
-    <header class="sticky top-0 bg-white/90 backdrop-blur-xl border-b border-slate-200 px-5 py-4 z-40">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-sky-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-sky-200">HVA</div>
-                <h1 class="font-bold text-lg text-slate-900">TTDHS_HVA</h1>
-            </div>
-            <button onclick="openModal('settings-modal')" class="text-2xl text-slate-600 p-2"><i class="bi bi-gear-fill"></i></button>
-        </div>
-    </header>
-
-    <main class="p-5">
-        <h2 class="text-2xl font-bold text-slate-900 mb-6">Chào Thầy/Cô!</h2>
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="openModal('report-modal')" class="bg-white p-6 rounded-3xl border border-slate-200 text-left shadow-sm hover:border-sky-300 transition-all">
-                <div class="text-4xl mb-3">📊</div>
-                <span class="font-bold text-slate-800">Báo cáo</span>
-            </button>
-            <button onclick="openModal('settings-modal')" class="bg-white p-6 rounded-3xl border border-slate-200 text-left shadow-sm hover:border-sky-300 transition-all">
-                <div class="text-4xl mb-3">⚙️</div>
-                <span class="font-bold text-slate-800">Cài đặt</span>
-            </button>
-        </div>
-    </main>
-
-    <div id="modal-backdrop" onclick="closeModal()" class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity z-50"></div>
-
-    <div id="report-modal" class="modal-fixed">
-        <div class="p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">Báo cáo trực tuyến</h2>
-                <button onclick="closeModal()" class="text-3xl text-slate-400">×</button>
-            </div>
-            <div class="space-y-6">
-                <!-- I. CHUYÊN MÔN -->
-                <div class="bg-white p-5 rounded-3xl border border-slate-100">
-                    <h3 class="font-bold text-sky-600 mb-3 uppercase text-sm tracking-wider">I. Chuyên môn</h3>
-                    <div class="space-y-2">
-                        <div class="p-3 bg-slate-50 rounded-xl">Tình hình lên lớp</div>
-                        <div class="p-3 bg-slate-50 rounded-xl">Ghi sổ đầu bài</div>
-                        <div class="p-3 bg-slate-50 rounded-xl">Tiến độ kế hoạch</div>
-                    </div>
-                </div>
-                <!-- II. CÀI ĐẶT NHANH -->
-                <div class="bg-white p-5 rounded-3xl border border-slate-100">
-                    <h3 class="font-bold text-sky-600 mb-3 uppercase text-sm tracking-wider">II. Hệ thống</h3>
-                    <div class="p-4 bg-slate-800 text-white rounded-2xl">
-                        <p class="font-semibold">Quản lý hồ sơ viên chức</p>
-                        <p class="text-slate-400 text-sm">Truy cập nhanh dữ liệu</p>
-                    </div>
-                </div>
-                <button onclick="closeModal()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold">Đóng</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="settings-modal" class="modal-fixed">
-        <div class="p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">Cài đặt hệ thống</h2>
-                <button onclick="closeModal()" class="text-3xl text-slate-400">×</button>
-            </div>
-            <div class="space-y-4">
-                <div class="flex justify-between items-center p-4 bg-white rounded-2xl border">
-                    <span>Thông báo đẩy</span>
-                    <input type="checkbox" checked class="w-6 h-6 accent-sky-600">
-                </div>
-                <div class="flex justify-between items-center p-4 bg-white rounded-2xl border">
-                    <span>Chế độ tối</span>
-                    <input type="checkbox" class="w-6 h-6 accent-sky-600">
-                </div>
-                <button onclick="closeModal()" class="w-full py-4 bg-sky-600 text-white rounded-2xl font-bold mt-4">Lưu cấu hình</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        function openModal(id) {
-            document.getElementById(id).classList.add('modal-active');
-            document.getElementById('modal-backdrop').classList.remove('opacity-0', 'pointer-events-none');
-        }
-        function closeModal() {
-            document.querySelectorAll('.modal-fixed').forEach(m => m.classList.remove('modal-active'));
-            document.getElementById('modal-backdrop').classList.add('opacity-0', 'pointer-events-none');
+        function handleLogin() {
+            var user = document.getElementById('username').value;
+            var pass = document.getElementById('password').value;
+            
+            // Tài khoản cá nhân của thầy:
+            // Tài khoản: hcau
+            // Mật khẩu: HVA_1234
+            if (user === "hcau" && pass === "HVA_1234") {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'main.html';
+            } else {
+                alert("Sai tài khoản hoặc mật khẩu!");
+            }
         }
     </script>
+</head>
+<body>
+
+    <div class="page-container">
+        <div class="login-card">
+            <div class="logo">HVA</div>
+            <h1>Chào mừng HVA</h1>
+            <p>Vui lòng đăng nhập để tiếp tục</p>
+            
+            <input type="text" id="username" placeholder="Tài khoản">
+            <input type="password" id="password" placeholder="Mật khẩu">
+            
+            <button onclick="handleLogin()">Đăng Nhập</button>
+        </div>
+    </div>
+
 </body>
 </html>
