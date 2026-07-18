@@ -221,83 +221,46 @@
             </section>
         </main>
 
-<script>
-    // 1. Quản lý trạng thái chung
-    let deferredPrompt = null;
-    let currentModalId = null;
+<!-- Modal Backdrop -->
+    <div id="modal-backdrop" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300" onclick="closeModal()"></div>
 
-    // 2. Service Worker (Luôn đăng ký)
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Load:', err));
-        });
-    }
+    <!-- Modal Báo cáo -->
+    <div id="report-modal" class="fixed bottom-0 inset-x-0 z-[60] bg-brand-primary rounded-t-3xl p-6 translate-y-full transition-transform duration-300">
+        <h3 class="text-white font-bold mb-4">Gửi báo cáo trực tuyến</h3>
+        <select id="r-type" class="w-full bg-white/5 p-3 rounded-xl text-sm mb-3 text-slate-200">
+            <option value="Chuyên môn">Chuyên môn</option>
+            <option value="CSVC">Cơ sở vật chất</option>
+        </select>
+        <button onclick="submitReport()" class="w-full bg-teal-600 p-3 rounded-xl font-bold text-white">GỬI BÁO CÁO</button>
+    </div>
 
-    // 3. Logic PWA (Chặn prompt mặc định để dùng nút riêng)
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-    });
+    <script>
+        // --- LOGIC PWA & MODAL ---
+        let deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; });
 
-    // Hàm gọi cài đặt (Dùng được cho cả nút Header và nút trong Modal)
-    function triggerPWAInstall() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choice) => {
+        function triggerPWAInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
                 deferredPrompt = null;
-            });
-        } else {
-            // Nếu không có prompt (do đã cài hoặc trình duyệt chặn), mở modal hướng dẫn
-            openModal('install-guide-modal');
+            } else {
+                console.log("Đã cài hoặc không hỗ trợ");
+            }
         }
-    }
 
-    // 4. Modal Control (Cải tiến để không bị lỗi null)
-    function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        const backdrop = document.getElementById('modal-backdrop');
-        if (!modal || !backdrop) return;
-        
-        currentModalId = modalId;
-        backdrop.classList.remove('pointer-events-none', 'opacity-0');
-        backdrop.classList.add('opacity-100');
-        modal.classList.remove('translate-y-full');
-        modal.classList.add('translate-y-0');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-        if (!currentModalId) return;
-        const modal = document.getElementById(currentModalId);
-        const backdrop = document.getElementById('modal-backdrop');
-        
-        if (modal) {
-            modal.classList.remove('translate-y-0');
-            modal.classList.add('translate-y-full');
+        function openModal(id) {
+            document.getElementById('modal-backdrop').classList.remove('pointer-events-none', 'opacity-0');
+            document.getElementById(id).classList.remove('translate-y-full');
+            document.body.style.overflow = 'hidden';
         }
-        if (backdrop) {
-            backdrop.classList.add('pointer-events-none', 'opacity-0');
-        }
-        document.body.style.overflow = 'auto';
-        currentModalId = null;
-    }
 
-    // 5. Gán sự kiện "Vuốt để đóng" (Áp dụng cho mọi Modal)
-    document.querySelectorAll('[id$="-modal"]').forEach(modal => {
-        let startY = 0;
-        modal.addEventListener('touchstart', e => startY = e.touches[0].screenY, { passive: true });
-        modal.addEventListener('touchend', e => {
-            if (e.changedTouches[0].screenY - startY > 80) closeModal();
-        }, { passive: true });
-    });
-
-    // 6. Kiểm tra ẩn nút nếu đã cài đặt
-    window.addEventListener('DOMContentLoaded', () => {
-        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-            document.getElementById('install-banner')?.classList.add('hidden');
-            document.getElementById('header-install-btn')?.classList.add('hidden');
+        function closeModal() {
+            document.getElementById('modal-backdrop').classList.add('pointer-events-none', 'opacity-0');
+            document.getElementById('report-modal').classList.add('translate-y-full');
+            document.body.style.overflow = 'auto';
         }
-    });
-</script>
+
+        async function submitReport() { alert("Đang gửi báo cáo..."); closeModal(); }
+    </script>
 </body>
 </html>
