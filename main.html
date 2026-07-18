@@ -26,7 +26,7 @@
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
         body {
@@ -36,7 +36,7 @@
         .safe-pb { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
         .safe-pt { padding-top: calc(1rem + env(safe-area-inset-top)); }
         .hidden-force { display: none !important; }
-        
+       
         @keyframes pulse-glow {
             0%, 100% { opacity: 0.5; transform: scale(1); }
             50% { opacity: 0.9; transform: scale(1.03); }
@@ -44,7 +44,6 @@
         .animate-glow {
             animation: pulse-glow 4s infinite ease-in-out;
         }
-        /* Custom scrollbar for modern looks */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -59,7 +58,6 @@
 </head>
 <body class="h-full bg-brand-deep text-slate-100 overflow-x-hidden antialiased select-none">
 
-    <!-- Background Gradient and Glow Effects -->
     <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-brand-deep via-slate-950 to-brand-deep">
         <div class="absolute -top-[20%] -left-[10%] w-[80%] h-[60%] rounded-full bg-teal-500/10 blur-[120px] animate-glow"></div>
         <div class="absolute top-[40%] -right-[20%] w-[90%] h-[70%] rounded-full bg-indigo-500/10 blur-[150px] animate-glow" style="animation-delay: 2s;"></div>
@@ -67,7 +65,6 @@
 
     <div class="flex flex-col min-h-screen">
         
-        <!-- Header -->
         <header class="fixed top-0 left-0 right-0 z-40 bg-brand-deep/70 backdrop-blur-xl border-b border-white/5 px-4 py-3 safe-pt flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 shadow-lg shadow-brand-teal/20 flex items-center justify-center">
@@ -94,10 +91,8 @@
             </div>
         </header>
 
-        <!-- Main Content Area -->
         <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-lg mx-auto w-full">
             
-            <!-- Install Banner -->
             <section id="install-banner" class="mb-4 hidden-force">
                 <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/20 to-indigo-600/25 border border-brand-glow/30 backdrop-blur-md flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -115,7 +110,6 @@
                 </div>
             </section>
 
-            <!-- Phương châm -->
             <section class="mb-5 mt-2">
                 <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/10 to-indigo-500/10 border border-brand-teal/20 backdrop-blur-md">
                     <div class="flex items-center space-x-2 text-brand-glow text-xs font-bold uppercase tracking-widest mb-1.5">
@@ -125,11 +119,8 @@
                     <p class="text-sm text-slate-200 italic font-medium">"Kết nối – Điều hành – Chia sẻ – Hiệu quả"</p>
                 </div>
             </section>
-            
-            <!-- Navigation Grid Area -->
-            <section style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" class="mb-6">
-                
-                <!-- 1. Báo cáo trực tuyến -->
+
+            <section class="grid grid-cols-2 gap-3 mb-6">
                 <div onclick="openModal('report-modal')" class="group relative rounded-2xl bg-gradient-to-tr from-teal-600/20 to-teal-500/10 hover:from-teal-600/30 active:scale-[0.97] border border-teal-500/20 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                     <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-teal-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
                     <div class="w-10 h-10 rounded-xl bg-teal-500 flex items-center justify-center shadow-lg shadow-teal-500/20 mb-3">
@@ -139,7 +130,6 @@
                     <p class="text-[11px] text-teal-200/70 mt-1 line-clamp-1">Gửi báo cáo nhanh</p>
                 </div>
 
-                <!-- 2. Văn bản - Biểu mẫu -->
                 <div onclick="openModal('document-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                     <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-blue-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20 mb-3">
@@ -149,7 +139,6 @@
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Sở GD&ĐT, Quy chế, Mẫu</p>
                 </div>
 
-                <!-- 3. Chuyên môn -->
                 <div onclick="openModal('academic-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                     <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-emerald-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 mb-3">
@@ -159,7 +148,6 @@
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Kế hoạch, Sổ đầu bài, STEM</p>
                 </div>
 
-                <!-- 4. Thi đua -->
                 <div onclick="openModal('competition-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                     <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-amber-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-500 flex items-center justify-center shadow-lg shadow-amber-500/20 mb-3">
@@ -169,7 +157,6 @@
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">HSG, NCKH, Sáng kiến</p>
                 </div>
 
-                <!-- 5. Chuyển đổi số -->
                 <div onclick="openModal('digital-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                     <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-cyan-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-teal-400 flex items-center justify-center shadow-lg shadow-cyan-500/20 mb-3">
@@ -179,7 +166,6 @@
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Trí tuệ nhân tạo AI, LMS</p>
                 </div>
 
-                <!-- 6. Chất lượng -->
                 <div onclick="openModal('quality-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                     <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-rose-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-orange-500 flex items-center justify-center shadow-lg shadow-rose-500/20 mb-3">
@@ -189,7 +175,6 @@
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Đánh giá ngoài, TEMIS</p>
                 </div>
 
-                <!-- 7. Đoàn trường -->
                 <div onclick="openModal('youth-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                     <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-red-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-500 to-pink-500 flex items-center justify-center shadow-lg shadow-red-500/20 mb-3">
@@ -199,7 +184,6 @@
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Trải nghiệm, Phong trào</p>
                 </div>
 
-                <!-- 8. Lịch công tác -->
                 <div onclick="openModal('team-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
                     <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 mb-3">
@@ -208,48 +192,8 @@
                     <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Lịch công tác</h3>
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Lịch tháng, Lịch tuần, Đột xuất</p>
                 </div>
-  <div id="toast-message" class="hidden-force fixed bottom-10 left-4 right-4 bg-slate-800 border border-white/10 text-white p-4 rounded-2xl shadow-2xl z-50 text-center transition-all"></div>
-
-    <script>
-        let deferredPrompt = null;
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('install-banner').classList.remove('hidden-force');
-            document.getElementById('header-install-btn').classList.remove('hidden-force');
-        });
-
-        function triggerPWAInstall() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choice) => {
-                    if (choice.outcome === 'accepted') {
-                        document.getElementById('install-banner').classList.add('hidden-force');
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                showToast("Nhấn nút 'Chia sẻ' sau đó chọn 'Thêm vào màn hình chính'");
-            }
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast-message');
-            toast.textContent = msg;
-            toast.classList.remove('hidden-force');
-            setTimeout(() => toast.classList.add('hidden-force'), 3000);
-        }
-
-        // Kiểm tra cài đặt ngay khi tải
-        window.addEventListener('load', () => {
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                document.getElementById('install-banner').classList.add('hidden-force');
-            }
-        });
             </section>
 
-            <!-- Bản tin -->
             <section class="mb-4">
                 <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
                     <i class="bi bi-activity text-brand-glow"></i>
@@ -275,14 +219,20 @@
         </main>
     </div>
 
-    <!-- MODALS SYSTEM (All Modals for Grid Buttons) -->
+    <!-- Toast -->
+    <div id="toast-message" class="hidden-force fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-xl bg-slate-900/90 border border-brand-glow/30 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between transition-all duration-300">
+        <div class="flex items-center space-x-2">
+            <i class="bi bi-info-circle text-brand-glow text-base"></i>
+            <span id="toast-text"></span>
+        </div>
+        <button onclick="hideToast()" class="text-slate-400 hover:text-white"><i class="bi bi-x-lg"></i></button>
+    </div>
 
-    <!-- Info/Contact Modal -->
+    <!-- ==================== MODALS ==================== -->
+    <!-- Contact Modal -->
     <div id="contact-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
         <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('contact-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-                <i class="bi bi-x-lg text-lg"></i>
-            </button>
+            <button onclick="closeModal('contact-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
             <div class="text-center">
                 <div class="w-12 h-12 rounded-full bg-brand-glow/10 text-brand-glow flex items-center justify-center mx-auto mb-3">
                     <i class="bi bi-info-circle-fill text-2xl"></i>
@@ -299,12 +249,10 @@
         </div>
     </div>
 
-    <!-- 1. Report Modal -->
+    <!-- Report Modal -->
     <div id="report-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
         <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('report-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-                <i class="bi bi-x-lg text-lg"></i>
-            </button>
+            <button onclick="closeModal('report-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
             <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
                 <div class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center"><i class="bi bi-clipboard-data text-base"></i></div>
                 <h3 class="font-bold text-white text-sm">Báo cáo trực tuyến</h3>
@@ -321,12 +269,10 @@
         </div>
     </div>
 
-    <!-- 2. Document Modal -->
+    <!-- Document Modal -->
     <div id="document-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
         <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('document-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-                <i class="bi bi-x-lg text-lg"></i>
-            </button>
+            <button onclick="closeModal('document-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
             <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
                 <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center"><i class="bi bi-folder-fill text-base"></i></div>
                 <h3 class="font-bold text-white text-sm">Văn bản - Biểu mẫu</h3>
@@ -343,12 +289,10 @@
         </div>
     </div>
 
-    <!-- 3. Academic Modal -->
+    <!-- Academic Modal -->
     <div id="academic-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
         <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('academic-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-                <i class="bi bi-x-lg text-lg"></i>
-            </button>
+            <button onclick="closeModal('academic-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
             <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
                 <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center"><i class="bi bi-journal-bookmark-fill text-base"></i></div>
                 <h3 class="font-bold text-white text-sm">Quản lý Chuyên môn</h3>
@@ -365,12 +309,10 @@
         </div>
     </div>
 
-    <!-- 4. Competition Modal -->
+    <!-- Competition Modal -->
     <div id="competition-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
         <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('competition-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-                <i class="bi bi-x-lg text-lg"></i>
-            </button>
+            <button onclick="closeModal('competition-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
             <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
                 <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center"><i class="bi bi-trophy-fill text-base"></i></div>
                 <h3 class="font-bold text-white text-sm">Thi đua & Khen thưởng</h3>
@@ -387,12 +329,10 @@
         </div>
     </div>
 
-    <!-- 5. Digital Modal -->
+    <!-- Digital Modal -->
     <div id="digital-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
         <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('digital-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-                <i class="bi bi-x-lg text-lg"></i>
-            </button>
+            <button onclick="closeModal('digital-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
             <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
                 <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center"><i class="bi bi-cpu-fill text-base"></i></div>
                 <h3 class="font-bold text-white text-sm">Hạ tầng Chuyển đổi số</h3>
@@ -409,12 +349,10 @@
         </div>
     </div>
 
-    <!-- 6. Quality Modal -->
+    <!-- Quality Modal -->
     <div id="quality-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
         <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('quality-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-                <i class="bi bi-x-lg text-lg"></i>
-            </button>
+            <button onclick="closeModal('quality-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
             <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
                 <div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center"><i class="bi bi-patch-check-fill text-base"></i></div>
                 <h3 class="font-bold text-white text-sm">Đảm bảo Chất lượng</h3>
@@ -431,12 +369,10 @@
         </div>
     </div>
 
-    <!-- 7. Youth Modal -->
+    <!-- Youth Modal -->
     <div id="youth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
         <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('youth-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-                <i class="bi bi-x-lg text-lg"></i>
-            </button>
+            <button onclick="closeModal('youth-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
             <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
                 <div class="w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center"><i class="bi bi-flag-fill text-base"></i></div>
                 <h3 class="font-bold text-white text-sm">Hoạt động Đoàn trường</h3>
@@ -453,12 +389,10 @@
         </div>
     </div>
 
-    <!-- 8. Team Modal -->
+    <!-- Team Modal -->
     <div id="team-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
         <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('team-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
-                <i class="bi bi-x-lg text-lg"></i>
-            </button>
+            <button onclick="closeModal('team-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
             <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
                 <div class="w-8 h-8 rounded-lg bg-violet-500/20 text-violet-400 flex items-center justify-center"><i class="bi bi-calendar3 text-base"></i></div>
                 <h3 class="font-bold text-white text-sm">Lịch công tác</h3>
@@ -475,49 +409,32 @@
         </div>
     </div>
 
-    <!-- Toast Notification Center for PWA Interactions (Never using alerts) -->
-    <div id="toast-message" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-xl bg-slate-900/90 border border-brand-glow/30 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between transition-all duration-300 scale-90 opacity-0 pointer-events-none">
-        <div class="flex items-center space-x-2">
-            <i class="bi bi-info-circle text-brand-glow text-base"></i>
-            <span id="toast-text">Mẫu thông báo</span>
-        </div>
-        <button onclick="hideToast()" class="text-slate-400 hover:text-white"><i class="bi bi-x-lg"></i></button>
-    </div>
-
     <script>
-        // --- 1. Toast Notification Custom Logic (Standard replacement for alert) ---
+        // Toast
         let toastTimeout;
         function showToast(message) {
             const toast = document.getElementById('toast-message');
             const toastText = document.getElementById('toast-text');
-            if (!toast) return;
-
             toastText.textContent = message;
             toast.classList.remove('hidden-force', 'opacity-0', 'scale-90', 'pointer-events-none');
             toast.classList.add('opacity-100', 'scale-100');
-
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                hideToast();
-            }, 5000);
+            toastTimeout = setTimeout(hideToast, 5000);
         }
-
         function hideToast() {
             const toast = document.getElementById('toast-message');
-            if (!toast) return;
             toast.classList.remove('opacity-100', 'scale-100');
             toast.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
         }
 
-        // --- 2. Modal Window Controls ---
+        // Modal
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.classList.remove('hidden-force');
-                document.body.classList.add('overflow-hidden'); // Disable background scrolling
+                document.body.classList.add('overflow-hidden');
             }
         }
-
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             if (modal) {
@@ -526,61 +443,104 @@
             }
         }
 
-        // Close modal when tapping outside of the box content
+        // Click outside to close
         window.addEventListener('click', (e) => {
-            const modals = ['contact-modal', 'report-modal', 'document-modal', 'academic-modal', 'competition-modal', 'digital-modal', 'quality-modal', 'youth-modal', 'team-modal'];
+            const modals = ['contact-modal','report-modal','document-modal','academic-modal','competition-modal','digital-modal','quality-modal','youth-modal','team-modal'];
             modals.forEach(id => {
-                const modalElement = document.getElementById(id);
-                if (e.target === modalElement) {
-                    closeModal(id);
-                }
+                const modal = document.getElementById(id);
+                if (e.target === modal) closeModal(id);
             });
         });
 
-        // --- 3. Progressive Web App (PWA) Handler ---
-        function checkPWAStatus() {
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-            const isInstalled = localStorage.getItem('pwa_installed') === 'true';
+        // PWA
+      <script>
+    let deferredPrompt = null;
 
-            if (isStandalone || isInstalled) {
-                document.getElementById('header-install-btn')?.classList.add('hidden-force');
-                document.getElementById('install-banner')?.classList.add('hidden-force');
-                return true;
-            }
-            return false;
+    // Toast function
+    let toastTimeout;
+    function showToast(message) {
+        const toast = document.getElementById('toast-message');
+        const toastText = document.getElementById('toast-text');
+        toastText.textContent = message;
+        toast.classList.remove('hidden-force', 'opacity-0', 'scale-90', 'pointer-events-none');
+        toast.classList.add('opacity-100', 'scale-100');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(hideToast, 5000);
+    }
+    function hideToast() {
+        const toast = document.getElementById('toast-message');
+        toast.classList.remove('opacity-100', 'scale-100');
+        toast.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
+    }
+
+    // Modal functions
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('hidden-force');
+            document.body.classList.add('overflow-hidden');
         }
-
-        let deferredPrompt = null;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if (!checkPWAStatus()) {
-                document.getElementById('header-install-btn')?.classList.remove('hidden-force');
-                document.getElementById('install-banner')?.classList.remove('hidden-force');
-            }
-        });
-
-        function triggerPWAInstall() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choice) => {
-                    if (choice.outcome === 'accepted') {
-                        localStorage.setItem('pwa_installed', 'true');
-                        checkPWAStatus();
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                showToast("Vui lòng chạm vào nút tùy chọn của trình duyệt rồi chọn 'Thêm vào màn hình chính' để cài đặt app!");
-            }
+    }
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('hidden-force');
+            document.body.classList.remove('overflow-hidden');
         }
+    }
 
-        // Event hooks initialization
-        window.addEventListener('load', checkPWAStatus);
-        window.addEventListener('appinstalled', () => {
-            localStorage.setItem('pwa_installed', 'true');
-            checkPWAStatus();
+    // PWA Install - ĐÃ TỐI ƯU
+    function triggerPWAInstall() {
+        if (deferredPrompt) {
+            // Android/Chrome
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choice) => {
+                if (choice.outcome === 'accepted') {
+                    localStorage.setItem('pwa_installed', 'true');
+                    document.getElementById('install-banner').classList.add('hidden-force');
+                    document.getElementById('header-install-btn').classList.add('hidden-force');
+                }
+                deferredPrompt = null;
+            });
+        } else {
+            // iOS hoặc trình duyệt không hỗ trợ prompt
+            showToast("📱 Vui lòng chạm nút 'Chia sẻ' (ở dưới hoặc trên) → Chọn 'Thêm vào màn hình chính'");
+        }
+    }
+
+    // Listen for install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('install-banner').classList.remove('hidden-force');
+        document.getElementById('header-install-btn').classList.remove('hidden-force');
+    });
+
+    // Check if already installed
+    window.addEventListener('load', () => {
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        if (isStandalone || localStorage.getItem('pwa_installed') === 'true') {
+            document.getElementById('install-banner').classList.add('hidden-force');
+            document.getElementById('header-install-btn').classList.add('hidden-force');
+        }
+    });
+
+    // When app is installed successfully
+    window.addEventListener('appinstalled', () => {
+        localStorage.setItem('pwa_installed', 'true');
+        document.getElementById('install-banner').classList.add('hidden-force');
+        document.getElementById('header-install-btn').classList.add('hidden-force');
+        showToast("🎉 Ứng dụng đã được cài đặt thành công!");
+    });
+
+    // Click outside modal to close
+    window.addEventListener('click', (e) => {
+        const modals = ['contact-modal','report-modal','document-modal','academic-modal','competition-modal','digital-modal','quality-modal','youth-modal','team-modal'];
+        modals.forEach(id => {
+            const modal = document.getElementById(id);
+            if (e.target === modal) closeModal(id);
         });
+    });
     </script>
 </body>
 </html>
