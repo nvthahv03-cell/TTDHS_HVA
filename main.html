@@ -79,7 +79,74 @@
                 </div>
             </div>
         </header>
+<main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto">
+            <!-- PWA Install Banner -->
+            <section id="install-banner" class="hidden-force mb-4">
+                <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/20 to-indigo-600/25 border border-brand-glow/30 backdrop-blur-md flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center text-brand-glow">
+                            <i class="bi bi-phone-vibrate text-xl animate-bounce"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white uppercase tracking-wider">Cài đặt Ứng dụng</h4>
+                            <p class="text-[11px] text-teal-200/80 mt-0.5">Thêm nhanh vào màn hình chính</p>
+                        </div>
+                    </div>
+                    <button onclick="triggerPWAInstall()" class="px-3.5 py-1.5 bg-brand-glow hover:bg-teal-400 text-brand-deep font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
+                        Cài đặt ngay
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
 
+    <script>
+        // 1. Logic kiểm tra cài đặt
+        function checkPWAStatus() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isInstalled = localStorage.getItem('pwa_installed') === 'true';
+
+            if (isStandalone || isInstalled) {
+                document.getElementById('header-install-btn')?.classList.add('hidden-force');
+                document.getElementById('install-banner')?.classList.add('hidden-force');
+                return true;
+            }
+            return false;
+        }
+
+        // 2. Logic PWA Install
+        let deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!checkPWAStatus()) {
+                document.getElementById('header-install-btn')?.classList.remove('hidden-force');
+                document.getElementById('install-banner')?.classList.remove('hidden-force');
+            }
+        });
+
+        function triggerPWAInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choice) => {
+                    if (choice.outcome === 'accepted') {
+                        localStorage.setItem('pwa_installed', 'true');
+                        checkPWAStatus();
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                alert("Bạn có thể cài đặt bằng cách nhấn vào menu 'Thêm vào màn hình chính' của trình duyệt!");
+            }
+        }
+
+        // 3. Khởi tạo
+        window.addEventListener('load', checkPWAStatus);
+        window.addEventListener('appinstalled', () => {
+            localStorage.setItem('pwa_installed', 'true');
+            checkPWAStatus();
+        });
+    </script>
         <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto">
             
             <section class="mb-5 mt-2">
