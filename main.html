@@ -208,7 +208,45 @@
                     <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Lịch công tác</h3>
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Lịch tháng, Lịch tuần, Đột xuất</p>
                 </div>
+  <div id="toast-message" class="hidden-force fixed bottom-10 left-4 right-4 bg-slate-800 border border-white/10 text-white p-4 rounded-2xl shadow-2xl z-50 text-center transition-all"></div>
 
+    <script>
+        let deferredPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-banner').classList.remove('hidden-force');
+            document.getElementById('header-install-btn').classList.remove('hidden-force');
+        });
+
+        function triggerPWAInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choice) => {
+                    if (choice.outcome === 'accepted') {
+                        document.getElementById('install-banner').classList.add('hidden-force');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                showToast("Nhấn nút 'Chia sẻ' sau đó chọn 'Thêm vào màn hình chính'");
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-message');
+            toast.textContent = msg;
+            toast.classList.remove('hidden-force');
+            setTimeout(() => toast.classList.add('hidden-force'), 3000);
+        }
+
+        // Kiểm tra cài đặt ngay khi tải
+        window.addEventListener('load', () => {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                document.getElementById('install-banner').classList.add('hidden-force');
+            }
+        });
             </section>
 
             <!-- Bản tin -->
