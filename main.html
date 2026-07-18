@@ -1,546 +1,262 @@
-<!DOCTYPE html>
-<html lang="vi" class="h-full scroll-smooth">
-<head>
-    <link rel="manifest" href="manifest.json">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TTDHS_HVA - Trung tâm Điều hành số THPT Hòa Vang</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            deep: '#070A13',
-                            primary: '#0F172A',
-                            accent: '#1E293B',
-                            teal: '#0D9488',
-                            glow: '#2DD4BF'
+  </main>
+
+        <script>
+            // ====================== PWA INSTALLATION ======================
+            // 1. Đăng ký Service Worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('sw.js')
+                        .then(reg => console.log('PWA Service Worker hoạt động tại scope: ', reg.scope))
+                        .catch(err => console.error('Lỗi đăng ký Service Worker:', err));
+                });
+            }
+
+            // Biến toàn cục
+            let deferredPrompt = null;
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isAlreadyInstalled = localStorage.getItem('pwa_installed') === 'true';
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+            // Hàm hiển thị Banner cài đặt PWA
+            function showPWAInstallBanner(platformType = 'android') {
+                if (document.getElementById('pwa-install-banner')) return;
+
+                const installBanner = document.createElement('div');
+                installBanner.id = 'pwa-install-banner';
+                installBanner.className = 'fixed bottom-20 inset-x-4 z-50 p-4 rounded-2xl bg-[#0F172A]/95 border border-[#0D9488]/30 backdrop-blur-xl shadow-2xl flex items-center justify-between transform translate-y-[150%] transition-transform duration-500 max-w-md mx-auto';
+
+                if (platformType === 'ios') {
+                    installBanner.innerHTML = `
+                        <div class="flex items-center space-x-3 w-full">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0D9488] to-indigo-500 p-0.5 flex items-center justify-center shrink-0">
+                                <div class="w-full h-full bg-[#070A13] rounded-[10px] flex items-center justify-center">
+                                    <span class="text-[#2DD4BF] font-bold text-xs tracking-wider">HVA</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h4 class="text-xs font-bold text-white">Cài đặt TTDHS_HVA</h4>
+                                <p class="text-[9px] text-slate-300 mt-0.5 leading-relaxed">Chạm nút chia sẻ <i class="bi bi-box-arrow-up text-[#2DD4BF] font-bold"></i> ở đáy trình duyệt, rồi chọn <span class="text-[#2DD4BF] font-bold">"Thêm vào MH chính"</span></p>
+                            </div>
+                            <button id="btn-pwa-close" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 shrink-0">
+                                <i class="bi bi-x-lg text-[10px] text-slate-400"></i>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    installBanner.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0D9488] to-indigo-500 p-0.5 flex items-center justify-center shrink-0">
+                                <div class="w-full h-full bg-[#070A13] rounded-[10px] flex items-center justify-center">
+                                    <span class="text-[#2DD4BF] font-bold text-xs tracking-wider">HVA</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Cài đặt TTDHS_HVA</h4>
+                                <p class="text-[10px] text-slate-300 mt-0.5">Trải nghiệm mượt mà như App di động</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2 shrink-0">
+                            <button id="btn-pwa-install" class="px-3.5 py-1.5 bg-[#0D9488] hover:bg-[#2DD4BF] text-white hover:text-[#070A13] font-bold text-xs rounded-lg transition-all active:scale-95 shadow-md shadow-[#0D9488]/20">
+                                Cài đặt ngay
+                            </button>
+                            <button id="btn-pwa-close" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10">
+                                <i class="bi bi-x-lg text-[10px] text-slate-400"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+
+                document.body.appendChild(installBanner);
+
+                // Hiển thị banner
+                setTimeout(() => {
+                    installBanner.classList.remove('translate-y-[150%]');
+                }, 200);
+
+                // Nút đóng
+                document.getElementById('btn-pwa-close').addEventListener('click', () => {
+                    installBanner.classList.add('translate-y-[150%]');
+                    setTimeout(() => installBanner.remove(), 600);
+                });
+
+                // Nút cài đặt (Android)
+                const installBtn = document.getElementById('btn-pwa-install');
+                if (installBtn) {
+                    installBtn.addEventListener('click', async () => {
+                        if (deferredPrompt) {
+                            installBanner.classList.add('translate-y-[150%]');
+                            setTimeout(() => installBanner.remove(), 600);
+
+                            deferredPrompt.prompt();
+                            const { outcome } = await deferredPrompt.userChoice;
+                            console.log(`Lựa chọn cài đặt: ${outcome}`);
+
+                            if (outcome === 'accepted') {
+                                localStorage.setItem('pwa_installed', 'true');
+                            }
+                            deferredPrompt = null;
                         }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
-                    }
+                    });
                 }
             }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .safe-pb { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
-        .safe-pt { padding-top: calc(1rem + env(safe-area-inset-top)); }
-        .hidden-force { display: none !important; }
-       
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 0.9; transform: scale(1.03); }
-        }
-        .animate-glow {
-            animation: pulse-glow 4s infinite ease-in-out;
-        }
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(45, 212, 191, 0.3);
-            border-radius: 999px;
-        }
-    </style>
-</head>
-<body class="h-full bg-brand-deep text-slate-100 overflow-x-hidden antialiased select-none">
 
-    <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-brand-deep via-slate-950 to-brand-deep">
-        <div class="absolute -top-[20%] -left-[10%] w-[80%] h-[60%] rounded-full bg-teal-500/10 blur-[120px] animate-glow"></div>
-        <div class="absolute top-[40%] -right-[20%] w-[90%] h-[70%] rounded-full bg-indigo-500/10 blur-[150px] animate-glow" style="animation-delay: 2s;"></div>
+            // Kích hoạt banner nếu chưa cài đặt
+            if (!isStandalone && !isAlreadyInstalled) {
+                // Android / Chrome
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    deferredPrompt = e;
+                    showPWAInstallBanner('android');
+                });
+
+                // iOS
+                if (isIOS) {
+                    window.addEventListener('load', () => {
+                        setTimeout(() => {
+                            showPWAInstallBanner('ios');
+                        }, 3000);
+                    });
+                }
+            }
+
+            // Sự kiện khi người dùng đã cài đặt thành công
+            window.addEventListener('appinstalled', () => {
+                console.log('Ứng dụng TTDHS_HVA đã được cài đặt thành công!');
+                localStorage.setItem('pwa_installed', 'true');
+
+                // Ẩn banner nếu còn
+                const banner = document.getElementById('pwa-install-banner');
+                if (banner) {
+                    banner.classList.add('translate-y-[150%]');
+                    setTimeout(() => banner.remove(), 600);
+                }
+
+                // Toast thông báo
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-6 inset-x-6 z-50 p-4 rounded-xl bg-emerald-500/90 text-white font-bold text-xs text-center shadow-lg backdrop-blur-md max-w-xs mx-auto';
+                toast.innerText = '🎉 Đã cài đặt ứng dụng thành công!';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+            });
+        </script>
+
+        <!-- Bottom Navigation -->
+        <nav class="fixed bottom-0 left-0 right-0 z-40 bg-brand-deep/80 backdrop-blur-2xl border-t border-white/5 pb-safe px-6 shadow-2xl">
+            <div class="flex items-center justify-between h-16 max-w-lg mx-auto">
+                <a href="#" class="flex flex-col items-center justify-center flex-1 text-brand-glow py-1">
+                    <i class="bi bi-house-door-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Trang chủ</span>
+                </a>
+                <a href="#" onclick="openModal('contact-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
+                    <i class="bi bi-telephone-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Thông báo</span>
+                </a>
+                <a href="#" onclick="openModal('assistant-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
+                    <i class="bi bi-robot text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Assistant HVA</span>
+                </a>
+                <a href="#" onclick="openModal('team-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
+                    <i class="bi bi-person-lines-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Hồ sơ số</span>
+                </a>
+            </div>
+        </nav>
     </div>
 
-    <div class="flex flex-col min-h-screen">
-        
-        <header class="fixed top-0 left-0 right-0 z-40 bg-brand-deep/70 backdrop-blur-xl border-b border-white/5 px-4 py-3 safe-pt flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 shadow-lg shadow-brand-teal/20 flex items-center justify-center">
-                    <div class="w-full h-full bg-brand-deep rounded-[10px] flex items-center justify-center">
-                        <span class="text-brand-glow font-bold text-sm tracking-widest">HVA</span>
+    <!-- Backdrop -->
+    <div id="modal-backdrop" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+    <!-- Install Guide Modal -->
+    <div id="install-guide-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
+        <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
+        <div class="px-6 pb-8">
+            <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand-glow/15 flex items-center justify-center text-brand-glow">
+                        <i class="bi bi-phone"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-base font-bold text-white">Hướng dẫn Cài đặt App</h4>
+                        <p class="text-[10px] text-slate-400">Trải nghiệm mượt mà không cần qua Store</p>
                     </div>
                 </div>
-                <div>
-                    <h1 class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-none">Trung tâm Điều hành số</h1>
-                    <p class="text-sm font-bold text-white tracking-tight mt-0.5">TTDHS_HVA</p>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                    <h5 class="text-xs font-bold text-brand-glow flex items-center gap-1.5 mb-2"><i class="bi bi-apple"></i> iOS (iPhone / iPad)</h5>
+                    <ol class="list-decimal list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
+                        <li>Mở bằng <strong class="text-white">Safari</strong></li>
+                        <li>Nhấp <strong class="text-white">Chia sẻ</strong> → "Thêm vào MH chính"</li>
+                        <li>Nhấp <strong class="text-brand-glow">"Thêm"</strong></li>
+                    </ol>
                 </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <button id="header-install-btn" onclick="triggerPWAInstall()" class="px-2.5 py-1.5 rounded-xl bg-brand-glow/20 border border-brand-glow/40 text-brand-glow text-xs font-bold flex items-center space-x-1 hover:bg-brand-glow/30 active:scale-95 transition-all hidden-force">
-                    <i class="bi bi-download"></i>
-                    <span>Cài App</span>
-                </button>
-                <button onclick="openModal('contact-modal')" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all">
-                    <i class="bi bi-info-circle text-base text-slate-300"></i>
-                </button>
-                <div class="w-9 h-9 rounded-full border border-white/10 overflow-hidden bg-slate-800 shrink-0">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" alt="Avatar" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=HVA'">
+                <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                    <h5 class="text-xs font-bold text-teal-400 flex items-center gap-1.5 mb-2"><i class="bi bi-android2"></i> Android</h5>
+                    <ol class="list-decimal list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
+                        <li>Nhấn nút <strong>"Cài đặt ngay"</strong></li>
+                        <li>Hoặc ⋮ → "Thêm vào Màn hình chính"</li>
+                    </ol>
                 </div>
-            </div>
-        </header>
-
-        <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-lg mx-auto w-full">
-            
-            <section id="install-banner" class="mb-4 hidden-force">
-                <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/20 to-indigo-600/25 border border-brand-glow/30 backdrop-blur-md flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center text-brand-glow">
-                            <i class="bi bi-phone-vibrate text-xl animate-bounce"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-xs font-bold text-white uppercase tracking-wider">Cài đặt Ứng dụng</h4>
-                            <p class="text-[11px] text-teal-200/80 mt-0.5">Thêm nhanh vào màn hình chính</p>
-                        </div>
-                    </div>
-                    <button onclick="triggerPWAInstall()" class="px-3.5 py-1.5 bg-brand-glow hover:bg-teal-400 text-brand-deep font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
-                        Cài đặt ngay
-                    </button>
-                </div>
-            </section>
-
-            <section class="mb-5 mt-2">
-                <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/10 to-indigo-500/10 border border-brand-teal/20 backdrop-blur-md">
-                    <div class="flex items-center space-x-2 text-brand-glow text-xs font-bold uppercase tracking-widest mb-1.5">
-                        <i class="bi bi-lightning-charge-fill animate-pulse"></i>
-                        <span>Phương châm hoạt động</span>
-                    </div>
-                    <p class="text-sm text-slate-200 italic font-medium">"Kết nối – Điều hành – Chia sẻ – Hiệu quả"</p>
-                </div>
-            </section>
-
-            <section class="grid grid-cols-2 gap-3 mb-6">
-                <div onclick="openModal('report-modal')" class="group relative rounded-2xl bg-gradient-to-tr from-teal-600/20 to-teal-500/10 hover:from-teal-600/30 active:scale-[0.97] border border-teal-500/20 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-teal-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-teal-500 flex items-center justify-center shadow-lg shadow-teal-500/20 mb-3">
-                        <i class="bi bi-clipboard-data text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Báo cáo trực tuyến</h3>
-                    <p class="text-[11px] text-teal-200/70 mt-1 line-clamp-1">Gửi báo cáo nhanh</p>
-                </div>
-
-                <div onclick="openModal('document-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-blue-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20 mb-3">
-                        <i class="bi bi-folder-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Văn bản - Biểu mẫu</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Sở GD&ĐT, Quy chế, Mẫu</p>
-                </div>
-
-                <div onclick="openModal('academic-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-emerald-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 mb-3">
-                        <i class="bi bi-journal-bookmark-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chuyên môn</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Kế hoạch, Sổ đầu bài, STEM</p>
-                </div>
-
-                <div onclick="openModal('competition-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-amber-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-500 flex items-center justify-center shadow-lg shadow-amber-500/20 mb-3">
-                        <i class="bi bi-trophy-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Thi đua</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">HSG, NCKH, Sáng kiến</p>
-                </div>
-
-                <div onclick="openModal('digital-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-cyan-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-teal-400 flex items-center justify-center shadow-lg shadow-cyan-500/20 mb-3">
-                        <i class="bi bi-cpu-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chuyển đổi số</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Trí tuệ nhân tạo AI, LMS</p>
-                </div>
-
-                <div onclick="openModal('quality-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-rose-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-orange-500 flex items-center justify-center shadow-lg shadow-rose-500/20 mb-3">
-                        <i class="bi bi-patch-check-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chất lượng</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Đánh giá ngoài, TEMIS</p>
-                </div>
-
-                <div onclick="openModal('youth-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-red-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-500 to-pink-500 flex items-center justify-center shadow-lg shadow-red-500/20 mb-3">
-                        <i class="bi bi-flag-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Đoàn trường</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Trải nghiệm, Phong trào</p>
-                </div>
-
-                <div onclick="openModal('team-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 mb-3">
-                        <i class="bi bi-calendar3 text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Lịch công tác</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Lịch tháng, Lịch tuần, Đột xuất</p>
-                </div>
-            </section>
-
-            <section class="mb-4">
-                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <i class="bi bi-activity text-brand-glow"></i>
-                    Bản tin điều hành nhanh
-                </h2>
-                <div class="space-y-2.5">
-                    <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div class="w-2 h-2 rounded-full bg-brand-glow mt-1.5 shrink-0 animate-ping"></div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-[10px] font-bold text-slate-400">VĂN PHÒNG • VỪA CẬP NHẬT</p>
-                            <a href="https://thpthoavang.edu.vn/" target="_blank" class="text-xs text-slate-200 font-medium mt-0.5 hover:text-brand-glow transition-colors block">Triển khai rà soát hồ sơ thi đua khen thưởng học kỳ mới.</a>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div class="w-2 h-2 rounded-full bg-indigo-400 mt-1.5 shrink-0"></div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-[10px] font-bold text-slate-400">TỔ CHUYÊN MÔN • 1 GIỜ TRƯỚC</p>
-                            <a href="https://thpthoavang.edu.vn/chuyen-mon" target="_blank" class="text-xs text-slate-200 font-medium mt-0.5 hover:text-brand-glow transition-colors block">Đã cập nhật biểu mẫu Kế hoạch Giáo dục tổ nhóm chuyên môn năm học mới.</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Toast -->
-    <div id="toast-message" class="hidden-force fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-xl bg-slate-900/90 border border-brand-glow/30 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between transition-all duration-300">
-        <div class="flex items-center space-x-2">
-            <i class="bi bi-info-circle text-brand-glow text-base"></i>
-            <span id="toast-text"></span>
-        </div>
-        <button onclick="hideToast()" class="text-slate-400 hover:text-white"><i class="bi bi-x-lg"></i></button>
-    </div>
-
-    <!-- ==================== MODALS ==================== -->
-    <!-- Contact Modal -->
-    <div id="contact-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
-        <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('contact-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
-            <div class="text-center">
-                <div class="w-12 h-12 rounded-full bg-brand-glow/10 text-brand-glow flex items-center justify-center mx-auto mb-3">
-                    <i class="bi bi-info-circle-fill text-2xl"></i>
-                </div>
-                <h3 class="text-base font-bold text-white mb-1">Thông tin Trung tâm</h3>
-                <p class="text-xs text-slate-400 mb-4">Trường THPT Hòa Vang, Đà Nẵng</p>
-                <div class="text-left space-y-2 text-sm text-slate-300">
-                    <p class="flex items-center gap-2"><i class="bi bi-geo-alt-fill text-teal-400"></i> 101 Ông Ích Đường, Cẩm Lệ, Đà Nẵng</p>
-                    <p class="flex items-center gap-2"><i class="bi bi-envelope-fill text-teal-400"></i> thpthoavangdn@gmail.com</p>
-                    <p class="flex items-center gap-2"><i class="bi bi-telephone-fill text-teal-400"></i> (0236) 3846142</p>
-                </div>
-                <button onclick="closeModal('contact-modal')" class="w-full mt-5 py-2.5 bg-brand-glow/20 border border-brand-glow/40 hover:bg-brand-glow/30 text-brand-glow font-bold text-xs rounded-xl transition-all">Đóng</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Report Modal -->
-    <div id="report-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
-        <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('report-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
-            <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
-                <div class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center"><i class="bi bi-clipboard-data text-base"></i></div>
-                <h3 class="font-bold text-white text-sm">Báo cáo trực tuyến</h3>
-            </div>
-            <div class="space-y-2.5 text-xs text-slate-300">
-                <p class="text-slate-400 mb-3">Thực hiện báo cáo và thống kê nhanh chóng các nhiệm vụ được giao.</p>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-teal-500/40 hover:bg-teal-500/5 transition-all">
-                    <span>Báo cáo tuần học viên & nề nếp</span><i class="bi bi-arrow-right text-teal-400"></i>
-                </a>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-teal-500/40 hover:bg-teal-500/5 transition-all">
-                    <span>Thống kê kết quả kiểm tra định kỳ</span><i class="bi bi-arrow-right text-teal-400"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Document Modal -->
-    <div id="document-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
-        <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('document-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
-            <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
-                <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center"><i class="bi bi-folder-fill text-base"></i></div>
-                <h3 class="font-bold text-white text-sm">Văn bản - Biểu mẫu</h3>
-            </div>
-            <div class="space-y-2.5 text-xs text-slate-300">
-                <p class="text-slate-400 mb-3">Tải và tra cứu hệ thống văn bản chỉ đạo hành chính và biểu mẫu nghiệp vụ.</p>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-blue-500/40 hover:bg-blue-500/5 transition-all">
-                    <span>Văn bản chỉ đạo từ Sở GD&ĐT</span><i class="bi bi-arrow-right text-blue-400"></i>
-                </a>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-blue-500/40 hover:bg-blue-500/5 transition-all">
-                    <span>Quy chế nội bộ trường THPT Hòa Vang</span><i class="bi bi-arrow-right text-blue-400"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Academic Modal -->
-    <div id="academic-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
-        <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('academic-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
-            <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center"><i class="bi bi-journal-bookmark-fill text-base"></i></div>
-                <h3 class="font-bold text-white text-sm">Quản lý Chuyên môn</h3>
-            </div>
-            <div class="space-y-2.5 text-xs text-slate-300">
-                <p class="text-slate-400 mb-3">Phục vụ công tác giảng dạy, quản lý sổ sách điện tử và giáo dục STEM.</p>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all">
-                    <span>Sổ đầu bài & Kế hoạch bài dạy</span><i class="bi bi-arrow-right text-emerald-400"></i>
-                </a>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all">
-                    <span>Tài nguyên hoạt động STEM</span><i class="bi bi-arrow-right text-emerald-400"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Competition Modal -->
-    <div id="competition-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
-        <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('competition-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
-            <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
-                <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center"><i class="bi bi-trophy-fill text-base"></i></div>
-                <h3 class="font-bold text-white text-sm">Thi đua & Khen thưởng</h3>
-            </div>
-            <div class="space-y-2.5 text-xs text-slate-300">
-                <p class="text-slate-400 mb-3">Quản lý và ghi nhận thành tích giáo viên dạy giỏi, HSG, nghiên cứu khoa học.</p>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-amber-500/40 hover:bg-amber-500/5 transition-all">
-                    <span>Hồ sơ bồi dưỡng HSG cấp TP</span><i class="bi bi-arrow-right text-amber-400"></i>
-                </a>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-amber-500/40 hover:bg-amber-500/5 transition-all">
-                    <span>Đề xuất Sáng kiến kinh nghiệm</span><i class="bi bi-arrow-right text-amber-400"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Digital Modal -->
-    <div id="digital-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
-        <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('digital-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
-            <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
-                <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center"><i class="bi bi-cpu-fill text-base"></i></div>
-                <h3 class="font-bold text-white text-sm">Hạ tầng Chuyển đổi số</h3>
-            </div>
-            <div class="space-y-2.5 text-xs text-slate-300">
-                <p class="text-slate-400 mb-3">Cung cấp hệ thống dạy học trực tuyến và công cụ trợ lý AI của HVA.</p>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-cyan-500/40 hover:bg-cyan-500/5 transition-all">
-                    <span>Truy cập hệ thống LMS học trực tuyến</span><i class="bi bi-arrow-right text-cyan-400"></i>
-                </a>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-cyan-500/40 hover:bg-cyan-500/5 transition-all">
-                    <span>Hỗ trợ Trí tuệ Nhân tạo AI (Beta)</span><i class="bi bi-arrow-right text-cyan-400"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quality Modal -->
-    <div id="quality-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
-        <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('quality-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
-            <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
-                <div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center"><i class="bi bi-patch-check-fill text-base"></i></div>
-                <h3 class="font-bold text-white text-sm">Đảm bảo Chất lượng</h3>
-            </div>
-            <div class="space-y-2.5 text-xs text-slate-300">
-                <p class="text-slate-400 mb-3">Theo dõi đánh giá chuẩn nghề nghiệp giáo viên và minh chứng kiểm định chất lượng.</p>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-rose-500/40 hover:bg-rose-500/5 transition-all">
-                    <span>Đánh giá chuẩn TEMIS giáo viên</span><i class="bi bi-arrow-right text-rose-400"></i>
-                </a>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-rose-500/40 hover:bg-rose-500/5 transition-all">
-                    <span>Minh chứng Kiểm định Giáo dục</span><i class="bi bi-arrow-right text-rose-400"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Youth Modal -->
-    <div id="youth-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
-        <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('youth-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
-            <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
-                <div class="w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center"><i class="bi bi-flag-fill text-base"></i></div>
-                <h3 class="font-bold text-white text-sm">Hoạt động Đoàn trường</h3>
-            </div>
-            <div class="space-y-2.5 text-xs text-slate-300">
-                <p class="text-slate-400 mb-3">Thông tin các phong trào Đoàn hội, thanh niên tình nguyện và ngoại khóa.</p>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-red-500/40 hover:bg-red-500/5 transition-all">
-                    <span>Đăng ký Hoạt động ngoại khóa dã ngoại</span><i class="bi bi-arrow-right text-red-400"></i>
-                </a>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-red-500/40 hover:bg-red-500/5 transition-all">
-                    <span>Sổ tay đánh giá rèn luyện thanh niên</span><i class="bi bi-arrow-right text-red-400"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Team Modal -->
-    <div id="team-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
-        <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative">
-            <button onclick="closeModal('team-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="bi bi-x-lg text-lg"></i></button>
-            <div class="flex items-center space-x-2.5 mb-4 border-b border-white/5 pb-3">
-                <div class="w-8 h-8 rounded-lg bg-violet-500/20 text-violet-400 flex items-center justify-center"><i class="bi bi-calendar3 text-base"></i></div>
-                <h3 class="font-bold text-white text-sm">Lịch công tác</h3>
-            </div>
-            <div class="space-y-2.5 text-xs text-slate-300">
-                <p class="text-slate-400 mb-3">Lịch làm việc chi tiết của hội đồng nhà trường, tổ CM và giáo viên.</p>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-violet-500/40 hover:bg-violet-500/5 transition-all">
-                    <span>Lịch tuần nhà trường</span><i class="bi bi-arrow-right text-violet-400"></i>
-                </a>
-                <a href="#" class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-violet-500/40 hover:bg-violet-500/5 transition-all">
-                    <span>Lịch trực Ban giám hiệu & Đột xuất</span><i class="bi bi-arrow-right text-violet-400"></i>
-                </a>
             </div>
         </div>
     </div>
 
     <script>
-        // Toast
-        let toastTimeout;
-        function showToast(message) {
-            const toast = document.getElementById('toast-message');
-            const toastText = document.getElementById('toast-text');
-            toastText.textContent = message;
-            toast.classList.remove('hidden-force', 'opacity-0', 'scale-90', 'pointer-events-none');
-            toast.classList.add('opacity-100', 'scale-100');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(hideToast, 5000);
-        }
-        function hideToast() {
-            const toast = document.getElementById('toast-message');
-            toast.classList.remove('opacity-100', 'scale-100');
-            toast.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
-        }
+        let currentModalId = null;
 
-        // Modal
+        // Modal Functions
         function openModal(modalId) {
+            currentModalId = modalId;
+            const backdrop = document.getElementById('modal-backdrop');
             const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('hidden-force');
-                document.body.classList.add('overflow-hidden');
-            }
-        }
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('hidden-force');
-                document.body.classList.remove('overflow-hidden');
-            }
+            
+            backdrop.classList.remove('pointer-events-none', 'opacity-0');
+            backdrop.classList.add('opacity-100');
+            modal.classList.remove('translate-y-full');
+            modal.classList.add('translate-y-0');
+            document.body.style.overflow = 'hidden';
         }
 
-        // Click outside to close
-        window.addEventListener('click', (e) => {
-            const modals = ['contact-modal','report-modal','document-modal','academic-modal','competition-modal','digital-modal','quality-modal','youth-modal','team-modal'];
-            modals.forEach(id => {
-                const modal = document.getElementById(id);
-                if (e.target === modal) closeModal(id);
-            });
-        });
-
-        // PWA
-      <script>
-    let deferredPrompt = null;
-
-    // Toast function
-    let toastTimeout;
-    function showToast(message) {
-        const toast = document.getElementById('toast-message');
-        const toastText = document.getElementById('toast-text');
-        toastText.textContent = message;
-        toast.classList.remove('hidden-force', 'opacity-0', 'scale-90', 'pointer-events-none');
-        toast.classList.add('opacity-100', 'scale-100');
-        clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(hideToast, 5000);
-    }
-    function hideToast() {
-        const toast = document.getElementById('toast-message');
-        toast.classList.remove('opacity-100', 'scale-100');
-        toast.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
-    }
-
-    // Modal functions
-    function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.remove('hidden-force');
-            document.body.classList.add('overflow-hidden');
+        function closeModal() {
+            if (!currentModalId) return;
+            const backdrop = document.getElementById('modal-backdrop');
+            const modal = document.getElementById(currentModalId);
+            
+            backdrop.classList.add('pointer-events-none', 'opacity-0');
+            modal.classList.remove('translate-y-0');
+            modal.classList.add('translate-y-full');
+            document.body.style.overflow = 'auto';
+            currentModalId = null;
         }
-    }
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.add('hidden-force');
-            document.body.classList.remove('overflow-hidden');
-        }
-    }
 
-    // PWA Install - ĐÃ TỐI ƯU
-    function triggerPWAInstall() {
-        if (deferredPrompt) {
-            // Android/Chrome
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choice) => {
-                if (choice.outcome === 'accepted') {
-                    localStorage.setItem('pwa_installed', 'true');
-                    document.getElementById('install-banner').classList.add('hidden-force');
-                    document.getElementById('header-install-btn').classList.add('hidden-force');
+        // Backdrop click
+        document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+
+        // Swipe to close modal
+        document.querySelectorAll('[id$="-modal"]').forEach(modal => {
+            let touchStartY = 0;
+            modal.addEventListener('touchstart', e => {
+                touchStartY = e.changedTouches[0].screenY;
+            }, { passive: true });
+
+            modal.addEventListener('touchend', e => {
+                const touchEndY = e.changedTouches[0].screenY;
+                if (touchEndY - touchStartY > 80 && modal.scrollTop === 0) {
+                    closeModal();
                 }
-                deferredPrompt = null;
-            });
-        } else {
-            // iOS hoặc trình duyệt không hỗ trợ prompt
-            showToast("📱 Vui lòng chạm nút 'Chia sẻ' (ở dưới hoặc trên) → Chọn 'Thêm vào màn hình chính'");
-        }
-    }
-
-    // Listen for install prompt
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('install-banner').classList.remove('hidden-force');
-        document.getElementById('header-install-btn').classList.remove('hidden-force');
-    });
-
-    // Check if already installed
-    window.addEventListener('load', () => {
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-        if (isStandalone || localStorage.getItem('pwa_installed') === 'true') {
-            document.getElementById('install-banner').classList.add('hidden-force');
-            document.getElementById('header-install-btn').classList.add('hidden-force');
-        }
-    });
-
-    // When app is installed successfully
-    window.addEventListener('appinstalled', () => {
-        localStorage.setItem('pwa_installed', 'true');
-        document.getElementById('install-banner').classList.add('hidden-force');
-        document.getElementById('header-install-btn').classList.add('hidden-force');
-        showToast("🎉 Ứng dụng đã được cài đặt thành công!");
-    });
-
-    // Click outside modal to close
-    window.addEventListener('click', (e) => {
-        const modals = ['contact-modal','report-modal','document-modal','academic-modal','competition-modal','digital-modal','quality-modal','youth-modal','team-modal'];
-        modals.forEach(id => {
-            const modal = document.getElementById(id);
-            if (e.target === modal) closeModal(id);
+            }, { passive: true });
         });
-    });
+
+        // Check standalone mode
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+                const installBanner = document.getElementById('install-banner');
+                if (installBanner) installBanner.classList.add('hidden');
+                const headerBtn = document.getElementById('header-install-btn');
+                if (headerBtn) headerBtn.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>
