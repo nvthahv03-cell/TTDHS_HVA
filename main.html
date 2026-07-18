@@ -307,29 +307,31 @@
         });
         <!-- ... existing code ... -->
 <script>
-    // 1. Kiểm tra trạng thái "đã cài" ngay khi vừa load trang
-    function checkInstallationStatus() {
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-        const isInstalledLocal = localStorage.getItem('pwa_installed') === 'true';
+    // 1. Hàm ẩn banner bằng mọi giá (Dùng style trực tiếp thay vì class)
+    function forceHideBanner() {
+        const banner = document.getElementById('pwa-install-banner');
         
-        if (isStandalone || isInstalledLocal) {
-            const banner = document.getElementById('pwa-install-banner');
-            if (banner) banner.classList.add('hidden'); // Ẩn banner ngay lập tức
-            console.log("App đã cài đặt, banner ẩn.");
+        // Kiểm tra xem ứng dụng đã cài chưa (trạng thái standalone hoặc đã lưu local)
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        const isInstalled = localStorage.getItem('pwa_installed') === 'true';
+
+        if (isStandalone || isInstalled) {
+            if (banner) {
+                // Ép ẩn bằng cả style trực tiếp và class
+                banner.style.setProperty('display', 'none', 'important');
+                banner.classList.add('hidden');
+                console.log("Đã cưỡng bức ẩn banner thành công.");
+            }
         }
     }
 
-    // 2. Chạy kiểm tra ngay khi load
-    window.addEventListener('load', checkInstallationStatus);
+    // 2. Chạy ngay khi DOM sẵn sàng
+    document.addEventListener('DOMContentLoaded', forceHideBanner);
 
-    // 3. Xử lý khi người dùng nhấn "Cài đặt ngay"
+    // 3. Lắng nghe sự kiện cài đặt thành công
     window.addEventListener('appinstalled', (evt) => {
-        console.log('Cài đặt thành công!');
         localStorage.setItem('pwa_installed', 'true');
-        
-        // Ẩn banner
-        const banner = document.getElementById('pwa-install-banner');
-        if (banner) banner.remove();
+        forceHideBanner();
         
         // Hiện thông báo chúc mừng
         const toast = document.createElement('div');
@@ -339,10 +341,8 @@
         setTimeout(() => toast.remove(), 4000);
     });
 
-    // 4. Định kỳ kiểm tra (phòng trường hợp event không bắt được)
-    setInterval(checkInstallationStatus, 2000);
-
-    </script>
-
+    // 4. Kiểm tra lặp lại mỗi giây (vòng bảo vệ cuối cùng)
+    setInterval(forceHideBanner, 1000);
+</script>
 </body>
 </html>
