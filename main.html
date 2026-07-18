@@ -306,42 +306,6 @@
             setTimeout(() => toast.remove(), 4000);
         });
     </script>
-<!-- ... existing code ... -->
-<script>
-    // 1. Kiểm tra trạng thái "đã cài" ngay khi vừa load trang
-    function checkInstallationStatus() {
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-        const isInstalledLocal = localStorage.getItem('pwa_installed') === 'true';
-        
-        if (isStandalone || isInstalledLocal) {
-            const banner = document.getElementById('pwa-install-banner');
-            if (banner) banner.classList.add('hidden'); // Ẩn banner ngay lập tức
-            console.log("App đã cài đặt, banner ẩn.");
-        }
-    }
 
-    // 2. Chạy kiểm tra ngay khi load
-    window.addEventListener('load', checkInstallationStatus);
-
-    // 3. Xử lý khi người dùng nhấn "Cài đặt ngay"
-    window.addEventListener('appinstalled', (evt) => {
-        console.log('Cài đặt thành công!');
-        localStorage.setItem('pwa_installed', 'true');
-        
-        // Ẩn banner
-        const banner = document.getElementById('pwa-install-banner');
-        if (banner) banner.remove();
-        
-        // Hiện thông báo chúc mừng
-        const toast = document.createElement('div');
-        toast.className = 'fixed top-6 inset-x-6 z-[60] p-4 rounded-xl bg-emerald-500/90 text-white font-bold text-xs text-center shadow-lg backdrop-blur-md max-w-xs mx-auto animate-bounce';
-        toast.innerText = '🎉 Đã cài đặt ứng dụng thành công!';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
-    });
-
-    // 4. Định kỳ kiểm tra (phòng trường hợp event không bắt được)
-    setInterval(checkInstallationStatus, 2000);
-</script>
 </body>
 </html>
