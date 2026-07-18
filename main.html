@@ -75,26 +75,78 @@
             </div>
         </header>
 
-        <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-lg mx-auto w-full">
-            <!-- Install Banner -->
-            <section id="install-banner" class="mb-4 hidden-force">
-                <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/20 to-indigo-600/25 border border-brand-glow/30 backdrop-blur-md flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center text-brand-glow">
-                            <i class="bi bi-phone-vibrate text-xl animate-bounce"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-xs font-bold text-white uppercase tracking-wider">Cài đặt Ứng dụng</h4>
-                            <p class="text-[11px] text-teal-200/80 mt-0.5">Thêm nhanh vào màn hình chính</p>
-                        </div>
-                    </div>
-                    <button onclick="triggerPWAInstall()" class="px-3.5 py-1.5 bg-brand-glow hover:bg-teal-400 text-brand-deep font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
-                        Cài đặt ngay
-                    </button>
+       <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-lg mx-auto w-full">
+    
+    <!-- Install Banner -->
+    <section id="install-banner" class="mb-4 hidden-force">
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/20 to-indigo-600/25 border border-brand-glow/30 backdrop-blur-md flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center text-brand-glow">
+                    <i class="bi bi-phone-vibrate text-xl animate-bounce"></i>
                 </div>
-            </section>
+                <div>
+                    <h4 class="text-xs font-bold text-white uppercase tracking-wider">Cài đặt Ứng dụng</h4>
+                    <p class="text-[11px] text-teal-200/80 mt-0.5">Thêm nhanh vào màn hình chính</p>
+                </div>
+            </div>
+            <button onclick="triggerPWAInstall()" class="px-3.5 py-1.5 bg-brand-glow hover:bg-teal-400 text-brand-deep font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
+                Cài đặt ngay
+            </button>
+        </div>
+    </section>
 
-        </main>
+    <!-- Phương châm -->
+    <section class="mb-5 mt-2">
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/10 to-indigo-500/10 border border-brand-teal/20 backdrop-blur-md">
+            <div class="flex items-center space-x-2 text-brand-glow text-xs font-bold uppercase tracking-widest mb-1.5">
+                <i class="bi bi-lightning-charge-fill animate-pulse"></i>
+                <span>Phương châm hoạt động</span>
+            </div>
+            <p class="text-sm text-slate-200 italic font-medium">"Kết nối – Điều hành – Chia sẻ – Hiệu quả"</p>
+        </div>
+    </section>
+
+    <!-- Tiêu đề phân hệ -->
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-sm font-bold text-slate-300 tracking-wider uppercase flex items-center gap-2">
+            <i class="bi bi-grid-1x2-fill text-brand-glow"></i>
+            Phân Hệ Điều Hành Chính
+        </h2>
+        <span class="text-xs text-brand-glow font-semibold">THPT Hòa Vang</span>
+    </div>
+
+    <!-- Grid 8 Card -->
+    <section class="grid grid-cols-2 gap-3 mb-6">
+        <!-- Card 1 -->
+        <div onclick="openModal('report-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+            <div class="w-10 h-10 rounded-xl bg-teal-500 flex items-center justify-center shadow-lg mb-3">
+                <i class="bi bi-clipboard-data text-white text-lg"></i>
+            </div>
+            <h3 class="text-sm font-bold text-white">Báo cáo trực tuyến</h3>
+            <p class="text-[11px] text-slate-400">Gửi báo cáo nhanh</p>
+        </div>
+
+        <!-- Thêm 7 card còn lại (em sẽ đưa tiếp nếu thầy muốn) -->
+        <!-- ... -->
+    </section>
+
+    <!-- Bản tin -->
+    <section class="mb-4">
+        <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <i class="bi bi-activity text-brand-glow"></i>
+            Bản tin điều hành nhanh
+        </h2>
+        <div class="space-y-2.5">
+            <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                <div class="w-2 h-2 rounded-full bg-brand-glow mt-1.5 shrink-0 animate-ping"></div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-[10px] font-bold text-slate-400">VĂN PHÒNG • VỪA CẬP NHẬT</p>
+                    <a href="https://thpthoavang.edu.vn/" target="_blank" class="text-xs text-slate-200 font-medium mt-0.5 hover:text-brand-glow transition-colors block">Triển khai rà soát hồ sơ thi đua khen thưởng học kỳ mới.</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
     </div>
 
     <!-- Toast -->
