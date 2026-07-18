@@ -222,44 +222,43 @@
         </main>
 
 <script>
-    // 1. Quản lý chung
+    // 1. Quản lý trạng thái chung
     let deferredPrompt = null;
     let currentModalId = null;
 
-    // 2. Service Worker Registration
+    // 2. Service Worker (Luôn đăng ký)
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .catch(err => console.error('SW Error:', err));
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Load:', err));
         });
     }
 
-    // 3. PWA Install Logic
+    // 3. Logic PWA (Chặn prompt mặc định để dùng nút riêng)
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
     });
 
+    // Hàm gọi cài đặt (Dùng được cho cả nút Header và nút trong Modal)
     function triggerPWAInstall() {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choice) => {
-                if (choice.outcome === 'accepted') {
-                    document.getElementById('install-banner')?.classList.add('hidden');
-                }
                 deferredPrompt = null;
             });
         } else {
+            // Nếu không có prompt (do đã cài hoặc trình duyệt chặn), mở modal hướng dẫn
             openModal('install-guide-modal');
         }
     }
 
-    // 4. Modal Control
+    // 4. Modal Control (Cải tiến để không bị lỗi null)
     function openModal(modalId) {
-        currentModalId = modalId;
-        const backdrop = document.getElementById('modal-backdrop');
         const modal = document.getElementById(modalId);
+        const backdrop = document.getElementById('modal-backdrop');
+        if (!modal || !backdrop) return;
         
+        currentModalId = modalId;
         backdrop.classList.remove('pointer-events-none', 'opacity-0');
         backdrop.classList.add('opacity-100');
         modal.classList.remove('translate-y-full');
@@ -269,29 +268,30 @@
 
     function closeModal() {
         if (!currentModalId) return;
-        const backdrop = document.getElementById('modal-backdrop');
         const modal = document.getElementById(currentModalId);
+        const backdrop = document.getElementById('modal-backdrop');
         
-        backdrop.classList.add('pointer-events-none', 'opacity-0');
-        modal.classList.remove('translate-y-0');
-        modal.classList.add('translate-y-full');
+        if (modal) {
+            modal.classList.remove('translate-y-0');
+            modal.classList.add('translate-y-full');
+        }
+        if (backdrop) {
+            backdrop.classList.add('pointer-events-none', 'opacity-0');
+        }
         document.body.style.overflow = 'auto';
         currentModalId = null;
     }
 
-    // 5. Khởi tạo & Sự kiện
-    document.getElementById('modal-backdrop')?.addEventListener('click', closeModal);
-
-    // Swipe down to close
+    // 5. Gán sự kiện "Vuốt để đóng" (Áp dụng cho mọi Modal)
     document.querySelectorAll('[id$="-modal"]').forEach(modal => {
         let startY = 0;
         modal.addEventListener('touchstart', e => startY = e.touches[0].screenY, { passive: true });
         modal.addEventListener('touchend', e => {
-            if (e.changedTouches[0].screenY - startY > 80 && modal.scrollTop === 0) closeModal();
+            if (e.changedTouches[0].screenY - startY > 80) closeModal();
         }, { passive: true });
     });
 
-    // Check Installation Status
+    // 6. Kiểm tra ẩn nút nếu đã cài đặt
     window.addEventListener('DOMContentLoaded', () => {
         if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
             document.getElementById('install-banner')?.classList.add('hidden');
