@@ -54,40 +54,6 @@ tailwind.config = {
             animation: pulse-glow 4s infinite ease-in-out;
         }
     </style>
-</head>
-<body class="h-full bg-brand-deep text-slate-100 overflow-x-hidden antialiased select-none">
-
-    <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-brand-deep via-slate-950 to-brand-deep">
-        <div class="absolute -top-[20%] -left-[10%] w-[80%] h-[60%] rounded-full bg-teal-500/10 blur-[120px] animate-glow"></div>
-        <div class="absolute top-[40%] -right-[20%] w-[90%] h-[70%] rounded-full bg-indigo-500/10 blur-[150px] animate-glow" style="animation-delay: 2s;"></div>
-    </div>
-
-    <div class="flex flex-col min-h-screen">
-        <header class="fixed top-0 left-0 right-0 z-40 bg-brand-deep/70 backdrop-blur-xl border-b border-white/5 px-4 py-3 safe-pt flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 shadow-lg shadow-brand-teal/20 flex items-center justify-center">
-                    <div class="w-full h-full bg-brand-deep rounded-[10px] flex items-center justify-center">
-                        <span class="text-brand-glow font-bold text-sm tracking-widest">HVA</span>
-                    </div>
-                </div>
-                <div class="div">
-                    <h1 class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-none">Trung tâm Điều hành số</h1>
-                    <p class="text-sm font-bold text-white tracking-tight mt-0.5">TTDHS_HVA</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <button id="header-install-btn" onclick="openModal('install-guide-modal')" class="px-2.5 py-1.5 rounded-xl bg-brand-glow/20 border border-brand-glow/40 text-brand-glow text-xs font-bold flex items-center space-x-1 hover:bg-brand-glow/30 active:scale-95 transition-all">
-                    <i class="bi bi-download"></i>
-                    <span>Cài App</span>
-                </button>
-                <button onclick="openModal('contact-modal')" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all">
-                    <i class="bi bi-info-circle text-base text-slate-300"></i>
-                </button>
-                <div class="w-9 h-9 rounded-full border border-white/10 overflow-hidden bg-slate-800 shrink-0">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" alt="Avatar" class="w-full h-full object-cover">
-                </div>
-            </div>
-        </header>
 
         <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto">
             <!-- CHÈN CARD CHÀO MỪNG VÀO ĐÂY -->
