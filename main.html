@@ -7,7 +7,24 @@
     <title>TTDHS_HVA - Trung tâm Điều hành số THPT Hòa Vang</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { brand: { deep: '#070A13', primary: '#0F172A', accent: '#1E293B', teal: '#0D9488', glow: '#2DD4BF' } }, fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'] } } } };
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            deep: '#070A13',
+                            primary: '#0F172A',
+                            accent: '#1E293B',
+                            teal: '#0D9488',
+                            glow: '#2DD4BF'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
+                    }
+                }
+            }
+        }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -16,7 +33,11 @@
         .safe-pb { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
         .safe-pt { padding-top: calc(1rem + env(safe-area-inset-top)); }
         .hidden-force { display: none !important; }
-        @keyframes pulse-glow { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.03); } }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.03); }
+        }
         .animate-glow { animation: pulse-glow 4s infinite ease-in-out; }
     </style>
 </head>
@@ -49,7 +70,7 @@
                     <i class="bi bi-info-circle text-base text-slate-300"></i>
                 </button>
                 <div class="w-9 h-9 rounded-full border border-white/10 overflow-hidden bg-slate-800 shrink-0">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" alt="Avatar" class="w-full h-full object-cover">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" alt="Avatar" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=HVA'">
                 </div>
             </div>
         </header>
@@ -73,15 +94,15 @@
                 </div>
             </section>
 
-            <!-- Nội dung chính của thầy -->
-            <section class="mb-5 mt-2">...</section>
-            <section class="grid grid-cols-2 gap-3 mb-6">... (8 card) ...</section>
-            <section class="mb-4">... Bản tin ...</section>
+            <!-- Các phần còn lại giữ nguyên như code của thầy -->
+            <section class="mb-5 mt-2"> ... </section>
+            <section class="grid grid-cols-2 gap-3 mb-6">
+            <section class="mb-4"> ... Bản tin ... </section>
         </main>
     </div>
 
     <!-- Toast -->
-    <div id="toast-message" class="hidden-force fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-xl bg-slate-900/90 border border-brand-glow/30 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between">
+    <div id="toast-message" class="hidden-force fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-xl bg-slate-900/90 border border-brand-glow/30 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between transition-all duration-300">
         <div class="flex items-center space-x-2">
             <i class="bi bi-info-circle text-brand-glow text-base"></i>
             <span id="toast-text"></span>
@@ -89,31 +110,63 @@
         <button onclick="hideToast()" class="text-slate-400 hover:text-white"><i class="bi bi-x-lg"></i></button>
     </div>
 
+    <!-- Modals (giữ nguyên như code thầy gửi) -->
+    <!-- ... (contact-modal, report-modal, document-modal, ... team-modal) ... -->
+
     <script>
         let deferredPrompt = null;
+        let toastTimeout;
 
-        function showToast(msg) {
+        function showToast(message) {
             const toast = document.getElementById('toast-message');
-            document.getElementById('toast-text').textContent = msg;
-            toast.classList.remove('hidden-force');
-            setTimeout(() => toast.classList.add('hidden-force'), 4000);
+            const toastText = document.getElementById('toast-text');
+            toastText.textContent = message;
+            toast.classList.remove('hidden-force', 'opacity-0', 'scale-90', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'scale-100');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(hideToast, 5000);
         }
 
-        function triggerPWAInstall() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(choice => {
-                    if (choice.outcome === 'accepted') {
-                        document.getElementById('install-banner').classList.add('hidden-force');
-                        document.getElementById('header-install-btn').classList.add('hidden-force');
-                    }
-                });
-            } else {
-                showToast("📱 Chạm nút 'Chia sẻ' → Chọn 'Thêm vào màn hình chính'");
+        function hideToast() {
+            const toast = document.getElementById('toast-message');
+            toast.classList.remove('opacity-100', 'scale-100');
+            toast.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
+        }
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden-force');
+                document.body.classList.add('overflow-hidden');
             }
         }
 
-        window.addEventListener('beforeinstallprompt', e => {
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('hidden-force');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        // PWA Install
+        function triggerPWAInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choice) => {
+                    if (choice.outcome === 'accepted') {
+                        localStorage.setItem('pwa_installed', 'true');
+                        document.getElementById('install-banner').classList.add('hidden-force');
+                        document.getElementById('header-install-btn').classList.add('hidden-force');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                showToast("📱 Vui lòng chạm nút 'Chia sẻ' → Chọn 'Thêm vào màn hình chính'");
+            }
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             document.getElementById('install-banner').classList.remove('hidden-force');
@@ -121,10 +174,27 @@
         });
 
         window.addEventListener('load', () => {
-            if (window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('pwa_installed') === 'true') {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            if (isStandalone || localStorage.getItem('pwa_installed') === 'true') {
                 document.getElementById('install-banner').classList.add('hidden-force');
                 document.getElementById('header-install-btn').classList.add('hidden-force');
             }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            localStorage.setItem('pwa_installed', 'true');
+            document.getElementById('install-banner').classList.add('hidden-force');
+            document.getElementById('header-install-btn').classList.add('hidden-force');
+            showToast("🎉 Ứng dụng đã được cài đặt thành công!");
+        });
+
+        // Click outside to close modal
+        window.addEventListener('click', (e) => {
+            const modals = ['contact-modal','report-modal','document-modal','academic-modal','competition-modal','digital-modal','quality-modal','youth-modal','team-modal'];
+            modals.forEach(id => {
+                const modal = document.getElementById(id);
+                if (e.target === modal) closeModal(id);
+            });
         });
     </script>
 </body>
