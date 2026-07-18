@@ -25,6 +25,27 @@
                 }
             }
         }
+        function updateWelcomeTicker() {
+    const days = [
+        "Chủ nhật",
+        "Thứ Hai",
+        "Thứ Ba",
+        "Thứ Tư",
+        "Thứ Năm",
+        "Thứ Sáu",
+        "Thứ Bảy"
+    ];
+
+    const now = new Date();
+
+    const text =
+        `📅 Hôm nay: ${days[now.getDay()]}, ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}   •   ✨ Chào mừng đến với Trung tâm Điều hành số THPT Hòa Vang   •   🌸 Chúc Quý Thầy, Cô luôn mạnh khỏe - hạnh phúc - một ngày làm việc hiệu quả!`;
+
+    document.getElementById("welcomeTicker").innerHTML =
+        `<span class="ticker">${text}</span>`;
+}
+
+updateWelcomeTicker();
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -39,6 +60,21 @@
             50% { opacity: 0.9; transform: scale(1.03); }
         }
         .animate-glow { animation: pulse-glow 4s infinite ease-in-out; }
+        .ticker{
+    display:inline-block;
+    white-space:nowrap;
+    padding-left:100%;
+    animation:ticker 22s linear infinite;
+}
+
+@keyframes ticker{
+    from{
+        transform:translateX(0);
+    }
+    to{
+        transform:translateX(-100%);
+    }
+}
     </style>
 </head>
 <body class="h-full bg-brand-deep text-slate-100 overflow-x-hidden antialiased select-none">
@@ -94,7 +130,9 @@
             </button>
         </div>
     </section>
-
+<div class="overflow-hidden rounded-xl bg-brand-glow/10 border border-brand-glow/20 py-2 px-3 mb-3">
+    <div id="welcomeTicker" class="whitespace-nowrap text-xs font-medium text-brand-glow"></div>
+</div>
   <!-- Phương châm -->
     <section class="mb-3 mt-2">
         <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/10 to-indigo-500/10 border border-brand-teal/20 backdrop-blur-md">
