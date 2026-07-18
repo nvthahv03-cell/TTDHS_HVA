@@ -35,13 +35,11 @@
 </head>
 <body class="h-full bg-brand-deep text-slate-100 overflow-x-hidden antialiased select-none">
 
-    <!-- Background Decoration -->
     <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-brand-deep via-slate-950 to-brand-deep">
         <div class="absolute -top-[20%] -left-[10%] w-[80%] h-[60%] rounded-full bg-teal-500/10 blur-[120px] animate-glow"></div>
         <div class="absolute top-[40%] -right-[20%] w-[90%] h-[70%] rounded-full bg-indigo-500/10 blur-[150px] animate-glow" style="animation-delay: 2s;"></div>
     </div>
 
-    <!-- Header -->
     <header class="fixed top-0 left-0 right-0 z-40 bg-brand-deep/70 backdrop-blur-xl border-b border-white/5 px-4 py-3 safe-pt flex items-center justify-between">
         <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 shadow-lg shadow-brand-teal/20 flex items-center justify-center">
@@ -50,7 +48,7 @@
                 </div>
             </div>
             <div>
-                <h1 class="text-[9px] font-semibold text-slate-400 uppercase tracking-widest leading-none">Trung tâm Điều hành số</h1>
+                <h1 class="text-[9px] font-semibold text-slate-300 uppercase tracking-widest leading-none">Trung tâm Điều hành số</h1>
                 <p class="text-sm font-bold text-white tracking-tight">TTDHS_HVA</p>
             </div>
         </div>
@@ -60,76 +58,62 @@
     </header>
 
     <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto">
-        <!-- PWA Install Banner -->
-        <section id="install-banner" class="mb-4 hidden">
-            <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/20 to-indigo-600/25 border border-brand-glow/30 backdrop-blur-md flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center text-brand-glow"><i class="bi bi-phone-vibrate text-xl animate-bounce"></i></div>
-                    <div>
-                        <h4 class="text-xs font-bold text-white">Cài đặt Ứng dụng</h4>
-                        <p class="text-[11px] text-teal-200/80">Thêm nhanh vào màn hình chính</p>
-                    </div>
-                </div>
-                <button onclick="triggerPWAInstall()" class="px-3 py-1.5 bg-brand-glow text-brand-deep font-bold text-[10px] rounded-xl">Cài ngay</button>
-            </div>
-        </section>
-
-        <!-- Card Chào Mừng -->
-        <div id="welcome-card" class="mb-6 relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900/40 to-teal-900/40 border border-white/10 backdrop-blur-md p-6 shadow-2xl transition-all duration-500 hover:scale-[1.01]">
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-teal-500/20 rounded-full blur-3xl"></div>
+        
+        <div id="welcome-card" class="mb-6 relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900/60 to-teal-900/60 border border-white/10 backdrop-blur-md p-6 shadow-2xl">
             <div class="relative z-10">
-                <p class="text-teal-400 text-[10px] font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
-                    <i class="bi bi-hand-thumbs-up-fill animate-bounce"></i> KÍNH CHÀO
+                <p class="text-brand-glow text-[10px] font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                    <i class="bi bi-hand-thumbs-up-fill animate-bounce"></i> XIN CHÀO
                 </p>
                 <h3 id="welcome-name" class="text-lg font-bold text-white mb-0.5">Quý Thầy/Cô</h3>
-                <p id="welcome-title" class="text-xs text-slate-300 font-medium mb-4">THPT Hòa Vang</p>
-                <div class="space-y-0.5">
-                    <p class="text-[10px] text-slate-400">đã đăng nhập vào</p>
-                    <p class="text-[11px] font-bold text-white uppercase tracking-wider">TRUNG TÂM ĐIỀU HÀNH SỐ - THPT HÒA VANG</p>
-                </div>
+                <p id="welcome-title" class="text-xs text-white font-medium mb-4">THPT Hòa Vang</p>
+                <p class="text-[11px] font-bold text-white/90 uppercase tracking-wider">TRUNG TÂM ĐIỀU HÀNH SỐ - THPT HÒA VANG</p>
             </div>
         </div>
 
-        <!-- Phương châm -->
-        <section class="mb-5">
-            <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/10 to-indigo-500/10 border border-brand-teal/20 backdrop-blur-md">
-                <div class="flex items-center space-x-2 text-brand-glow text-xs font-bold uppercase tracking-widest mb-1.5">
-                    <i class="bi bi-lightning-charge-fill animate-pulse"></i>
-                    <span>Phương châm hoạt động</span>
-                </div>
-                <p class="text-sm text-slate-200 italic font-medium">"Kết nối – Điều hành – Chia sẻ – Hiệu quả"</p>
-            </div>
-        </section>
-
-        <!-- Dashboard Grid -->
         <section class="grid grid-cols-2 gap-3 mb-6">
-            <div onclick="openModal('report-modal')" class="group relative rounded-2xl bg-gradient-to-tr from-teal-600/20 to-teal-500/10 border border-teal-500/20 p-4 shadow-xl transition-all active:scale-[0.97] cursor-pointer">
-                <div class="w-10 h-10 rounded-xl bg-teal-500 flex items-center justify-center mb-3 shadow-lg"><i class="bi bi-clipboard-data text-white"></i></div>
-                <h3 class="text-sm font-bold text-white">Báo cáo</h3>
+            <!-- 8 Menu Items -->
+            <div onclick="openModal('report-modal')" class="group rounded-2xl bg-white/[0.05] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center mb-3 text-teal-400"><i class="bi bi-clipboard-data"></i></div>
+                <h3 class="text-xs font-bold text-white">Báo cáo</h3>
             </div>
-            <div onclick="openModal('doc-modal')" class="group relative rounded-2xl bg-white/[0.03] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
-                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center mb-3 shadow-lg"><i class="bi bi-folder-fill text-white"></i></div>
-                <h3 class="text-sm font-bold text-white">Văn bản</h3>
+            <div onclick="openModal('doc-modal')" class="group rounded-2xl bg-white/[0.05] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center mb-3 text-blue-400"><i class="bi bi-folder-fill"></i></div>
+                <h3 class="text-xs font-bold text-white">Văn bản</h3>
             </div>
-            <div onclick="openModal('academic-modal')" class="group relative rounded-2xl bg-white/[0.03] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
-                <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center mb-3 shadow-lg"><i class="bi bi-journal-bookmark-fill text-white"></i></div>
-                <h3 class="text-sm font-bold text-white">Chuyên môn</h3>
+            <div onclick="openModal('academic-modal')" class="group rounded-2xl bg-white/[0.05] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-3 text-emerald-400"><i class="bi bi-journal-bookmark-fill"></i></div>
+                <h3 class="text-xs font-bold text-white">Chuyên môn</h3>
             </div>
-            <div onclick="openModal('competition-modal')" class="group relative rounded-2xl bg-white/[0.03] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
-                <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center mb-3 shadow-lg"><i class="bi bi-trophy-fill text-white"></i></div>
-                <h3 class="text-sm font-bold text-white">Thi đua</h3>
+            <div onclick="openModal('competition-modal')" class="group rounded-2xl bg-white/[0.05] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center mb-3 text-amber-400"><i class="bi bi-trophy-fill"></i></div>
+                <h3 class="text-xs font-bold text-white">Thi đua</h3>
+            </div>
+            <div onclick="openModal('calendar-modal')" class="group rounded-2xl bg-white/[0.05] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center mb-3 text-rose-400"><i class="bi bi-calendar-event"></i></div>
+                <h3 class="text-xs font-bold text-white">Lịch công tác</h3>
+            </div>
+            <div onclick="openModal('staff-modal')" class="group rounded-2xl bg-white/[0.05] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center mb-3 text-purple-400"><i class="bi bi-people-fill"></i></div>
+                <h3 class="text-xs font-bold text-white">Nhân sự</h3>
+            </div>
+            <div onclick="openModal('facilities-modal')" class="group rounded-2xl bg-white/[0.05] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center mb-3 text-orange-400"><i class="bi bi-building"></i></div>
+                <h3 class="text-xs font-bold text-white">Cơ sở vật chất</h3>
+            </div>
+            <div onclick="openModal('settings-modal')" class="group rounded-2xl bg-white/[0.05] border border-white/10 p-4 transition-all active:scale-[0.97] cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-slate-500/20 flex items-center justify-center mb-3 text-slate-300"><i class="bi bi-gear-fill"></i></div>
+                <h3 class="text-xs font-bold text-white">Cài đặt</h3>
             </div>
         </section>
     </main>
 
-    <!-- Modal System -->
     <div id="modal-backdrop" onclick="closeModal()" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
 
     <div id="report-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[80vh] bg-brand-primary border-t border-white/10 rounded-t-[2rem] transform translate-y-full transition-transform duration-300">
         <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3"></div>
-        <div class="px-6 pb-10 overflow-y-auto max-h-[70vh]">
+        <div class="px-6 pb-10">
             <h2 class="text-lg font-bold text-white mb-4">Phân hệ Báo cáo</h2>
-            <p class="text-slate-400">Đang khởi tạo dữ liệu điều hành...</p>
+            <p class="text-slate-300">Nội dung đang được khởi tạo...</p>
         </div>
     </div>
 
@@ -146,20 +130,6 @@
             document.getElementById('modal-backdrop').classList.replace('pointer-events-auto', 'pointer-events-none');
             const modals = document.querySelectorAll('.fixed.bottom-0');
             modals.forEach(modal => modal.classList.replace('translate-y-0', 'translate-y-full'));
-        }
-
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('install-banner').classList.remove('hidden');
-        });
-
-        function triggerPWAInstall() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt = null;
-            }
         }
     </script>
 </body>
