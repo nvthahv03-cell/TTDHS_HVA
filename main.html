@@ -45,7 +45,75 @@
         }
     </style>
 </head>
-<body class="h-full bg-brand-deep text-slate-100 overflow-x-hidden antialiased select-none">
+<main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto">
+            <!-- PWA Install Banner -->
+            <section id="install-banner" class="hidden-force mb-4">
+                <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/20 to-indigo-600/25 border border-brand-glow/30 backdrop-blur-md flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center text-brand-glow">
+                            <i class="bi bi-phone-vibrate text-xl animate-bounce"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white uppercase tracking-wider">Cài đặt Ứng dụng</h4>
+                            <p class="text-[11px] text-teal-200/80 mt-0.5">Thêm nhanh vào màn hình chính</p>
+                        </div>
+                    </div>
+                    <button onclick="triggerPWAInstall()" class="px-3.5 py-1.5 bg-brand-glow hover:bg-teal-400 text-brand-deep font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
+                        Cài đặt ngay
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // 1. Logic kiểm tra cài đặt
+        function checkPWAStatus() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const isInstalled = localStorage.getItem('pwa_installed') === 'true';
+
+            if (isStandalone || isInstalled) {
+                document.getElementById('header-install-btn')?.classList.add('hidden-force');
+                document.getElementById('install-banner')?.classList.add('hidden-force');
+                return true;
+            }
+            return false;
+        }
+
+        // 2. Logic PWA Install
+        let deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!checkPWAStatus()) {
+                document.getElementById('header-install-btn')?.classList.remove('hidden-force');
+                document.getElementById('install-banner')?.classList.remove('hidden-force');
+            }
+        });
+
+        function triggerPWAInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choice) => {
+                    if (choice.outcome === 'accepted') {
+                        localStorage.setItem('pwa_installed', 'true');
+                        checkPWAStatus();
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                alert("Bạn có thể cài đặt bằng cách nhấn vào menu 'Thêm vào màn hình chính' của trình duyệt!");
+            }
+        }
+
+        // 3. Khởi tạo
+        window.addEventListener('load', checkPWAStatus);
+        window.addEventListener('appinstalled', () => {
+            localStorage.setItem('pwa_installed', 'true');
+            checkPWAStatus();
+        });
+ 
+    <body class="h-full bg-brand-deep text-slate-100 overflow-x-hidden antialiased select-none">
 
     <!-- Background -->
     <div class="fixed inset-0 -z-50 overflow-hidden bg-gradient-to-br from-brand-deep via-slate-950 to-brand-deep">
@@ -221,216 +289,7 @@
             </section>
         </main>
 
-   <script>
-    // 1. Đăng ký Service Worker chuẩn PWA
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('PWA Service Worker hoạt động tại scope: ', reg.scope))
-                .catch(err => console.error('Lỗi đăng ký Service Worker:', err));
-        });
-    }
-
-    // KIỂM TRA THÔNG MINH: Phát hiện xem ứng dụng đã cài hoặc đang chạy độc lập (Standalone) chưa
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    const isAlreadyInstalled = localStorage.getItem('pwa_installed') === 'true';
-
-    // Phát hiện thiết bị chạy iOS (iPhone/iPad) để hiển thị hướng dẫn phù hợp
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-    let deferredPrompt = null;
-
-    // Hàm động tạo và trượt Banner cài đặt lên màn hình
-    function showPWAInstallBanner(platformType = 'android') {
-        // Nếu đã có banner cũ rồi thì không tạo thêm để tránh trùng lặp
-        if (document.getElementById('pwa-install-banner')) return;
-
-        const installBanner = document.createElement('div');
-        installBanner.id = 'pwa-install-banner';
-        installBanner.className = 'fixed bottom-20 inset-x-4 z-50 p-4 rounded-2xl bg-[#0F172A]/95 border border-[#0D9488]/30 backdrop-blur-xl shadow-2xl flex items-center justify-between transform translate-y-[150%] transition-transform duration-500 max-w-md mx-auto';
-        
-        if (platformType === 'ios') {
-            // Giao diện Banner tùy biến chuyên biệt dành cho iOS Safari
-            installBanner.innerHTML = `
-                <div class="flex items-center space-x-3 w-full">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0D9488] to-indigo-500 p-0.5 flex items-center justify-center shrink-0">
-                        <div class="w-full h-full bg-[#070A13] rounded-[10px] flex items-center justify-center">
-                            <span class="text-[#2DD4BF] font-bold text-xs tracking-wider">HVA</span>
-                        </div>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h4 class="text-xs font-bold text-white">Cài đặt TTDHS_HVA</h4>
-                        <p class="text-[9px] text-slate-300 mt-0.5 leading-relaxed">Chạm nút chia sẻ <i class="bi bi-box-arrow-up text-[#2DD4BF] font-bold"></i> ở đáy trình duyệt, rồi chọn <span class="text-[#2DD4BF] font-bold">"Thêm vào MH chính"</span></p>
-                    </div>
-                    <button id="btn-pwa-close" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 shrink-0">
-                        <i class="bi bi-x-lg text-[10px] text-slate-400"></i>
-                    </button>
-                </div>
-            `;
-        } else {
-            // Giao diện Banner tiêu chuẩn kèm nút "Cài đặt ngay" cho Android/PC
-            installBanner.innerHTML = `
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0D9488] to-indigo-500 p-0.5 flex items-center justify-center shrink-0">
-                        <div class="w-full h-full bg-[#070A13] rounded-[10px] flex items-center justify-center">
-                            <span class="text-[#2DD4BF] font-bold text-xs tracking-wider">HVA</span>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-bold text-white">Cài đặt TTDHS_HVA</h4>
-                        <p class="text-[10px] text-slate-300 mt-0.5">Trải nghiệm mượt mà như App di động</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2 shrink-0">
-                    <button id="btn-pwa-install" class="px-3.5 py-1.5 bg-[#0D9488] hover:bg-[#2DD4BF] text-white hover:text-[#070A13] font-bold text-xs rounded-lg transition-all active:scale-95 shadow-md shadow-[#0D9488]/20">
-                        Cài đặt ngay
-                    </button>
-                    <button id="btn-pwa-close" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10">
-                        <i class="bi bi-x-lg text-[10px] text-slate-400"></i>
-                    </button>
-                </div>
-            `;
-        }
-
-        // Đưa banner vào DOM
-        document.body.appendChild(installBanner);
-
-        setTimeout(() => {
-            installBanner.classList.remove('translate-y-[150%]');
-        }, 200);
-
-        // Gán sự kiện đóng Banner thủ công khi nhấn nút "X"
-        document.getElementById('btn-pwa-close')?.addEventListener('click', () => {
-            installBanner.classList.add('translate-y-[150%]');
-            setTimeout(() => installBanner.remove(), 600);
-        });
-
-        // Gán sự kiện kích hoạt hộp thoại cài đặt hệ thống
-        document.getElementById('btn-pwa-install')?.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                // Trượt ẩn banner xuống trước khi hiển thị hộp thoại hệ thống
-                installBanner.classList.add('translate-y-[150%]');
-                setTimeout(() => installBanner.remove(), 600);
-
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`Lựa chọn cài đặt từ người dùng: ${outcome}`);
-                
-                if (outcome === 'accepted') {
-                    localStorage.setItem('pwa_installed', 'true');
-                }
-                deferredPrompt = null;
-            }
-        });
-    }
-
-    // BẮT ĐẦU KÍCH HOẠT: Chỉ hiển thị banner nếu ứng dụng CHƯA ĐƯỢC CÀI ĐẶT
-    if (!isStandalone && !isAlreadyInstalled) {
-        // A. Xử lý cho Android, Chrome, Edge (Hệ điều hành có hỗ trợ prompt tự động)
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Ngăn hệ thống tự hiện prompt mặc định xấu xí của trình duyệt
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Kích hoạt hiển thị Banner của trường mình thiết kế cực đẹp
-            showPWAInstallBanner('android');
-        });
-
-        // B. Xử lý riêng cho iPhone/iPad (iOS Safari không hỗ trợ prompt cài đặt tự động)
-        if (isIOS) {
-            window.addEventListener('load', () => {
-                // Hiển thị hướng dẫn cài đặt iOS sau khi trang web tải xong 3 giây
-                setTimeout(() => {
-                    showPWAInstallBanner('ios');
-                }, 3000);
-            });
-        }
-    }
-
-    // 2. Lắng nghe xem nếu ứng dụng đã được cài đặt thành công (trên bất cứ nền tảng nào)
-    window.addEventListener('appinstalled', (evt) => {
-        console.log('Ứng dụng TTDHS_HVA đã được cài đặt thành công!');
-        localStorage.setItem('pwa_installed', 'true');
-        
-        // Ẩn lập tức banner nếu vẫn còn tồn tại trên giao diện
-        const banner = document.getElementById('pwa-install-banner');
-        if (banner) {
-            banner.classList.add('translate-y-[150%]');
-            setTimeout(() => banner.remove(), 600);
-        }
-        
-        // Tạo thông báo Toast chúc mừng cài đặt thành công
-        const toast = document.createElement('div');
-        toast.className = 'fixed top-6 inset-x-6 z-50 p-4 rounded-xl bg-emerald-500/90 text-white font-bold text-xs text-center shadow-lg backdrop-blur-md max-w-xs mx-auto animate-bounce';
-        toast.innerText = '🎉 Đã cài đặt ứng dụng thành công!';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
-    });
-</script>
-        
-        <!-- Bottom Navigation -->
-        <nav class="fixed bottom-0 left-0 right-0 z-40 bg-brand-deep/80 backdrop-blur-2xl border-t border-white/5 pb-safe px-6 shadow-2xl">
-            <div class="flex items-center justify-between h-16 max-w-lg mx-auto">
-                <a href="#" class="flex flex-col items-center justify-center flex-1 text-brand-glow py-1">
-                    <i class="bi bi-house-door-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Trang chủ</span>
-                </a>
-                <a href="#" onclick="openModal('contact-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
-                    <i class="bi bi-telephone-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Thông báo</span>
-                </a>
-                <a href="#" onclick="openModal('assistant-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
-    <i class="bi bi-robot text-lg"></i>
-    <span class="text-[10px] font-medium mt-1">Assistant HVA</span>
-</a>
-                <a href="#" onclick="openModal('team-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
-                    <i class="bi bi-person-lines-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Hồ sơ số</span>
-                </a>
-            </div>
-        </nav>
-    </div>
-
-    <!-- Backdrop -->
-    <div id="modal-backdrop" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
-
-    <!-- Modals -->
-    <!-- Install Guide -->
-    <div id="install-guide-modal" class="fixed bottom-0 inset-x-0 z-50 max-h-[85vh] bg-brand-deep border-t border-white/10 rounded-t-[2.5rem] transform translate-y-full transition-transform duration-300 overflow-y-auto">
-        <div class="w-12 h-1.5 bg-slate-600 rounded-full mx-auto my-3 opacity-60"></div>
-        <div class="px-6 pb-8">
-            <div class="flex items-center justify-between mb-5">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-brand-glow/15 flex items-center justify-center text-brand-glow">
-                        <i class="bi bi-phone"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-base font-bold text-white">Hướng dẫn Cài đặt App</h4>
-                        <p class="text-[10px] text-slate-400">Trải nghiệm mượt mà không cần qua Store</p>
-                    </div>
-                </div>
-                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center"><i class="bi bi-x-lg text-slate-300"></i></button>
-            </div>
-            <!-- iOS & Android guide content giữ nguyên như cũ -->
-            <div class="space-y-4">
-                <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                    <h5 class="text-xs font-bold text-brand-glow flex items-center gap-1.5 mb-2"><i class="bi bi-apple"></i> iOS (iPhone / iPad)</h5>
-                    <ol class="list-decimal list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
-                        <li>Mở bằng <strong class="text-white">Safari</strong></li>
-                        <li>Nhấp <strong class="text-white">Chia sẻ</strong> → "Thêm vào MH chính"</li>
-                        <li>Nhấp <strong class="text-brand-glow">"Thêm"</strong></li>
-                    </ol>
-                </div>
-                <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                    <h5 class="text-xs font-bold text-teal-400 flex items-center gap-1.5 mb-2"><i class="bi bi-android2"></i> Android</h5>
-                    <ol class="list-decimal list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
-                        <li>Nhấn nút <strong>"Cài đặt ngay"</strong></li>
-                        <li>Hoặc ⋮ → "Thêm vào Màn hình chính"</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
+  
 
 </script>
 </body>
