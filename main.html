@@ -217,7 +217,7 @@
                 </div>
             </section>
         </main>
-        <!-- CHÉP ĐOẠN NÀY DÁN VÀO NGAY TRƯỚC THẺ NÚT ĐÓNG </body> TRONG FILE INDEX.HTML CỦA THẦY -->
+      <!-- CHÉP ĐOẠN NÀY DÁN VÀO NGAY DÒNG 220 TRONG FILE INDEX.HTML CỦA THẦY -->
 <script>
     // 1. Đăng ký Service Worker để trình duyệt nhận diện PWA
     if ('serviceWorker' in navigator) {
@@ -231,7 +231,11 @@
     // 2. Xử lý sự kiện "Kích hoạt cài đặt ứng dụng" tự động
     let deferredPrompt;
     
-    // Tạo cấu trúc Banner cài đặt động bằng JS để không làm vỡ bố cục HTML gốc của Thầy
+    // KIỂM TRA THÔNG MINH: Phát hiện xem ứng dụng đã được cài đặt hoặc đang mở dưới dạng App chưa
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const isAlreadyInstalled = localStorage.getItem('pwa_installed') === 'true';
+
+    // Tạo cấu trúc Banner cài đặt động bằng JS
     const installBanner = document.createElement('div');
     installBanner.id = 'pwa-install-banner';
     installBanner.className = 'fixed bottom-20 inset-x-4 z-50 p-4 rounded-2xl bg-brand-primary/95 border border-brand-teal/30 backdrop-blur-xl shadow-2xl flex items-center justify-between transform translate-y-[150%] transition-transform duration-500 max-w-md mx-auto';
@@ -256,44 +260,63 @@
             </button>
         </div>
     `;
-    document.body.appendChild(installBanner);
+
+    // Chỉ đính kèm banner vào trang nếu chưa cài đặt và không chạy dưới dạng App độc lập
+    if (!isStandalone && !isAlreadyInstalled) {
+        document.body.appendChild(installBanner);
+    }
 
     // Lắng nghe sự kiện cài đặt từ hệ thống (Chrome, Edge, Safari...)
     window.addEventListener('beforeinstallprompt', (e) => {
+        // Nếu đã ở chế độ App hoặc đã lưu cờ cài đặt trước đó thì không hiển thị nữa
+        if (isStandalone || isAlreadyInstalled) {
+            return;
+        }
         // Ngăn trình duyệt tự hiển thị hộp thoại mặc định xấu xí
         e.preventDefault();
         // Lưu trữ sự kiện để kích hoạt sau
         deferredPrompt = e;
         // Trượt Banner cài đặt tuyệt đẹp lên màn hình
         setTimeout(() => {
-            installBanner.classList.remove('translate-y-[150%]');
-        }, 1000);
+            if (document.getElementById('pwa-install-banner')) {
+                installBanner.classList.remove('translate-y-[150%]');
+            }
+        }, 1500);
     });
 
     // Xử lý khi Thầy bấm nút "Cài đặt ngay"
-    document.getElementById('btn-pwa-install').addEventListener('click', async () => {
+    document.getElementById('btn-pwa-install')?.addEventListener('click', async () => {
         if (deferredPrompt) {
             // Kích hoạt hộp thoại cài đặt hệ thống
             deferredPrompt.prompt();
             // Chờ người dùng phản hồi
             const { outcome } = await deferredPrompt.userChoice;
             console.log(`Lựa chọn của người dùng cài đặt: ${outcome}`);
+            
+            if (outcome === 'accepted') {
+                // Đánh dấu đã cài đặt thành công vào bộ nhớ máy
+                localStorage.setItem('pwa_installed', 'true');
+                // Trượt ẩn banner lập tức và dọn dẹp khỏi giao diện
+                installBanner.classList.add('translate-y-[150%]');
+                setTimeout(() => installBanner.remove(), 600);
+            }
             // Xóa bộ nhớ đệm sự kiện
             deferredPrompt = null;
-            // Ẩn banner đi
-            installBanner.classList.add('translate-y-[150%]');
         }
     });
 
     // Xử lý nút đóng Banner cài đặt
-    document.getElementById('btn-pwa-close').addEventListener('click', () => {
+    document.getElementById('btn-pwa-close')?.addEventListener('click', () => {
         installBanner.classList.add('translate-y-[150%]');
     });
 
     // Lắng nghe xem nếu ứng dụng đã được cài đặt thành công
     window.addEventListener('appinstalled', (evt) => {
         console.log('Ứng dụng TTDHS_HVA đã được cài đặt thành công vào máy!');
+        localStorage.setItem('pwa_installed', 'true');
         installBanner.classList.add('translate-y-[150%]');
+        setTimeout(() => installBanner.remove(), 600);
+        
         // Tạo một thông báo toast nhỏ báo cài đặt thành công
         const toast = document.createElement('div');
         toast.className = 'fixed top-6 inset-x-6 z-50 p-4 rounded-xl bg-emerald-500/90 text-white font-bold text-xs text-center shadow-lg backdrop-blur-md max-w-xs mx-auto animate-bounce';
