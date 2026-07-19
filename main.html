@@ -84,32 +84,42 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
         <div class="absolute top-[40%] -right-[20%] w-[90%] h-[70%] rounded-full bg-indigo-500/10 blur-[150px] animate-glow" style="animation-delay: 2s;"></div>
     </div>
 
-    <div class="flex flex-col min-h-screen">
-        <header class="fixed top-0 left-0 right-0 z-40 bg-brand-deep/70 backdrop-blur-xl border-b border-white/5 px-4 py-3 safe-pt flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 shadow-lg shadow-brand-teal/20 flex items-center justify-center">
-                    <div class="w-full h-full bg-brand-deep rounded-[10px] flex items-center justify-center">
-                        <span class="text-brand-glow font-bold text-sm tracking-widest">HVA</span>
-                    </div>
-                </div>
-                <div>
-                    <h1 class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest leading-none">Trung tâm Điều hành số</h1>
-                    <p class="text-sm font-bold text-yellow tracking-tight mt-0.5">Trường THPT Hòa Vang</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <button id="header-install-btn" onclick="triggerPWAInstall()" class="px-2.5 py-1.5 rounded-xl bg-brand-glow/20 border border-brand-glow/40 text-brand-glow text-xs font-bold flex items-center space-x-1 hover:bg-brand-glow/30 active:scale-95 transition-all hidden-force">
-                    <i class="bi bi-download"></i>
-                    <span>Cài App</span>
-                </button>
-                <button onclick="openModal('contact-modal')" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all">
-                    <i class="bi bi-info-circle text-base text-slate-300"></i>
-                </button>
-                <div class="w-9 h-9 rounded-full border border-white/10 overflow-hidden bg-slate-800 shrink-0">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" alt="Avatar" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=HVA'">
-                </div>
-            </div>
-        </header>
+    <div class="flex items-center space-x-2">
+
+    <!-- Thông báo -->
+    <button
+        class="relative w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all"
+        title="Thông báo">
+
+        <i class="bi bi-bell text-base text-slate-300"></i>
+
+        <span
+            class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+            3
+        </span>
+
+    </button>
+
+    <!-- Trợ lý AI -->
+    <button
+        class="w-9 h-9 rounded-full bg-brand-glow/10 border border-brand-glow/30 flex items-center justify-center hover:bg-brand-glow/20 active:scale-95 transition-all"
+        title="Trợ lý AI">
+
+        <i class="bi bi-mic-fill text-brand-glow"></i>
+
+    </button>
+
+    <!-- Hồ sơ người dùng -->
+    <button
+        onclick="openModal('profile-modal')"
+        class="w-9 h-9 rounded-full bg-brand-teal text-white font-bold text-xs border border-brand-teal/40 flex items-center justify-center hover:opacity-90 active:scale-95 transition-all"
+        title="Hồ sơ cá nhân">
+
+        NVT
+
+    </button>
+
+</div>
 
        <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-lg mx-auto w-full">
     
