@@ -128,11 +128,15 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
 
         </button>
 
-        <button class="w-9 h-9 rounded-full bg-brand-glow/10 border border-brand-glow/30 flex items-center justify-center">
+        <!-- Trợ lý AI -->
+<button
+    onclick="openModal('ai-modal')"
+    class="w-9 h-9 rounded-full bg-brand-glow/10 border border-brand-glow/30 flex items-center justify-center hover:bg-brand-glow/20 active:scale-95 transition-all"
+    title="Trợ lý AI">
 
-            <i class="bi bi-mic-fill text-brand-glow"></i>
+    <i class="bi bi-mic-fill text-brand-glow"></i>
 
-        </button>
+</button>
 
         <button onclick="openModal('profile-modal')"
             class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
@@ -396,5 +400,80 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
             });
         });
     </script>
+        <!-- =========================
+     AI ASSISTANT MODAL
+========================= -->
+
+<div id="ai-modal"
+     class="fixed inset-0 z-50 hidden-force flex items-center justify-center bg-black/60 backdrop-blur-sm p-5">
+
+    <div class="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-700 shadow-2xl overflow-hidden">
+
+        <!-- Header -->
+
+        <div class="px-5 py-4 border-b border-slate-700">
+
+            <h2 class="text-xl font-bold text-brand-glow flex items-center gap-2">
+
+                <i class="bi bi-mic-fill"></i>
+
+                Trợ lý AI
+
+            </h2>
+
+            <p class="text-slate-400 text-sm mt-1">
+
+                Hãy nói hoặc nhập yêu cầu của bạn.
+
+            </p>
+
+        </div>
+
+        <!-- Body -->
+
+        <div class="p-5 space-y-4">
+
+            <button
+                class="w-full py-4 rounded-2xl bg-brand-glow/20 border border-brand-glow/40 hover:bg-brand-glow/30 transition">
+
+                🎙️ Nói với Trợ lý AI
+
+            </button>
+
+            <textarea
+                rows="4"
+                placeholder="Ví dụ:
+Mở lịch công tác tuần
+Mở công văn 3293
+Tạo thông báo..."
+                class="w-full rounded-2xl bg-slate-800 border border-slate-700 p-4 text-sm resize-none outline-none">
+            </textarea>
+
+            <button
+                class="w-full py-3 rounded-xl bg-brand-teal font-semibold hover:opacity-90">
+
+                Gửi yêu cầu
+
+            </button>
+
+        </div>
+
+        <!-- Footer -->
+
+        <div class="px-5 py-3 border-t border-slate-700 text-center">
+
+            <button
+                onclick="closeModal('ai-modal')"
+                class="text-slate-400 hover:text-white">
+
+                Đóng
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 </body>
 </html>
