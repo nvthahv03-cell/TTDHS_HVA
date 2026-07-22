@@ -473,24 +473,20 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
         });
        // Bồi dưỡng chuyên môn
 function openBoiduongForm(type, subType = '') {
+
     closeModal('boiduong-modal');
-    
-    let title = '';
-    switch(type) {
-        case 'sinh_hoat_chuyen_mon': title = 'Sinh hoạt chuyên môn'; break;
-        case 'tap_huan': title = 'Tập huấn'; break;
-        case 'hoi_thao': title = 'Hội thảo'; break;
-        case 'hoi_nghi': title = 'Hội nghị'; break;
-        case 'boi_duong': title = 'Bồi dưỡng'; break;
-        default: title = 'Bồi dưỡng chuyên môn';
+
+    if (type !== 'hoi_thao') {
+        showToast("⚠️ Chức năng đang hoàn thiện.");
+        return;
     }
-    
-    showToast(`📋 Đang mở form: ${title} ${subType ? `(${subType})` : ''}`);
-    
-    setTimeout(() => {
-        showToast("✅ Form báo cáo đã mở");
-    }, 800);
+
+    window.open(
+        "https://script.google.com/macros/s/AKfycbzrpNdCyBsIIKJqx3DL2OZA0nWAkmFMPvyq8JYBrOhDvPELheNX4CNeIFvB7xNRG3VR/exec?page=hoithao",
+        "_blank"
+    );
 }
+       
     </script>
         <!-- =========================
      AI ASSISTANT MODAL
