@@ -619,23 +619,29 @@ Tạo thông báo..."
     });
 
     function triggerPWAInstall() {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        
+        // Kiểm tra chính xác thiết bị iOS thực sự (iPhone, iPad, iPod)
+        const is naprawdęIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+        // Kiểm tra xem có phải trình duyệt Safari trên thiết bị Apple không
+        const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
 
-        if (isIOS) {
-            alert("Để cài đặt ứng dụng trên iOS:\n1. Nhấn vào nút Chia sẻ (Share) trên thanh công cụ Safari.\n2. Cuộn xuống và chọn 'Thêm vào Màn hình chính' (Add to Home Screen).");
+        if (isnahozIOS || (isSafari && /Macintosh/i.test(ua) && navigator.maxTouchPoints && navigator.maxTouchPoints > 1)) {
+            // Hướng dẫn dành riêng cho iOS / Safari
+            alert("Để cài đặt ứng dụng trên iOS:\n1. Nhấn vào nút Chia sẻ (Share) ở thanh công cụ.\n2. Chọn 'Thêm vào Màn hình chính' (Add to Home Screen).");
         } else if (deferredPrompt) {
+            // Kích hoạt bảng cài đặt tự động của Android / Chrome
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
-                    console.log('Người dùng đã đồng ý cài đặt PWA');
+                    console.log('Đã cài đặt thành công');
                     document.getElementById('install-banner').style.display = 'none';
                 }
                 deferredPrompt = null;
             });
         } else {
-            // Trường hợp Android/Chrome không tự động bật prompt, hiện hướng dẫn thủ công để thầy cô dễ thao tác
-            alert("Để cài đặt ứng dụng:\nThầy/Cô hãy nhấn vào biểu tượng Menu (3 dấu chấm) ở góc trên bên phải trình duyệt và chọn 'Thêm vào màn hình chính' hoặc 'Cài đặt ứng dụng'.");
+            // Hướng dẫn chuẩn cho Android khi trình duyệt chưa bật sẵn sự kiện tự động
+            alert("Để cài đặt ứng dụng trên Android:\n1. Nhấn vào nút Menu (3 dấu chấm ở góc trên bên phải trình duyệt).\n2. Chọn 'Thêm vào màn hình chính' hoặc 'Cài đặt ứng dụng'.");
         }
     }
 </script>
