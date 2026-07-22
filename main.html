@@ -247,24 +247,72 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Lịch tháng, Lịch tuần, Đột xuất</p>
                     </div>
                   
-                 <!-- Card Báo cáo trực tuyến -->
-<div onclick="openModal('report-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 mb-3">
-        <i class="bi bi-bar-chart-line-fill text-white text-lg"></i>
-    </div>
-    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Báo cáo trực tuyến</h3>
-    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Các hoạt động dạy học, ngoài giờ, CSVC</p>
-</div>
+               <!-- Bồi dưỡng chuyên môn Modal -->
+    <div id="boiduong-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
+        <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('boiduong-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="bi bi-x-lg text-lg"></i>
+            </button>
+            
+            <div class="flex items-center space-x-2.5 mb-5 border-b border-white/5 pb-4">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+                    <i class="bi bi-mortarboard-fill text-white text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white text-base">Bồi dưỡng chuyên môn</h3>
+                    <p class="text-xs text-slate-400">Sinh hoạt, tập huấn, hội thảo, hội nghị, bồi dưỡng</p>
+                </div>
+            </div>
 
-<!-- Card Bồi dưỡng chuyên môn (mới) -->
-<div onclick="openModal('boiduong-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/20 mb-3">
-        <i class="bi bi-mortarboard-fill text-white text-lg"></i>
+            <div class="space-y-3">
+                <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-4">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="bi bi-people-fill text-violet-400"></i>
+                        <h4 class="font-semibold text-white">Sinh hoạt chuyên môn</h4>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="openBoiduongForm('sinh_hoat_chuyen_mon', 'cap_so')" class="p-3 text-left bg-white/5 hover:bg-white/10 rounded-xl transition-all text-sm">Cấp Sở</button>
+                        <button onclick="openBoiduongForm('sinh_hoat_chuyen_mon', 'cap_cum')" class="p-3 text-left bg-white/5 hover:bg-white/10 rounded-xl transition-all text-sm">Cấp Cụm</button>
+                        <button onclick="openBoiduongForm('sinh_hoat_chuyen_mon', 'cap_truong')" class="p-3 text-left bg-white/5 hover:bg-white/10 rounded-xl transition-all text-sm">Cấp Trường</button>
+                        <button onclick="openBoiduongForm('sinh_hoat_chuyen_mon', 'cap_to')" class="p-3 text-left bg-white/5 hover:bg-white/10 rounded-xl transition-all text-sm">Cấp Tổ</button>
+                        <button onclick="openBoiduongForm('sinh_hoat_chuyen_mon', 'khac')" class="col-span-2 p-3 text-left bg-white/5 hover:bg-white/10 rounded-xl transition-all text-sm">Khác</button>
+                    </div>
+                </div>
+
+                <button onclick="openBoiduongForm('tap_huan')" class="w-full p-4 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-between hover:bg-white/5 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <i class="bi bi-person-video text-lg text-teal-400"></i>
+                        <span class="font-medium text-white">Tập huấn</span>
+                    </div>
+                    <i class="bi bi-chevron-right text-slate-400 group-hover:text-white"></i>
+                </button>
+
+                <button onclick="openBoiduongForm('hoi_thao')" class="w-full p-4 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-between hover:bg-white/5 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <i class="bi bi-chat-text text-lg text-amber-400"></i>
+                        <span class="font-medium text-white">Hội thảo</span>
+                    </div>
+                    <i class="bi bi-chevron-right text-slate-400 group-hover:text-white"></i>
+                </button>
+
+                <button onclick="openBoiduongForm('hoi_nghi')" class="w-full p-4 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-between hover:bg-white/5 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <i class="bi bi-building text-lg text-rose-400"></i>
+                        <span class="font-medium text-white">Hội nghị</span>
+                    </div>
+                    <i class="bi bi-chevron-right text-slate-400 group-hover:text-white"></i>
+                </button>
+
+                <button onclick="openBoiduongForm('boi_duong')" class="w-full p-4 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-between hover:bg-white/5 transition-all group">
+                    <div class="flex items-center gap-3">
+                        <i class="bi bi-book text-lg text-sky-400"></i>
+                        <span class="font-medium text-white">Bồi dưỡng</span>
+                    </div>
+                    <i class="bi bi-chevron-right text-slate-400 group-hover:text-white"></i>
+                </button>
+            </div>
+        </div>
     </div>
-    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">🎓 Bồi dưỡng chuyên môn</h3>
-    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Sinh hoạt chuyên môn, tập huấn, hội thảo, hội nghị, bồi dưỡng</p>
 </div>
 
         <div class="space-y-3">
