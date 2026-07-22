@@ -631,6 +631,53 @@ Tạo thông báo..."
         }
     }
 </script>
-   
+  <!-- Cài đặt Ứng dụng và Chạy chữ -->
+<script>
+    // 1. Biến toàn cục cho PWA (đã kiểm tra an toàn tránh trùng lặp)
+    if (typeof window.deferredPrompt === 'undefined') {
+        window.deferredPrompt = null;
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        window.deferredPrompt = e;
+    });
+
+    function triggerPWAInstall() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        if (isIOS) {
+            alert("Để cài đặt trên iOS:\n1. Nhấn nút Chia sẻ (Share) trên Safari.\n2. Chọn 'Thêm vào Màn hình chính'.");
+        } else if (window.deferredPrompt) {
+            window.deferredPrompt.prompt();
+            window.deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    const banner = document.getElementById('install-banner');
+                    if (banner) banner.style.display = 'none';
+                }
+                window.deferredPrompt = null;
+            });
+        }
+    }
+
+    // 2. Hàm chạy chữ chào mừng (Ticker)
+    function updateWelcomeTicker() {
+        const days = ["Chủ nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+        const now = new Date();
+        const text = `📅 Hôm nay: ${days[now.getDay()]}, ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}    •    ✨ Chào mừng đến với Trung tâm Điều hành số THPT Hòa Vang    •    🌸 Chúc Quý Thầy, Cô luôn mạnh khỏe - hạnh phúc - một ngày làm việc hiệu quả!`;
+        
+        const tickerElement = document.getElementById("welcomeTicker");
+        if (tickerElement) {
+            tickerElement.innerHTML = `<span class="ticker">${text}</span>`;
+        }
+    }
+
+    // 3. Kích hoạt tự động khi tải trang
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', updateWelcomeTicker);
+    } else {
+        updateWelcomeTicker();
+    }
+</script>
 </body>
 </html>
