@@ -624,29 +624,66 @@ Tạo thông báo..."
 <script>
     let deferredPrompt = null;
 
+    // Lắng nghe sự kiện sẵn sàng cài đặt từ trình duyệt (Android/Chrome/Edge)
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
+        const banner = document.getElementById('install-banner');
+        if (banner) banner.classList.remove('hidden-force');
     });
 
     function triggerPWAInstall() {
+        // Nhận diện thiết bị iOS chính xác hơn
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        // Kiểm tra nếu chạy trên Safari của iOS
+        const isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1 && navigator.userAgent.toLowerCase().indexOf('chrome') === -1;
 
-        if (isIOS) {
-            alert("Để cài đặt trên iOS:\n1. Nhấn nút Chia sẻ (Share) trên Safari.\n2. Chọn 'Thêm vào Màn hình chính'.");
+        if (isIOS || isSafari) {
+            // Hiển thị thông báo hướng dẫn thân thiện cho iOS thay vì dùng alert
+            showIOSInstallGuide();
         } else if (deferredPrompt) {
+            // Kích hoạt bảng cài đặt tự động trên Android/Desktop
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
-                    document.getElementById('install-banner').style.display = 'none';
+                    const banner = document.getElementById('install-banner');
+                    if (banner) banner.style.display = 'none';
                 }
                 deferredPrompt = null;
             });
         } else {
-            // Trường hợp Android mở bằng trình duyệt bên thứ 3 hoặc sự kiện chưa sẵn sàng, 
-            // ta thử thông báo nhẹ hoặc gọi lại prompt nếu trình duyệt cho phép
-            alert("Thầy vui lòng bấm vào nút Menu (3 chấm) của trình duyệt để chọn 'Cài đặt ứng dụng' hoặc 'Thêm vào màn hình chính' nhé!");
+            // Fallback khi trình duyệt chưa sẵn sàng prompt tự động
+            showToast("📱 Vui lòng bấm vào Menu (3 chấm) của trình duyệt và chọn 'Cài đặt ứng dụng' hoặc 'Thêm vào màn hình chính'!");
         }
+    }
+
+    // Hàm tạo giao diện thông báo hướng dẫn cho iOS (nếu chưa có modal riêng)
+    function showIOSInstallGuide() {
+        const existingGuide = document.getElementById('ios-guide-modal');
+        if (existingGuide) {
+            existingGuide.remove();
+        }
+
+        const modalHTML = `
+            <div id="ios-guide-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+                <div class="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-sm w-full p-6 text-white shadow-2xl relative">
+                    <h3 class="text-lg font-bold text-amber-400 mb-3 flex items-center gap-2">
+                        <span>📲 Cài đặt lên iPhone/iPad</span>
+                    </h3>
+                    <p class="text-sm text-zinc-300 mb-4 leading-relaxed">
+                        Để đưa ứng dụng ra màn hình chính, thầy thực hiện 2 bước đơn giản trên Safari:
+                    </p>
+                    <ol class="text-sm text-zinc-300 space-y-2 mb-6 list-decimal list-inside bg-zinc-800/50 p-3 rounded-xl border border-zinc-700/50">
+                        <li>Nhấn vào nút <b>Chia sẻ (Share)</b> <span class="inline-block px-1">📤</span> ở thanh công cụ phía dưới Safari.</li>
+                        <li>Cuộn xuống và chọn <b>'Thêm vào Màn hình chính' (Add to Home Screen)</b>.</li>
+                    </ol>
+                    <button onclick="document.getElementById('ios-guide-modal').remove()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
+                        Đã hiểu
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
 </script>
 </body>
