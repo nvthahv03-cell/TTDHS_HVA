@@ -624,7 +624,6 @@ Tạo thông báo..."
 <script>
     let deferredPrompt = null;
 
-    // Lắng nghe sự kiện sẵn sàng cài đặt từ trình duyệt (Android/Chrome/Edge)
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -632,17 +631,14 @@ Tạo thông báo..."
         if (banner) banner.classList.remove('hidden-force');
     });
 
-    function triggerPWAInstall() {
-        // Nhận diện thiết bị iOS chính xác hơn
+    // Đảm bảo hàm này nằm ở phạm vi global để HTML gọi được
+    window.triggerPWAInstall = function() {
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        // Kiểm tra nếu chạy trên Safari của iOS
         const isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1 && navigator.userAgent.toLowerCase().indexOf('chrome') === -1;
 
         if (isIOS || isSafari) {
-            // Hiển thị thông báo hướng dẫn thân thiện cho iOS thay vì dùng alert
             showIOSInstallGuide();
         } else if (deferredPrompt) {
-            // Kích hoạt bảng cài đặt tự động trên Android/Desktop
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
@@ -652,17 +648,13 @@ Tạo thông báo..."
                 deferredPrompt = null;
             });
         } else {
-            // Fallback khi trình duyệt chưa sẵn sàng prompt tự động
-            showToast("📱 Vui lòng bấm vào Menu (3 chấm) của trình duyệt và chọn 'Cài đặt ứng dụng' hoặc 'Thêm vào màn hình chính'!");
+            showToast("📱 Vui lòng bấm vào Menu (3 chấm) của trình duyệt và chọn 'Thêm vào màn hình chính'!");
         }
-    }
+    };
 
-    // Hàm tạo giao diện thông báo hướng dẫn cho iOS (nếu chưa có modal riêng)
     function showIOSInstallGuide() {
         const existingGuide = document.getElementById('ios-guide-modal');
-        if (existingGuide) {
-            existingGuide.remove();
-        }
+        if (existingGuide) existingGuide.remove();
 
         const modalHTML = `
             <div id="ios-guide-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
