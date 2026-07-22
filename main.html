@@ -615,16 +615,12 @@ Tạo thông báo..."
     </div>
 
 </div>
-<!-- Cài đặt Ứng dụng (Hiển thị cho cả Android và iOS) -->
 <script>
-    // Khai báo an toàn bằng window để không bao giờ bị lỗi trùng lặp
-    if (typeof window.deferredPrompt === 'undefined') {
-        window.deferredPrompt = null;
-    }
+    let deferredPrompt = null;
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
-        window.deferredPrompt = e;
+        deferredPrompt = e;
     });
 
     function triggerPWAInstall() {
@@ -632,53 +628,19 @@ Tạo thông báo..."
 
         if (isIOS) {
             alert("Để cài đặt trên iOS:\n1. Nhấn nút Chia sẻ (Share) trên Safari.\n2. Chọn 'Thêm vào Màn hình chính'.");
-        } else if (window.deferredPrompt) {
-            window.deferredPrompt.prompt();
-            window.deferredPrompt.userChoice.then((choiceResult) => {
+        } else if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
                     document.getElementById('install-banner').style.display = 'none';
                 }
-                window.deferredPrompt = null;
+                deferredPrompt = null;
             });
+        } else {
+            // Trường hợp Android mở bằng trình duyệt bên thứ 3 hoặc sự kiện chưa sẵn sàng, 
+            // ta thử thông báo nhẹ hoặc gọi lại prompt nếu trình duyệt cho phép
+            alert("Thầy vui lòng bấm vào nút Menu (3 chấm) của trình duyệt để chọn 'Cài đặt ứng dụng' hoặc 'Thêm vào màn hình chính' nhé!");
         }
-    }
-</script>
-  <!-- Cài đặt Ứng dụng và Chạy chữ -->
-<script>
-    // 1. Biến toàn cục cho PWA (đã kiểm tra an toàn tránh trùng lặp)
-    if (typeof window.deferredPrompt === 'undefined') {
-        window.deferredPrompt = null;
-    }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        window.deferredPrompt = e;
-    });
-
-    function triggerPWAInstall() {
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-        if (isIOS) {
-            alert("Để cài đặt trên iOS:\n1. Nhấn nút Chia sẻ (Share) trên Safari.\n2. Chọn 'Thêm vào Màn hình chính'.");
-        } else if (window.deferredPrompt) {
-            window.deferredPrompt.prompt();
-            window.deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    const banner = document.getElementById('install-banner');
-                    if (banner) banner.style.display = 'none';
-                }
-                window.deferredPrompt = null;
-            });
-        }
-    }
-
-   
-
-    // 3. Kích hoạt tự động khi tải trang
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', updateWelcomeTicker);
-    } else {
-        updateWelcomeTicker();
     }
 </script>
 </body>
