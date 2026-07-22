@@ -1,53 +1,211 @@
+======== index.html ========
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập - HVA</title>
+    <title>Đăng nhập hệ thống</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .page-container { width: 100%; max-width: 400px; }
-        .login-card { background: #ffffff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
-        .logo { width: 80px; height: 80px; background: #3b82f6; border-radius: 50%; margin: 0 auto 20px; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; }
-        h1 { font-size: 24px; color: #1e293b; margin-bottom: 10px; }
-        p { color: #64748b; font-size: 14px; margin-bottom: 30px; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 10px; outline: none; }
-        input:focus { border-color: #3b82f6; }
-        button { width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #2563eb; }
-    </style>
-    <script>
-        function handleLogin() {
-            var user = document.getElementById('username').value;
-            var pass = document.getElementById('password').value;
-            
-            // Tài khoản cá nhân của thầy:
-            // Tài khoản: admin
-            // Mật khẩu: HVA_123
-            if (user === "admin" && pass === "HVA_123") {
-                sessionStorage.setItem('isLoggedIn', 'true');
-                window.location.href = 'main.html';
-            } else {
-                alert("Sai tài khoản hoặc mật khẩu!");
-            }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-    </script>
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: #665566;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #0066cc;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #0055b3;
+        }
+
+        .btn-submit:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            margin-top: 16px;
+            padding: 12px;
+            background-color: #ffe6e6;
+            color: #cc0000;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="page-container">
-        <div class="login-card">
-            <div class="logo">HVA</div>
-            <h1>Chào mừng HVA</h1>
-            <p>Vui lòng đăng nhập để tiếp tục</p>
-            
-            <input type="text" id="username" placeholder="Tài khoản">
-            <input type="password" id="password" placeholder="Mật khẩu">
-            
-            <button onclick="handleLogin()">Đăng Nhập</button>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Đăng nhập</h1>
+            <p>Vui lòng nhập thông tin tài khoản của bạn</p>
         </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Tên đăng nhập</label>
+                <input type="text" id="username" name="username" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-submit">Đăng nhập</button>
+
+            <div id="errorMsg" class="error-message"></div>
+        </form>
     </div>
 
+    <script>
+       const WEB_APP_URL =
+"https://script.google.com/macros/s/AKfycbzrpNdCyBsIIKJqx3DL2OZA0nWAkmFMPvyq8JYBrOhDvPELheNX4CNeIFvB7xNRG3VR/exec";
+
+        const loginForm = document.getElementById("loginForm");
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const submitBtn = document.getElementById("submitBtn");
+        const errorMsg = document.getElementById("errorMsg");
+
+        loginForm.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            if (!username || !password) {
+                showError("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
+                return;
+            }
+
+            setLoading(true);
+            hideError();
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        action: "login",
+                        username,
+                        password
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Lỗi kết nối máy chủ. Mã lỗi: " + response.status);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    sessionStorage.setItem("user", JSON.stringify(result.user));
+                    window.location.href = "main.html";
+                } else {
+                    showError(result.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+                }
+
+            } catch (error) {
+                console.error("Network or parsing error:", error);
+                showError("Đã xảy ra lỗi mạng hoặc không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        function showError(message) {
+            errorMsg.textContent = message;
+            errorMsg.style.display = "block";
+        }
+
+        function hideError() {
+            errorMsg.textContent = "";
+            errorMsg.style.display = "none";
+        }
+
+        function setLoading(isLoading) {
+            submitBtn.disabled = isLoading;
+            submitBtn.textContent = isLoading ? "Đang xử lý..." : "Đăng nhập";
+            usernameInput.disabled = isLoading;
+            passwordInput.disabled = isLoading;
+        }
+    </script>
 </body>
 </html>
