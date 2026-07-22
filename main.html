@@ -247,30 +247,25 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Lịch tháng, Lịch tuần, Đột xuất</p>
                     </div>
                   
-                 <div onclick="openModal('report-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
-                       <i class="bi bi-bar-chart-line-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Báo cáo trực tuyến</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Các hoạt động dạy học, ngoài giờ, CSVC</p>
-                    </div>
-                  <!-- Bồi dưỡng chuyên môn Modal -->
-<div id="boiduong-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
-    <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-        <button onclick="closeModal('boiduong-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-            <i class="bi bi-x-lg text-lg"></i>
-        </button>
-        
-        <div class="flex items-center space-x-2.5 mb-5 border-b border-white/5 pb-4">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                <i class="bi bi-mortarboard-fill text-white text-xl"></i>
-            </div>
-            <div>
-                <h3 class="font-bold text-white text-base">Bồi dưỡng chuyên môn</h3>
-                <p class="text-xs text-slate-400">Sinh hoạt, tập huấn, hội thảo, hội nghị, bồi dưỡng</p>
-            </div>
-        </div>
+                 <!-- Card Báo cáo trực tuyến -->
+<div onclick="openModal('report-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 mb-3">
+        <i class="bi bi-bar-chart-line-fill text-white text-lg"></i>
+    </div>
+    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Báo cáo trực tuyến</h3>
+    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Các hoạt động dạy học, ngoài giờ, CSVC</p>
+</div>
+
+<!-- Card Bồi dưỡng chuyên môn (mới) -->
+<div onclick="openModal('boiduong-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/20 mb-3">
+        <i class="bi bi-mortarboard-fill text-white text-lg"></i>
+    </div>
+    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">🎓 Bồi dưỡng chuyên môn</h3>
+    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Sinh hoạt chuyên môn, tập huấn, hội thảo, hội nghị, bồi dưỡng</p>
+</div>
 
         <div class="space-y-3">
             <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-4">
