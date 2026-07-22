@@ -246,7 +246,57 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
                     <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Lịch công tác</h3>
                     <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Lịch tháng, Lịch tuần, Đột xuất</p>
                     </div>
-                  
+             
+    </section>
+            <section class="mb-1">
+            
+                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-1 flex items-center gap-2">
+                    <i class="bi bi-activity text-brand-glow"></i>
+                    Bản tin điều hành nhanh
+                </h2>
+                <div class="space-y-1.5">
+                    <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="w-2 h-2 rounded-full bg-brand-glow mt-1.5 shrink-0 animate-ping"></div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[10px] font-bold text-slate-400">VĂN PHÒNG • VỪA CẬP NHẬT</p>
+                            <a href="https://thpthoavang.edu.vn/" target="_blank" class="text-xs text-slate-200 font-medium mt-0.5 hover:text-brand-glow transition-colors block">Triển khai rà soát hồ sơ thi đua khen thưởng học kỳ mới trên cổng thông tin điện tử.</a>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="w-2 h-2 rounded-full bg-indigo-400 mt-1.5 shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[10px] font-bold text-slate-400">TỔ CHUYÊN MÔN • 1 GIỜ TRƯỚC</p>
+                            <a href="https://thpthoavang.edu.vn/8943-2/chuyen-mon" target="_blank" class="text-xs text-slate-200 font-medium mt-0.5 hover:text-brand-glow transition-colors block">Đã cập nhật biểu mẫu Kế hoạch Giáo dục tổ nhóm chuyên môn năm học mới.</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <nav class="fixed bottom-0 left-0 right-0 z-40 bg-brand-deep/80 backdrop-blur-2xl border-t border-white/5 pb-safe px-6 shadow-2xl">
+            <div class="flex items-center justify-between h-16 max-w-lg mx-auto">
+                <a href="#" class="flex flex-col items-center justify-center flex-1 text-brand-glow py-1">
+                    <i class="bi bi-house-door-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Trang chủ</span>
+                </a>
+                <a href="#" onclick="openModal('contact-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
+                    <i class="bi bi-telephone-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Liên hệ</span>
+                </a>
+                <a href="#" onclick="openModal('digital-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
+                    <i class="bi bi-cpu-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Trí tuệ AI</span>
+                </a>
+                <a href="#" onclick="openModal('team-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
+                    <i class="bi bi-person-lines-fill text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Hồ sơ số</span>
+                </a>
+            </div>
+        </nav>
+
+    
+    <!-- Toast -->
+             
               <!-- Bồi dưỡng chuyên môn Modal -->
 <div id="boiduong-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-deep/80 backdrop-blur-md hidden-force transition-all duration-300">
     <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
@@ -318,55 +368,6 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
         </div>
     </div>
 </div>               
-    </section>
-            <section class="mb-1">
-            
-                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-1 flex items-center gap-2">
-                    <i class="bi bi-activity text-brand-glow"></i>
-                    Bản tin điều hành nhanh
-                </h2>
-                <div class="space-y-1.5">
-                    <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div class="w-2 h-2 rounded-full bg-brand-glow mt-1.5 shrink-0 animate-ping"></div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-[10px] font-bold text-slate-400">VĂN PHÒNG • VỪA CẬP NHẬT</p>
-                            <a href="https://thpthoavang.edu.vn/" target="_blank" class="text-xs text-slate-200 font-medium mt-0.5 hover:text-brand-glow transition-colors block">Triển khai rà soát hồ sơ thi đua khen thưởng học kỳ mới trên cổng thông tin điện tử.</a>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div class="w-2 h-2 rounded-full bg-indigo-400 mt-1.5 shrink-0"></div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-[10px] font-bold text-slate-400">TỔ CHUYÊN MÔN • 1 GIỜ TRƯỚC</p>
-                            <a href="https://thpthoavang.edu.vn/8943-2/chuyen-mon" target="_blank" class="text-xs text-slate-200 font-medium mt-0.5 hover:text-brand-glow transition-colors block">Đã cập nhật biểu mẫu Kế hoạch Giáo dục tổ nhóm chuyên môn năm học mới.</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <nav class="fixed bottom-0 left-0 right-0 z-40 bg-brand-deep/80 backdrop-blur-2xl border-t border-white/5 pb-safe px-6 shadow-2xl">
-            <div class="flex items-center justify-between h-16 max-w-lg mx-auto">
-                <a href="#" class="flex flex-col items-center justify-center flex-1 text-brand-glow py-1">
-                    <i class="bi bi-house-door-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Trang chủ</span>
-                </a>
-                <a href="#" onclick="openModal('contact-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
-                    <i class="bi bi-telephone-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Liên hệ</span>
-                </a>
-                <a href="#" onclick="openModal('digital-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
-                    <i class="bi bi-cpu-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Trí tuệ AI</span>
-                </a>
-                <a href="#" onclick="openModal('team-modal')" class="flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-white py-1">
-                    <i class="bi bi-person-lines-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Hồ sơ số</span>
-                </a>
-            </div>
-        </nav>
-
-    
-    <!-- Toast -->
     <div id="toast-message" class="hidden-force fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-xl bg-slate-900/90 border border-brand-glow/30 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between transition-all duration-300">
         <div class="flex items-center space-x-2">
             <i class="bi bi-info-circle text-brand-glow text-base"></i>
@@ -455,7 +456,7 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
 
         // Click outside to close modal
         window.addEventListener('click', (e) => {
-            const modals = ['contact-modal','report-modal','document-modal','academic-modal','competition-modal','digital-modal','quality-modal','youth-modal','team-modal'];
+           const modals = ['contact-modal','report-modal','document-modal','academic-modal','competition-modal','digital-modal','quality-modal','youth-modal','team-modal','boiduong-modal'];
             modals.forEach(id => {
                 const modal = document.getElementById(id);
                 if (e.target === modal) closeModal(id);
