@@ -151,8 +151,8 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
 
        <main class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-lg mx-auto w-full">
     
-    <!-- Install Banner -->
-    <section id="install-banner" class="mb-4 hidden-force">
+  <!-- Install Banner -->
+    <section id="install-banner" class="mb-4">
         <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/20 to-indigo-600/25 border border-brand-glow/30 backdrop-blur-md flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center text-brand-glow">
@@ -168,9 +168,6 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
             </button>
         </div>
     </section>
-<div class="overflow-hidden rounded-xl bg-brand-glow/10 border border-brand-glow/20 py-2 px-3 mb-3">
-    <div id="welcomeTicker" class="whitespace-nowrap text-xs font-medium text-brand-glow"></div>
-</div>
   <!-- Phương châm -->
     <section class="mb-3 mt-2">
         <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/10 to-indigo-500/10 border border-brand-teal/20 backdrop-blur-md">
@@ -612,5 +609,53 @@ Tạo thông báo..."
     </div>
 
 </div>
+<!-- Cài đặt Ứng dụng (Hiển thị cho cả Android và iOS) -->
+<section id="install-banner" class="mb-4">
+    <div class="p-4 rounded-2xl bg-gradient-to-r from-brand-teal/20 to-indigo-600/25 border border-brand-glow/30 backdrop-blur-md flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center text-brand-glow">
+                <i class="bi bi-phone-vibrate text-xl animate-bounce"></i>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Cài đặt Ứng dụng</h4>
+                <p class="text-[11px] text-teal-200/80 mt-0.5">Thêm nhanh vào màn hình chính</p>
+            </div>
+        </div>
+        <button onclick="triggerPWAInstall()" class="px-3.5 py-1.5 bg-brand-glow hover:bg-teal-400 text-brand-deep font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
+            Cài đặt ngay
+        </button>
+    </div>
+</section>
+
+<!-- Đoạn Script xử lý sự kiện cài đặt cho Android và iOS (Đặt trước thẻ đóng </body>) -->
+<script>
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e; // Lưu lại sự kiện cho Android
+    });
+
+    function triggerPWAInstall() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        
+        if (isIOS) {
+            // Hướng dẫn cài đặt cho iOS (Safari)
+            alert("Để cài đặt ứng dụng trên iOS:\n1. Nhấn vào nút Chia sẻ (Share) trên thanh công cụ Safari.\n2. Cuộn xuống và chọn 'Thêm vào Màn hình chính' (Add to Home Screen).");
+        } else if (deferredPrompt) {
+            // Kích hoạt bảng cài đặt tự động cho Android / Chrome
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('Người dùng đã đồng ý cài đặt PWA');
+                    document.getElementById('install-banner').style.display = 'none'; // Cài xong tự động ẩn banner
+                }
+                deferredPrompt = null;
+            });
+        } else {
+            alert("Ứng dụng có thể đã được cài đặt, hoặc trình duyệt của thầy không hỗ trợ cài đặt tự động. Thầy có thể dùng menu của trình duyệt để thêm vào màn hình chính nhé!");
+        }
+    }
+</script>
 </body>
 </html>
