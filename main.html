@@ -489,18 +489,18 @@ function openBoiduongForm(type, subType = '') {
     // ====================== HỘI THẢO MODAL ======================
 function openHoiThaoForm() {
   const modalHTML = `
-    <div id="hoithao-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999] px-2 sm:px-4">
-      <div class="bg-zinc-900 rounded-3xl w-full max-w-5xl mx-2 sm:mx-auto max-h-[95vh] flex flex-col shadow-2xl overflow-hidden">
+    <div id="hoithao-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999] p-0 sm:p-4">
+      <div class="bg-zinc-900 rounded-none sm:rounded-3xl w-full h-full sm:h-auto sm:max-w-6xl sm:max-h-[95vh] flex flex-col shadow-2xl overflow-hidden">
         
         <!-- Header -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-zinc-950">
+        <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-white/10 bg-zinc-950">
           <div class="flex items-center gap-3">
             <div class="w-9 h-9 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center text-white text-xl">
               📊
             </div>
             <div>
-              <h2 class="text-xl font-semibold text-white">Báo cáo Hội Thảo</h2>
-              <p class="text-slate-400 text-sm">Trung tâm Điều hành số THPT Hòa Vang</p>
+              <h2 class="text-lg sm:text-xl font-semibold text-white">Báo cáo Hội Thảo</h2>
+              <p class="text-slate-400 text-xs sm:text-sm">Trung tâm Điều hành số THPT Hòa Vang</p>
             </div>
           </div>
           <button onclick="closeHoiThaoModal()" 
@@ -510,10 +510,10 @@ function openHoiThaoForm() {
         </div>
 
         <!-- Iframe Content -->
-        <div class="flex-1 p-3 bg-zinc-950">
+        <div class="flex-1 w-full bg-zinc-950 p-0 sm:p-3" style="min-height: 80vh;">
           <iframe id="hoithao-iframe" 
                   src="https://script.google.com/macros/s/AKfycbzrpNdCyBsIIKJqx3DL2OZA0nWAkmFMPvyq8JYBrOhDvPELheNX4CNeIFvB7xNRG3VR/exec"
-                  style="width:100%; height:100%; border:none; border-radius:12px; background:#18181b;"
+                  style="width:100%; height:100%; border:none; border-radius:0px; sm:border-radius:12px; background:#18181b;"
                   allowfullscreen></iframe>
         </div>
       </div>
@@ -525,7 +525,6 @@ function openHoiThaoForm() {
   modalContainer.innerHTML = modalHTML;
   document.body.appendChild(modalContainer.firstElementChild);
 }
-
 function closeHoiThaoModal() {
   const modal = document.getElementById('hoithao-modal');
   if (modal) {
