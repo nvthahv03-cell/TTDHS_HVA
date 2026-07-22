@@ -610,8 +610,8 @@ Tạo thông báo..."
 </div>
 <!-- Cài đặt Ứng dụng (Hiển thị cho cả Android và iOS) -->
 <script>
-    let deferredPrompt = null;
-
+    <script>
+    // Xóa dòng let deferredPrompt = null; ở đây đi, giữ nguyên phần bắt sự kiện:
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -630,10 +630,6 @@ Tạo thông báo..."
                 }
                 deferredPrompt = null;
             });
-        } else {
-            // Trường hợp Android mở bằng trình duyệt bên thứ 3 hoặc sự kiện chưa sẵn sàng, 
-            // ta thử thông báo nhẹ hoặc gọi lại prompt nếu trình duyệt cho phép
-            alert("Thầy vui lòng bấm vào nút Menu (3 chấm) của trình duyệt để chọn 'Cài đặt ứng dụng' hoặc 'Thêm vào màn hình chính' nhé!");
         }
     }
 </script>
