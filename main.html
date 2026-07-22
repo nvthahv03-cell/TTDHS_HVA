@@ -25,27 +25,22 @@
                 }
             }
         }
-        function updateWelcomeTicker() {
-    const days = [
-        "Chủ nhật",
-        "Thứ Hai",
-        "Thứ Ba",
-        "Thứ Tư",
-        "Thứ Năm",
-        "Thứ Sáu",
-        "Thứ Bảy"
-    ];
-
+       function updateWelcomeTicker() {
+    const days = ["Chủ nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
     const now = new Date();
-
-    const text =
-        `📅 Hôm nay: ${days[now.getDay()]}, ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}   •   ✨ Chào mừng đến với Trung tâm Điều hành số THPT Hòa Vang   •   🌸 Chúc Quý Thầy, Cô luôn mạnh khỏe - hạnh phúc - một ngày làm việc hiệu quả!`;
-
-    document.getElementById("welcomeTicker").innerHTML =
-        `<span class="ticker">${text}</span>`;
+    const text = `📅 Hôm nay: ${days[now.getDay()]}, ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}    •    ✨ Chào mừng đến với Trung tâm Điều hành số THPT Hòa Vang    •    🌸 Chúc Quý Thầy, Cô luôn mạnh khỏe - hạnh phúc - một ngày làm việc hiệu quả!`;
+    
+    const tickerElement = document.getElementById("welcomeTicker");
+    if (tickerElement) {
+        tickerElement.innerHTML = `<span class="ticker">${text}</span>`;
+    }
 }
 
-window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateWelcomeTicker);
+} else {
+    updateWelcomeTicker();
+}
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
