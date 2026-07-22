@@ -457,24 +457,30 @@ if (document.readyState === 'loading') {
 
         // Click outside to close modal
         window.addEventListener('click', (e) => {
-           const modals = [
-    'contact-modal', 
-    'report-modal', 
-    'document-modal', 
-    'academic-modal', 
-    'competition-modal', 
-    'digital-modal', 
-    'quality-modal', 
-    'youth-modal', 
-    'team-modal', 
-    'boiduong-modal', 
-    'hoithao-modal' // Thêm mới ID modal hội thảo vào đây
+          // Danh sách các modal
+const modals = [
+    'contact-modal',
+    'report-modal',
+    'document-modal',
+    'academic-modal',
+    'competition-modal',
+    'digital-modal',
+    'quality-modal',
+    'youth-modal',
+    'team-modal',
+    'boiduong-modal',
+    'hoithao-modal'
 ];
-            modals.forEach(id => {
-                const modal = document.getElementById(id);
-                if (e.target === modal) closeModal(id);
-            });
-        });
+
+// Sự kiện click đóng modal khi bấm ra vùng tối bên ngoài
+window.addEventListener('click', (e) => {
+    modals.forEach(id => {
+        const modal = document.getElementById(id);
+        if (modal && e.target === modal) {
+            closeModal(id);
+        }
+    });
+});
        // Bồi dưỡng chuyên môn
 function openBoiduongForm(type, subType = '') {
 
