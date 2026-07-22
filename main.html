@@ -615,29 +615,26 @@ Tạo thông báo..."
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
-        deferredPrompt = e; // Lưu lại sự kiện tự động cho Android
+        deferredPrompt = e;
     });
 
     function triggerPWAInstall() {
-        // Kiểm tra xem có phải iOS thực sự không
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
         if (isIOS) {
-            // Hướng dẫn riêng cho iOS
-            alert("Để cài đặt ứng dụng trên iOS:\n1. Nhấn vào nút Chia sẻ (Share) trên Safari.\n2. Chọn 'Thêm vào Màn hình chính' (Add to Home Screen).");
+            alert("Để cài đặt trên iOS:\n1. Nhấn nút Chia sẻ (Share) trên Safari.\n2. Chọn 'Thêm vào Màn hình chính'.");
         } else if (deferredPrompt) {
-            // Kích hoạt bảng cài đặt tự động cho Android
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
-                    console.log('Người dùng đã đồng ý cài đặt');
                     document.getElementById('install-banner').style.display = 'none';
                 }
                 deferredPrompt = null;
             });
         } else {
-            // Trường hợp Android đã cài rồi hoặc trình duyệt chặn sự kiện
-            alert("Ứng dụng có thể đã được cài đặt, hoặc thầy có thể dùng menu (3 chấm) của trình duyệt để thêm vào màn hình chính.");
+            // Trường hợp Android mở bằng trình duyệt bên thứ 3 hoặc sự kiện chưa sẵn sàng, 
+            // ta thử thông báo nhẹ hoặc gọi lại prompt nếu trình duyệt cho phép
+            alert("Thầy vui lòng bấm vào nút Menu (3 chấm) của trình duyệt để chọn 'Cài đặt ứng dụng' hoặc 'Thêm vào màn hình chính' nhé!");
         }
     }
 </script>
