@@ -621,6 +621,7 @@ Tạo thông báo..."
 
     // Đảm bảo hàm này nằm ở phạm vi global để HTML gọi được
     window.triggerPWAInstall = function() {
+        console.log(deferredPrompt);
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1 && navigator.userAgent.toLowerCase().indexOf('chrome') === -1;
 
