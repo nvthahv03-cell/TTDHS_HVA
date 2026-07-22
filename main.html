@@ -349,13 +349,14 @@ window.addEventListener("DOMContentLoaded", updateWelcomeTicker);
             </button>
 
             <!-- Hội thảo -->
-            <button onclick="openBoiduongForm('hoi_thao')" class="w-full p-4 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-between hover:bg-white/5 transition-all group">
-                <div class="flex items-center gap-3">
-                    <i class="bi bi-chat-text text-lg text-amber-400"></i>
-                    <span class="font-medium text-white">Hội thảo</span>
-                </div>
-                <i class="bi bi-chevron-right text-slate-400 group-hover:text-white"></i>
-            </button>
+            <button onclick="openHoiThaoForm()" 
+        class="w-full p-4 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-between hover:bg-white/10 transition-all">
+  <div class="flex items-center gap-3">
+    <i class="bi bi-chat-text text-lg text-amber-400"></i>
+    <span class="font-medium text-white">Hội thảo</span>
+  </div>
+  <i class="bi bi-chevron-right text-slate-400 group-hover:text-white"></i>
+</button>
 
             <!-- Hội nghị -->
             <button onclick="openBoiduongForm('hoi_nghi')" class="w-full p-4 bg-white/[0.03] border border-white/10 rounded-2xl flex items-center justify-between hover:bg-white/5 transition-all group">
@@ -486,6 +487,53 @@ function openBoiduongForm(type, subType = '') {
         "_blank"
 
     );
+}
+        // Mở Form Hội Thảo trong Modal
+    // ====================== HỘI THẢO MODAL ======================
+function openHoiThaoForm() {
+  const modalHTML = `
+    <div id="hoithao-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999] p-4">
+      <div class="bg-zinc-900 rounded-3xl w-full max-w-4xl max-h-[95vh] flex flex-col shadow-2xl overflow-hidden">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-zinc-950">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center text-white text-xl">
+              📊
+            </div>
+            <div>
+              <h2 class="text-xl font-semibold text-white">Báo cáo Hội Thảo</h2>
+              <p class="text-slate-400 text-sm">Trung tâm Điều hành số THPT Hòa Vang</p>
+            </div>
+          </div>
+          <button onclick="closeHoiThaoModal()" 
+                  class="w-10 h-10 flex items-center justify-center text-3xl text-slate-400 hover:text-white hover:bg-white/10 rounded-2xl transition-all">
+            ×
+          </button>
+        </div>
+
+        <!-- Iframe Content -->
+        <div class="flex-1 p-3 bg-zinc-950">
+          <iframe id="hoithao-iframe" 
+                  src="https://script.google.com/macros/s/AKfycbzrpNdCyBsIIKJqx3DL2OZA0nWAkmFMPvyq8JYBrOhDvPELheNX4CNeIFvB7xNRG3VR/exec"
+                  style="width:100%; height:100%; border:none; border-radius:12px; background:#18181b;"
+                  allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Thêm vào body
+  const modalContainer = document.createElement('div');
+  modalContainer.innerHTML = modalHTML;
+  document.body.appendChild(modalContainer.firstElementChild);
+}
+
+function closeHoiThaoModal() {
+  const modal = document.getElementById('hoithao-modal');
+  if (modal) {
+    modal.remove();
+  }
 }
        
     </script>
