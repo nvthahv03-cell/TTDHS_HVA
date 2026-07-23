@@ -874,7 +874,7 @@ const HVAAssistant = (() => {
 
         const user=getUser();
 
-        const honor=getHonorific(user.gender);
+       const honor = getHonorific(user.gender, user.workPosition);
 
         document.getElementById("assistantGreeting").textContent=
             getGreeting();
