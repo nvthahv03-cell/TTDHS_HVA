@@ -296,19 +296,28 @@ if (document.readyState === 'loading') {
 
 <!-- Menu 2 (Chuyển đổi số) -->
 <div onclick="openModal('digital-modal')"
-     class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+     class="group relative rounded-2xl bg-white/25 backdrop-blur-xl hover:bg-white/35
+            active:scale-[0.97] border border-white/40 hover:border-cyan-300
+            p-4 shadow-lg transition-all duration-300 cursor-pointer overflow-hidden">
 
-    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-cyan-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+    <!-- Hiệu ứng nền -->
+    <div class="absolute -top-8 -right-8 w-20 h-20 rounded-full bg-cyan-400/10 blur-2xl
+                group-hover:scale-150 transition-all duration-500"></div>
 
-    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-sky-500 flex items-center justify-center shadow-lg shadow-cyan-500/20 mb-3">
-        <i class="bi bi-cpu-fill text-white text-lg"></i>
+    <!-- Icon -->
+    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-sky-600
+                flex items-center justify-center shadow-md mb-3
+                group-hover:scale-110 transition-transform duration-300">
+        <i class="bi bi-display-fill text-white text-lg"></i>
     </div>
 
-    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">
+    <!-- Tiêu đề -->
+    <h3 class="text-sm font-bold text-slate-800 group-hover:text-cyan-700 transition-colors">
         Chuyển đổi số
     </h3>
 
-    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">
+    <!-- Mô tả -->
+    <p class="text-[11px] text-slate-500 mt-1 line-clamp-1">
         Điều hành số • Học liệu • Phần mềm
     </p>
 
