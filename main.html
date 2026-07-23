@@ -831,17 +831,26 @@ const HVAAssistant = (() => {
 
     }
 
-    function getHonorific(gender){
+   function getHonorific(gender, workPosition) {
+    const g = (gender || "").trim().toLowerCase();
+    const p = (workPosition || "").trim().toLowerCase();
 
-        gender = (gender || "").toLowerCase();
+    // Nhóm nhà giáo và cán bộ quản lý
+    const isTeacher = [
+        "hiệu trưởng",
+        "phó hiệu trưởng",
+        "giáo viên",
+        "tổ trưởng",
+        "tổ phó"
+    ].some(k => p.includes(k));
 
-        if(gender==="nam") return "Thầy";
-
-        if(gender==="nữ" || gender==="nu") return "Cô";
-
-        return "";
-
+    if (isTeacher) {
+        return g === "nữ" ? "Cô" : "Thầy";
     }
+
+    // Nhóm nhân viên
+    return g === "nữ" ? "Chị" : "Anh";
+}
 
     function randomMessage(){
 
