@@ -172,7 +172,7 @@
                 const result = await response.json();
                 console.log(result);
                 if (result.success) {
-                    sessionStorage.setItem("user", JSON.stringify(result.user));
+                    localStorage.setItem("user", JSON.stringify(result.user));
                     window.location.href = "main.html";
                 } else {
                     showError(result.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
