@@ -192,9 +192,34 @@ if (document.readyState === 'loading') {
             </p>
 
             <!-- Bong bóng chat -->
-            <div class="bg-white/90 rounded-2xl p-3 text-slate-700 shadow mb-3">
-                Xin chào! Hôm nay tôi có thể hỗ trợ gì cho thầy/cô?
-            </div>
+            <!-- Greeting -->
+<div class="mb-3">
+
+    <div id="assistantGreeting"
+         class="text-white text-lg font-bold">
+        👋 Xin chào
+    </div>
+
+    <div id="assistantName"
+         class="text-white text-xl font-bold mt-1">
+        ...
+    </div>
+
+    <div id="assistantPosition"
+         class="text-cyan-100 text-sm mt-1">
+        ...
+    </div>
+
+</div>
+
+<!-- Bong bóng chat -->
+<div
+    id="assistantMessage"
+    class="bg-white/90 rounded-2xl p-3 text-slate-700 shadow mb-3">
+
+    Xin chào!
+
+</div>
 
             <!-- Ô nhập -->
             <div class="flex items-center bg-white rounded-full px-4 py-2 shadow-lg">
@@ -771,6 +796,109 @@ Tạo thông báo..."
         `;
         document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
+</script>
+<script>
+
+/* ===================================================
+   HVA Assistant 1.0
+=================================================== */
+
+const HVAAssistant = (() => {
+
+    function getUser() {
+
+        try {
+
+            return JSON.parse(sessionStorage.getItem("user")) || {};
+
+        } catch {
+
+            return {};
+
+        }
+
+    }
+
+    function getGreeting() {
+
+        const h = new Date().getHours();
+
+        if (h < 11) return "🌅 Chào buổi sáng";
+
+        if (h < 14) return "☀️ Chào buổi trưa";
+
+        if (h < 18) return "🌤️ Chào buổi chiều";
+
+        if (h < 23) return "🌙 Chào buổi tối";
+
+        return "🌌 Chào khuya";
+
+    }
+
+    function getHonorific(gender){
+
+        gender = (gender || "").toLowerCase();
+
+        if(gender==="nam") return "Thầy";
+
+        if(gender==="nữ" || gender==="nu") return "Cô";
+
+        return "";
+
+    }
+
+    function randomMessage(){
+
+        const list=[
+
+            "Hôm nay tôi có thể hỗ trợ gì cho thầy/cô?",
+
+            "Chúc thầy/cô một ngày làm việc hiệu quả.",
+
+            "Tôi luôn sẵn sàng hỗ trợ công việc của thầy/cô.",
+
+            "Chúc thầy/cô thật nhiều năng lượng hôm nay."
+
+        ];
+
+        return list[Math.floor(Math.random()*list.length)];
+
+    }
+
+    function render(){
+
+        const user=getUser();
+
+        const honor=getHonorific(user.gender);
+
+        document.getElementById("assistantGreeting").textContent=
+            getGreeting();
+
+        document.getElementById("assistantName").textContent=
+            `${honor} ${user.fullName || ""}`;
+
+        document.getElementById("assistantPosition").textContent=
+            `${user.workPosition || ""} • ${user.department || ""}`;
+
+        document.getElementById("assistantMessage").textContent=
+            randomMessage().replaceAll("thầy/cô",honor.toLowerCase());
+
+    }
+
+    return{
+
+        render
+
+    };
+
+})();
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    HVAAssistant.render();
+
+});
+
 </script>
 </body>
 </html>
