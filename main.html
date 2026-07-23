@@ -805,7 +805,7 @@ const HVAAssistant = (() => {
 
         try {
 
-            return JSON.parse(sessionStorage.getItem("user")) || {};
+            return JSON.parse(localStorage.getItem("user")) || {};
 
         } catch {
 
