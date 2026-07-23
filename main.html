@@ -323,57 +323,43 @@ if (document.readyState === 'loading') {
 
 </div>
 
-                <div onclick="openModal('competition-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-amber-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-500 flex items-center justify-center shadow-lg shadow-amber-500/20 mb-3">
-                        <i class="bi bi-trophy-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Thi đua</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">HSG, NCKH, Sáng kiến</p>
-                </div>
+            <!-- Menu 3 (Báo cáo trực tuyến) -->
+<div onclick="openModal('boiduong-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
 
-                <div onclick="openModal('digital-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-cyan-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-teal-400 flex items-center justify-center shadow-lg shadow-cyan-500/20 mb-3">
-                        <i class="bi bi-cpu-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chuyển đổi số</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Trí tuệ nhân tạo AI, LMS</p>
-                </div>
+    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
 
-                <div onclick="openModal('quality-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-rose-500/10 w-16 h-16 rounded-full bg-rose-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-orange-500 flex items-center justify-center shadow-lg shadow-rose-500/20 mb-3">
-                        <i class="bi bi-patch-check-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Chất lượng</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Đánh giá ngoài, TEMIS</p>
-                </div>
+    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
+        <i class="bi bi-clipboard-data-fill text-white text-xl"></i>
+    </div>
 
-                <div onclick="openModal('youth-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-red-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-500 to-pink-500 flex items-center justify-center shadow-lg shadow-red-500/20 mb-3">
-                        <i class="bi bi-flag-fill text-white text-lg"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Đoàn trường</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Trải nghiệm, Phong trào</p>
-                </div>
-                 <div onclick="openModal('boiduong-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
-                        <i class="bi bi-people-fill text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Báo cáo trực tuyến</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Lịch, tháng, tuần, Đột xuất</p>
-                    </div>
-                <div onclick="openModal('team-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
-                    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
-                        <i class="bi bi-people-fill text-white text-xl"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">Lịch công tác</h3>
-                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">Lịch tháng, Lịch tuần, Đột xuất</p>
-                    </div>
+    <h3 class="text-sm font-bold text-slate-800 group-hover:text-violet-700 transition-colors">
+        Báo cáo trực tuyến
+    </h3>
+
+    <p class="text-[11px] text-slate-500 mt-1 line-clamp-1">
+        Tập huấn • Hội thảo • Sinh hoạt CM
+    </p>
+
+</div>   
+                
+               <!-- Menu 4 (Hoạt động) -->
+<div onclick="openModal('team-modal')" class="group relative rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] active:scale-[0.97] border border-white/10 hover:border-brand-glow/40 p-4 shadow-xl transition-all duration-300 cursor-pointer overflow-hidden">
+
+    <div class="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-violet-500/10 blur-md group-hover:scale-150 transition-all duration-500"></div>
+
+    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-500 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20 shrink-0">
+        <i class="bi bi-calendar-event-fill text-white text-xl"></i>
+    </div>
+
+    <h3 class="text-sm font-bold text-slate-800 group-hover:text-violet-700 transition-colors">
+        Hoạt động
+    </h3>
+
+    <p class="text-[11px] text-slate-500 mt-1 line-clamp-1">
+        Lịch tháng • Lịch tuần • Đột xuất
+    </p>
+
+</div>
              
     </section>
             <section class="mb-1">
