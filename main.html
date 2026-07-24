@@ -955,6 +955,7 @@ function openHoiThaoForm() {
           </button>
         </div>
 
+
         <!-- Iframe Content -->
         <div class="flex-1 w-full bg-zinc-950 p-0 sm:p-3" style="min-height: 80vh;">
         <iframe id="hoithao-iframe" 
@@ -1222,26 +1223,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     HVAAssistant.render();
 
 });
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Lấy thông tin người dùng hiện tại
-        const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
-        
-        if (user) {
-            // Thầy thay các selector dưới đây (như #input-name, #input-dept, #input-position) 
-            // bằng ID thực tế của các ô input trong form Báo cáo Hội Thảo của thầy nhé:
-            
-            const nameInput = document.querySelector('#input-name'); // Ô Họ và tên
-            const deptInput = document.querySelector('#input-dept'); // Ô Tổ chuyên môn
-            const posInput = document.querySelector('#input-pos');   // Ô Chức vụ
 
-            if (nameInput) nameInput.value = user.name || '';
-            if (deptInput) deptInput.value = user.department || '';
-            if (posInput) posInput.value = user.position || '';
-            
-            console.log("Đã tự động điền thông tin cho:", user.name);
-        }
-    });
 </script>
 
 </body>
