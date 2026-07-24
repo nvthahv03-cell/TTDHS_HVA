@@ -1056,11 +1056,12 @@ Tạo thông báo..."
 
 
 <script>
-    let pwaInstallPrompt = null;
+    // Khởi tạo trực tiếp trên window, không dùng let/const để tránh lỗi trùng lặp định danh
+    window.pwaInstallPrompt = window.pwaInstallPrompt || null;
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
-        pwaInstallPrompt = e;
+        window.pwaInstallPrompt = e;
         const banner = document.getElementById('install-banner');
         if (banner) banner.classList.remove('hidden-force');
     });
@@ -1072,14 +1073,14 @@ Tạo thông báo..."
 
         if (isIOS || isSafari) {
             showIOSInstallGuide();
-        } else if (pwaInstallPrompt) {
-            pwaInstallPrompt.prompt();
-            pwaInstallPrompt.userChoice.then((choiceResult) => {
+        } else if (window.pwaInstallPrompt) {
+            window.pwaInstallPrompt.prompt();
+            window.pwaInstallPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
                     const banner = document.getElementById('install-banner');
                     if (banner) banner.style.display = 'none';
                 }
-                pwaInstallPrompt = null;
+                window.pwaInstallPrompt = null;
             });
         } else {
             showToast("📱 Vui lòng bấm vào Menu (3 chấm) của trình duyệt và chọn 'Thêm vào màn hình chính'!");
