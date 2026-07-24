@@ -816,7 +816,21 @@ if (document.readyState === 'loading') {
             toast.classList.remove('opacity-100', 'scale-100');
             toast.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
         }
+// ====================== LẤY USER TỪ LOCALSTORAGE ======================
+function getCurrentUser() {
+    try {
+        let user = JSON.parse(localStorage.getItem("user")) || {};
 
+        return {
+            name: user.name || user.fullName || "",
+            department: user.department || "",
+            position: user.position || user.chucVu || user.workPosition || ""
+        };
+    } catch (e) {
+        console.error("Lỗi lấy user:", e);
+        return { name: "", department: "", position: "" };
+    }
+}
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             if (modal) {
