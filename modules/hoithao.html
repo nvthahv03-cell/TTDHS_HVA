@@ -1,12 +1,356 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Hội thảo</title>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo cáo Hội Thảo - TTDHS_HVA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
+    .toast { animation: toastIn 0.3s ease forwards; }
+    @keyframes toastIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  </style>
 </head>
-<body>
+<body class="bg-gradient-to-br from-slate-950 to-zinc-950 text-slate-100 min-h-screen">
 
-<h1>Module Hội thảo</h1>
+  <div class="max-w-2xl mx-auto p-4">
+    <!-- Header -->
+   
 
-</body>
-</html>
+    <!-- Form -->
+   <div id="formContainer" class="w-full mx-auto glass border border-white/10 rounded-3xl p-4 sm:p-6 shadow-2xl">
+      <form id="hoiThaoForm">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium mb-1 text-slate-400">Họ và tên</label>
+            <input type="text" id="hoTen" readonly class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none cursor-not-allowed">
+          </div>
+          <div>
+            <label class="block text-xs font-medium mb-1 text-slate-400">Tổ chuyên môn</label>
+            <input type="text" id="toChuyenMon" readonly class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none cursor-not-allowed">
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-xs font-medium mb-1 text-slate-400">Chức vụ</label>
+          <input type="text" id="chucVu" readonly class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none cursor-not-allowed">
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-xs font-medium mb-1 text-slate-400">Tên hội thảo <span class="text-red-400">*</span></label>
+          <input type="text" id="tenHoiThao" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label class="block text-xs font-medium mb-1 text-slate-400">Đơn vị tổ chức <span class="text-red-400">*</span></label>
+            <input type="text" id="donViToChuc" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required>
+          </div>
+          <div>
+            <label class="block text-xs font-medium mb-1 text-slate-400">Cấp tổ chức</label>
+            <select id="capToChuc" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500">
+              <option value="Bo GDĐT">Bộ GDĐT</option>
+              <option value="So GDĐT">Sở GDĐT</option>
+              <option value="Cum">Cụm</option>
+              <option value="Truong">Trường</option>
+              <option value="Khac">Khác</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label class="block text-xs font-medium mb-1 text-slate-400">Hình thức</label>
+            <select id="hinhThuc" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500">
+              <option value="Trực tiếp">Trực tiếp</option>
+              <option value="Trực tuyến">Trực tuyến</option>
+              <option value="Kết hợp">Kết hợp</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium mb-1 text-slate-400">Thời gian <span class="text-red-400">*</span></label>
+            <input type="datetime-local" id="thoiGian" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-xs font-medium mb-1 text-slate-400">Địa điểm</label>
+          <input type="text" id="diaDiem" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500">
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-xs font-medium mb-1 text-slate-400">Nội dung chính <span class="text-red-400">*</span></label>
+          <textarea id="noiDungChinh" rows="4" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label class="block text-xs font-medium mb-1 text-slate-400">Kết quả đạt được</label>
+            <textarea id="ketQua" rows="3" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-medium mb-1 text-slate-400">Đề xuất</label>
+            <textarea id="deXuat" rows="3" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500"></textarea>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-xs font-medium mb-1 text-slate-400">Link minh chứng</label>
+          <input type="url" id="minhChung" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" placeholder="https://...">
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-xs font-medium mb-1 text-slate-400">Ghi chú</label>
+          <textarea id="ghiChu" rows="2" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500"></textarea>
+        </div>
+
+        <div class="flex gap-3 mt-8">
+          <button type="button" onclick="FORM.reset()" class="flex-1 py-3.5 border border-white/30 hover:bg-white/10 rounded-2xl font-medium transition-all">Làm mới</button>
+          <button type="submit" id="btnSubmit" class="flex-1 py-3.5 bg-teal-600 hover:bg-teal-500 rounded-2xl font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-70">
+            <span id="btnText">Gửi báo cáo</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-8 text-xs text-slate-500">
+      Trường THPT Hòa Vang<br>
+      Trung tâm Điều hành số<br>
+      Phiên bản 1.0 ©2026
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[100]">
+    <div class="text-center">
+      <div class="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <div class="mt-4 text-white font-medium">Đang lưu dữ liệu...</div>
+      <div class="text-slate-400 text-sm mt-1">Vui lòng chờ trong giây lát</div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[110] px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-sm max-w-xs">
+    <span id="toastIcon" class="text-lg"></span>
+    <span id="toastMessage" class="font-medium"></span>
+  </div>
+
+  <script>
+    // ====================== CONFIG ======================
+    const CONFIG = {
+      DASHBOARD_URL: "https://your-dashboard-url.com",
+      LOGO_URL: "https://via.placeholder.com/40x40/0ea5e9/ffffff?text=HVA",
+      SCHOOL_NAME: "Trường THPT Hòa Vang",
+      VERSION: "1.0",
+      TOAST_DURATION: 4500,
+      LOADING_TEXT: "Đang lưu dữ liệu...",
+      SHEET_NAME: "HoiThao"
+    };
+
+    // ====================== STATE ======================
+    const STATE = {
+      currentUser: null,
+      isSaving: false
+    };
+
+    // ====================== DOM CACHE ======================
+    const DOM = {
+      form: document.getElementById('hoiThaoForm'),
+      btnSubmit: document.getElementById('btnSubmit'),
+      btnText: document.getElementById('btnText'),
+      loadingOverlay: document.getElementById('loadingOverlay'),
+      toast: document.getElementById('toast'),
+      toastIcon: document.getElementById('toastIcon'),
+      toastMessage: document.getElementById('toastMessage'),
+      hoTen: document.getElementById('hoTen'),
+      toChuyenMon: document.getElementById('toChuyenMon'),
+      chucVu: document.getElementById('chucVu'),
+      tenHoiThao: document.getElementById('tenHoiThao')
+    };
+
+    // ====================== UTILS ======================
+    function showToast(message, type = 'success') {
+      const toast = DOM.toast;
+      DOM.toastIcon.textContent = type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️';
+      DOM.toastMessage.textContent = message;
+      toast.classList.remove('hidden', 'bg-emerald-600', 'bg-red-600', 'bg-amber-600');
+      toast.classList.add(type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-amber-600');
+      
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, CONFIG.TOAST_DURATION);
+    }
+<script>
+    // Ép buộc gắn hàm ra window toàn cục để bất kỳ sự kiện onclick nào cũng gọi được
+    window.openHoiThaoForm = function() {
+        const modal = document.getElementById('hoiThaoModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+
+        // Lấy thông tin user và điền vào form
+        const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+        
+        if (user) {
+            const inputHoTen = document.getElementById('hoTen');
+            const inputToCM = document.getElementById('toChuyenMon');
+            const inputChucVu = document.getElementById('chucVu');
+
+            if (inputHoTen) inputHoTen.value = user.name || '';
+            if (inputToCM) inputToCM.value = user.department || '';
+            if (inputChucVu) inputChucVu.value = user.position || '';
+        }
+    };
+</script>
+    function showLoading(show) {
+      DOM.loadingOverlay.classList.toggle('hidden', !show);
+    }
+
+    function disableForm(disable) {
+      const inputs = DOM.form.querySelectorAll('input, select, textarea, button');
+      inputs.forEach(el => {
+        if (el.id !== 'btnSubmit') el.disabled = disable;
+      });
+    }
+
+    // ====================== LẤY USER TỪ LOCALSTORAGE ======================
+    function getCurrentUser() {
+        try {
+            let user = JSON.parse(localStorage.getItem("user")) || {};
+
+            return {
+                name: user.name || user.fullName || "",
+                department: user.department || user.toChuyenMon || "",
+                position: user.position || user.chucVu || user.workPosition || ""
+            };
+        } catch (e) {
+            console.error("Lỗi lấy user:", e);
+            return { name: "", department: "", position: "" };
+        }
+    }
+
+    // ====================== API ======================
+    const API = {
+      saveHoiThao: function(data) {
+        return new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject)
+            .saveHoiThao(data);
+        });
+      }
+    };
+
+    // ====================== UI ======================
+    const UI = {
+      updateUserInfo: function() {
+        const user = getCurrentUser();
+        DOM.hoTen.value = user.name;
+        DOM.toChuyenMon.value = user.department;
+        DOM.chucVu.value = user.position;
+      }
+    };
+
+    // ====================== VALIDATION ======================
+    const VALIDATION = {
+      isValid: function() {
+        if (!DOM.tenHoiThao.value.trim()) {
+          showToast("Vui lòng nhập Tên hội thảo", 'warning');
+          DOM.tenHoiThao.focus();
+          return false;
+        }
+        if (!document.getElementById('donViToChuc').value.trim()) {
+          showToast("Vui lòng nhập Đơn vị tổ chức", 'warning');
+          document.getElementById('donViToChuc').focus();
+          return false;
+        }
+        if (!document.getElementById('thoiGian').value) {
+          showToast("Vui lòng chọn Thời gian", 'warning');
+          document.getElementById('thoiGian').focus();
+          return false;
+        }
+        if (!document.getElementById('noiDungChinh').value.trim()) {
+          showToast("Vui lòng nhập Nội dung chính", 'warning');
+          document.getElementById('noiDungChinh').focus();
+          return false;
+        }
+        return true;
+      }
+    };
+
+    // ====================== FORM ======================
+    const FORM = {
+      collectData: function() {
+        return {
+          hoTen: DOM.hoTen.value,
+          toChuyenMon: DOM.toChuyenMon.value,
+          chucVu: DOM.chucVu.value,
+          tenHoiThao: document.getElementById('tenHoiThao').value,
+          donViToChuc: document.getElementById('donViToChuc').value,
+          capToChuc: document.getElementById('capToChuc').value,
+          hinhThuc: document.getElementById('hinhThuc').value,
+          thoiGian: document.getElementById('thoiGian').value,
+          diaDiem: document.getElementById('diaDiem').value,
+          noiDungChinh: document.getElementById('noiDungChinh').value,
+          ketQua: document.getElementById('ketQua').value,
+          deXuat: document.getElementById('deXuat').value,
+          minhChung: document.getElementById('minhChung').value,
+          ghiChu: document.getElementById('ghiChu').value
+        };
+      },
+      reset: function() {
+        document.getElementById('hoiThaoForm').reset();
+        UI.updateUserInfo();           // Điền lại thông tin user sau khi reset
+        document.getElementById('tenHoiThao').focus();
+      }
+    };
+
+    // ====================== INIT ======================
+    function init() {
+      // Set logo (nếu có)
+      if (document.getElementById('logo')) {
+        document.getElementById('logo').src = CONFIG.LOGO_URL;
+      }
+
+      // Tự động điền thông tin người dùng
+      UI.updateUserInfo();
+
+      // Form submit
+      DOM.form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        if (!VALIDATION.isValid()) return;
+
+        STATE.isSaving = true;
+        showLoading(true);
+        DOM.btnSubmit.disabled = true;
+        DOM.btnText.innerHTML = `<i class="bi bi-hourglass-split animate-spin"></i> Đang lưu...`;
+
+        const data = FORM.collectData();
+
+        try {
+          const result = await API.saveHoiThao(data);
+          if (result.success) {
+            showToast(result.message, 'success');
+            FORM.reset();
+          } else {
+            showToast(result.message, 'error');
+          }
+        } catch (error) {
+          showToast("Lỗi khi lưu: " + error.message, 'error');
+        } finally {
+          STATE.isSaving = false;
+          showLoading(false);
+          DOM.btnSubmit.disabled = false;
+          DOM.btnText.textContent = 'Lưu báo cáo';
+        }
+      });
+    }
+
+    // Run
+    window.onload = init;
+  </script>
