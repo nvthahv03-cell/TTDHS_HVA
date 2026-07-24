@@ -1137,24 +1137,23 @@ const HVAAssistant = (() => {
 
     }
 
-   function getHonorific(gender, workPosition) {
+  function getHonorific(gender, workPosition) {
     const g = (gender || "").trim().toLowerCase();
     const p = (workPosition || "").trim().toLowerCase();
 
-    // Nhóm nhà giáo và cán bộ quản lý
-    const isTeacher = [
-        "hiệu trưởng",
-        "phó hiệu trưởng",
-        "giáo viên",
-        "tổ trưởng",
-        "tổ phó"
-    ].some(k => p.includes(k));
-
-    if (isTeacher) {
+    // Cán bộ quản lý và giáo viên
+    if (
+        p.includes("hiệu trưởng") ||
+        p.includes("phó hiệu trưởng") ||
+        p.includes("ttcm") ||
+        p.includes("tpcm") ||
+        p.includes("giáo viên") ||
+        p.includes("gv")
+    ) {
         return g === "nữ" ? "Cô" : "Thầy";
     }
 
-    // Nhóm nhân viên
+    // Nhân viên
     return g === "nữ" ? "Chị" : "Anh";
 }
 
