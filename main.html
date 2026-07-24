@@ -1056,37 +1056,35 @@ Tạo thông báo..."
 
 
 <script>
-    (function() {
-        let deferredPrompt = null;
+    let pwaInstallPrompt = null;
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            const banner = document.getElementById('install-banner');
-            if (banner) banner.classList.remove('hidden-force');
-        });
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        pwaInstallPrompt = e;
+        const banner = document.getElementById('install-banner');
+        if (banner) banner.classList.remove('hidden-force');
+    });
 
-        // Gắn hàm triggerPWAInstall ra window để HTML gọi được
-        window.triggerPWAInstall = function() {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1 && navigator.userAgent.toLowerCase().indexOf('chrome') === -1;
+    // Đảm bảo hàm này nằm ở phạm vi global để HTML gọi được
+    window.triggerPWAInstall = function() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1 && navigator.userAgent.toLowerCase().indexOf('chrome') === -1;
 
-            if (isIOS || isSafari) {
-                showIOSInstallGuide();
-            } else if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        const banner = document.getElementById('install-banner');
-                        if (banner) banner.style.display = 'none';
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                showToast("📱 Vui lòng bấm vào Menu (3 chấm) của trình duyệt và chọn 'Thêm vào màn hình chính'!");
-            }
-        };
-    })();
+        if (isIOS || isSafari) {
+            showIOSInstallGuide();
+        } else if (pwaInstallPrompt) {
+            pwaInstallPrompt.prompt();
+            pwaInstallPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    const banner = document.getElementById('install-banner');
+                    if (banner) banner.style.display = 'none';
+                }
+                pwaInstallPrompt = null;
+            });
+        } else {
+            showToast("📱 Vui lòng bấm vào Menu (3 chấm) của trình duyệt và chọn 'Thêm vào màn hình chính'!");
+        }
+    };
 </script>
     function showIOSInstallGuide() {
         const existingGuide = document.getElementById('ios-guide-modal');
