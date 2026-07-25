@@ -177,28 +177,38 @@
       isSaving: false
     };
 
-    // ====================== DOM CACHE ======================
-    const DOM = {
-      container: document.getElementById('hoiThaoContainer'),
-      form: document.getElementById('hoiThaoForm'),
-      btnSubmit: document.getElementById('btnSubmit'),
-      btnText: document.getElementById('btnText'),
-      btnReset: document.getElementById('btnReset'),
-      hoTen: document.getElementById('hoTen'),
-      toChuyenMon: document.getElementById('toChuyenMon'),
-      chucVu: document.getElementById('chucVu'),
-      tenHoiThao: document.getElementById('tenHoiThao'),
-      donViToChuc: document.getElementById('donViToChuc'),
-      capToChuc: document.getElementById('capToChuc'),
-      hinhThuc: document.getElementById('hinhThuc'),
-      thoiGian: document.getElementById('thoiGian'),
-      diaDiem: document.getElementById('diaDiem'),
-      noiDungChinh: document.getElementById('noiDungChinh'),
-      ketQua: document.getElementById('ketQua'),
-      deXuat: document.getElementById('deXuat'),
-      minhChung: document.getElementById('minhChung'),
-      ghiChu: document.getElementById('ghiChu')
-    };
+   // ====================== DOM CACHE ======================
+const DOM = {
+  container: document.getElementById('hoiThaoContainer'),
+  form: document.getElementById('hoiThaoForm'),
+
+  btnSubmit: document.getElementById('btnSubmit'),
+  btnText: document.getElementById('btnText'),
+  btnReset: document.getElementById('btnReset'),
+
+  // ===== Preview =====
+  btnPreview: document.getElementById('btnPreview'),
+  previewModal: document.getElementById('previewModal'),
+  previewPaper: document.getElementById('previewPaper'),
+  btnClosePreview: document.getElementById('btnClosePreview'),
+  btnBackForm: document.getElementById('btnBackForm'),
+  btnConfirmSubmit: document.getElementById('btnConfirmSubmit'),
+
+  hoTen: document.getElementById('hoTen'),
+  toChuyenMon: document.getElementById('toChuyenMon'),
+  chucVu: document.getElementById('chucVu'),
+  tenHoiThao: document.getElementById('tenHoiThao'),
+  donViToChuc: document.getElementById('donViToChuc'),
+  capToChuc: document.getElementById('capToChuc'),
+  hinhThuc: document.getElementById('hinhThuc'),
+  thoiGian: document.getElementById('thoiGian'),
+  diaDiem: document.getElementById('diaDiem'),
+  noiDungChinh: document.getElementById('noiDungChinh'),
+  ketQua: document.getElementById('ketQua'),
+  deXuat: document.getElementById('deXuat'),
+  minhChung: document.getElementById('minhChung'),
+  ghiChu: document.getElementById('ghiChu')
+};
 
     // ====================== UTILS ======================
     const UTILS = {
@@ -263,25 +273,38 @@
     };
 
     // ====================== UI ======================
-    const UI = {
-      updateUserInfo: function() {
-        STATE.currentUser = UTILS.getCurrentUser();
-        DOM.hoTen.value = STATE.currentUser.name || '';
-        DOM.toChuyenMon.value = STATE.currentUser.department || '';
-        DOM.chucVu.value = STATE.currentUser.position || '';
-      },
-      setSubmittingState: function(isSubmitting) {
-        STATE.isSaving = isSubmitting;
-        UTILS.showLoading(isSubmitting);
-        DOM.btnSubmit.disabled = isSubmitting;
-        if (isSubmitting) {
-          DOM.btnText.innerHTML = `<i class="bi bi-hourglass-split animate-spin"></i> Đang lưu...`;
-        } else {
-          DOM.btnText.textContent = 'Gửi báo cáo';
-        }
-      }
-    };
+   
+const UI = {
 
+  updateUserInfo: function () {
+    STATE.currentUser = UTILS.getCurrentUser();
+    DOM.hoTen.value = STATE.currentUser.name || '';
+    DOM.toChuyenMon.value = STATE.currentUser.department || '';
+    DOM.chucVu.value = STATE.currentUser.position || '';
+  },
+
+  setSubmittingState: function (isSubmitting) {
+    STATE.isSaving = isSubmitting;
+    UTILS.showLoading(isSubmitting);
+    DOM.btnSubmit.disabled = isSubmitting;
+
+    if (isSubmitting) {
+      DOM.btnText.innerHTML = `<i class="bi bi-hourglass-split animate-spin"></i> Đang lưu...`;
+    } else {
+      DOM.btnText.textContent = '📤 Gửi báo cáo';
+    }
+  },
+
+  // ===== PREVIEW =====
+  openPreview: function () {
+    DOM.previewModal.classList.remove('hidden');
+  },
+
+  closePreview: function () {
+    DOM.previewModal.classList.add('hidden');
+  }
+
+};
     // ====================== VALIDATION ======================
     const VALIDATION = {
       isValid: function() {
@@ -336,39 +359,83 @@
       }
     };
 
-    // ====================== INIT ======================
-    function init() {
-      UI.updateUserInfo();
+   // ====================== INIT ======================
+function init() {
 
-      DOM.btnReset.addEventListener('click', function() {
+  UI.updateUserInfo();
+
+  // ===== RESET =====
+  DOM.btnReset.addEventListener('click', function () {
+    FORM.reset();
+  });
+
+  // ===== PREVIEW =====
+  DOM.btnPreview.addEventListener('click', function () {
+    UI.openPreview();
+  });
+
+  DOM.btnClosePreview.addEventListener('click', function () {
+    UI.closePreview();
+  });
+
+  DOM.btnBackForm.addEventListener('click', function () {
+    UI.closePreview();
+  });
+
+  // ===== SUBMIT =====
+  DOM.form.addEventListener('submit', async function (e) {
+
+    e.preventDefault();
+
+    if (STATE.isSaving) return;
+
+    if (!VALIDATION.isValid()) return;
+
+    UI.setSubmittingState(true);
+
+    const data = FORM.collectData();
+
+    try {
+
+      const result = await API.saveHoiThao(data);
+
+      if (result && (result.success || result.status === 'success')) {
+
+        UTILS.showToast(
+          result.message || "Lưu báo cáo thành công!",
+          'success'
+        );
+
         FORM.reset();
-      });
 
-      DOM.form.addEventListener('submit', async function(e) {
-        e.preventDefault();
+      } else {
 
-        if (STATE.isSaving) return;
-        if (!VALIDATION.isValid()) return;
+        UTILS.showToast(
+          (result && result.message)
+            ? result.message
+            : "Có lỗi xảy ra khi lưu!",
+          'error'
+        );
 
-        UI.setSubmittingState(true);
-        const data = FORM.collectData();
+      }
 
-        try {
-          const result = await API.saveHoiThao(data);
-          if (result && (result.success || result.status === 'success')) {
-            UTILS.showToast(result.message || "Lưu báo cáo thành công!", 'success');
-            FORM.reset();
-          } else {
-            UTILS.showToast((result && result.message) ? result.message : "Có lỗi xảy ra khi lưu!", 'error');
-          }
-        } catch (error) {
-          UTILS.showToast("Lỗi khi lưu: " + (error.message || error), 'error');
-        } finally {
-          UI.setSubmittingState(false);
-        }
-      });
+    } catch (error) {
+
+      UTILS.showToast(
+        "Lỗi khi lưu: " + (error.message || error),
+        'error'
+      );
+
+    } finally {
+
+      UI.setSubmittingState(false);
+
     }
 
-    init();
+  });
+
+}
+
+init();
   })();
 </script>
