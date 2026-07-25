@@ -297,13 +297,181 @@ const UI = {
 
   // ===== PREVIEW =====
   openPreview: function () {
+
+    this.renderPreview();
+
     DOM.previewModal.classList.remove('hidden');
-  },
+
+},
 
   closePreview: function () {
     DOM.previewModal.classList.add('hidden');
   }
+renderPreview: function () {
 
+  DOM.previewPaper.innerHTML = `
+
+    <div style="text-align:center; margin-bottom:30px;">
+
+      <div style="font-size:18pt;font-weight:bold;">
+        TRƯỜNG THPT HÒA VANG
+      </div>
+
+      <div style="font-size:13pt;margin-top:4px;">
+        TRUNG TÂM ĐIỀU HÀNH SỐ
+      </div>
+
+      <div style="margin-top:18px;
+                  font-size:20pt;
+                  font-weight:bold;
+                  text-transform:uppercase;">
+        BÁO CÁO THAM DỰ HỘI THẢO
+      </div>
+
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;">
+
+      <tr>
+        <td style="width:180px;"><b>Họ và tên:</b></td>
+        <td>${DOM.hoTen.value}</td>
+      </tr>
+
+      <tr>
+        <td><b>Tổ chuyên môn:</b></td>
+        <td>${DOM.toChuyenMon.value}</td>
+      </tr>
+
+      <tr>
+        <td><b>Chức vụ:</b></td>
+        <td>${DOM.chucVu.value}</td>
+      </tr>
+
+      <tr>
+        <td><b>Tên hội thảo:</b></td>
+        <td>${DOM.tenHoiThao.value}</td>
+      </tr>
+
+      <tr>
+        <td><b>Đơn vị tổ chức:</b></td>
+        <td>${DOM.donViToChuc.value}</td>
+      </tr>
+
+      <tr>
+        <td><b>Cấp tổ chức:</b></td>
+        <td>${DOM.capToChuc.value}</td>
+      </tr>
+
+      <tr>
+        <td><b>Hình thức:</b></td>
+        <td>${DOM.hinhThuc.value}</td>
+      </tr>
+
+      <tr>
+        <td><b>Thời gian:</b></td>
+        <td>${DOM.thoiGian.value}</td>
+      </tr>
+
+      <tr>
+        <td><b>Địa điểm:</b></td>
+        <td>${DOM.diaDiem.value}</td>
+      </tr>
+
+    </table>
+
+    <br>
+
+    <div style="font-weight:bold;margin-bottom:8px;">
+      I. Nội dung chính
+    </div>
+
+    <div style="
+        border:1px solid #999;
+        padding:12px;
+        min-height:120px;
+        white-space:pre-wrap;">
+        ${DOM.noiDungChinh.value}
+    </div>
+
+    <br>
+
+    <div style="font-weight:bold;margin-bottom:8px;">
+      II. Kết quả tiếp thu
+    </div>
+
+    <div style="
+        border:1px solid #999;
+        padding:12px;
+        min-height:120px;
+        white-space:pre-wrap;">
+        ${DOM.ketQua.value}
+    </div>
+
+    <br>
+
+    <div style="font-weight:bold;margin-bottom:8px;">
+      III. Kiến nghị / Đề xuất
+    </div>
+
+    <div style="
+        border:1px solid #999;
+        padding:12px;
+        min-height:100px;
+        white-space:pre-wrap;">
+        ${DOM.deXuat.value}
+    </div>
+
+    <br>
+
+    <div style="font-weight:bold;margin-bottom:8px;">
+      IV. Minh chứng
+    </div>
+
+    <div>
+      ${DOM.minhChung.value || "Không có"}
+    </div>
+
+    <br>
+
+    <div style="font-weight:bold;margin-bottom:8px;">
+      Ghi chú
+    </div>
+
+    <div>
+      ${DOM.ghiChu.value || ""}
+    </div>
+
+    <br><br><br>
+
+    <div style="text-align:right;">
+
+        <div>Người báo cáo</div>
+
+        <br><br><br>
+
+        <div style="font-weight:bold;">
+            ${DOM.hoTen.value}
+        </div>
+
+    </div>
+
+    <hr style="margin-top:50px">
+
+    <div style="
+        font-size:11pt;
+        color:#777;
+        display:flex;
+        justify-content:space-between;">
+
+        <span>TTDHS_HVA - Trường THPT Hòa Vang</span>
+
+        <span>BẢN XEM TRƯỚC</span>
+
+    </div>
+
+  `;
+
+},
 };
     // ====================== VALIDATION ======================
     const VALIDATION = {
