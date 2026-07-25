@@ -252,11 +252,11 @@ if (document.readyState === 'loading') {
                     <h4 class="text-xs font-bold text-white uppercase tracking-wider">Cài đặt Ứng dụng</h4>
                     <p class="text-[11px] text-teal-200/80 mt-0.5">Thêm nhanh vào màn hình chính</p>
                 </div>
-            </div>
-            <button onclick="triggerPWAInstall()" class="px-3.5 py-1.5 bg-brand-glow hover:bg-teal-400 text-brand-deep font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
-                Cài đặt ngay
-            </button>
-        </div>
+           </div>
+    <button onclick="handleInstallApp()" class="px-3.5 py-1.5 bg-brand-glow hover:bg-teal-400 text-brand-deep font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-all">
+        Cài đặt ngay
+    </button>
+</div>
     </section>
 
   <!-- Phương châm -->
@@ -1074,34 +1074,31 @@ Tạo thông báo..."
 
 </script>
 <script>
-    // 1. Biến lưu sự kiện cài đặt tự động của Android / Chrome
+    // 1. Lắng nghe và bắt sự kiện cài đặt tự động của Android
     let deferredPrompt = null;
-
     window.addEventListener('beforeinstallprompt', (e) => {
-        // Ngăn trình duyệt hiện banner mặc định
         e.preventDefault();
-        // Lưu lại sự kiện để kích hoạt khi người dùng bấm nút
         deferredPrompt = e;
     });
 
-    // 2. Hàm gọi khi người dùng BẤM NÚT "CÀI ĐẶT" trên giao diện
+    // 2. Hàm xử lý cho nút "Cài đặt ngay" trên giao diện
     async function handleInstallApp() {
-        // Nếu là Android / Chrome có hỗ trợ cài trực tiếp
+        // Nếu đang ở Android/Chrome và đã có sự kiện cài đặt
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') {
                 deferredPrompt = null;
             }
-            return;
+        } else {
+            // Nếu là iOS Safari hoặc trình duyệt không hỗ trợ PWA tự động -> Mới bật Modal hướng dẫn
+            showIOSInstallGuide(true);
         }
-        // Nếu là iOS (Safari) hoặc trình duyệt không hỗ trợ PWA tự động -> Bật khung hướng dẫn
-        showIOSInstallGuide(true);
     }
 
-    // 3. Hàm hiển thị khung hướng dẫn iOS (Giữ nguyên 100% cấu trúc gốc của thầy)
+    // 3. Hàm hiển thị Modal hướng dẫn (Giữ 100% code gốc của thầy)
     function showIOSInstallGuide(isManualClick = false) {
-        // Nếu tự động chạy khi reload mà thầy đã bấm "Đã hiểu" -> Bỏ qua không hiện
+        // Nếu tự động chạy khi reload mà đã bấm "Đã hiểu" -> Không hiện
         if (!isManualClick && localStorage.getItem('hideIOSGuide') === 'true') {
             return;
         }
