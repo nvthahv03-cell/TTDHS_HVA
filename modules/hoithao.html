@@ -156,18 +156,29 @@
   window.openHoiThaoForm = function() {
     const container = document.getElementById('hoiThaoContainer');
     if (container) {
-      container.style.display = 'flex'; // Hiển thị lại nếu đã bị ẩn
+      container.style.display = 'flex';
     }
   };
 
   function closeHoiThaoModal() {
+    // 1. Ẩn form Hội thảo
     const container = document.getElementById('hoiThaoContainer');
     if (container) {
-      // Chỉ ẩn đi, KHÔNG xóa
       container.style.display = 'none';
     }
-  
-    // Gọi hàm quay về menu trước (nếu có)
+
+    // 2. Hiện lại toàn bộ nội dung chính của trang
+    const mainContent = document.querySelector('main') 
+                     || document.getElementById('mainContent')
+                     || document.getElementById('dashboard')
+                     || document.getElementById('app')
+                     || document.body.firstElementChild;
+
+    if (mainContent) {
+      mainContent.style.display = 'block';
+    }
+
+    // 3. Nếu trang chủ có hàm riêng thì gọi thêm
     if (typeof window.showHome === 'function') {
       window.showHome();
     } else if (typeof window.goBack === 'function') {
