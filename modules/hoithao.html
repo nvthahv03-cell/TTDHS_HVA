@@ -308,18 +308,11 @@ const UI = {
   },
 renderPreview: function () {
 
- // 1. Lấy thời gian thực bao gồm giờ, phút, giây
+ // Lấy thời gian thực
 const now = new Date();
 const ngayThangNam = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
 const gioPhutGiay = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-// 2. Cập nhật nút Xác nhận gửi có kèm thời gian
-const btnSubmit = document.getElementById('btnSubmit') || document.querySelector('.btn-submit'); // Điều chỉnh selector nếu cần
-if (btnSubmit) {
-  btnSubmit.innerHTML = `<i class="fas fa-paper-plane mr-2"></i>Xác nhận gửi (${gioPhutGiay})`;
-}
-
-// 3. Render lại nội dung Preview
 DOM.previewPaper.innerHTML = `
     <style>
       #previewPaper, #previewPaper * {
@@ -329,14 +322,28 @@ DOM.previewPaper.innerHTML = `
 
     <div style="background:#fff !important; color:#111 !important; color-scheme: light !important; font-family: 'Times New Roman', Times, serif; padding: 20px; line-height: 1.5;">
 
-        <div style="text-align:center; margin-bottom:25px;">
-          <div style="font-size:14pt; font-weight:bold; text-transform:uppercase;">
-            TRƯỜNG THPT HÒA VANG
+        <!-- Header: Bên trái là Đơn vị, Bên phải là Ngày giờ -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+          <div style="text-align: center;">
+            <div style="font-size: 13pt; font-weight: bold; text-transform: uppercase;">
+              TRƯỜNG THPT HÒA VANG
+            </div>
+            <div style="font-size: 11pt; font-weight: bold; text-transform: uppercase;">
+              TRUNG TÂM ĐIỀU HÀNH SỐ
+            </div>
           </div>
-          <div style="font-size:12pt; font-weight:bold; text-transform:uppercase;">
-            TRUNG TÂM ĐIỀU HÀNH SỐ
+
+          <div style="text-align: right; font-size: 12pt;">
+            <div style="font-style: italic; white-space: nowrap;">${ngayThangNam}</div>
+            <div style="font-style: italic; font-size: 10pt; color: #444 !important; margin-top: 2px;">
+              Thời gian lập: ${gioPhutGiay}
+            </div>
           </div>
-          <div style="margin-top:20px; font-size:16pt; font-weight:bold; text-transform:uppercase;">
+        </div>
+
+        <!-- Tiêu đề báo cáo -->
+        <div style="text-align: center; margin-bottom: 25px;">
+          <div style="font-size: 16pt; font-weight: bold; text-transform: uppercase;">
             BÁO CÁO THAM DỰ HỘI THẢO
           </div>
         </div>
@@ -344,7 +351,8 @@ DOM.previewPaper.innerHTML = `
         <table style="width:100%; border-collapse:collapse; font-size:13pt; margin-bottom:15px;">
           <tr>
             <td style="width:160px; padding:3px 0;"><b>Họ và tên:</b></td>
-            <td style="padding:3px 0;">${DOM.hoTen?.value || ''}</td>
+            <!-- Tô đậm tên ở bảng thông tin phía trên -->
+            <td style="padding:3px 0;"><b style="font-weight:bold !important; text-transform: uppercase;">${DOM.hoTen?.value || ''}</b></td>
           </tr>
           <tr>
             <td style="padding:3px 0;"><b>Tổ chuyên môn:</b></td>
@@ -419,14 +427,18 @@ DOM.previewPaper.innerHTML = `
 
         <br>
 
-        <!-- Khung ngày tháng và chữ ký chuẩn thẳng dòng -->
-        <div style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:320px;">
-            <div style="font-style:italic; white-space:nowrap;">${ngayThangNam}</div>
-            <div style="font-weight:bold; margin-top:5px;">Người báo cáo</div>
+        <!-- Chữ ký phía dưới góc phải -->
+        <div style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:280px;">
+            <div style="font-weight:bold;">Người báo cáo</div>
             <div style="font-style:italic; font-size:10pt; color:#555 !important;">(Ký, ghi rõ họ tên)</div>
+            
             <br><br><br>
-            <div style="font-weight:bold !important; font-size:13pt;">
-              ${DOM.hoTen?.value || ''}
+            
+            <!-- Tô đậm tên ở phần chữ ký phía dưới -->
+            <div style="margin-top:10px; font-size:13pt;">
+              <b style="font-weight:bold !important; text-transform: uppercase;">
+                ${DOM.hoTen?.value || ''}
+              </b>
             </div>
         </div>
         <div style="clear:both;"></div>
