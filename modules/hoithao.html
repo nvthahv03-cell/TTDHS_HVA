@@ -311,12 +311,10 @@ renderPreview: function () {
     const ngayThangNam = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
     const gioPhutGiay = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-    // Khung cuộn cha
     if (DOM.previewPaper) {
         DOM.previewPaper.style.width = '100%';
-        DOM.previewPaper.style.display = 'flex';
-        DOM.previewPaper.style.justifyContent = 'center';
-        DOM.previewPaper.style.overflowX = 'auto'; // Cho phép cuộn nhẹ nếu màn hình quá nhỏ
+        DOM.previewPaper.style.padding = '0';
+        DOM.previewPaper.style.boxSizing = 'border-box';
     }
 
     DOM.previewPaper.innerHTML = `
@@ -326,28 +324,50 @@ renderPreview: function () {
                 box-sizing: border-box;
             }
             
-            /* Khóa cứng kích thước tờ A4 chuẩn */
+            /* Khung A4 chuẩn trên Máy tính */
             .a4-wrapper {
-                width: 794px;
-                min-height: 1123px;
+                width: 100%;
+                max-width: 794px;
+                min-height: 1000px;
                 background: #ffffff !important;
                 color: #111111 !important;
                 font-family: 'Times New Roman', Times, serif;
-                padding: 50px 60px;
-                margin: 20px auto;
-                box-shadow: 0 0 15px rgba(0,0,0,0.3);
-                border: 1px solid #ccc;
+                padding: 40px 50px;
+                margin: 10px auto;
+                box-shadow: 0 0 10px rgba(0,0,0,0.15);
+                border: 1px solid #ddd;
                 line-height: 1.5;
-                transform-origin: top center;
+                font-size: 13pt;
             }
 
-            /* Tự động thu nhỏ nguyên bản A4 vừa khít màn hình Điện thoại (< 768px) */
+            /* Tự động căn chỉnh vừa khít 100% trên Điện thoại (< 768px) */
             @media screen and (max-width: 767px) {
                 .a4-wrapper {
-                    margin: 10px auto !important;
-                    /* Thu nhỏ tờ A4 theo tỉ lệ màn hình di động */
-                    transform: scale(calc((100vw - 20px) / 794));
-                    margin-bottom: calc(-1123px * (1 - ((100vw - 20px) / 794))) !important;
+                    padding: 15px 12px !important;
+                    margin: 0 auto !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                    font-size: 11pt !important;
+                    min-height: auto !important;
+                }
+                .a4-wrapper table {
+                    font-size: 11pt !important;
+                }
+                .a4-wrapper .header-title {
+                    font-size: 11pt !important;
+                }
+                .a4-wrapper .header-sub {
+                    font-size: 9.5pt !important;
+                }
+                .a4-wrapper .doc-title {
+                    font-size: 13pt !important;
+                }
+                .a4-wrapper .sig-box {
+                    width: 200px !important;
+                    font-size: 11pt !important;
+                }
+                .a4-wrapper .col-label {
+                    width: 110px !important;
                 }
             }
         </style>
@@ -355,17 +375,17 @@ renderPreview: function () {
         <div class="a4-wrapper">
 
             <!-- Dòng Thời gian đặt ở TRÊN ĐẦU GÓC PHẢI -->
-            <div class="header-top" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; gap: 10px;">
                 <div style="text-align: center;">
-                    <div style="font-size: 13pt; font-weight: bold; text-transform: uppercase;">
+                    <div class="header-title" style="font-size: 12pt; font-weight: bold; text-transform: uppercase;">
                         TRƯỜNG THPT HÒA VANG
                     </div>
-                    <div style="font-size: 11pt; font-weight: bold; text-transform: uppercase;">
+                    <div class="header-sub" style="font-size: 10pt; font-weight: bold; text-transform: uppercase;">
                         TRUNG TÂM ĐIỀU HÀNH SỐ
                     </div>
                 </div>
 
-                <div class="header-right" style="text-align: right; font-size: 11pt;">
+                <div style="text-align: right; font-size: 10pt;">
                     <div style="font-style: italic; color: #444 !important; white-space: nowrap;">
                         Thời gian lập: ${gioPhutGiay}
                     </div>
@@ -373,111 +393,110 @@ renderPreview: function () {
             </div>
 
             <!-- Tiêu đề báo cáo -->
-            <div style="text-align: center; margin-bottom: 25px;">
-                <div style="font-size: 16pt; font-weight: bold; text-transform: uppercase;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div class="doc-title" style="font-size: 15pt; font-weight: bold; text-transform: uppercase;">
                     BÁO CÁO THAM DỰ HỘI THẢO
                 </div>
             </div>
 
             <!-- Bảng thông tin -->
-            <table style="width:100%; border-collapse:collapse; font-size:13pt; margin-bottom:15px;">
+            <table style="width:100%; border-collapse:collapse; margin-bottom:15px; table-layout: fixed;">
                 <tr>
-                    <td style="width:140px; padding:4px 0; vertical-align: top;"><b>Họ và tên:</b></td>
-                    <td style="padding:4px 0;"><b style="font-weight:bold !important;">${DOM.hoTen?.value || ''}</b></td>
+                    <td class="col-label" style="width:130px; padding:3px 0; vertical-align: top;"><b>Họ và tên:</b></td>
+                    <td style="padding:3px 0; word-break: break-word;"><b style="font-weight:bold !important;">${DOM.hoTen?.value || ''}</b></td>
                 </tr>
                 <tr>
-                    <td style="padding:4px 0; vertical-align: top;"><b>Tổ chuyên môn:</b></td>
-                    <td style="padding:4px 0;">${DOM.toChuyenMon?.value || ''}</td>
+                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Tổ chuyên môn:</b></td>
+                    <td style="padding:3px 0; word-break: break-word;">${DOM.toChuyenMon?.value || ''}</td>
                 </tr>
                 <tr>
-                    <td style="padding:4px 0; vertical-align: top;"><b>Chức vụ:</b></td>
-                    <td style="padding:4px 0;">${DOM.chucVu?.value || ''}</td>
+                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Chức vụ:</b></td>
+                    <td style="padding:3px 0; word-break: break-word;">${DOM.chucVu?.value || ''}</td>
                 </tr>
                 <tr>
-                    <td style="padding:4px 0; vertical-align: top;"><b>Tên hội thảo:</b></td>
-                    <td style="padding:4px 0;">${DOM.tenHoiThao?.value || ''}</td>
+                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Tên hội thảo:</b></td>
+                    <td style="padding:3px 0; word-break: break-word;">${DOM.tenHoiThao?.value || ''}</td>
                 </tr>
                 <tr>
-                    <td style="padding:4px 0; vertical-align: top;"><b>Đơn vị tổ chức:</b></td>
-                    <td style="padding:4px 0;">${DOM.donViToChuc?.value || ''}</td>
+                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Đơn vị tổ chức:</b></td>
+                    <td style="padding:3px 0; word-break: break-word;">${DOM.donViToChuc?.value || ''}</td>
                 </tr>
                 <tr>
-                    <td style="padding:4px 0; vertical-align: top;"><b>Cấp tổ chức:</b></td>
-                    <td style="padding:4px 0;">${DOM.capToChuc?.value || ''}</td>
+                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Cấp tổ chức:</b></td>
+                    <td style="padding:3px 0; word-break: break-word;">${DOM.capToChuc?.value || ''}</td>
                 </tr>
                 <tr>
-                    <td style="padding:4px 0; vertical-align: top;"><b>Hình thức:</b></td>
-                    <td style="padding:4px 0;">${DOM.hinhThuc?.value || ''}</td>
+                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Hình thức:</b></td>
+                    <td style="padding:3px 0; word-break: break-word;">${DOM.hinhThuc?.value || ''}</td>
                 </tr>
                 <tr>
-                    <td style="padding:4px 0; vertical-align: top;"><b>Thời gian:</b></td>
-                    <td style="padding:4px 0;">${DOM.thoiGian?.value || ''}</td>
+                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Thời gian:</b></td>
+                    <td style="padding:3px 0; word-break: break-word;">${DOM.thoiGian?.value || ''}</td>
                 </tr>
                 <tr>
-                    <td style="padding:4px 0; vertical-align: top;"><b>Địa điểm:</b></td>
-                    <td style="padding:4px 0;">${DOM.diaDiem?.value || ''}</td>
+                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Địa điểm:</b></td>
+                    <td style="padding:3px 0; word-break: break-word;">${DOM.diaDiem?.value || ''}</td>
                 </tr>
             </table>
 
             <!-- Nội dung -->
-            <div style="font-size:13pt;">
-                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
+            <div>
+                <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">
                     I. Nội dung chính:
                 </div>
-                <div style="padding-left:10px; white-space:pre-wrap; min-height:40px;">
+                <div style="padding-left:8px; white-space:pre-wrap; min-height:30px; word-break: break-word;">
                     ${DOM.noiDungChinh?.value || '(Chưa nhập)'}
                 </div>
 
-                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
+                <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">
                     II. Kết quả tiếp thu:
                 </div>
-                <div style="padding-left:10px; white-space:pre-wrap; min-height:40px;">
+                <div style="padding-left:8px; white-space:pre-wrap; min-height:30px; word-break: break-word;">
                     ${DOM.ketQua?.value || '(Chưa nhập)'}
                 </div>
 
-                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
+                <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">
                     III. Kiến nghị / Đề xuất:
                 </div>
-                <div style="padding-left:10px; white-space:pre-wrap; min-height:40px;">
+                <div style="padding-left:8px; white-space:pre-wrap; min-height:30px; word-break: break-word;">
                     ${DOM.deXuat?.value || '(Chưa nhập)'}
                 </div>
 
-                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
+                <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">
                     IV. Minh chứng:
                 </div>
-                <div style="padding-left:10px;">
+                <div style="padding-left:8px; word-break: break-word;">
                     ${DOM.minhChung?.value || "Không có"}
                 </div>
 
-                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
+                <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">
                     Ghi chú:
                 </div>
-                <div style="padding-left:10px;">
+                <div style="padding-left:8px; word-break: break-word;">
                     ${DOM.ghiChu?.value || "Không có ghi chú"}
                 </div>
             </div>
 
-            <br>
-
             <!-- Chữ ký góc dưới bên phải -->
-            <div class="footer-sig" style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:280px;">
-                <div style="font-style:italic; white-space:nowrap; margin-bottom:5px;">${ngayThangNam}</div>
-                <div style="font-weight:bold;">Người báo cáo</div>
-                <div style="font-style:italic; font-size:10pt; color:#555 !important;">(Ký, ghi rõ họ tên)</div>
-                
-                <br><br><br>
-                
-                <div style="margin-top:10px; font-size:13pt;">
-                    <b style="font-weight:bold !important;">
-                        ${DOM.hoTen?.value || ''}
-                    </b>
+            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                <div class="sig-box" style="text-align:center; width:250px;">
+                    <div style="font-style:italic; white-space:nowrap; margin-bottom:4px; font-size: 0.95em;">${ngayThangNam}</div>
+                    <div style="font-weight:bold;">Người báo cáo</div>
+                    <div style="font-style:italic; font-size:9pt; color:#555 !important;">(Ký, ghi rõ họ tên)</div>
+                    
+                    <br><br><br>
+                    
+                    <div style="margin-top:5px;">
+                        <b style="font-weight:bold !important;">
+                            ${DOM.hoTen?.value || ''}
+                        </b>
+                    </div>
                 </div>
             </div>
-            <div style="clear:both;"></div>
 
-            <hr style="margin-top:30px; border:0; border-top:1px solid #ccc;">
+            <hr style="margin-top:25px; margin-bottom: 10px; border:0; border-top:1px solid #ccc;">
 
-            <div style="font-size:10pt; color:#777 !important; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 5px;">
+            <div style="font-size:9pt; color:#777 !important; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 5px;">
                 <span>TTDHS_HVA - Trường THPT Hòa Vang</span>
                 <span>BẢN XEM TRƯỚC</span>
             </div>
