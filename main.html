@@ -719,17 +719,17 @@ if (document.readyState === 'loading') {
 <div id="boiduong-modal"
     class="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-sm hidden-force transition-all duration-300">
     
-    <!-- Khung modal chính: Nền sáng (slate-50), full màn hình điện thoại -->
+    <!-- Khung modal chính -->
     <div class="bg-slate-50 border-0 sm:border border-slate-200 w-full h-full sm:h-auto sm:max-w-sm rounded-none sm:rounded-2xl p-5 shadow-2xl relative max-h-full sm:max-h-[90vh] overflow-y-auto flex flex-col justify-start text-slate-800">
         
-        <!-- Nút mũi tên quay lại góc trái (thay cho dấu X) -->
+        <!-- Nút mũi tên quay lại góc trái -->
         <button onclick="closeModal('boiduong-modal')" class="absolute top-4 left-4 text-slate-600 hover:text-slate-900 p-1.5 rounded-lg hover:bg-slate-200/60 transition-all flex items-center gap-1">
             <i class="bi bi-arrow-left text-2xl"></i>
         </button>
         
         <!-- Header -->
         <div class="flex items-center space-x-3 mb-5 border-b border-slate-200 pb-4 pt-1 pl-10">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center shrink-0 shadow-md">
+            <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shrink-0 shadow-md">
                 <i class="bi bi-mortarboard-fill text-white text-xl"></i>
             </div>
             <div>
@@ -738,81 +738,105 @@ if (document.readyState === 'loading') {
             </div>
         </div>
 
-        <!-- Danh sách các danh mục -->
+        <!-- Danh sách các danh mục (Nền xanh dịu) -->
         <div class="space-y-3">
-            <!-- 1. Sinh hoạt chuyên môn -->
-            <div class="bg-[#1e293b] border border-slate-700 rounded-2xl p-4 shadow-sm text-white">
-                <div class="flex items-center gap-2 mb-3">
-                    <i class="bi bi-people-fill text-violet-400 text-lg"></i>
-                    <h4 class="font-bold text-white text-base">Sinh hoạt chuyên môn</h4>
-                </div>
+            
+            <!-- 1. Sinh hoạt chuyên môn (Dạng Xổ xuống - Accordion) -->
+            <div class="bg-emerald-900 border border-emerald-700/60 rounded-2xl shadow-sm text-white overflow-hidden transition-all duration-300">
+                <button onclick="toggleSubMenu('shcm-sub-menu', 'shcm-arrow')" class="w-full p-4 flex items-center justify-between hover:bg-emerald-800/80 transition-all">
+                    <div class="flex items-center gap-3">
+                        <i class="bi bi-people-fill text-emerald-300 text-lg"></i>
+                        <span class="font-semibold text-white text-base">Sinh hoạt chuyên môn</span>
+                    </div>
+                    <i id="shcm-arrow" class="bi bi-chevron-down text-emerald-300 transition-transform duration-300"></i>
+                </button>
                 
-                <!-- Các nút chọn cấp -->
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="selectCapSinhHoat('cap_so')" class="p-3 text-left bg-white/10 hover:bg-white/20 rounded-xl transition-all text-sm font-medium border border-white/5">Cấp Sở</button>
-                    <button onclick="selectCapSinhHoat('cap_cum')" class="p-3 text-left bg-white/10 hover:bg-white/20 rounded-xl transition-all text-sm font-medium border border-white/5">Cấp Cụm</button>
-                    <button onclick="selectCapSinhHoat('cap_truong')" class="p-3 text-left bg-white/10 hover:bg-white/20 rounded-xl transition-all text-sm font-medium border border-white/5">Cấp Trường</button>
-                    <button onclick="selectCapSinhHoat('cap_to')" class="p-3 text-left bg-white/10 hover:bg-white/20 rounded-xl transition-all text-sm font-medium border border-white/5">Cấp Tổ</button>
-                    
-                    <!-- Nút Khác -->
-                    <button onclick="toggleKhacInput()" class="col-span-2 p-3 text-left bg-white/10 hover:bg-white/20 rounded-xl transition-all text-sm font-medium border border-white/5 flex items-center justify-between">
-                        <span>Khác</span>
-                        <i class="bi bi-pencil-square text-slate-400"></i>
-                    </button>
-                </div>
-
-                <!-- Khung tự điền nội dung khi chọn "Khác" (Mặc định ẩn) -->
-                <div id="box-cap-khac" class="hidden mt-3 pt-3 border-t border-white/10 space-y-2">
-                    <label class="text-xs text-slate-300 font-medium">Nhập cấp / hình thức sinh hoạt khác:</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="input-cap-khac" placeholder="Ví dụ: Cấp Thành phố, Liên trường..." 
-                            class="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500">
-                        <button onclick="submitCapKhac()" class="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-sm font-medium transition-all shrink-0">
-                            Xác nhận
+                <!-- Khung các nút cấp xổ xuống -->
+                <div id="shcm-sub-menu" class="hidden px-4 pb-4 pt-1 border-t border-emerald-800/60 space-y-3 bg-emerald-950/40">
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button onclick="selectCapSinhHoat('cap_so')" class="p-2.5 text-left bg-emerald-800/50 hover:bg-emerald-700/60 rounded-xl transition-all text-sm font-medium border border-emerald-600/30">Cấp Sở</button>
+                        <button onclick="selectCapSinhHoat('cap_cum')" class="p-2.5 text-left bg-emerald-800/50 hover:bg-emerald-700/60 rounded-xl transition-all text-sm font-medium border border-emerald-600/30">Cấp Cụm</button>
+                        <button onclick="selectCapSinhHoat('cap_truong')" class="p-2.5 text-left bg-emerald-800/50 hover:bg-emerald-700/60 rounded-xl transition-all text-sm font-medium border border-emerald-600/30">Cấp Trường</button>
+                        <button onclick="selectCapSinhHoat('cap_to')" class="p-2.5 text-left bg-emerald-800/50 hover:bg-emerald-700/60 rounded-xl transition-all text-sm font-medium border border-emerald-600/30">Cấp Tổ</button>
+                        
+                        <button onclick="toggleKhacInput()" class="col-span-2 p-2.5 text-left bg-emerald-800/50 hover:bg-emerald-700/60 rounded-xl transition-all text-sm font-medium border border-emerald-600/30 flex items-center justify-between">
+                            <span>Khác</span>
+                            <i class="bi bi-pencil-square text-emerald-300"></i>
                         </button>
+                    </div>
+
+                    <!-- Ô tự nhập khi bấm Khác trong SHCM -->
+                    <div id="box-cap-khac" class="hidden pt-2 border-t border-emerald-800/60 space-y-2">
+                        <label class="text-xs text-emerald-200 font-medium">Nhập cấp / hình thức khác:</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="input-cap-khac" placeholder="Ví dụ: Cấp Thành phố..." 
+                                class="w-full px-3 py-2 bg-emerald-950 border border-emerald-700 rounded-xl text-sm text-white placeholder-emerald-400 focus:outline-none focus:border-emerald-400">
+                            <button onclick="submitCapKhac()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-medium transition-all shrink-0">
+                                OK
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- 2. Tập huấn -->
-            <button onclick="openBoiduongForm('tap_huan')" class="w-full p-4 bg-[#1e293b] border border-slate-700 rounded-2xl flex items-center justify-between hover:bg-slate-800 transition-all shadow-sm group">
+            <button onclick="openBoiduongForm('tap_huan')" class="w-full p-4 bg-emerald-900 border border-emerald-700/60 rounded-2xl flex items-center justify-between hover:bg-emerald-800 transition-all shadow-sm group">
                 <div class="flex items-center gap-3">
-                    <i class="bi bi-person-video text-lg text-teal-400"></i>
+                    <i class="bi bi-person-video text-lg text-emerald-300"></i>
                     <span class="font-semibold text-white text-base">Tập huấn</span>
                 </div>
-                <i class="bi bi-chevron-right text-slate-400 group-hover:text-white transition-colors"></i>
+                <i class="bi bi-chevron-right text-emerald-300 group-hover:translate-x-1 transition-all"></i>
             </button>
 
             <!-- 3. Hội thảo -->
-            <button onclick="openHoiThaoForm()" 
-                class="w-full p-4 bg-[#1e293b] border border-slate-700 rounded-2xl flex items-center justify-between hover:bg-slate-800 transition-all shadow-sm group">
+            <button onclick="openHoiThaoForm()" class="w-full p-4 bg-emerald-900 border border-emerald-700/60 rounded-2xl flex items-center justify-between hover:bg-emerald-800 transition-all shadow-sm group">
                 <div class="flex items-center gap-3">
-                    <i class="bi bi-chat-text text-lg text-amber-400"></i>
+                    <i class="bi bi-chat-text text-lg text-emerald-300"></i>
                     <span class="font-semibold text-white text-base">Hội thảo</span>
                 </div>
-                <i class="bi bi-chevron-right text-slate-400 group-hover:text-white transition-colors"></i>
+                <i class="bi bi-chevron-right text-emerald-300 group-hover:translate-x-1 transition-all"></i>
             </button>
 
             <!-- 4. Hội nghị -->
-            <button onclick="openBoiduongForm('hoi_nghi')" class="w-full p-4 bg-[#1e293b] border border-slate-700 rounded-2xl flex items-center justify-between hover:bg-slate-800 transition-all shadow-sm group">
+            <button onclick="openBoiduongForm('hoi_nghi')" class="w-full p-4 bg-emerald-900 border border-emerald-700/60 rounded-2xl flex items-center justify-between hover:bg-emerald-800 transition-all shadow-sm group">
                 <div class="flex items-center gap-3">
-                    <i class="bi bi-building text-lg text-rose-400"></i>
+                    <i class="bi bi-building text-lg text-emerald-300"></i>
                     <span class="font-semibold text-white text-base">Hội nghị</span>
                 </div>
-                <i class="bi bi-chevron-right text-slate-400 group-hover:text-white transition-colors"></i>
+                <i class="bi bi-chevron-right text-emerald-300 group-hover:translate-x-1 transition-all"></i>
             </button>
 
             <!-- 5. Bồi dưỡng -->
-            <button onclick="openBoiduongForm('boi_duong')" class="w-full p-4 bg-[#1e293b] border border-slate-700 rounded-2xl flex items-center justify-between hover:bg-slate-800 transition-all shadow-sm group">
+            <button onclick="openBoiduongForm('boi_duong')" class="w-full p-4 bg-emerald-900 border border-emerald-700/60 rounded-2xl flex items-center justify-between hover:bg-emerald-800 transition-all shadow-sm group">
                 <div class="flex items-center gap-3">
-                    <i class="bi bi-book text-lg text-sky-400"></i>
+                    <i class="bi bi-book text-lg text-emerald-300"></i>
                     <span class="font-semibold text-white text-base">Bồi dưỡng</span>
                 </div>
-                <i class="bi bi-chevron-right text-slate-400 group-hover:text-white transition-colors"></i>
+                <i class="bi bi-chevron-right text-emerald-300 group-hover:translate-x-1 transition-all"></i>
             </button>
-        </div>
-    </div>
-</div>               
+
+            <!-- 6. Khác (Mới bổ sung - Dạng xổ xuống nhập tự do) -->
+            <div class="bg-emerald-900 border border-emerald-700/60 rounded-2xl shadow-sm text-white overflow-hidden transition-all duration-300">
+                <button onclick="toggleSubMenu('muc-khac-sub-menu', 'muc-khac-arrow')" class="w-full p-4 flex items-center justify-between hover:bg-emerald-800/80 transition-all">
+                    <div class="flex items-center gap-3">
+                        <i class="bi bi-grid-plus text-lg text-emerald-300"></i>
+                        <span class="font-semibold text-white text-base">Khác</span>
+                    </div>
+                    <i id="muc-khac-arrow" class="bi bi-chevron-down text-emerald-300 transition-transform duration-300"></i>
+                </button>
+                
+                <!-- Khung tự nhập nội dung cho Mục Khác -->
+                <div id="muc-khac-sub-menu" class="hidden px-4 pb-4 pt-3 border-t border-emerald-800/60 space-y-2 bg-emerald-950/40">
+                    <label class="text-xs text-emerald-200 font-medium">Nhập loại hình bồi dưỡng / công tác khác:</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="input-muc-khac" placeholder="Ví dụ: Tọa đàm, Báo cáo chuyên đề..." 
+                            class="w-full px-3 py-2 bg-emerald-950 border border-emerald-700 rounded-xl text-sm text-white placeholder-emerald-400 focus:outline-none focus:border-emerald-400">
+                        <button onclick="submitMucKhac()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-medium transition-all shrink-0">
+                            Xác nhận
+                        </button>
+                    </div>
+                </div>
+            </div>
 
 <!-- Toast Message -->
 <div id="toast-message" class="hidden-force fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-3 rounded-xl bg-slate-900/90 border border-brand-glow/30 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between transition-all duration-300">
