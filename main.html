@@ -1103,66 +1103,8 @@ Tạo thông báo..."
             showToast("📱 Vui lòng bấm vào Menu (3 chấm) của trình duyệt và chọn 'Thêm vào màn hình chính'!");
         }
     };
-<script>
-    // 1. Hàm kiểm tra xem ứng dụng có đang chạy ở chế độ App (Màn hình chính) hay không
-    function isRunningAsApp() {
-        return (window.navigator.standalone === true) || 
-               (window.matchMedia('(display-mode: standalone)').matches);
-    }
-
-    // 2. Hàm hiển thị thông báo chúc mừng khi mở App từ Màn hình chính
-    function checkAndShowWelcomeBanner() {
-        if (isRunningAsApp()) {
-            // Kiểm tra nếu chưa hiện thông báo chúc mừng lần nào trong phiên làm việc này
-            if (!sessionStorage.getItem('hasShownWelcomeApp')) {
-                const welcomeHTML = `
-                    <div id="app-welcome-toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-[90%] bg-emerald-600 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between border border-emerald-400 animate-bounce">
-                        <div class="flex items-center gap-3">
-                            <span class="text-2xl">🎉</span>
-                            <div>
-                                <h4 class="font-bold text-sm">Cài đặt thành công!</h4>
-                                <p class="text-xs text-emerald-100">Chúc mừng bạn đã thêm ứng dụng vào Màn hình chính.</p>
-                            </div>
-                        </div>
-                        <button onclick="document.getElementById('app-welcome-toast').remove()" class="text-emerald-200 hover:text-white font-bold p-1">
-                            ✕
-                        </button>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', welcomeHTML);
-                sessionStorage.setItem('hasShownWelcomeApp', 'true');
-
-                // Tự động ẩn sau 4 giây
-                setTimeout(() => {
-                    const toast = document.getElementById('app-welcome-toast');
-                    if (toast) toast.remove();
-                }, 4000);
-            }
-            return true; // Đang chạy dạng App
-        }
-        return false; // Đang chạy trên web thường
-    }
-
-    // 3. Hàm đóng hướng dẫn iOS & lưu trạng thái
-    function dismissIOSInstallGuide() {
-        localStorage.setItem('hideIOSInstallGuide', 'true');
-        const existingGuide = document.getElementById('ios-guide-modal');
-        if (existingGuide) existingGuide.remove();
-    }
-
-    // 4. Hàm hiển thị hướng dẫn cài đặt iOS
-    function showIOSInstallGuide(isManualClick = false) {
-        // Nếu đã chạy ở dạng App (đã cài thành công) -> Không hiện bảng cài đặt nữa
-        if (isRunningAsApp()) {
-            checkAndShowWelcomeBanner();
-            return;
-        }
-
-        // Nếu tự động chạy khi refresh mà người dùng đã bấm "Đã hiểu" -> Bỏ qua
-        if (!isManualClick && localStorage.getItem('hideIOSInstallGuide') === 'true') {
-            return;
-        }
-
+</script>
+    function showIOSInstallGuide() {
         const existingGuide = document.getElementById('ios-guide-modal');
         if (existingGuide) existingGuide.remove();
 
@@ -1170,16 +1112,16 @@ Tạo thông báo..."
             <div id="ios-guide-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
                 <div class="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-sm w-full p-6 text-white shadow-2xl relative">
                     <h3 class="text-lg font-bold text-amber-400 mb-3 flex items-center gap-2">
-                        <span>📲 Cài đặt lên Thiết bị</span>
+                        <span>📲 Cài đặt lên iPhone/iPad</span>
                     </h3>
                     <p class="text-sm text-zinc-300 mb-4 leading-relaxed">
-                        Để đưa ứng dụng ra màn hình chính, thực hiện 2 bước đơn giản trên trình duyệt:
+                        Để đưa ứng dụng ra màn hình chính, thầy thực hiện 2 bước đơn giản trên Safari:
                     </p>
                     <ol class="text-sm text-zinc-300 space-y-2 mb-6 list-decimal list-inside bg-zinc-800/50 p-3 rounded-xl border border-zinc-700/50">
-                        <li>Nhấn vào nút <b>Chia sẻ (Share)</b> hoặc <b>Menu (⋮)</b> ở góc trình duyệt.</li>
-                        <li>Chọn <b>'Thêm vào Màn hình chính' (Add to Home Screen)</b> hoặc <b>'Cài đặt ứng dụng'</b>.</li>
+                        <li>Nhấn vào nút <b>Chia sẻ (Share)</b> <span class="inline-block px-1">📤</span> ở thanh công cụ phía dưới Safari.</li>
+                        <li>Cuộn xuống và chọn <b>'Thêm vào Màn hình chính' (Add to Home Screen)</b>.</li>
                     </ol>
-                    <button onclick="dismissIOSInstallGuide()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
+                    <button onclick="document.getElementById('ios-guide-modal').remove()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
                         Đã hiểu
                     </button>
                 </div>
@@ -1187,14 +1129,6 @@ Tạo thông báo..."
         `;
         document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
-
-    // Chạy kiểm tra ngay khi mở trang
-    window.addEventListener('DOMContentLoaded', () => {
-        if (!checkAndShowWelcomeBanner()) {
-            // Nếu chưa phải là App thì mới xét chạy tự động Pop-up
-            showIOSInstallGuide(false);
-        }
-    });
 </script>
 <script>
 /* ===================================================
