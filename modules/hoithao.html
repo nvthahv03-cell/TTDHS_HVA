@@ -154,9 +154,14 @@
 <script>
   function closeHoiThaoModal() {
     const container = document.getElementById('hoiThaoContainer');
-    if (container) container.remove();
+    if (container) {
+      container.style.display = 'none'; // Ẩn module đi thay vì xóa hẳn để tránh trắng màn hình
+    }
     if (typeof window.closeModal === 'function') {
       window.closeModal('hoiThaoContainer');
+    }
+    if (typeof window.showMainView === 'function') {
+      window.showMainView();
     }
   }
 
