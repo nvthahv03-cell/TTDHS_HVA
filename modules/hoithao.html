@@ -152,11 +152,19 @@
 </div>
 
 <script>
- function closeHoiThaoModal() {
+  // Đưa hàm mở form ra ngoài window để trang chủ gọi được
+  window.openHoiThaoForm = function() {
     const container = document.getElementById('hoiThaoContainer');
     if (container) {
-      container.style.display = 'none'; // Ẩn module Báo cáo hội thảo con đi
+      container.style.display = 'flex'; // Hiển thị lại nếu đã bị ẩn
     }
+  };
+function closeHoiThaoModal() {
+    const container = document.getElementById('hoiThaoContainer');
+    if (container) {
+      container.style.display = 'none'; // Ẩn module hội thảo đi, trả về menu mẹ ngay lập tức
+    }
+  }
 
     // Gọi hàm của trang chủ để hiển thị lại menu cha / danh sách quản lý
     if (typeof window.showMenuCha === 'function') {
