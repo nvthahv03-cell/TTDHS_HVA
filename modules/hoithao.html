@@ -152,70 +152,41 @@
 </div>
 
 <script>
-  // Mở form Hội thảo
-  window.openHoiThaoForm = function () {
-    const container = document.getElementById('hoiThaoContainer');
-    if (container) {
-      container.style.display = 'flex';
-    }
-
-    // Ẩn menu chính
-    const mainMenu = document.getElementById('mainMenu') 
-                  || document.getElementById('dashboard') 
-                  || document.querySelector('main')
-                  || document.getElementById('app');
-    if (mainMenu) {
-      mainMenu.style.display = 'none';
-    }
-  };
-
-  // Đóng form → Quay về menu trước
-  function closeHoiThaoModal() {
-    // Ẩn form Hội thảo
-    const container = document.getElementById('hoiThaoContainer');
-    if (container) {
-      container.style.display = 'none';
-    }
-
-    // Hiện lại menu chính
-    const mainMenu = document.getElementById('mainMenu') 
-                  || document.getElementById('dashboard') 
-                  || document.querySelector('main')
-                  || document.getElementById('app');
-    if (mainMenu) {
-      mainMenu.style.display = 'block';
-    }
-
-    // Nếu có hàm riêng của trang chủ thì ưu tiên dùng
-    if (typeof window.showHome === 'function') {
-      window.showHome();
-    } else if (typeof window.showDashboard === 'function') {
-      window.showDashboard();
-    } else if (typeof window.goBack === 'function') {
-      window.goBack();
-    }
+// Mở form Hội thảo
+function openHoiThaoForm() {
+  const container = document.getElementById('hoiThaoContainer');
+  if (container) {
+    container.style.display = 'flex';
   }
 
-    // Gọi hàm của trang chủ để hiển thị lại menu cha / danh sách quản lý
-    if (typeof window.showMenuCha === 'function') {
-      window.showMenuCha();
-      return;
-    }
-    if (typeof window.openParentMenu === 'function') {
-      window.openParentMenu();
-      return;
-    }
-    if (typeof window.loadSection === 'function') {
-      window.loadSection('menu-cha'); // Thầy thay tên section menu cha nếu nhớ
-      return;
-    }
-    
-    // Nếu trang chủ dùng cách toggle class ẩn/hiện thông thường của menu cha:
-    const parentMenu = document.getElementById('menuChaContainer') || document.getElementById('mainMenu');
-    if (parentMenu) {
-      parentMenu.style.display = 'block';
-    }
+  // Ẩn menu chính
+  const mainMenu = document.getElementById('mainMenu') 
+                || document.getElementById('dashboard') 
+                || document.querySelector('main')
+                || document.getElementById('app');
+  if (mainMenu) {
+    mainMenu.style.display = 'none';
   }
+}
+
+// Đóng form → Quay về menu trước
+function closeHoiThaoModal() {
+  // Ẩn form Hội thảo
+  const container = document.getElementById('hoiThaoContainer');
+  if (container) {
+    container.style.display = 'none';
+  }
+
+  // Hiện lại menu chính
+  const mainMenu = document.getElementById('mainMenu') 
+                || document.getElementById('dashboard') 
+                || document.querySelector('main')
+                || document.getElementById('app');
+  if (mainMenu) {
+    mainMenu.style.display = 'block';
+  }
+}
+
   (() => {
     const DOM = {
       btnBackHeader: document.getElementById('btnBackHeader'),
