@@ -1074,58 +1074,31 @@ Tạo thông báo..."
 
 </script>
 <script>
-    // 1. Khai báo biến lưu sự kiện cài đặt Android
+    // 1. Lắng nghe và bắt sự kiện cài đặt tự động của Android
     let deferredPrompt = null;
-
-    // Lắng nghe sự kiện từ trình duyệt Android/Chrome
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
     });
 
-    // 2. Hàm gọi khi bấm nút "Cài đặt ngay"
+    // 2. Hàm xử lý cho nút "Cài đặt ngay" trên giao diện
     async function handleInstallApp() {
-        // TRƯỜNG HỢP 1: Android có hỗ trợ cài tự động
+        // Nếu đang ở Android/Chrome và đã có sự kiện cài đặt
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') {
                 deferredPrompt = null;
-                showSuccessModal(); // Hiện thông báo chúc mừng
             }
-        } 
-        // TRƯỜNG HỢP 2: iOS Safari HOẶC Android không bắt được event cài tự động
-        else {
-            showIOSInstallGuide(true); // Bật khung hướng dẫn ngay, không để nút bị "trơ"
+        } else {
+            // Nếu là iOS Safari hoặc trình duyệt không hỗ trợ PWA tự động -> Mới bật Modal hướng dẫn
+            showIOSInstallGuide(true);
         }
     }
 
-    // 3. Thông báo "Cài đặt thành công" cho Android
-    function showSuccessModal() {
-        const existingSuccess = document.getElementById('install-success-modal');
-        if (existingSuccess) existingSuccess.remove();
-
-        const successHTML = `
-            <div id="install-success-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-                <div class="bg-zinc-900 border border-emerald-500/50 rounded-2xl max-w-sm w-full p-6 text-white shadow-2xl relative text-center">
-                    <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
-                        🎉
-                    </div>
-                    <h3 class="text-lg font-bold text-emerald-400 mb-2">Cài đặt thành công!</h3>
-                    <p class="text-sm text-zinc-300 mb-6 leading-relaxed">
-                        Ứng dụng đã được thêm vào Màn hình chính. Thầy hãy **thoát trình duyệt và bấm vào biểu tượng ứng dụng ngoài Màn hình chính** để trải nghiệm nhé!
-                    </p>
-                    <button onclick="document.getElementById('install-success-modal').remove()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
-                        Đã hiểu
-                    </button>
-                </div>
-            </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', successHTML);
-    }
-
-    // 4. Khung hướng dẫn (Giữ nguyên 100% gốc của thầy)
+    // 3. Hàm hiển thị Modal hướng dẫn (Giữ 100% code gốc của thầy)
     function showIOSInstallGuide(isManualClick = false) {
+        // Nếu tự động chạy khi reload mà đã bấm "Đã hiểu" -> Không hiện
         if (!isManualClick && localStorage.getItem('hideIOSGuide') === 'true') {
             return;
         }
@@ -1137,14 +1110,14 @@ Tạo thông báo..."
             <div id="ios-guide-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
                 <div class="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-sm w-full p-6 text-white shadow-2xl relative">
                     <h3 class="text-lg font-bold text-amber-400 mb-3 flex items-center gap-2">
-                        <span>📲 Cài đặt lên Thiết bị</span>
+                        <span>📲 Cài đặt lên iPhone/iPad</span>
                     </h3>
                     <p class="text-sm text-zinc-300 mb-4 leading-relaxed">
-                        Để đưa ứng dụng ra màn hình chính, thầy thực hiện 2 bước đơn giản trên trình duyệt:
+                        Để đưa ứng dụng ra màn hình chính, thầy thực hiện 2 bước đơn giản trên Safari:
                     </p>
                     <ol class="text-sm text-zinc-300 space-y-2 mb-6 list-decimal list-inside bg-zinc-800/50 p-3 rounded-xl border border-zinc-700/50">
-                        <li>Nhấn vào nút <b>Chia sẻ (Share)</b> hoặc <b>Menu (⋮)</b> ở góc trình duyệt.</li>
-                        <li>Chọn <b>'Thêm vào Màn hình chính' (Add to Home Screen)</b> hoặc <b>'Cài đặt ứng dụng'</b>.</li>
+                        <li>Nhấn vào nút <b>Chia sẻ (Share)</b> <span class="inline-block px-1">📤</span> ở thanh công cụ phía dưới Safari.</li>
+                        <li>Cuộn xuống và chọn <b>'Thêm vào Màn hình chính' (Add to Home Screen)</b>.</li>
                     </ol>
                     <button onclick="localStorage.setItem('hideIOSGuide', 'true'); document.getElementById('ios-guide-modal').remove();" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
                         Đã hiểu
