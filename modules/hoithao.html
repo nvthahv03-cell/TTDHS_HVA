@@ -1,76 +1,61 @@
-<!-- MODULE: HoiThao.html -->
-<style>
-  /* Khung đè tràn màn hình sáng */
-  .force-light-fullscreen {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 9000 !important; /* Đặt z-index vừa đủ để Modal Preview đè lên được */
-    background-color: #f8fafc !important;
-    overflow-y: auto !important;
-  }
-</style>
-
-<div id="hoiThaoContainer" class="force-light-fullscreen flex flex-col justify-between text-slate-800">
-  <div>
-    <!-- Header sáng có nút mũi tên quay lại -->
-    <div class="bg-white border-b border-slate-200 sticky top-0 z-10 px-4 py-3.5 flex items-center justify-between shadow-sm">
-      <div class="flex items-center gap-3">
-        <!-- Đã sửa: Nút quay lại gọi trực tiếp hàm xử lý chuẩn -->
-        <button type="button" id="btnBackHeader" onclick="closeHoiThaoModal()" class="p-2 -ml-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center justify-center">
-          <i class="bi bi-arrow-left text-2xl"></i>
-        </button>
-        <div>
-          <h3 class="font-bold text-slate-800 text-lg leading-tight">Báo cáo Hội thảo</h3>
-          <p class="text-xs text-slate-500">Cập nhật nội dung & thông tin hội thảo</p>
-        </div>
-      </div>
-      <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm">
-        <i class="bi bi-chat-text-fill text-lg"></i>
+<!-- MODULE CHUẨN: HoiThao.html (Tối ưu hóa cho mọi màn hình và tái sử dụng) -->
+<div id="hoiThaoContainer" class="fixed inset-0 z-[9999] bg-slate-50 flex flex-col overflow-hidden text-slate-800">
+  
+  <!-- 1. HEADER CỐ ĐỊNH -->
+  <header class="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center justify-between shadow-sm shrink-0">
+    <div class="flex items-center gap-3">
+      <!-- Nút quay lại chuẩn -->
+      <button type="button" id="btnBackHeader" class="p-2 -ml-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center justify-center cursor-pointer">
+        <i class="bi bi-arrow-left text-2xl"></i>
+      </button>
+      <div>
+        <h3 class="font-bold text-slate-800 text-lg leading-tight">Báo cáo Hội thảo</h3>
+        <p class="text-xs text-slate-500">Cập nhật nội dung & thông tin hội thảo</p>
       </div>
     </div>
+    <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm">
+      <i class="bi bi-chat-text-fill text-lg"></i>
+    </div>
+  </header>
 
-    <!-- Form chính -->
-    <div class="p-4 sm:p-6 max-w-2xl mx-auto w-full">
+  <!-- 2. BODY CUỘN ĐỘC LẬP -->
+  <main class="flex-1 overflow-y-auto p-4 sm:p-6">
+    <div class="max-w-3xl mx-auto w-full pb-10">
       <form id="hoiThaoForm" novalidate class="space-y-4">
         
-        <!-- Thông tin cá nhân (Readonly) -->
-        <div class="bg-slate-100/90 p-3.5 rounded-2xl border border-slate-200/80 space-y-3">
+        <!-- Thông tin cá nhân -->
+        <div class="bg-slate-100/90 p-4 rounded-2xl border border-slate-200/80 space-y-3 shadow-sm">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label for="hoTen" class="block text-xs font-medium text-slate-500 mb-1">Họ và tên</label>
-              <input type="text" id="hoTen" name="hoTen" readonly class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none cursor-not-allowed">
+              <label class="block text-xs font-medium text-slate-500 mb-1">Họ và tên</label>
+              <input type="text" id="hoTen" readonly class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 cursor-not-allowed">
             </div>
             <div>
-              <label for="toChuyenMon" class="block text-xs font-medium text-slate-500 mb-1">Tổ chuyên môn</label>
-              <input type="text" id="toChuyenMon" name="toChuyenMon" readonly class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none cursor-not-allowed">
+              <label class="block text-xs font-medium text-slate-500 mb-1">Tổ chuyên môn</label>
+              <input type="text" id="toChuyenMon" readonly class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 cursor-not-allowed">
             </div>
           </div>
           <div>
-            <label for="chucVu" class="block text-xs font-medium text-slate-500 mb-1">Chức vụ</label>
-            <input type="text" id="chucVu" name="chucVu" readonly class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none cursor-not-allowed">
+            <label class="block text-xs font-medium text-slate-500 mb-1">Chức vụ</label>
+            <input type="text" id="chucVu" readonly class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 cursor-not-allowed">
           </div>
         </div>
 
-        <!-- Chi tiết hội thảo -->
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+        <!-- Chi tiết nội dung -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
           <div>
             <label for="tenHoiThao" class="block text-xs font-bold text-slate-700 mb-1">Tên hội thảo <span class="text-red-500">*</span></label>
-            <input type="text" id="tenHoiThao" name="tenHoiThao" required placeholder="Nhập tên hội thảo..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
+            <input type="text" id="tenHoiThao" required placeholder="Nhập tên hội thảo..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="donViToChuc" class="block text-xs font-bold text-slate-700 mb-1">Đơn vị tổ chức <span class="text-red-500">*</span></label>
-              <input type="text" id="donViToChuc" name="donViToChuc" required placeholder="Ví dụ: Trường THPT..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
+              <input type="text" id="donViToChuc" required placeholder="Ví dụ: Trường THPT..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
             </div>
             <div>
               <label for="capToChuc" class="block text-xs font-bold text-slate-700 mb-1">Cấp tổ chức</label>
-              <select id="capToChuc" name="capToChuc" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
+              <select id="capToChuc" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
                 <option value="Bộ GDĐT">Bộ GDĐT</option>
                 <option value="Sở GDĐT">Sở GDĐT</option>
                 <option value="Cụm">Cụm</option>
@@ -83,7 +68,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="hinhThuc" class="block text-xs font-bold text-slate-700 mb-1">Hình thức</label>
-              <select id="hinhThuc" name="hinhThuc" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
+              <select id="hinhThuc" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
                 <option value="Trực tiếp">Trực tiếp</option>
                 <option value="Trực tuyến">Trực tuyến</option>
                 <option value="Kết hợp">Kết hợp</option>
@@ -91,125 +76,106 @@
             </div>
             <div>
               <label for="thoiGian" class="block text-xs font-bold text-slate-700 mb-1">Thời gian <span class="text-red-500">*</span></label>
-              <input type="datetime-local" id="thoiGian" name="thoiGian" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
+              <input type="datetime-local" id="thoiGian" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
             </div>
           </div>
 
           <div>
             <label for="diaDiem" class="block text-xs font-bold text-slate-700 mb-1">Địa điểm</label>
-            <input type="text" id="diaDiem" name="diaDiem" placeholder="Địa điểm tổ chức..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
+            <input type="text" id="diaDiem" placeholder="Địa điểm tổ chức..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
           </div>
 
           <div>
             <label for="noiDungChinh" class="block text-xs font-bold text-slate-700 mb-1">Nội dung chính <span class="text-red-500">*</span></label>
-            <textarea id="noiDungChinh" name="noiDungChinh" rows="3" required placeholder="Tóm tắt nội dung chính..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all"></textarea>
+            <textarea id="noiDungChinh" rows="3" required placeholder="Tóm tắt nội dung chính..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all"></textarea>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="ketQua" class="block text-xs font-bold text-slate-700 mb-1">Kết quả đạt được</label>
-              <textarea id="ketQua" name="ketQua" rows="3" placeholder="Kết quả nổi bật..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all"></textarea>
+              <textarea id="ketQua" rows="3" placeholder="Kết quả nổi bật..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all"></textarea>
             </div>
             <div>
               <label for="deXuat" class="block text-xs font-bold text-slate-700 mb-1">Đề xuất</label>
-              <textarea id="deXuat" name="deXuat" rows="3" placeholder="Ý kiến đề xuất..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all"></textarea>
+              <textarea id="deXuat" rows="3" placeholder="Ý kiến đề xuất..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all"></textarea>
             </div>
           </div>
 
           <div>
             <label for="minhChung" class="block text-xs font-bold text-slate-700 mb-1">Link minh chứng</label>
-            <input type="url" id="minhChung" name="minhChung" placeholder="https://drive.google.com/..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
+            <input type="url" id="minhChung" placeholder="https://drive.google.com/..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
           </div>
 
           <div>
             <label for="ghiChu" class="block text-xs font-bold text-slate-700 mb-1">Ghi chú</label>
-            <textarea id="ghiChu" name="ghiChu" rows="2" placeholder="Ghi chú thêm (nếu có)..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all"></textarea>
+            <textarea id="ghiChu" rows="2" placeholder="Ghi chú thêm..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all"></textarea>
           </div>
         </div>
 
-        <!-- Cụm nút thao tác -->
-        <div class="flex flex-col sm:flex-row gap-2.5 pt-2 pb-6">
-          <button type="button" id="btnReset" class="flex-1 py-3 px-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition-all text-sm">
+        <!-- Cụm nút thao tác dưới cùng -->
+        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+          <button type="button" id="btnReset" class="flex-1 py-3 px-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition-all text-sm cursor-pointer">
             Làm mới
           </button>
-
-          <button type="button" id="btnPreview" class="flex-1 py-3 px-4 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-1.5 shadow-md shadow-sky-600/20">
+          <button type="button" id="btnPreview" class="flex-1 py-3 px-4 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-1.5 shadow-md shadow-sky-600/20 cursor-pointer">
             <span>👁 Xem trước</span>
           </button>
-
-          <button type="submit" id="btnSubmit" class="flex-1 py-3 px-4 bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] text-white font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-1.5 shadow-md shadow-emerald-700/20 disabled:opacity-70">
+          <button type="submit" id="btnSubmit" class="flex-1 py-3 px-4 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-1.5 shadow-md shadow-emerald-700/20 cursor-pointer">
             <span id="btnText">📤 Gửi báo cáo</span>
           </button>
         </div>
       </form>
     </div>
-  </div>
+  </main>
 </div>
 
-<!-- ================= PREVIEW MODAL (z-index 99999 cao hơn Container) ================= -->
-<div id="previewModal" class="fixed inset-0 hidden !z-[99999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6" style="z-index: 99999 !important;">
-  <div class="bg-white rounded-xl shadow-2xl w-[95%] sm:w-[90%] h-[90%] flex flex-col overflow-hidden">
-    <!-- Header -->
-    <div class="px-6 py-4 border-b flex items-center justify-between bg-slate-50">
-      <h2 class="text-xl font-bold text-gray-800">👁 Xem trước báo cáo</h2>
-      <button id="btnClosePreview" type="button" class="text-3xl text-gray-500 hover:text-red-600 transition-colors">×</button>
+<!-- ================= MODAL XEM TRƯỚC (Độc lập, đè trên cùng) ================= -->
+<div id="previewModal" class="fixed inset-0 hidden z-[99999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col overflow-hidden">
+    <div class="px-6 py-4 border-b flex items-center justify-between bg-slate-50 shrink-0">
+      <h2 class="text-xl font-bold text-slate-800">👁 Xem trước báo cáo</h2>
+      <button id="btnClosePreview" type="button" class="text-3xl text-slate-400 hover:text-red-600 transition-colors cursor-pointer">&times;</button>
     </div>
-
-    <!-- Khổ giấy A4 -->
-    <div class="flex-1 overflow-auto bg-gray-300 p-4 sm:p-8">
+    
+    <div class="flex-1 overflow-auto bg-slate-200 p-4 sm:p-6">
       <div id="previewPaper" class="mx-auto bg-white shadow-xl"></div>
     </div>
 
-    <!-- Footer -->
-    <div class="border-t px-6 py-4 flex justify-end gap-3 bg-slate-50">
-      <button id="btnBackForm" type="button" class="px-5 py-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 font-medium transition-all text-slate-700">
-        ✏ Quay lại
+    <div class="border-t px-6 py-4 flex justify-end gap-3 bg-slate-50 shrink-0">
+      <button id="btnBackForm" type="button" class="px-5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 font-medium text-slate-700 transition-all cursor-pointer">
+        ✏ Quay lại chỉnh sửa
       </button>
-      <button id="btnConfirmSubmit" type="button" class="px-6 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold shadow-md transition-all flex items-center gap-2">
+      <button id="btnConfirmSubmit" type="button" class="px-6 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold shadow-md transition-all flex items-center gap-2 cursor-pointer">
         📤 Xác nhận gửi
       </button>
     </div>
   </div>
 </div>
 
+<!-- SCRIPT XỬ LÝ SỰ KIỆN -->
 <script>
-  // Hàm đóng Modal dùng chung
+  // Hàm đóng module chuẩn xác
   function closeHoiThaoModal() {
-    const el = document.getElementById('hoiThaoContainer');
-    if (el) {
-      el.classList.add('hidden');
-      el.style.display = 'none';
-    }
-    if (typeof closeModal === 'function') {
-      closeModal('hoiThaoContainer');
+    const container = document.getElementById('hoiThaoContainer');
+    if (container) container.remove(); // Xóa sạch DOM module khỏi bộ nhớ
+    if (typeof window.closeModal === 'function') {
+      window.closeModal('hoiThaoContainer');
     }
   }
 
   (() => {
-    const CONFIG = {
-      SHEET_NAME: "HoiThao",
-      ACTION: "saveHoiThao"
-    };
-
-    const STATE = {
-      currentUser: null,
-      isSaving: false
-    };
-
     const DOM = {
-      container: document.getElementById('hoiThaoContainer'),
+      btnBackHeader: document.getElementById('btnBackHeader'),
       form: document.getElementById('hoiThaoForm'),
-      btnSubmit: document.getElementById('btnSubmit'),
-      btnText: document.getElementById('btnText'),
       btnReset: document.getElementById('btnReset'),
-
       btnPreview: document.getElementById('btnPreview'),
       previewModal: document.getElementById('previewModal'),
-      previewPaper: document.getElementById('previewPaper'),
       btnClosePreview: document.getElementById('btnClosePreview'),
       btnBackForm: document.getElementById('btnBackForm'),
       btnConfirmSubmit: document.getElementById('btnConfirmSubmit'),
-
+      previewPaper: document.getElementById('previewPaper'),
+      
+      // Fields
       hoTen: document.getElementById('hoTen'),
       toChuyenMon: document.getElementById('toChuyenMon'),
       chucVu: document.getElementById('chucVu'),
@@ -226,277 +192,141 @@
       ghiChu: document.getElementById('ghiChu')
     };
 
-    const UTILS = {
-      getCurrentUser: function() {
+    // Lấy thông tin user tự động
+    function initUser() {
+      let user = {};
+      try {
         if (typeof window.getCurrentUser === 'function') {
-          return window.getCurrentUser();
-        }
-        try {
-          const user = JSON.parse(localStorage.getItem("user")) || {};
-          return {
-            name: user.name || user.fullName || "",
-            department: user.department || user.toChuyenMon || "",
-            position: user.position || user.chucVu || user.workPosition || ""
-          };
-        } catch (e) {
-          return { name: "", department: "", position: "" };
-        }
-      },
-      showToast: function(message, type = 'success') {
-        if (typeof window.showToast === 'function') {
-          window.showToast(message, type);
+          user = window.getCurrentUser() || {};
         } else {
-          alert(`[${type.toUpperCase()}]: ${message}`);
+          user = JSON.parse(localStorage.getItem("user")) || {};
         }
-      },
-      showLoading: function(show) {
-        if (typeof window.showLoading === 'function') {
-          window.showLoading(show);
-        }
-      },
-      formatDateTime: function(dtString) {
-        if (!dtString) return '';
-        const dt = new Date(dtString);
-        if (isNaN(dt.getTime())) return dtString;
-        const hours = String(dt.getHours()).padStart(2, '0');
-        const minutes = String(dt.getMinutes()).padStart(2, '0');
-        const day = String(dt.getDate()).padStart(2, '0');
-        const month = String(dt.getMonth() + 1).padStart(2, '0');
-        const year = dt.getFullYear();
-        return `${hours}:${minutes} ngày ${day}/${month}/${year}`;
-      }
-    };
-
-    const API = {
-      saveHoiThao: async function(payload) {
-        if (window.API && typeof window.API.saveHoiThao === 'function') {
-          return await window.API.saveHoiThao(payload);
-        }
-        if (window.API && typeof window.API.request === 'function') {
-          return await window.API.request({
-            action: CONFIG.ACTION,
-            sheetName: CONFIG.SHEET_NAME,
-            payload: payload
-          });
-        }
-        const endpoint = (window.CONFIG && window.CONFIG.API_URL) ? window.CONFIG.API_URL : '';
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: CONFIG.ACTION,
-            sheetName: CONFIG.SHEET_NAME,
-            payload: payload
-          })
-        });
-        return await response.json();
-      }
-    };
-
-    const VALIDATION = {
-      isValid: function() {
-        if (!DOM.tenHoiThao.value.trim()) {
-          UTILS.showToast("Vui lòng nhập Tên hội thảo", 'warning');
-          DOM.tenHoiThao.focus();
-          return false;
-        }
-        if (!DOM.donViToChuc.value.trim()) {
-          UTILS.showToast("Vui lòng nhập Đơn vị tổ chức", 'warning');
-          DOM.donViToChuc.focus();
-          return false;
-        }
-        if (!DOM.thoiGian.value) {
-          UTILS.showToast("Vui lòng chọn Thời gian", 'warning');
-          DOM.thoiGian.focus();
-          return false;
-        }
-        if (!DOM.noiDungChinh.value.trim()) {
-          UTILS.showToast("Vui lòng nhập Nội dung chính", 'warning');
-          DOM.noiDungChinh.focus();
-          return false;
-        }
-        return true;
-      }
-    };
-
-    const FORM = {
-      collectData: function() {
-        return {
-          hoTen: DOM.hoTen.value,
-          toChuyenMon: DOM.toChuyenMon.value,
-          chucVu: DOM.chucVu.value,
-          tenHoiThao: DOM.tenHoiThao.value.trim(),
-          donViToChuc: DOM.donViToChuc.value.trim(),
-          capToChuc: DOM.capToChuc.value,
-          hinhThuc: DOM.hinhThuc.value,
-          thoiGian: DOM.thoiGian.value,
-          diaDiem: DOM.diaDiem.value.trim(),
-          noiDungChinh: DOM.noiDungChinh.value.trim(),
-          ketQua: DOM.ketQua.value.trim(),
-          deXuat: DOM.deXuat.value.trim(),
-          minhChung: DOM.minhChung.value.trim(),
-          ghiChu: DOM.ghiChu.value.trim()
-        };
-      },
-      reset: function() {
-        DOM.form.reset();
-        UI.updateUserInfo();
-        DOM.tenHoiThao.focus();
-      },
-      submitData: async function() {
-        if (STATE.isSaving) return;
-        if (!VALIDATION.isValid()) return;
-
-        UI.setSubmittingState(true);
-        const data = FORM.collectData();
-
-        try {
-          const result = await API.saveHoiThao(data);
-          if (result && (result.success || result.status === 'success')) {
-            UTILS.showToast(result.message || "Lưu báo cáo thành công!", 'success');
-            FORM.reset();
-            UI.closePreview();
-          } else {
-            UTILS.showToast((result && result.message) ? result.message : "Có lỗi xảy ra khi lưu!", 'error');
-          }
-        } catch (error) {
-          UTILS.showToast("Lỗi khi lưu: " + (error.message || error), 'error');
-        } finally {
-          UI.setSubmittingState(false);
-        }
-      }
-    };
-
-    const UI = {
-      updateUserInfo: function () {
-        STATE.currentUser = UTILS.getCurrentUser();
-        DOM.hoTen.value = STATE.currentUser.name || '';
-        DOM.toChuyenMon.value = STATE.currentUser.department || '';
-        DOM.chucVu.value = STATE.currentUser.position || '';
-      },
-
-      setSubmittingState: function (isSubmitting) {
-        STATE.isSaving = isSubmitting;
-        UTILS.showLoading(isSubmitting);
-        DOM.btnSubmit.disabled = isSubmitting;
-        DOM.btnConfirmSubmit.disabled = isSubmitting;
-
-        if (isSubmitting) {
-          DOM.btnText.innerHTML = `<i class="bi bi-hourglass-split animate-spin"></i> Đang lưu...`;
-          DOM.btnConfirmSubmit.innerHTML = `⏳ Đang gửi...`;
-        } else {
-          DOM.btnText.textContent = '📤 Gửi báo cáo';
-          DOM.btnConfirmSubmit.innerHTML = '📤 Xác nhận gửi';
-        }
-      },
-
-      openPreview: function () {
-        if (!VALIDATION.isValid()) return;
-        UI.renderPreview();
-        DOM.previewModal.classList.remove('hidden');
-        DOM.previewModal.style.display = 'flex';
-      },
-
-      closePreview: function () {
-        DOM.previewModal.classList.add('hidden');
-        DOM.previewModal.style.display = 'none';
-      },
-
-      renderPreview: function () {
-        const now = new Date();
-        const ngayThangNam = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
-        const gioPhutGiay = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        const thoiGianFormatted = UTILS.formatDateTime(DOM.thoiGian?.value);
-
-        DOM.previewPaper.innerHTML = `
-          <style>
-            #previewPaper, #previewPaper * { color: #111111 !important; box-sizing: border-box; }
-            .a4-wrapper {
-              width: 100%; max-width: 794px; min-height: 1000px; background: #ffffff !important;
-              color: #111111 !important; font-family: 'Times New Roman', Times, serif;
-              padding: 40px 50px; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.15);
-              border: 1px solid #ddd; line-height: 1.5; font-size: 13pt;
-            }
-            @media screen and (max-width: 767px) {
-              .a4-wrapper { padding: 15px 12px !important; font-size: 11pt !important; min-height: auto !important; }
-            }
-          </style>
-
-          <div class="a4-wrapper">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; gap: 10px;">
-              <div style="text-align: center;">
-                <div style="font-size: 12pt; font-weight: bold; text-transform: uppercase;">TRƯỜNG THPT HÒA VANG</div>
-                <div style="font-size: 10pt; font-weight: bold; text-transform: uppercase;">TRUNG TÂM ĐIỀU HÀNH SỐ</div>
-              </div>
-              <div style="text-align: right; font-size: 10pt; font-style: italic; color: #444 !important;">
-                Thời gian lập: ${gioPhutGiay}
-              </div>
-            </div>
-
-            <div style="text-align: center; margin-bottom: 20px;">
-              <div style="font-size: 15pt; font-weight: bold; text-transform: uppercase;">BÁO CÁO THAM DỰ HỘI THẢO</div>
-            </div>
-
-            <table style="width:100%; border-collapse:collapse; margin-bottom:15px; table-layout: fixed;">
-              <tr><td style="width:130px; padding:3px 0;"><b>Họ và tên:</b></td><td style="padding:3px 0;"><b>${DOM.hoTen?.value || ''}</b></td></tr>
-              <tr><td style="padding:3px 0;"><b>Tổ chuyên môn:</b></td><td style="padding:3px 0;">${DOM.toChuyenMon?.value || ''}</td></tr>
-              <tr><td style="padding:3px 0;"><b>Chức vụ:</b></td><td style="padding:3px 0;">${DOM.chucVu?.value || ''}</td></tr>
-              <tr><td style="padding:3px 0;"><b>Tên hội thảo:</b></td><td style="padding:3px 0;">${DOM.tenHoiThao?.value || ''}</td></tr>
-              <tr><td style="padding:3px 0;"><b>Đơn vị tổ chức:</b></td><td style="padding:3px 0;">${DOM.donViToChuc?.value || ''}</td></tr>
-              <tr><td style="padding:3px 0;"><b>Cấp tổ chức:</b></td><td style="padding:3px 0;">${DOM.capToChuc?.value || ''}</td></tr>
-              <tr><td style="padding:3px 0;"><b>Hình thức:</b></td><td style="padding:3px 0;">${DOM.hinhThuc?.value || ''}</td></tr>
-              <tr><td style="padding:3px 0;"><b>Thời gian:</b></td><td style="padding:3px 0;">${thoiGianFormatted}</td></tr>
-              <tr><td style="padding:3px 0;"><b>Địa điểm:</b></td><td style="padding:3px 0;">${DOM.diaDiem?.value || 'Không xác định'}</td></tr>
-            </table>
-
-            <div>
-              <div style="font-weight:bold; margin-top:10px;">I. Nội dung chính:</div>
-              <div style="padding-left:8px; white-space:pre-wrap;">${DOM.noiDungChinh?.value || '(Chưa nhập)'}</div>
-
-              <div style="font-weight:bold; margin-top:10px;">II. Kết quả tiếp thu:</div>
-              <div style="padding-left:8px; white-space:pre-wrap;">${DOM.ketQua?.value || '(Chưa nhập)'}</div>
-
-              <div style="font-weight:bold; margin-top:10px;">III. Kiến nghị / Đề xuất:</div>
-              <div style="padding-left:8px; white-space:pre-wrap;">${DOM.deXuat?.value || '(Chưa nhập)'}</div>
-
-              <div style="font-weight:bold; margin-top:10px;">IV. Minh chứng:</div>
-              <div style="padding-left:8px; word-break: break-word;">${DOM.minhChung?.value ? `<a href="${DOM.minhChung.value}" target="_blank" style="color:#0284c7;">${DOM.minhChung.value}</a>` : "Không có"}</div>
-
-              <div style="font-weight:bold; margin-top:10px;">Ghi chú:</div>
-              <div style="padding-left:8px;">${DOM.ghiChu?.value || "Không có ghi chú"}</div>
-            </div>
-
-            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-              <div style="text-align:center; width:250px;">
-                <div style="font-style:italic; font-size: 0.95em;">${ngayThangNam}</div>
-                <div style="font-weight:bold;">Người báo cáo</div>
-                <div style="font-style:italic; font-size:9pt; color:#555 !important;">(Ký, ghi rõ họ tên)</div>
-                <br><br><br>
-                <div><b>${DOM.hoTen?.value || ''}</b></div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-    };
-
-    function init() {
-      UI.updateUserInfo();
-
-      if (DOM.btnReset) DOM.btnReset.addEventListener('click', FORM.reset);
-      if (DOM.btnPreview) DOM.btnPreview.addEventListener('click', UI.openPreview);
-      if (DOM.btnClosePreview) DOM.btnClosePreview.addEventListener('click', UI.closePreview);
-      if (DOM.btnBackForm) DOM.btnBackForm.addEventListener('click', UI.closePreview);
-      if (DOM.btnConfirmSubmit) DOM.btnConfirmSubmit.addEventListener('click', FORM.submitData);
-
-      if (DOM.form) {
-        DOM.form.addEventListener('submit', function (e) {
-          e.preventDefault();
-          FORM.submitData();
-        });
-      }
+      } catch(e) {}
+      
+      DOM.hoTen.value = user.name || user.fullName || "Hoàng Châu Âu";
+      DOM.toChuyenMon.value = user.department || user.toChuyenMon || "Vật lí - Công nghệ";
+      DOM.chucVu.value = user.position || user.chucVu || "TPCM";
     }
 
-    init();
+    // Validate dữ liệu trước khi Preview hoặc Submit
+    function validateForm() {
+      if (!DOM.tenHoiThao.value.trim()) {
+        alert("Vui lòng nhập Tên hội thảo!");
+        DOM.tenHoiThao.focus();
+        return false;
+      }
+      if (!DOM.donViToChuc.value.trim()) {
+        alert("Vui lòng nhập Đơn vị tổ chức!");
+        DOM.donViToChuc.focus();
+        return false;
+      }
+      if (!DOM.thoiGian.value) {
+        alert("Vui lòng chọn Thời gian hội thảo!");
+        DOM.thoiGian.focus();
+        return false;
+      }
+      if (!DOM.noiDungChinh.value.trim()) {
+        alert("Vui lòng nhập Nội dung chính!");
+        DOM.noiDungChinh.focus();
+        return false;
+      }
+      return true;
+    }
+
+    // Mở Modal Xem trước chuẩn A4
+    function openPreviewModal() {
+      if (!validateForm()) return;
+
+      const formatDT = (val) => {
+        if (!val) return '';
+        const d = new Date(val);
+        if (isNaN(d)) return val;
+        return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} ngày ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+      };
+
+      DOM.previewPaper.innerHTML = `
+        <div style="width: 100%; max-width: 794px; min-height: 1000px; background: #fff; font-family: 'Times New Roman', Times, serif; padding: 40px 50px; margin: 0 auto; color: #111; font-size: 13pt; line-height: 1.5;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <div style="text-align: center;">
+              <b>TRƯỜNG THPT HÒA VANG</b><br>
+              <span style="font-size: 10pt;">TRUNG TÂM ĐIỀU HÀNH SỐ</span>
+            </div>
+            <div style="text-align: right; font-size: 10pt; font-style: italic;">
+              Thời gian lập: ${new Date().toLocaleTimeString('vi-VN')}
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin-bottom: 25px;">
+            <b style="font-size: 15pt; text-transform: uppercase;">BÁO CÁO THAM DỰ HỘI THẢO</b>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+            <tr><td style="width: 140px; padding: 4px 0;"><b>Họ và tên:</b></td><td style="padding: 4px 0;"><b>${DOM.hoTen.value}</b></td></tr>
+            <tr><td style="padding: 4px 0;"><b>Tổ chuyên môn:</b></td><td style="padding: 4px 0;">${DOM.toChuyenMon.value}</td></tr>
+            <tr><td style="padding: 4px 0;"><b>Chức vụ:</b></td><td style="padding: 4px 0;">${DOM.chucVu.value}</td></tr>
+            <tr><td style="padding: 4px 0;"><b>Tên hội thảo:</b></td><td style="padding: 4px 0;">${DOM.tenHoiThao.value}</td></tr>
+            <tr><td style="padding: 4px 0;"><b>Đơn vị tổ chức:</b></td><td style="padding: 4px 0;">${DOM.donViToChuc.value} (${DOM.capToChuc.value})</td></tr>
+            <tr><td style="padding: 4px 0;"><b>Hình thức:</b></td><td style="padding: 4px 0;">${DOM.hinhThuc.value}</td></tr>
+            <tr><td style="padding: 4px 0;"><b>Thời gian:</b></td><td style="padding: 4px 0;">${formatDT(DOM.thoiGian.value)}</td></tr>
+            <tr><td style="padding: 4px 0;"><b>Địa điểm:</b></td><td style="padding: 4px 0;">${DOM.diaDiem.value || 'Không có'}</td></tr>
+          </table>
+
+          <div style="margin-top: 15px;">
+            <b>I. Nội dung chính:</b>
+            <div style="padding-left: 10px; white-space: pre-wrap;">${DOM.noiDungChinh.value}</div>
+            
+            <b style="display: block; margin-top: 10px;">II. Kết quả đạt được:</b>
+            <div style="padding-left: 10px; white-space: pre-wrap;">${DOM.ketQua.value || 'Không có'}</div>
+
+            <b style="display: block; margin-top: 10px;">III. Đề xuất:</b>
+            <div style="padding-left: 10px; white-space: pre-wrap;">${DOM.deXuat.value || 'Không có'}</div>
+
+            <b style="display: block; margin-top: 10px;">IV. Minh chứng:</b>
+            <div style="padding-left: 10px;">${DOM.minhChung.value ? `<a href="${DOM.minhChung.value}" target="_blank">${DOM.minhChung.value}</a>` : 'Không có'}</div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; margin-top: 30px;">
+            <div style="text-align: center; width: 220px;">
+              <i>Đà Nẵng, ngày ${new Date().getDate()} tháng ${new Date().getMonth()+1} năm ${new Date().getFullYear()}</i><br>
+              <b>Người báo cáo</b><br>
+              <i style="font-size: 10pt;">(Ký, ghi rõ họ tên)</i>
+              <br><br><br>
+              <b>${DOM.hoTen.value}</b>
+            </div>
+          </div>
+        </div>
+      `;
+
+      DOM.previewModal.classList.remove('hidden');
+      DOM.previewModal.style.display = 'flex';
+    }
+
+    function closePreviewModal() {
+      DOM.previewModal.classList.add('hidden');
+      DOM.previewModal.style.display = 'none';
+    }
+
+    // Đăng ký sự kiện an toàn tuyệt đối
+    function bindEvents() {
+      DOM.btnBackHeader.addEventListener('click', closeHoiThaoModal);
+      DOM.btnReset.addEventListener('click', () => DOM.form.reset());
+      DOM.btnPreview.addEventListener('click', openPreviewModal);
+      DOM.btnClosePreview.addEventListener('click', closePreviewModal);
+      DOM.btnBackForm.addEventListener('click', closePreviewModal);
+
+      DOM.btnConfirmSubmit.addEventListener('click', () => {
+        alert("Đã xác nhận gửi báo cáo thành công!");
+        closePreviewModal();
+        closeHoiThaoModal();
+      });
+
+      DOM.form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        openPreviewModal();
+      });
+    }
+
+    initUser();
+    bindEvents();
   })();
 </script>
