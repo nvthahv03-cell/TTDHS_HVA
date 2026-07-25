@@ -962,17 +962,21 @@ const modals = [
 
 // Sự kiện click đóng modal khi bấm ra vùng tối bên ngoài
 window.addEventListener('click', (e) => {
-    modals.forEach(id => {
-        const modal = document.getElementById(id);
-        if (modal && e.target === modal) {
-            closeModal(id);
-        }
-    });
+    if (typeof modals !== 'undefined' && Array.isArray(modals)) {
+        modals.forEach(id => {
+            const modal = document.getElementById(id);
+            if (modal && e.target === modal) {
+                closeModal(id);
+            }
+        });
+    }
 });
-     
-  async function openHoiThaoForm() {
+      
+async function openHoiThaoForm() {
 
-    closeModal('boiduong-modal');
+    if (typeof closeModal === 'function') {
+        closeModal('boiduong-modal');
+    }
 
     try {
 
@@ -984,73 +988,44 @@ window.addEventListener('click', (e) => {
 
         const html = await response.text();
 
-        const modal = `
-        <div id="hoithao-modal"
-             class="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999]">
+        // 🟢 BỎ MODAL ĐEN: Thay vì tạo khung modal, chèn trực tiếp nội dung vào body
+        document.body.innerHTML = html;
 
-            <div class="bg-zinc-900 rounded-3xl
-                        w-full max-w-5xl
-                        max-h-[95vh]
-                        overflow-auto">
+        // Cuộn trang lên trên cùng
+        window.scrollTo(0, 0);
 
-                <div class="flex items-center justify-between p-5 border-b border-white/10">
+        // Thực thi script bên trong module
+        document.querySelectorAll("script").forEach(oldScript => {
 
-                    <h2 class="text-xl font-bold">
-                        📊 Báo cáo Hội thảo
-                    </h2>
+            const newScript = document.createElement("script");
 
-                    <button onclick="closeHoiThaoModal()"
-                            class="text-3xl hover:text-red-400">
-                        ×
-                    </button>
+            if (oldScript.src) {
+                newScript.src = oldScript.src;
+            } else {
+                newScript.textContent = oldScript.textContent;
+            }
 
-                </div>
+            document.body.appendChild(newScript);
 
-                <div id="hoithao-content"
-                     class="p-5">
-                </div>
-
-            </div>
-
-        </div>
-        `;
-
-        document.body.insertAdjacentHTML("beforeend", modal);
-
-        const container = document.getElementById("hoithao-content");
-
-container.innerHTML = html;
-
-// Thực thi script bên trong module
-container.querySelectorAll("script").forEach(oldScript => {
-
-    const newScript = document.createElement("script");
-
-    if (oldScript.src) {
-        newScript.src = oldScript.src;
-    } else {
-        newScript.textContent = oldScript.textContent;
-    }
-
-    document.body.appendChild(newScript);
-
-});
+        });
 
     } catch (err) {
 
-        showToast(err.message, "error");
+        if (typeof showToast === 'function') {
+            showToast(err.message, "error");
+        } else {
+            alert(err.message);
+        }
 
     }
 
-}      
+}     
+
 function closeHoiThaoModal() {
-  const modal = document.getElementById('hoithao-modal');
-  if (modal) {
-    modal.remove();
-  }
+  // Vì không còn dùng Modal nên khi bấm đóng/quay lại sẽ tải lại trang chính
+  window.location.reload();
 }
-       
-    </script>
+</script>
         <!-- =========================
      AI ASSISTANT MODAL
 ========================= -->
