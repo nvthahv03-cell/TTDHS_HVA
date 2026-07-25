@@ -320,7 +320,6 @@ DOM.previewPaper.innerHTML = `
         box-sizing: border-box;
       }
       
-      /* Cấu hình hiển thị full màn hình trên điện thoại (màn hình < 640px) */
       @media screen and (max-width: 639px) {
         .preview-container {
           padding: 12px 10px !important;
@@ -346,7 +345,7 @@ DOM.previewPaper.innerHTML = `
 
     <div class="preview-container" style="background:#fff !important; color:#111 !important; color-scheme: light !important; font-family: 'Times New Roman', Times, serif; padding: 20px; line-height: 1.5; width: 100%;">
 
-        <!-- Header: Bên trái là Đơn vị, Bên phải là Ngày giờ -->
+        <!-- Header: Bên trái là Đơn vị, Bên phải CHỈ CÓ Giờ Phút Giây -->
         <div class="header-flex" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
           <div style="text-align: center;">
             <div style="font-size: 13pt; font-weight: bold; text-transform: uppercase;">
@@ -357,9 +356,8 @@ DOM.previewPaper.innerHTML = `
             </div>
           </div>
 
-          <div class="header-right" style="text-align: right; font-size: 12pt;">
-            <div style="font-style: italic; white-space: nowrap;">${ngayThangNam}</div>
-            <div style="font-style: italic; font-size: 10pt; color: #444 !important; margin-top: 2px;">
+          <div class="header-right" style="text-align: right; font-size: 11pt;">
+            <div style="font-style: italic; color: #444 !important;">
               Thời gian lập: ${gioPhutGiay}
             </div>
           </div>
@@ -375,7 +373,8 @@ DOM.previewPaper.innerHTML = `
         <table style="width:100%; border-collapse:collapse; font-size:13pt; margin-bottom:15px;">
           <tr>
             <td style="width:140px; padding:3px 0; vertical-align: top;"><b>Họ và tên:</b></td>
-            <td style="padding:3px 0;"><b style="font-weight:bold !important; text-transform: uppercase;">${DOM.hoTen?.value || ''}</b></td>
+            <!-- Đậm chữ thường (không viết HOA) -->
+            <td style="padding:3px 0;"><b style="font-weight:bold !important;">${DOM.hoTen?.value || ''}</b></td>
           </tr>
           <tr>
             <td style="padding:3px 0; vertical-align: top;"><b>Tổ chuyên môn:</b></td>
@@ -450,15 +449,17 @@ DOM.previewPaper.innerHTML = `
 
         <br>
 
-        <!-- Chữ ký -->
-        <div class="footer-sig" style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:280px;">
+        <!-- Chữ ký & Ngày tháng năm nằm ở ĐÂY -->
+        <div class="footer-sig" style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:300px;">
+            <div style="font-style:italic; white-space:nowrap; margin-bottom:5px;">${ngayThangNam}</div>
             <div style="font-weight:bold;">Người báo cáo</div>
             <div style="font-style:italic; font-size:10pt; color:#555 !important;">(Ký, ghi rõ họ tên)</div>
             
             <br><br><br>
             
+            <!-- Đậm chữ thường (không viết HOA) -->
             <div style="margin-top:10px; font-size:13pt;">
-              <b style="font-weight:bold !important; text-transform: uppercase;">
+              <b style="font-weight:bold !important;">
                 ${DOM.hoTen?.value || ''}
               </b>
             </div>
