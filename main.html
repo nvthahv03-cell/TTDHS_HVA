@@ -1295,42 +1295,40 @@ const HVAAssistant = (() => {
 
 })();
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", () => {
 
     HVAAssistant.render();
 
 });
-<!-- Các mã script trước đó -->
-    
-    <script>
-        // Bật/tắt ô nhập "Khác"
-        function toggleKhacInput() {
-            const box = document.getElementById('box-cap-khac');
-            const input = document.getElementById('input-cap-khac');
-            if (box) {
-                box.classList.toggle('hidden');
-                if (!box.classList.contains('hidden')) {
-                    input.focus();
-                }
-            }
-        }
 
-        // Chọn các cấp cố định
-        function selectCapSinhHoat(cap) {
-            document.getElementById('box-cap-khac')?.classList.add('hidden');
-            openBoiduongForm('sinh_hoat_chuyen_mon', cap);
+// Bật/tắt ô nhập "Khác"
+function toggleKhacInput() {
+    const box = document.getElementById('box-cap-khac');
+    const input = document.getElementById('input-cap-khac');
+    if (box) {
+        box.classList.toggle('hidden');
+        if (!box.classList.contains('hidden')) {
+            input.focus();
         }
+    }
+}
 
-        // Xác nhận nội dung tự nhập
-        function submitCapKhac() {
-            const val = document.getElementById('input-cap-khac')?.value.trim();
-            if (!val) {
-                alert("Vui lòng nhập nội dung!");
-                return;
-            }
-            openBoiduongForm('sinh_hoat_chuyen_mon', val);
-        }
-    </script>
+// Chọn các cấp cố định
+function selectCapSinhHoat(cap) {
+    document.getElementById('box-cap-khac')?.classList.add('hidden');
+    openBoiduongForm('sinh_hoat_chuyen_mon', cap);
+}
+
+// Xác nhận nội dung tự nhập
+function submitCapKhac() {
+    const val = document.getElementById('input-cap-khac')?.value.trim();
+    if (!val) {
+        alert("Vui lòng nhập nội dung!");
+        return;
+    }
+    openBoiduongForm('sinh_hoat_chuyen_mon', val);
+}
+</script>
 </body>
 </html>
 
