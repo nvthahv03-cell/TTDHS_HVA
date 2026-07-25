@@ -309,25 +309,34 @@ const UI = {
 renderPreview: function () {
 
   DOM.previewPaper.innerHTML = `
+    <!-- Ép tất cả các thẻ con bên trong previewPaper luôn có chữ đen, không bị đè bởi Dark Mode -->
+    <style>
+      #previewPaper, #previewPaper * {
+        color: #111111 !important;
+      }
+    </style>
 
-    <div style="text-align:center; margin-bottom:30px;">
+    <div style="background:#fff !important; color:#111 !important; color-scheme: light !important; font-family: inherit; padding: 20px;">
 
-      <div style="font-size:18pt;font-weight:bold;">
-        TRƯỜNG THPT HÒA VANG
-      </div>
+        <div style="text-align:center; margin-bottom:30px;">
 
-      <div style="font-size:13pt;margin-top:4px;">
-        TRUNG TÂM ĐIỀU HÀNH SỐ
-      </div>
+          <div style="font-size:18pt;font-weight:bold;">
+            TRƯỜNG THPT HÒA VANG
+          </div>
 
-      <div style="margin-top:18px;
-                  font-size:20pt;
-                  font-weight:bold;
-                  text-transform:uppercase;">
-        BÁO CÁO THAM DỰ HỘI THẢO
-      </div>
+          <div style="font-size:13pt;margin-top:4px;">
+            TRUNG TÂM ĐIỀU HÀNH SỐ
+          </div>
 
-    </div>
+          <div style="margin-top:18px;
+                      font-size:20pt;
+                      font-weight:bold;
+                      text-transform:uppercase;">
+            BÁO CÁO THAM DỰ HỘI THẢO
+          </div>
+
+        </div>
+`;
 
     <table style="width:100%;border-collapse:collapse;">
 
