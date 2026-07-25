@@ -152,19 +152,32 @@
 </div>
 
 <script>
-  function closeHoiThaoModal() {
+ function closeHoiThaoModal() {
     const container = document.getElementById('hoiThaoContainer');
     if (container) {
-      container.style.display = 'none'; // Ẩn module đi thay vì xóa hẳn để tránh trắng màn hình
+      container.style.display = 'none'; // Ẩn module Báo cáo hội thảo con đi
     }
-    if (typeof window.closeModal === 'function') {
-      window.closeModal('hoiThaoContainer');
+
+    // Gọi hàm của trang chủ để hiển thị lại menu cha / danh sách quản lý
+    if (typeof window.showMenuCha === 'function') {
+      window.showMenuCha();
+      return;
     }
-    if (typeof window.showMainView === 'function') {
-      window.showMainView();
+    if (typeof window.openParentMenu === 'function') {
+      window.openParentMenu();
+      return;
+    }
+    if (typeof window.loadSection === 'function') {
+      window.loadSection('menu-cha'); // Thầy thay tên section menu cha nếu nhớ
+      return;
+    }
+    
+    // Nếu trang chủ dùng cách toggle class ẩn/hiện thông thường của menu cha:
+    const parentMenu = document.getElementById('menuChaContainer') || document.getElementById('mainMenu');
+    if (parentMenu) {
+      parentMenu.style.display = 'block';
     }
   }
-
   (() => {
     const DOM = {
       btnBackHeader: document.getElementById('btnBackHeader'),
