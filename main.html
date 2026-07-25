@@ -1103,8 +1103,20 @@ Tạo thông báo..."
             showToast("📱 Vui lòng bấm vào Menu (3 chấm) của trình duyệt và chọn 'Thêm vào màn hình chính'!");
         }
     };
-</script>
+<script>
+    // Hàm đóng thông báo và lưu trạng thái để không bao giờ hiện lại nữa
+    function dismissIOSInstallGuide() {
+        localStorage.setItem('hideIOSInstallGuide', 'true');
+        const existingGuide = document.getElementById('ios-guide-modal');
+        if (existingGuide) existingGuide.remove();
+    }
+
     function showIOSInstallGuide() {
+        // 1. Kiểm tra nếu đã từng bấm "Đã hiểu" thì BỎ QUA, không hiện nữa
+        if (localStorage.getItem('hideIOSInstallGuide') === 'true') {
+            return;
+        }
+
         const existingGuide = document.getElementById('ios-guide-modal');
         if (existingGuide) existingGuide.remove();
 
@@ -1121,7 +1133,8 @@ Tạo thông báo..."
                         <li>Nhấn vào nút <b>Chia sẻ (Share)</b> <span class="inline-block px-1">📤</span> ở thanh công cụ phía dưới Safari.</li>
                         <li>Cuộn xuống và chọn <b>'Thêm vào Màn hình chính' (Add to Home Screen)</b>.</li>
                     </ol>
-                    <button onclick="document.getElementById('ios-guide-modal').remove()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
+                    <!-- Gọi hàm dismissIOSInstallGuide() khi bấm nút -->
+                    <button onclick="dismissIOSInstallGuide()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
                         Đã hiểu
                     </button>
                 </div>
@@ -1130,7 +1143,6 @@ Tạo thông báo..."
         document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
 </script>
-<script>
 
 /* ===================================================
    HVA Assistant 1.0
