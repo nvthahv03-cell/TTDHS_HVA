@@ -162,7 +162,18 @@
 function closeHoiThaoModal() {
     const container = document.getElementById('hoiThaoContainer');
     if (container) {
-      container.style.display = 'none'; // Ẩn module hội thảo đi, trả về menu mẹ ngay lập tức
+      // Nếu container nằm độc lập thì xóa hẳn nó khỏi DOM để trả lại nguyên vẹn màn hình gốc
+      container.remove();
+    }
+    
+    // Nếu trang chủ có hàm quay lại menu cha, gọi nó
+    if (typeof window.showHome === 'function') {
+      window.showHome();
+    } else if (typeof window.goBack === 'function') {
+      window.goBack();
+    } else {
+      // Hoặc nếu cần, tải lại trang chính nhẹ nhàng
+      // location.reload();
     }
   }
 
