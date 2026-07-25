@@ -308,10 +308,18 @@ const UI = {
   },
 renderPreview: function () {
 
- // Lấy ngày hiện tại cho địa danh ngày tháng
+ // 1. Lấy thời gian thực bao gồm giờ, phút, giây
 const now = new Date();
 const ngayThangNam = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
+const gioPhutGiay = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
+// 2. Cập nhật nút Xác nhận gửi có kèm thời gian
+const btnSubmit = document.getElementById('btnSubmit') || document.querySelector('.btn-submit'); // Điều chỉnh selector nếu cần
+if (btnSubmit) {
+  btnSubmit.innerHTML = `<i class="fas fa-paper-plane mr-2"></i>Xác nhận gửi (${gioPhutGiay})`;
+}
+
+// 3. Render lại nội dung Preview
 DOM.previewPaper.innerHTML = `
     <style>
       #previewPaper, #previewPaper * {
@@ -411,13 +419,13 @@ DOM.previewPaper.innerHTML = `
 
         <br>
 
-        <!-- Phần ngày tháng và chữ ký -->
-        <div style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:250px;">
-            <div style="font-style:italic;">${ngayThangNam}</div>
+        <!-- Khung ngày tháng và chữ ký chuẩn thẳng dòng -->
+        <div style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:320px;">
+            <div style="font-style:italic; white-space:nowrap;">${ngayThangNam}</div>
             <div style="font-weight:bold; margin-top:5px;">Người báo cáo</div>
             <div style="font-style:italic; font-size:10pt; color:#555 !important;">(Ký, ghi rõ họ tên)</div>
             <br><br><br>
-            <div style="font-weight:bold;">
+            <div style="font-weight:bold !important; font-size:13pt;">
               ${DOM.hoTen?.value || ''}
             </div>
         </div>
