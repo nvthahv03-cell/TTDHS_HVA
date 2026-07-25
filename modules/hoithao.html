@@ -334,10 +334,17 @@
 
     // Gắn sự kiện an toàn
   if (DOM.btnBackHeader) {
-      DOM.btnBackHeader.onclick = function() {
+      DOM.btnBackHeader.onclick = function(e) {
+        e.preventDefault();
+        // Ẩn module hiện tại
         const container = document.getElementById('hoiThaoContainer');
         if (container) {
-          container.style.display = 'none'; // Ẩn hẳn module Báo cáo hội thảo đi
+          container.style.display = 'none';
+        }
+        // Kích hoạt nút quay lại gốc của trang chủ (nếu có)
+        const parentBackBtn = document.querySelector('.back-btn, #btnHome, [data-action="back"]');
+        if (parentBackBtn) {
+          parentBackBtn.click();
         }
       };
     }
