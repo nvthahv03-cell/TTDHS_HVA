@@ -1074,31 +1074,57 @@ Tạo thông báo..."
 
 </script>
 <script>
-    // 1. Lắng nghe và bắt sự kiện cài đặt tự động của Android
+    // 1. Biến lưu sự kiện cài đặt
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
     });
 
-    // 2. Hàm xử lý cho nút "Cài đặt ngay" trên giao diện
+    // 2. Hàm kích hoạt cài đặt trên Android / iOS
     async function handleInstallApp() {
-        // Nếu đang ở Android/Chrome và đã có sự kiện cài đặt
         if (deferredPrompt) {
+            // Hiện popup cài đặt gốc của Android/Chrome
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
+            
+            // Nếu người dùng bấm "Cài đặt" / "Thêm"
             if (outcome === 'accepted') {
                 deferredPrompt = null;
+                showSuccessModal(); // Gọi thông báo chúc mừng
             }
         } else {
-            // Nếu là iOS Safari hoặc trình duyệt không hỗ trợ PWA tự động -> Mới bật Modal hướng dẫn
+            // Nếu là iOS Safari hoặc duyệt web thông thường -> Bật Modal hướng dẫn
             showIOSInstallGuide(true);
         }
     }
 
-    // 3. Hàm hiển thị Modal hướng dẫn (Giữ 100% code gốc của thầy)
+    // 3. Hàm hiển thị thông báo "Cài đặt thành công" (Giao diện đẹp & gọn)
+    function showSuccessModal() {
+        const existingSuccess = document.getElementById('install-success-modal');
+        if (existingSuccess) existingSuccess.remove();
+
+        const successHTML = `
+            <div id="install-success-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+                <div class="bg-zinc-900 border border-emerald-500/50 rounded-2xl max-w-sm w-full p-6 text-white shadow-2xl relative text-center">
+                    <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                        🎉
+                    </div>
+                    <h3 class="text-lg font-bold text-emerald-400 mb-2">Cài đặt thành công!</h3>
+                    <p class="text-sm text-zinc-300 mb-6 leading-relaxed">
+                        Ứng dụng đã được thêm vào Màn hình chính. Vui lòng **thoát trình duyệt và bấm vào biểu tượng ứng dụng ngoài Màn hình chính** để trải nghiệm mượt mà nhất.
+                    </p>
+                    <button onclick="document.getElementById('install-success-modal').remove()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
+                        Đã hiểu
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', successHTML);
+    }
+
+    // 4. Hàm hiển thị Modal hướng dẫn iOS (Giữ nguyên 100% gốc của thầy)
     function showIOSInstallGuide(isManualClick = false) {
-        // Nếu tự động chạy khi reload mà đã bấm "Đã hiểu" -> Không hiện
         if (!isManualClick && localStorage.getItem('hideIOSGuide') === 'true') {
             return;
         }
