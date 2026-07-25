@@ -1074,31 +1074,64 @@ Tạo thông báo..."
 
 </script>
 <script>
-    // 1. Lắng nghe và bắt sự kiện cài đặt tự động của Android
-    let deferredPrompt = null;
+    // 1. Lắng nghe và lưu sự kiện cài đặt của Android ngay khi trình duyệt khởi chạy
+    window.deferredPrompt = window.deferredPrompt || null;
+
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
-        deferredPrompt = e;
+        window.deferredPrompt = e;
     });
 
-    // 2. Hàm xử lý cho nút "Cài đặt ngay" trên giao diện
+    // Lắng nghe sự kiện khi ứng dụng đã cài đặt xong thành công
+    window.addEventListener('appinstalled', () => {
+        window.deferredPrompt = null;
+        showSuccessModal();
+    });
+
+    // 2. Hàm xử lý duy nhất cho nút "Cài đặt ngay"
     async function handleInstallApp() {
-        // Nếu đang ở Android/Chrome và đã có sự kiện cài đặt
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
+        const promptEvent = window.deferredPrompt;
+
+        if (promptEvent) {
+            // Mở hộp thoại cài đặt gốc của Android/Chrome
+            promptEvent.prompt();
+            const { outcome } = await promptEvent.userChoice;
             if (outcome === 'accepted') {
-                deferredPrompt = null;
+                window.deferredPrompt = null;
+                showSuccessModal();
             }
         } else {
-            // Nếu là iOS Safari hoặc trình duyệt không hỗ trợ PWA tự động -> Mới bật Modal hướng dẫn
+            // Nếu Android/iOS không có prompt tự động -> Hiện ngay bảng hướng dẫn
             showIOSInstallGuide(true);
         }
     }
 
-    // 3. Hàm hiển thị Modal hướng dẫn (Giữ 100% code gốc của thầy)
+    // 3. Thông báo chúc mừng khi cài thành công
+    function showSuccessModal() {
+        const existingSuccess = document.getElementById('install-success-modal');
+        if (existingSuccess) existingSuccess.remove();
+
+        const successHTML = `
+            <div id="install-success-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+                <div class="bg-zinc-900 border border-emerald-500/50 rounded-2xl max-w-sm w-full p-6 text-white shadow-2xl relative text-center">
+                    <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                        🎉
+                    </div>
+                    <h3 class="text-lg font-bold text-emerald-400 mb-2">Cài đặt thành công!</h3>
+                    <p class="text-sm text-zinc-300 mb-6 leading-relaxed">
+                        Ứng dụng đã được thêm vào Màn hình chính. Thầy hãy **thoát trình duyệt và bấm vào biểu tượng ứng dụng ngoài Màn hình chính** để trải nghiệm nhé!
+                    </p>
+                    <button onclick="document.getElementById('install-success-modal').remove()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
+                        Đã hiểu
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', successHTML);
+    }
+
+    // 4. Khung hướng dẫn gốc của thầy
     function showIOSInstallGuide(isManualClick = false) {
-        // Nếu tự động chạy khi reload mà đã bấm "Đã hiểu" -> Không hiện
         if (!isManualClick && localStorage.getItem('hideIOSGuide') === 'true') {
             return;
         }
@@ -1110,14 +1143,14 @@ Tạo thông báo..."
             <div id="ios-guide-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
                 <div class="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-sm w-full p-6 text-white shadow-2xl relative">
                     <h3 class="text-lg font-bold text-amber-400 mb-3 flex items-center gap-2">
-                        <span>📲 Cài đặt lên iPhone/iPad</span>
+                        <span>📲 Cài đặt lên Thiết bị</span>
                     </h3>
                     <p class="text-sm text-zinc-300 mb-4 leading-relaxed">
-                        Để đưa ứng dụng ra màn hình chính, thầy thực hiện 2 bước đơn giản trên Safari:
+                        Để đưa ứng dụng ra màn hình chính, thầy thực hiện 2 bước đơn giản:
                     </p>
                     <ol class="text-sm text-zinc-300 space-y-2 mb-6 list-decimal list-inside bg-zinc-800/50 p-3 rounded-xl border border-zinc-700/50">
-                        <li>Nhấn vào nút <b>Chia sẻ (Share)</b> <span class="inline-block px-1">📤</span> ở thanh công cụ phía dưới Safari.</li>
-                        <li>Cuộn xuống và chọn <b>'Thêm vào Màn hình chính' (Add to Home Screen)</b>.</li>
+                        <li>Nhấn vào nút <b>Chia sẻ (Share)</b> hoặc <b>Menu (⋮)</b> ở góc trình duyệt.</li>
+                        <li>Chọn <b>'Thêm vào Màn hình chính' (Add to Home Screen)</b> hoặc <b>'Cài đặt ứng dụng'</b>.</li>
                     </ol>
                     <button onclick="localStorage.setItem('hideIOSGuide', 'true'); document.getElementById('ios-guide-modal').remove();" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
                         Đã hiểu
