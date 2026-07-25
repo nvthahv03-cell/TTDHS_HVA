@@ -1073,9 +1073,35 @@ Tạo thông báo..."
 
 
 </script>
+<script>
+    // 1. Biến lưu sự kiện cài đặt tự động của Android / Chrome
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Ngăn trình duyệt hiện banner mặc định
+        e.preventDefault();
+        // Lưu lại sự kiện để kích hoạt khi người dùng bấm nút
+        deferredPrompt = e;
+    });
+
+    // 2. Hàm gọi khi người dùng BẤM NÚT "CÀI ĐẶT" trên giao diện
+    async function handleInstallApp() {
+        // Nếu là Android / Chrome có hỗ trợ cài trực tiếp
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                deferredPrompt = null;
+            }
+            return;
+        }
+        // Nếu là iOS (Safari) hoặc trình duyệt không hỗ trợ PWA tự động -> Bật khung hướng dẫn
+        showIOSInstallGuide(true);
+    }
+
+    // 3. Hàm hiển thị khung hướng dẫn iOS (Giữ nguyên 100% cấu trúc gốc của thầy)
     function showIOSInstallGuide(isManualClick = false) {
-        // Nếu tự động chạy khi reload mà đã bấm "Đã hiểu" -> Không hiện
-        // Nếu người dùng chủ động bấm nút (isManualClick = true) -> Luôn hiện
+        // Nếu tự động chạy khi reload mà thầy đã bấm "Đã hiểu" -> Bỏ qua không hiện
         if (!isManualClick && localStorage.getItem('hideIOSGuide') === 'true') {
             return;
         }
