@@ -1021,15 +1021,15 @@ async function openHoiThaoForm() {
 
 }     
 
-function closeHoiThaoModal() {
+// Đưa hàm mở form ra ngoài window để trang chủ gọi được
+window.openHoiThaoForm = function () {
 
     const container = document.getElementById("hoiThaoContainer");
 
     if (container) {
-        container.style.display = "none";
+        container.style.display = "flex";
     }
 
-}
 </script>
         <!-- =========================
      AI ASSISTANT MODAL
