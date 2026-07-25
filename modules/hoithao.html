@@ -161,11 +161,17 @@
   };
 
  function closeHoiThaoModal() {
+  // Ẩn form Hội thảo
   const container = document.getElementById('hoiThaoContainer');
   if (container) {
     container.style.display = 'none';
   }
-  window.history.go(-1);
+
+  // Hiện lại phần chính của trang
+  const main = document.querySelector('main') || document.getElementById('app') || document.body;
+  if (main) {
+    main.style.display = 'block';
+  }
 }
 
     // 2. Hiện lại toàn bộ nội dung chính của trang
