@@ -13,7 +13,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
-        tailwind.config = {
+        tailwind.config = {F
             theme: {
                 extend: {
 
@@ -972,46 +972,19 @@ window.addEventListener('click', (e) => {
 });
       
 // Gán hàm mở form Hội thảo ra ngoài window để sự kiện onclick gọi được
-window.openHoiThaoForm = async function () {
+window.openHoiThaoForm = function () {
     // Đóng modal bồi dưỡng nếu đang mở
     if (typeof closeModal === 'function') {
         closeModal('boiduong-modal');
     }
 
-    try {
-        const response = await fetch("modules/hoithao.html");
-
-        if (!response.ok) {
-            throw new Error("Không tải được module Hội thảo từ thư mục modules/hoithao.html");
-        }
-
-        const html = await response.text();
-
-        // Chèn trực tiếp nội dung module vào body
-        document.body.innerHTML = html;
-
-        // Cuộn trang lên trên cùng
+    // Bật khung giao diện hội thảo có sẵn lên
+    const container = document.getElementById("hoiThaoContainer");
+    if (container) {
+        container.style.display = "flex";
         window.scrollTo(0, 0);
-
-        // Nạp và thực thi các thẻ script bên trong module vừa gọi
-        document.querySelectorAll("script").forEach(oldScript => {
-            const newScript = document.createElement("script");
-            if (oldScript.src) {
-                newScript.src = oldScript.src;
-            } else {
-                newScript.textContent = oldScript.textContent;
-            }
-            document.body.appendChild(newScript);
-        });
-
-    } catch (err) {
-        if (typeof showToast === 'function') {
-            showToast(err.message, "error");
-        } else {
-            alert(err.message);
-        }
     }
-};
+};       
         <!-- =========================
      AI ASSISTANT MODAL
 ========================= -->
