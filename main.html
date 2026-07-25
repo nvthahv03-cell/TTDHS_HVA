@@ -714,20 +714,22 @@ if (document.readyState === 'loading') {
              
               <!-- Bồi dưỡng chuyên môn Modal -->
 
-        <div id="boiduong-modal"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-lg hidden-force transition-all duration-300">
-    <div class="bg-slate-900 border border-white/10 w-full max-w-sm rounded-2xl p-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-        <button onclick="closeModal('boiduong-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-            <i class="bi bi-x-lg text-lg"></i>
+<div id="boiduong-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-lg hidden-force transition-all duration-300">
+    
+    <div class="bg-slate-900 border-0 sm:border border-white/10 w-full h-full sm:h-auto sm:max-w-sm rounded-none sm:rounded-2xl p-5 shadow-2xl relative max-h-full sm:max-h-[90vh] overflow-y-auto flex flex-col justify-start">
+        
+        <button onclick="closeModal('boiduong-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">
+            <i class="bi bi-x-lg text-xl"></i>
         </button>
         
-        <div class="flex items-center space-x-2.5 mb-5 border-b border-white/5 pb-4">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+        <div class="flex items-center space-x-2.5 mb-5 border-b border-white/5 pb-4 pr-8">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shrink-0">
                 <i class="bi bi-mortarboard-fill text-white text-xl"></i>
             </div>
             <div>
-                <h3 class="font-bold text-white text-base">Bồi dưỡng chuyên môn</h3>
-                <p class="text-xs text-slate-400">Sinh hoạt, tập huấn, hội thảo, hội nghị, bồi dưỡng</p>
+                <h3 class="font-bold text-white text-base leading-tight">Bồi dưỡng chuyên môn</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Sinh hoạt, tập huấn, hội thảo, hội nghị, bồi dưỡng</p>
             </div>
         </div>
 
