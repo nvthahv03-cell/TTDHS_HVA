@@ -169,38 +169,6 @@ function closeHoiThaoModal() {
     }
 
 }
-    // Hiện lại trang chính
-    const main =
-        document.querySelector('main') ||
-        document.getElementById('mainContent') ||
-        document.getElementById('dashboard') ||
-        document.getElementById('app');
-
-    if (main) {
-        main.style.display = '';
-    }
-
-}
-
-    // 2. Hiện lại toàn bộ nội dung chính của trang
-    const mainContent = document.querySelector('main') 
-                     || document.getElementById('mainContent')
-                     || document.getElementById('dashboard')
-                     || document.getElementById('app')
-                     || document.body.firstElementChild;
-
-    if (mainContent) {
-      mainContent.style.display = 'block';
-    }
-
-    // 3. Nếu trang chủ có hàm riêng thì gọi thêm
-    if (typeof window.showHome === 'function') {
-      window.showHome();
-    } else if (typeof window.goBack === 'function') {
-      window.goBack();
-    }
-  }
-
   (() => {
     const DOM = {
       btnBackHeader: document.getElementById('btnBackHeader'),
