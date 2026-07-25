@@ -296,14 +296,13 @@ const UI = {
   },
 
   // ===== PREVIEW =====
-  openPreview: function () {
+ openPreview:function(){
 
-    this.renderPreview();
+    UI.renderPreview();
 
     DOM.previewModal.classList.remove('hidden');
 
 },
-
   closePreview: function () {
     DOM.previewModal.classList.add('hidden');
   },
