@@ -153,12 +153,19 @@
 
 <script>
   // Hàm mở form toàn cục để trang chủ gọi qua openHoiThaoForm()
-  window.openHoiThaoForm = function() {
-    const container = document.getElementById('hoiThaoContainer');
-    if (container) {
-      container.style.display = 'flex';
+  window.openHoiThaoForm = function () {
+    // Đóng modal bồi dưỡng nếu đang mở
+    if (typeof closeModal === 'function') {
+        closeModal('boiduong-modal');
     }
-  };
+
+    // Bật khung giao diện hội thảo có sẵn lên
+    const container = document.getElementById("hoiThaoContainer");
+    if (container) {
+        container.style.display = "flex";
+        window.scrollTo(0, 0);
+    }
+};
 
   // Hàm đóng module hội thảo về menu mẹ
   function closeHoiThaoModal() {
