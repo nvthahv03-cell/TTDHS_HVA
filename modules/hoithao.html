@@ -307,23 +307,47 @@ const UI = {
     DOM.previewModal.classList.add('hidden');
   },
 renderPreview: function () {
-
- // Lấy thời gian thực
+// Lấy thời gian thực
 const now = new Date();
 const ngayThangNam = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
 const gioPhutGiay = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
 DOM.previewPaper.innerHTML = `
     <style>
+      /* Ép màu chữ đen và xử lý giao diện Responsive trên Điện thoại */
       #previewPaper, #previewPaper * {
         color: #111111 !important;
+        box-sizing: border-box;
+      }
+      
+      /* Cấu hình hiển thị full màn hình trên điện thoại (màn hình < 640px) */
+      @media screen and (max-width: 639px) {
+        .preview-container {
+          padding: 12px 10px !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 0 !important;
+        }
+        .header-flex {
+          flex-direction: column !important;
+          align-items: flex-start !important;
+          gap: 10px;
+        }
+        .header-right {
+          text-align: left !important;
+        }
+        .footer-sig {
+          width: 100% !important;
+          float: none !important;
+          margin-top: 30px !important;
+        }
       }
     </style>
 
-    <div style="background:#fff !important; color:#111 !important; color-scheme: light !important; font-family: 'Times New Roman', Times, serif; padding: 20px; line-height: 1.5;">
+    <div class="preview-container" style="background:#fff !important; color:#111 !important; color-scheme: light !important; font-family: 'Times New Roman', Times, serif; padding: 20px; line-height: 1.5; width: 100%;">
 
         <!-- Header: Bên trái là Đơn vị, Bên phải là Ngày giờ -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+        <div class="header-flex" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
           <div style="text-align: center;">
             <div style="font-size: 13pt; font-weight: bold; text-transform: uppercase;">
               TRƯỜNG THPT HÒA VANG
@@ -333,7 +357,7 @@ DOM.previewPaper.innerHTML = `
             </div>
           </div>
 
-          <div style="text-align: right; font-size: 12pt;">
+          <div class="header-right" style="text-align: right; font-size: 12pt;">
             <div style="font-style: italic; white-space: nowrap;">${ngayThangNam}</div>
             <div style="font-style: italic; font-size: 10pt; color: #444 !important; margin-top: 2px;">
               Thời gian lập: ${gioPhutGiay}
@@ -350,40 +374,39 @@ DOM.previewPaper.innerHTML = `
 
         <table style="width:100%; border-collapse:collapse; font-size:13pt; margin-bottom:15px;">
           <tr>
-            <td style="width:160px; padding:3px 0;"><b>Họ và tên:</b></td>
-            <!-- Tô đậm tên ở bảng thông tin phía trên -->
+            <td style="width:140px; padding:3px 0; vertical-align: top;"><b>Họ và tên:</b></td>
             <td style="padding:3px 0;"><b style="font-weight:bold !important; text-transform: uppercase;">${DOM.hoTen?.value || ''}</b></td>
           </tr>
           <tr>
-            <td style="padding:3px 0;"><b>Tổ chuyên môn:</b></td>
+            <td style="padding:3px 0; vertical-align: top;"><b>Tổ chuyên môn:</b></td>
             <td style="padding:3px 0;">${DOM.toChuyenMon?.value || ''}</td>
           </tr>
           <tr>
-            <td style="padding:3px 0;"><b>Chức vụ:</b></td>
+            <td style="padding:3px 0; vertical-align: top;"><b>Chức vụ:</b></td>
             <td style="padding:3px 0;">${DOM.chucVu?.value || ''}</td>
           </tr>
           <tr>
-            <td style="padding:3px 0;"><b>Tên hội thảo:</b></td>
+            <td style="padding:3px 0; vertical-align: top;"><b>Tên hội thảo:</b></td>
             <td style="padding:3px 0;">${DOM.tenHoiThao?.value || ''}</td>
           </tr>
           <tr>
-            <td style="padding:3px 0;"><b>Đơn vị tổ chức:</b></td>
+            <td style="padding:3px 0; vertical-align: top;"><b>Đơn vị tổ chức:</b></td>
             <td style="padding:3px 0;">${DOM.donViToChuc?.value || ''}</td>
           </tr>
           <tr>
-            <td style="padding:3px 0;"><b>Cấp tổ chức:</b></td>
+            <td style="padding:3px 0; vertical-align: top;"><b>Cấp tổ chức:</b></td>
             <td style="padding:3px 0;">${DOM.capToChuc?.value || ''}</td>
           </tr>
           <tr>
-            <td style="padding:3px 0;"><b>Hình thức:</b></td>
+            <td style="padding:3px 0; vertical-align: top;"><b>Hình thức:</b></td>
             <td style="padding:3px 0;">${DOM.hinhThuc?.value || ''}</td>
           </tr>
           <tr>
-            <td style="padding:3px 0;"><b>Thời gian:</b></td>
+            <td style="padding:3px 0; vertical-align: top;"><b>Thời gian:</b></td>
             <td style="padding:3px 0;">${DOM.thoiGian?.value || ''}</td>
           </tr>
           <tr>
-            <td style="padding:3px 0;"><b>Địa điểm:</b></td>
+            <td style="padding:3px 0; vertical-align: top;"><b>Địa điểm:</b></td>
             <td style="padding:3px 0;">${DOM.diaDiem?.value || ''}</td>
           </tr>
         </table>
@@ -392,49 +415,48 @@ DOM.previewPaper.innerHTML = `
           <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
             I. Nội dung chính:
           </div>
-          <div style="padding-left:15px; white-space:pre-wrap; min-height:40px;">
+          <div style="padding-left:10px; white-space:pre-wrap; min-height:40px;">
             ${DOM.noiDungChinh?.value || '(Chưa nhập)'}
           </div>
 
           <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
             II. Kết quả tiếp thu:
           </div>
-          <div style="padding-left:15px; white-space:pre-wrap; min-height:40px;">
+          <div style="padding-left:10px; white-space:pre-wrap; min-height:40px;">
             ${DOM.ketQua?.value || '(Chưa nhập)'}
           </div>
 
           <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
             III. Kiến nghị / Đề xuất:
           </div>
-          <div style="padding-left:15px; white-space:pre-wrap; min-height:40px;">
+          <div style="padding-left:10px; white-space:pre-wrap; min-height:40px;">
             ${DOM.deXuat?.value || '(Chưa nhập)'}
           </div>
 
           <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
             IV. Minh chứng:
           </div>
-          <div style="padding-left:15px;">
+          <div style="padding-left:10px;">
             ${DOM.minhChung?.value || "Không có"}
           </div>
 
           <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
             Ghi chú:
           </div>
-          <div style="padding-left:15px;">
+          <div style="padding-left:10px;">
             ${DOM.ghiChu?.value || "Không có ghi chú"}
           </div>
         </div>
 
         <br>
 
-        <!-- Chữ ký phía dưới góc phải -->
-        <div style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:280px;">
+        <!-- Chữ ký -->
+        <div class="footer-sig" style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:280px;">
             <div style="font-weight:bold;">Người báo cáo</div>
             <div style="font-style:italic; font-size:10pt; color:#555 !important;">(Ký, ghi rõ họ tên)</div>
             
             <br><br><br>
             
-            <!-- Tô đậm tên ở phần chữ ký phía dưới -->
             <div style="margin-top:10px; font-size:13pt;">
               <b style="font-weight:bold !important; text-transform: uppercase;">
                 ${DOM.hoTen?.value || ''}
@@ -443,9 +465,9 @@ DOM.previewPaper.innerHTML = `
         </div>
         <div style="clear:both;"></div>
 
-        <hr style="margin-top:40px; border:0; border-top:1px solid #ccc;">
+        <hr style="margin-top:30px; border:0; border-top:1px solid #ccc;">
 
-        <div style="font-size:10pt; color:#777 !important; display:flex; justify-content:space-between;">
+        <div style="font-size:10pt; color:#777 !important; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 5px;">
           <span>TTDHS_HVA - Trường THPT Hòa Vang</span>
           <span>BẢN XEM TRƯỚC</span>
         </div>
