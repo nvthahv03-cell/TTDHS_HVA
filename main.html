@@ -1022,8 +1022,13 @@ async function openHoiThaoForm() {
 }     
 
 function closeHoiThaoModal() {
-  // Vì không còn dùng Modal nên khi bấm đóng/quay lại sẽ tải lại trang chính
-  window.location.reload();
+
+    const container = document.getElementById("hoiThaoContainer");
+
+    if (container) {
+        container.style.display = "none";
+    }
+
 }
 </script>
         <!-- =========================
