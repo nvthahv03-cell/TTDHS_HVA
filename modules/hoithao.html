@@ -295,7 +295,7 @@ const UI = {
     }
   },
 
- // ===== PREVIEW =====
+// ===== PREVIEW =====
 openPreview: function () {
     UI.renderPreview();
     DOM.previewModal.classList.remove('hidden');
@@ -306,24 +306,17 @@ closePreview: function () {
 },
 
 renderPreview: function () {
-   
     // Lấy thời gian thực
     const now = new Date();
     const ngayThangNam = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
     const gioPhutGiay = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-    // Xử lý container trên điện thoại
-    if (DOM.previewModal) {
-        DOM.previewModal.style.padding = '0';
-        DOM.previewModal.style.overflow = 'auto';
-    }
+    // Khung cuộn cha
     if (DOM.previewPaper) {
         DOM.previewPaper.style.width = '100%';
-        DOM.previewPaper.style.maxWidth = '100%';
-        DOM.previewPaper.style.margin = '0';
-        DOM.previewPaper.style.padding = '0';
-        DOM.previewPaper.style.display = 'block';
-        DOM.previewPaper.style.overflowX = 'auto';
+        DOM.previewPaper.style.display = 'flex';
+        DOM.previewPaper.style.justifyContent = 'center';
+        DOM.previewPaper.style.overflowX = 'auto'; // Cho phép cuộn nhẹ nếu màn hình quá nhỏ
     }
 
     DOM.previewPaper.innerHTML = `
@@ -332,58 +325,36 @@ renderPreview: function () {
                 color: #111111 !important;
                 box-sizing: border-box;
             }
-
-            /* Khung A4 chuẩn (máy tính) */
-            .a4-container {
-                width: 800px;
+            
+            /* Khóa cứng kích thước tờ A4 chuẩn */
+            .a4-wrapper {
+                width: 794px;
                 min-height: 1123px;
                 background: #ffffff !important;
                 color: #111111 !important;
                 font-family: 'Times New Roman', Times, serif;
-                padding: 40px 50px;
+                padding: 50px 60px;
                 margin: 20px auto;
-                box-shadow: 0 0 15px rgba(0,0,0,0.2);
-                border: 1px solid #ddd;
+                box-shadow: 0 0 15px rgba(0,0,0,0.3);
+                border: 1px solid #ccc;
                 line-height: 1.5;
+                transform-origin: top center;
             }
 
-            /* ===== ĐIỆN THOẠI ===== */
-            @media screen and (max-width: 768px) {
-                .a4-container {
-                    width: 100% !important;
-                    max-width: 100% !important;
-                    min-width: 100% !important;
-                    margin: 0 !important;
-                    padding: 20px 16px !important;
-                    box-shadow: none !important;
-                    border: none !important;
-                    border-radius: 0 !important;
-                }
-
-                #previewPaper {
-                    padding: 0 !important;
-                    margin: 0 !important;
-                }
-
-                .header-top {
-                    flex-direction: column !important;
-                    gap: 8px !important;
-                }
-
-                .header-right {
-                    text-align: left !important;
-                }
-
-                .footer-sig {
-                    float: none !important;
-                    width: 100% !important;
-                    margin-top: 30px !important;
+            /* Tự động thu nhỏ nguyên bản A4 vừa khít màn hình Điện thoại (< 768px) */
+            @media screen and (max-width: 767px) {
+                .a4-wrapper {
+                    margin: 10px auto !important;
+                    /* Thu nhỏ tờ A4 theo tỉ lệ màn hình di động */
+                    transform: scale(calc((100vw - 20px) / 794));
+                    margin-bottom: calc(-1123px * (1 - ((100vw - 20px) / 794))) !important;
                 }
             }
         </style>
 
-        <div class="a4-container">
-            <!-- Header -->
+        <div class="a4-wrapper">
+
+            <!-- Dòng Thời gian đặt ở TRÊN ĐẦU GÓC PHẢI -->
             <div class="header-top" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
                 <div style="text-align: center;">
                     <div style="font-size: 13pt; font-weight: bold; text-transform: uppercase;">
@@ -393,6 +364,7 @@ renderPreview: function () {
                         TRUNG TÂM ĐIỀU HÀNH SỐ
                     </div>
                 </div>
+
                 <div class="header-right" style="text-align: right; font-size: 11pt;">
                     <div style="font-style: italic; color: #444 !important; white-space: nowrap;">
                         Thời gian lập: ${gioPhutGiay}
@@ -400,7 +372,7 @@ renderPreview: function () {
                 </div>
             </div>
 
-            <!-- Tiêu đề -->
+            <!-- Tiêu đề báo cáo -->
             <div style="text-align: center; margin-bottom: 25px;">
                 <div style="font-size: 16pt; font-weight: bold; text-transform: uppercase;">
                     BÁO CÁO THAM DỰ HỘI THẢO
@@ -411,7 +383,7 @@ renderPreview: function () {
             <table style="width:100%; border-collapse:collapse; font-size:13pt; margin-bottom:15px;">
                 <tr>
                     <td style="width:140px; padding:4px 0; vertical-align: top;"><b>Họ và tên:</b></td>
-                    <td style="padding:4px 0;"><b>${DOM.hoTen?.value || ''}</b></td>
+                    <td style="padding:4px 0;"><b style="font-weight:bold !important;">${DOM.hoTen?.value || ''}</b></td>
                 </tr>
                 <tr>
                     <td style="padding:4px 0; vertical-align: top;"><b>Tổ chuyên môn:</b></td>
@@ -449,27 +421,37 @@ renderPreview: function () {
 
             <!-- Nội dung -->
             <div style="font-size:13pt;">
-                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">I. Nội dung chính:</div>
+                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
+                    I. Nội dung chính:
+                </div>
                 <div style="padding-left:10px; white-space:pre-wrap; min-height:40px;">
                     ${DOM.noiDungChinh?.value || '(Chưa nhập)'}
                 </div>
 
-                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">II. Kết quả tiếp thu:</div>
+                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
+                    II. Kết quả tiếp thu:
+                </div>
                 <div style="padding-left:10px; white-space:pre-wrap; min-height:40px;">
                     ${DOM.ketQua?.value || '(Chưa nhập)'}
                 </div>
 
-                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">III. Kiến nghị / Đề xuất:</div>
+                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
+                    III. Kiến nghị / Đề xuất:
+                </div>
                 <div style="padding-left:10px; white-space:pre-wrap; min-height:40px;">
                     ${DOM.deXuat?.value || '(Chưa nhập)'}
                 </div>
 
-                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">IV. Minh chứng:</div>
+                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
+                    IV. Minh chứng:
+                </div>
                 <div style="padding-left:10px;">
                     ${DOM.minhChung?.value || "Không có"}
                 </div>
 
-                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">Ghi chú:</div>
+                <div style="font-weight:bold; margin-top:12px; margin-bottom:4px;">
+                    Ghi chú:
+                </div>
                 <div style="padding-left:10px;">
                     ${DOM.ghiChu?.value || "Không có ghi chú"}
                 </div>
@@ -477,27 +459,33 @@ renderPreview: function () {
 
             <br>
 
-            <!-- Chữ ký -->
+            <!-- Chữ ký góc dưới bên phải -->
             <div class="footer-sig" style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:280px;">
                 <div style="font-style:italic; white-space:nowrap; margin-bottom:5px;">${ngayThangNam}</div>
                 <div style="font-weight:bold;">Người báo cáo</div>
                 <div style="font-style:italic; font-size:10pt; color:#555 !important;">(Ký, ghi rõ họ tên)</div>
+                
                 <br><br><br>
+                
                 <div style="margin-top:10px; font-size:13pt;">
-                    <b>${DOM.hoTen?.value || ''}</b>
+                    <b style="font-weight:bold !important;">
+                        ${DOM.hoTen?.value || ''}
+                    </b>
                 </div>
             </div>
-
             <div style="clear:both;"></div>
 
             <hr style="margin-top:30px; border:0; border-top:1px solid #ccc;">
+
             <div style="font-size:10pt; color:#777 !important; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 5px;">
                 <span>TTDHS_HVA - Trường THPT Hòa Vang</span>
                 <span>BẢN XEM TRƯỚC</span>
             </div>
+
         </div>
     `;
 }
+
 };
   // ====================== VALIDATION ======================
     const VALIDATION = {
