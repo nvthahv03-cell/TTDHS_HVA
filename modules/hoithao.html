@@ -1,154 +1,107 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <base target="_top">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Báo cáo Hội Thảo - TTDHS_HVA</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', system-ui, sans-serif; }
-    .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); }
-    .toast { animation: toastIn 0.3s ease forwards; }
-    @keyframes toastIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  </style>
-</head>
-<body class="bg-gradient-to-br from-slate-950 to-zinc-950 text-slate-100 min-h-screen">
-
-  <div class="max-w-2xl mx-auto p-4">
-    <!-- Header -->
-   
-
-    <!-- Form -->
-   <div id="formContainer" class="w-full mx-auto glass border border-white/10 rounded-3xl p-4 sm:p-6 shadow-2xl">
-      <form id="hoiThaoForm">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-medium mb-1 text-slate-400">Họ và tên</label>
-            <input type="text" id="hoTen" readonly class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none cursor-not-allowed">
-          </div>
-          <div>
-            <label class="block text-xs font-medium mb-1 text-slate-400">Tổ chuyên môn</label>
-            <input type="text" id="toChuyenMon" readonly class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none cursor-not-allowed">
-          </div>
+<!-- MODULE: HoiThao.html -->
+<div id="hoiThaoContainer" class="w-full max-w-2xl mx-auto p-4">
+  <div id="formContainer" class="w-full mx-auto glass border border-white/10 rounded-3xl p-4 sm:p-6 shadow-2xl">
+    <form id="hoiThaoForm" novalidate>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="hoTen" class="block text-xs font-medium mb-1 text-slate-400">Họ và tên</label>
+          <input type="text" id="hoTen" name="hoTen" readonly class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none cursor-not-allowed">
         </div>
-
-        <div class="mt-4">
-          <label class="block text-xs font-medium mb-1 text-slate-400">Chức vụ</label>
-          <input type="text" id="chucVu" readonly class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none cursor-not-allowed">
+        <div>
+          <label for="toChuyenMon" class="block text-xs font-medium mb-1 text-slate-400">Tổ chuyên môn</label>
+          <input type="text" id="toChuyenMon" name="toChuyenMon" readonly class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none cursor-not-allowed">
         </div>
+      </div>
 
-        <div class="mt-4">
-          <label class="block text-xs font-medium mb-1 text-slate-400">Tên hội thảo <span class="text-red-400">*</span></label>
-          <input type="text" id="tenHoiThao" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required>
+      <div class="mt-4">
+        <label for="chucVu" class="block text-xs font-medium mb-1 text-slate-400">Chức vụ</label>
+        <input type="text" id="chucVu" name="chucVu" readonly class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none cursor-not-allowed">
+      </div>
+
+      <div class="mt-4">
+        <label for="tenHoiThao" class="block text-xs font-medium mb-1 text-slate-400">Tên hội thảo <span class="text-red-400">*</span></label>
+        <input type="text" id="tenHoiThao" name="tenHoiThao" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <label for="donViToChuc" class="block text-xs font-medium mb-1 text-slate-400">Đơn vị tổ chức <span class="text-red-400">*</span></label>
+          <input type="text" id="donViToChuc" name="donViToChuc" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label class="block text-xs font-medium mb-1 text-slate-400">Đơn vị tổ chức <span class="text-red-400">*</span></label>
-            <input type="text" id="donViToChuc" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required>
-          </div>
-          <div>
-            <label class="block text-xs font-medium mb-1 text-slate-400">Cấp tổ chức</label>
-            <select id="capToChuc" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500">
-              <option value="Bo GDĐT">Bộ GDĐT</option>
-              <option value="So GDĐT">Sở GDĐT</option>
-              <option value="Cum">Cụm</option>
-              <option value="Truong">Trường</option>
-              <option value="Khac">Khác</option>
-            </select>
-          </div>
+        <div>
+          <label for="capToChuc" class="block text-xs font-medium mb-1 text-slate-400">Cấp tổ chức</label>
+          <select id="capToChuc" name="capToChuc" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500">
+            <option value="Bo GDĐT">Bộ GDĐT</option>
+            <option value="So GDĐT">Sở GDĐT</option>
+            <option value="Cum">Cụm</option>
+            <option value="Truong">Trường</option>
+            <option value="Khac">Khác</option>
+          </select>
         </div>
+      </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label class="block text-xs font-medium mb-1 text-slate-400">Hình thức</label>
-            <select id="hinhThuc" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500">
-              <option value="Trực tiếp">Trực tiếp</option>
-              <option value="Trực tuyến">Trực tuyến</option>
-              <option value="Kết hợp">Kết hợp</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-medium mb-1 text-slate-400">Thời gian <span class="text-red-400">*</span></label>
-            <input type="datetime-local" id="thoiGian" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required>
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <label for="hinhThuc" class="block text-xs font-medium mb-1 text-slate-400">Hình thức</label>
+          <select id="hinhThuc" name="hinhThuc" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500">
+            <option value="Trực tiếp">Trực tiếp</option>
+            <option value="Trực tuyến">Trực tuyến</option>
+            <option value="Kết hợp">Kết hợp</option>
+          </select>
         </div>
-
-        <div class="mt-4">
-          <label class="block text-xs font-medium mb-1 text-slate-400">Địa điểm</label>
-          <input type="text" id="diaDiem" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500">
+        <div>
+          <label for="thoiGian" class="block text-xs font-medium mb-1 text-slate-400">Thời gian <span class="text-red-400">*</span></label>
+          <input type="datetime-local" id="thoiGian" name="thoiGian" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required>
         </div>
+      </div>
 
-        <div class="mt-4">
-          <label class="block text-xs font-medium mb-1 text-slate-400">Nội dung chính <span class="text-red-400">*</span></label>
-          <textarea id="noiDungChinh" rows="4" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required></textarea>
+      <div class="mt-4">
+        <label for="diaDiem" class="block text-xs font-medium mb-1 text-slate-400">Địa điểm</label>
+        <input type="text" id="diaDiem" name="diaDiem" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500">
+      </div>
+
+      <div class="mt-4">
+        <label for="noiDungChinh" class="block text-xs font-medium mb-1 text-slate-400">Nội dung chính <span class="text-red-400">*</span></label>
+        <textarea id="noiDungChinh" name="noiDungChinh" rows="4" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" required></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <label for="ketQua" class="block text-xs font-medium mb-1 text-slate-400">Kết quả đạt được</label>
+          <textarea id="ketQua" name="ketQua" rows="3" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500"></textarea>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label class="block text-xs font-medium mb-1 text-slate-400">Kết quả đạt được</label>
-            <textarea id="ketQua" rows="3" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500"></textarea>
-          </div>
-          <div>
-            <label class="block text-xs font-medium mb-1 text-slate-400">Đề xuất</label>
-            <textarea id="deXuat" rows="3" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500"></textarea>
-          </div>
+        <div>
+          <label for="deXuat" class="block text-xs font-medium mb-1 text-slate-400">Đề xuất</label>
+          <textarea id="deXuat" name="deXuat" rows="3" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500"></textarea>
         </div>
+      </div>
 
-        <div class="mt-4">
-          <label class="block text-xs font-medium mb-1 text-slate-400">Link minh chứng</label>
-          <input type="url" id="minhChung" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" placeholder="https://...">
-        </div>
+      <div class="mt-4">
+        <label for="minhChung" class="block text-xs font-medium mb-1 text-slate-400">Link minh chứng</label>
+        <input type="url" id="minhChung" name="minhChung" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500" placeholder="https://...">
+      </div>
 
-        <div class="mt-4">
-          <label class="block text-xs font-medium mb-1 text-slate-400">Ghi chú</label>
-          <textarea id="ghiChu" rows="2" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500"></textarea>
-        </div>
+      <div class="mt-4">
+        <label for="ghiChu" class="block text-xs font-medium mb-1 text-slate-400">Ghi chú</label>
+        <textarea id="ghiChu" name="ghiChu" rows="2" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:border-teal-500"></textarea>
+      </div>
 
-        <div class="flex gap-3 mt-8">
-          <button type="button" onclick="FORM.reset()" class="flex-1 py-3.5 border border-white/30 hover:bg-white/10 rounded-2xl font-medium transition-all">Làm mới</button>
-          <button type="submit" id="btnSubmit" class="flex-1 py-3.5 bg-teal-600 hover:bg-teal-500 rounded-2xl font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-70">
-            <span id="btnText">Gửi báo cáo</span>
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Footer -->
-    <div class="text-center mt-8 text-xs text-slate-500">
-      Trường THPT Hòa Vang<br>
-      Trung tâm Điều hành số<br>
-      Phiên bản 1.0 ©2026
-    </div>
+      <div class="flex gap-3 mt-8">
+        <button type="button" id="btnReset" class="flex-1 py-3.5 border border-white/30 hover:bg-white/10 rounded-2xl font-medium transition-all">Làm mới</button>
+        <button type="submit" id="btnSubmit" class="flex-1 py-3.5 bg-teal-600 hover:bg-teal-500 rounded-2xl font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-70">
+          <span id="btnText">Gửi báo cáo</span>
+        </button>
+      </div>
+    </form>
   </div>
+</div>
 
-  <!-- Loading Overlay -->
-  <div id="loadingOverlay" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[100]">
-    <div class="text-center">
-      <div class="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-      <div class="mt-4 text-white font-medium">Đang lưu dữ liệu...</div>
-      <div class="text-slate-400 text-sm mt-1">Vui lòng chờ trong giây lát</div>
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[110] px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-sm max-w-xs">
-    <span id="toastIcon" class="text-lg"></span>
-    <span id="toastMessage" class="font-medium"></span>
-  </div>
-
-  <script>
+<script>
+  (() => {
     // ====================== CONFIG ======================
     const CONFIG = {
-      DASHBOARD_URL: "https://your-dashboard-url.com",
-      LOGO_URL: "https://via.placeholder.com/40x40/0ea5e9/ffffff?text=HVA",
-      SCHOOL_NAME: "Trường THPT Hòa Vang",
-      VERSION: "1.0",
-      TOAST_DURATION: 4500,
-      LOADING_TEXT: "Đang lưu dữ liệu...",
-      SHEET_NAME: "HoiThao"
+      SHEET_NAME: "HoiThao",
+      ACTION: "saveHoiThao"
     };
 
     // ====================== STATE ======================
@@ -159,99 +112,106 @@
 
     // ====================== DOM CACHE ======================
     const DOM = {
+      container: document.getElementById('hoiThaoContainer'),
       form: document.getElementById('hoiThaoForm'),
       btnSubmit: document.getElementById('btnSubmit'),
       btnText: document.getElementById('btnText'),
-      loadingOverlay: document.getElementById('loadingOverlay'),
-      toast: document.getElementById('toast'),
-      toastIcon: document.getElementById('toastIcon'),
-      toastMessage: document.getElementById('toastMessage'),
+      btnReset: document.getElementById('btnReset'),
       hoTen: document.getElementById('hoTen'),
       toChuyenMon: document.getElementById('toChuyenMon'),
       chucVu: document.getElementById('chucVu'),
-      tenHoiThao: document.getElementById('tenHoiThao')
+      tenHoiThao: document.getElementById('tenHoiThao'),
+      donViToChuc: document.getElementById('donViToChuc'),
+      capToChuc: document.getElementById('capToChuc'),
+      hinhThuc: document.getElementById('hinhThuc'),
+      thoiGian: document.getElementById('thoiGian'),
+      diaDiem: document.getElementById('diaDiem'),
+      noiDungChinh: document.getElementById('noiDungChinh'),
+      ketQua: document.getElementById('ketQua'),
+      deXuat: document.getElementById('deXuat'),
+      minhChung: document.getElementById('minhChung'),
+      ghiChu: document.getElementById('ghiChu')
     };
 
     // ====================== UTILS ======================
-    function showToast(message, type = 'success') {
-      const toast = DOM.toast;
-      DOM.toastIcon.textContent = type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️';
-      DOM.toastMessage.textContent = message;
-      toast.classList.remove('hidden', 'bg-emerald-600', 'bg-red-600', 'bg-amber-600');
-      toast.classList.add(type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : 'bg-amber-600');
-      
-      setTimeout(() => {
-        toast.classList.add('hidden');
-      }, CONFIG.TOAST_DURATION);
-    }
-<script>
-    // Ép buộc gắn hàm ra window toàn cục để bất kỳ sự kiện onclick nào cũng gọi được
-    window.openHoiThaoForm = function() {
-        const modal = document.getElementById('hoiThaoModal');
-        if (modal) {
-            modal.classList.remove('hidden');
+    const UTILS = {
+      getCurrentUser: function() {
+        if (typeof window.getCurrentUser === 'function') {
+          return window.getCurrentUser();
         }
-
-        // Lấy thông tin user và điền vào form
-        const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
-        
-        if (user) {
-            const inputHoTen = document.getElementById('hoTen');
-            const inputToCM = document.getElementById('toChuyenMon');
-            const inputChucVu = document.getElementById('chucVu');
-
-            if (inputHoTen) inputHoTen.value = user.name || '';
-            if (inputToCM) inputToCM.value = user.department || '';
-            if (inputChucVu) inputChucVu.value = user.position || '';
-        }
-    };
-</script>
-    function showLoading(show) {
-      DOM.loadingOverlay.classList.toggle('hidden', !show);
-    }
-
-    function disableForm(disable) {
-      const inputs = DOM.form.querySelectorAll('input, select, textarea, button');
-      inputs.forEach(el => {
-        if (el.id !== 'btnSubmit') el.disabled = disable;
-      });
-    }
-
-    // ====================== LẤY USER TỪ LOCALSTORAGE ======================
-    function getCurrentUser() {
         try {
-            let user = JSON.parse(localStorage.getItem("user")) || {};
-
-            return {
-                name: user.name || user.fullName || "",
-                department: user.department || user.toChuyenMon || "",
-                position: user.position || user.chucVu || user.workPosition || ""
-            };
+          const user = JSON.parse(localStorage.getItem("user")) || {};
+          return {
+            name: user.name || user.fullName || "",
+            department: user.department || user.toChuyenMon || "",
+            position: user.position || user.chucVu || user.workPosition || ""
+          };
         } catch (e) {
-            console.error("Lỗi lấy user:", e);
-            return { name: "", department: "", position: "" };
+          console.error("Lỗi lấy user:", e);
+          return { name: "", department: "", position: "" };
         }
-    }
+      },
+      showToast: function(message, type = 'success') {
+        if (typeof window.showToast === 'function') {
+          window.showToast(message, type);
+        } else {
+          console.log(`[Toast ${type}]: ${message}`);
+        }
+      },
+      showLoading: function(show) {
+        if (typeof window.showLoading === 'function') {
+          window.showLoading(show);
+        }
+      }
+    };
 
     // ====================== API ======================
     const API = {
-      saveHoiThao: function(data) {
-        return new Promise((resolve, reject) => {
-          google.script.run
-            .withSuccessHandler(resolve)
-            .withFailureHandler(reject)
-            .saveHoiThao(data);
+      saveHoiThao: async function(payload) {
+        if (window.API && typeof window.API.saveHoiThao === 'function') {
+          return await window.API.saveHoiThao(payload);
+        }
+        if (window.API && typeof window.API.request === 'function') {
+          return await window.API.request({
+            action: CONFIG.ACTION,
+            sheetName: CONFIG.SHEET_NAME,
+            payload: payload
+          });
+        }
+        const endpoint = (window.CONFIG && window.CONFIG.API_URL) ? window.CONFIG.API_URL : '';
+        if (!endpoint) {
+          throw new Error("Chưa cấu hình API endpoint hệ thống");
+        }
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: CONFIG.ACTION,
+            sheetName: CONFIG.SHEET_NAME,
+            payload: payload
+          })
         });
+        return await response.json();
       }
     };
 
     // ====================== UI ======================
     const UI = {
       updateUserInfo: function() {
-        const user = getCurrentUser();
-        DOM.hoTen.value = user.name;
-        DOM.toChuyenMon.value = user.department;
-        DOM.chucVu.value = user.position;
+        STATE.currentUser = UTILS.getCurrentUser();
+        DOM.hoTen.value = STATE.currentUser.name || '';
+        DOM.toChuyenMon.value = STATE.currentUser.department || '';
+        DOM.chucVu.value = STATE.currentUser.position || '';
+      },
+      setSubmittingState: function(isSubmitting) {
+        STATE.isSaving = isSubmitting;
+        UTILS.showLoading(isSubmitting);
+        DOM.btnSubmit.disabled = isSubmitting;
+        if (isSubmitting) {
+          DOM.btnText.innerHTML = `<i class="bi bi-hourglass-split animate-spin"></i> Đang lưu...`;
+        } else {
+          DOM.btnText.textContent = 'Gửi báo cáo';
+        }
       }
     };
 
@@ -259,23 +219,23 @@
     const VALIDATION = {
       isValid: function() {
         if (!DOM.tenHoiThao.value.trim()) {
-          showToast("Vui lòng nhập Tên hội thảo", 'warning');
+          UTILS.showToast("Vui lòng nhập Tên hội thảo", 'warning');
           DOM.tenHoiThao.focus();
           return false;
         }
-        if (!document.getElementById('donViToChuc').value.trim()) {
-          showToast("Vui lòng nhập Đơn vị tổ chức", 'warning');
-          document.getElementById('donViToChuc').focus();
+        if (!DOM.donViToChuc.value.trim()) {
+          UTILS.showToast("Vui lòng nhập Đơn vị tổ chức", 'warning');
+          DOM.donViToChuc.focus();
           return false;
         }
-        if (!document.getElementById('thoiGian').value) {
-          showToast("Vui lòng chọn Thời gian", 'warning');
-          document.getElementById('thoiGian').focus();
+        if (!DOM.thoiGian.value) {
+          UTILS.showToast("Vui lòng chọn Thời gian", 'warning');
+          DOM.thoiGian.focus();
           return false;
         }
-        if (!document.getElementById('noiDungChinh').value.trim()) {
-          showToast("Vui lòng nhập Nội dung chính", 'warning');
-          document.getElementById('noiDungChinh').focus();
+        if (!DOM.noiDungChinh.value.trim()) {
+          UTILS.showToast("Vui lòng nhập Nội dung chính", 'warning');
+          DOM.noiDungChinh.focus();
           return false;
         }
         return true;
@@ -289,68 +249,59 @@
           hoTen: DOM.hoTen.value,
           toChuyenMon: DOM.toChuyenMon.value,
           chucVu: DOM.chucVu.value,
-          tenHoiThao: document.getElementById('tenHoiThao').value,
-          donViToChuc: document.getElementById('donViToChuc').value,
-          capToChuc: document.getElementById('capToChuc').value,
-          hinhThuc: document.getElementById('hinhThuc').value,
-          thoiGian: document.getElementById('thoiGian').value,
-          diaDiem: document.getElementById('diaDiem').value,
-          noiDungChinh: document.getElementById('noiDungChinh').value,
-          ketQua: document.getElementById('ketQua').value,
-          deXuat: document.getElementById('deXuat').value,
-          minhChung: document.getElementById('minhChung').value,
-          ghiChu: document.getElementById('ghiChu').value
+          tenHoiThao: DOM.tenHoiThao.value.trim(),
+          donViToChuc: DOM.donViToChuc.value.trim(),
+          capToChuc: DOM.capToChuc.value,
+          hinhThuc: DOM.hinhThuc.value,
+          thoiGian: DOM.thoiGian.value,
+          diaDiem: DOM.diaDiem.value.trim(),
+          noiDungChinh: DOM.noiDungChinh.value.trim(),
+          ketQua: DOM.ketQua.value.trim(),
+          deXuat: DOM.deXuat.value.trim(),
+          minhChung: DOM.minhChung.value.trim(),
+          ghiChu: DOM.ghiChu.value.trim()
         };
       },
       reset: function() {
-        document.getElementById('hoiThaoForm').reset();
-        UI.updateUserInfo();           // Điền lại thông tin user sau khi reset
-        document.getElementById('tenHoiThao').focus();
+        DOM.form.reset();
+        UI.updateUserInfo();
+        DOM.tenHoiThao.focus();
       }
     };
 
     // ====================== INIT ======================
     function init() {
-      // Set logo (nếu có)
-      if (document.getElementById('logo')) {
-        document.getElementById('logo').src = CONFIG.LOGO_URL;
-      }
-
-      // Tự động điền thông tin người dùng
       UI.updateUserInfo();
 
-      // Form submit
+      DOM.btnReset.addEventListener('click', function() {
+        FORM.reset();
+      });
+
       DOM.form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
+        if (STATE.isSaving) return;
         if (!VALIDATION.isValid()) return;
 
-        STATE.isSaving = true;
-        showLoading(true);
-        DOM.btnSubmit.disabled = true;
-        DOM.btnText.innerHTML = `<i class="bi bi-hourglass-split animate-spin"></i> Đang lưu...`;
-
+        UI.setSubmittingState(true);
         const data = FORM.collectData();
 
         try {
           const result = await API.saveHoiThao(data);
-          if (result.success) {
-            showToast(result.message, 'success');
+          if (result && (result.success || result.status === 'success')) {
+            UTILS.showToast(result.message || "Lưu báo cáo thành công!", 'success');
             FORM.reset();
           } else {
-            showToast(result.message, 'error');
+            UTILS.showToast((result && result.message) ? result.message : "Có lỗi xảy ra khi lưu!", 'error');
           }
         } catch (error) {
-          showToast("Lỗi khi lưu: " + error.message, 'error');
+          UTILS.showToast("Lỗi khi lưu: " + (error.message || error), 'error');
         } finally {
-          STATE.isSaving = false;
-          showLoading(false);
-          DOM.btnSubmit.disabled = false;
-          DOM.btnText.textContent = 'Lưu báo cáo';
+          UI.setSubmittingState(false);
         }
       });
     }
 
-    // Run
-    window.onload = init;
-  </script>
+    init();
+  })();
+</script>
