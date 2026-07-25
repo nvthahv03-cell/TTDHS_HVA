@@ -333,14 +333,14 @@
     }
 
     // Gắn sự kiện an toàn
-   if (DOM.btnBackHeader) {
-  DOM.btnBackHeader.addEventListener('click', () => {
-    closeHoiThaoModal();
-    if (typeof window.showMainView === 'function') {
-      window.showMainView();
+  if (DOM.btnBackHeader) {
+      DOM.btnBackHeader.onclick = function() {
+        const container = document.getElementById('hoiThaoContainer');
+        if (container) {
+          container.style.display = 'none'; // Ẩn hẳn module Báo cáo hội thảo đi
+        }
+      };
     }
-  });
-}
     if (DOM.btnReset) DOM.btnReset.addEventListener('click', () => { DOM.form.reset(); initUser(); });
     if (DOM.btnPreview) DOM.btnPreview.addEventListener('click', openPreviewModal);
     if (DOM.btnClosePreview) DOM.btnClosePreview.addEventListener('click', closePreviewModal);
