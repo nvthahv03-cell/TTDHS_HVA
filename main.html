@@ -915,64 +915,65 @@ window.addEventListener('click', (e) => {
         }
     });
 });
-       // Bồi dưỡng chuyên môn
-function openBoiduongForm(type, subType = '') {
+     
+  async function openHoiThaoForm() {
 
     closeModal('boiduong-modal');
 
-    if (type !== 'hoi_thao') {
-        showToast("⚠️ Chức năng đang hoàn thiện.");
-        return;
+    try {
+
+        const response = await fetch("modules/hoithao.html");
+
+        if (!response.ok) {
+            throw new Error("Không tải được module Hội thảo.");
+        }
+
+        const html = await response.text();
+
+        const modal = `
+        <div id="hoithao-modal"
+             class="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999]">
+
+            <div class="bg-zinc-900 rounded-3xl
+                        w-full max-w-5xl
+                        max-h-[95vh]
+                        overflow-auto">
+
+                <div class="flex items-center justify-between p-5 border-b border-white/10">
+
+                    <h2 class="text-xl font-bold">
+                        📊 Báo cáo Hội thảo
+                    </h2>
+
+                    <button onclick="closeHoiThaoModal()"
+                            class="text-3xl hover:text-red-400">
+                        ×
+                    </button>
+
+                </div>
+
+                <div id="hoithao-content"
+                     class="p-5">
+                </div>
+
+            </div>
+
+        </div>
+        `;
+
+        document.body.insertAdjacentHTML("beforeend", modal);
+
+        document
+            .getElementById("hoithao-content")
+            .innerHTML = html;
+
+    } catch (err) {
+
+        showToast(err.message, "error");
+
     }
 
-    window.open(
-        "https://script.google.com/macros/s/AKfycbze1hLFtfFxmTOb53tVocxr2Cunq3Xl8C5ygK8NXPntfi-IuTAXhSiE6rjOqvGml7mA/exec?page=hoi_thao",
-        "_blank"
-
-    );
-}
-        // Mở Form Hội Thảo trong Modal
-    // ====================== HỘI THẢO MODAL ======================
-function openHoiThaoForm() {
-  const modalHTML = `
-    <div id="hoithao-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-[9999] p-0 sm:p-4">
-      <div class="bg-zinc-900 rounded-none sm:rounded-3xl w-full h-full sm:h-auto sm:max-w-6xl sm:max-h-[95vh] flex flex-col shadow-2xl overflow-hidden">
-        
-        <!-- Header -->
-        <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-white/10 bg-zinc-950">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center text-white text-xl">
-              📊
-            </div>
-            <div>
-              <h2 class="text-lg sm:text-xl font-semibold text-white">Báo cáo Hội Thảo</h2>
-              <p class="text-slate-400 text-xs sm:text-sm">Trung tâm Điều hành số THPT Hòa Vang</p>
-            </div>
-          </div>
-          <button onclick="closeHoiThaoModal()" 
-                  class="w-10 h-10 flex items-center justify-center text-3xl text-slate-400 hover:text-white hover:bg-white/10 rounded-2xl transition-all">
-            ×
-          </button>
-        </div>
-
-
-        <!-- Iframe Content -->
-        <div class="flex-1 w-full bg-zinc-950 p-0 sm:p-3" style="min-height: 80vh;">
-        <iframe id="hoithao-iframe" 
-        src="https://script.google.com/macros/s/AKfycbze1hLFtfFxmTOb53tVocxr2Cunq3Xl8C5ygK8NXPntfi-IuTAXhSiE6rjOqvGml7mA/exec"
-        class="w-full h-full border-none rounded-none sm:rounded-xl bg-zinc-900"
-        allowfullscreen></iframe>
-         
-        </div>
-      </div>
-    </div>
-  `;
-
-  // Thêm vào body
-  const modalContainer = document.createElement('div');
-  modalContainer.innerHTML = modalHTML;
-  document.body.appendChild(modalContainer.firstElementChild);
-}
+}      
 function closeHoiThaoModal() {
   const modal = document.getElementById('hoithao-modal');
   if (modal) {
