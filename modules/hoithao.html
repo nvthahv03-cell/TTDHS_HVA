@@ -312,28 +312,44 @@ const now = new Date();
 const ngayThangNam = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
 const gioPhutGiay = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
+// Ép trực tiếp style full chiều rộng cho thẻ cha #previewPaper (nếu có)
+if (DOM.previewPaper) {
+  DOM.previewPaper.style.width = '100%';
+  DOM.previewPaper.style.maxWidth = '100%';
+  DOM.previewPaper.style.padding = '0';
+}
+
 DOM.previewPaper.innerHTML = `
     <style>
-      /* Ép màu chữ đen và xử lý giao diện Responsive trên Điện thoại */
+      /* Ép màu chữ đen và mở rộng full màn hình */
       #previewPaper, #previewPaper * {
         color: #111111 !important;
         box-sizing: border-box;
       }
       
+      .preview-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 15px !important;
+        background: #fff !important;
+        color: #111 !important;
+        color-scheme: light !important;
+        font-family: 'Times New Roman', Times, serif;
+        line-height: 1.5;
+      }
+
+      /* Xử lý hiển thị tràn viền đẹp trên điện thoại */
       @media screen and (max-width: 639px) {
         .preview-container {
-          padding: 12px 10px !important;
-          width: 100% !important;
-          max-width: 100% !important;
-          margin: 0 !important;
+          padding: 10px 5px !important;
         }
-        .header-flex {
+        .header-top {
           flex-direction: column !important;
           align-items: flex-start !important;
-          gap: 10px;
         }
         .header-right {
           text-align: left !important;
+          margin-bottom: 10px;
         }
         .footer-sig {
           width: 100% !important;
@@ -343,10 +359,10 @@ DOM.previewPaper.innerHTML = `
       }
     </style>
 
-    <div class="preview-container" style="background:#fff !important; color:#111 !important; color-scheme: light !important; font-family: 'Times New Roman', Times, serif; padding: 20px; line-height: 1.5; width: 100%;">
+    <div class="preview-container">
 
-        <!-- Header: Bên trái là Đơn vị, Bên phải CHỈ CÓ Giờ Phút Giây -->
-        <div class="header-flex" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+        <!-- Dòng Thời gian đặt ở TRÊN ĐẦU GÓC PHẢI (Cao hơn/Ngang hàng Đơn vị) -->
+        <div class="header-top" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
           <div style="text-align: center;">
             <div style="font-size: 13pt; font-weight: bold; text-transform: uppercase;">
               TRƯỜNG THPT HÒA VANG
@@ -356,8 +372,9 @@ DOM.previewPaper.innerHTML = `
             </div>
           </div>
 
+          <!-- Thời gian ở vị trí cao nhất bên phải -->
           <div class="header-right" style="text-align: right; font-size: 11pt;">
-            <div style="font-style: italic; color: #444 !important;">
+            <div style="font-style: italic; color: #444 !important; white-space: nowrap;">
               Thời gian lập: ${gioPhutGiay}
             </div>
           </div>
@@ -373,7 +390,6 @@ DOM.previewPaper.innerHTML = `
         <table style="width:100%; border-collapse:collapse; font-size:13pt; margin-bottom:15px;">
           <tr>
             <td style="width:140px; padding:3px 0; vertical-align: top;"><b>Họ và tên:</b></td>
-            <!-- Đậm chữ thường (không viết HOA) -->
             <td style="padding:3px 0;"><b style="font-weight:bold !important;">${DOM.hoTen?.value || ''}</b></td>
           </tr>
           <tr>
@@ -449,7 +465,7 @@ DOM.previewPaper.innerHTML = `
 
         <br>
 
-        <!-- Chữ ký & Ngày tháng năm nằm ở ĐÂY -->
+        <!-- Ngày tháng năm + Chữ ký góc dưới bên phải -->
         <div class="footer-sig" style="float:right; text-align:center; font-size:13pt; margin-top:20px; width:300px;">
             <div style="font-style:italic; white-space:nowrap; margin-bottom:5px;">${ngayThangNam}</div>
             <div style="font-weight:bold;">Người báo cáo</div>
@@ -457,7 +473,6 @@ DOM.previewPaper.innerHTML = `
             
             <br><br><br>
             
-            <!-- Đậm chữ thường (không viết HOA) -->
             <div style="margin-top:10px; font-size:13pt;">
               <b style="font-weight:bold !important;">
                 ${DOM.hoTen?.value || ''}
