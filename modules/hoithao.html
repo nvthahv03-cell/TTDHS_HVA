@@ -1,4 +1,4 @@
-<!-- MODULE: HoiThao.html (Sửa lỗi ép tràn màn hình sáng) -->
+<!-- MODULE: HoiThao.html (Sửa lỗi ép tràn màn hình sáng & Hoàn thiện logic) -->
 <style>
   /* Kỹ thuật đè khung xám tối bên ngoài của Modal mẹ */
   .force-light-fullscreen {
@@ -16,7 +16,6 @@
 </style>
 
 <div id="hoiThaoContainer" class="force-light-fullscreen flex flex-col justify-between text-slate-800">
-  
   <div>
     <!-- Header sáng có nút mũi tên quay lại -->
     <div class="bg-white border-b border-slate-200 sticky top-0 z-10 px-4 py-3.5 flex items-center justify-between shadow-sm">
@@ -58,14 +57,11 @@
 
         <!-- Chi tiết hội thảo -->
         <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-          
-          <!-- Tên hội thảo -->
           <div>
             <label for="tenHoiThao" class="block text-xs font-bold text-slate-700 mb-1">Tên hội thảo <span class="text-red-500">*</span></label>
             <input type="text" id="tenHoiThao" name="tenHoiThao" required placeholder="Nhập tên hội thảo..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
           </div>
 
-          <!-- Đơn vị & Cấp tổ chức -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="donViToChuc" class="block text-xs font-bold text-slate-700 mb-1">Đơn vị tổ chức <span class="text-red-500">*</span></label>
@@ -74,16 +70,15 @@
             <div>
               <label for="capToChuc" class="block text-xs font-bold text-slate-700 mb-1">Cấp tổ chức</label>
               <select id="capToChuc" name="capToChuc" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
-                <option value="Bo GDĐT">Bộ GDĐT</option>
-                <option value="So GDĐT">Sở GDĐT</option>
-                <option value="Cum">Cụm</option>
-                <option value="Truong">Trường</option>
-                <option value="Khac">Khác</option>
+                <option value="Bộ GDĐT">Bộ GDĐT</option>
+                <option value="Sở GDĐT">Sở GDĐT</option>
+                <option value="Cụm">Cụm</option>
+                <option value="Trường">Trường</option>
+                <option value="Khác">Khác</option>
               </select>
             </div>
           </div>
 
-          <!-- Hình thức & Thời gian -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="hinhThuc" class="block text-xs font-bold text-slate-700 mb-1">Hình thức</label>
@@ -99,19 +94,16 @@
             </div>
           </div>
 
-          <!-- Địa điểm -->
           <div>
             <label for="diaDiem" class="block text-xs font-bold text-slate-700 mb-1">Địa điểm</label>
             <input type="text" id="diaDiem" name="diaDiem" placeholder="Địa điểm tổ chức..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
           </div>
 
-          <!-- Nội dung chính -->
           <div>
             <label for="noiDungChinh" class="block text-xs font-bold text-slate-700 mb-1">Nội dung chính <span class="text-red-500">*</span></label>
             <textarea id="noiDungChinh" name="noiDungChinh" rows="3" required placeholder="Tóm tắt nội dung chính..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all"></textarea>
           </div>
 
-          <!-- Kết quả & Đề xuất -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="ketQua" class="block text-xs font-bold text-slate-700 mb-1">Kết quả đạt được</label>
@@ -123,7 +115,6 @@
             </div>
           </div>
 
-          <!-- Link minh chứng & Ghi chú -->
           <div>
             <label for="minhChung" class="block text-xs font-bold text-slate-700 mb-1">Link minh chứng</label>
             <input type="url" id="minhChung" name="minhChung" placeholder="https://drive.google.com/..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all">
@@ -133,7 +124,6 @@
             <label for="ghiChu" class="block text-xs font-bold text-slate-700 mb-1">Ghi chú</label>
             <textarea id="ghiChu" name="ghiChu" rows="2" placeholder="Ghi chú thêm (nếu có)..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:bg-white transition-all"></textarea>
           </div>
-
         </div>
 
         <!-- Cụm nút thao tác -->
@@ -150,129 +140,87 @@
             <span id="btnText">📤 Gửi báo cáo</span>
           </button>
         </div>
-
       </form>
     </div>
   </div>
-
 </div>
 
 <script>
-  // Hàm đóng Modal an toàn kể cả khi dùng nhiều thư viện khác nhau
   function closeHoiThaoModal() {
     const el = document.getElementById('hoiThaoContainer');
-    if (el) {
-      el.style.display = 'none';
-    }
-    if (typeof closeModal === 'function') {
-      closeModal('hoiThaoContainer');
-    }
+    if (el) el.style.display = 'none';
+    if (typeof closeModal === 'function') closeModal('hoiThaoContainer');
   }
 </script>
+
 <!-- ================= PREVIEW MODAL ================= -->
-<div id="previewModal"
-     class="fixed inset-0 hidden z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-6">
-
-    <div class="bg-white rounded-xl shadow-2xl w-[90%] h-[90%] flex flex-col overflow-hidden">
-
-        <!-- Header -->
-        <div class="px-6 py-4 border-b flex items-center justify-between">
-
-            <h2 class="text-xl font-bold text-gray-800">
-                👁 Xem trước báo cáo
-            </h2>
-
-            <button id="btnClosePreview"
-                    class="text-3xl text-gray-500 hover:text-red-600">
-                ×
-            </button>
-
-        </div>
-
-        <!-- Khổ giấy A4 -->
-        <div class="flex-1 overflow-auto bg-gray-300 p-8">
-
-            <div id="previewPaper"
-                 class="mx-auto bg-white shadow-xl"
-                 style="
-                     width:210mm;
-                     min-height:297mm;
-                     padding:25mm;
-                     font-family:'Times New Roman', serif;
-                     font-size:14pt;
-                     line-height:1.5;
-                 ">
-
-            </div>
-
-        </div>
-
-        <!-- Footer -->
-        <div class="border-t px-6 py-4 flex justify-end gap-3">
-
-            <button id="btnBackForm"
-                class="px-5 py-2 rounded-lg border">
-                ✏ Quay lại
-            </button>
-
-            <button id="btnConfirmSubmit"
-                class="px-6 py-2 rounded-lg bg-teal-600 text-white">
-                📤 Xác nhận gửi
-            </button>
-
-        </div>
-
+<div id="previewModal" class="fixed inset-0 hidden z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6">
+  <div class="bg-white rounded-xl shadow-2xl w-[95%] sm:w-[90%] h-[90%] flex flex-col overflow-hidden">
+    <!-- Header -->
+    <div class="px-6 py-4 border-b flex items-center justify-between bg-slate-50">
+      <h2 class="text-xl font-bold text-gray-800">👁 Xem trước báo cáo</h2>
+      <button id="btnClosePreview" type="button" class="text-3xl text-gray-500 hover:text-red-600 transition-colors">×</button>
     </div>
 
+    <!-- Khổ giấy A4 -->
+    <div class="flex-1 overflow-auto bg-gray-300 p-4 sm:p-8">
+      <div id="previewPaper" class="mx-auto bg-white shadow-xl"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="border-t px-6 py-4 flex justify-end gap-3 bg-slate-50">
+      <button id="btnBackForm" type="button" class="px-5 py-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 font-medium transition-all text-slate-700">
+        ✏ Quay lại
+      </button>
+      <button id="btnConfirmSubmit" type="button" class="px-6 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold shadow-md transition-all flex items-center gap-2">
+        📤 Xác nhận gửi
+      </button>
+    </div>
+  </div>
 </div>
+
 <script>
   (() => {
-    // ====================== CONFIG ======================
     const CONFIG = {
       SHEET_NAME: "HoiThao",
       ACTION: "saveHoiThao"
     };
 
-    // ====================== STATE ======================
     const STATE = {
       currentUser: null,
       isSaving: false
     };
 
-   // ====================== DOM CACHE ======================
-const DOM = {
-  container: document.getElementById('hoiThaoContainer'),
-  form: document.getElementById('hoiThaoForm'),
+    const DOM = {
+      container: document.getElementById('hoiThaoContainer'),
+      form: document.getElementById('hoiThaoForm'),
+      btnSubmit: document.getElementById('btnSubmit'),
+      btnText: document.getElementById('btnText'),
+      btnReset: document.getElementById('btnReset'),
 
-  btnSubmit: document.getElementById('btnSubmit'),
-  btnText: document.getElementById('btnText'),
-  btnReset: document.getElementById('btnReset'),
+      btnPreview: document.getElementById('btnPreview'),
+      previewModal: document.getElementById('previewModal'),
+      previewPaper: document.getElementById('previewPaper'),
+      btnClosePreview: document.getElementById('btnClosePreview'),
+      btnBackForm: document.getElementById('btnBackForm'),
+      btnConfirmSubmit: document.getElementById('btnConfirmSubmit'),
 
-  // ===== Preview =====
-  btnPreview: document.getElementById('btnPreview'),
-  previewModal: document.getElementById('previewModal'),
-  previewPaper: document.getElementById('previewPaper'),
-  btnClosePreview: document.getElementById('btnClosePreview'),
-  btnBackForm: document.getElementById('btnBackForm'),
-  btnConfirmSubmit: document.getElementById('btnConfirmSubmit'),
+      hoTen: document.getElementById('hoTen'),
+      toChuyenMon: document.getElementById('toChuyenMon'),
+      chucVu: document.getElementById('chucVu'),
+      tenHoiThao: document.getElementById('tenHoiThao'),
+      donViToChuc: document.getElementById('donViToChuc'),
+      capToChuc: document.getElementById('capToChuc'),
+      hinhThuc: document.getElementById('hinhThuc'),
+      thoiGian: document.getElementById('thoiGian'),
+      diaDiem: document.getElementById('diaDiem'),
+      noiDungChinh: document.getElementById('noiDungChinh'),
+      ketQua: document.getElementById('ketQua'),
+      deXuat: document.getElementById('deXuat'),
+      minhChung: document.getElementById('minhChung'),
+      ghiChu: document.getElementById('ghiChu')
+    };
 
-  hoTen: document.getElementById('hoTen'),
-  toChuyenMon: document.getElementById('toChuyenMon'),
-  chucVu: document.getElementById('chucVu'),
-  tenHoiThao: document.getElementById('tenHoiThao'),
-  donViToChuc: document.getElementById('donViToChuc'),
-  capToChuc: document.getElementById('capToChuc'),
-  hinhThuc: document.getElementById('hinhThuc'),
-  thoiGian: document.getElementById('thoiGian'),
-  diaDiem: document.getElementById('diaDiem'),
-  noiDungChinh: document.getElementById('noiDungChinh'),
-  ketQua: document.getElementById('ketQua'),
-  deXuat: document.getElementById('deXuat'),
-  minhChung: document.getElementById('minhChung'),
-  ghiChu: document.getElementById('ghiChu')
-};
-
-    // ====================== UTILS ======================
     const UTILS = {
       getCurrentUser: function() {
         if (typeof window.getCurrentUser === 'function') {
@@ -294,17 +242,27 @@ const DOM = {
         if (typeof window.showToast === 'function') {
           window.showToast(message, type);
         } else {
-          console.log(`[Toast ${type}]: ${message}`);
+          alert(`[${type.toUpperCase()}]: ${message}`);
         }
       },
       showLoading: function(show) {
         if (typeof window.showLoading === 'function') {
           window.showLoading(show);
         }
+      },
+      formatDateTime: function(dtString) {
+        if (!dtString) return '';
+        const dt = new Date(dtString);
+        if (isNaN(dt.getTime())) return dtString;
+        const hours = String(dt.getHours()).padStart(2, '0');
+        const minutes = String(dt.getMinutes()).padStart(2, '0');
+        const day = String(dt.getDate()).padStart(2, '0');
+        const month = String(dt.getMonth() + 1).padStart(2, '0');
+        const year = dt.getFullYear();
+        return `${hours}:${minutes} ngày ${day}/${month}/${year}`;
       }
     };
 
-    // ====================== API ======================
     const API = {
       saveHoiThao: async function(payload) {
         if (window.API && typeof window.API.saveHoiThao === 'function') {
@@ -334,241 +292,6 @@ const DOM = {
       }
     };
 
-    // ====================== UI ======================
-   
-const UI = {
-
-  updateUserInfo: function () {
-    STATE.currentUser = UTILS.getCurrentUser();
-    DOM.hoTen.value = STATE.currentUser.name || '';
-    DOM.toChuyenMon.value = STATE.currentUser.department || '';
-    DOM.chucVu.value = STATE.currentUser.position || '';
-  },
-
-  setSubmittingState: function (isSubmitting) {
-    STATE.isSaving = isSubmitting;
-    UTILS.showLoading(isSubmitting);
-    DOM.btnSubmit.disabled = isSubmitting;
-
-    if (isSubmitting) {
-      DOM.btnText.innerHTML = `<i class="bi bi-hourglass-split animate-spin"></i> Đang lưu...`;
-    } else {
-      DOM.btnText.textContent = '📤 Gửi báo cáo';
-    }
-  },
-
-// ===== PREVIEW =====
-openPreview: function () {
-    UI.renderPreview();
-    DOM.previewModal.classList.remove('hidden');
-},
-
-closePreview: function () {
-    DOM.previewModal.classList.add('hidden');
-},
-
-renderPreview: function () {
-    // Lấy thời gian thực
-    const now = new Date();
-    const ngayThangNam = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
-    const gioPhutGiay = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-    if (DOM.previewPaper) {
-        DOM.previewPaper.style.width = '100%';
-        DOM.previewPaper.style.padding = '0';
-        DOM.previewPaper.style.boxSizing = 'border-box';
-    }
-
-    DOM.previewPaper.innerHTML = `
-        <style>
-            #previewPaper, #previewPaper * {
-                color: #111111 !important;
-                box-sizing: border-box;
-            }
-            
-            /* Khung A4 chuẩn trên Máy tính */
-            .a4-wrapper {
-                width: 100%;
-                max-width: 794px;
-                min-height: 1000px;
-                background: #ffffff !important;
-                color: #111111 !important;
-                font-family: 'Times New Roman', Times, serif;
-                padding: 40px 50px;
-                margin: 10px auto;
-                box-shadow: 0 0 10px rgba(0,0,0,0.15);
-                border: 1px solid #ddd;
-                line-height: 1.5;
-                font-size: 13pt;
-            }
-
-            /* Tự động căn chỉnh vừa khít 100% trên Điện thoại (< 768px) */
-            @media screen and (max-width: 767px) {
-                .a4-wrapper {
-                    padding: 15px 12px !important;
-                    margin: 0 auto !important;
-                    border: none !important;
-                    box-shadow: none !important;
-                    font-size: 11pt !important;
-                    min-height: auto !important;
-                }
-                .a4-wrapper table {
-                    font-size: 11pt !important;
-                }
-                .a4-wrapper .header-title {
-                    font-size: 11pt !important;
-                }
-                .a4-wrapper .header-sub {
-                    font-size: 9.5pt !important;
-                }
-                .a4-wrapper .doc-title {
-                    font-size: 13pt !important;
-                }
-                .a4-wrapper .sig-box {
-                    width: 200px !important;
-                    font-size: 11pt !important;
-                }
-                .a4-wrapper .col-label {
-                    width: 110px !important;
-                }
-            }
-        </style>
-
-        <div class="a4-wrapper">
-
-            <!-- Dòng Thời gian đặt ở TRÊN ĐẦU GÓC PHẢI -->
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; gap: 10px;">
-                <div style="text-align: center;">
-                    <div class="header-title" style="font-size: 12pt; font-weight: bold; text-transform: uppercase;">
-                        TRƯỜNG THPT HÒA VANG
-                    </div>
-                    <div class="header-sub" style="font-size: 10pt; font-weight: bold; text-transform: uppercase;">
-                        TRUNG TÂM ĐIỀU HÀNH SỐ
-                    </div>
-                </div>
-
-                <div style="text-align: right; font-size: 10pt;">
-                    <div style="font-style: italic; color: #444 !important; white-space: nowrap;">
-                        Thời gian lập: ${gioPhutGiay}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tiêu đề báo cáo -->
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div class="doc-title" style="font-size: 15pt; font-weight: bold; text-transform: uppercase;">
-                    BÁO CÁO THAM DỰ HỘI THẢO
-                </div>
-            </div>
-
-            <!-- Bảng thông tin -->
-            <table style="width:100%; border-collapse:collapse; margin-bottom:15px; table-layout: fixed;">
-                <tr>
-                    <td class="col-label" style="width:130px; padding:3px 0; vertical-align: top;"><b>Họ và tên:</b></td>
-                    <td style="padding:3px 0; word-break: break-word;"><b style="font-weight:bold !important;">${DOM.hoTen?.value || ''}</b></td>
-                </tr>
-                <tr>
-                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Tổ chuyên môn:</b></td>
-                    <td style="padding:3px 0; word-break: break-word;">${DOM.toChuyenMon?.value || ''}</td>
-                </tr>
-                <tr>
-                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Chức vụ:</b></td>
-                    <td style="padding:3px 0; word-break: break-word;">${DOM.chucVu?.value || ''}</td>
-                </tr>
-                <tr>
-                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Tên hội thảo:</b></td>
-                    <td style="padding:3px 0; word-break: break-word;">${DOM.tenHoiThao?.value || ''}</td>
-                </tr>
-                <tr>
-                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Đơn vị tổ chức:</b></td>
-                    <td style="padding:3px 0; word-break: break-word;">${DOM.donViToChuc?.value || ''}</td>
-                </tr>
-                <tr>
-                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Cấp tổ chức:</b></td>
-                    <td style="padding:3px 0; word-break: break-word;">${DOM.capToChuc?.value || ''}</td>
-                </tr>
-                <tr>
-                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Hình thức:</b></td>
-                    <td style="padding:3px 0; word-break: break-word;">${DOM.hinhThuc?.value || ''}</td>
-                </tr>
-                <tr>
-                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Thời gian:</b></td>
-                    <td style="padding:3px 0; word-break: break-word;">${DOM.thoiGian?.value || ''}</td>
-                </tr>
-                <tr>
-                    <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Địa điểm:</b></td>
-                    <td style="padding:3px 0; word-break: break-word;">${DOM.diaDiem?.value || ''}</td>
-                </tr>
-            </table>
-
-            <!-- Nội dung -->
-            <div>
-                <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">
-                    I. Nội dung chính:
-                </div>
-                <div style="padding-left:8px; white-space:pre-wrap; min-height:30px; word-break: break-word;">
-                    ${DOM.noiDungChinh?.value || '(Chưa nhập)'}
-                </div>
-
-                <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">
-                    II. Kết quả tiếp thu:
-                </div>
-                <div style="padding-left:8px; white-space:pre-wrap; min-height:30px; word-break: break-word;">
-                    ${DOM.ketQua?.value || '(Chưa nhập)'}
-                </div>
-
-                <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">
-                    III. Kiến nghị / Đề xuất:
-                </div>
-                <div style="padding-left:8px; white-space:pre-wrap; min-height:30px; word-break: break-word;">
-                    ${DOM.deXuat?.value || '(Chưa nhập)'}
-                </div>
-
-                <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">
-                    IV. Minh chứng:
-                </div>
-                <div style="padding-left:8px; word-break: break-word;">
-                    ${DOM.minhChung?.value || "Không có"}
-                </div>
-
-                <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">
-                    Ghi chú:
-                </div>
-                <div style="padding-left:8px; word-break: break-word;">
-                    ${DOM.ghiChu?.value || "Không có ghi chú"}
-                </div>
-            </div>
-
-            <!-- Chữ ký góc dưới bên phải -->
-            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-                <div class="sig-box" style="text-align:center; width:250px;">
-                    <div style="font-style:italic; white-space:nowrap; margin-bottom:4px; font-size: 0.95em;">${ngayThangNam}</div>
-                    <div style="font-weight:bold;">Người báo cáo</div>
-                    <div style="font-style:italic; font-size:9pt; color:#555 !important;">(Ký, ghi rõ họ tên)</div>
-                    
-                    <br><br><br>
-                    
-                    <div style="margin-top:5px;">
-                        <b style="font-weight:bold !important;">
-                            ${DOM.hoTen?.value || ''}
-                        </b>
-                    </div>
-                </div>
-            </div>
-
-            <hr style="margin-top:25px; margin-bottom: 10px; border:0; border-top:1px solid #ccc;">
-
-            <div style="font-size:9pt; color:#777 !important; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 5px;">
-                <span>TTDHS_HVA - Trường THPT Hòa Vang</span>
-                <span>BẢN XEM TRƯỚC</span>
-            </div>
-
-        </div>
-    `;
-}
-
-};
-  // ====================== VALIDATION ======================
     const VALIDATION = {
       isValid: function() {
         if (!DOM.tenHoiThao.value.trim()) {
@@ -595,7 +318,6 @@ renderPreview: function () {
       }
     };
 
-    // ====================== FORM ======================
     const FORM = {
       collectData: function() {
         return {
@@ -619,86 +341,234 @@ renderPreview: function () {
         DOM.form.reset();
         UI.updateUserInfo();
         DOM.tenHoiThao.focus();
+      },
+      submitData: async function() {
+        if (STATE.isSaving) return;
+        if (!VALIDATION.isValid()) return;
+
+        UI.setSubmittingState(true);
+        const data = FORM.collectData();
+
+        try {
+          const result = await API.saveHoiThao(data);
+          if (result && (result.success || result.status === 'success')) {
+            UTILS.showToast(result.message || "Lưu báo cáo thành công!", 'success');
+            FORM.reset();
+            UI.closePreview();
+          } else {
+            UTILS.showToast((result && result.message) ? result.message : "Có lỗi xảy ra khi lưu!", 'error');
+          }
+        } catch (error) {
+          UTILS.showToast("Lỗi khi lưu: " + (error.message || error), 'error');
+        } finally {
+          UI.setSubmittingState(false);
+        }
       }
     };
 
-   // ====================== INIT ======================
-function init() {
+    const UI = {
+      updateUserInfo: function () {
+        STATE.currentUser = UTILS.getCurrentUser();
+        DOM.hoTen.value = STATE.currentUser.name || '';
+        DOM.toChuyenMon.value = STATE.currentUser.department || '';
+        DOM.chucVu.value = STATE.currentUser.position || '';
+      },
 
-  UI.updateUserInfo();
+      setSubmittingState: function (isSubmitting) {
+        STATE.isSaving = isSubmitting;
+        UTILS.showLoading(isSubmitting);
+        DOM.btnSubmit.disabled = isSubmitting;
+        DOM.btnConfirmSubmit.disabled = isSubmitting;
 
-  // ===== RESET =====
-  DOM.btnReset.addEventListener('click', function () {
-    FORM.reset();
-  });
+        if (isSubmitting) {
+          DOM.btnText.innerHTML = `<i class="bi bi-hourglass-split animate-spin"></i> Đang lưu...`;
+          DOM.btnConfirmSubmit.innerHTML = `⏳ Đang gửi...`;
+        } else {
+          DOM.btnText.textContent = '📤 Gửi báo cáo';
+          DOM.btnConfirmSubmit.innerHTML = '📤 Xác nhận gửi';
+        }
+      },
 
-  // ===== PREVIEW =====
-  DOM.btnPreview.addEventListener('click', function () {
-    UI.openPreview();
-  });
+      openPreview: function () {
+        if (!VALIDATION.isValid()) return;
+        UI.renderPreview();
+        DOM.previewModal.classList.remove('hidden');
+      },
 
-  DOM.btnClosePreview.addEventListener('click', function () {
-    UI.closePreview();
-  });
+      closePreview: function () {
+        DOM.previewModal.classList.add('hidden');
+      },
 
-  DOM.btnBackForm.addEventListener('click', function () {
-    UI.closePreview();
-  });
+      renderPreview: function () {
+        const now = new Date();
+        const ngayThangNam = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
+        const gioPhutGiay = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const thoiGianFormatted = UTILS.formatDateTime(DOM.thoiGian?.value);
 
-  // ===== SUBMIT =====
-  DOM.form.addEventListener('submit', async function (e) {
+        if (DOM.previewPaper) {
+          DOM.previewPaper.style.width = '100%';
+          DOM.previewPaper.style.padding = '0';
+          DOM.previewPaper.style.boxSizing = 'border-box';
+        }
 
-    e.preventDefault();
+        DOM.previewPaper.innerHTML = `
+          <style>
+            #previewPaper, #previewPaper * {
+              color: #111111 !important;
+              box-sizing: border-box;
+            }
+            .a4-wrapper {
+              width: 100%;
+              max-width: 794px;
+              min-height: 1000px;
+              background: #ffffff !important;
+              color: #111111 !important;
+              font-family: 'Times New Roman', Times, serif;
+              padding: 40px 50px;
+              margin: 10px auto;
+              box-shadow: 0 0 10px rgba(0,0,0,0.15);
+              border: 1px solid #ddd;
+              line-height: 1.5;
+              font-size: 13pt;
+            }
+            @media screen and (max-width: 767px) {
+              .a4-wrapper {
+                padding: 15px 12px !important;
+                margin: 0 auto !important;
+                border: none !important;
+                box-shadow: none !important;
+                font-size: 11pt !important;
+                min-height: auto !important;
+              }
+              .a4-wrapper table { font-size: 11pt !important; }
+              .a4-wrapper .header-title { font-size: 11pt !important; }
+              .a4-wrapper .header-sub { font-size: 9.5pt !important; }
+              .a4-wrapper .doc-title { font-size: 13pt !important; }
+              .a4-wrapper .sig-box { width: 200px !important; font-size: 11pt !important; }
+              .a4-wrapper .col-label { width: 110px !important; }
+            }
+          </style>
 
-    if (STATE.isSaving) return;
+          <div class="a4-wrapper">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; gap: 10px;">
+              <div style="text-align: center;">
+                <div class="header-title" style="font-size: 12pt; font-weight: bold; text-transform: uppercase;">
+                  TRƯỜNG THPT HÒA VANG
+                </div>
+                <div class="header-sub" style="font-size: 10pt; font-weight: bold; text-transform: uppercase;">
+                  TRUNG TÂM ĐIỀU HÀNH SỐ
+                </div>
+              </div>
+              <div style="text-align: right; font-size: 10pt;">
+                <div style="font-style: italic; color: #444 !important; white-space: nowrap;">
+                  Thời gian lập: ${gioPhutGiay}
+                </div>
+              </div>
+            </div>
 
-    if (!VALIDATION.isValid()) return;
+            <div style="text-align: center; margin-bottom: 20px;">
+              <div class="doc-title" style="font-size: 15pt; font-weight: bold; text-transform: uppercase;">
+                BÁO CÁO THAM DỰ HỘI THẢO
+              </div>
+            </div>
 
-    UI.setSubmittingState(true);
+            <table style="width:100%; border-collapse:collapse; margin-bottom:15px; table-layout: fixed;">
+              <tr>
+                <td class="col-label" style="width:130px; padding:3px 0; vertical-align: top;"><b>Họ và tên:</b></td>
+                <td style="padding:3px 0; word-break: break-word;"><b style="font-weight:bold !important;">${DOM.hoTen?.value || ''}</b></td>
+              </tr>
+              <tr>
+                <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Tổ chuyên môn:</b></td>
+                <td style="padding:3px 0; word-break: break-word;">${DOM.toChuyenMon?.value || ''}</td>
+              </tr>
+              <tr>
+                <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Chức vụ:</b></td>
+                <td style="padding:3px 0; word-break: break-word;">${DOM.chucVu?.value || ''}</td>
+              </tr>
+              <tr>
+                <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Tên hội thảo:</b></td>
+                <td style="padding:3px 0; word-break: break-word;">${DOM.tenHoiThao?.value || ''}</td>
+              </tr>
+              <tr>
+                <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Đơn vị tổ chức:</b></td>
+                <td style="padding:3px 0; word-break: break-word;">${DOM.donViToChuc?.value || ''}</td>
+              </tr>
+              <tr>
+                <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Cấp tổ chức:</b></td>
+                <td style="padding:3px 0; word-break: break-word;">${DOM.capToChuc?.value || ''}</td>
+              </tr>
+              <tr>
+                <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Hình thức:</b></td>
+                <td style="padding:3px 0; word-break: break-word;">${DOM.hinhThuc?.value || ''}</td>
+              </tr>
+              <tr>
+                <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Thời gian:</b></td>
+                <td style="padding:3px 0; word-break: break-word;">${thoiGianFormatted}</td>
+              </tr>
+              <tr>
+                <td class="col-label" style="padding:3px 0; vertical-align: top;"><b>Địa điểm:</b></td>
+                <td style="padding:3px 0; word-break: break-word;">${DOM.diaDiem?.value || 'Không xác định'}</td>
+              </tr>
+            </table>
 
-    const data = FORM.collectData();
+            <div>
+              <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">I. Nội dung chính:</div>
+              <div style="padding-left:8px; white-space:pre-wrap; min-height:30px; word-break: break-word;">${DOM.noiDungChinh?.value || '(Chưa nhập)'}</div>
 
-    try {
+              <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">II. Kết quả tiếp thu:</div>
+              <div style="padding-left:8px; white-space:pre-wrap; min-height:30px; word-break: break-word;">${DOM.ketQua?.value || '(Chưa nhập)'}</div>
 
-      const result = await API.saveHoiThao(data);
+              <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">III. Kiến nghị / Đề xuất:</div>
+              <div style="padding-left:8px; white-space:pre-wrap; min-height:30px; word-break: break-word;">${DOM.deXuat?.value || '(Chưa nhập)'}</div>
 
-      if (result && (result.success || result.status === 'success')) {
+              <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">IV. Minh chứng:</div>
+              <div style="padding-left:8px; word-break: break-word;">${DOM.minhChung?.value ? `<a href="${DOM.minhChung.value}" target="_blank" style="color:#0284c7; text-decoration:underline;">${DOM.minhChung.value}</a>` : "Không có"}</div>
 
-        UTILS.showToast(
-          result.message || "Lưu báo cáo thành công!",
-          'success'
-        );
+              <div style="font-weight:bold; margin-top:10px; margin-bottom:3px;">Ghi chú:</div>
+              <div style="padding-left:8px; word-break: break-word;">${DOM.ghiChu?.value || "Không có ghi chú"}</div>
+            </div>
 
-        FORM.reset();
+            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+              <div class="sig-box" style="text-align:center; width:250px;">
+                <div style="font-style:italic; white-space:nowrap; margin-bottom:4px; font-size: 0.95em;">${ngayThangNam}</div>
+                <div style="font-weight:bold;">Người báo cáo</div>
+                <div style="font-style:italic; font-size:9pt; color:#555 !important;">(Ký, ghi rõ họ tên)</div>
+                <br><br><br>
+                <div style="margin-top:5px;">
+                  <b style="font-weight:bold !important;">${DOM.hoTen?.value || ''}</b>
+                </div>
+              </div>
+            </div>
 
-      } else {
+            <hr style="margin-top:25px; margin-bottom: 10px; border:0; border-top:1px solid #ccc;">
 
-        UTILS.showToast(
-          (result && result.message)
-            ? result.message
-            : "Có lỗi xảy ra khi lưu!",
-          'error'
-        );
-
+            <div style="font-size:9pt; color:#777 !important; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 5px;">
+              <span>TTDHS_HVA - Trường THPT Hòa Vang</span>
+              <span>BẢN XEM TRƯỚC</span>
+            </div>
+          </div>
+        `;
       }
+    };
 
-    } catch (error) {
+    function init() {
+      UI.updateUserInfo();
 
-      UTILS.showToast(
-        "Lỗi khi lưu: " + (error.message || error),
-        'error'
-      );
+      DOM.btnReset.addEventListener('click', FORM.reset);
+      DOM.btnPreview.addEventListener('click', UI.openPreview);
+      DOM.btnClosePreview.addEventListener('click', UI.closePreview);
+      DOM.btnBackForm.addEventListener('click', UI.closePreview);
 
-    } finally {
+      // Sửa lỗi: Gán sự kiện click cho nút "Xác nhận gửi" trong Modal Preview
+      DOM.btnConfirmSubmit.addEventListener('click', FORM.submitData);
 
-      UI.setSubmittingState(false);
-
+      // Sự kiện Submit Form
+      DOM.form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        FORM.submitData();
+      });
     }
 
-  });
-
-}
-
-init();
+    init();
   })();
 </script>
