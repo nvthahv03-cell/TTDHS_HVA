@@ -308,8 +308,7 @@ const UI = {
   },
 renderPreview: function () {
 
-  DOM.previewPaper.innerHTML = `
-    <!-- Ép tất cả các thẻ con bên trong previewPaper luôn có chữ đen, không bị đè bởi Dark Mode -->
+ DOM.previewPaper.innerHTML = `
     <style>
       #previewPaper, #previewPaper * {
         color: #111111 !important;
@@ -319,165 +318,120 @@ renderPreview: function () {
     <div style="background:#fff !important; color:#111 !important; color-scheme: light !important; font-family: inherit; padding: 20px;">
 
         <div style="text-align:center; margin-bottom:30px;">
-
-          <div style="font-size:18pt;font-weight:bold;">
+          <div style="font-size:18pt; font-weight:bold;">
             TRƯỜNG THPT HÒA VANG
           </div>
-
-          <div style="font-size:13pt;margin-top:4px;">
+          <div style="font-size:13pt; margin-top:4px;">
             TRUNG TÂM ĐIỀU HÀNH SỐ
           </div>
-
-          <div style="margin-top:18px;
-                      font-size:20pt;
-                      font-weight:bold;
-                      text-transform:uppercase;">
+          <div style="margin-top:18px; font-size:20pt; font-weight:bold; text-transform:uppercase;">
             BÁO CÁO THAM DỰ HỘI THẢO
           </div>
-
         </div>
-`;
 
-    <table style="width:100%;border-collapse:collapse;">
+        <table style="width:100%; border-collapse:collapse;">
+          <tr>
+            <td style="width:180px; padding:4px 0;"><b>Họ và tên:</b></td>
+            <td style="padding:4px 0;">${DOM.hoTen?.value || ''}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0;"><b>Tổ chuyên môn:</b></td>
+            <td style="padding:4px 0;">${DOM.toChuyenMon?.value || ''}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0;"><b>Chức vụ:</b></td>
+            <td style="padding:4px 0;">${DOM.chucVu?.value || ''}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0;"><b>Tên hội thảo:</b></td>
+            <td style="padding:4px 0;">${DOM.tenHoiThao?.value || ''}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0;"><b>Đơn vị tổ chức:</b></td>
+            <td style="padding:4px 0;">${DOM.donViToChuc?.value || ''}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0;"><b>Cấp tổ chức:</b></td>
+            <td style="padding:4px 0;">${DOM.capToChuc?.value || ''}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0;"><b>Hình thức:</b></td>
+            <td style="padding:4px 0;">${DOM.hinhThuc?.value || ''}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0;"><b>Thời gian:</b></td>
+            <td style="padding:4px 0;">${DOM.thoiGian?.value || ''}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0;"><b>Địa điểm:</b></td>
+            <td style="padding:4px 0;">${DOM.diaDiem?.value || ''}</td>
+          </tr>
+        </table>
 
-      <tr>
-        <td style="width:180px;"><b>Họ và tên:</b></td>
-        <td>${DOM.hoTen.value}</td>
-      </tr>
+        <br>
 
-      <tr>
-        <td><b>Tổ chuyên môn:</b></td>
-        <td>${DOM.toChuyenMon.value}</td>
-      </tr>
+        <div style="font-weight:bold; margin-bottom:8px;">
+          I. Nội dung chính
+        </div>
+        <div style="border:1px solid #999; padding:12px; min-height:120px; white-space:pre-wrap;">
+          ${DOM.noiDungChinh?.value || ''}
+        </div>
 
-      <tr>
-        <td><b>Chức vụ:</b></td>
-        <td>${DOM.chucVu.value}</td>
-      </tr>
+        <br>
 
-      <tr>
-        <td><b>Tên hội thảo:</b></td>
-        <td>${DOM.tenHoiThao.value}</td>
-      </tr>
+        <div style="font-weight:bold; margin-bottom:8px;">
+          II. Kết quả tiếp thu
+        </div>
+        <div style="border:1px solid #999; padding:12px; min-height:120px; white-space:pre-wrap;">
+          ${DOM.ketQua?.value || ''}
+        </div>
 
-      <tr>
-        <td><b>Đơn vị tổ chức:</b></td>
-        <td>${DOM.donViToChuc.value}</td>
-      </tr>
+        <br>
 
-      <tr>
-        <td><b>Cấp tổ chức:</b></td>
-        <td>${DOM.capToChuc.value}</td>
-      </tr>
+        <div style="font-weight:bold; margin-bottom:8px;">
+          III. Kiến nghị / Đề xuất
+        </div>
+        <div style="border:1px solid #999; padding:12px; min-height:100px; white-space:pre-wrap;">
+          ${DOM.deXuat?.value || ''}
+        </div>
 
-      <tr>
-        <td><b>Hình thức:</b></td>
-        <td>${DOM.hinhThuc.value}</td>
-      </tr>
+        <br>
 
-      <tr>
-        <td><b>Thời gian:</b></td>
-        <td>${DOM.thoiGian.value}</td>
-      </tr>
+        <div style="font-weight:bold; margin-bottom:8px;">
+          IV. Minh chứng
+        </div>
+        <div>
+          ${DOM.minhChung?.value || "Không có"}
+        </div>
 
-      <tr>
-        <td><b>Địa điểm:</b></td>
-        <td>${DOM.diaDiem.value}</td>
-      </tr>
+        <br>
 
-    </table>
-
-    <br>
-
-    <div style="font-weight:bold;margin-bottom:8px;">
-      I. Nội dung chính
-    </div>
-
-    <div style="
-        border:1px solid #999;
-        padding:12px;
-        min-height:120px;
-        white-space:pre-wrap;">
-        ${DOM.noiDungChinh.value}
-    </div>
-
-    <br>
-
-    <div style="font-weight:bold;margin-bottom:8px;">
-      II. Kết quả tiếp thu
-    </div>
-
-    <div style="
-        border:1px solid #999;
-        padding:12px;
-        min-height:120px;
-        white-space:pre-wrap;">
-        ${DOM.ketQua.value}
-    </div>
-
-    <br>
-
-    <div style="font-weight:bold;margin-bottom:8px;">
-      III. Kiến nghị / Đề xuất
-    </div>
-
-    <div style="
-        border:1px solid #999;
-        padding:12px;
-        min-height:100px;
-        white-space:pre-wrap;">
-        ${DOM.deXuat.value}
-    </div>
-
-    <br>
-
-    <div style="font-weight:bold;margin-bottom:8px;">
-      IV. Minh chứng
-    </div>
-
-    <div>
-      ${DOM.minhChung.value || "Không có"}
-    </div>
-
-    <br>
-
-    <div style="font-weight:bold;margin-bottom:8px;">
-      Ghi chú
-    </div>
-
-    <div>
-      ${DOM.ghiChu.value || ""}
-    </div>
-
-    <br><br><br>
-
-    <div style="text-align:right;">
-
-        <div>Người báo cáo</div>
+        <div style="font-weight:bold; margin-bottom:8px;">
+          Ghi chú
+        </div>
+        <div>
+          ${DOM.ghiChu?.value || "Không có ghi chú"}
+        </div>
 
         <br><br><br>
 
-        <div style="font-weight:bold;">
-            ${DOM.hoTen.value}
+        <div style="text-align:right;">
+          <div>Người báo cáo</div>
+          <br><br><br>
+          <div style="font-weight:bold;">
+            ${DOM.hoTen?.value || ''}
+          </div>
+        </div>
+
+        <hr style="margin-top:50px; border:0; border-top:1px solid #ccc;">
+
+        <div style="font-size:11pt; color:#777 !important; display:flex; justify-content:space-between;">
+          <span>TTDHS_HVA - Trường THPT Hòa Vang</span>
+          <span>BẢN XEM TRƯỚC</span>
         </div>
 
     </div>
-
-    <hr style="margin-top:50px">
-
-    <div style="
-        font-size:11pt;
-        color:#777;
-        display:flex;
-        justify-content:space-between;">
-
-        <span>TTDHS_HVA - Trường THPT Hòa Vang</span>
-
-        <span>BẢN XEM TRƯỚC</span>
-
-    </div>
-
-  `;
+`;
 }
 
 };
