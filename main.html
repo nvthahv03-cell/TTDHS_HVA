@@ -1103,8 +1103,11 @@ Tạo thông báo..."
             showToast("📱 Vui lòng bấm vào Menu (3 chấm) của trình duyệt và chọn 'Thêm vào màn hình chính'!");
         }
     };
-</script>
+<script>
     function showIOSInstallGuide() {
+        // Nếu đã từng bấm "Đã hiểu" thì dừng lại, không hiện nữa
+        if (localStorage.getItem('hideIOSGuide') === 'true') return;
+
         const existingGuide = document.getElementById('ios-guide-modal');
         if (existingGuide) existingGuide.remove();
 
@@ -1121,7 +1124,7 @@ Tạo thông báo..."
                         <li>Nhấn vào nút <b>Chia sẻ (Share)</b> <span class="inline-block px-1">📤</span> ở thanh công cụ phía dưới Safari.</li>
                         <li>Cuộn xuống và chọn <b>'Thêm vào Màn hình chính' (Add to Home Screen)</b>.</li>
                     </ol>
-                    <button onclick="document.getElementById('ios-guide-modal').remove()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
+                    <button onclick="localStorage.setItem('hideIOSGuide', 'true'); document.getElementById('ios-guide-modal').remove();" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
                         Đã hiểu
                     </button>
                 </div>
@@ -1130,7 +1133,7 @@ Tạo thông báo..."
         document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
 </script>
-<script>
+    <script>
 /* ===================================================
    HVA Assistant 1.0
 =================================================== */
