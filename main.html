@@ -1073,109 +1073,39 @@ Tạo thông báo..."
 
 
 </script>
-/* ====================== PWA INSTALL (Android + iOS) ====================== */
-let deferredPrompt = null;
+    function showIOSInstallGuide(isManualClick = false) {
+        // Nếu tự động chạy khi reload mà đã bấm "Đã hiểu" -> Không hiện
+        // Nếu người dùng chủ động bấm nút (isManualClick = true) -> Luôn hiện
+        if (!isManualClick && localStorage.getItem('hideIOSGuide') === 'true') {
+            return;
+        }
 
-// 1. Bắt sự kiện cài Android
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
+        const existingGuide = document.getElementById('ios-guide-modal');
+        if (existingGuide) existingGuide.remove();
 
-    const banner = document.getElementById('install-banner');
-    const headerBtn = document.getElementById('header-install-btn');
-    if (banner) banner.classList.remove('hidden-force');
-    if (headerBtn) headerBtn.classList.remove('hidden-force');
-});
-
-// 2. Hàm chính khi nhấn nút "Cài App"
-function triggerPWAInstall() {
-    if (deferredPrompt) {
-        // Android
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choice) => {
-            if (choice.outcome === 'accepted') {
-                localStorage.setItem('pwa_installed', 'true');
-                hideInstallButtons();
-                showSuccessMessage();
-            }
-            deferredPrompt = null;
-        });
-    } else {
-        // iOS
-        showIOSInstallGuide();
+        const modalHTML = `
+            <div id="ios-guide-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+                <div class="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-sm w-full p-6 text-white shadow-2xl relative">
+                    <h3 class="text-lg font-bold text-amber-400 mb-3 flex items-center gap-2">
+                        <span>📲 Cài đặt lên iPhone/iPad</span>
+                    </h3>
+                    <p class="text-sm text-zinc-300 mb-4 leading-relaxed">
+                        Để đưa ứng dụng ra màn hình chính, thầy thực hiện 2 bước đơn giản trên Safari:
+                    </p>
+                    <ol class="text-sm text-zinc-300 space-y-2 mb-6 list-decimal list-inside bg-zinc-800/50 p-3 rounded-xl border border-zinc-700/50">
+                        <li>Nhấn vào nút <b>Chia sẻ (Share)</b> <span class="inline-block px-1">📤</span> ở thanh công cụ phía dưới Safari.</li>
+                        <li>Cuộn xuống và chọn <b>'Thêm vào Màn hình chính' (Add to Home Screen)</b>.</li>
+                    </ol>
+                    <button onclick="localStorage.setItem('hideIOSGuide', 'true'); document.getElementById('ios-guide-modal').remove();" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 font-semibold text-zinc-950 rounded-xl transition-all shadow-lg">
+                        Đã hiểu
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
     }
-}
-
-// 3. Modal hướng dẫn iOS
-function showIOSInstallGuide() {
-    const old = document.getElementById('ios-guide-modal');
-    if (old) old.remove();
-
-    const html = `
-    <div id="ios-guide-modal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-        <div class="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-sm w-full p-6 text-white shadow-2xl">
-            <h3 class="text-lg font-bold text-amber-400 mb-3">
-                📲 Cài đặt lên iPhone / iPad
-            </h3>
-            <p class="text-sm text-zinc-300 mb-4">
-                Thầy làm theo 2 bước sau trên <b>Safari</b>:
-            </p>
-            <ol class="text-sm text-zinc-300 space-y-2 mb-6 list-decimal list-inside bg-zinc-800/50 p-4 rounded-xl">
-                <li>Nhấn nút <b>Chia sẻ</b> 📤 ở thanh dưới Safari</li>
-                <li>Chọn <b>"Thêm vào Màn hình chính"</b></li>
-            </ol>
-            <button onclick="document.getElementById('ios-guide-modal').remove()" 
-                    class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-zinc-950 font-semibold rounded-xl">
-                Đã hiểu
-            </button>
-        </div>
-    </div>`;
-    document.body.insertAdjacentHTML('beforeend', html);
-}
-
-// 4. Thông báo thành công
-function showSuccessMessage() {
-    const oldToast = document.getElementById('pwa-success-toast');
-    if (oldToast) oldToast.remove();
-
-    const toast = document.createElement('div');
-    toast.id = 'pwa-success-toast';
-    toast.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 z-[99999] px-6 py-4 bg-emerald-600 text-white font-bold text-sm rounded-2xl shadow-2xl flex items-center gap-2';
-    toast.innerHTML = `
-        <span class="text-xl">🎉</span>
-        <span>CHÚC MỪNG BẠN ĐÃ CÀI APP THÀNH CÔNG</span>
-    `;
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-        toast.remove();
-    }, 4000);
-}
-
-// 5. Ẩn nút khi đã cài
-function hideInstallButtons() {
-    document.getElementById('install-banner')?.classList.add('hidden-force');
-    document.getElementById('header-install-btn')?.classList.add('hidden-force');
-}
-
-// 6. Khi app được cài thành công
-window.addEventListener('appinstalled', () => {
-    localStorage.setItem('pwa_installed', 'true');
-    hideInstallButtons();
-    showSuccessMessage();
-});
-
-// 7. Kiểm tra khi mở trang
-window.addEventListener('load', () => {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
-                      || window.navigator.standalone === true;
-
-    if (isStandalone || localStorage.getItem('pwa_installed') === 'true') {
-        hideInstallButtons();
-    }
-});
 </script>
-    <script>
+<script>
 /* ===================================================
    HVA Assistant 1.0
 =================================================== */
