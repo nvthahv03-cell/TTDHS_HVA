@@ -1,4 +1,4 @@
-<!-- MODULE CHUẨN ĐÃ FIX LỖI TOAST: HoiThao.html -->
+<!-- MODULE CHUẨN ĐÃ FIX HOÀN CHỈNH LỖI LÙI VỀ VÀ HIỂN THỊ: HoiThao.html -->
 <div id="hoiThaoContainer" class="fixed inset-0 z-[9999] bg-slate-50 flex flex-col overflow-hidden text-slate-800">
   
   <!-- HEADER -->
@@ -152,7 +152,7 @@
 </div>
 
 <script>
-  // Đưa hàm mở form ra ngoài window để trang chủ gọi được
+  // Hàm mở form toàn cục để trang chủ gọi qua openHoiThaoForm()
   window.openHoiThaoForm = function() {
     const container = document.getElementById('hoiThaoContainer');
     if (container) {
@@ -160,15 +160,14 @@
     }
   };
 
-function closeHoiThaoModal() {
-
-    const container = document.getElementById("hoiThaoContainer");
-
+  // Hàm đóng module hội thảo về menu mẹ
+  function closeHoiThaoModal() {
+    const container = document.getElementById('hoiThaoContainer');
     if (container) {
-        container.style.display = "none";
+      container.style.display = 'none';
     }
+  }
 
-}
   (() => {
     const DOM = {
       btnBackHeader: document.getElementById('btnBackHeader'),
@@ -200,7 +199,6 @@ function closeHoiThaoModal() {
       ghiChu: document.getElementById('ghiChu')
     };
 
-    // Hàm thông báo độc lập, không bị phụ thuộc vào hàm thiếu của trang chủ
     function showAlert(msg) {
       alert(msg);
     }
@@ -215,9 +213,9 @@ function closeHoiThaoModal() {
         }
       } catch (e) {}
       
-      if (DOM.hoTen) DOM.hoTen.value = user.name || user.fullName || "Hoàng Châu Âu";
-      if (DOM.toChuyenMon) DOM.toChuyenMon.value = user.department || user.toChuyenMon || "Vật lí - Công nghệ";
-      if (DOM.chucVu) DOM.chucVu.value = user.position || user.chucVu || "TPCM";
+      if (DOM.hoTen) DOM.hoTen.value = user.name || user.fullName || "Phạm Tấn Đức";
+      if (DOM.toChuyenMon) DOM.toChuyenMon.value = user.department || user.toChuyenMon || "Văn phòng";
+      if (DOM.chucVu) DOM.chucVu.value = user.position || user.chucVu || "Nhân viên";
     }
 
     function validateForm() {
@@ -248,7 +246,6 @@ function closeHoiThaoModal() {
       if (!validateForm()) return;
       
       const now = new Date();
-      const ngayThangNam = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
       
       let thoiGianVal = DOM.thoiGian.value;
       if (thoiGianVal) {
@@ -302,7 +299,7 @@ function closeHoiThaoModal() {
             <div style="padding-left: 10px;">${DOM.ghiChu.value || 'Không có'}</div>
           </div>
 
-         <div style="display: flex; justify-content: flex-end; margin-top: 30px;">
+          <div style="display: flex; justify-content: flex-end; margin-top: 30px;">
             <div style="text-align: center; width: 280px;">
               <div style="font-style: italic; white-space: nowrap;">Đà Nẵng, ngày 25 tháng 7 năm 2026</div>
               <b style="display: block; margin-top: 4px;">Người báo cáo</b>
@@ -311,7 +308,7 @@ function closeHoiThaoModal() {
               <b>${DOM.hoTen.value}</b>
             </div>
           </div>
-      
+        </div>
       `;
 
       DOM.previewModal.classList.remove('hidden');
@@ -323,22 +320,14 @@ function closeHoiThaoModal() {
       DOM.previewModal.style.display = 'none';
     }
 
-    // Gắn sự kiện an toàn
-  if (DOM.btnBackHeader) {
-      DOM.btnBackHeader.onclick = function(e) {
+    // Gắn sự kiện cho nút lùi về trên Header
+    if (DOM.btnBackHeader) {
+      DOM.btnBackHeader.addEventListener('click', (e) => {
         e.preventDefault();
-        // Ẩn module hiện tại
-        const container = document.getElementById('hoiThaoContainer');
-        if (container) {
-          container.style.display = 'none';
-        }
-        // Kích hoạt nút quay lại gốc của trang chủ (nếu có)
-        const parentBackBtn = document.querySelector('.back-btn, #btnHome, [data-action="back"]');
-        if (parentBackBtn) {
-          parentBackBtn.click();
-        }
-      };
+        closeHoiThaoModal();
+      });
     }
+
     if (DOM.btnReset) DOM.btnReset.addEventListener('click', () => { DOM.form.reset(); initUser(); });
     if (DOM.btnPreview) DOM.btnPreview.addEventListener('click', openPreviewModal);
     if (DOM.btnClosePreview) DOM.btnClosePreview.addEventListener('click', closePreviewModal);
