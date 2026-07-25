@@ -152,28 +152,47 @@
 </div>
 
 <script>
-  // Đưa hàm mở form ra ngoài window để trang chủ gọi được
-  window.openHoiThaoForm = function() {
+  // Mở form Hội thảo
+  window.openHoiThaoForm = function () {
     const container = document.getElementById('hoiThaoContainer');
     if (container) {
-      container.style.display = 'flex'; // Hiển thị lại nếu đã bị ẩn
+      container.style.display = 'flex';
+    }
+
+    // Ẩn menu chính
+    const mainMenu = document.getElementById('mainMenu') 
+                  || document.getElementById('dashboard') 
+                  || document.querySelector('main')
+                  || document.getElementById('app');
+    if (mainMenu) {
+      mainMenu.style.display = 'none';
     }
   };
-function closeHoiThaoModal() {
+
+  // Đóng form → Quay về menu trước
+  function closeHoiThaoModal() {
+    // Ẩn form Hội thảo
     const container = document.getElementById('hoiThaoContainer');
     if (container) {
-      // Nếu container nằm độc lập thì xóa hẳn nó khỏi DOM để trả lại nguyên vẹn màn hình gốc
-      container.remove();
+      container.style.display = 'none';
     }
-    
-    // Nếu trang chủ có hàm quay lại menu cha, gọi nó
+
+    // Hiện lại menu chính
+    const mainMenu = document.getElementById('mainMenu') 
+                  || document.getElementById('dashboard') 
+                  || document.querySelector('main')
+                  || document.getElementById('app');
+    if (mainMenu) {
+      mainMenu.style.display = 'block';
+    }
+
+    // Nếu có hàm riêng của trang chủ thì ưu tiên dùng
     if (typeof window.showHome === 'function') {
       window.showHome();
+    } else if (typeof window.showDashboard === 'function') {
+      window.showDashboard();
     } else if (typeof window.goBack === 'function') {
       window.goBack();
-    } else {
-      // Hoặc nếu cần, tải lại trang chính nhẹ nhàng
-      // location.reload();
     }
   }
 
