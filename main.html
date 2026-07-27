@@ -14,7 +14,7 @@
                 extend: {
                     colors: {
                         brand: {
-                            deep: '#F1F5F9',
+                            deep: '#EBF1F6',
                             primary: '#FFFFFF',
                             accent: '#CBD5E1',
                             teal: '#0F4C81',
@@ -28,22 +28,33 @@
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/app.css">
+    <style>
+        /* Tinh chỉnh bổ sung độ tương phản, viền card và chữ */
+        .backdrop-blur-md { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .backdrop-blur-xl { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        
+        /* Tăng nhẹ shadow và thêm border trắng mờ tinh tế cho các thành phần thẻ card */
+        .card-enhanced {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+    </style>
 </head>
 <body class="h-full bg-brand-deep text-slate-900 overflow-x-hidden antialiased select-none">
 
     <!-- Background -->
-    <div class="fixed inset-0 -z-50 overflow-hidden bg-[#F1F5F9]">
-        <div class="absolute -top-[15%] -left-[5%] w-[65%] h-[45%] rounded-full bg-sky-400/15 blur-[80px]"></div>
-        <div class="absolute top-[35%] -right-[15%] w-[75%] h-[55%] rounded-full bg-blue-400/10 blur-[90px]"></div>
+    <div class="fixed inset-0 -z-50 overflow-hidden bg-[#EBF1F6]">
+        <div class="absolute -top-[15%] -left-[5%] w-[65%] h-[45%] rounded-full bg-sky-400/10 blur-[50px]"></div>
+        <div class="absolute top-[35%] -right-[15%] w-[75%] h-[55%] rounded-full bg-blue-400/8 blur-[60px]"></div>
     </div>
 
     <div id="app" class="flex flex-col min-h-screen">
 
         <!-- ================= HEADER ================= -->
-        <header class="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 px-4 py-3 safe-pt flex items-center justify-between shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+        <header class="fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-300/80 px-4 py-3 safe-pt flex items-center justify-between shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-blue-600 p-0.5 shadow-md shadow-brand-teal/20 flex items-center justify-center">
                     <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
@@ -51,20 +62,20 @@
                     </div>
                 </div>
                 <div>
-                    <h1 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">Trung tâm Điều hành số</h1>
-                    <p class="text-sm font-bold text-slate-900 tracking-tight mt-0.5">Trường THPT Hòa Vang</p>
+                    <h1 class="text-[10px] font-extrabold text-slate-600 uppercase tracking-widest leading-none">Trung tâm Điều hành số</h1>
+                    <p class="text-sm font-extrabold text-slate-900 tracking-tight mt-0.5">Trường THPT Hòa Vang</p>
                 </div>
             </div>
             <div class="flex items-center space-x-2">
-                <button id="btn-notification" class="relative w-9 h-9 rounded-full bg-slate-100 border border-slate-200/90 flex items-center justify-center hover:bg-slate-200/70 transition shadow-sm">
-                    <i class="bi bi-bell text-slate-700"></i>
+                <button id="btn-notification" class="relative w-9 h-9 rounded-full bg-slate-100 border border-slate-300/80 flex items-center justify-center hover:bg-slate-200/80 transition shadow-sm">
+                    <i class="bi bi-bell text-slate-800"></i>
                     <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">3</span>
                 </button>
-                <button id="btn-ai" class="w-9 h-9 rounded-full bg-sky-50 border border-sky-200/90 flex items-center justify-center hover:bg-sky-100 active:scale-95 transition-all shadow-sm" title="Trợ lý AI">
+                <button id="btn-ai" class="w-9 h-9 rounded-full bg-sky-50 border border-sky-300/80 flex items-center justify-center hover:bg-sky-100 active:scale-95 transition-all shadow-sm" title="Trợ lý AI">
                     <i class="bi bi-mic-fill text-brand-glow"></i>
                 </button>
-                <button id="btn-profile" class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200/90 flex items-center justify-center hover:bg-slate-200/70 transition shadow-sm">
-                    <i class="bi bi-person-fill text-slate-700"></i>
+                <button id="btn-profile" class="w-9 h-9 rounded-full bg-slate-100 border border-slate-300/80 flex items-center justify-center hover:bg-slate-200/80 transition shadow-sm">
+                    <i class="bi bi-person-fill text-slate-800"></i>
                 </button>
             </div>
         </header>
@@ -79,23 +90,23 @@
         <div id="module-container" class="fixed inset-0 z-50 hidden" aria-hidden="true"></div>
 
         <!-- ================= BOTTOM NAV ================= -->
-        <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white backdrop-blur-xl border-t border-slate-200/90 pb-safe px-6 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
+        <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-300/80 pb-safe px-6 shadow-[0_-4px_25px_rgba(0,0,0,0.1)]">
             <div class="flex items-center justify-between h-16 max-w-[460px] mx-auto">
-                <a href="#" data-nav="home" class="nav-item flex flex-col items-center justify-center flex-1 text-brand-teal py-1 font-semibold">
+                <a href="#" data-nav="home" class="nav-item flex flex-col items-center justify-center flex-1 text-brand-teal py-1 font-bold">
                     <i class="bi bi-house-door-fill text-xl drop-shadow-sm"></i>
-                    <span class="text-[10px] font-bold mt-1">Trang chủ</span>
+                    <span class="text-[10px] font-extrabold mt-1">Trang chủ</span>
                 </a>
-                <a href="#" data-nav="contact" class="nav-item flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-slate-700 py-1 transition">
+                <a href="#" data-nav="contact" class="nav-item flex flex-col items-center justify-center flex-1 text-slate-500 hover:text-slate-900 py-1 transition">
                     <i class="bi bi-telephone-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Liên hệ</span>
+                    <span class="text-[10px] font-semibold mt-1">Liên hệ</span>
                 </a>
-                <a href="#" data-nav="ai" class="nav-item flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-slate-700 py-1 transition">
+                <a href="#" data-nav="ai" class="nav-item flex flex-col items-center justify-center flex-1 text-slate-500 hover:text-slate-900 py-1 transition">
                     <i class="bi bi-cpu-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Trí tuệ AI</span>
+                    <span class="text-[10px] font-semibold mt-1">Trí tuệ AI</span>
                 </a>
-                <a href="#" data-nav="profile" class="nav-item flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-slate-700 py-1 transition">
+                <a href="#" data-nav="profile" class="nav-item flex flex-col items-center justify-center flex-1 text-slate-500 hover:text-slate-900 py-1 transition">
                     <i class="bi bi-person-lines-fill text-lg"></i>
-                    <span class="text-[10px] font-medium mt-1">Hồ sơ số</span>
+                    <span class="text-[10px] font-semibold mt-1">Hồ sơ số</span>
                 </a>
             </div>
         </nav>
