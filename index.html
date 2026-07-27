@@ -92,31 +92,35 @@
                     </div>
 
                     <!-- Password -->
-                    <div>
-                        <label for="password" class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                            Mật khẩu
-                        </label>
-                        <div class="relative">
-                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                                <i class="bi bi-lock-fill text-lg"></i>
-                            </span>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                required
-                                autocomplete="current-password"
-                                placeholder="Nhập mật khẩu"
-                                class="w-full pl-11 pr-12 py-3 rounded-xl border border-slate-200 bg-white/70 text-slate-800 text-sm
-                                       placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal
-                                       transition-all"
-                            >
-                            <button type="button" id="togglePassword" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                                <i class="bi bi-eye text-lg" id="eyeIcon"></i>
-                            </button>
-                        </div>
-                    </div>
+                   <div class="relative">
+    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+        <i class="bi bi-lock-fill text-lg"></i>
+    </span>
 
+    <!-- Tiền tố HVA@ -->
+    <span class="absolute left-11 top-1/2 -translate-y-1/2 text-slate-600 font-semibold text-sm">
+        HVA@
+    </span>
+
+    <input
+        type="password"
+        id="password"
+        name="password"
+        required
+        autocomplete="current-password"
+        placeholder="Nhập mật khẩu"
+        class="w-full pl-24 pr-12 py-3 rounded-xl border border-slate-200 bg-white/70 text-slate-800 text-sm
+               placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal
+               transition-all"
+    >
+
+    <button type="button"
+            id="togglePassword"
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+        <i class="bi bi-eye text-lg" id="eyeIcon"></i>
+    </button>
+</div>
+  </div>
                     <!-- Submit -->
                     <button
                         type="submit"
