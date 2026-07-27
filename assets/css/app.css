@@ -1,0 +1,80 @@
+/* ==================================================
+   TTDHS_HVA – App Shell Styles
+   ================================================== */
+body {
+    font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+.safe-pb { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
+.safe-pt { padding-top: calc(1rem + env(safe-area-inset-top)); }
+.hidden-force { display: none !important; }
+
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.03); }
+}
+.animate-glow { animation: pulse-glow 4s infinite ease-in-out; }
+
+.ticker {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%;
+    animation: ticker 22s linear infinite;
+}
+@keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+    animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.skeleton-loader {
+    background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.04) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite linear;
+}
+
+:focus-visible {
+    outline: 2px solid rgba(56, 189, 248, 0.8);
+    outline-offset: 2px;
+}
+
+.hover-lift {
+    will-change: transform, box-shadow, border-color;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Module transition */
+#module-container {
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+#module-container.entering {
+    opacity: 0;
+    transform: translateY(12px);
+}
+#module-container.entered {
+    opacity: 1;
+    transform: translateY(0);
+}
+#module-container.leaving {
+    opacity: 0;
+    transform: translateY(12px);
+}
