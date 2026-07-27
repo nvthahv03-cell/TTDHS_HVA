@@ -99,8 +99,7 @@ export function renderHome() {
     </div>
 </section>
 
-<!-- VIỆC CỦA TÔI HÔM NAY + THÔNG BÁO + TIN TỨC (giữ nguyên
-// ... (phần đầu đã có ở lần trước)
+
 
     // ===== VIỆC CỦA TÔI HÔM NAY =====
     container.innerHTML += `
