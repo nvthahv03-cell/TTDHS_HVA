@@ -165,13 +165,14 @@
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value;
+           const username = usernameInput.value.trim();
+        const rawPassword = passwordInput.value.trim();
+        const password = "HVA@" + rawPassword;
 
-            if (!username || !password) {
-                showError("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
-                return;
-            }
+           if (!username || !rawPassword) {
+    showError("Vui lòng nhập đầy đủ tên đăng nhập và 4 số tự nhiên của mật khẩu.");
+    return;
+}
 
             setLoading(true);
             hideError();
