@@ -1,149 +1,192 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập hệ thống</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0F4C81">
+    <title>Đăng nhập – TTDHS_HVA | Trung tâm Điều hành số THPT Hòa Vang</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            deep: '#F5F7FA',
+                            primary: '#FFFFFF',
+                            accent: '#E2E8F0',
+                            teal: '#0F4C81',
+                            glow: '#14B8A6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .login-container {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .login-header {
-            margin-bottom: 24px;
-            text-align: center;
-        }
-
-        .login-header h1 {
-            font-size: 24px;
-            color: #1a1a1a;
-            margin-bottom: 8px;
-        }
-
-        .login-header p {
-            color: #665566;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #333333;
-            font-weight: 500;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #dcdcdc;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #0066cc;
-            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background-color: #0066cc;
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn-submit:hover {
-            background-color: #0055b3;
-        }
-
-        .btn-submit:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-
-        .error-message {
-            margin-top: 16px;
-            padding: 12px;
-            background-color: #ffe6e6;
-            color: #cc0000;
-            border-radius: 8px;
-            font-size: 14px;
-            text-align: center;
-            display: none;
-        }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
+        .safe-pt { padding-top: env(safe-area-inset-top); }
     </style>
 </head>
-<body>
+<body class="h-full bg-brand-deep text-slate-800 overflow-x-hidden antialiased">
 
-    <div class="login-container">
-        <div class="login-header">
-            <h1>Đăng nhập</h1>
-            <p>Vui lòng nhập thông tin tài khoản của bạn</p>
+    <!-- Background blobs (đồng bộ main) -->
+    <div class="fixed inset-0 -z-50 overflow-hidden bg-[#F5F7FA]">
+        <div class="absolute -top-[20%] -left-[10%] w-[80%] h-[60%] rounded-full bg-sky-200/30 blur-[120px]"></div>
+        <div class="absolute top-[40%] -right-[20%] w-[90%] h-[70%] rounded-full bg-cyan-200/25 blur-[150px]"></div>
+        <div class="absolute bottom-[-10%] left-[20%] w-[50%] h-[40%] rounded-full bg-teal-200/20 blur-[100px]"></div>
+    </div>
+
+    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8 safe-pt safe-pb">
+
+        <!-- Logo + Title -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 shadow-lg shadow-brand-teal/25 mb-4">
+                <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
+                    <span class="text-brand-teal font-bold text-xl tracking-widest">HVA</span>
+                </div>
+            </div>
+            <h1 class="text-xl font-bold text-slate-800 tracking-tight">Trung tâm Điều hành số</h1>
+            <p class="text-sm font-medium text-brand-teal mt-1">Trường THPT Hòa Vang</p>
+            <p class="text-xs text-slate-500 mt-2 max-w-xs mx-auto">Kết nối – Điều hành – Hiệu quả</p>
         </div>
 
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">Tên đăng nhập</label>
-                <input type="text" id="username" name="username" required autocomplete="username">
+        <!-- Login Card -->
+        <div class="w-full max-w-sm">
+            <div class="bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl shadow-slate-200/50 p-6 sm:p-8">
+
+                <div class="mb-6">
+                    <h2 class="text-lg font-bold text-slate-800">Đăng nhập hệ thống</h2>
+                    <p class="text-sm text-slate-500 mt-1">Vui lòng sử dụng tài khoản được cấp</p>
+                </div>
+
+                <form id="loginForm" class="space-y-5">
+                    <!-- Username -->
+                    <div>
+                        <label for="username" class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
+                            Tên đăng nhập
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                                <i class="bi bi-person-fill text-lg"></i>
+                            </span>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                required
+                                autocomplete="username"
+                                placeholder="Nhập tên đăng nhập"
+                                class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-white/70 text-slate-800 text-sm
+                                       placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal
+                                       transition-all"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
+                            Mật khẩu
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
+                                <i class="bi bi-lock-fill text-lg"></i>
+                            </span>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                autocomplete="current-password"
+                                placeholder="Nhập mật khẩu"
+                                class="w-full pl-11 pr-12 py-3 rounded-xl border border-slate-200 bg-white/70 text-slate-800 text-sm
+                                       placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal
+                                       transition-all"
+                            >
+                            <button type="button" id="togglePassword" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                <i class="bi bi-eye text-lg" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <button
+                        type="submit"
+                        id="submitBtn"
+                        class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-teal to-indigo-600 text-white font-semibold text-sm
+                               shadow-lg shadow-brand-teal/25 hover:shadow-brand-teal/40 active:scale-[0.98]
+                               transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                        <span id="btnText">Đăng nhập</span>
+                        <i class="bi bi-arrow-right-circle text-lg" id="btnIcon"></i>
+                    </button>
+
+                    <!-- Error -->
+                    <div id="errorMsg" class="hidden rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-sm px-4 py-3 text-center"></div>
+                </form>
             </div>
 
-            <div class="form-group">
-                <label for="password">Mật khẩu</label>
-                <input type="password" id="password" name="password" required autocomplete="current-password">
-            </div>
-
-            <button type="submit" id="submitBtn" class="btn-submit">Đăng nhập</button>
-
-            <div id="errorMsg" class="error-message"></div>
-        </form>
+            <!-- Footer -->
+            <p class="text-center text-xs text-slate-400 mt-6">
+                © 2026 Trung tâm Điều hành số THPT Hòa Vang<br>
+                <span class="text-brand-teal/70">Chuyển đổi số – Nâng tầm quản trị</span>
+            </p>
+        </div>
     </div>
 
     <script>
-       const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycbzrpNdCyBsIIKJqx3DL2OZA0nWAkmFMPvyq8JYBrOhDvPELheNX4CNeIFvB7xNRG3VR/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzrpNdCyBsIIKJqx3DL2OZA0nWAkmFMPvyq8JYBrOhDvPELheNX4CNeIFvB7xNRG3VR/exec";
+// ====================== AUTO LOGIN ======================
+try {
 
-        const loginForm = document.getElementById("loginForm");
+    const currentUser = localStorage.getItem("user");
+
+    if (currentUser !== null) {
+
+        JSON.parse(currentUser);
+
+        window.location.replace("main.html");
+
+    }
+
+} catch (e) {
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("loginTime");
+
+}
+} catch (e) {
+    localStorage.removeItem("user");
+}
+
+        const loginForm   = document.getElementById("loginForm");
         const usernameInput = document.getElementById("username");
         const passwordInput = document.getElementById("password");
-        const submitBtn = document.getElementById("submitBtn");
-        const errorMsg = document.getElementById("errorMsg");
+        const submitBtn   = document.getElementById("submitBtn");
+        const btnText     = document.getElementById("btnText");
+        const btnIcon     = document.getElementById("btnIcon");
+        const errorMsg    = document.getElementById("errorMsg");
+        const togglePassword = document.getElementById("togglePassword");
+        const eyeIcon    = document.getElementById("eyeIcon");
 
-        loginForm.addEventListener("submit", async function(e) {
+        // Toggle show/hide password
+        togglePassword.addEventListener("click", () => {
+            const isPassword = passwordInput.type === "password";
+            passwordInput.type = isPassword ? "text" : "password";
+            eyeIcon.className = isPassword ? "bi bi-eye-slash text-lg" : "bi bi-eye text-lg";
+        });
+
+        loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            
+
             const username = usernameInput.value.trim();
             const password = passwordInput.value;
 
@@ -156,52 +199,70 @@
             hideError();
 
             try {
-               const response = await fetch(WEB_APP_URL, {
-    method: "POST",
-    body: JSON.stringify({
-        action: "login",
-        username,
-        password
-    })
-});
+                const response = await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        action: "login",
+                        username,
+                        password
+                    })
+                });
 
                 if (!response.ok) {
                     throw new Error("Lỗi kết nối máy chủ. Mã lỗi: " + response.status);
                 }
 
                 const result = await response.json();
-                console.log(result);
+		if (!result || typeof result !== "object") {
+    		throw new Error("Máy chủ trả về dữ liệu không hợp lệ.");
+		}
+
                 if (result.success) {
                     localStorage.setItem("user", JSON.stringify(result.user));
-                    window.location.href = "main.html";
+		localStorage.setItem("loginTime", String(Date.now()));
+                    // Chuyển sang App Shell
+                    window.location.replace("main.html");
                 } else {
                     showError(result.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
                 }
-
             } catch (error) {
-                console.error("Network or parsing error:", error);
+                console.error(error);
                 showError("Đã xảy ra lỗi mạng hoặc không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
             } finally {
                 setLoading(false);
+		
             }
         });
 
         function showError(message) {
+	passwordInput.focus();
+	passwordInput.select();
             errorMsg.textContent = message;
-            errorMsg.style.display = "block";
+            errorMsg.classList.remove("hidden");
         }
 
         function hideError() {
             errorMsg.textContent = "";
-            errorMsg.style.display = "none";
+            errorMsg.classList.add("hidden");
         }
 
         function setLoading(isLoading) {
             submitBtn.disabled = isLoading;
-            submitBtn.textContent = isLoading ? "Đang xử lý..." : "Đăng nhập";
             usernameInput.disabled = isLoading;
             passwordInput.disabled = isLoading;
+	togglePassword.disabled = isLoading;
+
+            if (isLoading) {
+                btnText.textContent = "Đang xác thực...";
+                btnIcon.className = "bi bi-arrow-repeat text-lg animate-spin";
+            } else {
+                btnText.textContent = "Đăng nhập";
+                btnIcon.className = "bi bi-arrow-right-circle text-lg";
+            }
         }
+
+        // Tự động focus
+        usernameInput.focus();
     </script>
 </body>
 </html>
