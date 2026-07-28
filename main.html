@@ -289,5 +289,39 @@ document.addEventListener("click", async function(event) {
     }
 });
 </script>
+ <script>
+    // Dán toàn bộ đoạn mã JavaScript xử lý giao việc vào đây
+    const SCRIPT_URL = "LINK_WEB_APP_GOOGLE_SCRIPT_CUA_THAY";
+    
+    async function moModalGiaoViec() {
+        document.getElementById('modalGiaoViec').classList.remove('hidden');
+        await taiNhanSuVaoSelect();
+    }
+    
+    function dongModalGiaoViec() {
+        document.getElementById('modalGiaoViec').classList.add('hidden');
+        document.getElementById('vungXemTruoc').classList.add('hidden');
+    }
+
+    async function taiNhanSuVaoSelect() {
+        const selectNguoiNhan = document.getElementById('nguoiNhan');
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=getNhanSu`);
+            const danhSach = await response.json();
+            
+            selectNguoiNhan.innerHTML = '<option value="">-- Chọn cán bộ / giáo viên nhận việc --</option>';
+            danhSach.forEach(ns => {
+                const opt = document.createElement('option');
+                opt.value = ns.hoTen;
+                opt.textContent = `${ns.hoTen} - ${ns.toBoPhan}`;
+                selectNguoiNhan.appendChild(opt);
+            });
+        } catch (error) {
+            console.error("Lỗi tải nhân sự:", error);
+        }
+    }
+    
+    // Các hàm xử lý xem trước, gửi dữ liệu và micro còn lại...
+</script>
 </body>
 </html>
