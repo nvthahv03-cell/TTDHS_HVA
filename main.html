@@ -323,5 +323,19 @@ document.addEventListener("click", async function(event) {
     
     // Các hàm xử lý xem trước, gửi dữ liệu và micro còn lại...
 </script>
+  <script>
+ document.addEventListener('DOMContentLoaded', function() {
+    // Tự động tìm tất cả các nút hoặc icon có chữ "Giao việc" trên trang và gán hàm mở modal
+    const buttons = document.querySelectorAll('button, div, a');
+    buttons.forEach(el => {
+        if (el.innerText && el.innerText.includes('Giao việc')) {
+            el.onclick = function(e) {
+                e.preventDefault();
+                moModalGiaoViec();
+            };
+        }
+    });
+});
+ </script>
 </body>
 </html>
