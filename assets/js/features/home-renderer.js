@@ -291,7 +291,6 @@ function bindHomeEvents() {
             if (isIOS()) {
                 showPWAPopup(true);
             } else {
-                // Android / Desktop → gọi PWA.install() (sẽ dùng deferredPrompt)
                 PWA.install();
             }
         });
@@ -300,13 +299,12 @@ function bindHomeEvents() {
     // ===== POPUP ANDROID =====
     document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
         hidePWAPopup();
-        // Có thể lưu localStorage để không hiện lại trong session
         localStorage.setItem('pwa-dismissed', Date.now().toString());
     });
 
     document.getElementById('pwa-confirm-btn')?.addEventListener('click', () => {
         hidePWAPopup();
-        PWA.install(); // Gọi deferredPrompt.prompt()
+        PWA.install();
     });
 
     // ===== POPUP iOS =====
@@ -316,35 +314,35 @@ function bindHomeEvents() {
         localStorage.setItem('pwa-ios-dismissed', Date.now().toString());
     });
 
-    // ===== TỰ ĐỘNG HIỆN POPUP KHI ĐỦ ĐIỀU KIỆN =====
-    // Chỉ hiện nếu chưa cài đặt (không ở chế độ standalone)
+    // ===== TỰ ĐỘNG HIỆN POPUP (phiên bản mạnh) =====
     if (!isStandalone()) {
-        // Android: lắng nghe beforeinstallprompt (thường nằm trong PWA service)
-        // Ở đây ta giả định PWA service sẽ gọi window.dispatchEvent hoặc expose event
+        // Hiện banner ngay lập tức
+        const banner = document.getElementById('install-banner');
+        if (banner) banner.classList.remove('hidden');
+
+        // Android - lắng nghe beforeinstallprompt
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
-            // Hiện banner
-            const banner = document.getElementById('install-banner');
-            if (banner) banner.classList.remove('hidden');
+            window.deferredPrompt = e;
 
-            // Hiện popup Android sau 1.5s (nếu user chưa dismiss)
             const dismissed = localStorage.getItem('pwa-dismissed');
-            if (!dismissed || Date.now() - Number(dismissed) > 24 * 60 * 60 * 1000) {
-                setTimeout(() => showPWAPopup(false), 1500);
+            if (!dismissed || Date.now() - Number(dismissed) > 12 * 60 * 60 * 1000) {
+                setTimeout(() => showPWAPopup(false), 1000);
             }
         });
 
-        // iOS: hiện hướng dẫn sau 2 giây (chỉ lần đầu hoặc sau 3 ngày)
+        // iOS
         if (isIOS()) {
             const iosDismissed = localStorage.getItem('pwa-ios-dismissed');
-            if (!iosDismissed || Date.now() - Number(iosDismissed) > 3 * 24 * 60 * 60 * 1000) {
-                setTimeout(() => {
-                    // Hiện banner luôn
-                    const banner = document.getElementById('install-banner');
-                    if (banner) banner.classList.remove('hidden');
-
-                    showPWAPopup(true);
-                }, 2000);
+            if (!iosDismissed || Date.now() - Number(iosDismissed) > 2 * 24 * 60 * 60 * 1000) {
+                setTimeout(() => showPWAPopup(true), 1500);
+            }
+        } 
+        // Desktop / trình duyệt khác → hiện popup Android sau 2 giây để test
+        else {
+            const dismissed = localStorage.getItem('pwa-dismissed');
+            if (!dismissed || Date.now() - Number(dismissed) > 12 * 60 * 60 * 1000) {
+                setTimeout(() => showPWAPopup(false), 2000);
             }
         }
     }
