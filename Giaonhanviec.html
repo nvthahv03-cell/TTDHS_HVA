@@ -13,24 +13,24 @@
 </head>
 <body class="h-full bg-white text-[#0F4C81] antialiased flex flex-col">
 
-    <!-- HEADER TRANG GIAO VIỆC -->
-    <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
-        <div class="flex items-center space-x-3">
-            <button onclick="dongTrangGiaoViec()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-[#0F4C81] transition">
-                <i class="bi bi-arrow-left text-xl font-bold"></i>
-            </button>
-            <div>
-                <h1 class="text-xs font-extrabold uppercase tracking-widest text-slate-500">Trung tâm Điều hành số</h1>
-                <p class="text-lg font-extrabold text-[#0F4C81]">Giao nhiệm vụ & Chỉ đạo công tác</p>
-            </div>
+   <!-- HEADER TRANG GIAO VIỆC -->
+<header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div class="flex items-center space-x-3">
+        <button onclick="window.location.href='main.html'" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-[#0F4C81] transition">
+            <i class="bi bi-arrow-left text-xl font-bold"></i>
+        </button>
+        <div>
+            <h1 class="text-xs font-extrabold uppercase tracking-widest text-slate-500">Trung tâm Điều hành số</h1>
+            <p class="text-lg font-extrabold text-[#0F4C81]">Giao nhiệm vụ & Chỉ đạo công tác</p>
         </div>
-        <div class="flex items-center gap-3">
-            <button type="button" onclick="dongTrangGiaoViec()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition">Hủy bỏ</button>
-            <button form="formGiaoViecFull" type="submit" id="btnSubmit" class="px-6 py-2 rounded-xl bg-[#0F4C81] text-white text-sm font-bold hover:bg-blue-900 shadow-lg shadow-blue-900/20 transition flex items-center gap-2">
-                <i class="bi bi-send-fill"></i> Xác nhận Giao việc
-            </button>
-        </div>
-    </header>
+    </div>
+    <div class="flex items-center gap-3">
+        <button type="button" onclick="window.location.href='main.html'" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition">Hủy bỏ</button>
+        <button form="formGiaoViecFull" type="submit" id="btnSubmit" class="px-6 py-2 rounded-xl bg-[#0F4C81] text-white text-sm font-bold hover:bg-blue-900 shadow-lg shadow-blue-900/20 transition flex items-center gap-2">
+            <i class="bi bi-send-fill"></i> Xác nhận Giao việc
+        </button>
+    </div>
+</header>
 
     <!-- NỘI DUNG CHÍNH (FULL MÀN HÌNH - NỀN TRẮNG, CHỮ XANH ĐẬM) -->
     <main class="flex-1 max-w-4xl w-full mx-auto p-6 md:p-8 overflow-y-auto">
