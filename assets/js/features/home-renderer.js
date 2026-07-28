@@ -300,3 +300,17 @@ function bindHomeEvents() {
         }
     }
 }
+// ============================================================================
+// TÍCH HỢP SỰ KIỆN GIAO VIỆC KẾT NỐI GOOGLE SHEETS (GAS API)
+// ============================================================================
+document.addEventListener("DOMContentLoaded", function() {
+    // Tìm nút "Giao việc" đầu tiên trong Dock điều hành
+    const btnGiaoViec = document.querySelector('[data-open-modal="document-modal"]');
+    
+    if (btnGiaoViec) {
+        btnGiaoViec.addEventListener("click", async function() {
+            // Thầy có thể gọi hàm apiCreateTask tại đây khi form modal giao việc hoàn tất
+            console.log("Đã kích hoạt chức năng Giao việc từ Home Renderer.");
+        });
+    }
+});
