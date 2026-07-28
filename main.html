@@ -353,19 +353,16 @@
             }
         });
 
-        // 6. Tự động bắt sự kiện click vào bất kỳ nút/menu nào có tên "Giao việc" trên giao diện để mở Modal đúng quy trình
-        document.addEventListener('DOMContentLoaded', function() {
-            const elements = document.querySelectorAll('button, div, a, span');
-            elements.forEach(el => {
-                if (el.innerText && (el.innerText.trim() === 'Giao việc' || el.innerText.trim() === 'Giao nhiệm vụ mới')) {
-                    el.style.cursor = 'pointer';
-                    el.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        moModalGiaoViec();
-                    });
-                }
-            });
-        });
+        // Tự động bắt sự kiện click toàn cục cho nút "Giao việc" (kể cả phần tử render động)
+document.addEventListener('click', function(e) {
+    const target = e.target.closest('button, div, a, span');
+    if (!target) return;
+    const text = target.innerText ? target.innerText.trim() : '';
+    if (text === 'Giao việc' || text === 'Giao nhiệm vụ mới') {
+        e.preventDefault();
+        moModalGiaoViec();
+    }
+});
     </script>
 </body>
 </html>
