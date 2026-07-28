@@ -197,60 +197,12 @@ export function renderHome() {
 </section>
 `;
 
-    // Gọi các hàm thiết lập giao diện, popup và sự kiện
-    initHomeLogic();
+// Popup Cài đặt ứng dụng (PWA) & Popup Chúc mừng sinh nhật (Hệ thống thiết kế sẵn)
     renderPWAPopups();
     renderBirthdayModal();
+
+    // Bind events sau khi render
     bindHomeEvents();
-}
-
-function initHomeLogic() {
-    const nameEl = $('#assistantName');
-    const greetingEl = $('#assistantGreeting');
-    const positionEl = $('#assistantPosition');
-    const msgEl = $('#assistantMessage span');
-
-    if (nameEl) nameEl.textContent = 'Thầy giáo';
-    if (greetingEl) greetingEl.textContent = '👋 Xin chào,';
-    if (positionEl) positionEl.textContent = 'Tiến sĩ Toán học - Phó Hiệu trưởng';
-    if (msgEl) msgEl.textContent = 'Hệ thống điều hành số đã sẵn sàng. Chúc thầy một ngày làm việc hiệu quả!';
-
-    const installBanner = $('#install-banner');
-    if (installBanner) installBanner.classList.remove('hidden');
-
-    const assistantInput = $('#assistantInput');
-    const assistantMicBtn = $('#assistantMicBtn');
-
-    if (assistantInput) {
-        assistantInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && assistantInput.value.trim() !== '') {
-                const query = assistantInput.value.trim();
-                if (msgEl) msgEl.textContent = `Đang xử lý yêu cầu: "${query}"...`;
-                assistantInput.value = '';
-                setTimeout(() => {
-                    if (msgEl) msgEl.textContent = 'Đã cập nhật dữ liệu điều hành và ghi nhận nội dung tìm kiếm của thầy.';
-                }, 1500);
-            }
-        });
-    }
-
-    if (assistantMicBtn) {
-        assistantMicBtn.addEventListener('click', () => {
-            if (msgEl) msgEl.textContent = 'Đang lắng nghe giọng nói... Hãy nói yêu cầu của thầy.';
-            setTimeout(() => {
-                if (msgEl) msgEl.textContent = 'Đã nhận diện giọng nói thành công.';
-            }, 2000);
-        });
-    }
-
-    document.querySelectorAll('[data-open-modal]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const modalName = btn.getAttribute('data-open-modal');
-            if (ModalManager && typeof ModalManager.open === 'function') {
-                ModalManager.open(modalName);
-            }
-        });
-    });
 }
 
 function renderPWAPopups() {
@@ -259,7 +211,6 @@ function renderPWAPopups() {
     const popupHtml = `
     <div id="pwa-custom-popup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden animate-fade-in">
         <div class="w-full max-w-xs bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 p-6 text-center">
-            <!-- Android Content -->
             <div id="pwa-android-content" class="hidden">
                 <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-inner">
                     📱
@@ -272,7 +223,6 @@ function renderPWAPopups() {
                 </div>
             </div>
 
-            <!-- iOS Content -->
             <div id="pwa-ios-content" class="hidden text-left">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-sm font-bold text-slate-900">Cài đặt trên iPhone/iPad</h3>
@@ -295,122 +245,23 @@ function renderPWAPopups() {
                 </div>
                 <button id="pwa-ios-got-it" class="w-full py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/25">Đã hiểu</button>
             </div>
-
-            <!-- Success / Congratulation Content (dành cho iOS sau khi đã hoàn tất thêm hoặc người dùng xác nhận) -->
-            <div id="pwa-success-content" class="hidden">
-                <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-inner animate-bounce">
-                    🎉
-                </div>
-                <h3 class="text-base font-bold text-slate-900 mb-1">Cài đặt thành công!</h3>
-                <p class="text-xs text-slate-500 mb-6 leading-relaxed">Chúc mừng thầy đã thêm ứng dụng thành công. Vui lòng thoát trình duyệt web và mở lại từ icon ứng dụng trên màn hình chính để trải nghiệm tối ưu nhất.</p>
-                <button id="pwa-success-close" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-lg shadow-emerald-500/25 transition">Đã hiểu, thoát web</button>
-            </div>
         </div>
     </div>
     `;
     document.body.insertAdjacentHTML('beforeend', popupHtml);
+}
 
-    // Gắn sự kiện đóng popup chung
-    const dismissBtn = document.getElementById('pwa-dismiss-btn');
-    const iosClose = document.getElementById('pwa-ios-close');
-    const iosGotIt = document.getElementById('pwa-ios-got-it');
-    const successClose = document.getElementById('pwa-success-close');
-    const popup = document.getElementById('pwa-custom-popup');
-
-    [dismissBtn, iosClose, iosGotIt].forEach(btn => {
-        if (btn && popup) {
-            btn.addEventListener('click', () => {
-                popup.classList.add('hidden');
-            });
-        }
-    });
-
-    if (successClose && popup) {
-        successClose.addEventListener('click', () => {
-            popup.classList.add('hidden');
-            // Gợi ý chuyển hướng hoặc đóng tab nếu trình duyệt cho phép, hoặc để người dùng tự thoát
-        });
-    }
+function renderBirthdayModal() {
+    if (document.getElementById('birthday-modal')) return;
+    // Thêm logic render modal sinh nhật nếu cần thiết
 }
 
 function bindHomeEvents() {
+    // Gắn các sự kiện tương tác trên trang chủ ở đây
     const installBtn = document.getElementById('btn-install');
     if (installBtn) {
         installBtn.addEventListener('click', () => {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-            // Đảm bảo popup đã được chèn vào DOM
-            renderPWAPopups();
-
-            const popup = document.getElementById('pwa-custom-popup');
-            const androidContent = document.getElementById('pwa-android-content');
-            const iosContent = document.getElementById('pwa-ios-content');
-            const successContent = document.getElementById('pwa-success-content');
-
-            if (popup) {
-                if (androidContent) androidContent.classList.add('hidden');
-                if (iosContent) iosContent.classList.add('hidden');
-                if (successContent) successContent.classList.add('hidden');
-
-                if (isIOS) {
-                    // Hiển thị hướng dẫn cài đặt iOS, sau bước này hoặc bấm "Đã hiểu" có thể chuyển sang màn hình chúc mừng
-                    if (iosContent) iosContent.classList.remove('hidden');
-                    popup.classList.remove('hidden');
-                } else {
-                    // Nếu trình duyệt hỗ trợ PWA native prompt (Android/Desktop)
-                    if (window.deferredPrompt) {
-                        window.deferredPrompt.prompt();
-                        window.deferredPrompt.userChoice.then((choiceResult) => {
-                            if (choiceResult.outcome === 'accepted') {
-                                console.log('Người dùng đã cài đặt thành công trên Android');
-                                // Android cài trực tiếp xong sẽ ẩn/không hiện popup nữa
-                                popup.classList.add('hidden');
-                            }
-                            window.deferredPrompt = null;
-                        });
-                    } else if (typeof PWA !== 'undefined' && typeof PWA.install === 'function') {
-                        PWA.install();
-                        popup.classList.add('hidden');
-                    } else {
-                        // Trường hợp không có prompt native, hiện popup tùy chỉnh cho Android
-                        if (androidContent) androidContent.classList.remove('hidden');
-                        popup.classList.add('hidden'); // Hoặc hiển thị nếu muốn ép kiểu thủ công
-                    }
-                }
-            }
-        });
-    }
-
-    const pwaConfirmBtn = document.getElementById('pwa-confirm-btn');
-    if (pwaConfirmBtn) {
-        pwaConfirmBtn.addEventListener('click', () => {
-            if (window.deferredPrompt) {
-                window.deferredPrompt.prompt();
-                window.deferredPrompt.userChoice.then((choiceResult) => {
-                    window.deferredPrompt = null;
-                });
-            } else if (typeof PWA !== 'undefined' && typeof PWA.install === 'function') {
-                PWA.install();
-            }
-            const popup = document.getElementById('pwa-custom-popup');
-            if (popup) popup.classList.add('hidden');
-        });
-    }
-
-    // Xử lý nút "Đã hiểu" ở hướng dẫn iOS để chuyển sang màn hình chúc mừng & khuyên thoát web vào icon app
-    const iosGotItBtn = document.getElementById('pwa-ios-got-it');
-    if (iosGotItBtn) {
-        iosGotItBtn.addEventListener('click', () => {
-            const iosContent = document.getElementById('pwa-ios-content');
-            const successContent = document.getElementById('pwa-success-content');
-            if (iosContent) iosContent.classList.add('hidden');
-            if (successContent) successContent.classList.remove('hidden');
+            PWA.install();
         });
     }
 }
-
-// Bắt sự kiện beforeinstallprompt toàn cục để lưu lại prompt gốc của trình duyệt
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    window.deferredPrompt = e;
-});
