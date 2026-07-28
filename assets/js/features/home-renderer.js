@@ -424,110 +424,23 @@ function renderPWAPopups() {
                 </div>
                 <button id="pwa-ios-got-it" class="w-full py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/25">Đã hiểu</button>
             </div>
-
-            <div id="pwa-success-content" class="hidden">
-                <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-inner">
-                    🎉
-                </div>
-                <h3 class="text-base font-bold text-slate-900 mb-1">Chúc mừng!</h3>
-                <p class="text-xs text-slate-600 mb-6 leading-relaxed">Ứng dụng đã được cài đặt thành công.<br>Vui lòng đóng trình duyệt và mở ứng dụng từ biểu tượng HVA trên Màn hình chính để có trải nghiệm tốt nhất.</p>
-                <button id="pwa-success-close" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-lg shadow-emerald-500/25 transition">Đóng</button>
-            </div>
         </div>
-    </div>`;
+    </div>
+    `;
     document.body.insertAdjacentHTML('beforeend', popupHtml);
-
-    // Logic hiển thị popup chỉ 1 lần nếu chưa tương tác
-    if (!localStorage.getItem('hva_pwa_popup_shown')) {
-        setTimeout(() => {
-            const popup = document.getElementById('pwa-custom-popup');
-            if (popup) {
-                popup.classList.remove('hidden');
-                const isIos = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
-                if (isIos) {
-                    document.getElementById('pwa-ios-content').classList.remove('hidden');
-                } else {
-                    document.getElementById('pwa-android-content').classList.remove('hidden');
-                }
-            }
-        }, 1500);
-    }
-
-    document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
-        document.getElementById('pwa-custom-popup').classList.add('hidden');
-        localStorage.setItem('hva_pwa_popup_shown', 'true');
-    });
-    document.getElementById('pwa-confirm-btn')?.addEventListener('click', () => {
-        document.getElementById('pwa-android-content').classList.add('hidden');
-        document.getElementById('pwa-success-content').classList.remove('hidden');
-        localStorage.setItem('hva_pwa_popup_shown', 'true');
-        PWA.handleInstall();
-    });
-    document.getElementById('pwa-ios-close')?.addEventListener('click', () => {
-        document.getElementById('pwa-custom-popup').classList.add('hidden');
-        localStorage.setItem('hva_pwa_popup_shown', 'true');
-    });
-    document.getElementById('pwa-ios-got-it')?.addEventListener('click', () => {
-        document.getElementById('pwa-custom-popup').classList.add('hidden');
-        localStorage.setItem('hva_pwa_popup_shown', 'true');
-    });
-    document.getElementById('pwa-success-close')?.addEventListener('click', () => {
-        document.getElementById('pwa-custom-popup').classList.add('hidden');
-    });
 }
 
 function renderBirthdayModal() {
     if (document.getElementById('birthday-modal')) return;
-
-    const modalHtml = `
-    <div id="birthday-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden animate-fade-in">
-        <div class="w-full max-w-xs bg-gradient-to-br from-amber-50 via-white to-orange-50 rounded-3xl shadow-2xl overflow-hidden border border-amber-200/60 p-6 text-center relative">
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-400/20 rounded-full blur-2xl pointer-events-none"></div>
-            <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-orange-500 text-white rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 shadow-lg shadow-orange-500/30">
-                🎂
-            </div>
-            <h3 class="text-lg font-black text-slate-900 mb-1">Chúc mừng sinh nhật</h3>
-            <div id="birthday-greeting-name" class="text-sm font-bold text-amber-700 mb-3">Thầy...</div>
-            <p id="birthday-greeting-msg" class="text-xs text-slate-600 mb-6 leading-relaxed">Kính chúc Thầy/Cô luôn dồi dào sức khỏe, hạnh phúc và gặt hái được nhiều thành công rực rỡ trong sự nghiệp trồng người!</p>
-            <button id="birthday-thanks-btn" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-xs font-bold shadow-lg shadow-orange-500/25 transition">Cảm ơn</button>
-        </div>
-    </div>`;
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-    document.getElementById('birthday-thanks-btn')?.addEventListener('click', () => {
-        document.getElementById('birthday-modal').classList.add('hidden');
-    });
-
-    // Hàm kiểm tra sinh nhật giả lập hoặc kích hoạt sẵn sàng khi có dữ liệu ngày sinh
-    window.checkBirthdayTrigger = (userData) => {
-        if (!userData || !userData.dob) return;
-        const today = new Date();
-        const dob = new Date(userData.dob);
-        if (today.getDate() === dob.getDate() && today.getMonth() === dob.getMonth()) {
-            let prefix = 'Thầy';
-            if (userData.role === 'teacher') prefix = userData.gender === 'female' ? 'Cô' : 'Thầy';
-            else if (userData.role === 'staff') prefix = userData.gender === 'female' ? 'Chị' : 'Anh';
-            
-            const nameEl = document.getElementById('birthday-greeting-name');
-            if (nameEl) nameEl.innerText = `${prefix} ${userData.name || ''}`;
-            
-            document.getElementById('birthday-modal').classList.remove('hidden');
-        }
-    };
+    // Thêm logic render modal sinh nhật nếu cần thiết
 }
 
 function bindHomeEvents() {
-    // Install button
-    const btnInstall = document.getElementById('btn-install');
-    if (btnInstall) {
-        btnInstall.addEventListener('click', () => PWA.handleInstall());
-    }
-
-    // Open modal từ data-attribute
-    document.querySelectorAll('[data-open-modal]').forEach(el => {
-        el.addEventListener('click', () => {
-            const id = el.dataset.openModal;
-            if (id) ModalManager.open(id);
+    // Gắn các sự kiện tương tác trên trang chủ ở đây
+    const installBtn = document.getElementById('btn-install');
+    if (installBtn) {
+        installBtn.addEventListener('click', () => {
+            PWA.install();
         });
-    });
+    }
 }
