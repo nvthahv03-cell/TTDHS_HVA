@@ -301,22 +301,24 @@ function bindHomeEvents() {
     }
 }
 
-// Lắng nghe thao tác trên nút Giao việc riêng biệt
+// Lắng nghe thao tác trên nút Giao việc
 document.addEventListener("click", async function(event) {
-    const btn = event.target.closest("#btnGiaoViecNet");
+    const btn = event.target.closest('[data-open-modal="document-modal"]');
     if (!btn) return;
 
-    console.log("Đã bấm nút Giao việc, modal đang mở...");
+    console.log("Đã bấm nút mở modal!");
     
-    const taskData = {
-        tieuDe: "Kiểm tra hệ thống giao việc từ App",
-        noiDung: "Đồng bộ tự động qua Google Apps Script",
-        nguoiGiao: "Thầy Nguyễn Văn Thả"
-    };
-    const assignees = [{ username: "to.toan", hoTen: "Tổ Toán", vaiTro: "Chủ trì" }];
-    
-    const ketQua = await apiCreateTask(taskData, assignees);
-    if (ketQua && ketQua.status === "success") {
-        alert("Đã đẩy dữ liệu thành công xuống Google Sheets!");
+    // Nếu thầy muốn test gọi API ngầm mà không sợ lỗi, hãy dùng try...catch:
+    try {
+        /* 
+        const taskData = { tieuDe: "Test", noiDung: "Test", nguoiGiao: "Thầy Thả" };
+        const assignees = [{ username: "to.toan", hoTen: "Tổ Toán", vaiTro: "Chủ trì" }];
+        const ketQua = await apiCreateTask(taskData, assignees);
+        if (ketQua && ketQua.status === "success") {
+            console.log("Đồng bộ thành công!");
+        }
+        */
+    } catch (e) {
+        console.error("Lỗi gọi API:", e);
     }
 });
