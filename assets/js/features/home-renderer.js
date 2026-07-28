@@ -44,8 +44,8 @@ export function renderHome() {
         </div>
 
         <div class="flex items-center bg-white/95 backdrop-blur-xl rounded-xl px-2.5 py-1 shadow-md border border-white/50">
-            <input type="text" placeholder="Hỏi HVA Assistant điều gì đó..." class="flex-1 bg-transparent outline-none text-[11px] font-medium text-slate-800 placeholder-slate-400">
-            <button class="ml-2 w-6 h-6 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 transition shadow-sm flex items-center justify-center text-white active:scale-95">
+            <input type="text" id="assistantInput" placeholder="Hỏi HVA Assistant điều gì đó..." class="flex-1 bg-transparent outline-none text-[11px] font-medium text-slate-800 placeholder-slate-400">
+            <button id="assistantMicBtn" class="ml-2 w-6 h-6 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 transition shadow-sm flex items-center justify-center text-white active:scale-95">
                 <i class="bi bi-mic-fill text-[10px]"></i>
             </button>
         </div>
@@ -196,9 +196,61 @@ export function renderHome() {
     </div>
 </section>
 `;
-renderPWAPopups();
+
+    // Gọi các hàm thiết lập giao diện, popup và sự kiện
+    initHomeLogic();
+    renderPWAPopups();
     renderBirthdayModal();
     bindHomeEvents();
+}
+
+function initHomeLogic() {
+    const nameEl = $('#assistantName');
+    const greetingEl = $('#assistantGreeting');
+    const positionEl = $('#assistantPosition');
+    const msgEl = $('#assistantMessage span');
+
+    if (nameEl) nameEl.textContent = 'Thầy giáo';
+    if (greetingEl) greetingEl.textContent = '👋 Xin chào,';
+    if (positionEl) positionEl.textContent = 'Tiến sĩ Toán học - Phó Hiệu trưởng';
+    if (msgEl) msgEl.textContent = 'Hệ thống điều hành số đã sẵn sàng. Chúc thầy một ngày làm việc hiệu quả!';
+
+    const installBanner = $('#install-banner');
+    if (installBanner) installBanner.classList.remove('hidden');
+
+    const assistantInput = $('#assistantInput');
+    const assistantMicBtn = $('#assistantMicBtn');
+
+    if (assistantInput) {
+        assistantInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && assistantInput.value.trim() !== '') {
+                const query = assistantInput.value.trim();
+                if (msgEl) msgEl.textContent = `Đang xử lý yêu cầu: "${query}"...`;
+                assistantInput.value = '';
+                setTimeout(() => {
+                    if (msgEl) msgEl.textContent = 'Đã cập nhật dữ liệu điều hành và ghi nhận nội dung tìm kiếm của thầy.';
+                }, 1500);
+            }
+        });
+    }
+
+    if (assistantMicBtn) {
+        assistantMicBtn.addEventListener('click', () => {
+            if (msgEl) msgEl.textContent = 'Đang lắng nghe giọng nói... Hãy nói yêu cầu của thầy.';
+            setTimeout(() => {
+                if (msgEl) msgEl.textContent = 'Đã nhận diện giọng nói thành công.';
+            }, 2000);
+        });
+    }
+
+    document.querySelectorAll('[data-open-modal]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const modalName = btn.getAttribute('data-open-modal');
+            if (ModalManager && typeof ModalManager.open === 'function') {
+                ModalManager.open(modalName);
+            }
+        });
+    });
 }
 
 function renderPWAPopups() {
@@ -245,6 +297,20 @@ function renderPWAPopups() {
     </div>
     `;
     document.body.insertAdjacentHTML('beforeend', popupHtml);
+
+    // Gắn sự kiện đóng popup iOS / Android nếu cần
+    const dismissBtn = document.getElementById('pwa-dismiss-btn');
+    const iosClose = document.getElementById('pwa-ios-close');
+    const iosGotIt = document.getElementById('pwa-ios-got-it');
+    const popup = document.getElementById('pwa-custom-popup');
+
+    [dismissBtn, iosClose, iosGotIt].forEach(btn => {
+        if (btn && popup) {
+            btn.addEventListener('click', () => {
+                popup.classList.add('hidden');
+            });
+        }
+    });
 }
 
 function renderBirthdayModal() {
@@ -255,8 +321,27 @@ function bindHomeEvents() {
     const installBtn = document.getElementById('btn-install');
     if (installBtn) {
         installBtn.addEventListener('click', () => {
-            PWA.install();
+            if (PWA && typeof PWA.install === 'function') {
+                PWA.install();
+            } else {
+                const popup = document.getElementById('pwa-custom-popup');
+                const androidContent = document.getElementById('pwa-android-content');
+                if (popup && androidContent) {
+                    androidContent.classList.remove('hidden');
+                    popup.classList.remove('hidden');
+                }
+            }
         });
     }
 
+    const pwaConfirmBtn = document.getElementById('pwa-confirm-btn');
+    if (pwaConfirmBtn) {
+        pwaConfirmBtn.addEventListener('click', () => {
+            if (PWA && typeof PWA.install === 'function') {
+                PWA.install();
+            }
+            const popup = document.getElementById('pwa-custom-popup');
+            if (popup) popup.classList.add('hidden');
+        });
+    }
 }
