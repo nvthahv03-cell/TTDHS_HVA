@@ -180,22 +180,22 @@
 <!-- ĐOẠN GẮN KẾT SỰ KIỆN GIAO VIỆC -->
 <script>
 document.addEventListener("click", async function(event) {
-    // Bắt đúng nút Giao việc có ID đã định nghĩa trên HTML
     const btn = event.target.closest('#btnGiaoViecNet');
     if (!btn) return;
 
     console.log("Đã bấm nút Giao việc!");
 
-    // Thử gọi hàm API lưu dữ liệu (thầy có thể điều chỉnh dữ liệu mẫu bên dưới)
-    try {
-        const taskData = {
-            tieuDe: "Nhiệm vụ mới từ hệ thống",
-            noiDung: "Đồng bộ giao việc tự động",
-            nguoiGiao: "Thầy Nguyễn Văn Thả"
-        };
-        const assignees = [{ username: "to.toan", hoTen: "Tổ Toán", vaiTro: "Chủ trì" }];
+    // Định nghĩa rõ ràng biến taskData ở đây
+    const taskData = {
+        tieuDe: "Nhiệm vụ mới từ hệ thống",
+        noiDung: "Đồng bộ giao việc tự động",
+        nguoiGiao: "Thầy Nguyễn Văn Thả"
+    };
+    const assignees = [{ username: "to.toan", hoTen: "Tổ Toán", vaiTro: "Chủ trì" }];
 
+    try {
         const ketQua = await apiCreateTask(taskData, assignees);
+        console.log("Kết quả từ Google Sheets:", ketQua);
         if (ketQua && ketQua.status === "success") {
             alert("Đã giao việc thành công xuống Google Sheets!");
         }
