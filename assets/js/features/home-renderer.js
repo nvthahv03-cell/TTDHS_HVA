@@ -308,9 +308,6 @@ document.addEventListener("click", async function(event) {
 
     console.log("Đã bấm nút Giao việc, modal đang mở...");
     
-    // Tại đây, khi modal nhập liệu hiện lên và thầy bấm nút lưu/gửi trong modal đó, 
-    // thầy có thể gọi trực tiếp hàm truyền dữ liệu mẫu như sau để kiểm tra:
-    /*
     const taskData = {
         tieuDe: "Kiểm tra hệ thống giao việc từ App",
         noiDung: "Đồng bộ tự động qua Google Apps Script",
@@ -319,8 +316,7 @@ document.addEventListener("click", async function(event) {
     const assignees = [{ username: "to.toan", hoTen: "Tổ Toán", vaiTro: "Chủ trì" }];
     
     const ketQua = await apiCreateTask(taskData, assignees);
-    if(ketQua && ketQua.status === "success") {
+    if (ketQua && ketQua.status === "success") {
         alert("Đã đẩy dữ liệu thành công xuống Google Sheets!");
     }
-    */
 });
