@@ -16,20 +16,15 @@
 </head>
 <body class="h-full text-slate-800 antialiased flex flex-col bg-slate-50 selection:bg-blue-100 selection:text-[#0F4C81]">
 
- <!-- ================= HEADER CHUẨN TTĐHS_HVA v2.0 ================= -->
+ <!-- ================= HEADER TTĐHS_HVA ================= -->
 <header class="relative sticky top-0 z-40 overflow-hidden shadow-lg">
 
-    <!-- ================= Background ================= -->
-    <div class="absolute inset-0
-        bg-gradient-to-r
-        from-[#062B5B]
-        via-[#0F4C81]
-        to-[#1486D8]">
-    </div>
+    <!-- Background -->
+    <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
 
     <!-- Glow -->
-    <div class="absolute -left-20 -top-16 w-72 h-72 bg-cyan-300/20 rounded-full blur-3xl"></div>
-    <div class="absolute right-0 -bottom-20 w-80 h-80 bg-sky-200/15 rounded-full blur-3xl"></div>
+    <div class="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-cyan-300/20 blur-3xl"></div>
+    <div class="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-sky-300/15 blur-3xl"></div>
 
     <!-- Grid -->
     <div class="absolute inset-0 opacity-[0.06]"
@@ -40,121 +35,91 @@
         background-size:28px 28px;">
     </div>
 
-    <!-- Network -->
-    <svg class="absolute inset-0 w-full h-full opacity-[0.12]"
-         preserveAspectRatio="none">
+    <!-- Circuit -->
+    <svg class="absolute inset-0 w-full h-full opacity-[0.12]" preserveAspectRatio="none">
 
         <g stroke="white" stroke-width="1.2" fill="none">
-
-            <path d="M45 28 H120 V68 H205"/>
-            <path d="M300 18 V45 H380 V92"/>
-            <path d="M560 30 H650 V65 H760"/>
-
-            <path d="M170 90 H240 V120"/>
-            <path d="M470 100 H550"/>
-
+            <path d="M35 28 H120 V68 H200"/>
+            <path d="M300 20 V55 H390 V95"/>
+            <path d="M560 28 H650 V60 H760"/>
         </g>
 
         <g fill="white">
+            <circle cx="35" cy="28" r="2.6"/>
+            <circle cx="120" cy="68" r="2.6"/>
+            <circle cx="200" cy="68" r="2.6"/>
 
-            <circle cx="45" cy="28" r="2.8"/>
-            <circle cx="120" cy="68" r="2.8"/>
-            <circle cx="205" cy="68" r="2.8"/>
+            <circle cx="300" cy="20" r="2.6"/>
+            <circle cx="390" cy="55" r="2.6"/>
+            <circle cx="390" cy="95" r="2.6"/>
 
-            <circle cx="300" cy="18" r="2.8"/>
-            <circle cx="380" cy="45" r="2.8"/>
-            <circle cx="380" cy="92" r="2.8"/>
-
-            <circle cx="560" cy="30" r="2.8"/>
-            <circle cx="650" cy="65" r="2.8"/>
-            <circle cx="760" cy="65" r="2.8"/>
-
+            <circle cx="560" cy="28" r="2.6"/>
+            <circle cx="650" cy="60" r="2.6"/>
+            <circle cx="760" cy="60" r="2.6"/>
         </g>
 
     </svg>
 
-    <!-- ================= Content ================= -->
+    <div class="relative max-w-3xl mx-auto px-4 pt-4 pb-5">
 
-    <div class="relative max-w-3xl mx-auto
-                px-4 py-3.5
-                flex items-center justify-between">
+        <!-- Dòng 1 -->
+        <div class="flex items-center justify-between">
 
-        <!-- LEFT -->
+            <div class="flex items-center gap-3">
 
-        <div class="flex items-center gap-3">
+                <button
+                    onclick="window.location.href='main.html'"
+                    class="w-11 h-11 rounded-2xl
+                           bg-white/12
+                           border border-white/20
+                           backdrop-blur
+                           hover:bg-white/20
+                           transition">
 
-            <!-- Back -->
+                    <i class="bi bi-arrow-left text-white text-xl"></i>
 
-            <button
-                onclick="window.location.href='main.html'"
-                class="w-11 h-11
-                       rounded-2xl
-                       bg-white/12
-                       backdrop-blur
-                       border border-white/15
-                       hover:bg-white/20
-                       active:scale-95
-                       transition-all">
+                </button>
 
-                <i class="bi bi-arrow-left text-white text-xl"></i>
-
-            </button>
-
-            <!-- Title -->
-
-            <div>
-
-                <div class="text-white
-                            font-extrabold
-                            tracking-wide
-                            uppercase
-                            text-sm">
+                <div class="text-white font-bold uppercase tracking-wide text-sm">
 
                     HVA - THPT HÒA VANG
 
                 </div>
 
-                <div class="mt-0.5
-                            text-white
-                            font-black
-                            uppercase
-                            tracking-wide
-                            text-2xl">
+            </div>
 
-                    TRANG GIAO VIỆC
+            <div class="flex items-center gap-2
+                        px-3 py-2
+                        rounded-full
+                        bg-white/12
+                        border border-white/15
+                        backdrop-blur">
 
-                </div>
+                <span class="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
+
+                <span class="text-white text-xs font-semibold">
+
+                    Hệ thống kết nối
+
+                </span>
 
             </div>
 
         </div>
 
-        <!-- Badge -->
+        <!-- Dòng 2 -->
 
-        <div class="flex
-                    items-center
-                    gap-2
-                    px-3 py-2
-                    rounded-full
-                    bg-white/12
-                    backdrop-blur
-                    border border-white/15">
+        <div class="mt-2 ml-14">
 
-            <span class="w-2.5 h-2.5
-                         rounded-full
-                         bg-lime-400
-                         animate-pulse
-                         shadow-[0_0_12px_#6EEB83]">
-            </span>
+            <div class="text-white
+                        text-[38px]
+                        leading-none
+                        font-black
+                        uppercase">
 
-            <span class="text-white
-                         text-xs
-                         font-semibold
-                         whitespace-nowrap">
+                TRANG GIAO VIỆC
 
-                Hệ thống kết nối
-
-            </span>
+            </div>
 
         </div>
 
@@ -165,25 +130,66 @@
     <main class="flex-1 max-w-3xl w-full mx-auto p-4 sm:p-6 pb-28 overflow-y-auto">
         <form id="formGiaoViecFull" class="space-y-5">
             
-           <!-- Thông tin -->
-<div class="flex-1">
+          <!-- ================= NGƯỜI GIAO ================= -->
 
-    <div class="text-xs text-slate-500">
-        Người giao
-    </div>
+<div class="bg-gradient-to-br
+            from-[#F5FAFF]
+            to-[#EDF7FF]
+            border border-blue-100
+            rounded-3xl
+            shadow-sm
+            p-5
+            mb-5">
 
-    <div id="nguoiGiao"
-         class="text-lg font-bold text-[#0F4C81] leading-tight mt-0.5">
-        Thầy Nguyễn Văn Thà
-    </div>
+    <div class="flex items-center gap-4">
 
-    <div class="mt-2 text-xs text-slate-500">
-        Chức vụ
-    </div>
+        <!-- Icon -->
 
-    <div id="chucVuNguoiGiao"
-         class="text-sm font-semibold text-slate-700 leading-tight">
-        Phó Hiệu trưởng
+        <div class="w-14 h-14
+                    rounded-2xl
+                    bg-gradient-to-br
+                    from-[#0F4C81]
+                    to-[#29B6F6]
+                    flex items-center justify-center
+                    shadow-md">
+
+            <i class="bi bi-person-badge-fill text-white text-2xl"></i>
+
+        </div>
+
+        <!-- Thông tin -->
+
+        <div class="flex-1">
+
+            <div class="text-lg
+                        font-bold
+                        text-[#0F4C81]
+                        leading-tight">
+
+                Người giao:
+                <span id="nguoiGiao">
+
+                    Thầy Nguyễn Văn Thà
+
+                </span>
+
+            </div>
+
+            <div class="mt-1
+                        text-sm
+                        font-semibold
+                        text-slate-600">
+
+                <span id="chucVuNguoiGiao">
+
+                    Phó Hiệu trưởng
+
+                </span>
+
+            </div>
+
+        </div>
+
     </div>
 
 </div>
