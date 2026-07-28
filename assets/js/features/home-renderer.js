@@ -100,12 +100,12 @@ export function renderHome() {
 
 <!-- QUICK ACTION (DOCK ĐIỀU HÀNH) -->
 <div class="grid grid-cols-5 gap-1.5 mb-4">
-    <button data-open-modal="document-modal" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 active:scale-95 transition-all group">
-        <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
-            <i class="bi bi-plus-circle-fill"></i>
-        </div>
-        <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Giao việc</span>
-    </button>
+    <button id="btnGiaoViecNet" data-open-modal="document-modal" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 active:scale-95 transition-all group">
+    <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
+        <i class="bi bi-plus-circle-fill"></i>
+    </div>
+    <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Giao việc</span>
+</button>
     <button data-open-modal="team-modal" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-orange-200 active:scale-95 transition-all group">
         <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
             <i class="bi bi-calendar-check-fill"></i>
@@ -300,17 +300,27 @@ function bindHomeEvents() {
         }
     }
 }
-// ============================================================================
-// TÍCH HỢP SỰ KIỆN GIAO VIỆC KẾT NỐI GOOGLE SHEETS (GAS API)
-// ============================================================================
-document.addEventListener("DOMContentLoaded", function() {
-    // Tìm nút "Giao việc" đầu tiên trong Dock điều hành
-    const btnGiaoViec = document.querySelector('[data-open-modal="document-modal"]');
+
+// Lắng nghe thao tác trên nút Giao việc riêng biệt
+document.addEventListener("click", async function(event) {
+    const btn = event.target.closest("#btnGiaoViecNet");
+    if (!btn) return;
+
+    console.log("Đã bấm nút Giao việc, modal đang mở...");
     
-    if (btnGiaoViec) {
-        btnGiaoViec.addEventListener("click", async function() {
-            // Thầy có thể gọi hàm apiCreateTask tại đây khi form modal giao việc hoàn tất
-            console.log("Đã kích hoạt chức năng Giao việc từ Home Renderer.");
-        });
+    // Tại đây, khi modal nhập liệu hiện lên và thầy bấm nút lưu/gửi trong modal đó, 
+    // thầy có thể gọi trực tiếp hàm truyền dữ liệu mẫu như sau để kiểm tra:
+    /*
+    const taskData = {
+        tieuDe: "Kiểm tra hệ thống giao việc từ App",
+        noiDung: "Đồng bộ tự động qua Google Apps Script",
+        nguoiGiao: "Thầy Nguyễn Văn Thả"
+    };
+    const assignees = [{ username: "to.toan", hoTen: "Tổ Toán", vaiTro: "Chủ trì" }];
+    
+    const ketQua = await apiCreateTask(taskData, assignees);
+    if(ketQua && ketQua.status === "success") {
+        alert("Đã đẩy dữ liệu thành công xuống Google Sheets!");
     }
+    */
 });
