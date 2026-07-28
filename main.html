@@ -353,16 +353,6 @@
             }
         });
 
-        // Tự động bắt sự kiện click toàn cục cho nút "Giao việc" (kể cả phần tử render động)
-document.addEventListener('click', function(e) {
-    const target = e.target.closest('button, div, a, span');
-    if (!target) return;
-    const text = target.innerText ? target.innerText.trim() : '';
-    if (text === 'Giao việc' || text === 'Giao nhiệm vụ mới') {
-        e.preventDefault();
-        moModalGiaoViec();
-    }
-});
-    </script>
+</script>
 </body>
 </html>
