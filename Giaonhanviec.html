@@ -40,27 +40,33 @@
         <form id="formGiaoViecFull" class="space-y-5">
             
             <!-- Thông tin Người giao -->
-            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/80 border border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#0F4C81] flex items-center justify-center text-lg shadow-sm">
-                        <i class="bi bi-person-circle"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <label class="block text-[11px] font-medium text-slate-400">Người giao</label>
-                        <input type="text" id="nguoiGiao" readonly class="w-full bg-transparent text-sm font-bold text-[#0F4C81] outline-none truncate" value="Thầy Nguyễn Văn Thả">
-                    </div>
-                </div>
+<div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+    <div class="flex items-center gap-4">
 
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/80 border border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#0F4C81] flex items-center justify-center text-lg shadow-sm">
-                        <i class="bi bi-briefcase-fill"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <label class="block text-[11px] font-medium text-slate-400">Chức vụ</label>
-                        <input type="text" id="chucVuNguoiGiao" readonly class="w-full bg-transparent text-sm font-bold text-[#0F4C81] outline-none truncate" value="Phó Hiệu trưởng">
-                    </div>
-                </div>
+        <!-- Icon Người -->
+        <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center shadow-sm flex-shrink-0">
+            <i class="bi bi-person-fill text-3xl text-[#0F4C81]"></i>
+        </div>
+
+        <!-- Thông tin -->
+        <div class="flex-1">
+            <div class="flex items-center flex-wrap gap-2">
+                <span class="text-sm text-slate-500 font-medium">Người giao:</span>
+                <span id="nguoiGiao" class="text-base font-bold text-[#0F4C81]">
+                    Thầy Nguyễn Văn Thà
+                </span>
             </div>
+
+            <div class="flex items-center flex-wrap gap-2 mt-1">
+                <span class="text-sm text-slate-500 font-medium">Chức vụ:</span>
+                <span id="chucVuNguoiGiao" class="text-sm font-semibold text-slate-700">
+                    Phó Hiệu trưởng
+                </span>
+            </div>
+        </div>
+
+    </div>
+</div>
 
             <!-- NGUỒN GIAO -->
             <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
