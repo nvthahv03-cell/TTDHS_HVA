@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trung tâm Điều hành số - Giao nhiệm vụ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="h-full bg-white text-[#0F4C81] antialiased flex flex-col">
+
+    <!-- HEADER TRANG GIAO VIỆC -->
+    <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+        <div class="flex items-center space-x-3">
+            <button onclick="dongTrangGiaoViec()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-[#0F4C81] transition">
+                <i class="bi bi-arrow-left text-xl font-bold"></i>
+            </button>
+            <div>
+                <h1 class="text-xs font-extrabold uppercase tracking-widest text-slate-500">Trung tâm Điều hành số</h1>
+                <p class="text-lg font-extrabold text-[#0F4C81]">Giao nhiệm vụ & Chỉ đạo công tác</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button type="button" onclick="dongTrangGiaoViec()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition">Hủy bỏ</button>
+            <button form="formGiaoViecFull" type="submit" id="btnSubmit" class="px-6 py-2 rounded-xl bg-[#0F4C81] text-white text-sm font-bold hover:bg-blue-900 shadow-lg shadow-blue-900/20 transition flex items-center gap-2">
+                <i class="bi bi-send-fill"></i> Xác nhận Giao việc
+            </button>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH (FULL MÀN HÌNH - NỀN TRẮNG, CHỮ XANH ĐẬM) -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-6 md:p-8 overflow-y-auto">
+        <form id="formGiaoViecFull" class="space-y-6">
+            
+            <!-- Phần 1: Thông tin người giao (Khóa tự động) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Người giao nhiệm vụ</label>
+                    <input type="text" id="nguoiGiao" readonly class="w-full bg-transparent text-sm font-extrabold text-[#0F4C81] outline-none" value="Thầy Nguyễn Văn Thả">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Chức vụ</label>
+                    <input type="text" id="chucVuNguoiGiao" readonly class="w-full bg-transparent text-sm font-extrabold text-[#0F4C81] outline-none" value="Phó Hiệu trưởng">
+                </div>
+            </div>
+
+            <!-- Phần 2: Loại nhiệm vụ & Thời gian -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Loại nhiệm vụ</label>
+                    <select id="loaiNhiemVu" class="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-[#0F4C81] outline-none focus:border-[#0F4C81] transition">
+                        <option value="Chỉ đạo thường xuyên">Chỉ đạo thường xuyên</option>
+                        <option value="Công việc khẩn">Công việc khẩn</option>
+                        <option value="Thực hiện theo Văn bản">Thực hiện theo Văn bản</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Thời gian cập nhật giao</label>
+                    <input type="text" id="thoiGianHienThi" readonly class="w-full rounded-xl border-2 border-slate-200 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700">
+                </div>
+            </div>
+
+            <!-- Phần 3: Tiêu đề nhiệm vụ -->
+            <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Tiêu đề nhiệm vụ</label>
+                <input type="text" id="tieuDe" required class="w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold text-[#0F4C81] outline-none focus:border-[#0F4C81] transition" placeholder="Nhập tóm tắt tên công việc giao...">
+            </div>
+
+            <!-- Phần 4: Nội dung chi tiết (Ô văn bản hoặc tự ghi) -->
+            <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Nội dung chi tiết yêu cầu / Chỉ đạo</label>
+                <textarea id="noiDung" rows="4" class="w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold text-[#0F4C81] outline-none focus:border-[#0F4C81] transition resize-y" placeholder="Nhập nội dung công việc hoặc chọn mẫu sẵn..."></textarea>
+            </div>
+
+            <!-- Phần 5: PHÂN CHỌN TỔ / BỘ PHẬN & ĐỐI TƯỢNG (Đúng 8 đơn vị) -->
+            <div class="border-2 border-slate-200 rounded-2xl p-5 space-y-4 bg-slate-50/50">
+                <div class="flex justify-between items-center">
+                    <label class="text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">Chọn Tổ / Bộ phận & Cán bộ nhận việc (Đa đối tượng)</label>
+                    <span id="soLuongChon" class="text-xs font-bold bg-[#0F4C81] text-white px-2.5 py-1 rounded-lg">Đã chọn: 0 người</span>
+                </div>
+
+                <!-- Danh sách đúng 8 Tổ chuyên môn & Văn phòng -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="danhSachTo">
+                    <button type="button" onclick="chonTo('Toán - Tin')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Toán - Tin</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Hóa học')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Hóa học</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Vật lí - Công nghệ')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Vật lí - Công nghệ</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Sinh - GDTC - QPAN')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Sinh - GDTC - QPAN</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Ngữ văn')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Ngữ văn</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Sử - Địa - GD KT&PL')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Sử - Địa - GD KT&PL</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Ngoại Ngữ')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Ngoại Ngữ</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Văn Phòng')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between bg-blue-50">
+                        <span>Văn Phòng</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Khu vực hiển thị danh sách nhân sự của tổ đang chọn -->
+                <div id="vungNhanSuTo" class="bg-white p-4 rounded-xl border border-slate-200 hidden">
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b">
+                        <h4 id="tieuDeTenTo" class="text-xs font-extrabold text-[#0F4C81] uppercase">Danh sách nhân sự</h4>
+                        <button type="button" onclick="chonTatCaTrongTo()" class="text-xs font-bold text-blue-600 hover:underline">Chọn tất cả tổ này</button>
+                    </div>
+                    <div id="danhSachCheckboxNhanSu" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 max-h-48 overflow-y-auto p-1">
+                        <!-- Danh sách checkbox nhân sự load từ Sheet -->
+                    </div>
+                </div>
+
+                <!-- Khung hiển thị các cá nhân/tổ đã được chọn tổng hợp -->
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Đã tổng hợp người nhận nhiệm vụ:</label>
+                    <div id="danhSachDaChon" class="p-3 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-[#0F4C81] min-h-[42px] flex items-center flex-wrap gap-1.5">
+                        <span class="text-slate-400 italic">Chưa chọn đối tượng nào...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 6: Hạn hoàn thành & Ghi chú -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Hạn hoàn thành</label>
+                    <input type="date" id="hanHoanThanh" class="w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold text-[#0F4C81] outline-none focus:border-[#0F4C81] transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Ghi chú quản lý</label>
+                    <input type="text" id="ghiChu" class="w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold text-[#0F4C81] outline-none focus:border-[#0F4C81] transition" placeholder="Ghi chú đôn đốc thêm...">
+                </div>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- SCRIPT XỬ LÝ LOGIC -->
+    <script>
+        const SCRIPT_URL = "URL_WEB_APP_GOOGLE_APPS_SCRIPT_CỦA_THẦY";
+        let tatCaNhanSu = [];
+        let danhSachNguoiNhanChon = [];
+
+        window.addEventListener('DOMContentLoaded', async function() {
+            const now = new Date();
+            document.getElementById('thoiGianHienThi').value = now.toLocaleString('vi-VN');
+            await taiDuLieuNhanSu();
+        });
+
+        async function taiDuLieuNhanSu() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getNhanSu`);
+                tatCaNhanSu = await response.json();
+            } catch (e) {
+                console.error("Lỗi tải nhân sự từ Sheet:", e);
+                tatCaNhanSu = [
+                    { hoTen: "Nguyễn Văn Thả", toBoPhan: "Toán - Tin" },
+                    { hoTen: "Trần Văn A", toBoPhan: "Hóa học" },
+                    { hoTen: "Lê Thị B", toBoPhan: "Ngữ văn" },
+                    { hoTen: "Phạm Văn C", toBoPhan: "Văn Phòng" }
+                ];
+            }
+        }
+
+        function chonTo(tenTo) {
+            const vungNhanSu = document.getElementById('vungNhanSuTo');
+            const tieuDeTo = document.getElementById('tieuDeTenTo');
+            const containerCheckbox = document.getElementById('danhSachCheckboxNhanSu');
+            
+            vungNhanSu.classList.remove('hidden');
+            tieuDeTo.innerText = `Danh sách nhân sự thuộc: ${tenTo}`;
+            
+            const nsThuocTo = tatCaNhanSu.filter(ns => ns.toBoPhan === tenTo);
+            
+            containerCheckbox.innerHTML = '';
+            if (nsThuocTo.length === 0) {
+                containerCheckbox.innerHTML = '<span class="text-xs text-slate-400 italic">Chưa có dữ liệu nhân sự trong tổ này ở Sheet NhanSu.</span>';
+                return;
+            }
+
+            nsThuocTo.forEach(ns => {
+                const isChecked = danhSachNguoiNhanChon.includes(ns.hoTen);
+                const label = document.createElement('label');
+                label.className = "flex items-center space-x-2.5 p-2 rounded-lg hover:bg-slate-50 cursor-pointer border border-slate-100";
+                label.innerHTML = `
+                    <input type="checkbox" value="${ns.hoTen}" ${isChecked ? 'checked' : ''} onchange="capNhatChonNhanSu(this)" class="w-4 h-4 text-[#0F4C81] rounded border-slate-300 focus:ring-[#0F4C81]">
+                    <span class="text-xs font-bold text-[#0F4C81]">${ns.hoTen}</span>
+                `;
+                containerCheckbox.appendChild(label);
+            });
+        }
+
+        function capNhatChonNhanSu(checkbox) {
+            const ten = checkbox.value;
+            if (checkbox.checked) {
+                if (!danhSachNguoiNhanChon.includes(ten)) danhSachNguoiNhanChon.push(ten);
+            } else {
+                danhSachNguoiNhanChon = danhSachNguoiNhanChon.filter(item => item !== ten);
+            }
+            hienThiDanhSachDaChonTag();
+        }
+
+        function hienThiDanhSachDaChonTag() {
+            const container = document.getElementById('danhSachDaChon');
+            const badgeSoLuong = document.getElementById('soLuongChon');
+            
+            badgeSoLuong.innerText = `Đã chọn: ${danhSachNguoiNhanChon.length} người`;
+            
+            if (danhSachNguoiNhanChon.length === 0) {
+                container.innerHTML = '<span class="text-slate-400 italic">Chưa chọn đối tượng nào...</span>';
+                return;
+            }
+
+            container.innerHTML = '';
+            danhSachNguoiNhanChon.forEach(ten => {
+                const tag = document.createElement('span');
+                tag.className = "bg-blue-50 text-[#0F4C81] border border-blue-200 px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5";
+                tag.innerHTML = `${ten} <i class="bi bi-x cursor-pointer hover:text-red-600" onclick="xoaNguoiChon('${ten}')"></i>`;
+                container.appendChild(tag);
+            });
+        }
+
+        function xoaNguoiChon(ten) {
+            danhSachNguoiNhanChon = danhSachNguoiNhanChon.filter(item => item !== ten);
+            hienThiDanhSachDaChonTag();
+            const checkboxes = document.querySelectorAll('#danhSachCheckboxNhanSu input[type="checkbox"]');
+            checkboxes.forEach(cb => { if(cb.value === ten) cb.checked = false; });
+        }
+
+        function chonTatCaTrongTo() {
+            const checkboxes = document.querySelectorAll('#danhSachCheckboxNhanSu input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = true;
+                if (!danhSachNguoiNhanChon.includes(cb.value)) {
+                    danhSachNguoiNhanChon.push(cb.value);
+                }
+            });
+            hienThiDanhSachDaChonTag();
+        }
+
+        function dongTrangGiaoViec() {
+            window.history.back();
+        }
+
+        document.getElementById('formGiaoViecFull').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (danhSachNguoiNhanChon.length === 0) {
+                alert('Vui lòng chọn ít nhất một cán bộ hoặc bộ phận nhận nhiệm vụ!');
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btnSubmit');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = `<span class="inline-block animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></span> Đang gửi...`;
+
+            const payload = {
+                nguoiGiao: document.getElementById('nguoiGiao').value,
+                chucVuNguoiGiao: document.getElementById('chucVuNguoiGiao').value,
+                loaiNhiemVu: document.getElementById('loaiNhiemVu').value,
+                tieuDe: document.getElementById('tieuDe').value,
+                noiDung: document.getElementById('noiDung').value,
+                nguoiNhan: danhSachNguoiNhanChon.join(', '),
+                hanHoanThanh: document.getElementById('hanHoanThanh').value,
+                ghiChu: document.getElementById('ghiChu').value,
+                thoiGianGiao: new Date().toISOString()
+            };
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+
+                alert('Đã giao nhiệm vụ thành công cho các đối tượng đã chọn! Dữ liệu đã được lưu về Google Sheets.');
+                dongTrangGiaoViec();
+            } catch (err) {
+                console.error(err);
+                alert('Lỗi kết nối hệ thống cơ sở dữ liệu!');
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<i class="bi bi-send-fill"></i> Xác nhận Giao việc`;
+            }
+        });
+    </script>
+</body>
+</html>
