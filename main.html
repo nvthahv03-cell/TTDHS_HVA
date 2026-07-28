@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="vi" class="h-full scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -173,7 +173,19 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script type="module" src="assets/js/core/app.js"></script>
+  <!-- Scripts -->
+<script src="services/api.js"></script>
+<script type="module" src="assets/js/core/app.js"></script>
+
+<!-- ĐOẠN GẮN KẾT SỰ KIỆN GIAO VIỆC -->
+<script>
+document.addEventListener("click", async function(event) {
+    // Bắt đúng nút Giao việc trong Dock điều hành
+    const btn = event.target.closest('[data-open-modal="document-modal"]');
+    if (!btn) return;
+
+    console.log("Đã kích hoạt modal Giao việc từ main.html");
+});
+</script>
 </body>
 </html>
