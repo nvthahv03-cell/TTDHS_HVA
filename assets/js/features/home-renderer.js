@@ -298,7 +298,7 @@ function renderPWAPopups() {
     `;
     document.body.insertAdjacentHTML('beforeend', popupHtml);
 
-    // Gắn sự kiện đóng popup iOS / Android nếu cần
+    // Gắn sự kiện đóng popup iOS / Android
     const dismissBtn = document.getElementById('pwa-dismiss-btn');
     const iosClose = document.getElementById('pwa-ios-close');
     const iosGotIt = document.getElementById('pwa-ios-got-it');
@@ -321,15 +321,35 @@ function bindHomeEvents() {
     const installBtn = document.getElementById('btn-install');
     if (installBtn) {
         installBtn.addEventListener('click', () => {
-            if (PWA && typeof PWA.install === 'function') {
-                PWA.install();
-            } else {
-                const popup = document.getElementById('pwa-custom-popup');
-                const androidContent = document.getElementById('pwa-android-content');
-                if (popup && androidContent) {
-                    androidContent.classList.remove('hidden');
-                    popup.classList.remove('hidden');
+            // Kiểm tra nếu thiết bị là iOS (iPhone/iPad/iPod)
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+            // Đảm bảo popup đã được chèn vào DOM trước khi thao tác
+            renderPWAPopups();
+
+            const popup = document.getElementById('pwa-custom-popup');
+            const androidContent = document.getElementById('pwa-android-content');
+            const iosContent = document.getElementById('pwa-ios-content');
+
+            if (popup) {
+                // Ẩn tất cả nội dung trước để reset trạng thái
+                if (androidContent) androidContent.classList.add('hidden');
+                if (iosContent) iosContent.classList.add('hidden');
+
+                if (isIOS) {
+                    // Hiển thị hướng dẫn dành riêng cho iOS
+                    if (iosContent) iosContent.classList.remove('hidden');
+                } else {
+                    // Nếu có service PWA native thì gọi, ngược lại bật popup Android/Desktop
+                    if (typeof PWA !== 'undefined' && typeof PWA.install === 'function') {
+                        PWA.install();
+                        return;
+                    }
+                    if (androidContent) androidContent.classList.remove('hidden');
                 }
+
+                // Show popup tổng
+                popup.classList.remove('hidden');
             }
         });
     }
@@ -337,7 +357,7 @@ function bindHomeEvents() {
     const pwaConfirmBtn = document.getElementById('pwa-confirm-btn');
     if (pwaConfirmBtn) {
         pwaConfirmBtn.addEventListener('click', () => {
-            if (PWA && typeof PWA.install === 'function') {
+            if (typeof PWA !== 'undefined' && typeof PWA.install === 'function') {
                 PWA.install();
             }
             const popup = document.getElementById('pwa-custom-popup');
