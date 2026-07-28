@@ -16,64 +16,146 @@
 </head>
 <body class="h-full text-slate-800 antialiased flex flex-col bg-slate-50 selection:bg-blue-100 selection:text-[#0F4C81]">
 
-   <!-- HEADER CHUẨN HVA -->
-<header class="relative overflow-hidden bg-gradient-to-r from-[#0F4C81] via-[#1565A9] to-[#1B84D6] px-4 py-4 sticky top-0 z-30 shadow-lg">
+   <!-- ================= HEADER CHUẨN TTĐHS_HVA v1.0 ================= -->
+<header class="relative sticky top-0 z-40 overflow-hidden shadow-xl">
 
-    <!-- Họa tiết Chuyển đổi số -->
-    <div class="absolute inset-0 opacity-10 pointer-events-none">
-        <div class="absolute inset-0"
-             style="background-image:
-             radial-gradient(circle at 20% 30%, rgba(255,255,255,.45) 2px, transparent 2px),
-             radial-gradient(circle at 70% 40%, rgba(255,255,255,.35) 2px, transparent 2px),
-             radial-gradient(circle at 45% 75%, rgba(255,255,255,.40) 2px, transparent 2px),
-             linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
-             linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
-             background-size:120px 120px,160px 160px,200px 200px,28px 28px,28px 28px;">
-        </div>
+    <!-- Digital Blue Gradient -->
+    <div class="absolute inset-0 bg-gradient-to-r
+        from-[#072B61]
+        via-[#0F4C81]
+        via-[#1677C9]
+        to-[#29B6F6]">
     </div>
 
-    <div class="relative max-w-3xl mx-auto flex items-center justify-between">
+    <!-- Glow trái -->
+    <div class="absolute -left-24 -top-24 w-72 h-72
+                rounded-full bg-cyan-300/25 blur-3xl">
+    </div>
 
-        <!-- Bên trái -->
-        <div class="flex items-center gap-3">
+    <!-- Glow phải -->
+    <div class="absolute -right-24 -bottom-24 w-80 h-80
+                rounded-full bg-blue-100/20 blur-3xl">
+    </div>
 
-            <!-- Nút quay lại -->
-            <button type="button"
+    <!-- Grid -->
+    <div class="absolute inset-0 opacity-[0.08]"
+        style="
+        background-image:
+        linear-gradient(rgba(255,255,255,.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.15) 1px, transparent 1px);
+        background-size:26px 26px;">
+    </div>
+
+    <!-- Circuit Pattern -->
+    <svg class="absolute inset-0 w-full h-full opacity-20"
+         preserveAspectRatio="none">
+
+        <!-- Left -->
+        <path d="M30 30 H110 V70 H180"
+              stroke="white"
+              stroke-width="1.5"
+              fill="none"/>
+
+        <circle cx="30" cy="30" r="3" fill="white"/>
+        <circle cx="110" cy="70" r="3" fill="white"/>
+        <circle cx="180" cy="70" r="3" fill="white"/>
+
+        <!-- Center -->
+        <path d="M320 15 V45 H390 V95"
+              stroke="white"
+              stroke-width="1.5"
+              fill="none"/>
+
+        <circle cx="320" cy="15" r="3" fill="white"/>
+        <circle cx="390" cy="45" r="3" fill="white"/>
+        <circle cx="390" cy="95" r="3" fill="white"/>
+
+        <!-- Right -->
+        <path d="M620 20 H710 V60 H790"
+              stroke="white"
+              stroke-width="1.5"
+              fill="none"/>
+
+        <circle cx="620" cy="20" r="3" fill="white"/>
+        <circle cx="710" cy="60" r="3" fill="white"/>
+        <circle cx="790" cy="60" r="3" fill="white"/>
+
+    </svg>
+
+    <!-- Nội dung -->
+    <div class="relative max-w-3xl mx-auto
+                px-4 py-4
+                flex items-center justify-between">
+
+        <!-- LEFT -->
+        <div class="flex items-center gap-4">
+
+            <!-- Back -->
+            <button
                 onclick="window.location.href='main.html'"
-                class="w-10 h-10 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95
-                       flex items-center justify-center
-                       border border-white/20 text-white transition">
+                class="w-11 h-11
+                       rounded-xl
+                       bg-white/15
+                       border border-white/20
+                       backdrop-blur-md
+                       hover:bg-white/25
+                       active:scale-95
+                       transition">
 
-                <i class="bi bi-arrow-left text-lg"></i>
+                <i class="bi bi-arrow-left text-white text-xl"></i>
 
             </button>
 
-            <!-- Tiêu đề -->
+            <!-- Title -->
             <div>
 
-                <div class="text-sm font-extrabold tracking-wide text-white uppercase">
+                <div class="text-white
+                            font-black
+                            uppercase
+                            tracking-[1px]
+                            text-base">
+
                     HVA - THPT HÒA VANG
+
                 </div>
 
-                <div class="text-lg font-extrabold tracking-wide text-amber-300 uppercase">
+                <div class="text-amber-300
+                            font-black
+                            uppercase
+                            tracking-wide
+                            text-xl
+                            drop-shadow">
+
                     TRANG GIAO VIỆC
+
                 </div>
 
             </div>
 
         </div>
 
-        <!-- Góc phải -->
-        <div
-            class="flex items-center gap-2
-                   px-3 py-1.5 rounded-full
-                   bg-white/15 border border-white/20
-                   backdrop-blur">
+        <!-- RIGHT -->
+        <div class="hidden md:flex
+                    items-center
+                    gap-2
+                    px-3 py-1.5
+                    rounded-full
+                    bg-white/15
+                    border border-white/20
+                    backdrop-blur">
 
-            <span class="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
+            <span class="w-2.5 h-2.5
+                         rounded-full
+                         bg-lime-400
+                         animate-pulse">
+            </span>
 
-            <span class="text-xs font-semibold text-white">
+            <span class="text-white
+                         text-xs
+                         font-semibold">
+
                 Hệ thống kết nối
+
             </span>
 
         </div>
@@ -81,7 +163,6 @@
     </div>
 
 </header>
-
     <!-- NỘI DUNG FORM -->
     <main class="flex-1 max-w-3xl w-full mx-auto p-4 sm:p-6 pb-28 overflow-y-auto">
         <form id="formGiaoViecFull" class="space-y-5">
