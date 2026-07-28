@@ -301,24 +301,4 @@ function bindHomeEvents() {
     }
 }
 
-// Lắng nghe thao tác trên nút Giao việc
-document.addEventListener("click", async function(event) {
-    const btn = event.target.closest('[data-open-modal="document-modal"]');
-    if (!btn) return;
 
-    console.log("Đã bấm nút mở modal!");
-    
-    // Nếu thầy muốn test gọi API ngầm mà không sợ lỗi, hãy dùng try...catch:
-    try {
-        /* 
-        const taskData = { tieuDe: "Test", noiDung: "Test", nguoiGiao: "Thầy Thả" };
-        const assignees = [{ username: "to.toan", hoTen: "Tổ Toán", vaiTro: "Chủ trì" }];
-        const ketQua = await apiCreateTask(taskData, assignees);
-        if (ketQua && ketQua.status === "success") {
-            console.log("Đồng bộ thành công!");
-        }
-        */
-    } catch (e) {
-        console.error("Lỗi gọi API:", e);
-    }
-});
