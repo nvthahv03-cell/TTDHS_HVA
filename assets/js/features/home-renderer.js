@@ -115,7 +115,7 @@ export function renderHome() {
         <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
             <i class="bi bi-calendar-check-fill"></i>
         </div>
-        <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Hôm nay</span>
+        <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Lịch hôm nay</span>
     </button>
     <button data-open-modal="document-modal" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-amber-200 active:scale-95 transition-all group">
         <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
@@ -127,7 +127,7 @@ export function renderHome() {
         <div class="w-9 h-9 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
             <i class="bi bi-display-fill"></i>
         </div>
-        <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Dashboard</span>
+        <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Điều hành</span>
     </button>
     <button data-open-modal="boiduong-modal" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-purple-200 active:scale-95 transition-all group">
         <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
@@ -155,44 +155,44 @@ export function renderHome() {
 
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
-    <div data-open-modal="digital-modal" class="group relative rounded-2xl bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-800/60 active:scale-[0.98]">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-blue-400/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-blue-500/30 text-[8px] font-extrabold text-blue-200 border border-blue-400/30 uppercase">Trụ cột 1</div>
-        <div class="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/20">
-            <i class="bi bi-globe text-cyan-300 text-lg"></i>
+    <div data-open-modal="digital-modal" class="group relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
+        <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-white/20 text-[8px] font-extrabold text-white border border-white/30 uppercase">Trụ cột 1</div>
+        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
+            <i class="bi bi-globe text-white text-lg"></i>
         </div>
-        <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">THÔNG TIN SỐ</h3>
-        <p class="text-[10px] text-blue-200/80 font-medium">Website • Thông báo • Tuyển sinh • Danh bạ</p>
+        <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">CỔNG THÔNG TIN</h3>
+        <p class="text-[10px] text-blue-50 font-medium">Website • Thông báo • Tuyển sinh • Danh bạ</p>
     </div>
 
-    <div data-open-modal="digital-modal" class="group relative rounded-2xl bg-gradient-to-br from-cyan-950 via-teal-950 to-slate-900 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-cyan-800/60 active:scale-[0.98]">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-cyan-400/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-cyan-500/30 text-[8px] font-extrabold text-cyan-200 border border-cyan-400/30 uppercase">Trụ cột 2</div>
-        <div class="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/20">
-            <i class="bi bi-cpu text-cyan-300 text-lg"></i>
+    <div data-open-modal="digital-modal" class="group relative rounded-2xl bg-gradient-to-br from-teal-600 via-teal-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-teal-400/40 active:scale-[0.98]">
+        <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-white/20 text-[8px] font-extrabold text-white border border-white/30 uppercase">Trụ cột 2</div>
+        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
+            <i class="bi bi-cpu text-white text-lg"></i>
         </div>
         <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">ĐIỀU HÀNH SỐ</h3>
-        <p class="text-[10px] text-cyan-200/80 font-medium">Dashboard • Giao việc • Văn bản • Lịch • AI</p>
+        <p class="text-[10px] text-teal-50 font-medium">Dashboard • Giao việc • Văn bản • AI</p>
     </div>
 
-    <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-purple-950 via-indigo-950 to-slate-900 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-purple-800/60 active:scale-[0.98]">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-purple-400/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-purple-500/30 text-[8px] font-extrabold text-purple-200 border border-purple-400/30 uppercase">Trụ cột 3</div>
-        <div class="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/20">
-            <i class="bi bi-journal-check text-purple-300 text-lg"></i>
+    <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-purple-400/40 active:scale-[0.98]">
+        <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-white/20 text-[8px] font-extrabold text-white border border-white/30 uppercase">Trụ cột 3</div>
+        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
+            <i class="bi bi-journal-check text-white text-lg"></i>
         </div>
-        <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">TÁC NGHIỆP SỐ</h3>
-        <p class="text-[10px] text-purple-200/80 font-medium">Chuyên môn • Báo cáo • Tập huấn • Khảo sát</p>
+        <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">CHUYÊN MÔN SỐ</h3>
+        <p class="text-[10px] text-purple-50 font-medium">Báo cáo • Tập huấn • Hội thảo • Khảo sát</p>
     </div>
 
-    <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-amber-950 via-orange-950 to-slate-900 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-amber-800/60 active:scale-[0.98]">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-amber-400/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-amber-500/30 text-[8px] font-extrabold text-amber-200 border border-amber-400/30 uppercase">Trụ cột 4</div>
-        <div class="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/20">
-            <i class="bi bi-graph-up-arrow text-amber-300 text-lg"></i>
+    <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-amber-400/40 active:scale-[0.98]">
+        <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-white/20 text-[8px] font-extrabold text-white border border-white/30 uppercase">Trụ cột 4</div>
+        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
+            <i class="bi bi-graph-up-arrow text-white text-lg"></i>
         </div>
-        <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">QUẢN TRỊ CHIẾN LƯỢC</h3>
-        <p class="text-[10px] text-amber-200/80 font-medium">KPI • Thi đua • Kiểm định • Quản trị rủi ro</p>
+        <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">QUẢN TRỊ</h3>
+        <p class="text-[10px] text-amber-50 font-medium">Kế hoạch • Thi đua • Kiểm tra • KPI</p>
     </div>
 </section>
 `;
