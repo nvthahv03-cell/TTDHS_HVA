@@ -136,7 +136,6 @@ export function renderHome() {
 <section class="grid grid-cols-2 gap-3 mb-2">
     <div data-open-modal="digital-modal" class="group relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-white/20 text-[8px] font-extrabold text-white border border-white/30 uppercase">Trụ cột 1</div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
             <i class="bi bi-globe text-white text-lg"></i>
         </div>
@@ -145,7 +144,6 @@ export function renderHome() {
     </div>
     <div data-open-modal="digital-modal" class="group relative rounded-2xl bg-gradient-to-br from-teal-600 via-teal-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-teal-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-white/20 text-[8px] font-extrabold text-white border border-white/30 uppercase">Trụ cột 2</div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
             <i class="bi bi-cpu text-white text-lg"></i>
         </div>
@@ -154,7 +152,6 @@ export function renderHome() {
     </div>
     <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-purple-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-white/20 text-[8px] font-extrabold text-white border border-white/30 uppercase">Trụ cột 3</div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
             <i class="bi bi-journal-check text-white text-lg"></i>
         </div>
@@ -163,7 +160,6 @@ export function renderHome() {
     </div>
     <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-amber-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-        <div class="absolute top-2.5 right-2.5 px-1.5 py-0.2 rounded-full bg-white/20 text-[8px] font-extrabold text-white border border-white/30 uppercase">Trụ cột 4</div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
             <i class="bi bi-graph-up-arrow text-white text-lg"></i>
         </div>
