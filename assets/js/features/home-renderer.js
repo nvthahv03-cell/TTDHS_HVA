@@ -182,28 +182,45 @@ function renderPWAPopups() {
     if (document.getElementById('pwa-custom-popup')) return;
 
     const popupHtml = `
-    <div id="pwa-custom-popup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden animate-fade-in">
-        <div class="w-full max-w-xs bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 p-6 text-left">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="text-sm font-bold text-slate-900">Cài đặt trên iPhone/iPad</h3>
-                <button id="pwa-ios-close" class="w-7 h-7 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 text-xs font-bold">✕</button>
-            </div>
-            <p class="text-xs text-slate-500 mb-4">Thực hiện các bước sau để thêm vào Màn hình chính:</p>
-            <div class="space-y-2.5 mb-5 text-xs text-slate-700 font-medium">
-                <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">1</span>
-                    <span>Nhấn nút <b>Chia sẻ</b> (Share) ở thanh công cụ trình duyệt.</span>
+    <div id="pwa-custom-popup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
+        <div class="w-full max-w-xs bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 p-6 text-center">
+            
+            <!-- ANDROID -->
+            <div id="pwa-android-content" class="hidden">
+                <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl mx-auto flex items-center justify-center text-2xl mb-4 shadow-inner">
+                    📱
                 </div>
-                <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">2</span>
-                    <span>Chọn <b>Add to Home Screen</b> (Thêm vào MH chính).</span>
-                </div>
-                <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
-                    <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">3</span>
-                    <span>Nhấn <b>Thêm</b> (Add) ở góc trên bên phải.</span>
+                <h3 class="text-base font-bold text-slate-900 mb-1">Cài đặt ứng dụng</h3>
+                <p class="text-xs text-slate-500 mb-6">Thêm TTĐHS_HVA vào màn hình chính để truy cập nhanh và tiện lợi hơn.</p>
+                <div class="flex gap-2.5">
+                    <button id="pwa-dismiss-btn" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">Để sau</button>
+                    <button id="pwa-confirm-btn" class="flex-1 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-500/25 transition">Cài đặt ngay</button>
                 </div>
             </div>
-            <button id="pwa-ios-got-it" class="w-full py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold shadow-lg shadow-blue-500/25">Đã hiểu</button>
+
+            <!-- iOS -->
+            <div id="pwa-ios-content" class="hidden text-left">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-sm font-bold text-slate-900">Cài đặt trên iPhone/iPad</h3>
+                    <button id="pwa-ios-close" class="w-7 h-7 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 text-xs font-bold">✕</button>
+                </div>
+                <p class="text-xs text-slate-500 mb-4">Thực hiện các bước sau:</p>
+                <div class="space-y-2.5 mb-5 text-xs text-slate-700 font-medium">
+                    <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
+                        <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">1</span>
+                        <span>Nhấn nút <b>Chia sẻ</b> (Share)</span>
+                    </div>
+                    <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
+                        <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">2</span>
+                        <span>Chọn <b>Add to Home Screen</b></span>
+                    </div>
+                    <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
+                        <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">3</span>
+                        <span>Nhấn <b>Thêm</b> (Add)</span>
+                    </div>
+                </div>
+                <button id="pwa-ios-got-it" class="w-full py-2.5 rounded-xl bg-blue-600 text-white text-xs font-bold">Đã hiểu</button>
+            </div>
         </div>
     </div>
     `;
@@ -224,35 +241,66 @@ function isStandalone() {
            window.navigator.standalone === true;
 }
 
-function showPWAPopup() {
+function showPWAPopup(isIOSDevice = false) {
     const popup = document.getElementById('pwa-custom-popup');
-    if (popup) popup.classList.remove('hidden');
+    if (!popup) return;
+
+    document.getElementById('pwa-android-content')?.classList.toggle('hidden', isIOSDevice);
+    document.getElementById('pwa-ios-content')?.classList.toggle('hidden', !isIOSDevice);
+
+    popup.classList.remove('hidden');
 }
 
 function hidePWAPopup() {
-    const popup = document.getElementById('pwa-custom-popup');
-    if (popup) popup.classList.add('hidden');
+    document.getElementById('pwa-custom-popup')?.classList.add('hidden');
 }
 
 function bindHomeEvents() {
-    // Đóng popup iOS
+    // Nút Android
+    document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
+        hidePWAPopup();
+        localStorage.setItem('pwa-dismissed', Date.now().toString());
+    });
+
+    document.getElementById('pwa-confirm-btn')?.addEventListener('click', () => {
+        hidePWAPopup();
+        // Gọi cài đặt thật
+        if (window.deferredPrompt) {
+            window.deferredPrompt.prompt();
+            window.deferredPrompt.userChoice.then(() => {
+                window.deferredPrompt = null;
+            });
+        } else if (typeof PWA?.install === 'function') {
+            PWA.install();
+        }
+    });
+
+    // Nút iOS
     document.getElementById('pwa-ios-close')?.addEventListener('click', hidePWAPopup);
     document.getElementById('pwa-ios-got-it')?.addEventListener('click', () => {
         hidePWAPopup();
         localStorage.setItem('pwa-ios-dismissed', Date.now().toString());
     });
 
-    // Chỉ hiện hướng dẫn trên iOS (khi chưa cài)
-    if (!isStandalone() && isIOS()) {
-        const iosDismissed = localStorage.getItem('pwa-ios-dismissed');
-        if (!iosDismissed || Date.now() - Number(iosDismissed) > 2 * 24 * 60 * 60 * 1000) {
-            setTimeout(() => showPWAPopup(), 1500);
-        }
-    }
+    // Chỉ hiện khi chưa cài
+    if (isStandalone()) return;
 
-    // Android / Desktop: lắng nghe sự kiện cài đặt gốc
+    // Android: bắt sự kiện beforeinstallprompt → hiện popup
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         window.deferredPrompt = e;
+
+        const dismissed = localStorage.getItem('pwa-dismissed');
+        if (!dismissed || Date.now() - Number(dismissed) > 12 * 60 * 60 * 1000) {
+            setTimeout(() => showPWAPopup(false), 1200);
+        }
     });
+
+    // iOS
+    if (isIOS()) {
+        const iosDismissed = localStorage.getItem('pwa-ios-dismissed');
+        if (!iosDismissed || Date.now() - Number(iosDismissed) > 2 * 24 * 60 * 60 * 1000) {
+            setTimeout(() => showPWAPopup(true), 1500);
+        }
+    }
 }
