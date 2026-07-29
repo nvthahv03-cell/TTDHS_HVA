@@ -8,25 +8,6 @@
     <title>TTDHS_HVA - Trung tâm Điều hành số THPT Hòa Vang</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        header: '#0B3C5D',
-                        bgMain: '#F4F7FA',
-                        brandBlue: '#007AFF',
-                        brandTeal: '#10B981',
-                        brandPurple: '#8B5CF6',
-                        brandOrange: '#F97316'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/app.css">
@@ -34,18 +15,19 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="h-full bg-[#F4F7FA] text-slate-900 overflow-x-hidden antialiased select-none font-sans pb-24">
+<body class="h-full bg-[#F4F7FA] text-slate-900 overflow-x-hidden antialiased select-none pb-24">
 
     <div id="app" class="flex flex-col min-h-screen">
 
-        <!-- ================= HEADER ================= -->
-        <header class="fixed top-0 left-0 right-0 z-40 bg-[#0B3C5D] text-white px-4 py-3 safe-pt flex items-center justify-between shadow-md">
+        <!-- ================= HEADER XANH ĐẬM ================= -->
+        <header class="fixed top-0 left-0 right-0 z-40 text-white px-4 py-3 flex items-center justify-between shadow-md" style="background-color: #0B3C5D;">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-full bg-white p-0.5 flex items-center justify-center shrink-0 shadow-sm">
                     <div class="w-full h-full rounded-full border border-slate-200 flex flex-col items-center justify-center text-center leading-none bg-white">
-                        <span class="text-[#0B3C5D] font-extrabold text-[11px] tracking-tighter">HVA</span>
+                        <span style="color: #0B3C5D;" class="font-extrabold text-[11px] tracking-tighter">HVA</span>
                         <span class="text-[6px] text-slate-500 font-bold tracking-tighter">THPT HÒA VANG</span>
                     </div>
                 </div>
@@ -79,8 +61,8 @@
                     </div>
                     <h3 class="text-xs font-medium text-purple-100 leading-snug">Trợ lý số – Hỏi đáp, tóm tắt, tra cứu văn bản hỗ trợ công việc hàng ngày của thầy cô.</h3>
                 </div>
-                <div class="w-20 h-20 relative shrink-0 flex items-center justify-center">
-                    <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shadow-lg border border-white/30">
+                <div class="w-16 h-16 relative shrink-0 flex items-center justify-center">
+                    <div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-lg border border-white/30">
                         🤖
                     </div>
                 </div>
@@ -99,7 +81,7 @@
             <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-100 relative">
                 <div class="flex justify-between items-start">
                     <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-amber-500 text-2xl shrink-0">
+                        <div class="w-11 h-11 rounded-full bg-amber-100 flex items-center justify-center text-amber-500 text-xl shrink-0">
                             <i class="bi bi-sun-fill"></i>
                         </div>
                         <div>
@@ -236,7 +218,7 @@
                     <i class="bi bi-chevron-right absolute bottom-3 right-3 text-white/80 text-sm"></i>
                 </div>
 
-                <!-- Điều hành số (Mở Modal Giao việc tại đây) -->
+                <!-- Điều hành số (Nhấn vào để mở Modal Giao việc) -->
                 <div onclick="moModalGiaoViec()" class="rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-400 p-3.5 text-white shadow-sm flex flex-col justify-between relative overflow-hidden min-h-[105px] cursor-pointer hover:opacity-95 transition">
                     <div class="flex justify-between items-start z-10">
                         <div>
@@ -279,15 +261,12 @@
                 </div>
             </div>
 
-            <!-- Home-view container giữ lại cho JS render động -->
-            <div id="home-view"></div>
         </main>
 
-        <!-- ================= MODAL GIAO VIỆC (GIỮ NGUYÊN LOGIC) ================= -->
+        <!-- ================= MODAL GIAO VIỆC ================= -->
         <div id="modalGiaoViec" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-0 sm:p-4 transition-all duration-300">
             <div class="bg-white rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 w-full max-w-2xl shadow-2xl max-h-[90vh] flex flex-col custom-scrollbar border border-slate-100">
                 
-                <!-- Modal Header -->
                 <div class="flex items-center justify-between pb-4 border-b border-slate-100 shrink-0">
                     <div class="flex items-center space-x-3">
                         <div class="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center shadow-sm">
@@ -303,14 +282,12 @@
                     </button>
                 </div>
                 
-                <!-- Form Container -->
                 <form id="formGiaoViec" class="space-y-4 pt-4 overflow-y-auto custom-scrollbar flex-1 pr-1">
-                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Người giao nhiệm vụ</label>
                             <div class="relative">
-                                <input type="text" id="nguoiGiao" readonly class="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-xs font-semibold text-slate-700 shadow-sm outline-none" value="Thầy Nguyễn Văn Thả (Phó Hiệu trưởng)">
+                                <input type="text" id="nguoiGiao" readonly class="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-xs font-semibold text-slate-700 shadow-sm outline-none" value="Thầy Nguyễn Văn Thà (Phó Hiệu trưởng)">
                                 <i class="bi bi-person-badge absolute left-3 top-2.5 text-slate-400 text-sm"></i>
                             </div>
                         </div>
@@ -385,7 +362,7 @@
                     <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 shrink-0">
                         <button type="button" onclick="dongModalGiaoViec()" class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-semibold hover:bg-slate-200 active:scale-95 transition">Hủy bỏ</button>
                         <button type="button" onclick="hienThiXemTruoc()" class="px-4 py-2.5 rounded-xl bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 active:scale-95 transition shadow-sm">Xem trước</button>
-                        <button type="submit" class="px-5 py-2.5 rounded-xl bg-[#0B3C5D] text-white text-xs font-semibold hover:bg-blue-900 active:scale-95 transition shadow-md flex items-center gap-1.5">
+                        <button type="submit" style="background-color: #0B3C5D;" class="px-5 py-2.5 rounded-xl text-white text-xs font-semibold hover:opacity-90 active:scale-95 transition shadow-md flex items-center gap-1.5">
                             <i class="bi bi-check-circle-fill"></i>
                             <span>Xác nhận Giao</span>
                         </button>
@@ -393,9 +370,6 @@
                 </form>
             </div>
         </div>
-
-        <!-- ================= MODULE CONTAINER ================= -->
-        <div id="module-container" class="fixed inset-0 z-50 hidden" aria-hidden="true"></div>
 
         <!-- ================= BOTTOM NAV ================= -->
         <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200/80 pb-safe px-4 shadow-lg">
@@ -420,20 +394,8 @@
         </nav>
     </div>
 
-    <!-- Overlays & Modals khác giữ nguyên -->
-    <div id="global-overlay" class="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm hidden-force" aria-hidden="true"></div>
-    <div id="toast-message" class="hidden-force fixed bottom-20 left-1/2 -translate-x-1/2 z-[70] px-4 py-3 rounded-2xl bg-slate-900/95 border border-slate-800 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between transition-all duration-300">
-        <div class="flex items-center space-x-2">
-            <i class="bi bi-info-circle text-sky-400 text-base"></i>
-            <span id="toast-text"></span>
-        </div>
-        <button id="toast-close" class="text-slate-400 hover:text-white"><i class="bi bi-x-lg"></i></button>
-    </div>
-
-    <!-- ================= SCRIPTS ================= -->
+    <!-- SCRIPTS -->
     <script src="services/api.js"></script>
-    <script type="module" src="assets/js/core/app.js"></script>
-
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWw1moG7zHpb7tsmdl4pMVtIx0mzKQ_gxuAHGEW1WpjJUAiD9mEYNy-xKSjKr9C9m-/exec";
         
