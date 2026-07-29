@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="vi" class="h-full">
+<html lang="vi" class="h-full scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#0F4C81">
-    <title>Đăng nhập – TTDHS_HVA | Trung tâm Điều hành số THPT Hòa Vang</title>
+    <link rel="manifest" href="manifest.json">
+    <title>TTDHS_HVA - Trung tâm Điều hành số THPT Hòa Vang</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -13,11 +14,11 @@
                 extend: {
                     colors: {
                         brand: {
-                            deep: '#F5F7FA',
+                            deep: '#F1F5F9',
                             primary: '#FFFFFF',
-                            accent: '#E2E8F0',
+                            accent: '#CBD5E1',
                             teal: '#0F4C81',
-                            glow: '#14B8A6'
+                            glow: '#0284C7'
                         }
                     },
                     fontFamily: {
@@ -27,217 +28,372 @@
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.css">
     <style>
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
-        .safe-pt { padding-top: env(safe-area-inset-top); }
+        .backdrop-blur-md { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .backdrop-blur-xl { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .card-enhanced {
+            box-shadow: 0 10px 25px -5px rgba(15, 76, 129, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+        /* Custom scrollbar mượt cho Modal */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
     </style>
 </head>
-<body class="h-full bg-brand-deep text-slate-800 overflow-x-hidden antialiased">
+<body class="h-full bg-slate-100 text-slate-900 overflow-x-hidden antialiased select-none font-sans">
 
-    <!-- Background blobs (đồng bộ main) -->
-    <div class="fixed inset-0 -z-50 overflow-hidden bg-[#F5F7FA]">
-        <div class="absolute -top-[20%] -left-[10%] w-[80%] h-[60%] rounded-full bg-sky-200/30 blur-[120px]"></div>
-        <div class="absolute top-[40%] -right-[20%] w-[90%] h-[70%] rounded-full bg-cyan-200/25 blur-[150px]"></div>
-        <div class="absolute bottom-[-10%] left-[20%] w-[50%] h-[40%] rounded-full bg-teal-200/20 blur-[100px]"></div>
+    <!-- Background đốm màu sinh động hơn -->
+    <div class="fixed inset-0 -z-50 overflow-hidden bg-slate-100">
+        <div class="absolute -top-[10%] -left-[10%] w-[70%] h-[50%] rounded-full bg-sky-300/20 blur-[80px]"></div>
+        <div class="absolute top-[30%] -right-[20%] w-[80%] h-[60%] rounded-full bg-blue-400/15 blur-[90px]"></div>
+        <div class="absolute -bottom-[10%] left-[20%] w-[60%] h-[40%] rounded-full bg-indigo-300/15 blur-[70px]"></div>
     </div>
 
-    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8 safe-pt safe-pb">
+    <div id="app" class="flex flex-col min-h-screen">
 
-        <!-- Logo + Title -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 shadow-lg shadow-brand-teal/25 mb-4">
-                <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-                    <span class="text-brand-teal font-bold text-xl tracking-widest">HVA</span>
+        <!-- ================= HEADER ================= -->
+        <header class="fixed top-0 left-0 right-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200/80 px-4 py-3 safe-pt flex items-center justify-between shadow-sm">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal via-blue-600 to-sky-500 p-0.5 shadow-md shadow-brand-teal/20 flex items-center justify-center">
+                    <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
+                        <span class="text-brand-teal font-black text-sm tracking-widest">HVA</span>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Trung tâm Điều hành số</h1>
+                    <p class="text-sm font-extrabold text-slate-900 tracking-tight mt-0.5">Trường THPT Hòa Vang</p>
                 </div>
             </div>
-            <h1 class="text-xl font-bold text-slate-800 tracking-tight">Trung tâm Điều hành số</h1>
-            <p class="text-sm font-medium text-brand-teal mt-1">Trường THPT Hòa Vang</p>
-            <p class="text-xs text-slate-500 mt-2 max-w-xs mx-auto">Kết nối – Điều hành – Hiệu quả</p>
-        </div>
+            <div class="flex items-center space-x-2">
+                <button id="btn-notification" class="relative w-9 h-9 rounded-full bg-slate-100/80 border border-slate-200 flex items-center justify-center hover:bg-slate-200/80 active:scale-95 transition shadow-sm">
+                    <i class="bi bi-bell text-slate-700 text-sm"></i>
+                    <span class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-rose-500 text-[10px] font-bold text-white flex items-center justify-center shadow-sm animate-pulse">3</span>
+                </button>
+                <button id="btn-ai" class="w-9 h-9 rounded-full bg-sky-50 border border-sky-200 flex items-center justify-center hover:bg-sky-100 active:scale-95 transition shadow-sm" title="Trợ lý AI">
+                    <i class="bi bi-mic-fill text-brand-glow text-sm"></i>
+                </button>
+                <button id="btn-profile" class="w-9 h-9 rounded-full bg-slate-100/80 border border-slate-200 flex items-center justify-center hover:bg-slate-200/80 active:scale-95 transition shadow-sm">
+                    <i class="bi bi-person-fill text-slate-700 text-sm"></i>
+                </button>
+            </div>
+        </header>
 
-        <!-- Login Card -->
-        <div class="w-full max-w-sm">
-            <div class="bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl shadow-slate-200/50 p-6 sm:p-8">
+        <!-- ================= MAIN CONTENT ================= -->
+        <main id="main-content" class="flex-1 px-4 pt-24 pb-24 safe-pb overflow-y-auto max-w-[460px] mx-auto w-full">
+            <!-- Home content sẽ được render bởi HomeRenderer -->
+            <div id="home-view"></div>
+        </main>
 
-                <div class="mb-6">
-                    <h2 class="text-lg font-bold text-slate-800">Đăng nhập hệ thống</h2>
-                    <p class="text-sm text-slate-500 mt-1">Vui lòng sử dụng tài khoản được cấp</p>
+        <!-- ================= MODAL GIAO VIỆC (THIẾT KẾ ĐƯỢC TỐI ƯU CỰC NÉT) ================= -->
+        <div id="modalGiaoViec" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-0 sm:p-4 transition-all duration-300">
+            <div class="bg-white rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 w-full max-w-2xl shadow-2xl max-h-[90vh] flex flex-col custom-scrollbar border border-slate-100 animate-in fade-in slide-in-from-bottom-5 duration-200">
+                
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100 shrink-0">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center shadow-sm">
+                            <i class="bi bi-send-plus-fill text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-slate-900 leading-tight">Giao nhiệm vụ mới</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Trung tâm Điều hành số - THPT Hòa Vang</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="dongModalGiaoViec()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+                        <i class="bi bi-x-lg text-sm"></i>
+                    </button>
                 </div>
-
-                <form id="loginForm" class="space-y-5">
-                    <!-- Username -->
-                    <div>
-                        <label for="username" class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                            Tên đăng nhập
-                        </label>
-                        <div class="relative">
-                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                                <i class="bi bi-person-fill text-lg"></i>
-                            </span>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                required
-                                autocomplete="username"
-                                placeholder="Nhập tên đăng nhập"
-                                class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-white/70 text-slate-800 text-sm
-                                       placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal
-                                       transition-all"
-                            >
+                
+                <!-- Form Container -->
+                <form id="formGiaoViec" class="space-y-4 pt-4 overflow-y-auto custom-scrollbar flex-1 pr-1">
+                    
+                    <!-- Người giao & Loại nhiệm vụ -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Người giao nhiệm vụ</label>
+                            <div class="relative">
+                                <input type="text" id="nguoiGiao" readonly class="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 py-2.5 text-xs font-semibold text-slate-700 shadow-sm outline-none" value="Thầy Nguyễn Văn Thả (Phó Hiệu trưởng)">
+                                <i class="bi bi-person-badge absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Loại nhiệm vụ</label>
+                            <div class="relative">
+                                <select id="loaiNhiemVu" class="w-full rounded-xl border border-slate-200 pl-9 pr-8 py-2.5 text-xs font-medium text-slate-800 shadow-sm bg-white focus:ring-2 focus:ring-brand-glow/20 focus:border-brand-glow outline-none appearance-none transition">
+                                    <option value="Chỉ đạo thường xuyên">Chỉ đạo thường xuyên</option>
+                                    <option value="Công việc khẩn">⚡ Công việc khẩn</option>
+                                    <option value="Thực hiện theo Văn bản">📄 Thực hiện theo Văn bản</option>
+                                </select>
+                                <i class="bi bi-tag absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                                <i class="bi bi-chevron-down absolute right-3 top-3 text-slate-400 text-[10px]"></i>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Password -->
-                   <div class="relative">
-    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-        <i class="bi bi-lock-fill text-lg"></i>
-    </span>
+                    <!-- Tiêu đề công việc -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tiêu đề nhiệm vụ <span class="text-rose-500">*</span></label>
+                        <input type="text" id="tieuDe" required class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 shadow-sm placeholder:text-slate-400 focus:ring-2 focus:ring-brand-glow/20 focus:border-brand-glow outline-none transition" placeholder="Nhập tiêu đề tóm tắt công việc...">
+                    </div>
 
-    <!-- Tiền tố HVA@ -->
-    <span class="absolute left-11 top-1/2 -translate-y-1/2 text-slate-600 font-semibold text-sm">
-        HVA@
-    </span>
+                    <!-- Nội dung chi tiết -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-semibold text-slate-600">Nội dung chi tiết yêu cầu</label>
+                            <button type="button" id="btnMic" class="flex items-center gap-1 text-[11px] font-semibold bg-rose-50 text-rose-600 border border-rose-200/60 px-2.5 py-1 rounded-full hover:bg-rose-100 active:scale-95 transition shadow-sm">
+                                <i class="bi bi-mic-fill text-rose-500"></i>
+                                <span>Đọc giọng nói</span>
+                            </button>
+                        </div>
+                        <textarea id="noiDung" rows="3" class="w-full rounded-xl border border-slate-200 p-3 text-xs font-medium text-slate-800 shadow-sm placeholder:text-slate-400 focus:ring-2 focus:ring-brand-glow/20 focus:border-brand-glow outline-none transition resize-none" placeholder="Nhập nội dung chi tiết hoặc bấm nút đọc bằng giọng nói..."></textarea>
+                    </div>
 
-    <input
-        type="password"
-        id="password"
-        name="password"
-        required
-        autocomplete="current-password"
-        placeholder="Nhập mật khẩu"
-        class="w-full pl-24 pr-12 py-3 rounded-xl border border-slate-200 bg-white/70 text-slate-800 text-sm
-               placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal
-               transition-all"
-    >
+                    <!-- Người nhận & Hạn hoàn thành -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Người nhận / Bộ phận chủ trì <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <select id="nguoiNhan" required class="w-full rounded-xl border border-slate-200 pl-9 pr-8 py-2.5 text-xs font-medium text-slate-800 shadow-sm bg-white focus:ring-2 focus:ring-brand-glow/20 focus:border-brand-glow outline-none appearance-none transition">
+                                    <option value="">-- Đang tải danh sách nhân sự... --</option>
+                                </select>
+                                <i class="bi bi-people absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                                <i class="bi bi-chevron-down absolute right-3 top-3 text-slate-400 text-[10px]"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Hạn hoàn thành</label>
+                            <div class="relative">
+                                <input type="date" id="hanHoanThanh" class="w-full rounded-xl border border-slate-200 pl-9 pr-3 py-2 text-xs font-medium text-slate-800 shadow-sm bg-white focus:ring-2 focus:ring-brand-glow/20 focus:border-brand-glow outline-none transition">
+                                <i class="bi bi-calendar-event absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
 
-    <button type="button"
-            id="togglePassword"
-            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-        <i class="bi bi-eye text-lg" id="eyeIcon"></i>
-    </button>
-</div>
-  </div>
-                    <!-- Submit -->
-                    <button
-                        type="submit"
-                        id="submitBtn"
-                        class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-teal to-indigo-600 text-white font-semibold text-sm
-                               shadow-lg shadow-brand-teal/25 hover:shadow-brand-teal/40 active:scale-[0.98]
-                               transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                    >
-                        <span id="btnText">Đăng nhập</span>
-                        <i class="bi bi-arrow-right-circle text-lg" id="btnIcon"></i>
-                    </button>
+                    <!-- Ghi chú giao việc -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Ghi chú giao việc</label>
+                        <input type="text" id="ghiChu" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs font-medium text-slate-800 shadow-sm placeholder:text-slate-400 focus:ring-2 focus:ring-brand-glow/20 focus:border-brand-glow outline-none transition" placeholder="Ghi chú đôn đốc, đính kèm thông tin khác...">
+                    </div>
 
-                    <!-- Error -->
-                    <div id="errorMsg" class="hidden rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-sm px-4 py-3 text-center"></div>
+                    <!-- Vùng Xem trước -->
+                    <div id="vungXemTruoc" class="hidden p-3.5 bg-amber-50/90 rounded-2xl border border-amber-200 text-xs text-slate-800 space-y-1.5 shadow-sm">
+                        <h4 class="font-bold text-amber-900 flex items-center gap-1.5 border-b border-amber-200/60 pb-1.5">
+                            <i class="bi bi-eye-fill text-amber-600"></i> Xem trước phiếu giao nhiệm vụ:
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 pt-0.5">
+                            <p><strong class="text-slate-600">Loại:</strong> <span id="previewLoai" class="font-medium"></span></p>
+                            <p><strong class="text-slate-600">Hạn:</strong> <span id="previewHan" class="font-medium"></span></p>
+                        </div>
+                        <p><strong class="text-slate-600">Tiêu đề:</strong> <span id="previewTieuDe" class="font-semibold text-slate-900"></span></p>
+                        <p><strong class="text-slate-600">Nội dung:</strong> <span id="previewNoiDung" class="italic text-slate-700"></span></p>
+                        <p><strong class="text-slate-600">Người nhận:</strong> <span id="previewNguoiNhan" class="font-semibold text-indigo-700"></span></p>
+                    </div>
+
+                    <!-- Nút hành động -->
+                    <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 shrink-0">
+                        <button type="button" onclick="dongModalGiaoViec()" class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-semibold hover:bg-slate-200 active:scale-95 transition">Hủy bỏ</button>
+                        <button type="button" onclick="hienThiXemTruoc()" class="px-4 py-2.5 rounded-xl bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 active:scale-95 transition shadow-sm">Xem trước</button>
+                        <button type="submit" class="px-5 py-2.5 rounded-xl bg-brand-teal text-white text-xs font-semibold hover:bg-blue-900 active:scale-95 transition shadow-md shadow-brand-teal/20 flex items-center gap-1.5">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Xác nhận Giao</span>
+                        </button>
+                    </div>
                 </form>
             </div>
+        </div>
 
-            <!-- Footer -->
-            <p class="text-center text-xs text-slate-400 mt-6">
-                © 2026 Trung tâm Điều hành số THPT Hòa Vang<br>
-                <span class="text-brand-teal/70">Chuyển đổi số – Nâng tầm quản trị</span>
-            </p>
+        <!-- ================= MODULE CONTAINER ================= -->
+        <div id="module-container" class="fixed inset-0 z-50 hidden" aria-hidden="true"></div>
+
+        <!-- ================= BOTTOM NAV ================= -->
+        <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-xl border-t border-slate-200/80 pb-safe px-6 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+            <div class="flex items-center justify-between h-16 max-w-[460px] mx-auto">
+                <a href="#" data-nav="home" class="nav-item flex flex-col items-center justify-center flex-1 text-brand-teal py-1 font-bold">
+                    <i class="bi bi-house-door-fill text-xl drop-shadow-sm"></i>
+                    <span class="text-[10px] font-black mt-0.5">Trang chủ</span>
+                </a>
+                <a href="#" data-nav="contact" class="nav-item flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-slate-800 py-1 transition">
+                    <i class="bi bi-telephone-fill text-lg"></i>
+                    <span class="text-[10px] font-semibold mt-0.5">Liên hệ</span>
+                </a>
+                <a href="#" data-nav="ai" class="nav-item flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-slate-800 py-1 transition">
+                    <i class="bi bi-cpu-fill text-lg"></i>
+                    <span class="text-[10px] font-semibold mt-0.5">Trí tuệ AI</span>
+                </a>
+                <a href="#" data-nav="profile" class="nav-item flex flex-col items-center justify-center flex-1 text-slate-400 hover:text-slate-800 py-1 transition">
+                    <i class="bi bi-person-lines-fill text-lg"></i>
+                    <span class="text-[10px] font-semibold mt-0.5">Hồ sơ số</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- ================= OVERLAYS & MODALS KHÁC ================= -->
+    <div id="global-overlay" class="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm hidden-force" aria-hidden="true"></div>
+    <div id="toast-message" class="hidden-force fixed bottom-20 left-1/2 -translate-x-1/2 z-[70] px-4 py-3 rounded-2xl bg-slate-900/95 border border-slate-800 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between transition-all duration-300">
+        <div class="flex items-center space-x-2">
+            <i class="bi bi-info-circle text-brand-glow text-base"></i>
+            <span id="toast-text"></span>
+        </div>
+        <button id="toast-close" class="text-slate-400 hover:text-white"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div id="loading-overlay" class="fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm flex items-center justify-center hidden-force">
+        <div class="flex flex-col items-center gap-3 bg-white/10 p-5 rounded-3xl backdrop-blur-md">
+            <div class="w-10 h-10 border-4 border-brand-glow/30 border-t-brand-glow rounded-full animate-spin"></div>
+            <span class="text-white text-xs font-semibold">Đang tải...</span>
         </div>
     </div>
 
+    <!-- AI Modal -->
+    <div id="ai-modal" class="fixed inset-0 z-50 hidden-force flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-5">
+        <div class="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-800">
+                <h2 class="text-lg font-bold text-brand-glow flex items-center gap-2">
+                    <i class="bi bi-mic-fill"></i> Trợ lý AI
+                </h2>
+                <p class="text-slate-400 text-xs mt-0.5">Hãy nói hoặc nhập yêu cầu của bạn.</p>
+            </div>
+            <div class="p-5 space-y-3.5">
+                <button class="w-full py-3.5 rounded-2xl bg-brand-glow/20 border border-brand-glow/40 hover:bg-brand-glow/30 active:scale-95 transition text-white text-xs font-semibold">🎙️ Nói với Trợ lý AI</button>
+                <textarea rows="4" placeholder="Ví dụ:&#10;Mở lịch công tác tuần&#10;Mở công văn 3293&#10;Tạo thông báo..." class="w-full rounded-2xl bg-slate-800 border border-slate-700 p-3.5 text-xs text-white resize-none outline-none focus:border-brand-glow transition"></textarea>
+                <button class="w-full py-2.5 rounded-xl bg-brand-teal font-semibold text-white text-xs hover:opacity-90 shadow-lg">Gửi yêu cầu</button>
+            </div>
+            <div class="px-5 py-3 border-t border-slate-800 text-center">
+                <button data-close-modal="ai-modal" class="text-slate-400 hover:text-white text-xs">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Boiduong Modal -->
+    <div id="boiduong-modal" class="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-slate-900/50 backdrop-blur-sm hidden-force transition-all duration-300">
+        <div class="bg-white border-0 sm:border border-slate-200 w-full h-full sm:h-auto sm:max-w-sm rounded-none sm:rounded-3xl p-5 shadow-2xl relative max-h-full sm:max-h-[90vh] overflow-y-auto flex flex-col justify-start text-slate-800">
+            <button data-close-modal="boiduong-modal" class="absolute top-4 left-4 text-slate-600 hover:text-slate-900 p-1.5 rounded-lg hover:bg-slate-100 transition flex items-center gap-1">
+                <i class="bi bi-arrow-left text-xl"></i>
+            </button>
+            <div class="flex items-center space-x-3 mb-5 border-b border-slate-100 pb-4 pt-1 pl-10">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-600 flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/20">
+                    <i class="bi bi-mortarboard-fill text-white text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-900 text-sm leading-tight">Bồi dưỡng chuyên môn</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Sinh hoạt, tập huấn, hội thảo, hội nghị, bồi dưỡng</p>
+                </div>
+            </div>
+            <div class="space-y-3" id="boiduong-menu"></div>
+        </div>
+    </div>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script src="services/api.js"></script>
+    <script type="module" src="assets/js/core/app.js"></script>
+
+    <!-- LOGIC GIAO VIỆC CHUẨN XÁC GIỮ NGUYÊN 100% -->
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzrpNdCyBsIIKJqx3DL2OZA0nWAkmFMPvyq8JYBrOhDvPELheNX4CNeIFvB7xNRG3VR/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWw1moG7zHpb7tsmdl4pMVtIx0mzKQ_gxuAHGEW1WpjJUAiD9mEYNy-xKSjKr9C9m-/exec";
+        
+        // 1. Mở modal và gọi API đổ danh sách nhân sự
+        async function moModalGiaoViec() {
+            const modal = document.getElementById('modalGiaoViec');
+            if (modal) modal.classList.remove('hidden');
+            await taiNhanSuVaoSelect();
+        }
+        
+        // 2. Đóng modal
+        function dongModalGiaoViec() {
+            const modal = document.getElementById('modalGiaoViec');
+            if (modal) modal.classList.add('hidden');
+            const preview = document.getElementById('vungXemTruoc');
+            if (preview) preview.classList.add('hidden');
+        }
 
-        const loginForm   = document.getElementById("loginForm");
-        const usernameInput = document.getElementById("username");
-        const passwordInput = document.getElementById("password");
-        const submitBtn   = document.getElementById("submitBtn");
-        const btnText     = document.getElementById("btnText");
-        const btnIcon     = document.getElementById("btnIcon");
-        const errorMsg    = document.getElementById("errorMsg");
-        const togglePassword = document.getElementById("togglePassword");
-        const eyeIcon    = document.getElementById("eyeIcon");
+        // 3. Tải nhân sự từ Sheet độc lập vào thẻ <select>
+        async function taiNhanSuVaoSelect() {
+            const selectNguoiNhan = document.getElementById('nguoiNhan');
+            if (!selectNguoiNhan) return;
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getNhanSu`);
+                const danhSach = await response.json();
+                
+                selectNguoiNhan.innerHTML = '<option value="">-- Chọn cán bộ / giáo viên nhận việc --</option>';
+                danhSach.forEach(ns => {
+                    const opt = document.createElement('option');
+                    opt.value = ns.hoTen;
+                    opt.textContent = `${ns.hoTen} - ${ns.toBoPhan}`;
+                    selectNguoiNhan.appendChild(opt);
+                });
+            } catch (error) {
+                console.error("Lỗi tải nhân sự:", error);
+                selectNguoiNhan.innerHTML = '<option value="">-- Lỗi tải danh sách nhân sự --</option>';
+            }
+        }
 
-        // Toggle show/hide password
-        togglePassword.addEventListener("click", () => {
-            const isPassword = passwordInput.type === "password";
-            passwordInput.type = isPassword ? "text" : "password";
-            eyeIcon.className = isPassword ? "bi bi-eye-slash text-lg" : "bi bi-eye text-lg";
-        });
+        // 4. Xem trước thông tin
+        function hienThiXemTruoc() {
+            const loai = document.getElementById('loaiNhiemVu').value;
+            const tieuDe = document.getElementById('tieuDe').value;
+            const noiDung = document.getElementById('noiDung').value;
+            const selectNguoiNhan = document.getElementById('nguoiNhan');
+            const nguoiNhanText = selectNguoiNhan.options[selectNguoiNhan.selectedIndex]?.text || '';
+            const han = document.getElementById('hanHoanThanh').value;
 
-        loginForm.addEventListener("submit", async (e) => {
+            if (!tieuDe || !selectNguoiNhan.value) {
+                alert('Vui lòng nhập tiêu đề và chọn người nhận trước khi xem trước!');
+                return;
+            }
+
+            document.getElementById('previewLoai').innerText = loai;
+            document.getElementById('previewTieuDe').innerText = tieuDe;
+            document.getElementById('previewNoiDung').innerText = noiDung || '(Không có nội dung chi tiết)';
+            document.getElementById('previewNguoiNhan').innerText = nguoiNhanText;
+            document.getElementById('previewHan').innerText = han || '(Chưa chốt hạn)';
+
+            document.getElementById('vungXemTruoc').classList.remove('hidden');
+        }
+
+        // 5. Gửi dữ liệu chính thức khi bấm Xác nhận Giao việc trong form
+        document.getElementById('formGiaoViec').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            const taskData = {
+                loaiNhiemVu: document.getElementById('loaiNhiemVu').value,
+                tieuDe: document.getElementById('tieuDe').value,
+                noiDung: document.getElementById('noiDung').value,
+                nguoiNhan: document.getElementById('nguoiNhan').value,
+                nguoiGiao: document.getElementById('nguoiGiao').value,
+                hanHoanThanh: document.getElementById('hanHoanThanh').value,
+                ghiChu: document.getElementById('ghiChu').value
+            };
 
-           const username = usernameInput.value.trim();
-        const rawPassword = passwordInput.value.trim();
-        const password = "HVA@" + rawPassword;
-
-           if (!username || !rawPassword) {
-    showError("Vui lòng nhập đầy đủ tên đăng nhập và 4 số tự nhiên của mật khẩu.");
-    return;
-}
-
-            setLoading(true);
-            hideError();
+            const assignees = [{ username: taskData.nguoiNhan, hoTen: taskData.nguoiNhan, vaiTro: "Chủ trì" }];
 
             try {
-                const response = await fetch(WEB_APP_URL, {
-                    method: "POST",
-                    body: JSON.stringify({
-                        action: "login",
-                        username,
-                        password
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error("Lỗi kết nối máy chủ. Mã lỗi: " + response.status);
-                }
-
-                const result = await response.json();
-
-                if (result.success) {
-                    localStorage.setItem("user", JSON.stringify(result.user));
-                    // Chuyển sang App Shell
-                    window.location.href = "main.html";
+                let ketQua;
+                if (typeof apiCreateTask === 'function') {
+                    ketQua = await apiCreateTask(taskData, assignees);
                 } else {
-                    showError(result.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(taskData)
+                    });
+                    ketQua = await response.json();
                 }
-            } catch (error) {
-                console.error(error);
-                showError("Đã xảy ra lỗi mạng hoặc không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
-            } finally {
-                setLoading(false);
+                
+                if (ketQua && (ketQua.status === 'success' || ketQua.status === 'SUCCESS')) {
+                    alert('Đã giao việc thành công xuống Google Sheets!');
+                    dongModalGiaoViec();
+                    document.getElementById('formGiaoViec').reset();
+                } else {
+                    alert('Có lỗi xảy ra: ' + (ketQua?.message || 'Không rõ nguyên nhân'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Lỗi kết nối đến hệ thống cơ sở dữ liệu!');
             }
         });
-
-        function showError(message) {
-            errorMsg.textContent = message;
-            errorMsg.classList.remove("hidden");
-        }
-
-        function hideError() {
-            errorMsg.textContent = "";
-            errorMsg.classList.add("hidden");
-        }
-
-        function setLoading(isLoading) {
-            submitBtn.disabled = isLoading;
-            usernameInput.disabled = isLoading;
-            passwordInput.disabled = isLoading;
-
-            if (isLoading) {
-                btnText.textContent = "Đang xác thực...";
-                btnIcon.className = "bi bi-arrow-repeat text-lg animate-spin";
-            } else {
-                btnText.textContent = "Đăng nhập";
-                btnIcon.className = "bi bi-arrow-right-circle text-lg";
-            }
-        }
-
-        // Tự động focus
-        usernameInput.focus();
     </script>
 </body>
 </html>
