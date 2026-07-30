@@ -37,55 +37,36 @@ export const ModalManager = {
 
     _bindEsc() {
         if (escHandler) return;
-
         escHandler = (e) => {
             if (e.key === 'Escape' && openModals.size > 0) {
                 const last = [...openModals].pop();
                 this.close(last);
             }
         };
-
         document.addEventListener('keydown', escHandler);
     },
 
     _unbindEsc() {
         if (!escHandler) return;
-
         document.removeEventListener('keydown', escHandler);
         escHandler = null;
     },
 
     init() {
-
-        // Đóng khi click nền
+        // Click outside
         on(window, 'click', (e) => {
             openModals.forEach(id => {
                 const modal = document.getElementById(id);
-                if (modal && e.target === modal) {
-                    this.close(id);
-                }
+                if (modal && e.target === modal) this.close(id);
             });
         });
 
-        // Nút đóng
+        // data-close-modal
         $$('[data-close-modal]').forEach(btn => {
             on(btn, 'click', () => {
                 const id = btn.dataset.closeModal;
                 if (id) this.close(id);
             });
         });
-
-        // Nút mở
-       on(document, 'click', (e) => {
-    const btn = e.target.closest('[data-open-modal]');
-    if (!btn) return;
-
-    e.preventDefault();
-
-    const id = btn.dataset.openModal;
-    if (id) this.open(id);
-});
-        });
-
     }
 };
