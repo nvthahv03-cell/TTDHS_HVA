@@ -49,45 +49,46 @@ export function renderHome() {
     </div>
 </div>
 <!-- Background Effect -->
-<div class="absolute -top-20 -left-20 w-56 h-56 bg-blue-600/30 rounded-full blur-3xl pointer-events-none"></div>
-<div class="absolute top-1/2 -right-20 w-56 h-56 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -top-20 -left-20 w-56 h-56 bg-blue-400/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 -right-20 w-56 h-56 bg-indigo-400/15 rounded-full blur-3xl pointer-events-none"></div>
 
 <!-- 2. BA PHÍM TÁC VỤ NHANH (Shortcut style) -->
 <div class="grid grid-cols-3 gap-3 mb-4 relative z-10">
 
   <!-- Shortcut 1: Lịch công tác -->
   <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
-    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-500/25 border border-blue-300/50 shadow-[0_0_20px_rgba(59,130,246,0.5),inset_0_1px_0_rgba(191,219,254,0.3)]">
-      <i class="bi bi-calendar3 text-[34px] sm:text-[40px] text-white"
-         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 6px rgba(37,99,235,0.6), 0 0 14px rgba(96,165,250,0.5);"></i>
+    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-white border border-blue-200 shadow-[0_4px_16px_rgba(59,130,246,0.18),0_0_0_1px_rgba(147,197,253,0.3)]">
+      <i class="bi bi-calendar3 text-[34px] sm:text-[40px] text-blue-600"
+         style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
     </div>
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
       LỊCH CÔNG TÁC
     </span>
   </div>
 
   <!-- Shortcut 2: Văn bản - Biểu mẫu -->
   <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
-    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-500/25 border border-blue-300/50 shadow-[0_0_20px_rgba(59,130,246,0.5),inset_0_1px_0_rgba(191,219,254,0.3)]">
-      <i class="bi bi-file-earmark-text text-[34px] sm:text-[40px] text-white"
-         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 6px rgba(37,99,235,0.6), 0 0 14px rgba(96,165,250,0.5);"></i>
+    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-white border border-blue-200 shadow-[0_4px_16px_rgba(59,130,246,0.18),0_0_0_1px_rgba(147,197,253,0.3)]">
+      <i class="bi bi-file-earmark-text text-[34px] sm:text-[40px] text-blue-600"
+         style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
     </div>
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
       VĂN BẢN BIỂU MẪU
     </span>
   </div>
 
   <!-- Shortcut 3: Thông tin - Thông báo -->
   <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
-    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-500/25 border border-blue-300/50 shadow-[0_0_20px_rgba(59,130,246,0.5),inset_0_1px_0_rgba(191,219,254,0.3)]">
-      <i class="bi bi-megaphone text-[34px] sm:text-[40px] text-white"
-         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 6px rgba(37,99,235,0.6), 0 0 14px rgba(96,165,250,0.5);"></i>
+    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-white border border-blue-200 shadow-[0_4px_16px_rgba(59,130,246,0.18),0_0_0_1px_rgba(147,197,253,0.3)]">
+      <i class="bi bi-megaphone text-[34px] sm:text-[40px] text-blue-600"
+         style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
     </div>
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
       THÔNG TIN THÔNG BÁO
     </span>
   </div>
 
+</div>
 </div>
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
