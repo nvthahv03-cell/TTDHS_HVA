@@ -57,72 +57,38 @@ export function renderHome() {
 
   <!-- Shortcut 1: Lịch công tác -->
   <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
-    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-gradient-to-b from-blue-500/20 to-blue-600/10 border border-blue-400/30 shadow-[0_0_18px_rgba(59,130,246,0.35),inset_0_1px_0_rgba(147,197,253,0.2)]">
-      <i class="bi bi-calendar3 text-[32px] sm:text-[38px] text-blue-100"
-         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 4px rgba(37,99,235,0.45), 0 0 12px rgba(96,165,250,0.35);"></i>
+    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-500/25 border border-blue-300/50 shadow-[0_0_20px_rgba(59,130,246,0.5),inset_0_1px_0_rgba(191,219,254,0.3)]">
+      <i class="bi bi-calendar3 text-[34px] sm:text-[40px] text-white"
+         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 6px rgba(37,99,235,0.6), 0 0 14px rgba(96,165,250,0.5);"></i>
     </div>
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide">
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
       LỊCH CÔNG TÁC
     </span>
   </div>
 
   <!-- Shortcut 2: Văn bản - Biểu mẫu -->
   <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
-    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-gradient-to-b from-blue-500/20 to-blue-600/10 border border-blue-400/30 shadow-[0_0_18px_rgba(59,130,246,0.35),inset_0_1px_0_rgba(147,197,253,0.2)]">
-      <i class="bi bi-file-earmark-text text-[32px] sm:text-[38px] text-blue-100"
-         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 4px rgba(37,99,235,0.45), 0 0 12px rgba(96,165,250,0.35);"></i>
+    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-500/25 border border-blue-300/50 shadow-[0_0_20px_rgba(59,130,246,0.5),inset_0_1px_0_rgba(191,219,254,0.3)]">
+      <i class="bi bi-file-earmark-text text-[34px] sm:text-[40px] text-white"
+         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 6px rgba(37,99,235,0.6), 0 0 14px rgba(96,165,250,0.5);"></i>
     </div>
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide">
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
       VĂN BẢN BIỂU MẪU
     </span>
   </div>
 
   <!-- Shortcut 3: Thông tin - Thông báo -->
   <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
-    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-gradient-to-b from-blue-500/20 to-blue-600/10 border border-blue-400/30 shadow-[0_0_18px_rgba(59,130,246,0.35),inset_0_1px_0_rgba(147,197,253,0.2)]">
-      <i class="bi bi-megaphone text-[32px] sm:text-[38px] text-blue-100"
-         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 4px rgba(37,99,235,0.45), 0 0 12px rgba(96,165,250,0.35);"></i>
+    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-500/25 border border-blue-300/50 shadow-[0_0_20px_rgba(59,130,246,0.5),inset_0_1px_0_rgba(191,219,254,0.3)]">
+      <i class="bi bi-megaphone text-[34px] sm:text-[40px] text-white"
+         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 6px rgba(37,99,235,0.6), 0 0 14px rgba(96,165,250,0.5);"></i>
     </div>
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide">
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
       THÔNG TIN THÔNG BÁO
     </span>
   </div>
 
 </div>
-<!-- QUICK ACTION (DOCK ĐIỀU HÀNH) -->
-<div class="grid grid-cols-5 gap-1.5 mb-4">
-    <button id="btnGiaoViecNet" onclick="window.location.href='Giaonhanviec.html'" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 active:scale-95 transition-all group">
-    <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
-        <i class="bi bi-plus-circle-fill"></i>
-    </div>
-    <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Giao việc</span>
-</button>
-    <button data-open-modal="team-modal" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-orange-200 active:scale-95 transition-all group">
-        <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
-            <i class="bi bi-calendar-check-fill"></i>
-        </div>
-        <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Lịch hôm nay</span>
-    </button>
-    <button data-open-modal="document-modal" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-amber-200 active:scale-95 transition-all group">
-        <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
-            <i class="bi bi-file-earmark-text-fill"></i>
-        </div>
-        <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Văn bản</span>
-    </button>
-    <button data-open-modal="digital-modal" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-cyan-200 active:scale-95 transition-all group">
-        <div class="w-9 h-9 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
-            <i class="bi bi-display-fill"></i>
-        </div>
-        <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Điều hành</span>
-    </button>
-    <button data-open-modal="boiduong-modal" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-purple-200 active:scale-95 transition-all group">
-        <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
-            <i class="bi bi-clipboard-check-fill"></i>
-        </div>
-        <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Nhiệm vụ</span>
-    </button>
-</div>
-
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
     <div data-open-modal="digital-modal" class="group relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
