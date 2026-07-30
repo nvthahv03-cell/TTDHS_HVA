@@ -76,13 +76,15 @@ export const ModalManager = {
         });
 
         // Nút mở
-        $$('[data-open-modal]').forEach(btn => {
-            on(btn, 'click', (e) => {
-                e.preventDefault();
+       on(document, 'click', (e) => {
+    const btn = e.target.closest('[data-open-modal]');
+    if (!btn) return;
 
-                const id = btn.dataset.openModal;
-                if (id) this.open(id);
-            });
+    e.preventDefault();
+
+    const id = btn.dataset.openModal;
+    if (id) this.open(id);
+});
         });
 
     }
