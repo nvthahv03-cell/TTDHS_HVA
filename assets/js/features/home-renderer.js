@@ -49,55 +49,87 @@ export function renderHome() {
     </div>
 </div>
 
-<!-- DASHBOARD ĐIỀU HÀNH -->
-<div class="mb-4 p-3.5 rounded-2xl bg-slate-900 text-white shadow-lg border border-slate-800 relative overflow-hidden">
-    <div class="absolute top-0 right-0 w-40 h-40 bg-blue-600/10 rounded-full blur-2xl pointer-events-none"></div>
-    <div class="relative z-10 flex flex-col gap-3">
-        <div class="flex items-center justify-between pb-2.5 border-b border-slate-800">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-inner">
-                    <i class="bi bi-shield-shaded text-sm"></i>
-                </div>
-                <div>
-                    <div class="text-xs font-black tracking-wider uppercase text-slate-100 flex items-center gap-1.5">
-                        THPT HÒA VANG <span class="text-[9px] px-1.5 py-0.2 bg-blue-600/40 text-blue-300 rounded font-bold border border-blue-500/30">NZE</span>
-                    </div>
-                    <div class="text-[10px] font-medium text-slate-400">Trung tâm Điều hành Số</div>
-                </div>
-            </div>
-            <div class="text-right">
-                <div class="text-[11px] font-bold text-cyan-400 tabular-nums">Thứ Ba, 28/07/2026</div>
-                <div class="text-[9px] text-emerald-400 flex items-center justify-end gap-1 mt-0.5 font-medium">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-                    <span>Hệ thống trực tuyến</span>
-                </div>
-            </div>
-        </div>
-        <div class="grid grid-cols-4 gap-1.5 text-center">
-            <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700/60 shadow-sm">
-                <div class="text-[9px] text-slate-400 font-semibold uppercase">KPI ĐH</div>
-                <div class="text-xs font-black text-blue-400 mt-0.5 tabular-nums">94%</div>
-            </div>
-            <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700/60 shadow-sm">
-                <div class="text-[9px] text-slate-400 font-semibold uppercase">Hệ thống</div>
-                <div class="text-xs font-black text-emerald-400 mt-0.5 tabular-nums">Ổn định</div>
-            </div>
-            <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700/60 shadow-sm">
-                <div class="text-[9px] text-slate-400 font-semibold uppercase">Văn bản</div>
-                <div class="text-xs font-black text-amber-400 mt-0.5 tabular-nums">02</div>
-            </div>
-            <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700/60 shadow-sm">
-                <div class="text-[9px] text-slate-400 font-semibold uppercase">Việc khẩn</div>
-                <div class="text-xs font-black text-rose-400 mt-0.5 tabular-nums">01</div>
-            </div>
-        </div>
-        <div class="flex items-center gap-2 text-[10px] text-slate-300 font-medium px-2.5 py-1.5 bg-slate-800/50 rounded-xl border border-slate-700/40">
-            <span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[9px] font-bold uppercase shrink-0">Việc khẩn</span>
-            <span class="truncate">Rà soát tiến độ chuẩn bị cơ sở vật chất năm học mới trước 15:00 hôm nay.</span>
-        </div>
-    </div>
-</div>
+<!-- 2. BA PHÍM TÁC VỤ NHANH (Shortcut style) -->
+<div class="grid grid-cols-3 gap-4 mb-4 relative z-10">
 
+  <!-- Shortcut 1: Lịch công tác -->
+  <div class="group relative flex flex-col items-center justify-center text-center cursor-pointer active:scale-95 transition-transform duration-200">
+    <!-- Card nền + glow -->
+    <div class="relative w-full aspect-square max-w-[110px] rounded-2xl bg-gradient-to-b from-[#1e3a8a]/80 to-[#0f172a]/90 border border-blue-400/40 shadow-[0_0_25px_rgba(59,130,246,0.45),inset_0_1px_0_rgba(147,197,253,0.25)] flex items-center justify-center mb-3 overflow-hidden">
+      <!-- Highlight phía trên -->
+      <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
+      
+      <!-- Icon chính -->
+      <div class="relative z-10">
+        <i class="fa-solid fa-calendar-days text-[42px] sm:text-[48px] text-blue-100"
+           style="text-shadow: 
+             0 1px 0 #93c5fd,
+             0 2px 0 #60a5fa,
+             0 3px 1px #3b82f6,
+             0 5px 8px rgba(37,99,235,0.5),
+             0 0 18px rgba(96,165,250,0.4);">
+        </i>
+        <!-- Đồng hồ nhỏ đè lên -->
+        <div class="absolute -bottom-1 -right-2 w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-slate-900 flex items-center justify-center shadow-md">
+          <i class="fa-solid fa-clock text-[10px] text-white"></i>
+        </div>
+      </div>
+    </div>
+    
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-sm">
+      LỊCH<br>CÔNG TÁC
+    </span>
+  </div>
+
+  <!-- Shortcut 2: Văn bản - Biểu mẫu -->
+  <div class="group relative flex flex-col items-center justify-center text-center cursor-pointer active:scale-95 transition-transform duration-200">
+    <div class="relative w-full aspect-square max-w-[110px] rounded-2xl bg-gradient-to-b from-[#1e3a8a]/80 to-[#0f172a]/90 border border-blue-400/40 shadow-[0_0_25px_rgba(59,130,246,0.45),inset_0_1px_0_rgba(147,197,253,0.25)] flex items-center justify-center mb-3 overflow-hidden">
+      <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
+      
+      <i class="fa-solid fa-file-lines text-[42px] sm:text-[48px] text-blue-100 relative z-10"
+         style="text-shadow: 
+           0 1px 0 #93c5fd,
+           0 2px 0 #60a5fa,
+           0 3px 1px #3b82f6,
+           0 5px 8px rgba(37,99,235,0.5),
+           0 0 18px rgba(96,165,250,0.4);">
+      </i>
+    </div>
+    
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-sm">
+      VĂN BẢN<br>BIỂU MẪU
+    </span>
+  </div>
+
+  <!-- Shortcut 3: Thông tin - Thông báo -->
+  <div class="group relative flex flex-col items-center justify-center text-center cursor-pointer active:scale-95 transition-transform duration-200">
+    <div class="relative w-full aspect-square max-w-[110px] rounded-2xl bg-gradient-to-b from-[#1e3a8a]/80 to-[#0f172a]/90 border border-blue-400/40 shadow-[0_0_25px_rgba(59,130,246,0.45),inset_0_1px_0_rgba(147,197,253,0.25)] flex items-center justify-center mb-3 overflow-hidden">
+      <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
+      
+      <div class="relative z-10">
+        <i class="fa-solid fa-bullhorn text-[42px] sm:text-[48px] text-blue-100"
+           style="text-shadow: 
+             0 1px 0 #93c5fd,
+             0 2px 0 #60a5fa,
+             0 3px 1px #3b82f6,
+             0 5px 8px rgba(37,99,235,0.5),
+             0 0 18px rgba(96,165,250,0.4);">
+        </i>
+        <!-- Sóng âm thanh -->
+        <div class="absolute -right-3 top-1/2 -translate-y-1/2 flex flex-col gap-[3px]">
+          <div class="w-2.5 h-[2px] bg-blue-300/80 rounded-full origin-left rotate-12"></div>
+          <div class="w-3.5 h-[2px] bg-blue-200/90 rounded-full origin-left"></div>
+          <div class="w-2.5 h-[2px] bg-blue-300/80 rounded-full origin-left -rotate-12"></div>
+        </div>
+      </div>
+    </div>
+    
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-sm">
+      THÔNG TIN<br>THÔNG BÁO
+    </span>
+  </div>
+
+</div>
 <!-- QUICK ACTION (DOCK ĐIỀU HÀNH) -->
 <div class="grid grid-cols-5 gap-1.5 mb-4">
     <button id="btnGiaoViecNet" onclick="window.location.href='Giaonhanviec.html'" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 active:scale-95 transition-all group">
