@@ -89,7 +89,7 @@ export function renderHome() {
   </div>
 
 </div>
-</div>
+
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
     <div data-open-modal="digital-modal" class="group relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
