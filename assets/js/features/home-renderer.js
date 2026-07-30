@@ -89,15 +89,7 @@ export function renderHome() {
   </div>
 
 </div>
-<!-- QUICK ACTION (DOCK ĐIỀU HÀNH) -->
-<div class="grid grid-cols-5 gap-1.5 mb-4">
-    <button id="btnGiaoViecNet" onclick="window.location.href='Giaonhanviec.html'" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 active:scale-95 transition-all group">
-    <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
-        <i class="bi bi-plus-circle-fill"></i>
-    </div>
-    <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Giao việc</span>
-</button>
- </div>
+
 
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
