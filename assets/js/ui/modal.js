@@ -52,14 +52,33 @@ export const ModalManager = {
         escHandler = null;
     },
 
-    init() {
-        // Click outside
-        on(window, 'click', (e) => {
-            openModals.forEach(id => {
-                const modal = document.getElementById(id);
-                if (modal && e.target === modal) this.close(id);
-            });
+   init() {
+    // Click outside
+    on(window, 'click', (e) => {
+        openModals.forEach(id => {
+            const modal = document.getElementById(id);
+            if (modal && e.target === modal) this.close(id);
         });
+    });
+
+    // data-close-modal
+    $$('[data-close-modal]').forEach(btn => {
+        on(btn, 'click', () => {
+            const id = btn.dataset.closeModal;
+            if (id) this.close(id);
+        });
+    });
+
+    // data-open-modal
+    $$('[data-open-modal]').forEach(btn => {
+        on(btn, 'click', (e) => {
+            e.preventDefault();
+
+            const id = btn.dataset.openModal;
+            if (id) this.open(id);
+        });
+    });
+}
 
         // data-close-modal
         $$('[data-close-modal]').forEach(btn => {
