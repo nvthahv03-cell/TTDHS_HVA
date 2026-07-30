@@ -89,11 +89,18 @@ export function renderHome() {
   </div>
 
 </div>
-
+<!-- QUICK ACTION (DOCK ĐIỀU HÀNH) -->
+<div class="grid grid-cols-5 gap-1.5 mb-4">
+    <button id="btnGiaoViecNet" onclick="window.location.href='Giaonhanviec.html'" class="flex flex-col items-center gap-1 p-2 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 active:scale-95 transition-all group">
+    <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm shadow-inner group-hover:scale-110 transition-transform">
+        <i class="bi bi-plus-circle-fill"></i>
+    </div>
+    <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Giao việc</span>
+</button>
+ </div>
 
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
-
     <div data-open-modal="digital-modal" class="group relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
@@ -260,5 +267,3 @@ function bindHomeEvents() {
         }
     }
 }
-
-
