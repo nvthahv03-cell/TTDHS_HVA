@@ -97,9 +97,7 @@ export function renderHome() {
     </div>
     <span class="text-[9px] font-bold text-slate-700 text-center leading-tight">Giao việc</span>
 </button>
-    
-    
-</div>
+ </div>
 
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
@@ -117,7 +115,7 @@ export function renderHome() {
             <i class="bi bi-cpu text-white text-lg"></i>
         </div>
         <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">ĐIỀU HÀNH SỐ</h3>
-        <p class="text-[10px] text-teal-50 font-medium">Dashboard • Giao việc • Văn bản • AI</p>
+        <p class="text-[10px] text-teal-50 font-medium">Giao việc • Văn bản • AI • Dashboard </p>
     </div>
     <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-purple-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
