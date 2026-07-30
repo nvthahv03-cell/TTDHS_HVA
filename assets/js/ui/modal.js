@@ -37,55 +37,53 @@ export const ModalManager = {
 
     _bindEsc() {
         if (escHandler) return;
+
         escHandler = (e) => {
             if (e.key === 'Escape' && openModals.size > 0) {
                 const last = [...openModals].pop();
                 this.close(last);
             }
         };
+
         document.addEventListener('keydown', escHandler);
     },
 
     _unbindEsc() {
         if (!escHandler) return;
+
         document.removeEventListener('keydown', escHandler);
         escHandler = null;
     },
 
-   init() {
-    // Click outside
-    on(window, 'click', (e) => {
-        openModals.forEach(id => {
-            const modal = document.getElementById(id);
-            if (modal && e.target === modal) this.close(id);
+    init() {
+
+        // Đóng khi click nền
+        on(window, 'click', (e) => {
+            openModals.forEach(id => {
+                const modal = document.getElementById(id);
+                if (modal && e.target === modal) {
+                    this.close(id);
+                }
+            });
         });
-    });
 
-    // data-close-modal
-    $$('[data-close-modal]').forEach(btn => {
-        on(btn, 'click', () => {
-            const id = btn.dataset.closeModal;
-            if (id) this.close(id);
-        });
-    });
-
-    // data-open-modal
-    $$('[data-open-modal]').forEach(btn => {
-        on(btn, 'click', (e) => {
-            e.preventDefault();
-
-            const id = btn.dataset.openModal;
-            if (id) this.open(id);
-        });
-    });
-}
-
-        // data-close-modal
+        // Nút đóng
         $$('[data-close-modal]').forEach(btn => {
             on(btn, 'click', () => {
                 const id = btn.dataset.closeModal;
                 if (id) this.close(id);
             });
         });
+
+        // Nút mở
+        $$('[data-open-modal]').forEach(btn => {
+            on(btn, 'click', (e) => {
+                e.preventDefault();
+
+                const id = btn.dataset.openModal;
+                if (id) this.open(id);
+            });
+        });
+
     }
 };
