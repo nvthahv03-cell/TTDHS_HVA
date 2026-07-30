@@ -40,6 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 ModalManager.open('contact-modal');
             } else if (nav === 'profile') {
                 ModalManager.open('team-modal');
+        
+            }
+            
+        });
         // Điều hành số
 document.addEventListener('click', (e) => {
     const card = e.target.closest('[data-open-modal="digital-modal"]');
@@ -48,8 +52,6 @@ document.addEventListener('click', (e) => {
         ModalManager.open('digital-modal');
     }
 });
-            }
-        });
     });
 
     // 6. Boiduong menu (nếu cần bind thêm)
