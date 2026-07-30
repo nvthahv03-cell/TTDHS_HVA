@@ -40,6 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 ModalManager.open('contact-modal');
             } else if (nav === 'profile') {
                 ModalManager.open('team-modal');
+        // Điều hành số
+document.addEventListener('click', (e) => {
+    const card = e.target.closest('[data-open-modal="digital-modal"]');
+    if (card) {
+        e.preventDefault();
+        ModalManager.open('digital-modal');
+    }
+});
             }
         });
     });
