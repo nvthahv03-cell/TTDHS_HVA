@@ -48,6 +48,9 @@ export function renderHome() {
         </div>
     </div>
 </div>
+<!-- Background Effect -->
+<div class="absolute -top-20 -left-20 w-56 h-56 bg-blue-600/30 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/2 -right-20 w-56 h-56 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
 <!-- 2. BA PHÍM TÁC VỤ NHANH (Shortcut style) -->
 <div class="grid grid-cols-3 gap-4 mb-4 relative z-10">
