@@ -53,82 +53,38 @@ export function renderHome() {
 <div class="absolute top-1/2 -right-20 w-56 h-56 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
 <!-- 2. BA PHÍM TÁC VỤ NHANH (Shortcut style) -->
-<div class="grid grid-cols-3 gap-4 mb-4 relative z-10">
+<div class="grid grid-cols-3 gap-3 mb-4 relative z-10">
 
   <!-- Shortcut 1: Lịch công tác -->
-  <div class="group relative flex flex-col items-center justify-center text-center cursor-pointer active:scale-95 transition-transform duration-200">
-    <!-- Card nền + glow -->
-    <div class="relative w-full aspect-square max-w-[110px] rounded-2xl bg-gradient-to-b from-[#1e3a8a]/80 to-[#0f172a]/90 border border-blue-400/40 shadow-[0_0_25px_rgba(59,130,246,0.45),inset_0_1px_0_rgba(147,197,253,0.25)] flex items-center justify-center mb-3 overflow-hidden">
-      <!-- Highlight phía trên -->
-      <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
-      
-      <!-- Icon chính -->
-      <div class="relative z-10">
-        <i class="fa-solid fa-calendar-days text-[42px] sm:text-[48px] text-blue-100"
-           style="text-shadow: 
-             0 1px 0 #93c5fd,
-             0 2px 0 #60a5fa,
-             0 3px 1px #3b82f6,
-             0 5px 8px rgba(37,99,235,0.5),
-             0 0 18px rgba(96,165,250,0.4);">
-        </i>
-        <!-- Đồng hồ nhỏ đè lên -->
-        <div class="absolute -bottom-1 -right-2 w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-slate-900 flex items-center justify-center shadow-md">
-          <i class="fa-solid fa-clock text-[10px] text-white"></i>
-        </div>
-      </div>
+  <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
+    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-gradient-to-b from-blue-500/20 to-blue-600/10 border border-blue-400/30 shadow-[0_0_18px_rgba(59,130,246,0.35),inset_0_1px_0_rgba(147,197,253,0.2)]">
+      <i class="bi bi-calendar3 text-[32px] sm:text-[38px] text-blue-100"
+         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 4px rgba(37,99,235,0.45), 0 0 12px rgba(96,165,250,0.35);"></i>
     </div>
-    
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-sm">
-      LỊCH<br>CÔNG TÁC
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide">
+      LỊCH CÔNG TÁC
     </span>
   </div>
 
   <!-- Shortcut 2: Văn bản - Biểu mẫu -->
-  <div class="group relative flex flex-col items-center justify-center text-center cursor-pointer active:scale-95 transition-transform duration-200">
-    <div class="relative w-full aspect-square max-w-[110px] rounded-2xl bg-gradient-to-b from-[#1e3a8a]/80 to-[#0f172a]/90 border border-blue-400/40 shadow-[0_0_25px_rgba(59,130,246,0.45),inset_0_1px_0_rgba(147,197,253,0.25)] flex items-center justify-center mb-3 overflow-hidden">
-      <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
-      
-      <i class="fa-solid fa-file-lines text-[42px] sm:text-[48px] text-blue-100 relative z-10"
-         style="text-shadow: 
-           0 1px 0 #93c5fd,
-           0 2px 0 #60a5fa,
-           0 3px 1px #3b82f6,
-           0 5px 8px rgba(37,99,235,0.5),
-           0 0 18px rgba(96,165,250,0.4);">
-      </i>
+  <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
+    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-gradient-to-b from-blue-500/20 to-blue-600/10 border border-blue-400/30 shadow-[0_0_18px_rgba(59,130,246,0.35),inset_0_1px_0_rgba(147,197,253,0.2)]">
+      <i class="bi bi-file-earmark-text text-[32px] sm:text-[38px] text-blue-100"
+         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 4px rgba(37,99,235,0.45), 0 0 12px rgba(96,165,250,0.35);"></i>
     </div>
-    
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-sm">
-      VĂN BẢN<br>BIỂU MẪU
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide">
+      VĂN BẢN BIỂU MẪU
     </span>
   </div>
 
   <!-- Shortcut 3: Thông tin - Thông báo -->
-  <div class="group relative flex flex-col items-center justify-center text-center cursor-pointer active:scale-95 transition-transform duration-200">
-    <div class="relative w-full aspect-square max-w-[110px] rounded-2xl bg-gradient-to-b from-[#1e3a8a]/80 to-[#0f172a]/90 border border-blue-400/40 shadow-[0_0_25px_rgba(59,130,246,0.45),inset_0_1px_0_rgba(147,197,253,0.25)] flex items-center justify-center mb-3 overflow-hidden">
-      <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
-      
-      <div class="relative z-10">
-        <i class="fa-solid fa-bullhorn text-[42px] sm:text-[48px] text-blue-100"
-           style="text-shadow: 
-             0 1px 0 #93c5fd,
-             0 2px 0 #60a5fa,
-             0 3px 1px #3b82f6,
-             0 5px 8px rgba(37,99,235,0.5),
-             0 0 18px rgba(96,165,250,0.4);">
-        </i>
-        <!-- Sóng âm thanh -->
-        <div class="absolute -right-3 top-1/2 -translate-y-1/2 flex flex-col gap-[3px]">
-          <div class="w-2.5 h-[2px] bg-blue-300/80 rounded-full origin-left rotate-12"></div>
-          <div class="w-3.5 h-[2px] bg-blue-200/90 rounded-full origin-left"></div>
-          <div class="w-2.5 h-[2px] bg-blue-300/80 rounded-full origin-left -rotate-12"></div>
-        </div>
-      </div>
+  <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
+    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-gradient-to-b from-blue-500/20 to-blue-600/10 border border-blue-400/30 shadow-[0_0_18px_rgba(59,130,246,0.35),inset_0_1px_0_rgba(147,197,253,0.2)]">
+      <i class="bi bi-megaphone text-[32px] sm:text-[38px] text-blue-100"
+         style="text-shadow: 0 1px 0 #93c5fd, 0 2px 0 #60a5fa, 0 3px 4px rgba(37,99,235,0.45), 0 0 12px rgba(96,165,250,0.35);"></i>
     </div>
-    
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide drop-shadow-sm">
-      THÔNG TIN<br>THÔNG BÁO
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-white tracking-wide">
+      THÔNG TIN THÔNG BÁO
     </span>
   </div>
 
