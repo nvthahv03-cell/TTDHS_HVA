@@ -355,8 +355,13 @@
 /**
  * Tự động khởi tạo và xử lý Dropdown Tái Sử Dụng
  */
+/**
+ * Script khởi tạo & quản lý sự kiện Dropdown/Dropup dùng chung
+ */
 function initDropdownSystem() {
-    // 1. Sự kiện Toggle đóng/mở khi click vào Card
+    if (window.__dropdownSystemInitialized) return;
+    window.__dropdownSystemInitialized = true;
+
     document.addEventListener('click', (e) => {
         const toggleBtn = e.target.closest('[data-dropdown-toggle]');
         
@@ -366,41 +371,42 @@ function initDropdownSystem() {
             const targetMenu = document.getElementById(targetId);
             const arrowIcon = toggleBtn.querySelector('[data-dropdown-arrow]');
 
-            // Đóng tất cả menu khác đang mở (nếu có)
+            // Đóng tất cả dropdown khác đang mở
             closeAllDropdowns(targetMenu);
 
             if (targetMenu) {
                 const isHidden = targetMenu.classList.contains('hidden');
                 
                 if (isHidden) {
-                    // Mở Menu
                     targetMenu.classList.remove('hidden');
                     setTimeout(() => {
-                        targetMenu.classList.remove('opacity-0', '-translate-y-2', 'scale-95');
+                        targetMenu.classList.remove('opacity-0', '-translate-y-2', 'translate-y-2', 'scale-95');
                         targetMenu.classList.add('opacity-100', 'translate-y-0', 'scale-100');
                     }, 10);
                     if (arrowIcon) arrowIcon.classList.add('rotate-180');
                 } else {
-                    // Đóng Menu
                     closeSingleDropdown(targetMenu, arrowIcon);
                 }
             }
             return;
         }
 
-        // 2. Click ra ngoài -> Tự động đóng tất cả Dropdown
+        // Bấm ra ngoài -> tự động đóng tất cả Dropdown
         if (!e.target.closest('[data-dropdown-menu]')) {
             closeAllDropdowns();
         }
     });
 }
 
-// Hàm hỗ trợ đóng 1 Dropdown mượt mà với Animation
+// Hàm hỗ trợ đóng 1 Dropdown/Dropup mượt mà với Animation
 function closeSingleDropdown(menu, arrow) {
     if (!menu || menu.classList.contains('hidden')) return;
     
+    // Tự động nhận diện menu xổ trên (origin-bottom) hay xổ dưới để hiệu ứng thu lại chuẩn
+    const isDropup = menu.classList.contains('origin-bottom');
     menu.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
-    menu.classList.add('opacity-0', '-translate-y-2', 'scale-95');
+    menu.classList.add('opacity-0', 'scale-95', isDropup ? 'translate-y-2' : '-translate-y-2');
+    
     if (arrow) arrow.classList.remove('rotate-180');
     
     setTimeout(() => {
@@ -408,7 +414,7 @@ function closeSingleDropdown(menu, arrow) {
     }, 200);
 }
 
-// Hàm đóng toàn bộ Dropdown
+// Hàm hỗ trợ đóng toàn bộ Dropdown
 function closeAllDropdowns(exceptMenu = null) {
     document.querySelectorAll('[data-dropdown-menu]').forEach(menu => {
         if (menu !== exceptMenu) {
