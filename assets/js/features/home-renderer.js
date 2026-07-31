@@ -9,7 +9,7 @@ export function renderHome() {
 
     container.innerHTML = `
 <!-- HVA Assistant -->
-<div class="relative mb-3.5 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-indigo-950 via-blue-900 to-slate-900 shadow-xl p-3.5 text-white">
+<div class="relative mb-2 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-indigo-950 via-blue-900 to-slate-900 shadow-xl p-3.5 text-white">
     <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-cyan-400/20 rounded-full blur-2xl pointer-events-none"></div>
     <div class="absolute top-0 right-0 p-3 opacity-10">
         <i class="bi bi-cpu text-7xl"></i>
