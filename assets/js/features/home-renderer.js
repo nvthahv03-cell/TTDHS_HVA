@@ -136,10 +136,10 @@ export function renderHome() {
 
     </div>
 </div>
-  <!-- CARD 3: NGHIỆP VỤ SỐ (Đã có lại Thẻ cha + Menu Dropup con) -->
+ <!-- CARD 3: NGHIỆP VỤ SỐ -->
 <div class="relative">
     
-    <!-- 1. THẺ CHA: CARD NGHIỆP VỤ SỐ MÀU TÍM -->
+    <!-- CARD CHA (TÍM) -->
     <div data-dropdown-toggle="nghiepvuso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-purple-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
@@ -152,10 +152,10 @@ export function renderHome() {
         <p class="text-[10px] text-purple-50 font-medium">Chuyên môn • Hoạt động • Hội thảo</p>
     </div>
 
-    <!-- 2. MENU CON (DROPUP): BẬT LÊN KHI BẤM VÀO CARD -->
+    <!-- DROPUP CON (MẶC ĐỊNH BẮT BUỘC CÓ CLASS hidden) -->
     <div id="nghiepvuso-dropdown" data-dropdown-menu class="hidden absolute left-0 right-0 bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 min-w-[280px] max-h-[70vh] overflow-y-auto">
 
-        <!-- Menu 1 -->
+        <!-- 1. Báo cáo chuyên môn -->
         <a href="baocao-chuyenmon.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
             <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
                 <i class="bi bi-journal-bookmark text-sm"></i>
@@ -163,7 +163,7 @@ export function renderHome() {
             <span>📘 Báo cáo chuyên môn</span>
         </a>
 
-        <!-- Menu 2 -->
+        <!-- 2. Báo cáo hoạt động giáo dục -->
         <a href="baocao-hoatdong.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
             <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
                 <i class="bi bi-bullseye text-sm"></i>
@@ -171,7 +171,7 @@ export function renderHome() {
             <span>🎯 Báo cáo hoạt động giáo dục</span>
         </a>
 
-        <!-- Menu 3: BỒI DƯỠNG CHUYÊN MÔN (Xổ 5 con) -->
+        <!-- 3. BỒI DƯỠNG CHUYÊN MÔN (Xổ 5 con) -->
         <div class="border-y border-slate-100 dark:border-slate-700/50 my-1 py-1">
             <button type="button" onclick="event.stopPropagation(); document.getElementById('bdcm-sub-list').classList.toggle('hidden'); document.getElementById('bdcm-arrow-icon').classList.toggle('rotate-180');" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
                 <div class="flex items-center gap-2.5">
@@ -183,6 +183,7 @@ export function renderHome() {
                 <i id="bdcm-arrow-icon" class="bi bi-chevron-down text-[10px] text-slate-400 transition-transform duration-300"></i>
             </button>
 
+            <!-- 5 menu cháu -->
             <div id="bdcm-sub-list" class="hidden pl-6 pr-1 pt-1 space-y-1">
                 <a href="baocao-tap-huan.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
                     <i class="bi bi-award text-blue-500 text-xs"></i>
@@ -207,7 +208,7 @@ export function renderHome() {
             </div>
         </div>
 
-        <!-- Menu 4 -->
+        <!-- 4. Báo cáo cuộc thi -->
         <a href="baocao-cuocthi.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
             <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
                 <i class="bi bi-trophy text-sm"></i>
@@ -215,7 +216,7 @@ export function renderHome() {
             <span>🏆 Báo cáo các cuộc thi</span>
         </a>
 
-        <!-- Menu 5 -->
+        <!-- 5. Báo cáo chuyển đổi số -->
         <a href="baocao-cds.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
             <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
                 <i class="bi bi-laptop text-sm"></i>
@@ -223,8 +224,8 @@ export function renderHome() {
             <span>💻 Báo cáo chuyển đổi số</span>
         </a>
 
-    </div> <!-- Đóng dropdown -->
-</div> <!-- Đóng relative -->
+    </div>
+</div>
 
         <!-- Menu 4 -->
         <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 transition-colors">
