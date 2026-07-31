@@ -327,30 +327,6 @@ function bindHomeEvents() {
         }
     });
 
-    // 3. Nút iOS
-    document.getElementById('pwa-ios-close')?.addEventListener('click', window.hidePWAPopup);
-    document.getElementById('pwa-ios-got-it')?.addEventListener('click', () => {
-        window.hidePWAPopup();
-        localStorage.setItem('pwa-ios-dismissed', Date.now().toString());
-    });
-
-    // 4. Nếu đã mở dưới dạng App độc lập (Standalone) -> Bỏ qua Popup
-    if (isStandalone()) return;
-
-    // 5. Logic tự động hiển thị Popup sau khi Renderer xong giao diện
-    const isIOSDevice = isIOS();
-    const dismissedKey = isIOSDevice ? 'pwa-ios-dismissed' : 'pwa-dismissed';
-    const lastDismissed = localStorage.getItem(dismissedKey);
-
-    const cooldown = isIOSDevice ? 2 * 24 * 60 * 60 * 1000 : 12 * 60 * 60 * 1000;
-
-    if (!lastDismissed || Date.now() - Number(lastDismissed) > cooldown) {
-        setTimeout(() => {
-            window.showPWAPopup(isIOSDevice);
-        }, 1200);
-    }
-}
-
     // 3. Sự kiện nút iOS
     document.getElementById('pwa-ios-close')?.addEventListener('click', window.hidePWAPopup);
     document.getElementById('pwa-ios-got-it')?.addEventListener('click', () => {
