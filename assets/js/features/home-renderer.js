@@ -135,14 +135,81 @@ export function renderHome() {
 
     </div>
 </div>
-    <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-purple-400/40 active:scale-[0.98]">
+    <!-- CARD 3: NGHIỆP VỤ SỐ (Drop-up Enabled) -->
+<div class="relative">
+    <div data-dropdown-toggle="nghiepvuso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-purple-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
             <i class="bi bi-journal-check text-white text-lg"></i>
         </div>
-        <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">NGHIỆP VỤ SỐ</h3>
+        <div class="flex items-center justify-between">
+            <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">NGHIỆP VỤ SỐ</h3>
+            <i class="bi bi-chevron-up text-xs text-purple-100 transition-transform duration-300 transform" data-dropdown-arrow></i>
+        </div>
         <p class="text-[10px] text-purple-50 font-medium">Báo cáo • Tập huấn • Hội thảo • Khảo sát</p>
     </div>
+
+    <!-- Dropup Menu (Hiển thị phía trên card, có scrollbar khi danh sách dài) -->
+    <div id="nghiepvuso-dropdown" data-dropdown-menu class="hidden absolute left-0 right-0 bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 space-y-1 transition-all duration-200 opacity-0 transform translate-y-2 scale-95 origin-bottom max-h-[280px] overflow-y-auto">
+        
+        <!-- Menu 1 -->
+        <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-journal-bookmark text-sm"></i>
+            </div>
+            <span>📘 Báo cáo chuyên môn</span>
+        </a>
+
+        <!-- Menu 2 -->
+        <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-bullseye text-sm"></i>
+            </div>
+            <span>🎯 Báo cáo hoạt động giáo dục</span>
+        </a>
+
+        <!-- Menu 3 -->
+        <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-mortarboard text-sm"></i>
+            </div>
+            <span>🎓 Bồi dưỡng chuyên môn</span>
+        </a>
+
+        <!-- Menu 4 -->
+        <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-trophy text-sm"></i>
+            </div>
+            <span>🏆 Báo cáo các cuộc thi</span>
+        </a>
+
+        <!-- Menu 5 -->
+        <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-laptop text-sm"></i>
+            </div>
+            <span>💻 Báo cáo chuyển đổi số</span>
+        </a>
+
+        <!-- Menu 6 -->
+        <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-building text-sm"></i>
+            </div>
+            <span>🏫 Báo cáo hành chính</span>
+        </a>
+
+        <!-- Menu 7 -->
+        <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-folder2-open text-sm"></i>
+            </div>
+            <span>📂 Khác</span>
+        </a>
+
+    </div>
+</div>
     <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-amber-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
