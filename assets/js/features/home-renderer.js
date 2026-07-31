@@ -225,6 +225,14 @@ export function renderHome() {
     renderBirthdayModal();
     bindHomeEvents();
 }
+// Lưu lại prompt cài đặt PWA toàn cục ngay khi trình duyệt bắn ra
+window.deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    window.deferredPrompt = e;
+});
+
+
 
 function renderPWAPopups() {
     if (document.getElementById('pwa-custom-popup')) return;
@@ -304,7 +312,7 @@ function hidePWAPopup() {
 }
 
 function bindHomeEvents() {
-    // Nút Android
+    // 1. Gán sự kiện nút Android
     document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
         hidePWAPopup();
         localStorage.setItem('pwa-dismissed', Date.now().toString());
@@ -312,7 +320,6 @@ function bindHomeEvents() {
 
     document.getElementById('pwa-confirm-btn')?.addEventListener('click', () => {
         hidePWAPopup();
-        // Gọi cài đặt thật
         if (window.deferredPrompt) {
             window.deferredPrompt.prompt();
             window.deferredPrompt.userChoice.then(() => {
@@ -323,28 +330,25 @@ function bindHomeEvents() {
         }
     });
 
-    // Nút iOS
+    // 2. Gán sự kiện nút iOS
     document.getElementById('pwa-ios-close')?.addEventListener('click', hidePWAPopup);
     document.getElementById('pwa-ios-got-it')?.addEventListener('click', () => {
         hidePWAPopup();
         localStorage.setItem('pwa-ios-dismissed', Date.now().toString());
     });
 
-    // Chỉ hiện khi chưa cài
+    // 3. Nếu ứng dụng đã cài đặt rồi (Standalone) -> Không hiện Popup nữa
     if (isStandalone()) return;
 
-    // Android: bắt sự kiện beforeinstallprompt → hiện popup
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        window.deferredPrompt = e;
-
+    // 4. Kiểm tra hiển thị Popup cho Android
+    if (window.deferredPrompt) {
         const dismissed = localStorage.getItem('pwa-dismissed');
         if (!dismissed || Date.now() - Number(dismissed) > 12 * 60 * 60 * 1000) {
             setTimeout(() => showPWAPopup(false), 1200);
         }
-    });
+    }
 
-    // iOS
+    // 5. Kiểm tra hiển thị Popup cho iOS
     if (isIOS()) {
         const iosDismissed = localStorage.getItem('pwa-ios-dismissed');
         if (!iosDismissed || Date.now() - Number(iosDismissed) > 2 * 24 * 60 * 60 * 1000) {
