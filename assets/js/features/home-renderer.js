@@ -120,8 +120,9 @@ export function renderHome() {
     </div>
     <div class="flex-1 h-[2px] bg-gradient-to-l from-transparent via-slate-300 to-slate-300"></div>
 </div>
+
 <!-- 04 TRỤ CỘT CHÍNH -->
-<section class="grid grid-cols-2 gap-3 mb-2">
+<section class="grid grid-cols-2 gap-3">
     <div onclick="window.open('https://thpthoavang.edu.vn/', '_blank')" class="group relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
