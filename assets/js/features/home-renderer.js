@@ -106,10 +106,11 @@ export function renderHome() {
 <div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-cyan-50/80 border border-blue-100 shadow-sm p-2 mb-3 backdrop-blur-md flex items-center gap-2.5">
     
     <!-- Badge Cố định bên trái -->
-    <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-bold shadow-xs shrink-0 z-10">
-        <i class="bi bi-bell-fill animate-bounce text-amber-300 text-xs"></i>
-        <span class="uppercase tracking-wider">📌 MỚI</span>
-    </div>
+    <!-- Badge đổi thành NHẮC VIỆC với icon chuông báo hiệu -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-bold shadow-xs shrink-0 z-10">
+    <i class="bi bi-bell-fill text-amber-300 text-xs animate-bounce"></i>
+    <span class="uppercase tracking-wider">NHẮC VIỆC</span>
+</div>
 
     <!-- Dải chữ chạy dùng thẻ marquee -->
     <marquee onmouseover="this.stop();" onmouseout="this.start();" scrollamount="5" class="text-xs font-semibold text-slate-700 flex items-center">
