@@ -227,7 +227,7 @@ export function renderHome() {
                     </a>
                 </div>
             </div>
-
+  </div>
             <!-- 4. Báo cáo các cuộc thi -->
             <a href="baocao-cuocthi.html" class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:border-purple-400 transition-all">
                 <div class="flex items-center gap-3.5">
