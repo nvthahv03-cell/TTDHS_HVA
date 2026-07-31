@@ -87,9 +87,20 @@ export function renderHome() {
       THÔNG TIN THÔNG BÁO
     </span>
   </div>
-
 </div>
+<!-- VIỆC CỦA TÔI -->
+<div class="flex items-center mt-1 mb-2">
+    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-slate-300 to-slate-300"></div>
 
+    <div class="mx-3 px-4 py-1 rounded-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 shadow-sm flex items-center gap-2">
+        <i class="bi bi-person-workspace text-[#0F4C81] text-sm"></i>
+        <span class="text-[13px] font-bold uppercase tracking-wide text-[#0F4C81]">
+            VIỆC CỦA TÔI
+        </span>
+    </div>
+
+    <div class="flex-1 h-px bg-gradient-to-l from-transparent via-slate-300 to-slate-300"></div>
+</div>
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
     <div onclick="window.open('https://thpthoavang.edu.vn/', '_blank')" class="group relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
