@@ -317,7 +317,27 @@ function renderPWAPopups() {
     `;
     document.body.insertAdjacentHTML('beforeend', popupHtml);
 }
+// ==========================================
+// HÀM QUẢN LÝ BẬT/TẮT MODAL FULL MÀN HÌNH
+// ==========================================
 
+// Hàm mở Modal Full Màn Hình
+window.openFullModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Khóa cuộn trang nền
+    }
+};
+
+// Hàm đóng Modal Full Màn Hình
+window.closeFullModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = ''; // Mở lại cuộn trang nền
+    }
+};
 function renderBirthdayModal() {
     if (document.getElementById('birthday-modal')) return;
 }
