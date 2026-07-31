@@ -136,125 +136,95 @@ export function renderHome() {
 
     </div>
 </div>
-   <!-- MODAL FULL MÀN HÌNH - NGHIỆP VỤ SỐ -->
-<div id="nghiepvuso-modal" class="fixed inset-0 z-[9999] hidden bg-slate-900/60 backdrop-blur-sm">
-    <div class="fixed inset-0 bg-slate-50 dark:bg-slate-900 flex flex-col w-full h-full overflow-y-auto">
-        
-        <!-- Header Thanh tiêu đề -->
-        <div class="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-3.5 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-purple-100 dark:bg-purple-900/50 text-purple-600 flex items-center justify-center text-lg">
-                    <i class="bi bi-journal-check"></i>
-                </div>
-                <div>
-                    <h2 class="text-sm font-extrabold text-slate-800 dark:text-white uppercase">NGHIỆP VỤ SỐ</h2>
-                    <p class="text-[11px] text-slate-500">Chọn danh mục báo cáo & chuyên môn</p>
-                </div>
+  <!-- CARD 3: NGHIỆP VỤ SỐ (Đã có lại Thẻ cha + Menu Dropup con) -->
+<div class="relative">
+    
+    <!-- 1. THẺ CHA: CARD NGHIỆP VỤ SỐ MÀU TÍM -->
+    <div data-dropdown-toggle="nghiepvuso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-purple-400/40 active:scale-[0.98]">
+        <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
+            <i class="bi bi-journal-check text-white text-lg"></i>
+        </div>
+        <div class="flex items-center justify-between">
+            <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">NGHIỆP VỤ SỐ</h3>
+            <i class="bi bi-chevron-up text-xs text-purple-100 transition-transform duration-300 transform" data-dropdown-arrow></i>
+        </div>
+        <p class="text-[10px] text-purple-50 font-medium">Chuyên môn • Hoạt động • Hội thảo</p>
+    </div>
+
+    <!-- 2. MENU CON (DROPUP): BẬT LÊN KHI BẤM VÀO CARD -->
+    <div id="nghiepvuso-dropdown" data-dropdown-menu class="hidden absolute left-0 right-0 bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 min-w-[280px] max-h-[70vh] overflow-y-auto">
+
+        <!-- Menu 1 -->
+        <a href="baocao-chuyenmon.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-journal-bookmark text-sm"></i>
             </div>
-            <!-- Nút đóng X -->
-            <button onclick="closeFullModal('nghiepvuso-modal')" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 flex items-center justify-center hover:bg-slate-200 transition-colors">
-                <i class="bi bi-x-lg text-base"></i>
+            <span>📘 Báo cáo chuyên môn</span>
+        </a>
+
+        <!-- Menu 2 -->
+        <a href="baocao-hoatdong.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-bullseye text-sm"></i>
+            </div>
+            <span>🎯 Báo cáo hoạt động giáo dục</span>
+        </a>
+
+        <!-- Menu 3: BỒI DƯỠNG CHUYÊN MÔN (Xổ 5 con) -->
+        <div class="border-y border-slate-100 dark:border-slate-700/50 my-1 py-1">
+            <button type="button" onclick="event.stopPropagation(); document.getElementById('bdcm-sub-list').classList.toggle('hidden'); document.getElementById('bdcm-arrow-icon').classList.toggle('rotate-180');" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                        <i class="bi bi-mortarboard text-sm"></i>
+                    </div>
+                    <span>🎓 Bồi dưỡng chuyên môn</span>
+                </div>
+                <i id="bdcm-arrow-icon" class="bi bi-chevron-down text-[10px] text-slate-400 transition-transform duration-300"></i>
             </button>
-        </div>
 
-        <!-- Danh sách các danh mục lớn, tràn toàn màn hình -->
-        <div class="p-4 max-w-2xl mx-auto w-full space-y-3">
-
-            <!-- 1. Báo cáo chuyên môn -->
-            <a href="baocao-chuyenmon.html" class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:border-purple-400 transition-all">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg shrink-0">
-                        <i class="bi bi-journal-bookmark"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-white">Báo cáo chuyên môn</h3>
-                        <p class="text-xs text-slate-500">Các kế hoạch & báo cáo chuyên môn trường</p>
-                    </div>
-                </div>
-                <i class="bi bi-chevron-right text-slate-400"></i>
-            </a>
-
-            <!-- 2. Báo cáo hoạt động giáo dục -->
-            <a href="baocao-hoatdong.html" class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:border-purple-400 transition-all">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg shrink-0">
-                        <i class="bi bi-bullseye"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-white">Báo cáo hoạt động giáo dục</h3>
-                        <p class="text-xs text-slate-500">Hoạt động ngoại khóa, trải nghiệm, hướng nghiệp</p>
-                    </div>
-                </div>
-                <i class="bi bi-chevron-right text-slate-400"></i>
-            </a>
-
-           <!-- Menu 3: BỒI DƯỠNG CHUYÊN MÔN (Có 5 con xổ xuống) -->
-    <div class="border-y border-slate-100 dark:border-slate-700/50 my-1 py-1">
-        <button type="button" onclick="event.stopPropagation(); document.getElementById('bdcm-sub-list').classList.toggle('hidden'); document.getElementById('bdcm-arrow-icon').classList.toggle('rotate-180');" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
-            <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
-                    <i class="bi bi-mortarboard text-sm"></i>
-                </div>
-                <span>🎓 Bồi dưỡng chuyên môn</span>
+            <div id="bdcm-sub-list" class="hidden pl-6 pr-1 pt-1 space-y-1">
+                <a href="baocao-tap-huan.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
+                    <i class="bi bi-award text-blue-500 text-xs"></i>
+                    <span>1. Tập huấn</span>
+                </a>
+                <a href="baocao-hoi-thao.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
+                    <i class="bi bi-people text-purple-500 text-xs"></i>
+                    <span>2. Hội thảo</span>
+                </a>
+                <a href="baocao-shcm.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
+                    <i class="bi bi-journal-bookmark text-emerald-500 text-xs"></i>
+                    <span>3. Sinh hoạt CM</span>
+                </a>
+                <a href="baocao-bdtx.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
+                    <i class="bi bi-book text-amber-500 text-xs"></i>
+                    <span>4. Bồi dưỡng thường xuyên</span>
+                </a>
+                <a href="baocao-khac.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
+                    <i class="bi bi-grid text-slate-400 text-xs"></i>
+                    <span>5. Khác</span>
+                </a>
             </div>
-            <i id="bdcm-arrow-icon" class="bi bi-chevron-down text-[10px] text-slate-400 transition-transform duration-300"></i>
-        </button>
-
-        <!-- 5 Danh mục con -->
-        <div id="bdcm-sub-list" class="hidden pl-6 pr-1 pt-1 space-y-1">
-            <a href="baocao-tap-huan.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
-                <i class="bi bi-award text-blue-500 text-xs"></i>
-                <span>1. Tập huấn</span>
-            </a>
-            <a href="baocao-hoi-thao.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
-                <i class="bi bi-people text-purple-500 text-xs"></i>
-                <span>2. Hội thảo</span>
-            </a>
-            <a href="baocao-shcm.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
-                <i class="bi bi-journal-bookmark text-emerald-500 text-xs"></i>
-                <span>3. Sinh hoạt CM</span>
-            </a>
-            <a href="baocao-bdtx.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
-                <i class="bi bi-book text-amber-500 text-xs"></i>
-                <span>4. Bồi dưỡng thường xuyên</span>
-            </a>
-            <a href="baocao-khac.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
-                <i class="bi bi-grid text-slate-400 text-xs"></i>
-                <span>5. Khác</span>
-            </a>
         </div>
-    </div>
-            <!-- 4. Báo cáo các cuộc thi -->
-            <a href="baocao-cuocthi.html" class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:border-purple-400 transition-all">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg shrink-0">
-                        <i class="bi bi-trophy"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-white">Báo cáo các cuộc thi</h3>
-                        <p class="text-xs text-slate-500">HSG, Khoa học kỹ thuật, các hội thi</p>
-                    </div>
-                </div>
-                <i class="bi bi-chevron-right text-slate-400"></i>
-            </a>
 
-            <!-- 5. Báo cáo chuyển đổi số -->
-            <a href="baocao-cds.html" class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:border-purple-400 transition-all">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg shrink-0">
-                        <i class="bi bi-laptop"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800 dark:text-white">Báo cáo chuyển đổi số</h3>
-                        <p class="text-xs text-slate-500">Ứng dụng CNTT & Chuyển đổi số dạy học</p>
-                    </div>
-                </div>
-                <i class="bi bi-chevron-right text-slate-400"></i>
-            </a>
+        <!-- Menu 4 -->
+        <a href="baocao-cuocthi.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-trophy text-sm"></i>
+            </div>
+            <span>🏆 Báo cáo các cuộc thi</span>
+        </a>
 
-        </div>
-    </div>
-</div>
+        <!-- Menu 5 -->
+        <a href="baocao-cds.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
+                <i class="bi bi-laptop text-sm"></i>
+            </div>
+            <span>💻 Báo cáo chuyển đổi số</span>
+        </a>
+
+    </div> <!-- Đóng dropdown -->
+</div> <!-- Đóng relative -->
 
         <!-- Menu 4 -->
         <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 transition-colors">
