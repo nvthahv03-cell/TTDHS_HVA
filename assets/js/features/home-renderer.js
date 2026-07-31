@@ -53,19 +53,43 @@ export function renderHome() {
 <div class="absolute top-1/2 -right-20 w-56 h-56 bg-indigo-400/15 rounded-full blur-3xl pointer-events-none"></div>
 
 <!-- 2. BA PHÍM TÁC VỤ NHANH (Shortcut style) -->
-<div class="grid grid-cols-3 gap-3 mb-4 relative z-10">
+<div class="grid grid-cols-3 gap-3 mb-1 relative z-10">
+  
+<!-- Shortcut 1: Lịch công tác -->
+<div class="group glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl active:scale-95">
 
-  <!-- Shortcut 1: Lịch công tác -->
-  <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
-    <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-white border border-blue-200 shadow-[0_4px_16px_rgba(59,130,246,0.18),0_0_0_1px_rgba(147,197,253,0.3)]">
-      <i class="bi bi-calendar3 text-[34px] sm:text-[40px] text-blue-600"
-         style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
+    <!-- Icon -->
+    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl
+                bg-white
+                border border-blue-200/90
+                shadow-lg
+                flex items-center justify-center
+                transition-all duration-300
+                group-hover:scale-105
+                group-hover:border-blue-400">
+
+        <i class="bi bi-calendar3
+                  text-[32px] sm:text-[38px]
+                  text-blue-600
+                  leading-none"></i>
+
     </div>
-    <span class="font-bold text-[13px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-      LỊCH CÔNG TÁC
-    </span>
-  </div>
 
+    <!-- Tiêu đề -->
+    <div class="h-10 mt-3 flex items-center justify-center">
+        <span class="font-bold
+                     text-[13px]
+                     sm:text-xs
+                     uppercase
+                     tracking-wide
+                     leading-tight
+                     text-slate-800
+                     text-center">
+            LỊCH CÔNG TÁC
+        </span>
+    </div>
+
+</div>
   <!-- Shortcut 2: Văn bản - Biểu mẫu -->
   <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
     <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-white border border-blue-200 shadow-[0_4px_16px_rgba(59,130,246,0.18),0_0_0_1px_rgba(147,197,253,0.3)]">
@@ -89,7 +113,19 @@ export function renderHome() {
   </div>
 
 </div>
+<!-- ================= VIỆC CỦA TÔI ================= -->
+<div class="flex items-center my-5">
+    <div class="flex-1 h-px bg-slate-300"></div>
 
+    <div class="px-4 flex items-center gap-2">
+        <i class="bi bi-person-workspace text-[#0F4C81] text-lg"></i>
+        <span class="text-sm font-bold tracking-wide text-[#0F4C81] uppercase">
+            Việc của tôi
+        </span>
+    </div>
+
+    <div class="flex-1 h-px bg-slate-300"></div>
+</div>
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
     <div onclick="window.open('https://thpthoavang.edu.vn/', '_blank')" class="group relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
