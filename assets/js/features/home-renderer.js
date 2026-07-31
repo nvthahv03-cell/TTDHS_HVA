@@ -89,7 +89,7 @@ export function renderHome() {
   </div>
 </div>
 <!-- VIỆC CỦA TÔI -->
-<div class="flex items-center mt-1 mb-2">
+<div class="flex items-center mt-2 mb-3">
     <div class="flex-1 h-px bg-gradient-to-r from-transparent via-slate-300 to-slate-300"></div>
 
     <div class="mx-3 px-4 py-1 rounded-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 shadow-sm flex items-center gap-2">
@@ -100,6 +100,37 @@ export function renderHome() {
     </div>
 
     <div class="flex-1 h-px bg-gradient-to-l from-transparent via-slate-300 to-slate-300"></div>
+</div>
+
+<!-- KHUNG BAO CHỮ CHẠY (ANNOUNCEMENT TICKER) -->
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-cyan-50/80 border border-blue-100 shadow-sm p-2 mb-3 backdrop-blur-md flex items-center gap-2.5">
+    
+    <!-- Badge Cố định bên trái: Icon + Nhãn Thông báo -->
+    <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-bold shadow-xs shrink-0 z-10">
+        <i class="bi bi-bell-fill animate-bounce text-amber-300 text-xs"></i>
+        <span class="uppercase tracking-wider">Thông báo</span>
+    </div>
+
+    <!-- Khung chứa chữ chạy (Che hiệu ứng tràn 2 bên) -->
+    <div class="relative flex-1 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+        <div class="animate-marquee whitespace-nowrap flex items-center gap-8 text-xs font-semibold text-slate-700">
+            
+            <!-- Nội dung chạy (Thầy thay đổi chữ ở các thẻ span bên dưới) -->
+            <span class="inline-flex items-center gap-1.5">
+                <i class="bi bi-dot text-blue-600 text-lg"></i>
+                Hoàn thành báo cáo chuyên môn năm học trước ngày 15 hàng tháng.
+            </span>
+            <span class="inline-flex items-center gap-1.5">
+                <i class="bi bi-dot text-purple-600 text-lg"></i>
+                Lịch họp Chuyên môn định kỳ tuần này chuyển sang sáng Thứ 5.
+            </span>
+            <span class="inline-flex items-center gap-1.5">
+                <i class="bi bi-dot text-emerald-600 text-lg"></i>
+                Đã cập nhật danh sách Phê duyệt kế hoạch bài dạy mới trên hệ thống.
+            </span>
+
+        </div>
+    </div>
 </div>
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
