@@ -138,17 +138,28 @@ export function renderHome() {
 </div>
     <!-- CARD 3: NGHIỆP VỤ SỐ (Drop-up Enabled) -->
 <div class="relative">
-    <div data-dropdown-toggle="nghiepvuso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-purple-400/40 active:scale-[0.98]">
+    <div data-dropdown-toggle="nghiepvuso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-indigo-700 via-blue-700 to-sky-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
+
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
             <i class="bi bi-journal-check text-white text-lg"></i>
         </div>
+
         <div class="flex items-center justify-between">
-            <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">NGHIỆP VỤ SỐ</h3>
-            <i class="bi bi-chevron-up text-xs text-purple-100 transition-transform duration-300 transform" data-dropdown-arrow></i>
+            <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">
+                NGHIỆP VỤ SỐ
+            </h3>
+
+            <i class="bi bi-chevron-up text-xs text-blue-100 transition-transform duration-300 transform" data-dropdown-arrow></i>
         </div>
-        <p class="text-[10px] text-purple-50 font-medium">Chuyên môn • Hoạt động • Hội thảo </p>
+
+        <p class="text-[10px] text-blue-50 font-medium">
+            Chuyên môn • Hoạt động • Hội thảo
+        </p>
+
     </div>
+</div>
 
     <!-- Dropup Menu (Hiển thị phía trên card, có scrollbar khi danh sách dài) -->
     <div id="nghiepvuso-dropdown" data-dropdown-menu class="hidden absolute left-0 right-0 bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 space-y-1 transition-all duration-200 opacity-0 transform translate-y-2 scale-95 origin-bottom max-h-[280px] overflow-y-auto">
