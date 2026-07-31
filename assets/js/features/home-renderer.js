@@ -302,47 +302,54 @@ function isStandalone() {
 }
 
 function bindHomeEvents() {
-    // 1. Nút Bỏ qua Android
+    // 1. Nút Bỏ qua (Android)
     document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
         window.hidePWAPopup();
         localStorage.setItem('pwa-dismissed', Date.now().toString());
     });
 
-    // 2. Nút Cài đặt Android (Bật Native Prompt trực tiếp từ Chrome)
+    // 2. Nút Cài đặt ngay (Android) - Kích hoạt Native Prompt
     document.getElementById('pwa-confirm-btn')?.addEventListener('click', async () => {
-        const btn = document.getElementById('pwa-confirm-btn');
-        
-        // Nếu bắt được sự kiện Native
         if (window.deferredPrompt) {
             window.hidePWAPopup();
-            // Bật ngay bảng hỏi cài đặt chuẩn của hệ điều hành Android
-            window.deferredPrompt.prompt();
-            const choiceResult = await window.deferredPrompt.userChoice;
-            console.log('User choice:', choiceResult.outcome);
-            window.deferredPrompt = null;
-        } 
-        // Nếu gọi qua module PWA sẵn có
-        else if (typeof PWA?.install === 'function') {
-            window.hidePWAPopup();
-            PWA.install();
-        } 
-        // Xử lý dự phòng: Chờ tối đa 1.5 giây nếu Service Worker nạp trễ
-        else {
-            if (btn) btn.innerText = 'Đang kết nối...';
             
-            setTimeout(async () => {
-                if (window.deferredPrompt) {
-                    window.hidePWAPopup();
-                    window.deferredPrompt.prompt();
-                    window.deferredPrompt = null;
-                } else {
-                    alert('Hệ thống chưa ghi nhận được yêu cầu cài đặt trực tiếp.\n\nThầy/Cô vui lòng mở menu Chrome (dấu 3 chấm ⋮) -> Chọn "Cài đặt ứng dụng" hoặc "Thêm vào màn hình chính".');
-                    window.hidePWAPopup();
-                }
-                if (btn) btn.innerText = 'Cài đặt ngay';
-            }, 1500);
+            // Kích hoạt hộp thoại cài đặt trực tiếp của Android Chrome
+            window.deferredPrompt.prompt();
+            
+            const choiceResult = await window.deferredPrompt.userChoice;
+            console.log('Người dùng đã chọn:', choiceResult.outcome);
+            
+            // Reset biến sau khi dùng
+            window.deferredPrompt = null;
+        } else {
+            // Dự phòng nếu bấm quá nhanh khi sự kiện chưa kịp ghi nhận
+            alert('Hệ thống đang sẵn sàng, Thầy/Cô vui lòng thử bấm lại sau 1 giây ạ.');
         }
     });
+
+    // 3. Nút iOS
+    document.getElementById('pwa-ios-close')?.addEventListener('click', window.hidePWAPopup);
+    document.getElementById('pwa-ios-got-it')?.addEventListener('click', () => {
+        window.hidePWAPopup();
+        localStorage.setItem('pwa-ios-dismissed', Date.now().toString());
+    });
+
+    // 4. Nếu đã mở dưới dạng App độc lập (Standalone) -> Bỏ qua Popup
+    if (isStandalone()) return;
+
+    // 5. Logic tự động hiển thị Popup sau khi Renderer xong giao diện
+    const isIOSDevice = isIOS();
+    const dismissedKey = isIOSDevice ? 'pwa-ios-dismissed' : 'pwa-dismissed';
+    const lastDismissed = localStorage.getItem(dismissedKey);
+
+    const cooldown = isIOSDevice ? 2 * 24 * 60 * 60 * 1000 : 12 * 60 * 60 * 1000;
+
+    if (!lastDismissed || Date.now() - Number(lastDismissed) > cooldown) {
+        setTimeout(() => {
+            window.showPWAPopup(isIOSDevice);
+        }, 1200);
+    }
+}
 
     // 3. Sự kiện nút iOS
     document.getElementById('pwa-ios-close')?.addEventListener('click', window.hidePWAPopup);
