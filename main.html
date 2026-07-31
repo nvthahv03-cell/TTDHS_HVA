@@ -352,7 +352,76 @@
                 alert('Lỗi kết nối đến hệ thống cơ sở dữ liệu!');
             }
         });
+/**
+ * Tự động khởi tạo và xử lý Dropdown Tái Sử Dụng
+ */
+function initDropdownSystem() {
+    // 1. Sự kiện Toggle đóng/mở khi click vào Card
+    document.addEventListener('click', (e) => {
+        const toggleBtn = e.target.closest('[data-dropdown-toggle]');
+        
+        if (toggleBtn) {
+            e.stopPropagation();
+            const targetId = toggleBtn.getAttribute('data-dropdown-toggle');
+            const targetMenu = document.getElementById(targetId);
+            const arrowIcon = toggleBtn.querySelector('[data-dropdown-arrow]');
 
+            // Đóng tất cả menu khác đang mở (nếu có)
+            closeAllDropdowns(targetMenu);
+
+            if (targetMenu) {
+                const isHidden = targetMenu.classList.contains('hidden');
+                
+                if (isHidden) {
+                    // Mở Menu
+                    targetMenu.classList.remove('hidden');
+                    setTimeout(() => {
+                        targetMenu.classList.remove('opacity-0', '-translate-y-2', 'scale-95');
+                        targetMenu.classList.add('opacity-100', 'translate-y-0', 'scale-100');
+                    }, 10);
+                    if (arrowIcon) arrowIcon.classList.add('rotate-180');
+                } else {
+                    // Đóng Menu
+                    closeSingleDropdown(targetMenu, arrowIcon);
+                }
+            }
+            return;
+        }
+
+        // 2. Click ra ngoài -> Tự động đóng tất cả Dropdown
+        if (!e.target.closest('[data-dropdown-menu]')) {
+            closeAllDropdowns();
+        }
+    });
+}
+
+// Hàm hỗ trợ đóng 1 Dropdown mượt mà với Animation
+function closeSingleDropdown(menu, arrow) {
+    if (!menu || menu.classList.contains('hidden')) return;
+    
+    menu.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
+    menu.classList.add('opacity-0', '-translate-y-2', 'scale-95');
+    if (arrow) arrow.classList.remove('rotate-180');
+    
+    setTimeout(() => {
+        menu.classList.add('hidden');
+    }, 200);
+}
+
+// Hàm đóng toàn bộ Dropdown
+function closeAllDropdowns(exceptMenu = null) {
+    document.querySelectorAll('[data-dropdown-menu]').forEach(menu => {
+        if (menu !== exceptMenu) {
+            const toggleBtn = document.querySelector(`[data-dropdown-toggle="${menu.id}"]`);
+            const arrow = toggleBtn ? toggleBtn.querySelector('[data-dropdown-arrow]') : null;
+            closeSingleDropdown(menu, arrow);
+        }
+    });
+}
+
+// Gọi khởi tạo hệ thống Dropdown
+initDropdownSystem();
+       
         // Tự động bắt sự kiện click toàn cục cho nút "Giao việc" (kể cả phần tử render động)
 document.addEventListener('click', function(e) {
     const target = e.target.closest('button, div, a, span');
