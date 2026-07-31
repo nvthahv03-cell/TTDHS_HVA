@@ -232,7 +232,25 @@ window.addEventListener('beforeinstallprompt', (e) => {
     window.deferredPrompt = e;
 });
 
+window.showPWAPopup = function(isIOSDevice = false) {
+    const popup = document.getElementById('pwa-custom-popup');
+    if (!popup) {
+        console.warn('Không tìm thấy element #pwa-custom-popup trong DOM');
+        return;
+    }
 
+    const androidContent = document.getElementById('pwa-android-content');
+    const iosContent = document.getElementById('pwa-ios-content');
+
+    if (androidContent) androidContent.classList.toggle('hidden', isIOSDevice);
+    if (iosContent) iosContent.classList.toggle('hidden', !isIOSDevice);
+
+    popup.classList.remove('hidden');
+};
+
+window.hidePWAPopup = function() {
+    document.getElementById('pwa-custom-popup')?.classList.add('hidden');
+};
 
 function renderPWAPopups() {
     if (document.getElementById('pwa-custom-popup')) return;
