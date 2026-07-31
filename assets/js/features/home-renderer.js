@@ -109,14 +109,41 @@ export function renderHome() {
         <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">CỔNG THÔNG TIN</h3>
         <p class="text-[10px] text-blue-50 font-medium">Website • Thông báo • Tuyển sinh • Danh bạ</p>
     </div>
-    <div data-open-modal="digital-modal" class="group relative rounded-2xl bg-gradient-to-br from-teal-600 via-teal-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-teal-400/40 active:scale-[0.98]">
+    <!-- CARD 2: ĐIỀU HÀNH SỐ (Dropdown Enabled) -->
+<div class="relative">
+    <div data-dropdown-toggle="dieuhanhso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-teal-600 via-teal-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-teal-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
             <i class="bi bi-cpu text-white text-lg"></i>
         </div>
-        <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">ĐIỀU HÀNH SỐ</h3>
-        <p class="text-[10px] text-teal-50 font-medium">Giao việc • Văn bản • AI • Dashboard </p>
+        <div class="flex items-center justify-between">
+            <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">ĐIỀU HÀNH SỐ</h3>
+            <i class="bi bi-chevron-down text-xs text-teal-100 transition-transform duration-300 transform" data-dropdown-arrow></i>
+        </div>
+        <p class="text-[10px] text-teal-50 font-medium">Giao việc • Văn bản • AI • Dashboard</p>
     </div>
+
+    <!-- Dropdown Menu (Hỗ trợ mở rộng 10-15 menu con) -->
+    <div id="dieuhanhso-dropdown" data-dropdown-menu class="hidden absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 space-y-1 transition-all duration-200 opacity-0 transform -translate-y-2 scale-95 origin-top">
+        
+        <!-- Menu con 1: Giao việc -->
+        <a href="Giaonhanviec.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors">
+            <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600">
+                <i class="bi bi-clipboard-check text-sm"></i>
+            </div>
+            <span>📋 Giao việc</span>
+        </a>
+
+        <!-- Menu con 2: Lịch công tác -->
+        <button onclick="alert('Chức năng đang phát triển')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors text-left">
+            <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600">
+                <i class="bi bi-calendar3 text-sm"></i>
+            </div>
+            <span>📅 Lịch công tác</span>
+        </button>
+
+    </div>
+</div>
     <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-purple-400/40 active:scale-[0.98]">
         <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
         <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
