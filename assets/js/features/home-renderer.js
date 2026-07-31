@@ -159,7 +159,7 @@ export function renderHome() {
         </p>
 
     </div>
-</div>
+
 
     <!-- Dropup Menu (Hiển thị phía trên card, có scrollbar khi danh sách dài) -->
     <div id="nghiepvuso-dropdown" data-dropdown-menu class="hidden absolute left-0 right-0 bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 space-y-1 transition-all duration-200 opacity-0 transform translate-y-2 scale-95 origin-bottom max-h-[280px] overflow-y-auto">
