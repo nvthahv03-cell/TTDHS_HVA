@@ -241,11 +241,11 @@ export function renderHome() {
             <span>1. Tập huấn</span>
         </a>
 
-        <!-- Con 2: Hội thảo -->
-        <a href="baocao-hoi-thao.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
-            <i class="bi bi-people text-purple-500 text-xs"></i>
-            <span>2. Hội thảo</span>
-        </a>
+       <!-- Con 2: Báo cáo Hội thảo -->
+<a href="HoiThao.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
+    <i class="bi bi-people text-purple-500 text-xs"></i>
+    <span>2. Hội thảo</span>
+</a>
 
         <!-- Con 3: Sinh hoạt CM -->
         <a href="baocao-shcm.html" class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 dark:text-slate-300 hover:bg-purple-100/50 hover:text-purple-700 transition-colors">
