@@ -98,7 +98,7 @@ export function renderHome() {
             <i class="bi bi-globe text-white text-lg"></i>
         </div>
         <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">CỔNG THÔNG TIN</h3>
-        <p class="text-[10px] text-blue-50 font-medium">Website • Thông báo • Tuyển sinh • Danh bạ</p>
+        <p class="text-[10px] text-blue-50 font-medium">Website • Thông báo • Tin tức</p>
     </div>
     <!-- CARD 2: ĐIỀU HÀNH SỐ (Đã đổi sang Drop-up xổ ngược lên) -->
 <div class="relative">
@@ -146,7 +146,7 @@ export function renderHome() {
             <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">NGHIỆP VỤ SỐ</h3>
             <i class="bi bi-chevron-up text-xs text-purple-100 transition-transform duration-300 transform" data-dropdown-arrow></i>
         </div>
-        <p class="text-[10px] text-purple-50 font-medium">Báo cáo • Tập huấn • Hội thảo • Khảo sát</p>
+        <p class="text-[10px] text-purple-50 font-medium">Chuyên môn • Hoạt động • Hội thảo </p>
     </div>
 
     <!-- Dropup Menu (Hiển thị phía trên card, có scrollbar khi danh sách dài) -->
@@ -216,7 +216,7 @@ export function renderHome() {
             <i class="bi bi-graph-up-arrow text-white text-lg"></i>
         </div>
         <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">QUẢN TRỊ</h3>
-        <p class="text-[10px] text-amber-50 font-medium">Kế hoạch • Thi đua • Kiểm tra • KPI</p>
+        <p class="text-[10px] text-amber-50 font-medium">Kế hoạch • Thi đua • KPI</p>
     </div>
 </section>
 `;
