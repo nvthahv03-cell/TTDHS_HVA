@@ -4,22 +4,29 @@ import { ModuleManager } from '../modules/module-manager.js';
 import { PWA } from '../services/pwa.js';
 
 // ============================================================================
-// 1. KHAI BÁO BIẾN & HÀM GLOBAL (Đưa lên đầu để tương thích ES Module)
+// 1. KHAI BÁO BIẾN & LẮNG NGHE SỰ KIỆN NATIVE PWA (ANDROID)
 // ============================================================================
 
-window.deferredPrompt = null;
+window.deferredPrompt = window.deferredPrompt || null;
+
+// Lắng nghe ngay lập tức ở mức window
 window.addEventListener('beforeinstallprompt', (e) => {
+    // Ngăn Chrome hiển thị banner mặc định ở chân trang
     e.preventDefault();
+    // Lưu sự kiện lại để kích hoạt khi người dùng bấm nút
     window.deferredPrompt = e;
+    console.log('✅ [PWA] Đã bắt thành công sự kiện cài đặt trực tiếp trên Android!');
 });
 
-// Gán trực tiếp vào window để gọi được cả từ Console và các file khác
+window.addEventListener('appinstalled', () => {
+    window.deferredPrompt = null;
+    console.log('🎉 [PWA] Ứng dụng đã được cài đặt thành công!');
+});
+
+// Hàm hiển thị Popup PWA
 window.showPWAPopup = function (isIOSDevice = false) {
     const popup = document.getElementById('pwa-custom-popup');
-    if (!popup) {
-        console.warn('Không tìm thấy element #pwa-custom-popup trong DOM');
-        return;
-    }
+    if (!popup) return;
 
     const androidContent = document.getElementById('pwa-android-content');
     const iosContent = document.getElementById('pwa-ios-content');
@@ -83,46 +90,33 @@ export function renderHome() {
         </div>
     </div>
 </div>
+
 <!-- Background Effect -->
 <div class="absolute -top-20 -left-20 w-56 h-56 bg-blue-400/20 rounded-full blur-3xl pointer-events-none"></div>
 <div class="absolute top-1/2 -right-20 w-56 h-56 bg-indigo-400/15 rounded-full blur-3xl pointer-events-none"></div>
 
-<!-- 2. BA PHÍM TÁC VỤ NHANH (Shortcut style) -->
+<!-- 2. BA PHÍM TÁC VỤ NHANH -->
 <div class="grid grid-cols-3 gap-3 mb-4 relative z-10">
-
-  <!-- Shortcut 1: Lịch công tác -->
   <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
     <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-white border border-blue-200 shadow-[0_4px_16px_rgba(59,130,246,0.18),0_0_0_1px_rgba(147,197,253,0.3)]">
-      <i class="bi bi-calendar3 text-[34px] sm:text-[40px] text-blue-600"
-         style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
+      <i class="bi bi-calendar3 text-[34px] sm:text-[40px] text-blue-600" style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
     </div>
-    <span class="font-bold text-[13px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-      LỊCH CÔNG TÁC
-    </span>
+    <span class="font-bold text-[13px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">LỊCH CÔNG TÁC</span>
   </div>
 
-  <!-- Shortcut 2: Văn bản - Biểu mẫu -->
   <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
     <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-white border border-blue-200 shadow-[0_4px_16px_rgba(59,130,246,0.18),0_0_0_1px_rgba(147,197,253,0.3)]">
-      <i class="bi bi-file-earmark-text text-[34px] sm:text-[40px] text-blue-600"
-         style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
+      <i class="bi bi-file-earmark-text text-[34px] sm:text-[40px] text-blue-600" style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
     </div>
-    <span class="font-bold text-[13px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-      VĂN BẢN BIỂU MẪU
-    </span>
+    <span class="font-bold text-[13px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">VĂN BẢN BIỂU MẪU</span>
   </div>
 
-  <!-- Shortcut 3: Thông tin - Thông báo -->
   <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95">
     <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center mb-2.5 rounded-2xl bg-white border border-blue-200 shadow-[0_4px_16px_rgba(59,130,246,0.18),0_0_0_1px_rgba(147,197,253,0.3)]">
-      <i class="bi bi-megaphone text-[34px] sm:text-[40px] text-blue-600"
-         style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
+      <i class="bi bi-megaphone text-[34px] sm:text-[40px] text-blue-600" style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
     </div>
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-      THÔNG TIN THÔNG BÁO
-    </span>
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">THÔNG TIN THÔNG BÁO</span>
   </div>
-
 </div>
 
 <!-- 04 TRỤ CỘT CHÍNH -->
@@ -150,7 +144,6 @@ export function renderHome() {
             <p class="text-[10px] text-teal-50 font-medium">Giao việc • Văn bản • AI • Dashboard</p>
         </div>
 
-        <!-- Dropup Menu -->
         <div id="dieuhanhso-dropdown" data-dropdown-menu class="hidden absolute left-0 right-0 bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 space-y-1 transition-all duration-200 opacity-0 transform translate-y-2 scale-95 origin-bottom max-h-[280px] overflow-y-auto">
             <a href="Giaonhanviec.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors">
                 <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
@@ -181,7 +174,6 @@ export function renderHome() {
             <p class="text-[10px] text-purple-50 font-medium">Chuyên môn • Hoạt động • Hội thảo </p>
         </div>
 
-        <!-- Dropup Menu -->
         <div id="nghiepvuso-dropdown" data-dropdown-menu class="hidden absolute left-0 right-0 bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 space-y-1 transition-all duration-200 opacity-0 transform translate-y-2 scale-95 origin-bottom max-h-[280px] overflow-y-auto">
             <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/30 hover:text-purple-600 transition-colors">
                 <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 shrink-0">
@@ -241,7 +233,6 @@ export function renderHome() {
 `;
 
     renderPWAPopups();
-    renderBirthdayModal();
     bindHomeEvents();
 }
 
@@ -262,10 +253,12 @@ function renderPWAPopups() {
                     📱
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mb-1">Cài đặt ứng dụng</h3>
-                <p class="text-xs text-slate-500 mb-6">Thêm TTĐHS_HVA vào màn hình chính để truy cập nhanh và tiện lợi hơn.</p>
+                <p class="text-xs text-slate-500 mb-6">Thêm TTĐHS_HVA vào màn hình chính để truy cập nhanh và mượt mà hơn.</p>
                 <div class="flex gap-2.5">
                     <button id="pwa-dismiss-btn" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">Để sau</button>
-                    <button id="pwa-confirm-btn" class="flex-1 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-500/25 transition">Cài đặt ngay</button>
+                    <button id="pwa-confirm-btn" class="flex-1 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-1">
+                        <span>Cài đặt ngay</span>
+                    </button>
                 </div>
             </div>
 
@@ -275,15 +268,15 @@ function renderPWAPopups() {
                     <h3 class="text-sm font-bold text-slate-900">Cài đặt trên iPhone/iPad</h3>
                     <button id="pwa-ios-close" class="w-7 h-7 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 text-xs font-bold">✕</button>
                 </div>
-                <p class="text-xs text-slate-500 mb-4">Thực hiện các bước sau:</p>
+                <p class="text-xs text-slate-500 mb-4">Thực hiện các bước sau để cài ứng dụng:</p>
                 <div class="space-y-2.5 mb-5 text-xs text-slate-700 font-medium">
                     <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
                         <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">1</span>
-                        <span>Nhấn nút <b>Chia sẻ</b> (Share)</span>
+                        <span>Nhấn nút <b>Chia sẻ</b> (Share <i class="bi bi-share"></i>)</span>
                     </div>
                     <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
                         <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">2</span>
-                        <span>Chọn <b>Add to Home Screen</b></span>
+                        <span>Chọn <b>Thêm vào MH chính</b> (Add to Home)</span>
                     </div>
                     <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
                         <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">3</span>
@@ -298,10 +291,6 @@ function renderPWAPopups() {
     document.body.insertAdjacentHTML('beforeend', popupHtml);
 }
 
-function renderBirthdayModal() {
-    if (document.getElementById('birthday-modal')) return;
-}
-
 function isIOS() {
     return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -313,46 +302,69 @@ function isStandalone() {
 }
 
 function bindHomeEvents() {
-    // 1. Gán sự kiện nút Android
+    // 1. Nút Bỏ qua Android
     document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
         window.hidePWAPopup();
         localStorage.setItem('pwa-dismissed', Date.now().toString());
     });
 
-    document.getElementById('pwa-confirm-btn')?.addEventListener('click', () => {
-        window.hidePWAPopup();
+    // 2. Nút Cài đặt Android (Bật Native Prompt trực tiếp từ Chrome)
+    document.getElementById('pwa-confirm-btn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('pwa-confirm-btn');
+        
+        // Nếu bắt được sự kiện Native
         if (window.deferredPrompt) {
+            window.hidePWAPopup();
+            // Bật ngay bảng hỏi cài đặt chuẩn của hệ điều hành Android
             window.deferredPrompt.prompt();
-            window.deferredPrompt.userChoice.then(() => {
-                window.deferredPrompt = null;
-            });
-        } else if (typeof PWA?.install === 'function') {
+            const choiceResult = await window.deferredPrompt.userChoice;
+            console.log('User choice:', choiceResult.outcome);
+            window.deferredPrompt = null;
+        } 
+        // Nếu gọi qua module PWA sẵn có
+        else if (typeof PWA?.install === 'function') {
+            window.hidePWAPopup();
             PWA.install();
-        } else {
-            alert('Trình duyệt chưa hỗ trợ cài trực tiếp hoặc app đã sẵn sàng.');
+        } 
+        // Xử lý dự phòng: Chờ tối đa 1.5 giây nếu Service Worker nạp trễ
+        else {
+            if (btn) btn.innerText = 'Đang kết nối...';
+            
+            setTimeout(async () => {
+                if (window.deferredPrompt) {
+                    window.hidePWAPopup();
+                    window.deferredPrompt.prompt();
+                    window.deferredPrompt = null;
+                } else {
+                    alert('Hệ thống chưa ghi nhận được yêu cầu cài đặt trực tiếp.\n\nThầy/Cô vui lòng mở menu Chrome (dấu 3 chấm ⋮) -> Chọn "Cài đặt ứng dụng" hoặc "Thêm vào màn hình chính".');
+                    window.hidePWAPopup();
+                }
+                if (btn) btn.innerText = 'Cài đặt ngay';
+            }, 1500);
         }
     });
 
-    // 2. Gán sự kiện nút iOS
+    // 3. Sự kiện nút iOS
     document.getElementById('pwa-ios-close')?.addEventListener('click', window.hidePWAPopup);
     document.getElementById('pwa-ios-got-it')?.addEventListener('click', () => {
         window.hidePWAPopup();
         localStorage.setItem('pwa-ios-dismissed', Date.now().toString());
     });
 
-    // 3. Nếu ứng dụng đã cài đặt rồi (Standalone) -> Không làm gì cả
+    // 4. Nếu ứng dụng đã chạy ở dạng Native App (Standalone) -> Bỏ qua toàn bộ popup
     if (isStandalone()) return;
 
-    // 4. Kiểm tra tự động bật Popup sau 1.2s
+    // 5. Kiểm tra thiết bị và kích hoạt Popup tự động
     const isIOSDevice = isIOS();
     const dismissedKey = isIOSDevice ? 'pwa-ios-dismissed' : 'pwa-dismissed';
     const lastDismissed = localStorage.getItem(dismissedKey);
 
+    // Thời gian giãn cách hỏi lại (iOS: 2 ngày, Android: 12 giờ)
     const cooldown = isIOSDevice ? 2 * 24 * 60 * 60 * 1000 : 12 * 60 * 60 * 1000;
 
     if (!lastDismissed || Date.now() - Number(lastDismissed) > cooldown) {
         setTimeout(() => {
             window.showPWAPopup(isIOSDevice);
-        }, 1200);
+        }, 1500);
     }
 }
