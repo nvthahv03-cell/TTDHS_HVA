@@ -108,7 +108,7 @@ export function renderHome() {
     <!-- Badge Cố định bên trái -->
     <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-bold shadow-xs shrink-0 z-10">
         <i class="bi bi-bell-fill animate-bounce text-amber-300 text-xs"></i>
-        <span class="uppercase tracking-wider">Thông báo</span>
+        <span class="uppercase tracking-wider">📌 MỚI</span>
     </div>
 
     <!-- Dải chữ chạy dùng thẻ marquee -->
