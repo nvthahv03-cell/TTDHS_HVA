@@ -61,7 +61,7 @@ export function renderHome() {
       <i class="bi bi-calendar3 text-[34px] sm:text-[40px] text-blue-600"
          style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
     </div>
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
+    <span class="font-bold text-[13px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
       LỊCH CÔNG TÁC
     </span>
   </div>
@@ -72,7 +72,7 @@ export function renderHome() {
       <i class="bi bi-file-earmark-text text-[34px] sm:text-[40px] text-blue-600"
          style="filter: drop-shadow(0 2px 3px rgba(37,99,235,0.25));"></i>
     </div>
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
+    <span class="font-bold text-[13px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
       VĂN BẢN BIỂU MẪU
     </span>
   </div>
