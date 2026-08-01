@@ -48,71 +48,65 @@ export function renderHome() {
         </div>
     </div>
 </div>
-<!-- 2. BA PHÍM TÁC VỤ NHANH (Shortcut style) -->
-<div class="grid grid-cols-3 gap-3 mb-4 relative z-10">
+<!-- Container 3 phím tác vụ -->
+<div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-4 relative z-10">
 
   <!-- Shortcut 1: Lịch công tác -->
-  <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 group">
-    <!-- Badge xanh -->
-    <span class="absolute top-2.5 right-2.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white shadow-sm"></span>
+  <button type="button" class="glass-glow-blue rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover active:scale-95 transition-all group border border-slate-100">
+    <!-- Badge đồng bộ vị trí -->
+    <span class="absolute top-2 right-2 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white shadow-sm"></span>
     
-    <div class="w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-50 border border-blue-200 shadow-[0_4px_14px_rgba(59,130,246,0.15)] relative">
-      <i class="bi bi-calendar3 text-[30px] sm:text-[34px] text-blue-600"></i>
-      <!-- Đồng hồ nhỏ -->
-      <div class="absolute bottom-1.5 right-1.5 w-5 h-5 rounded-full bg-white border border-blue-300 flex items-center justify-center shadow-sm">
-        <i class="bi bi-clock text-[10px] text-blue-600"></i>
+    <div class="w-14 h-14 sm:w-18 sm:h-18 flex items-center justify-center mb-2 rounded-2xl bg-blue-50 border border-blue-200 shadow-sm relative">
+      <i class="bi bi-calendar3 text-2xl sm:text-3xl text-blue-600"></i>
+      <div class="absolute bottom-1 right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white border border-blue-300 flex items-center justify-center shadow-sm">
+        <i class="bi bi-clock text-[9px] sm:text-[10px] text-blue-600"></i>
       </div>
     </div>
     
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-      LỊCH CÔNG TÁC
+    <span class="font-bold text-[10px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
+      Lịch công tác
     </span>
-    <span class="mt-1 text-[10px] text-emerald-600 font-medium flex items-center justify-center gap-1">
-      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-      Hôm nay có 3 lịch
+    <span class="mt-1 text-[9px] sm:text-[10px] text-emerald-600 font-medium flex items-center justify-center gap-1">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      3 lịch hôm nay
     </span>
-  </div>
+  </button>
 
   <!-- Shortcut 2: Văn bản - Biểu mẫu -->
-  <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 group">
-    <!-- Badge số 2 -->
-    <span class="absolute -top-1.5 -right-1.5 w-6 h-6 bg-red-500 text-white text-xs font-extrabold rounded-full flex items-center justify-center border-2 border-white shadow-md">2</span>
+  <button type="button" class="glass-glow-blue rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover active:scale-95 transition-all group border border-slate-100">
+    <!-- Badge số -->
+    <span class="absolute top-2 right-2 px-1.5 py-0.5 min-w-[20px] bg-red-500 text-white text-[10px] font-extrabold rounded-full border-2 border-white shadow-sm leading-none flex items-center justify-center">2</span>
     
-    <div class="w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-50 border border-blue-200 shadow-[0_4px_14px_rgba(59,130,246,0.15)]">
-      <i class="bi bi-file-earmark-text text-[30px] sm:text-[34px] text-blue-600"></i>
+    <div class="w-14 h-14 sm:w-18 sm:h-18 flex items-center justify-center mb-2 rounded-2xl bg-blue-50 border border-blue-200 shadow-sm">
+      <i class="bi bi-file-earmark-text text-2xl sm:text-3xl text-blue-600"></i>
     </div>
     
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-      VĂN BẢN BIỂU MẪU
+    <span class="font-bold text-[10px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
+      Văn bản biểu mẫu
     </span>
-    <span class="mt-1 text-[10px] text-slate-500 font-medium">
-      2 văn bản chưa đọc
+    <span class="mt-1 text-[9px] sm:text-[10px] text-slate-500 font-medium truncate w-full">
+      2 chưa đọc
     </span>
-  </div>
+  </button>
 
   <!-- Shortcut 3: Thông tin - Thông báo -->
-  <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 group">
-    <!-- Badge số 5 -->
-    <span class="absolute -top-1.5 -right-1.5 w-6 h-6 bg-amber-500 text-white text-xs font-extrabold rounded-full flex items-center justify-center border-2 border-white shadow-md">5</span>
+  <button type="button" class="glass-glow-blue rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover active:scale-95 transition-all group border border-slate-100">
+    <!-- Badge số -->
+    <span class="absolute top-2 right-2 px-1.5 py-0.5 min-w-[20px] bg-amber-500 text-white text-[10px] font-extrabold rounded-full border-2 border-white shadow-sm leading-none flex items-center justify-center">5</span>
     
-    <div class="w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-50 border border-blue-200 shadow-[0_4px_14px_rgba(59,130,246,0.15)] relative">
-      <i class="bi bi-megaphone text-[30px] sm:text-[34px] text-blue-600"></i>
-      <!-- Sóng âm -->
-      <div class="absolute -right-1 top-1/2 -translate-y-1/2 flex flex-col gap-[2px]">
-        <div class="w-2 h-[2px] bg-blue-400 rounded-full rotate-12"></div>
-        <div class="w-3 h-[2px] bg-blue-500 rounded-full"></div>
-        <div class="w-2 h-[2px] bg-blue-400 rounded-full -rotate-12"></div>
-      </div>
+    <div class="w-14 h-14 sm:w-18 sm:h-18 flex items-center justify-center mb-2 rounded-2xl bg-blue-50 border border-blue-200 shadow-sm relative">
+      <i class="bi bi-megaphone text-2xl sm:text-3xl text-blue-600"></i>
     </div>
     
-    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-      THÔNG TIN THÔNG BÁO
+    <span class="font-bold text-[10px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
+      Thông tin thông báo
     </span>
-    <span class="mt-1 text-[10px] text-amber-600 font-medium">
-      5 thông tin mới
+    <span class="mt-1 text-[9px] sm:text-[10px] text-amber-600 font-medium truncate w-full">
+      5 tin mới
     </span>
-  </div>
+  </button>
 
+</div>
 </div><!-- VIỆC CỦA TÔI -->
 <div class="flex items-center mt-2 mb-3">
     <div class="flex-1 h-px bg-gradient-to-r from-transparent via-slate-300 to-slate-300"></div>
