@@ -48,63 +48,197 @@ export function renderHome() {
         </div>
     </div>
 </div>
-<!-- Container 3 phím tác vụ -->
-<div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-4 relative z-10">
+<!-- BA PHÍM TÁC VỤ NHANH (Shortcut style) -->
+<div class="grid grid-cols-3 gap-3 mb-4 relative z-10">
 
   <!-- Shortcut 1: Lịch công tác -->
-  <button type="button" class="glass-glow-blue rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover active:scale-95 transition-all group border border-slate-100">
-    <!-- Badge đồng bộ vị trí -->
-    <span class="absolute top-2 right-2 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white shadow-sm"></span>
+  <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 group dashboard-card" onclick="toggleDashboardMenu('menu-lich-tb', event)">
+    <!-- Badge xanh -->
+    <span class="absolute top-2.5 right-2.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white shadow-sm"></span>
     
-    <div class="w-14 h-14 sm:w-18 sm:h-18 flex items-center justify-center mb-2 rounded-2xl bg-blue-50 border border-blue-200 shadow-sm relative">
-      <i class="bi bi-calendar3 text-2xl sm:text-3xl text-blue-600"></i>
-      <div class="absolute bottom-1 right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white border border-blue-300 flex items-center justify-center shadow-sm">
-        <i class="bi bi-clock text-[9px] sm:text-[10px] text-blue-600"></i>
+    <div class="w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-50 border border-blue-200 shadow-[0_4px_14px_rgba(59,130,246,0.15)] relative">
+      <i class="bi bi-calendar-check-fill text-[30px] sm:text-[34px] text-blue-600 transition-transform duration-300 group-hover:scale-110"></i>
+      <!-- Đồng hồ nhỏ -->
+      <div class="absolute bottom-1.5 right-1.5 w-5 h-5 rounded-full bg-white border border-blue-300 flex items-center justify-center shadow-sm">
+        <i class="bi bi-clock text-[10px] text-blue-600"></i>
       </div>
     </div>
     
-    <span class="font-bold text-[10px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-      Lịch công tác
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
+      LỊCH - THÔNG BÁO
     </span>
-    <span class="mt-1 text-[9px] sm:text-[10px] text-emerald-600 font-medium flex items-center justify-center gap-1">
-      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-      3 lịch hôm nay
+    <span class="mt-1 text-[10px] text-emerald-600 font-medium flex items-center justify-center gap-1">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+      3 lịch • 5 thông báo
     </span>
-  </button>
+
+    <!-- Dropdown Menu 1 -->
+    <div id="menu-lich-tb" class="dashboard-dropdown hidden" onclick="event.stopPropagation()">
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-calendar3 text-blue-500"></i> Lịch công tác</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('lich-tuan')"><i class="bi bi-calendar-week"></i> Lịch tuần</div>
+          <div class="dashboard-item" onclick="loadModule('lich-thang')"><i class="bi bi-calendar-month"></i> Lịch tháng</div>
+          <div class="dashboard-item" onclick="loadModule('lich-dot-xuat')"><i class="bi bi-calendar-event"></i> Lịch đột xuất</div>
+        </div>
+      </div>
+
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-bell-fill text-amber-500"></i> Thông báo</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('tb-moi')"><i class="bi bi-bell"></i> Thông báo mới</div>
+          <div class="dashboard-item" onclick="loadModule('tb-quan-trong')"><i class="bi bi-exclamation-diamond"></i> Thông báo quan trọng</div>
+          <div class="dashboard-item" onclick="loadModule('tb-da-luu')"><i class="bi bi-bookmark-check"></i> Thông báo đã lưu</div>
+        </div>
+      </div>
+
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-check2-square text-emerald-500"></i> Việc của tôi</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('viec-moi-giao')"><i class="bi bi-plus-circle"></i> Việc mới giao</div>
+          <div class="dashboard-item" onclick="loadModule('viec-dang-thuc-hien')"><i class="bi bi-hourglass-split"></i> Đang thực hiện</div>
+          <div class="dashboard-item" onclick="loadModule('viec-da-hoan-thanh')"><i class="bi bi-check-circle"></i> Đã hoàn thành</div>
+        </div>
+      </div>
+
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-alarm-fill text-rose-500"></i> Nhắc việc</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('nhac-hom-nay')"><i class="bi bi-clock-history"></i> Hôm nay</div>
+          <div class="dashboard-item" onclick="loadModule('nhac-tuan-nay')"><i class="bi bi-calendar-minus"></i> Tuần này</div>
+          <div class="dashboard-item" onclick="loadModule('nhac-qua-han')"><i class="bi bi-exclamation-triangle"></i> Quá hạn</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Shortcut 2: Văn bản - Biểu mẫu -->
-  <button type="button" class="glass-glow-blue rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover active:scale-95 transition-all group border border-slate-100">
-    <!-- Badge số -->
-    <span class="absolute top-2 right-2 px-1.5 py-0.5 min-w-[20px] bg-red-500 text-white text-[10px] font-extrabold rounded-full border-2 border-white shadow-sm leading-none flex items-center justify-center">2</span>
+  <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 group dashboard-card" onclick="toggleDashboardMenu('menu-van-ban', event)">
+    <!-- Badge số 2 -->
+    <span class="absolute -top-1.5 -right-1.5 w-6 h-6 bg-red-500 text-white text-xs font-extrabold rounded-full flex items-center justify-center border-2 border-white shadow-md">2</span>
     
-    <div class="w-14 h-14 sm:w-18 sm:h-18 flex items-center justify-center mb-2 rounded-2xl bg-blue-50 border border-blue-200 shadow-sm">
-      <i class="bi bi-file-earmark-text text-2xl sm:text-3xl text-blue-600"></i>
+    <div class="w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-50 border border-blue-200 shadow-[0_4px_14px_rgba(59,130,246,0.15)]">
+      <i class="bi bi-folder2-open text-[30px] sm:text-[34px] text-blue-600 transition-transform duration-300 group-hover:scale-110"></i>
     </div>
     
-    <span class="font-bold text-[10px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-      Văn bản biểu mẫu
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
+      VĂN BẢN BIỂU MẪU
     </span>
-    <span class="mt-1 text-[9px] sm:text-[10px] text-slate-500 font-medium truncate w-full">
-      2 chưa đọc
+    <span class="mt-1 text-[10px] text-slate-500 font-medium">
+      2 văn bản chưa đọc
     </span>
-  </button>
+
+    <!-- Dropdown Menu 2 -->
+    <div id="menu-van-ban" class="dashboard-dropdown hidden" onclick="event.stopPropagation()">
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-file-earmark-text-fill text-blue-500"></i> Văn bản</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('van-ban-den')"><i class="bi bi-inbox-fill"></i> Văn bản đến</div>
+          <div class="dashboard-item" onclick="loadModule('van-ban-di')"><i class="bi bi-send-fill"></i> Văn bản đi</div>
+          <div class="dashboard-item" onclick="loadModule('van-ban-noi-bo')"><i class="bi bi-building"></i> Văn bản nội bộ</div>
+        </div>
+      </div>
+
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-ui-checks text-indigo-500"></i> Biểu mẫu</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('bieu-mau-dien-tu')"><i class="bi bi-laptop"></i> Biểu mẫu điện tử</div>
+          <div class="dashboard-item" onclick="loadModule('bieu-mau-chuyen-mon')"><i class="bi bi-journal-bookmark"></i> Biểu mẫu chuyên môn</div>
+          <div class="dashboard-item" onclick="loadModule('bieu-mau-hanh-chinh')"><i class="bi bi-briefcase"></i> Biểu mẫu hành chính</div>
+        </div>
+      </div>
+
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-bar-chart-line-fill text-cyan-500"></i> Báo cáo</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('bao-cao-truc-tuyen')"><i class="bi bi-cloud-arrow-up"></i> Báo cáo trực tuyến</div>
+          <div class="dashboard-item" onclick="loadModule('bao-cao-dinh-ky')"><i class="bi bi-calendar2-check"></i> Báo cáo định kỳ</div>
+          <div class="dashboard-item" onclick="loadModule('bao-cao-thong-ke')"><i class="bi bi-pie-chart"></i> Báo cáo thống kê</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Shortcut 3: Thông tin - Thông báo -->
-  <button type="button" class="glass-glow-blue rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover active:scale-95 transition-all group border border-slate-100">
-    <!-- Badge số -->
-    <span class="absolute top-2 right-2 px-1.5 py-0.5 min-w-[20px] bg-amber-500 text-white text-[10px] font-extrabold rounded-full border-2 border-white shadow-sm leading-none flex items-center justify-center">5</span>
+  <div class="glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 group dashboard-card" onclick="toggleDashboardMenu('menu-hoc-lieu', event)">
+    <!-- Badge số 5 -->
+    <span class="absolute -top-1.5 -right-1.5 w-6 h-6 bg-amber-500 text-white text-xs font-extrabold rounded-full flex items-center justify-center border-2 border-white shadow-md">5</span>
     
-    <div class="w-14 h-14 sm:w-18 sm:h-18 flex items-center justify-center mb-2 rounded-2xl bg-blue-50 border border-blue-200 shadow-sm relative">
-      <i class="bi bi-megaphone text-2xl sm:text-3xl text-blue-600"></i>
+    <div class="w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center mb-2.5 rounded-2xl bg-blue-50 border border-blue-200 shadow-[0_4px_14px_rgba(59,130,246,0.15)] relative">
+      <i class="bi bi-book-half text-[30px] sm:text-[34px] text-blue-600 transition-transform duration-300 group-hover:scale-110"></i>
+      <!-- Sóng âm -->
+      <div class="absolute -right-1 top-1/2 -translate-y-1/2 flex flex-col gap-[2px]">
+        <div class="w-2 h-[2px] bg-blue-400 rounded-full rotate-12"></div>
+        <div class="w-3 h-[2px] bg-blue-500 rounded-full"></div>
+        <div class="w-2 h-[2px] bg-blue-400 rounded-full -rotate-12"></div>
+      </div>
     </div>
     
-    <span class="font-bold text-[10px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-      Thông tin thông báo
+    <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
+      HỌC LIỆU SỐ
     </span>
-    <span class="mt-1 text-[9px] sm:text-[10px] text-amber-600 font-medium truncate w-full">
-      5 tin mới
+    <span class="mt-1 text-[10px] text-amber-600 font-medium">
+      Kho tài nguyên số
     </span>
-  </button>
+
+    <!-- Dropdown Menu 3 -->
+    <div id="menu-hoc-lieu" class="dashboard-dropdown hidden" onclick="event.stopPropagation()">
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-journal-text text-blue-500"></i> Giáo án</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('giao-an-dien-tu')"><i class="bi bi-file-earmark-code"></i> Giáo án điện tử</div>
+          <div class="dashboard-item" onclick="loadModule('giao-an-minh-hoa')"><i class="bi bi-file-earmark-slides"></i> Giáo án minh họa</div>
+        </div>
+      </div>
+
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-card-checklist text-purple-500"></i> Ngân hàng đề</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('de-kiem-tra')"><i class="bi bi-file-earmark-check"></i> Đề kiểm tra</div>
+          <div class="dashboard-item" onclick="loadModule('de-thi')"><i class="bi bi-journal-check"></i> Đề thi</div>
+          <div class="dashboard-item" onclick="loadModule('ma-tran-de')"><i class="bi bi-grid-3x3"></i> Ma trận đề</div>
+        </div>
+      </div>
+
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-play-btn-fill text-red-500"></i> Video</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('video-bai-giang')"><i class="bi bi-file-earmark-play"></i> Video bài giảng</div>
+          <div class="dashboard-item" onclick="loadModule('video-tap-huan')"><i class="bi bi-display"></i> Video tập huấn</div>
+        </div>
+      </div>
+
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-robot text-teal-500"></i> AI hỗ trợ</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('ai-chatgpt')"><i class="bi bi-chat-dots"></i> ChatGPT</div>
+          <div class="dashboard-item" onclick="loadModule('ai-gemini')"><i class="bi bi-stars"></i> Gemini</div>
+          <div class="dashboard-item" onclick="loadModule('ai-copilot')"><i class="bi bi-cpu"></i> Copilot</div>
+        </div>
+      </div>
+
+      <div class="dashboard-item" onclick="toggleSubmenu(this, event)">
+        <span class="flex items-center gap-2"><i class="bi bi-archive-fill text-amber-500"></i> Kho học liệu</span>
+        <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        <div class="dashboard-submenu">
+          <div class="dashboard-item" onclick="loadModule('kho-bo-gddt')"><i class="bi bi-bank"></i> Bộ GDĐT</div>
+          <div class="dashboard-item" onclick="loadModule('kho-so-gddt')"><i class="bi bi-building"></i> Sở GDĐT</div>
+          <div class="dashboard-item" onclick="loadModule('kho-nha-truong')"><i class="bi bi-house-door"></i> Nhà trường</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 </div><!-- VIỆC CỦA TÔI -->
