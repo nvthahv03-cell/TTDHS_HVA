@@ -450,5 +450,42 @@
             }
         });
     </script>
+    <!-- SCRIPT XỬ LÝ ĐÓNG/MỞ MENU XỔ NGUỢC -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleButtons = document.querySelectorAll('[data-dropdown-toggle]');
+
+    toggleButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const targetId = btn.getAttribute('data-dropdown-toggle');
+            const targetMenu = document.getElementById(targetId);
+            const arrow = btn.querySelector('[data-dropdown-arrow]');
+
+            // Đóng tất cả menu khác đang mở
+            document.querySelectorAll('[data-dropdown-menu]').forEach(menu => {
+                if (menu.id !== targetId) {
+                    menu.classList.add('hidden');
+                }
+            });
+            document.querySelectorAll('[data-dropdown-arrow]').forEach(arr => {
+                if (arr !== arrow) arr.classList.remove('rotate-180');
+            });
+
+            // Bật/tắt menu được bấm
+            if (targetMenu) {
+                const isHidden = targetMenu.classList.toggle('hidden');
+                if (arrow) arrow.classList.toggle('rotate-180', !isHidden);
+            }
+        });
+    });
+
+    // Bấm ra ngoài màn hình thì tự đóng menu
+    document.addEventListener('click', () => {
+        document.querySelectorAll('[data-dropdown-menu]').forEach(menu => menu.classList.add('hidden'));
+        document.querySelectorAll('[data-dropdown-arrow]').forEach(arrow => arrow.classList.remove('rotate-180'));
+    });
+});
+</script>
 </body>
 </html>
