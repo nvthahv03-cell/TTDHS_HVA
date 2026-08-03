@@ -402,7 +402,7 @@ export function renderHome() {
             </span>
         </a>
            <!-- Menu Bồi dưỡng chuyên môn -->
-<div class="border-y border-slate-100 my-1 py-1">
+<div class="relative border-y border-slate-100 my-1 py-1">
 
     <button type="button"
         onclick="event.stopPropagation();
@@ -421,39 +421,38 @@ export function renderHome() {
         </div>
 
         <i id="bdcm-sub-arrow"
-           class="bi bi-chevron-down text-xs text-slate-400 transition-transform duration-300">
+           class="bi bi-chevron-right text-xs text-slate-400 transition-transform duration-300">
         </i>
 
     </button>
 
     <!-- Menu cháu -->
     <div id="bdcm-sub-items"
-     class="hidden absolute left-full top-0 ml-3 w-64 bg-white rounded-xl shadow-xl border border-slate-200 p-2 space-y-1 z-[999]">
-   
+         class="hidden absolute top-0 left-full ml-2 w-60 bg-white rounded-xl border border-slate-200 shadow-xl p-2 space-y-1 z-[9999]">
 
         <a href="baocao-tap-huan.html"
            class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
-            • Tập huấn
+            Tập huấn
         </a>
 
         <a href="HoiThao.html"
            class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
-            • Hội thảo
+            Hội thảo
         </a>
 
         <a href="baocao-shcm.html"
            class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
-            • Sinh hoạt chuyên môn
+            Sinh hoạt chuyên môn
         </a>
 
         <a href="baocao-bdtx.html"
            class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
-            • Bồi dưỡng thường xuyên
+            Bồi dưỡng thường xuyên
         </a>
 
         <a href="baocao-khac.html"
            class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
-            • Khác
+            Khác
         </a>
 
     </div>
