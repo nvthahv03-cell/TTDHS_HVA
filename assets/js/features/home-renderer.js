@@ -36,11 +36,7 @@ export function renderHome() {
             </div>
             <div id="assistantPosition" class="text-cyan-200/90 text-[10px] font-medium leading-tight mt-0.5">...</div>
         </div>
-        <div id="assistantMessage" class="bg-white/95 backdrop-blur-xl rounded-xl px-3 py-2 text-[11px] font-medium text-slate-800 shadow-md mb-2 border border-white/40 flex items-start gap-2">
-            <i class="bi bi-chat-quote-fill text-indigo-600 text-xs shrink-0 mt-0.5"></i>
-            <span class="leading-relaxed">Xin chào!</span>
-        </div>
-        <div class="flex items-center bg-white/95 backdrop-blur-xl rounded-xl px-2.5 py-1 shadow-md border border-white/50">
+       <div class="mt-2 flex items-center bg-white/95 backdrop-blur-xl rounded-xl px-2.5 py-1 shadow-md border border-white/50">
             <input type="text" id="assistantInput" placeholder="Hỏi HVA Assistant điều gì đó..." class="flex-1 bg-transparent outline-none text-[11px] font-medium text-slate-800 placeholder-slate-400">
             <button id="assistantMicBtn" class="ml-2 w-6 h-6 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 transition shadow-sm flex items-center justify-center text-white active:scale-95">
                 <i class="bi bi-mic-fill text-[10px]"></i>
