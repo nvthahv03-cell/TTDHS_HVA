@@ -159,60 +159,76 @@
 
     </div>
 
-    <!-- NÚT CHỨC NĂNG -->
-    <div class="flex items-center gap-2">
+  <!-- NÚT CHỨC NĂNG -->
+<div class="flex items-center gap-2">
 
-        <!-- THÔNG BÁO -->
-        <button id="btn-notification"
-                class="relative
-                       w-9 h-9
-                       rounded-xl
-                       bg-white
-                       border border-slate-200
-                       shadow-sm
-                       hover:bg-blue-50
-                       hover:border-blue-200
-                       active:scale-95
-                       transition">
+    <!-- MENU -->
+    <button id="btn-menu"
+            class="w-9 h-9 rounded-xl bg-white border border-slate-200/80
+                   shadow-sm hover:bg-blue-50 hover:border-blue-200
+                   text-slate-600 hover:text-[#0F4C81]
+                   active:scale-95 transition-all duration-200
+                   flex items-center justify-center"
+            title="Menu">
 
-            <i class="bi bi-bell-fill text-slate-700 text-sm"></i>
+        <i class="bi bi-list text-xl"></i>
 
-            <span class="absolute -top-1 -right-1
-                         flex h-4 w-4
-                         items-center justify-center">
+    </button>
 
-                <span class="animate-ping
-                             absolute
-                             inline-flex
-                             h-full
-                             w-full
-                             rounded-full
-                             bg-red-400
-                             opacity-70">
-                </span>
+    <!-- THÔNG BÁO -->
+    <button id="btn-notification"
+            class="relative w-9 h-9 rounded-xl bg-white border border-slate-200/80
+                   shadow-sm hover:bg-blue-50 hover:border-blue-200
+                   text-slate-600 hover:text-[#0F4C81]
+                   active:scale-95 transition-all duration-200
+                   flex items-center justify-center"
+            title="Thông báo">
 
-                <span class="relative
-                             inline-flex
-                             h-4
-                             min-w-[16px]
-                             px-1
-                             rounded-full
-                             bg-red-500
-                             border border-white
-                             text-[9px]
-                             font-bold
-                             text-white
-                             items-center
-                             justify-center">
+        <i class="bi bi-bell-fill text-sm"></i>
 
-                    3
+        <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center">
 
-                </span>
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-70"></span>
+
+            <span class="relative inline-flex h-4 min-w-[16px] px-1 rounded-full
+                         bg-red-500 border border-white text-[9px]
+                         font-bold text-white items-center justify-center">
+
+                3
 
             </span>
 
-        </button>
+        </span>
 
+    </button>
+
+    <!-- TÌM KIẾM -->
+    <button id="btn-search"
+            class="w-9 h-9 rounded-xl bg-white border border-slate-200/80
+                   shadow-sm hover:bg-blue-50 hover:border-blue-200
+                   text-slate-600 hover:text-[#0F4C81]
+                   active:scale-95 transition-all duration-200
+                   flex items-center justify-center"
+            title="Tìm kiếm">
+
+        <i class="bi bi-search text-sm"></i>
+
+    </button>
+
+    <!-- HỒ SƠ -->
+    <button id="btn-profile"
+            class="w-9 h-9 rounded-xl bg-white border border-slate-200/80
+                   shadow-sm hover:bg-blue-50 hover:border-blue-200
+                   text-slate-600 hover:text-[#0F4C81]
+                   active:scale-95 transition-all duration-200
+                   flex items-center justify-center"
+            title="Hồ sơ">
+
+        <i class="bi bi-person-fill text-base"></i>
+
+    </button>
+
+</div>
         <!-- HVA ASSISTANT -->
         <button id="btn-ai"
                 onclick="AppMain.openModal('ai-modal')"
