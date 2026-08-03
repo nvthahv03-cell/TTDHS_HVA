@@ -396,7 +396,7 @@ export function renderHome() {
                 <button type="button" onclick="event.stopPropagation(); document.getElementById('bdcm-sub-items').classList.toggle('hidden'); document.getElementById('bdcm-sub-arrow').classList.toggle('rotate-180');" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 transition-colors">
                     <div class="flex items-center gap-2.5">
                         <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"><i class="bi bi-mortarboard text-sm"></i></div>
-                        <span>🎓 Bồi dưỡng chuyên môn</span>
+                        <span>Bồi dưỡng chuyên môn</span>
                     </div>
                     <i id="bdcm-sub-arrow" class="bi bi-chevron-down text-[10px] text-slate-400 transition-transform duration-300"></i>
                 </button>
@@ -411,15 +411,15 @@ export function renderHome() {
 
             <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 hover:text-purple-600 transition-colors">
                 <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"><i class="bi bi-trophy text-lg"></i></div>
-                <span>🏆 Báo cáo các cuộc thi</span>
+                <span>Báo cáo các cuộc thi</span>
             </a>
             <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 hover:text-purple-600 transition-colors">
                 <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"><i class="bi bi-laptop text-lg"></i></div>
-                <span>💻 Báo cáo chuyển đổi số</span>
+                <span>Báo cáo chuyển đổi số</span>
             </a>
             <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 hover:text-purple-600 transition-colors">
                 <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"><i class="bi bi-building text-lg"></i></div>
-                <span>🏫 Báo cáo hành chính</span>
+                <span>Báo cáo hành chính</span>
             </a>
         </div>
     </div>
