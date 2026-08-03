@@ -357,38 +357,7 @@ export function renderHome() {
         <p class="text-[10px] text-blue-50 font-medium">Website • Thông báo • Tin tức</p>
     </div>
 
-    <!-- TRỤ CỘT 2: ĐIỀU HÀNH SỐ -->
-    <div class="relative">
-        <div data-dropdown-toggle="dieuhanhso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-teal-600 via-teal-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-teal-400/40 active:scale-[0.98]">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
-                <i class="bi bi-cpu text-white text-lg"></i>
-            </div>
-            <div class="flex items-center justify-between">
-                <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">ĐIỀU HÀNH SỐ</h3>
-                <i class="bi bi-chevron-up text-xs text-teal-100 transition-transform duration-300 transform" data-dropdown-arrow></i>
-            </div>
-            <p class="text-[10px] text-teal-50 font-medium">Giao việc • Văn bản • AI • Dashboard</p>
-        </div>
-
-        <!-- Dropup Menu Điều hành số -->
-        <div id="dieuhanhso-dropdown" data-dropdown-menu class="hidden absolute left-0 right-0 bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 space-y-1 transition-all duration-200 opacity-0 transform translate-y-2 scale-95 origin-bottom max-h-[280px] overflow-y-auto">
-            <a href="Giaonhanviec.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors">
-                <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
-                    <i class="bi bi-clipboard-check text-sm"></i>
-                </div>
-                <span>📋 Giao việc</span>
-            </a>
-            <button onclick="alert('Chức năng đang phát triển')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors text-left">
-                <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
-                    <i class="bi bi-calendar3 text-sm"></i>
-                </div>
-                <span>📅 Lịch công tác</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- TRỤ CỘT 3: NGHIỆP VỤ SỐ -->
+    <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ (Đã chuyển lên Card 2) -->
     <div class="relative">
         <div data-dropdown-toggle="nghiepvuso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-indigo-700 via-blue-700 to-sky-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
             <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
@@ -397,13 +366,13 @@ export function renderHome() {
             </div>
             <div class="flex items-center justify-between">
                 <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">NGHIỆP VỤ SỐ</h3>
-                <i class="bi bi-chevron-up text-xs text-blue-100 transition-transform duration-300 transform" data-dropdown-arrow></i>
+                <i class="bi bi-chevron-up text-xs text-blue-100 transition-transform duration-300" data-dropdown-arrow></i>
             </div>
             <p class="text-[10px] text-blue-50 font-medium">Chuyên môn • Hoạt động • Hội thảo</p>
         </div>
 
         <!-- Dropup Menu Nghiệp vụ số -->
-        <div id="nghiepvuso-dropdown" data-dropdown-menu class="hidden absolute left-0 w-[280px] sm:w-[320px] max-h-[80vh] overflow-y-auto bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2.5 space-y-1 transition-all duration-300">
+        <div id="nghiepvuso-dropdown" data-dropdown-menu class="hidden absolute left-0 w-[280px] sm:w-[320px] max-h-[70vh] overflow-y-auto bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2.5 space-y-1 transition-all duration-300">
             <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 hover:text-purple-600 transition-colors">
                 <div class="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"><i class="bi bi-journal-bookmark text-sm"></i></div>
                 <span>📘 Báo cáo chuyên môn</span>
@@ -447,6 +416,37 @@ export function renderHome() {
                 <div class="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"><i class="bi bi-folder2-open text-sm"></i></div>
                 <span>📂 Khác</span>
             </a>
+        </div>
+    </div>
+
+    <!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ (Màu đậm mới + Chuyển sang Card 3) -->
+    <div class="relative">
+        <div data-dropdown-toggle="dieuhanhso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-teal-700 via-emerald-700 to-cyan-700 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-teal-400/40 active:scale-[0.98]">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
+                <i class="bi bi-cpu text-white text-lg"></i>
+            </div>
+            <div class="flex items-center justify-between">
+                <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">ĐIỀU HÀNH SỐ</h3>
+                <i class="bi bi-chevron-up text-xs text-teal-100 transition-transform duration-300" data-dropdown-arrow></i>
+            </div>
+            <p class="text-[10px] text-teal-50 font-medium">Giao việc • Văn bản • AI • Dashboard</p>
+        </div>
+
+        <!-- Dropup Menu Điều hành số -->
+        <div id="dieuhanhso-dropdown" data-dropdown-menu class="hidden absolute right-0 w-[240px] bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 space-y-1 transition-all duration-200 max-h-[280px] overflow-y-auto">
+            <a href="Giaonhanviec.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors">
+                <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
+                    <i class="bi bi-clipboard-check text-sm"></i>
+                </div>
+                <span>📋 Giao việc</span>
+            </a>
+            <button onclick="alert('Chức năng đang phát triển')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors text-left">
+                <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
+                    <i class="bi bi-calendar3 text-sm"></i>
+                </div>
+                <span>📅 Lịch công tác</span>
+            </button>
         </div>
     </div>
 
@@ -544,6 +544,7 @@ function showPWAPopup(isIOSDevice = false) {
 function hidePWAPopup() {
     document.getElementById('pwa-custom-popup')?.classList.add('hidden');
 }
+
 
 function bindHomeEvents() {
     // Nút Android
