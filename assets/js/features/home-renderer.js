@@ -10,39 +10,122 @@ export function renderHome() {
     container.innerHTML = `
 <!-- HVA Assistant -->
 <div class="relative mb-2 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-indigo-950 via-blue-900 to-slate-900 shadow-xl p-3.5 text-white">
+
     <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-cyan-400/20 rounded-full blur-2xl pointer-events-none"></div>
+
     <div class="absolute top-0 right-0 p-3 opacity-10">
         <i class="bi bi-cpu text-7xl"></i>
     </div>
+
     <div class="relative z-10">
+
+        <!-- Header -->
         <div class="flex items-center justify-between mb-2">
+
             <div class="flex items-center gap-2">
+
                 <div class="w-7 h-7 rounded-xl bg-white/15 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner">
                     <i class="bi bi-robot text-cyan-300 text-sm"></i>
                 </div>
+
                 <div>
+
                     <h2 class="text-xs font-extrabold tracking-tight leading-tight flex items-center gap-1.5">
+
                         HVA Assistant
-                        <span class="px-1.5 py-0.5 rounded-full bg-cyan-400/30 text-[9px] font-bold text-cyan-100 border border-cyan-300/30">AI Pro</span>
+
+                        <span class="px-1.5 py-0.5 rounded-full bg-cyan-400/30 text-[9px] font-bold text-cyan-100 border border-cyan-300/30">
+
+                            AI Pro
+
+                        </span>
+
                     </h2>
-                    <p class="text-[10px] text-cyan-200/80">Trợ lý điều hành thông minh</p>
+
+                    <p class="text-[10px] text-cyan-200/80">
+
+                        Trợ lý điều hành thông minh
+
+                    </p>
+
                 </div>
+
             </div>
+
         </div>
-        <div class="mb-2.5 bg-white/10 backdrop-blur-md rounded-xl p-2 border border-white/15 shadow-sm">
+
+        <!-- Người dùng -->
+        <div class="mb-2 bg-white/10 backdrop-blur-md rounded-xl p-2 border border-white/15 shadow-sm">
+
             <div class="flex items-center flex-wrap gap-x-1.5">
-                <span id="assistantGreeting" class="text-cyan-100 text-[11px] font-medium">👋 Xin chào,</span>
-                <span id="assistantName" class="text-white text-xs font-bold leading-tight">...</span>
+
+                <span id="assistantGreeting"
+                      class="text-cyan-100 text-[11px] font-medium">
+
+                    👋 Xin chào,
+
+                </span>
+
+                <span id="assistantName"
+                      class="text-white text-xs font-bold leading-tight">
+
+                    ...
+
+                </span>
+
             </div>
-            <div id="assistantPosition" class="text-cyan-200/90 text-[10px] font-medium leading-tight mt-0.5">...</div>
+
+            <div id="assistantPosition"
+                 class="text-cyan-200/90 text-[10px] font-medium leading-tight mt-0.5">
+
+                ...
+
+            </div>
+
         </div>
-       <div class="mt-2 flex items-center bg-white/95 backdrop-blur-xl rounded-xl px-2.5 py-1 shadow-md border border-white/50">
-            <input type="text" id="assistantInput" placeholder="Hỏi HVA Assistant điều gì đó..." class="flex-1 bg-transparent outline-none text-[11px] font-medium text-slate-800 placeholder-slate-400">
-            <button id="assistantMicBtn" class="ml-2 w-6 h-6 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 transition shadow-sm flex items-center justify-center text-white active:scale-95">
-                <i class="bi bi-mic-fill text-[10px]"></i>
+
+        <!-- Ô hỏi AI -->
+        <div class="mt-2 flex items-center bg-white/95 backdrop-blur-xl rounded-xl px-2.5 py-2 shadow-md border border-white/50">
+
+            <input
+                type="text"
+                id="assistantInput"
+                placeholder="Hỏi HVA Assistant điều gì đó..."
+                class="flex-1 bg-transparent outline-none text-[11px] font-medium text-slate-800 placeholder-slate-400"
+            >
+
+            <!-- Micro -->
+            <button
+                id="assistantMicBtn"
+                class="ml-2 w-8 h-8 rounded-lg
+                       bg-gradient-to-r from-sky-500 to-cyan-500
+                       hover:from-sky-600 hover:to-cyan-600
+                       transition shadow-sm
+                       flex items-center justify-center
+                       text-white active:scale-95">
+
+                <i class="bi bi-mic-fill text-[11px]"></i>
+
             </button>
+
+            <!-- Gửi -->
+            <button
+                id="assistantSendBtn"
+                class="ml-2 w-8 h-8 rounded-lg
+                       bg-gradient-to-r from-[#0F4C81] to-[#29B6F6]
+                       hover:from-[#0B3E69] hover:to-[#1DA1F2]
+                       transition shadow-sm
+                       flex items-center justify-center
+                       text-white active:scale-95">
+
+                <i class="bi bi-arrow-up text-[11px]"></i>
+
+            </button>
+
         </div>
+
     </div>
+
 </div>
 <!-- ========================================== -->
 <!-- KHU VỰC 3 PHÍM TÁC VỤ NHANH (FULL FIXED CODE) -->
