@@ -12,16 +12,18 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            deep: '#F5F7FA',
-                            primary: '#FFFFFF',
-                            accent: '#E2E8F0',
-                            teal: '#0F4C81',
-                            glow: '#14B8A6'
+                        ms: {
+                            primary: '#0F4C81',   /* Microsoft Deep Blue */
+                            secondary: '#29B6F6', /* Sky Accent */
+                            success: '#10B981',
+                            danger: '#EF4444',
+                            bg: '#F5F7FA',        /* Windows 11 Light BG */
+                            card: '#FFFFFF',
+                            border: '#E2E8F0'
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
+                        sans: ['Inter', 'Segoe UI', '-apple-system', 'sans-serif']
                     }
                 }
             }
@@ -33,49 +35,53 @@
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
         .safe-pt { padding-top: env(safe-area-inset-top); }
+        .ms-blur-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
     </style>
 </head>
-<body class="h-full bg-brand-deep text-slate-800 overflow-x-hidden antialiased">
+<body class="h-full bg-ms-bg text-slate-800 overflow-x-hidden antialiased selection:bg-ms-secondary/20 selection:text-ms-primary">
 
-    <!-- Background blobs (đồng bộ main) -->
+    <!-- Background Decorative Gradient Blobs -->
     <div class="fixed inset-0 -z-50 overflow-hidden bg-[#F5F7FA]">
-        <div class="absolute -top-[20%] -left-[10%] w-[80%] h-[60%] rounded-full bg-sky-200/30 blur-[120px]"></div>
-        <div class="absolute top-[40%] -right-[20%] w-[90%] h-[70%] rounded-full bg-cyan-200/25 blur-[150px]"></div>
-        <div class="absolute bottom-[-10%] left-[20%] w-[50%] h-[40%] rounded-full bg-teal-200/20 blur-[100px]"></div>
+        <div class="absolute -top-[15%] -left-[10%] w-[60%] h-[50%] rounded-full bg-[#29B6F6]/15 blur-[120px]"></div>
+        <div class="absolute top-[40%] -right-[15%] w-[65%] h-[55%] rounded-full bg-[#0F4C81]/10 blur-[140px]"></div>
     </div>
 
     <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8 safe-pt safe-pb">
 
-        <!-- Logo + Title -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-teal to-indigo-500 p-0.5 shadow-lg shadow-brand-teal/25 mb-4">
-                <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center">
-                    <span class="text-brand-teal font-bold text-xl tracking-widest">HVA</span>
-                </div>
+        <!-- Header Block: Brand Logo & Title -->
+        <div class="text-center mb-6">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#0F4C81] text-white shadow-lg shadow-[#0F4C81]/20 mb-3 border border-white/40">
+                <span class="font-extrabold text-xl tracking-wider">HVA</span>
             </div>
-            <h1 class="text-xl font-bold text-slate-800 tracking-tight">Trung tâm Điều hành số</h1>
-            <p class="text-sm font-medium text-brand-teal mt-1">Trường THPT Hòa Vang</p>
-            <p class="text-xs text-slate-500 mt-2 max-w-xs mx-auto">Kết nối – Điều hành – Hiệu quả</p>
+            <h1 class="text-xl font-bold text-slate-900 tracking-tight">Trung tâm Điều hành số</h1>
+            <p class="text-xs font-semibold text-ms-primary mt-0.5 uppercase tracking-wide">Trường THPT Hòa Vang</p>
+            <p class="text-xs text-slate-500 mt-1.5">Hệ thống Quản trị & Điều hành Giáo dục Enterprise</p>
         </div>
 
-        <!-- Login Card -->
+        <!-- Login Card Block -->
         <div class="w-full max-w-sm">
-            <div class="bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl shadow-slate-200/50 p-6 sm:p-8">
+            <div class="ms-blur-card border border-slate-200/80 rounded-2xl shadow-xl shadow-slate-200/60 p-6 sm:p-7 transition-all">
 
-                <div class="mb-6">
-                    <h2 class="text-lg font-bold text-slate-800">Đăng nhập hệ thống</h2>
-                    <p class="text-sm text-slate-500 mt-1">Vui lòng sử dụng tài khoản được cấp</p>
+                <div class="mb-5 pb-4 border-b border-slate-100">
+                    <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                        <i class="bi bi-shield-lock-fill text-ms-primary"></i> Đăng nhập hệ thống
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Sử dụng tài khoản cán bộ, giáo viên đã cấp</p>
                 </div>
 
-                <form id="loginForm" class="space-y-5">
-                    <!-- Username -->
+                <form id="loginForm" class="space-y-4">
+                    <!-- Username Input -->
                     <div>
-                        <label for="username" class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
+                        <label for="username" class="block text-[11px] font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
                             Tên đăng nhập
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                                <i class="bi bi-person-fill text-lg"></i>
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                                <i class="bi bi-person text-base"></i>
                             </span>
                             <input
                                 type="text"
@@ -84,99 +90,102 @@
                                 required
                                 autocomplete="username"
                                 placeholder="Nhập tên đăng nhập"
-                                class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-white/70 text-slate-800 text-sm
-                                       placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal
-                                       transition-all"
+                                class="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 bg-white/90 text-slate-800 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-ms-primary/20 focus:border-ms-primary transition-all shadow-sm"
                             >
                         </div>
                     </div>
 
-                    <!-- Password -->
-                   <div class="relative">
-    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-        <i class="bi bi-lock-fill text-lg"></i>
-    </span>
+                    <!-- Password Input -->
+                    <div>
+                        <label for="password" class="block text-[11px] font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
+                            Mật khẩu
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                                <i class="bi bi-key text-base"></i>
+                            </span>
+                            <!-- Prefix HVA@ -->
+                            <span class="absolute left-9 top-1/2 -translate-y-1/2 text-slate-700 font-bold text-xs select-none pointer-events-none">
+                                HVA@
+                            </span>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                maxlength="4"
+                                pattern="[0-9]*"
+                                inputmode="numeric"
+                                autocomplete="current-password"
+                                placeholder="4 số bí mật"
+                                class="w-full pl-20 pr-10 py-2.5 rounded-xl border border-slate-200 bg-white/90 text-slate-800 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-ms-primary/20 focus:border-ms-primary transition-all shadow-sm"
+                            >
+                            <button 
+                                type="button"
+                                id="togglePassword"
+                                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-md transition focus:outline-none"
+                                aria-label="Hiện/Ẩn mật khẩu"
+                            >
+                                <i class="bi bi-eye text-base" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
 
-    <!-- Tiền tố HVA@ -->
-    <span class="absolute left-11 top-1/2 -translate-y-1/2 text-slate-600 font-semibold text-sm">
-        HVA@
-    </span>
-
-    <input
-        type="password"
-        id="password"
-        name="password"
-        required
-        autocomplete="current-password"
-        placeholder="Nhập mật khẩu"
-        class="w-full pl-24 pr-12 py-3 rounded-xl border border-slate-200 bg-white/70 text-slate-800 text-sm
-               placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-teal/30 focus:border-brand-teal
-               transition-all"
-    >
-
-    <button type="button"
-            id="togglePassword"
-            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-        <i class="bi bi-eye text-lg" id="eyeIcon"></i>
-    </button>
-</div>
-  </div>
-                    <!-- Submit -->
+                    <!-- Submit Button -->
                     <button
                         type="submit"
                         id="submitBtn"
-                        class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-teal to-indigo-600 text-white font-semibold text-sm
-                               shadow-lg shadow-brand-teal/25 hover:shadow-brand-teal/40 active:scale-[0.98]
-                               transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                        class="w-full mt-2 py-3 rounded-xl bg-ms-primary hover:bg-[#0b3c66] text-white font-semibold text-xs shadow-md shadow-ms-primary/20 active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                         <span id="btnText">Đăng nhập</span>
-                        <i class="bi bi-arrow-right-circle text-lg" id="btnIcon"></i>
+                        <i class="bi bi-arrow-right-circle text-sm" id="btnIcon"></i>
                     </button>
 
-                    <!-- Error -->
-                    <div id="errorMsg" class="hidden rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-sm px-4 py-3 text-center"></div>
+                    <!-- Error Alert -->
+                    <div id="errorMsg" class="hidden rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs p-3 text-center font-medium leading-relaxed"></div>
                 </form>
             </div>
 
-            <!-- Footer -->
-            <p class="text-center text-xs text-slate-400 mt-6">
-                © 2026 Trung tâm Điều hành số THPT Hòa Vang<br>
-                <span class="text-brand-teal/70">Chuyển đổi số – Nâng tầm quản trị</span>
-            </p>
+            <!-- Footer Copy -->
+            <div class="text-center text-[11px] text-slate-400 mt-6 space-y-0.5">
+                <p>© 2026 Trung tâm Điều hành số THPT Hòa Vang</p>
+                <p class="font-medium text-ms-primary/80">Microsoft 365 Enterprise Standard Interface</p>
+            </div>
         </div>
     </div>
 
+    <!-- LOGIC SỬ XỬ LÝ -->
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzrpNdCyBsIIKJqx3DL2OZA0nWAkmFMPvyq8JYBrOhDvPELheNX4CNeIFvB7xNRG3VR/exec";
 
-        const loginForm   = document.getElementById("loginForm");
+        const loginForm     = document.getElementById("loginForm");
         const usernameInput = document.getElementById("username");
         const passwordInput = document.getElementById("password");
-        const submitBtn   = document.getElementById("submitBtn");
-        const btnText     = document.getElementById("btnText");
-        const btnIcon     = document.getElementById("btnIcon");
-        const errorMsg    = document.getElementById("errorMsg");
+        const submitBtn     = document.getElementById("submitBtn");
+        const btnText       = document.getElementById("btnText");
+        const btnIcon       = document.getElementById("btnIcon");
+        const errorMsg      = document.getElementById("errorMsg");
         const togglePassword = document.getElementById("togglePassword");
-        const eyeIcon    = document.getElementById("eyeIcon");
+        const eyeIcon       = document.getElementById("eyeIcon");
 
         // Toggle show/hide password
         togglePassword.addEventListener("click", () => {
             const isPassword = passwordInput.type === "password";
             passwordInput.type = isPassword ? "text" : "password";
-            eyeIcon.className = isPassword ? "bi bi-eye-slash text-lg" : "bi bi-eye text-lg";
+            eyeIcon.className = isPassword ? "bi bi-eye-slash text-base" : "bi bi-eye text-base";
         });
 
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-           const username = usernameInput.value.trim();
-        const rawPassword = passwordInput.value.trim();
-        const password = "HVA@" + rawPassword;
+            const username = usernameInput.value.trim();
+            const rawPassword = passwordInput.value.trim();
+            const password = "HVA@" + rawPassword;
 
-           if (!username || !rawPassword) {
-    showError("Vui lòng nhập đầy đủ tên đăng nhập và 4 số tự nhiên của mật khẩu.");
-    return;
-}
+            if (!username || !rawPassword) {
+                showError("Vui lòng nhập đầy đủ tên đăng nhập và 4 số tự nhiên của mật khẩu.");
+                return;
+            }
 
             setLoading(true);
             hideError();
@@ -199,7 +208,6 @@
 
                 if (result.success) {
                     localStorage.setItem("user", JSON.stringify(result.user));
-                    // Chuyển sang App Shell
                     window.location.href = "main.html";
                 } else {
                     showError(result.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
@@ -229,14 +237,14 @@
 
             if (isLoading) {
                 btnText.textContent = "Đang xác thực...";
-                btnIcon.className = "bi bi-arrow-repeat text-lg animate-spin";
+                btnIcon.className = "bi bi-arrow-repeat text-sm animate-spin";
             } else {
                 btnText.textContent = "Đăng nhập";
-                btnIcon.className = "bi bi-arrow-right-circle text-lg";
+                btnIcon.className = "bi bi-arrow-right-circle text-sm";
             }
         }
 
-        // Tự động focus
+        // Tự động focus ô tài khoản
         usernameInput.focus();
     </script>
 </body>
