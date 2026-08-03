@@ -499,6 +499,19 @@
             btn.innerHTML = '<i class="bi bi-send-fill"></i><span>Giao việc</span>';
         }
     });
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    document.getElementById("nguoiGiao").textContent =
+        user.fullName || "";
+
+    document.getElementById("chucVuNguoiGiao").textContent =
+        user.workPosition || "";
+
+});
+
+
 </script>
 </body>
 </html>
