@@ -304,8 +304,7 @@ export function renderHome() {
 
 </div>
 
-
-</div><!-- VIỆC CỦA TÔI -->
+<!-- VIỆC CỦA TÔI -->
 <div class="flex items-center mt-2 mb-3">
     <div class="flex-1 h-px bg-gradient-to-r from-transparent via-slate-300 to-slate-300"></div>
 
@@ -324,10 +323,10 @@ export function renderHome() {
     
     <!-- Badge Cố định bên trái -->
     <!-- Badge đổi thành NHẮC VIỆC với icon chuông báo hiệu -->
-<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-bold shadow-xs shrink-0 z-10">
-    <i class="bi bi-bell-fill text-amber-300 text-xs animate-bounce"></i>
-    <span class="uppercase tracking-wider">NHẮC VIỆC</span>
-</div>
+    <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-bold shadow-xs shrink-0 z-10">
+        <i class="bi bi-bell-fill text-amber-300 text-xs animate-bounce"></i>
+        <span class="uppercase tracking-wider">NHẮC VIỆC</span>
+    </div>
 
     <!-- Dải chữ chạy dùng thẻ marquee -->
     <marquee onmouseover="this.stop();" onmouseout="this.start();" scrollamount="5" class="text-xs font-semibold text-slate-700 flex items-center">
@@ -342,8 +341,7 @@ export function renderHome() {
         </span>
     </marquee>
 </div>
-    </div>
-</div>
+
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
 
@@ -412,62 +410,78 @@ export function renderHome() {
                 <div class="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"><i class="bi bi-building text-sm"></i></div>
                 <span>🏫 Báo cáo hành chính</span>
             </a>
-            <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 hover:text-purple-600 transition-colors">
-                <div class="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"><i class="bi bi-folder2-open text-sm"></i></div>
-                <span>📂 Khác</span>
-            </a>
         </div>
     </div>
-
-    <!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ (Màu đậm mới + Chuyển sang Card 3) -->
-    <div class="relative">
-        <div data-dropdown-toggle="dieuhanhso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-teal-700 via-emerald-700 to-cyan-700 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-teal-400/40 active:scale-[0.98]">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
-                <i class="bi bi-cpu text-white text-lg"></i>
-            </div>
-            <div class="flex items-center justify-between">
-                <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">ĐIỀU HÀNH SỐ</h3>
-                <i class="bi bi-chevron-up text-xs text-teal-100 transition-transform duration-300" data-dropdown-arrow></i>
-            </div>
-            <p class="text-[10px] text-teal-50 font-medium">Giao việc • Văn bản • AI • Dashboard</p>
-        </div>
-
-        <!-- Dropup Menu Điều hành số -->
-        <div id="dieuhanhso-dropdown" data-dropdown-menu class="hidden absolute right-0 w-[240px] bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 space-y-1 transition-all duration-200 max-h-[280px] overflow-y-auto">
-            <a href="Giaonhanviec.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors">
-                <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
-                    <i class="bi bi-clipboard-check text-sm"></i>
-                </div>
-                <span>📋 Giao việc</span>
-            </a>
-            <button onclick="alert('Chức năng đang phát triển')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors text-left">
-                <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
-                    <i class="bi bi-calendar3 text-sm"></i>
-                </div>
-                <span>📅 Lịch công tác</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- TRỤ CỘT 4: QUẢN TRỊ -->
-    <div data-open-modal="boiduong-modal" class="group relative rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-slate-500/40 active:scale-[0.98]">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
-            <i class="bi bi-graph-up-arrow text-white text-lg"></i>
-        </div>
-        <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">QUẢN TRỊ</h3>
-        <p class="text-[10px] text-slate-100 font-medium">Kế hoạch • Thi đua • KPI</p>
-    </div>
-
 </section>
 `;
-
+// 2. Khởi tạo các sự kiện giao diện và PWA App
+    initMenuLogic();
     renderPWAPopups();
-    renderBirthdayModal();
     bindHomeEvents();
 }
 
+// ==========================================
+// LOGIC MENU XỔ DOWN / UP
+// ==========================================
+function initMenuLogic() {
+    window.toggleDashboardMenu = function(menuId, event) {
+        if (event) event.stopPropagation();
+        const targetMenu = document.getElementById(menuId);
+        if (!targetMenu) return;
+
+        const isHidden = targetMenu.classList.contains('hidden');
+        document.querySelectorAll('.dashboard-dropdown').forEach(m => m.classList.add('hidden'));
+
+        if (isHidden) targetMenu.classList.remove('hidden');
+    };
+
+    window.toggleSubmenu = function(element, event) {
+        if (event) event.stopPropagation();
+        const submenu = element.querySelector('.dashboard-submenu');
+        const arrowIcon = element.querySelector('.bi-chevron-right, .bi-chevron-down');
+
+        if (submenu) {
+            const isHidden = submenu.classList.contains('hidden');
+            const parent = element.parentElement;
+            if (parent) {
+                parent.querySelectorAll('.dashboard-submenu').forEach(s => s.classList.add('hidden'));
+                parent.querySelectorAll('.bi-chevron-down').forEach(i => {
+                    i.classList.remove('bi-chevron-down');
+                    i.classList.add('bi-chevron-right');
+                });
+            }
+
+            if (isHidden) {
+                submenu.classList.remove('hidden');
+                if (arrowIcon) {
+                    arrowIcon.classList.remove('bi-chevron-right');
+                    arrowIcon.classList.add('bi-chevron-down');
+                }
+            }
+        }
+    };
+
+    const nghiepVuBtn = document.getElementById('btn-nghiepvuso');
+    const nghiepVuMenu = document.getElementById('nghiepvuso-dropdown');
+
+    if (nghiepVuBtn && nghiepVuMenu) {
+        nghiepVuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = nghiepVuMenu.classList.contains('hidden');
+            document.querySelectorAll('.dashboard-dropdown').forEach(m => m.classList.add('hidden'));
+            nghiepVuMenu.classList.toggle('hidden', !isHidden);
+        });
+    }
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.dashboard-dropdown').forEach(menu => menu.classList.add('hidden'));
+        if (nghiepVuMenu) nghiepVuMenu.classList.add('hidden');
+    });
+}
+
+// ==========================================
+// LOGIC CÀI ĐẶT PWA APP (ANDROID & IOS)
+// ==========================================
 function renderPWAPopups() {
     if (document.getElementById('pwa-custom-popup')) return;
 
@@ -517,10 +531,6 @@ function renderPWAPopups() {
     document.body.insertAdjacentHTML('beforeend', popupHtml);
 }
 
-function renderBirthdayModal() {
-    if (document.getElementById('birthday-modal')) return;
-}
-
 function isIOS() {
     return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -545,9 +555,8 @@ function hidePWAPopup() {
     document.getElementById('pwa-custom-popup')?.classList.add('hidden');
 }
 
-
 function bindHomeEvents() {
-    // Nút Android
+    // Sự kiện Nút Android
     document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
         hidePWAPopup();
         localStorage.setItem('pwa-dismissed', Date.now().toString());
@@ -555,7 +564,6 @@ function bindHomeEvents() {
 
     document.getElementById('pwa-confirm-btn')?.addEventListener('click', () => {
         hidePWAPopup();
-        // Gọi cài đặt thật
         if (window.deferredPrompt) {
             window.deferredPrompt.prompt();
             window.deferredPrompt.userChoice.then(() => {
@@ -566,17 +574,17 @@ function bindHomeEvents() {
         }
     });
 
-    // Nút iOS
+    // Sự kiện Nút iOS
     document.getElementById('pwa-ios-close')?.addEventListener('click', hidePWAPopup);
     document.getElementById('pwa-ios-got-it')?.addEventListener('click', () => {
         hidePWAPopup();
         localStorage.setItem('pwa-ios-dismissed', Date.now().toString());
     });
 
-    // Chỉ hiện khi chưa cài
+    // Không hiển thị nếu ứng dụng đã được cài đặt (chạy ở chế độ standalone)
     if (isStandalone()) return;
 
-    // Android: bắt sự kiện beforeinstallprompt → hiện popup
+    // Lắng nghe sự kiện cài đặt trên Android
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         window.deferredPrompt = e;
@@ -587,7 +595,7 @@ function bindHomeEvents() {
         }
     });
 
-    // iOS
+    // Lắng nghe và kiểm tra thiết bị iOS
     if (isIOS()) {
         const iosDismissed = localStorage.getItem('pwa-ios-dismissed');
         if (!iosDismissed || Date.now() - Number(iosDismissed) > 2 * 24 * 60 * 60 * 1000) {
