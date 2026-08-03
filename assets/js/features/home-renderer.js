@@ -428,7 +428,8 @@ export function renderHome() {
 
     <!-- Menu cháu -->
     <div id="bdcm-sub-items"
-         class="hidden ml-14 mt-2 space-y-1">
+     class="hidden absolute left-full top-0 ml-3 w-64 bg-white rounded-xl shadow-xl border border-slate-200 p-2 space-y-1 z-[999]">
+   
 
         <a href="baocao-tap-huan.html"
            class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
