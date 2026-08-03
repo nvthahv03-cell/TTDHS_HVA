@@ -625,17 +625,7 @@ function bindHomeEvents() {
     // Không hiển thị nếu ứng dụng đã được cài đặt (chạy ở chế độ standalone)
     if (isStandalone()) return;
 
-    // Lắng nghe sự kiện cài đặt trên Android
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        window.deferredPrompt = e;
-
-        const dismissed = localStorage.getItem('pwa-dismissed');
-        if (!dismissed || Date.now() - Number(dismissed) > 12 * 60 * 60 * 1000) {
-            setTimeout(() => showPWAPopup(false), 1200);
-        }
-    });
-
+   
     // Lắng nghe và kiểm tra thiết bị iOS
     if (isIOS()) {
         const iosDismissed = localStorage.getItem('pwa-ios-dismissed');
