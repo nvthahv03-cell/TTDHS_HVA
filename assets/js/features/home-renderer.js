@@ -383,9 +383,9 @@ export function renderHome() {
 
         <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-purple-50 transition">
             <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
-                <i class="bi bi-bullseye text-lg"></i>
+                <i class="bi bi-bullseye text-sm"></i>
             </div>
-            <span class="text-sm font-semibold text-slate-700">
+            <span class="text-base font-semibold text-slate-700">
                 Báo cáo hoạt động giáo dục
             </span>
         </a>
