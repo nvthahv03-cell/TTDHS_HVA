@@ -409,65 +409,7 @@ function initDropdownSystem() {
         }
     });
 }
-<script>
-  // 1. Hàm mở/đóng Menu chính
-  window.toggleDashboardMenu = function (menuId, event) {
-    if (event) event.stopPropagation();
 
-    const targetMenu = document.getElementById(menuId);
-    if (!targetMenu) return;
-
-    const isHidden = targetMenu.classList.contains('hidden');
-
-    // Ẩn tất cả dropdown khác
-    document.querySelectorAll('.dashboard-dropdown').forEach(menu => {
-      menu.classList.add('hidden');
-    });
-
-    // Nếu đang ẩn thì mở ra
-    if (isHidden) {
-      targetMenu.classList.remove('hidden');
-    }
-  };
-
-  // 2. Hàm mở/đóng Submenu (Menu con)
-  window.toggleSubmenu = function (element, event) {
-    if (event) event.stopPropagation();
-
-    const submenu = element.querySelector('.dashboard-submenu');
-    if (!submenu) return;
-
-    // Đóng các submenu khác cùng cấp
-    const parentMenu = element.closest('.dashboard-dropdown');
-    if (parentMenu) {
-      parentMenu.querySelectorAll('.dashboard-submenu').forEach(sub => {
-        if (sub !== submenu) sub.classList.add('hidden');
-      });
-      parentMenu.querySelectorAll('.bi-chevron-down').forEach(ic => {
-        ic.classList.replace('bi-chevron-down', 'bi-chevron-right');
-      });
-    }
-
-    // Toggle submenu hiện tại
-    const isHidden = submenu.classList.contains('hidden');
-    const icon = element.querySelector('.bi-chevron-right, .bi-chevron-down');
-
-    if (isHidden) {
-      submenu.classList.remove('hidden');
-      if (icon) icon.classList.replace('bi-chevron-right', 'bi-chevron-down');
-    } else {
-      submenu.classList.add('hidden');
-      if (icon) icon.classList.replace('bi-chevron-down', 'bi-chevron-right');
-    }
-  };
-
-  // 3. Click ra ngoài thì tự đóng menu
-  document.addEventListener('click', function () {
-    document.querySelectorAll('.dashboard-dropdown').forEach(menu => {
-      menu.classList.add('hidden');
-    });
-  });
-</script>
 // Hàm hỗ trợ đóng 1 Dropdown/Dropup mượt mà với Animation
 function closeSingleDropdown(menu, arrow) {
     if (!menu || menu.classList.contains('hidden')) return;
