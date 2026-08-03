@@ -304,19 +304,7 @@ export function renderHome() {
 
 </div>
 
-<!-- VIỆC CỦA TÔI -->
-<div class="flex items-center mt-2 mb-3">
-    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-slate-300 to-slate-300"></div>
 
-    <div class="mx-3 px-4 py-1 rounded-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 shadow-sm flex items-center gap-2">
-        <i class="bi bi-person-workspace text-[#0F4C81] text-sm"></i>
-        <span class="text-[13px] font-bold uppercase tracking-wide text-[#0F4C81]">
-            VIỆC CỦA TÔI
-        </span>
-    </div>
-
-    <div class="flex-1 h-px bg-gradient-to-l from-transparent via-slate-300 to-slate-300"></div>
-</div>
 
 <!-- KHUNG BAO CHỮ CHẠY (Dùng marquee chuẩn HTML) -->
 <div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-cyan-50/80 border border-blue-100 shadow-sm p-2 mb-3 backdrop-blur-md flex items-center gap-2.5">
@@ -401,58 +389,61 @@ export function renderHome() {
                 Báo cáo hoạt động giáo dục
             </span>
         </a>
-           <!-- Menu Bồi dưỡng chuyên môn -->
-<div class="relative border-y border-slate-100 my-1 py-1">
+          <!-- Menu Bồi dưỡng chuyên môn -->
+<div class="border-y border-slate-100 dark:border-slate-700/50 my-1 py-1">
 
     <button type="button"
         onclick="event.stopPropagation();
                  document.getElementById('bdcm-sub-items').classList.toggle('hidden');
                  document.getElementById('bdcm-sub-arrow').classList.toggle('rotate-180');"
-        class="w-full flex items-center justify-between px-3 py-3 rounded-xl hover:bg-purple-50 transition">
+        class="w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 transition-colors">
 
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 shrink-0">
                 <i class="bi bi-mortarboard text-lg"></i>
             </div>
 
-            <span class="text-sm font-semibold text-slate-700">
-                Bồi dưỡng chuyên môn
-            </span>
+            <span>Bồi dưỡng chuyên môn</span>
         </div>
 
         <i id="bdcm-sub-arrow"
-           class="bi bi-chevron-right text-xs text-slate-400 transition-transform duration-300">
+           class="bi bi-chevron-down text-xs text-slate-400 transition-transform duration-300">
         </i>
 
     </button>
 
     <!-- Menu cháu -->
     <div id="bdcm-sub-items"
-         class="hidden absolute top-0 left-full ml-2 w-60 bg-white rounded-xl border border-slate-200 shadow-xl p-2 space-y-1 z-[9999]">
+         class="hidden ml-14 mt-2 border-l-2 border-purple-200 pl-4 space-y-1">
 
         <a href="baocao-tap-huan.html"
-           class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
-            Tập huấn
+           class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-purple-100/50 hover:text-purple-700">
+            <i class="bi bi-chevron-right text-[10px] text-purple-500"></i>
+            <span>Tập huấn</span>
         </a>
 
         <a href="HoiThao.html"
-           class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
-            Hội thảo
+           class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-purple-100/50 hover:text-purple-700">
+            <i class="bi bi-chevron-right text-[10px] text-purple-500"></i>
+            <span>Hội thảo</span>
         </a>
 
         <a href="baocao-shcm.html"
-           class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
-            Sinh hoạt chuyên môn
+           class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-purple-100/50 hover:text-purple-700">
+            <i class="bi bi-chevron-right text-[10px] text-purple-500"></i>
+            <span>Sinh hoạt chuyên môn</span>
         </a>
 
         <a href="baocao-bdtx.html"
-           class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
-            Bồi dưỡng thường xuyên
+           class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-purple-100/50 hover:text-purple-700">
+            <i class="bi bi-chevron-right text-[10px] text-purple-500"></i>
+            <span>Bồi dưỡng thường xuyên</span>
         </a>
 
         <a href="baocao-khac.html"
-           class="block px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-purple-100 hover:text-purple-700">
-            Khác
+           class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-purple-100/50 hover:text-purple-700">
+            <i class="bi bi-chevron-right text-[10px] text-purple-500"></i>
+            <span>Khác</span>
         </a>
 
     </div>
