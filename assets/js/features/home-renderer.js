@@ -502,23 +502,31 @@ function initMenuLogic() {
         }
     };
 
-    const nghiepVuBtn = document.getElementById('btn-nghiepvuso');
-    const nghiepVuMenu = document.getElementById('nghiepvuso-dropdown');
+   document.querySelectorAll("[data-dropdown-toggle]").forEach(btn => {
 
-    if (nghiepVuBtn && nghiepVuMenu) {
-        nghiepVuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isHidden = nghiepVuMenu.classList.contains('hidden');
-            document.querySelectorAll('.dashboard-dropdown').forEach(m => m.classList.add('hidden'));
-            nghiepVuMenu.classList.toggle('hidden', !isHidden);
+    btn.addEventListener("click", function (e) {
+
+        e.stopPropagation();
+
+        const menuId = this.dataset.dropdownToggle;
+        const menu = document.getElementById(menuId);
+
+        document.querySelectorAll("[data-dropdown-menu]").forEach(m => {
+            if (m !== menu) m.classList.add("hidden");
         });
-    }
 
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.dashboard-dropdown').forEach(menu => menu.classList.add('hidden'));
-        if (nghiepVuMenu) nghiepVuMenu.classList.add('hidden');
+        menu.classList.toggle("hidden");
     });
-}
+
+});
+
+document.addEventListener("click", () => {
+
+    document.querySelectorAll("[data-dropdown-menu]").forEach(menu => {
+        menu.classList.add("hidden");
+    });
+
+});
 
 // ==========================================
 // LOGIC CÀI ĐẶT PWA APP (ANDROID & IOS)
