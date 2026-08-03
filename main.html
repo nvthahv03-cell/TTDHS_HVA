@@ -62,176 +62,159 @@
 
     <div id="app" class="flex flex-col min-h-screen">
 
-      <!-- ================= HEADER 2.1 ================= -->
+     <!-- ================= HEADER 4.0 ================= -->
 <header class="fixed top-0 left-0 right-0 z-40
-               bg-gradient-to-r from-white via-[#F8FBFF] to-[#EEF7FF]
-               backdrop-blur-xl backdrop-saturate-150
-               border-b border-slate-200/60
-               shadow-[0_4px_20px_-4px_rgba(15,76,129,0.08)]
-               px-4 py-2.5 safe-pt
-               flex items-center justify-between">
+               bg-white/95 backdrop-blur-xl
+               border-b border-slate-200
+               shadow-sm
+               px-3 py-2">
 
-    <!-- LOGO + TIÊU ĐỀ -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center">
 
-        <!-- LOGO HVA DIGITAL -->
-        <div class="relative w-11 h-11 shrink-0">
+        <!-- ================= MENU ================= -->
+        <button id="btn-menu"
+                class="w-10 h-10
+                       flex items-center justify-center
+                       rounded-xl
+                       hover:bg-slate-100
+                       active:scale-95
+                       transition
+                       shrink-0">
 
-            <div class="absolute -inset-0.5
-                        rounded-2xl
-                        bg-gradient-to-br
-                        from-[#0F4C81]
-                        via-[#1565C0]
-                        to-[#29B6F6]
-                        blur-sm
-                        opacity-35">
-            </div>
+            <i class="bi bi-list text-[26px] text-slate-700"></i>
 
-            <div class="relative
-                        w-full h-full
-                        rounded-xl
-                        bg-gradient-to-br
-                        from-[#0F4C81]
-                        via-[#1565C0]
-                        to-[#29B6F6]
-                        p-[2px]
-                        shadow-md">
+        </button>
 
-                <div class="w-full h-full
-                            rounded-[10px]
-                            bg-white
-                            flex flex-col
-                            items-center
-                            justify-center">
+        <!-- ================= LOGO ================= -->
+        <div class="ml-2
+                    w-10 h-10
+                    rounded-xl
+                    bg-gradient-to-br
+                    from-[#0F4C81]
+                    via-[#1565C0]
+                    to-[#29B6F6]
+                    shadow-md
+                    flex flex-col
+                    items-center
+                    justify-center
+                    shrink-0">
 
-                    <i class="bi bi-cpu-fill
-                              text-[#0F4C81]
-                              text-xl
-                              leading-none">
-                    </i>
+            <i class="bi bi-cpu-fill text-white text-sm"></i>
 
-                    <span class="text-[8px]
-                                 font-black
-                                 tracking-[0.08em]
-                                 text-[#0F4C81]
-                                 leading-none
-                                 mt-0.5">
-                        HVA
-                    </span>
+            <span class="text-[7px]
+                         text-white
+                         font-bold
+                         tracking-wide
+                         leading-none">
 
-                </div>
+                HVA
 
-            </div>
+            </span>
 
         </div>
 
-        <!-- TIÊU ĐỀ -->
-        <div class="leading-tight">
+        <!-- ================= TIÊU ĐỀ ================= -->
+        <div class="flex-1 min-w-0 ml-3">
 
-            <div class="text-[9px]
+            <div class="text-[8px]
                         uppercase
-                        tracking-[0.22em]
-                        font-extrabold
-                        text-slate-400">
+                        tracking-[0.15em]
+                        font-bold
+                        text-slate-400
+                        truncate">
 
                 TRUNG TÂM ĐIỀU HÀNH SỐ
 
             </div>
 
-            <div class="text-[16px]
-                        font-black
+            <div class="text-[14px]
+                        font-extrabold
                         text-[#0F4C81]
-                        mt-0.5">
+                        leading-tight
+                        whitespace-nowrap
+                        overflow-hidden
+                        text-ellipsis">
 
                 Trường THPT Hòa Vang
 
             </div>
 
             <div id="current-date"
-                 class="text-[10.5px]
-                        font-medium
+                 class="text-[10px]
                         text-slate-500
-                        mt-0.5
-                        flex items-center gap-1">
+                        font-medium">
             </div>
+
+        </div>
+
+        <!-- ================= RIGHT ================= -->
+        <div class="flex items-center gap-1 shrink-0">
+
+            <!-- Notification -->
+            <button id="btn-notification"
+                    class="relative
+                           w-8 h-8
+                           rounded-lg
+                           bg-white
+                           border border-slate-200
+                           shadow-sm
+                           hover:bg-blue-50
+                           transition">
+
+                <i class="bi bi-bell-fill text-slate-700 text-sm"></i>
+
+                <span class="absolute
+                             -top-1
+                             -right-1
+                             w-4 h-4
+                             rounded-full
+                             bg-red-500
+                             text-[9px]
+                             font-bold
+                             text-white
+                             flex
+                             items-center
+                             justify-center">
+
+                    3
+
+                </span>
+
+            </button>
+
+            <!-- Search -->
+            <button id="btn-search"
+                    class="w-8 h-8
+                           rounded-lg
+                           bg-white
+                           border border-slate-200
+                           shadow-sm
+                           hover:bg-blue-50
+                           transition">
+
+                <i class="bi bi-search text-slate-700 text-sm"></i>
+
+            </button>
+
+            <!-- Profile -->
+            <button id="btn-profile"
+                    class="w-8 h-8
+                           rounded-lg
+                           bg-white
+                           border border-slate-200
+                           shadow-sm
+                           hover:bg-blue-50
+                           transition">
+
+                <i class="bi bi-person-fill text-slate-700 text-sm"></i>
+
+            </button>
 
         </div>
 
     </div>
 
-  <!-- NÚT CHỨC NĂNG -->
-<div class="flex items-center gap-2">
-
-    <!-- MENU -->
-    <button id="btn-menu"
-            class="w-9 h-9 rounded-xl bg-white border border-slate-200/80
-                   shadow-sm hover:bg-blue-50 hover:border-blue-200
-                   text-slate-600 hover:text-[#0F4C81]
-                   active:scale-95 transition-all duration-200
-                   flex items-center justify-center"
-            title="Menu">
-
-        <i class="bi bi-list text-xl"></i>
-
-    </button>
-
-    <!-- THÔNG BÁO -->
-    <button id="btn-notification"
-            class="relative w-9 h-9 rounded-xl bg-white border border-slate-200/80
-                   shadow-sm hover:bg-blue-50 hover:border-blue-200
-                   text-slate-600 hover:text-[#0F4C81]
-                   active:scale-95 transition-all duration-200
-                   flex items-center justify-center"
-            title="Thông báo">
-
-        <i class="bi bi-bell-fill text-sm"></i>
-
-        <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center">
-
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-70"></span>
-
-            <span class="relative inline-flex h-4 min-w-[16px] px-1 rounded-full
-                         bg-red-500 border border-white text-[9px]
-                         font-bold text-white items-center justify-center">
-
-                3
-
-            </span>
-
-        </span>
-
-    </button>
-
-    <!-- TÌM KIẾM -->
-    <button id="btn-search"
-            class="w-9 h-9 rounded-xl bg-white border border-slate-200/80
-                   shadow-sm hover:bg-blue-50 hover:border-blue-200
-                   text-slate-600 hover:text-[#0F4C81]
-                   active:scale-95 transition-all duration-200
-                   flex items-center justify-center"
-            title="Tìm kiếm">
-
-        <i class="bi bi-search text-sm"></i>
-
-    </button>
-
-    <!-- HỒ SƠ -->
-    <button id="btn-profile"
-            class="w-9 h-9 rounded-xl bg-white border border-slate-200/80
-                   shadow-sm hover:bg-blue-50 hover:border-blue-200
-                   text-slate-600 hover:text-[#0F4C81]
-                   active:scale-95 transition-all duration-200
-                   flex items-center justify-center"
-            title="Hồ sơ">
-
-        <i class="bi bi-person-fill text-base"></i>
-
-    </button>
-
-</div>
-       
 </header>
-
         <!-- ================= MAIN CONTENT ================= -->
         <main id="main-content" class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-[460px] mx-auto w-full">
             <!-- Home content sẽ được render bởi HomeRenderer -->
