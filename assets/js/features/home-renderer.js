@@ -382,7 +382,7 @@ export function renderHome() {
     <!-- Dropup Menu -->
     <div id="nghiepvuso-dropdown"
         data-dropdown-menu
-        class="hidden absolute left-0 bottom-[calc(100%+0.6rem)] z-[999] w-[430px] max-w-[92vw] bg-white rounded-2xl shadow-2xl border border-slate-200 p-3 space-y-1">
+        class="hidden absolute right-0 bottom-[calc(100%+0.6rem)] z-[999] w-[430px] max-w-[92vw] bg-white rounded-2xl shadow-2xl border border-slate-200 p-3 space-y-1">
 
         <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-purple-50 transition">
             <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
