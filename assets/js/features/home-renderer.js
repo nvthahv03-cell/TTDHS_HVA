@@ -505,9 +505,10 @@ function initMenuLogic() {
    document.querySelectorAll("[data-dropdown-toggle]").forEach(btn => {
 
     btn.addEventListener("click", function (e) {
-        console.log("CLICK:", this.dataset.dropdownToggle);
+        
 
         e.stopPropagation();
+        console.log("CLICK:", this.dataset.dropdownToggle);
 
         const menuId = this.dataset.dropdownToggle;
         const menu = document.getElementById(menuId);
