@@ -370,7 +370,7 @@ export function renderHome() {
         </div>
 
         <!-- Dropup Menu Nghiệp vụ số -->
-        <div id="nghiepvuso-dropdown" data-dropdown-menu class="hidden absolute left-0 w-[280px] sm:w-[320px] max-h-[70vh] overflow-y-auto bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2.5 space-y-1 transition-all duration-300">
+        <div id="nghiepvuso-dropdown" data-dropdown-menu class="hidden absolute left-0 w-[380px] sm:w-[420px] max-h-[70vh] overflow-y-auto bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2.5 space-y-1 transition-all duration-300">
             <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 hover:text-purple-600 transition-colors">
                 <div class="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"><i class="bi bi-journal-bookmark text-sm"></i></div>
                 <span>📘 Báo cáo chuyên môn</span>
@@ -382,7 +382,7 @@ export function renderHome() {
 
             <!-- Menu Bồi dưỡng chuyên môn -->
             <div class="border-y border-slate-100 dark:border-slate-700/50 my-1 py-1">
-                <button type="button" onclick="event.stopPropagation(); document.getElementById('bdcm-sub-items').classList.toggle('hidden'); document.getElementById('bdcm-sub-arrow').classList.toggle('rotate-180');" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 transition-colors">
+                <button type="button" onclick="event.stopPropagation(); document.getElementById('bdcm-sub-items').classList.toggle('hidden'); document.getElementById('bdcm-sub-arrow').classList.toggle('rotate-180');" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 transition-colors">
                     <div class="flex items-center gap-2.5">
                         <div class="w-7 h-7 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"><i class="bi bi-mortarboard text-sm"></i></div>
                         <span>🎓 Bồi dưỡng chuyên môn</span>
