@@ -505,6 +505,7 @@ function initMenuLogic() {
    document.querySelectorAll("[data-dropdown-toggle]").forEach(btn => {
 
     btn.addEventListener("click", function (e) {
+        console.log("CLICK:", this.dataset.dropdownToggle);
 
         e.stopPropagation();
 
