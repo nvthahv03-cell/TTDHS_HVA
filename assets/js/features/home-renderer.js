@@ -133,36 +133,33 @@ export function renderHome() {
 <div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-4 relative z-30">
 
   <!-- ================= SHORTCUT 1: LỊCH - THÔNG BÁO ================= -->
-  <div class="relative">
+<div class="relative">
     <!-- Nút bấm Shortcut 1 -->
-    <button type="button" 
+    <button type="button"
             onclick="toggleDashboardMenu('menu-lich-tb', event)"
-            class="w-full glass-glow-blue rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 border border-slate-100/80 group">
-      
-      <!-- Badge xanh (Luôn cố định góc trên phải) -->
-      <span class="absolute top-2 right-2 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white shadow-sm z-10"></span>
-      
-      <!-- Frame Icon -->
-      <div class="w-14 h-14 sm:w-18 sm:h-18 flex items-center justify-center mb-2 rounded-2xl bg-blue-50 border border-blue-200 shadow-sm relative">
-        <i class="bi bi-calendar-check-fill text-2xl sm:text-3xl text-blue-600 transition-transform duration-300 group-hover:scale-110"></i>
-        <!-- Đồng hồ nhỏ -->
-        <div class="absolute bottom-1 right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white border border-blue-300 flex items-center justify-center shadow-sm">
-          <i class="bi bi-clock text-[9px] sm:text-[10px] text-blue-600"></i>
+            class="w-full glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 border border-slate-100/80 group">
+
+        <!-- Frame Icon -->
+        <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-2 rounded-2xl bg-gradient-to-br from-blue-50 to-sky-100 border border-blue-200 shadow-sm relative">
+            <i class="bi bi-calendar-week-fill text-2xl sm:text-3xl text-blue-600 transition-transform duration-300 group-hover:scale-110"></i>
+
+            <!-- Đồng hồ -->
+            <div class="absolute bottom-1 right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white border border-blue-300 flex items-center justify-center shadow-sm">
+                <i class="bi bi-clock-fill text-[9px] sm:text-[10px] text-blue-600"></i>
+            </div>
         </div>
-      </div>
-      
-      <!-- Nhãn tiêu đề -->
-      <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-        LỊCH - THÔNG BÁO
-      </span>
 
-      <!-- Sub-text (Chấm xanh khóa cố định dòng đầu) -->
-      <div class="mt-1 text-[10px] text-emerald-600 font-medium flex items-start justify-center gap-1.5 leading-tight w-full">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 mt-0.5"></span>
-        <span>3 lịch • 5 thông báo</span>
-      </div>
+        <!-- Tiêu đề -->
+        <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight tracking-wide text-slate-700">
+            LỊCH - TKB
+        </span>
+
+        <!-- Mô tả -->
+        <div class="mt-1 text-[10px] text-slate-500 font-medium leading-tight">
+            Lịch công tác • Thời khóa biểu
+        </div>
+
     </button>
-
     <!-- Menu Dropdown 1 -->
     <div id="menu-lich-tb" class="dashboard-dropdown hidden absolute top-full left-0 mt-2 w-60 sm:w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-100 p-2 z-50 transition-all" onclick="event.stopPropagation()">
       
