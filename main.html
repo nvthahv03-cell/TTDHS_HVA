@@ -62,41 +62,197 @@
 
     <div id="app" class="flex flex-col min-h-screen">
 
-        <!-- ================= HEADER ================= -->
-        <header class="fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-300/80 px-4 py-3 safe-pt flex items-center justify-between shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-teal to-blue-600 p-0.5 shadow-md shadow-brand-teal/20 flex items-center justify-center">
-                    <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
-                        <span class="text-brand-teal font-extrabold text-sm tracking-widest">HVA</span>
-                    </div>
-                </div>
-                <div>
-                    <h1 class="text-[10px] font-extrabold text-slate-600 uppercase tracking-widest leading-none">
-    Trung tâm Điều hành số
-</h1>
+      <!-- ================= HEADER 2.1 ================= -->
+<header class="fixed top-0 left-0 right-0 z-40
+               bg-gradient-to-r from-white via-[#F8FBFF] to-[#EEF7FF]
+               backdrop-blur-xl backdrop-saturate-150
+               border-b border-slate-200/60
+               shadow-[0_4px_20px_-4px_rgba(15,76,129,0.08)]
+               px-4 py-2.5 safe-pt
+               flex items-center justify-between">
 
-<p class="text-sm font-extrabold text-slate-900 tracking-tight mt-0.5">
-    Trường THPT Hòa Vang
-</p>
+    <!-- LOGO + TIÊU ĐỀ -->
+    <div class="flex items-center gap-3">
 
-<p id="current-date"
-   class="text-[11px] text-slate-500 font-medium mt-0.5">
-</p>
+        <!-- LOGO HVA DIGITAL -->
+        <div class="relative w-11 h-11 shrink-0">
+
+            <div class="absolute -inset-0.5
+                        rounded-2xl
+                        bg-gradient-to-br
+                        from-[#0F4C81]
+                        via-[#1565C0]
+                        to-[#29B6F6]
+                        blur-sm
+                        opacity-35">
+            </div>
+
+            <div class="relative
+                        w-full h-full
+                        rounded-xl
+                        bg-gradient-to-br
+                        from-[#0F4C81]
+                        via-[#1565C0]
+                        to-[#29B6F6]
+                        p-[2px]
+                        shadow-md">
+
+                <div class="w-full h-full
+                            rounded-[10px]
+                            bg-white
+                            flex flex-col
+                            items-center
+                            justify-center">
+
+                    <i class="bi bi-cpu-fill
+                              text-[#0F4C81]
+                              text-xl
+                              leading-none">
+                    </i>
+
+                    <span class="text-[8px]
+                                 font-black
+                                 tracking-[0.08em]
+                                 text-[#0F4C81]
+                                 leading-none
+                                 mt-0.5">
+                        HVA
+                    </span>
+
                 </div>
+
             </div>
-            <div class="flex items-center space-x-2">
-                <button id="btn-notification" class="relative w-9 h-9 rounded-full bg-slate-100 border border-slate-300/80 flex items-center justify-center hover:bg-slate-200/80 transition shadow-sm">
-                    <i class="bi bi-bell text-slate-800"></i>
-                    <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">3</span>
-                </button>
-                <button id="btn-ai" onclick="AppMain.openModal('ai-modal')" class="w-9 h-9 rounded-full bg-sky-50 border border-sky-300/80 flex items-center justify-center hover:bg-sky-100 active:scale-95 transition-all shadow-sm" title="Trợ lý AI">
-                    <i class="bi bi-mic-fill text-brand-glow"></i>
-                </button>
-                <button id="btn-profile" class="w-9 h-9 rounded-full bg-slate-100 border border-slate-300/80 flex items-center justify-center hover:bg-slate-200/80 transition shadow-sm">
-                    <i class="bi bi-person-fill text-slate-800"></i>
-                </button>
+
+        </div>
+
+        <!-- TIÊU ĐỀ -->
+        <div class="leading-tight">
+
+            <div class="text-[9px]
+                        uppercase
+                        tracking-[0.22em]
+                        font-extrabold
+                        text-slate-400">
+
+                TRUNG TÂM ĐIỀU HÀNH SỐ
+
             </div>
-        </header>
+
+            <div class="text-[16px]
+                        font-black
+                        text-[#0F4C81]
+                        mt-0.5">
+
+                Trường THPT Hòa Vang
+
+            </div>
+
+            <div id="current-date"
+                 class="text-[10.5px]
+                        font-medium
+                        text-slate-500
+                        mt-0.5
+                        flex items-center gap-1">
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- NÚT CHỨC NĂNG -->
+    <div class="flex items-center gap-2">
+
+        <!-- THÔNG BÁO -->
+        <button id="btn-notification"
+                class="relative
+                       w-9 h-9
+                       rounded-xl
+                       bg-white
+                       border border-slate-200
+                       shadow-sm
+                       hover:bg-blue-50
+                       hover:border-blue-200
+                       active:scale-95
+                       transition">
+
+            <i class="bi bi-bell-fill text-slate-700 text-sm"></i>
+
+            <span class="absolute -top-1 -right-1
+                         flex h-4 w-4
+                         items-center justify-center">
+
+                <span class="animate-ping
+                             absolute
+                             inline-flex
+                             h-full
+                             w-full
+                             rounded-full
+                             bg-red-400
+                             opacity-70">
+                </span>
+
+                <span class="relative
+                             inline-flex
+                             h-4
+                             min-w-[16px]
+                             px-1
+                             rounded-full
+                             bg-red-500
+                             border border-white
+                             text-[9px]
+                             font-bold
+                             text-white
+                             items-center
+                             justify-center">
+
+                    3
+
+                </span>
+
+            </span>
+
+        </button>
+
+        <!-- HVA ASSISTANT -->
+        <button id="btn-ai"
+                onclick="AppMain.openModal('ai-modal')"
+                class="relative
+                       w-9 h-9
+                       rounded-xl
+                       bg-gradient-to-br
+                       from-[#0F4C81]
+                       via-[#1565C0]
+                       to-[#29B6F6]
+                       text-white
+                       shadow-md
+                       hover:scale-105
+                       active:scale-95
+                       transition-all"
+                title="HVA Assistant">
+
+            <i class="bi bi-robot text-sm"></i>
+
+        </button>
+
+        <!-- HỒ SƠ -->
+        <button id="btn-profile"
+                class="w-9 h-9
+                       rounded-xl
+                       bg-white
+                       border border-slate-200
+                       shadow-sm
+                       hover:bg-blue-50
+                       hover:border-blue-200
+                       active:scale-95
+                       transition">
+
+            <i class="bi bi-person-fill text-slate-700"></i>
+
+        </button>
+
+    </div>
+
+</header>
 
         <!-- ================= MAIN CONTENT ================= -->
         <main id="main-content" class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-[460px] mx-auto w-full">
