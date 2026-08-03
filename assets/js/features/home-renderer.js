@@ -508,7 +508,7 @@ function initMenuLogic() {
         
 
         e.stopPropagation();
-        console.log("CLICK:", this.dataset.dropdownToggle);
+       
 
         const menuId = this.dataset.dropdownToggle;
         const menu = document.getElementById(menuId);
@@ -529,7 +529,7 @@ document.addEventListener("click", () => {
     });
 
 });
-
+}
 // ==========================================
 // LOGIC CÀI ĐẶT PWA APP (ANDROID & IOS)
 // ==========================================
