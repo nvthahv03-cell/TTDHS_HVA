@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="vi" class="h-full scroll-smooth">
 <head>
-    <!-- Đặt đoạn script hứng PWA lên đầu tiên trong <head> -->
+    <!-- Đặt script hứng PWA lên đầu tiên -->
     <script>
       window.deferredPrompt = window.deferredPrompt || null;
 
-      // Hứng sự kiện ngay khi main.html vừa nạp
+      // Hứng sự kiện PWA
       window.addEventListener('beforeinstallprompt', (e) => {
           e.preventDefault();
           window.deferredPrompt = e;
@@ -80,7 +80,7 @@
                     <i class="bi bi-bell text-slate-800"></i>
                     <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">3</span>
                 </button>
-                <button id="btn-ai" class="w-9 h-9 rounded-full bg-sky-50 border border-sky-300/80 flex items-center justify-center hover:bg-sky-100 active:scale-95 transition-all shadow-sm" title="Trợ lý AI">
+                <button id="btn-ai" onclick="AppMain.openModal('ai-modal')" class="w-9 h-9 rounded-full bg-sky-50 border border-sky-300/80 flex items-center justify-center hover:bg-sky-100 active:scale-95 transition-all shadow-sm" title="Trợ lý AI">
                     <i class="bi bi-mic-fill text-brand-glow"></i>
                 </button>
                 <button id="btn-profile" class="w-9 h-9 rounded-full bg-slate-100 border border-slate-300/80 flex items-center justify-center hover:bg-slate-200/80 transition shadow-sm">
@@ -95,13 +95,12 @@
             <div id="home-view"></div>
         </main>
 
-        <!-- ================= MODAL GIAO VIỆC (ĐẶT GỌN GÀNG Ở ĐÂY) ================= -->
+        <!-- ================= MODAL GIAO VIỆC ================= -->
         <div id="modalGiaoViec" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
                 <h3 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2">Trung tâm Điều hành số - Giao nhiệm vụ</h3>
                 
                 <form id="formGiaoViec" class="space-y-4">
-                    <!-- Người giao & Loại nhiệm vụ -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-700">Người giao</label>
@@ -117,13 +116,11 @@
                         </div>
                     </div>
 
-                    <!-- Tiêu đề công việc -->
                     <div>
                         <label class="block text-sm font-medium text-slate-700">Tiêu đề nhiệm vụ</label>
                         <input type="text" id="tieuDe" required class="mt-1 block w-full rounded-lg border-slate-300 px-3 py-2 text-sm shadow-sm border" placeholder="Nhập tiêu đề tóm tắt nhiệm vụ...">
                     </div>
 
-                    <!-- Nội dung chi tiết (Có nút đọc Micro) -->
                     <div>
                         <div class="flex justify-between items-center mb-1">
                             <label class="text-sm font-medium text-slate-700">Nội dung chi tiết yêu cầu</label>
@@ -135,7 +132,6 @@
                         <textarea id="noiDung" rows="3" class="mt-1 block w-full rounded-lg border-slate-300 px-3 py-2 text-sm shadow-sm border" placeholder="Nhập nội dung hoặc bấm micro để đọc..."></textarea>
                     </div>
 
-                    <!-- Người nhận & Hạn hoàn thành -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-slate-700">Người nhận / Bộ phận chủ trì</label>
@@ -149,7 +145,6 @@
                         </div>
                     </div>
 
-                    <!-- Ghi chú giao việc -->
                     <div>
                         <label class="block text-sm font-medium text-slate-700">Ghi chú giao việc</label>
                         <input type="text" id="ghiChu" class="mt-1 block w-full rounded-lg border-slate-300 px-3 py-2 text-sm shadow-sm border" placeholder="Ghi chú thêm về kiểm tra, đôn đốc...">
@@ -202,15 +197,17 @@
     </div>
 
     <!-- ================= OVERLAYS & MODALS KHÁC ================= -->
-    <div id="global-overlay" class="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm hidden-force" aria-hidden="true"></div>
-    <div id="toast-message" class="hidden-force fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] px-4 py-3 rounded-xl bg-slate-900/95 border border-slate-700 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between transition-all duration-300">
+    <div id="global-overlay" class="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm hidden" aria-hidden="true"></div>
+    
+    <div id="toast-message" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[70] px-4 py-3 rounded-xl bg-slate-900/95 border border-slate-700 backdrop-blur-md shadow-2xl flex items-center space-x-2.5 text-xs text-white max-w-xs w-full justify-between transition-all duration-300">
         <div class="flex items-center space-x-2">
             <i class="bi bi-info-circle text-brand-glow text-base"></i>
             <span id="toast-text"></span>
         </div>
-        <button id="toast-close" class="text-slate-400 hover:text-white"><i class="bi bi-x-lg"></i></button>
+        <button id="toast-close" onclick="AppMain.hideToast()"><i class="bi bi-x-lg"></i></button>
     </div>
-    <div id="loading-overlay" class="fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm flex items-center justify-center hidden-force">
+
+    <div id="loading-overlay" class="fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm flex items-center justify-center hidden">
         <div class="flex flex-col items-center gap-3">
             <div class="w-12 h-12 border-4 border-brand-glow/30 border-t-brand-glow rounded-full animate-spin"></div>
             <span class="text-white text-sm font-medium">Đang tải...</span>
@@ -218,7 +215,7 @@
     </div>
 
     <!-- AI Modal -->
-    <div id="ai-modal" class="fixed inset-0 z-50 hidden-force flex items-center justify-center bg-black/60 backdrop-blur-sm p-5">
+    <div id="ai-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-5">
         <div class="w-full max-w-md rounded-3xl bg-slate-900 border border-slate-700 shadow-2xl overflow-hidden">
             <div class="px-5 py-4 border-b border-slate-700">
                 <h2 class="text-xl font-bold text-brand-glow flex items-center gap-2">
@@ -232,15 +229,15 @@
                 <button class="w-full py-3 rounded-xl bg-brand-teal font-semibold text-white hover:opacity-90 shadow-lg">Gửi yêu cầu</button>
             </div>
             <div class="px-5 py-3 border-t border-slate-700 text-center">
-                <button data-close-modal="ai-modal" class="text-slate-400 hover:text-white text-sm">Đóng</button>
+                <button onclick="AppMain.closeModal('ai-modal')" class="text-slate-400 hover:text-white text-sm">Đóng</button>
             </div>
         </div>
     </div>
 
     <!-- Boiduong Modal -->
-    <div id="boiduong-modal" class="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-sm hidden-force transition-all duration-300">
+    <div id="boiduong-modal" class="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/40 backdrop-blur-sm hidden transition-all duration-300">
         <div class="bg-white border-0 sm:border border-slate-200 w-full h-full sm:h-auto sm:max-w-sm rounded-none sm:rounded-2xl p-5 shadow-2xl relative max-h-full sm:max-h-[90vh] overflow-y-auto flex flex-col justify-start text-slate-800">
-            <button data-close-modal="boiduong-modal" class="absolute top-4 left-4 text-slate-600 hover:text-slate-900 p-1.5 rounded-lg hover:bg-slate-100 transition-all flex items-center gap-1">
+            <button onclick="AppMain.closeModal('boiduong-modal')" class="absolute top-4 left-4 text-slate-600 hover:text-slate-900 p-1.5 rounded-lg hover:bg-slate-100 transition-all flex items-center gap-1">
                 <i class="bi bi-arrow-left text-2xl"></i>
             </button>
             <div class="flex items-center space-x-3 mb-5 border-b border-slate-100 pb-4 pt-1 pl-10">
@@ -256,28 +253,58 @@
         </div>
     </div>
 
-    <!-- ================= SCRIPTS ================= -->
-    <!-- ================= SCRIPTS ================= -->
+    <!-- ================= SCRIPTS HỆ THỐNG ================= -->
     <script src="services/api.js"></script>
     <script type="module" src="assets/js/core/app.js"></script>
 
-    <!-- LOGIC ĐÃ XỬ LÝ SẠCH XUNG ĐỘT & ĐỒNG BỘ NÚT BẤM -->
+    <!-- LOGIC BẢO TRÌ & ĐỒNG BỘ TOÀN CỤC -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWw1moG7zHpb7tsmdl4pMVtIx0mzKQ_gxuAHGEW1WpjJUAiD9mEYNy-xKSjKr9C9m-/exec";
-        
+
         // ----------------------------------------------------
-        // 1. CHỨC NĂNG GIAO VIỆC & MODAL
+        // 1. QUẢN LÝ APP MAIN (Namespace dùng chung toàn hệ thống)
+        // ----------------------------------------------------
+        window.AppMain = {
+            openModal: function(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.classList.remove('hidden');
+            },
+            closeModal: function(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.classList.add('hidden');
+            },
+            showToast: function(msg) {
+                const toast = document.getElementById('toast-message');
+                const toastText = document.getElementById('toast-text');
+                if (toast && toastText) {
+                    toastText.innerText = msg;
+                    toast.classList.remove('hidden');
+                    setTimeout(() => toast.classList.add('hidden'), 3000);
+                }
+            },
+            hideToast: function() {
+                const toast = document.getElementById('toast-message');
+                if (toast) toast.classList.add('hidden');
+            },
+            showLoading: function(show = true) {
+                const loading = document.getElementById('loading-overlay');
+                if (loading) {
+                    show ? loading.classList.remove('hidden') : loading.classList.add('hidden');
+                }
+            }
+        };
+
+        // ----------------------------------------------------
+        // 2. CHỨC NĂNG GIAO VIỆC & MODAL GIAO VIỆC (GIỮ NGUYÊN VẸN)
         // ----------------------------------------------------
         async function moModalGiaoViec() {
-            const modal = document.getElementById('modalGiaoViec');
-            if (modal) modal.classList.remove('hidden');
+            AppMain.openModal('modalGiaoViec');
             await taiNhanSuVaoSelect();
         }
         window.moModalGiaoViec = moModalGiaoViec;
 
         function dongModalGiaoViec() {
-            const modal = document.getElementById('modalGiaoViec');
-            if (modal) modal.classList.add('hidden');
+            AppMain.closeModal('modalGiaoViec');
             const preview = document.getElementById('vungXemTruoc');
             if (preview) preview.classList.add('hidden');
         }
@@ -342,6 +369,7 @@
             const assignees = [{ username: taskData.nguoiNhan, hoTen: taskData.nguoiNhan, vaiTro: "Chủ trì" }];
 
             try {
+                AppMain.showLoading(true);
                 let ketQua;
                 if (typeof apiCreateTask === 'function') {
                     ketQua = await apiCreateTask(taskData, assignees);
@@ -363,11 +391,13 @@
             } catch (err) {
                 console.error(err);
                 alert('Lỗi kết nối đến hệ thống cơ sở dữ liệu!');
+            } finally {
+                AppMain.showLoading(false);
             }
         });
 
         // ----------------------------------------------------
-        // 2. HÀM ĐIỀU KHIỂN MENU CẤP 1 VÀ SUBMENU CẤP 2 (ĐÃ TỐI ƯU)
+        // 3. ĐIỀU KHIỂN MENU/SUBMENU & EVENT DELEGATION
         // ----------------------------------------------------
         window.toggleDashboardMenu = function(menuId, event) {
             if (event) event.stopPropagation();
@@ -375,62 +405,25 @@
             const targetMenu = document.getElementById(menuId);
             if (!targetMenu) return;
 
-            const isHidden = targetMenu.classList.contains('hidden') || targetMenu.style.display === 'none';
+            const isHidden = targetMenu.classList.contains('hidden');
 
-            // Ẩn tất cả dropdown cấp 1 khác
-            document.querySelectorAll('.dashboard-dropdown').forEach(m => {
-                m.classList.add('hidden');
-                m.style.display = 'none';
-            });
+            document.querySelectorAll('.dashboard-dropdown').forEach(m => m.classList.add('hidden'));
 
-            // Mở menu được click
             if (isHidden) {
                 targetMenu.classList.remove('hidden');
-                targetMenu.style.display = 'block';
-                targetMenu.style.opacity = '1';
-                targetMenu.style.visibility = 'visible';
             }
         };
 
-        window.toggleSubmenu = function(element, event) {
-            if (event) event.stopPropagation();
-
-            const submenu = element.querySelector('.dashboard-submenu');
-            if (!submenu) return;
-
-            const parentMenu = element.closest('.dashboard-dropdown');
-            if (parentMenu) {
-                // Đóng submenu khác cùng cấp
-                parentMenu.querySelectorAll('.dashboard-submenu').forEach(sub => {
-                    if (sub !== submenu) {
-                        sub.classList.add('hidden');
-                        sub.style.display = 'none';
-                    }
-                });
-                parentMenu.querySelectorAll('.bi-chevron-down').forEach(ic => {
-                    ic.classList.replace('bi-chevron-down', 'bi-chevron-right');
-                });
-            }
-
-            const isHidden = submenu.classList.contains('hidden') || submenu.style.display === 'none';
-            const icon = element.querySelector('.bi-chevron-right, .bi-chevron-down');
-
-            if (isHidden) {
-                submenu.classList.remove('hidden');
-                submenu.style.display = 'block';
-                if (icon) icon.classList.replace('bi-chevron-right', 'bi-chevron-down');
-            } else {
-                submenu.classList.add('hidden');
-                submenu.style.display = 'none';
-                if (icon) icon.classList.replace('bi-chevron-down', 'bi-chevron-right');
-            }
-        };
-
-        // ----------------------------------------------------
-        // 3. EVENT DELEGATION TỰ ĐỘNG BẮT SỰ KIỆN CLICK TOÀN CỤC
-        // ----------------------------------------------------
         document.addEventListener('click', function(e) {
-            // Nút "Giao việc"
+            // Đóng Modal khi bấm nút data-close-modal
+            const closeBtn = e.target.closest('[data-close-modal]');
+            if (closeBtn) {
+                const targetModal = closeBtn.getAttribute('data-close-modal');
+                AppMain.closeModal(targetModal);
+                return;
+            }
+
+            // Tự động kích hoạt Modal Giao việc nếu bấm nút Giao việc bất kỳ đâu trong DOM
             const btnGiaoViec = e.target.closest('button, div, a, span');
             if (btnGiaoViec) {
                 const text = btnGiaoViec.innerText ? btnGiaoViec.innerText.trim() : '';
@@ -441,51 +434,11 @@
                 }
             }
 
-            // Bấm ra ngoài vùng menu thì tự đóng tất cả Dropdown & Submenu
+            // Click ra ngoài tự động đóng menu
             if (!e.target.closest('.dashboard-dropdown') && !e.target.closest('[onclick*="toggleDashboardMenu"]')) {
-                document.querySelectorAll('.dashboard-dropdown').forEach(m => {
-                    m.classList.add('hidden');
-                    m.style.display = 'none';
-                });
+                document.querySelectorAll('.dashboard-dropdown').forEach(m => m.classList.add('hidden'));
             }
         });
     </script>
-    <!-- SCRIPT XỬ LÝ ĐÓNG/MỞ MENU XỔ NGUỢC -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const toggleButtons = document.querySelectorAll('[data-dropdown-toggle]');
-
-    toggleButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const targetId = btn.getAttribute('data-dropdown-toggle');
-            const targetMenu = document.getElementById(targetId);
-            const arrow = btn.querySelector('[data-dropdown-arrow]');
-
-            // Đóng tất cả menu khác đang mở
-            document.querySelectorAll('[data-dropdown-menu]').forEach(menu => {
-                if (menu.id !== targetId) {
-                    menu.classList.add('hidden');
-                }
-            });
-            document.querySelectorAll('[data-dropdown-arrow]').forEach(arr => {
-                if (arr !== arrow) arr.classList.remove('rotate-180');
-            });
-
-            // Bật/tắt menu được bấm
-            if (targetMenu) {
-                const isHidden = targetMenu.classList.toggle('hidden');
-                if (arrow) arrow.classList.toggle('rotate-180', !isHidden);
-            }
-        });
-    });
-
-    // Bấm ra ngoài màn hình thì tự đóng menu
-    document.addEventListener('click', () => {
-        document.querySelectorAll('[data-dropdown-menu]').forEach(menu => menu.classList.add('hidden'));
-        document.querySelectorAll('[data-dropdown-arrow]').forEach(arrow => arrow.classList.remove('rotate-180'));
-    });
-});
-</script>
 </body>
 </html>
