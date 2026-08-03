@@ -257,29 +257,32 @@
     </div>
 
     <!-- ================= SCRIPTS ================= -->
+    <!-- ================= SCRIPTS ================= -->
     <script src="services/api.js"></script>
     <script type="module" src="assets/js/core/app.js"></script>
 
-    <!-- LOGIC GIAO VIỆC CHUẨN XÁC -->
+    <!-- LOGIC ĐÃ XỬ LÝ SẠCH XUNG ĐỘT & ĐỒNG BỘ NÚT BẤM -->
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWw1moG7zHpb7tsmdl4pMVtIx0mzKQ_gxuAHGEW1WpjJUAiD9mEYNy-xKSjKr9C9m-/exec";
         
-        // 1. Mở modal và gọi API đổ danh sách nhân sự
+        // ----------------------------------------------------
+        // 1. CHỨC NĂNG GIAO VIỆC & MODAL
+        // ----------------------------------------------------
         async function moModalGiaoViec() {
             const modal = document.getElementById('modalGiaoViec');
             if (modal) modal.classList.remove('hidden');
             await taiNhanSuVaoSelect();
         }
-        
-        // 2. Đóng modal
+        window.moModalGiaoViec = moModalGiaoViec;
+
         function dongModalGiaoViec() {
             const modal = document.getElementById('modalGiaoViec');
             if (modal) modal.classList.add('hidden');
             const preview = document.getElementById('vungXemTruoc');
             if (preview) preview.classList.add('hidden');
         }
+        window.dongModalGiaoViec = dongModalGiaoViec;
 
-        // 3. Tải nhân sự từ Sheet độc lập vào thẻ <select>
         async function taiNhanSuVaoSelect() {
             const selectNguoiNhan = document.getElementById('nguoiNhan');
             if (!selectNguoiNhan) return;
@@ -300,7 +303,6 @@
             }
         }
 
-        // 4. Xem trước thông tin
         function hienThiXemTruoc() {
             const loai = document.getElementById('loaiNhiemVu').value;
             const tieuDe = document.getElementById('tieuDe').value;
@@ -322,9 +324,9 @@
 
             document.getElementById('vungXemTruoc').classList.remove('hidden');
         }
+        window.hienThiXemTruoc = hienThiXemTruoc;
 
-        // 5. Gửi dữ liệu chính thức khi bấm Xác nhận Giao việc trong form
-        document.getElementById('formGiaoViec').addEventListener('submit', async function(e) {
+        document.getElementById('formGiaoViec')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const taskData = {
@@ -340,7 +342,6 @@
             const assignees = [{ username: taskData.nguoiNhan, hoTen: taskData.nguoiNhan, vaiTro: "Chủ trì" }];
 
             try {
-                // Gọi hàm apiCreateTask từ services/api.js hoặc fetch trực tiếp Web App
                 let ketQua;
                 if (typeof apiCreateTask === 'function') {
                     ketQua = await apiCreateTask(taskData, assignees);
@@ -364,127 +365,90 @@
                 alert('Lỗi kết nối đến hệ thống cơ sở dữ liệu!');
             }
         });
-/**
- * Tự động khởi tạo và xử lý Dropdown Tái Sử Dụng
- */
-/**
- * Script khởi tạo & quản lý sự kiện Dropdown/Dropup dùng chung
- */
-function initDropdownSystem() {
-    if (window.__dropdownSystemInitialized) return;
-    window.__dropdownSystemInitialized = true;
 
-    document.addEventListener('click', (e) => {
-        const toggleBtn = e.target.closest('[data-dropdown-toggle]');
-        
-        if (toggleBtn) {
-            e.stopPropagation();
-            const targetId = toggleBtn.getAttribute('data-dropdown-toggle');
-            const targetMenu = document.getElementById(targetId);
-            const arrowIcon = toggleBtn.querySelector('[data-dropdown-arrow]');
+        // ----------------------------------------------------
+        // 2. HÀM ĐIỀU KHIỂN MENU CẤP 1 VÀ SUBMENU CẤP 2 (ĐÃ TỐI ƯU)
+        // ----------------------------------------------------
+        window.toggleDashboardMenu = function(menuId, event) {
+            if (event) event.stopPropagation();
 
-            // Đóng tất cả dropdown khác đang mở
-            closeAllDropdowns(targetMenu);
+            const targetMenu = document.getElementById(menuId);
+            if (!targetMenu) return;
 
-            if (targetMenu) {
-                const isHidden = targetMenu.classList.contains('hidden');
-                
-                if (isHidden) {
-                    targetMenu.classList.remove('hidden');
-                    setTimeout(() => {
-                        targetMenu.classList.remove('opacity-0', '-translate-y-2', 'translate-y-2', 'scale-95');
-                        targetMenu.classList.add('opacity-100', 'translate-y-0', 'scale-100');
-                    }, 10);
-                    if (arrowIcon) arrowIcon.classList.add('rotate-180');
-                } else {
-                    closeSingleDropdown(targetMenu, arrowIcon);
+            const isHidden = targetMenu.classList.contains('hidden') || targetMenu.style.display === 'none';
+
+            // Ẩn tất cả dropdown cấp 1 khác
+            document.querySelectorAll('.dashboard-dropdown').forEach(m => {
+                m.classList.add('hidden');
+                m.style.display = 'none';
+            });
+
+            // Mở menu được click
+            if (isHidden) {
+                targetMenu.classList.remove('hidden');
+                targetMenu.style.display = 'block';
+                targetMenu.style.opacity = '1';
+                targetMenu.style.visibility = 'visible';
+            }
+        };
+
+        window.toggleSubmenu = function(element, event) {
+            if (event) event.stopPropagation();
+
+            const submenu = element.querySelector('.dashboard-submenu');
+            if (!submenu) return;
+
+            const parentMenu = element.closest('.dashboard-dropdown');
+            if (parentMenu) {
+                // Đóng submenu khác cùng cấp
+                parentMenu.querySelectorAll('.dashboard-submenu').forEach(sub => {
+                    if (sub !== submenu) {
+                        sub.classList.add('hidden');
+                        sub.style.display = 'none';
+                    }
+                });
+                parentMenu.querySelectorAll('.bi-chevron-down').forEach(ic => {
+                    ic.classList.replace('bi-chevron-down', 'bi-chevron-right');
+                });
+            }
+
+            const isHidden = submenu.classList.contains('hidden') || submenu.style.display === 'none';
+            const icon = element.querySelector('.bi-chevron-right, .bi-chevron-down');
+
+            if (isHidden) {
+                submenu.classList.remove('hidden');
+                submenu.style.display = 'block';
+                if (icon) icon.classList.replace('bi-chevron-right', 'bi-chevron-down');
+            } else {
+                submenu.classList.add('hidden');
+                submenu.style.display = 'none';
+                if (icon) icon.classList.replace('bi-chevron-down', 'bi-chevron-right');
+            }
+        };
+
+        // ----------------------------------------------------
+        // 3. EVENT DELEGATION TỰ ĐỘNG BẮT SỰ KIỆN CLICK TOÀN CỤC
+        // ----------------------------------------------------
+        document.addEventListener('click', function(e) {
+            // Nút "Giao việc"
+            const btnGiaoViec = e.target.closest('button, div, a, span');
+            if (btnGiaoViec) {
+                const text = btnGiaoViec.innerText ? btnGiaoViec.innerText.trim() : '';
+                if (text === 'Giao việc' || text === 'Giao nhiệm vụ mới') {
+                    e.preventDefault();
+                    moModalGiaoViec();
+                    return;
                 }
             }
-            return;
-        }
 
-        // Bấm ra ngoài -> tự động đóng tất cả Dropdown
-        if (!e.target.closest('[data-dropdown-menu]')) {
-            closeAllDropdowns();
-        }
-    });
-}
-
-// Hàm bật / tắt Menu Dashboard (Lịch, Văn bản, Học liệu)
-function toggleDashboardMenu(menuId, event) {
-  if (event) event.stopPropagation();
-
-  const menu = document.getElementById(menuId);
-  if (!menu) return;
-
-  const isHidden = menu.classList.contains('hidden');
-
-  // Đóng tất cả menu khác
-  document.querySelectorAll('.dashboard-dropdown').forEach(d => {
-    d.classList.add('hidden');
-    d.classList.remove('opacity-100', 'scale-100');
-    d.classList.add('opacity-0', 'scale-95');
-  });
-
-  // Mở menu được bấm
-  if (isHidden) {
-    menu.classList.remove('hidden');
-    // Hiệu ứng hiện ra (animation)
-    setTimeout(() => {
-      menu.classList.remove('opacity-0', 'scale-95');
-      menu.classList.add('opacity-100', 'scale-100');
-    }, 10);
-  }
-}
-
-// Gắn vào window để chắc chắn HTML onclick luôn tìm thấy
-window.toggleDashboardMenu = toggleDashboardMenu;
-    // Hàm bật / tắt Menu con cấp 2 (Lịch tuần, Văn bản đến, Giáo án...)
-function toggleSubmenu(element, event) {
-  if (event) event.stopPropagation();
-
-  const submenu = element.querySelector('.dashboard-submenu');
-  if (!submenu) return;
-
-  // Đóng các submenu khác cùng cấp
-  const parentMenu = element.closest('.dashboard-dropdown');
-  if (parentMenu) {
-    parentMenu.querySelectorAll('.dashboard-submenu').forEach(sub => {
-      if (sub !== submenu) sub.classList.add('hidden');
-    });
-    parentMenu.querySelectorAll('.bi-chevron-down').forEach(ic => {
-      ic.classList.replace('bi-chevron-down', 'bi-chevron-right');
-    });
-  }
-
-  // Bật/Tắt submenu hiện tại
-  const isHidden = submenu.classList.contains('hidden');
-  const icon = element.querySelector('.bi-chevron-right, .bi-chevron-down');
-
-  if (isHidden) {
-    submenu.classList.remove('hidden');
-    if (icon) icon.classList.replace('bi-chevron-right', 'bi-chevron-down');
-  } else {
-    submenu.classList.add('hidden');
-    if (icon) icon.classList.replace('bi-chevron-down', 'bi-chevron-right');
-  }
-}
-
-// Gắn vào window để HTML onclick luôn tìm thấy
-window.toggleSubmenu = toggleSubmenu;
-// Gọi khởi tạo hệ thống Dropdown
-initDropdownSystem();
-       
-        // Tự động bắt sự kiện click toàn cục cho nút "Giao việc" (kể cả phần tử render động)
-document.addEventListener('click', function(e) {
-    const target = e.target.closest('button, div, a, span');
-    if (!target) return;
-    const text = target.innerText ? target.innerText.trim() : '';
-    if (text === 'Giao việc' || text === 'Giao nhiệm vụ mới') {
-        e.preventDefault();
-        moModalGiaoViec();
-    }
-});
+            // Bấm ra ngoài vùng menu thì tự đóng tất cả Dropdown & Submenu
+            if (!e.target.closest('.dashboard-dropdown') && !e.target.closest('[onclick*="toggleDashboardMenu"]')) {
+                document.querySelectorAll('.dashboard-dropdown').forEach(m => {
+                    m.classList.add('hidden');
+                    m.style.display = 'none';
+                });
+            }
+        });
     </script>
 </body>
 </html>
