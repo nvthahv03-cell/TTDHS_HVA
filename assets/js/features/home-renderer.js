@@ -137,11 +137,11 @@ export function renderHome() {
     <!-- Nút bấm Shortcut 1 -->
     <button type="button"
             onclick="toggleDashboardMenu('menu-lich-tb', event)"
-            class="w-full bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-200/70 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300 group">
+            class="w-full bg-white/90 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(59,130,246,0.12)] hover:border-blue-200 transition-all duration-300 group">
 
       <!-- Frame Icon Fluent -->
-      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-[20px] bg-gradient-to-br from-blue-50 to-sky-100/80 border border-blue-200/60 shadow-inner transition-all duration-300 group-hover:shadow-blue-200/50">
-        <i class="bi bi-calendar-week-fill text-2xl sm:text-3xl text-blue-600 transition-transform duration-300 group-hover:scale-110"></i>
+      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-2xl bg-blue-50 border border-blue-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-blue-100/80">
+        <i class="bi bi-calendar-event-fill text-2xl sm:text-3xl text-blue-600"></i>
       </div>
 
       <!-- Tiêu đề -->
@@ -199,11 +199,11 @@ export function renderHome() {
     <!-- Nút bấm Shortcut 2 -->
     <button type="button"
             onclick="toggleDashboardMenu('menu-thong-tin', event)"
-            class="w-full bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-200/70 shadow-sm hover:shadow-xl hover:border-amber-300 transition-all duration-300 group">
+            class="w-full bg-white/90 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(245,158,11,0.12)] hover:border-amber-200 transition-all duration-300 group">
 
       <!-- Frame Icon Fluent -->
-      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-[20px] bg-gradient-to-br from-amber-50 to-orange-100/80 border border-amber-200/60 shadow-inner transition-all duration-300 group-hover:shadow-amber-200/50">
-        <i class="bi bi-megaphone-fill text-2xl sm:text-3xl text-amber-600 transition-transform duration-300 group-hover:scale-110"></i>
+      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-2xl bg-amber-50 border border-amber-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-amber-100/80">
+        <i class="bi bi-megaphone-fill text-2xl sm:text-3xl text-amber-500"></i>
       </div>
 
       <!-- Tiêu đề -->
@@ -284,11 +284,11 @@ export function renderHome() {
     <!-- Nút bấm Shortcut 3 -->
     <button type="button"
             onclick="toggleDashboardMenu('menu-van-ban', event)"
-            class="w-full bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-200/70 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all duration-300 group">
+            class="w-full bg-white/90 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(16,185,129,0.12)] hover:border-emerald-200 transition-all duration-300 group">
 
       <!-- Frame Icon Fluent -->
-      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-[20px] bg-gradient-to-br from-emerald-50 to-teal-100/80 border border-emerald-200/60 shadow-inner transition-all duration-300 group-hover:shadow-emerald-200/50">
-        <i class="bi bi-file-earmark-text-fill text-2xl sm:text-3xl text-emerald-600 transition-transform duration-300 group-hover:scale-110"></i>
+      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-2xl bg-emerald-50 border border-emerald-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-emerald-100/80">
+        <i class="bi bi-file-earmark-text-fill text-2xl sm:text-3xl text-emerald-600"></i>
       </div>
 
       <!-- Tiêu đề -->
@@ -357,11 +357,11 @@ export function renderHome() {
     <!-- Nút bấm Shortcut 4 -->
     <button type="button"
             onclick="toggleDashboardMenu('menu-hoc-lieu', event)"
-            class="w-full bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-200/70 shadow-sm hover:shadow-xl hover:border-purple-300 transition-all duration-300 group">
+            class="w-full bg-white/90 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(147,51,234,0.12)] hover:border-purple-200 transition-all duration-300 group">
 
       <!-- Frame Icon Fluent -->
-      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-[20px] bg-gradient-to-br from-purple-50 to-indigo-100/80 border border-purple-200/60 shadow-inner transition-all duration-300 group-hover:shadow-purple-200/50">
-        <i class="bi bi-journal-richtext text-2xl sm:text-3xl text-purple-600 transition-transform duration-300 group-hover:scale-110"></i>
+      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-2xl bg-purple-50 border border-purple-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-purple-100/80">
+        <i class="bi bi-journal-bookmark-fill text-2xl sm:text-3xl text-purple-600"></i>
       </div>
 
       <!-- Tiêu đề -->
