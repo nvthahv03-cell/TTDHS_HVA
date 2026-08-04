@@ -128,44 +128,35 @@ export function renderHome() {
 
 </div>
 <!-- ========================================== -->
-<!-- KHU VỰC 3 PHÍM TÁC VỤ NHANH (FULL FIXED CODE) -->
+<!-- KHU VỰC 4 PHÍM TÁC VỤ NHANH (FLUENT DESIGN 4 COLUMNS) -->
 <!-- ========================================== -->
-<div class="grid grid-cols-3 gap-2.5 sm:gap-4 mb-4 relative z-30">
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 relative z-30">
 
-  <!-- ================= SHORTCUT 1: LỊCH - THÔNG BÁO ================= -->
-<div class="relative">
+  <!-- ================= SHORTCUT 1: LỊCH - TKB ================= -->
+  <div class="relative">
     <!-- Nút bấm Shortcut 1 -->
     <button type="button"
             onclick="toggleDashboardMenu('menu-lich-tb', event)"
-            class="w-full glass-glow-blue rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 border border-slate-100/80 group">
+            class="w-full bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-200/70 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300 group">
 
-        <!-- Frame Icon -->
-        <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-2 rounded-2xl bg-gradient-to-br from-blue-50 to-sky-100 border border-blue-200 shadow-sm relative">
-            <i class="bi bi-calendar-week-fill text-2xl sm:text-3xl text-blue-600 transition-transform duration-300 group-hover:scale-110"></i>
+      <!-- Frame Icon Fluent -->
+      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-[20px] bg-gradient-to-br from-blue-50 to-sky-100/80 border border-blue-200/60 shadow-inner transition-all duration-300 group-hover:shadow-blue-200/50">
+        <i class="bi bi-calendar-week-fill text-2xl sm:text-3xl text-blue-600 transition-transform duration-300 group-hover:scale-110"></i>
+      </div>
 
-            <!-- Đồng hồ -->
-            <div class="absolute bottom-1 right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white border border-blue-300 flex items-center justify-center shadow-sm">
-                <i class="bi bi-clock-fill text-[9px] sm:text-[10px] text-blue-600"></i>
-            </div>
-        </div>
-
-        <!-- Tiêu đề -->
-        <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight tracking-wide text-slate-700">
-            LỊCH - TKB
-        </span>
-
-        <!-- Mô tả -->
-        <div class="mt-1 text-[10px] text-slate-500 font-medium leading-tight">
-            Lịch công tác • Thời khóa biểu
-        </div>
-
+      <!-- Tiêu đề -->
+      <span class="font-bold text-xs sm:text-[13px] uppercase tracking-wider text-slate-800 leading-snug">
+        LỊCH - TKB
+      </span>
     </button>
+
     <!-- Menu Dropdown 1 -->
-    <div id="menu-lich-tb" class="dashboard-dropdown hidden absolute top-full left-0 mt-2 w-60 sm:w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-100 p-2 z-50 transition-all" onclick="event.stopPropagation()">
+    <div id="menu-lich-tb" class="dashboard-dropdown hidden absolute top-full left-0 mt-2 w-64 sm:w-70 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all" onclick="event.stopPropagation()">
       
-      <div class="dashboard-item p-2 hover:bg-blue-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+      <!-- Lịch công tác -->
+      <div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-calendar3 text-blue-500 text-sm"></i> Lịch công tác</span>
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-calendar3 text-blue-500 text-sm"></i> Lịch công tác</span>
           <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
         </div>
         <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
@@ -175,9 +166,59 @@ export function renderHome() {
         </div>
       </div>
 
-      <div class="dashboard-item p-2 hover:bg-amber-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+      <!-- Thời khóa biểu cá nhân -->
+      <div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-bell-fill text-amber-500 text-sm"></i> Thông báo</span>
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-person-badge-fill text-sky-500 text-sm"></i> Thời khóa biểu cá nhân</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-sky-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tkb-canhan-tuan')"><i class="bi bi-clock"></i> TKB Theo tuần</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-sky-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tkb-canhan-thaydoi')"><i class="bi bi-arrow-repeat"></i> Báo dạy bù / Lịch dạy thay</div>
+        </div>
+      </div>
+
+      <!-- Thời khóa biểu toàn trường -->
+      <div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-grid-3x3-gap-fill text-indigo-500 text-sm"></i> Thời khóa biểu toàn trường</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tkb-truong-lop')"><i class="bi bi-building"></i> Theo Lớp học</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tkb-truong-giaovien')"><i class="bi bi-people-fill"></i> Theo Giáo viên</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tkb-truong-phongchuyenmon')"><i class="bi bi-door-open-fill"></i> Theo Phòng bộ môn</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= SHORTCUT 2: THÔNG TIN ================= -->
+  <div class="relative">
+    <!-- Nút bấm Shortcut 2 -->
+    <button type="button"
+            onclick="toggleDashboardMenu('menu-thong-tin', event)"
+            class="w-full bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-200/70 shadow-sm hover:shadow-xl hover:border-amber-300 transition-all duration-300 group">
+
+      <!-- Frame Icon Fluent -->
+      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-[20px] bg-gradient-to-br from-amber-50 to-orange-100/80 border border-amber-200/60 shadow-inner transition-all duration-300 group-hover:shadow-amber-200/50">
+        <i class="bi bi-megaphone-fill text-2xl sm:text-3xl text-amber-600 transition-transform duration-300 group-hover:scale-110"></i>
+      </div>
+
+      <!-- Tiêu đề -->
+      <span class="font-bold text-xs sm:text-[13px] uppercase tracking-wider text-slate-800 leading-snug">
+        THÔNG TIN
+      </span>
+    </button>
+
+    <!-- Menu Dropdown 2 -->
+    <div id="menu-thong-tin" class="dashboard-dropdown hidden absolute top-full left-0 sm:left-1/2 sm:-translate-x-1/2 mt-2 w-64 sm:w-70 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all" onclick="event.stopPropagation()">
+      
+      <!-- 📣 Thông báo -->
+      <div class="dashboard-item p-2 hover:bg-amber-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-bell-fill text-amber-500 text-sm"></i> Thông báo</span>
           <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
         </div>
         <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
@@ -187,162 +228,168 @@ export function renderHome() {
         </div>
       </div>
 
-      <div class="dashboard-item p-2 hover:bg-emerald-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+      <!-- 📰 Tin tức -->
+      <div class="dashboard-item p-2 hover:bg-amber-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-check2-square text-emerald-500 text-sm"></i> Việc của tôi</span>
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-newspaper text-orange-500 text-sm"></i> Tin tức</span>
           <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
         </div>
         <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('viec-moi-giao')"><i class="bi bi-plus-circle"></i> Việc mới giao</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('viec-dang-thuc-hien')"><i class="bi bi-hourglass-split"></i> Đang thực hiện</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('viec-da-hoan-thanh')"><i class="bi bi-check-circle"></i> Đã hoàn thành</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-orange-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tin-nha-truong')"><i class="bi bi-building font-bold"></i> Tin nhà trường</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-orange-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tin-nganh-giao-duc')"><i class="bi bi-globe"></i> Tin ngành Giáo dục</div>
         </div>
       </div>
 
-      <div class="dashboard-item p-2 hover:bg-rose-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+      <!-- 📅 Sự kiện -->
+      <div class="dashboard-item p-2 hover:bg-amber-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-alarm-fill text-rose-500 text-sm"></i> Nhắc việc</span>
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-calendar-event-fill text-rose-500 text-sm"></i> Sự kiện</span>
           <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
         </div>
         <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-rose-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('nhac-hom-nay')"><i class="bi bi-clock-history"></i> Hôm nay</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-rose-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('nhac-tuan-nay')"><i class="bi bi-calendar-minus"></i> Tuần này</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-rose-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('nhac-qua-han')"><i class="bi bi-exclamation-triangle"></i> Quá hạn</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-rose-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('su-kien-sap-dien-ra')"><i class="bi bi-clock-history"></i> Sự kiện sắp diễn ra</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-rose-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('su-kien-da-qua')"><i class="bi bi-check2-circle"></i> Sự kiện đã qua</div>
+        </div>
+      </div>
+
+      <!-- 📷 Thư viện ảnh -->
+      <div class="dashboard-item p-2 hover:bg-amber-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-images text-emerald-500 text-sm"></i> Thư viện ảnh</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('thu-vien-anh-hoat-dong')"><i class="bi bi-image"></i> Ảnh hoạt động</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('thu-vien-anh-tu-lieu')"><i class="bi bi-archive"></i> Ảnh tư liệu</div>
+        </div>
+      </div>
+
+      <!-- 🎬 Video -->
+      <div class="dashboard-item p-2 hover:bg-amber-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-play-btn-fill text-red-500 text-sm"></i> Video</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-red-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('video-su-kien')"><i class="bi bi-film"></i> Video sự kiện</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-red-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('video-truyen-thong')"><i class="bi bi-tv"></i> Video truyền thông</div>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- ================= SHORTCUT 2: VĂN BẢN BIỂU MẪU ================= -->
-  <div class="relative">
-    <!-- Nút bấm Shortcut 2 -->
-    <button type="button" 
-            onclick="toggleDashboardMenu('menu-van-ban', event)"
-            class="w-full glass-glow-blue rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 border border-slate-100/80 group">
-      
-      <!-- Badge số 2 -->
-      <span class="absolute top-2 right-2 px-1.5 py-0.5 min-w-[20px] bg-red-500 text-white text-[10px] font-extrabold rounded-full border-2 border-white shadow-sm z-10 leading-none flex items-center justify-center">2</span>
-      
-      <!-- Frame Icon -->
-      <div class="w-14 h-14 sm:w-18 sm:h-18 flex items-center justify-center mb-2 rounded-2xl bg-blue-50 border border-blue-200 shadow-sm">
-        <i class="bi bi-folder2-open text-2xl sm:text-3xl text-blue-600 transition-transform duration-300 group-hover:scale-110"></i>
-      </div>
-      
-      <!-- Nhãn tiêu đề -->
-      <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-        VĂN BẢN BIỂU MẪU
-      </span>
-      
-      <!-- Sub-text -->
-      <span class="mt-1 text-[10px] text-slate-500 font-medium leading-tight">
-        2 văn bản chưa đọc
-      </span>
-    </button>
-
-    <!-- Menu Dropdown 2 -->
-    <div id="menu-van-ban" class="dashboard-dropdown hidden absolute top-full left-1/2 -translate-x-1/2 mt-2 w-60 sm:w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-100 p-2 z-50 transition-all" onclick="event.stopPropagation()">
-      
-      <div class="dashboard-item p-2 hover:bg-blue-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
-        <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-file-earmark-text-fill text-blue-500 text-sm"></i> Văn bản</span>
-          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
-        </div>
-        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-blue-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-den')"><i class="bi bi-inbox-fill"></i> Văn bản đến</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-blue-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-di')"><i class="bi bi-send-fill"></i> Văn bản đi</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-blue-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-noi-bo')"><i class="bi bi-building"></i> Văn bản nội bộ</div>
-        </div>
-      </div>
-
-      <div class="dashboard-item p-2 hover:bg-indigo-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
-        <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-ui-checks text-indigo-500 text-sm"></i> Biểu mẫu</span>
-          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
-        </div>
-        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('bieu-mau-dien-tu')"><i class="bi bi-laptop"></i> Biểu mẫu điện tử</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('bieu-mau-chuyen-mon')"><i class="bi bi-journal-bookmark"></i> Biểu mẫu chuyên môn</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('bieu-mau-hanh-chinh')"><i class="bi bi-briefcase"></i> Biểu mẫu hành chính</div>
-        </div>
-      </div>
-
-      <div class="dashboard-item p-2 hover:bg-cyan-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
-        <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-bar-chart-line-fill text-cyan-500 text-sm"></i> Báo cáo</span>
-          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
-        </div>
-        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-cyan-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('bao-cao-truc-tuyen')"><i class="bi bi-cloud-arrow-up"></i> Báo cáo trực tuyến</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-cyan-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('bao-cao-dinh-ky')"><i class="bi bi-calendar2-check"></i> Báo cáo định kỳ</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-cyan-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('bao-cao-thong-ke')"><i class="bi bi-pie-chart"></i> Báo cáo thống kê</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ================= SHORTCUT 3: HỌC LIỆU SỐ ================= -->
+  <!-- ================= SHORTCUT 3: VĂN BẢN ================= -->
   <div class="relative">
     <!-- Nút bấm Shortcut 3 -->
-    <button type="button" 
-            onclick="toggleDashboardMenu('menu-hoc-lieu', event)"
-            class="w-full glass-glow-blue rounded-2xl p-2.5 sm:p-4 flex flex-col items-center justify-center text-center relative shortcut-hover cursor-pointer active:scale-95 border border-slate-100/80 group">
-      
-      <!-- Badge số 5 -->
-      <span class="absolute top-2 right-2 px-1.5 py-0.5 min-w-[20px] bg-amber-500 text-white text-[10px] font-extrabold rounded-full border-2 border-white shadow-sm z-10 leading-none flex items-center justify-center">5</span>
-      
-      <!-- Frame Icon -->
-      <div class="w-14 h-14 sm:w-18 sm:h-18 flex items-center justify-center mb-2 rounded-2xl bg-blue-50 border border-blue-200 shadow-sm relative">
-        <i class="bi bi-book-half text-2xl sm:text-3xl text-blue-600 transition-transform duration-300 group-hover:scale-110"></i>
-        <!-- Sóng âm trang trí -->
-        <div class="absolute -right-1 top-1/2 -translate-y-1/2 flex flex-col gap-[2px]">
-          <div class="w-2 h-[2px] bg-blue-400 rounded-full rotate-12"></div>
-          <div class="w-3 h-[2px] bg-blue-500 rounded-full"></div>
-          <div class="w-2 h-[2px] bg-blue-400 rounded-full -rotate-12"></div>
-        </div>
+    <button type="button"
+            onclick="toggleDashboardMenu('menu-van-ban', event)"
+            class="w-full bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-200/70 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all duration-300 group">
+
+      <!-- Frame Icon Fluent -->
+      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-[20px] bg-gradient-to-br from-emerald-50 to-teal-100/80 border border-emerald-200/60 shadow-inner transition-all duration-300 group-hover:shadow-emerald-200/50">
+        <i class="bi bi-file-earmark-text-fill text-2xl sm:text-3xl text-emerald-600 transition-transform duration-300 group-hover:scale-110"></i>
       </div>
-      
-      <!-- Nhãn tiêu đề -->
-      <span class="font-bold text-[11px] sm:text-xs uppercase leading-tight text-slate-700 tracking-wide">
-        HỌC LIỆU SỐ
-      </span>
-      
-      <!-- Sub-text -->
-      <span class="mt-1 text-[10px] text-amber-600 font-medium leading-tight">
-        Kho tài nguyên số
+
+      <!-- Tiêu đề -->
+      <span class="font-bold text-xs sm:text-[13px] uppercase tracking-wider text-slate-800 leading-snug">
+        VĂN BẢN
       </span>
     </button>
 
     <!-- Menu Dropdown 3 -->
-    <div id="menu-hoc-lieu" class="dashboard-dropdown hidden absolute top-full right-0 mt-2 w-60 sm:w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-100 p-2 z-50 transition-all" onclick="event.stopPropagation()">
+    <div id="menu-van-ban" class="dashboard-dropdown hidden absolute top-full right-0 sm:right-1/2 sm:translate-x-1/2 mt-2 w-64 sm:w-70 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all" onclick="event.stopPropagation()">
       
-      <div class="dashboard-item p-2 hover:bg-blue-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+      <!-- Văn bản đến -->
+      <div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-journal-text text-blue-500 text-sm"></i> Giáo án</span>
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-inbox-fill text-emerald-500 text-sm"></i> Văn bản đến</span>
           <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
         </div>
         <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-blue-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('giao-an-dien-tu')"><i class="bi bi-file-earmark-code"></i> Giáo án điện tử</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-blue-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('giao-an-minh-hoa')"><i class="bi bi-file-earmark-slides"></i> Giáo án minh họa</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-den')"><i class="bi bi-file-earmark-arrow-down"></i> Tất cả văn bản đến</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-den-chua-xu-ly')"><i class="bi bi-exclamation-circle"></i> Chưa xử lý</div>
         </div>
       </div>
 
-      <div class="dashboard-item p-2 hover:bg-purple-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+      <!-- Văn bản đi -->
+      <div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-card-checklist text-purple-500 text-sm"></i> Ngân hàng đề</span>
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-send-fill text-teal-500 text-sm"></i> Văn bản đi</span>
           <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
         </div>
         <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-purple-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('de-kiem-tra')"><i class="bi bi-file-earmark-check"></i> Đề kiểm tra</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-purple-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('de-thi')"><i class="bi bi-journal-check"></i> Đề thi</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-purple-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('ma-tran-de')"><i class="bi bi-grid-3x3"></i> Ma trận đề</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-di')"><i class="bi bi-file-earmark-arrow-up"></i> Văn bản đã phát hành</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-noi-bo')"><i class="bi bi-building"></i> Văn bản nội bộ</div>
         </div>
       </div>
 
-      <div class="dashboard-item p-2 hover:bg-red-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+      <!-- Biểu mẫu -->
+      <div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-play-btn-fill text-red-500 text-sm"></i> Video</span>
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-ui-checks text-cyan-500 text-sm"></i> Biểu mẫu</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-cyan-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('bieu-mau-dien-tu')"><i class="bi bi-laptop"></i> Biểu mẫu điện tử</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-cyan-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('bieu-mau-chuyen-mon')"><i class="bi bi-journal-bookmark"></i> Biểu mẫu chuyên môn</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-cyan-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('bieu-mau-hanh-chinh')"><i class="bi bi-briefcase"></i> Biểu mẫu hành chính</div>
+        </div>
+      </div>
+
+      <!-- Tra cứu -->
+      <div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-search text-slate-600 text-sm"></i> Tra cứu</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-slate-800 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tra-cuu-van-ban')"><i class="bi bi-file-earmark-search"></i> Tra cứu văn bản</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-slate-800 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tra-cuu-ho-so')"><i class="bi bi-folder-search"></i> Tra cứu hồ sơ công việc</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= SHORTCUT 4: HỌC LIỆU SỐ ================= -->
+  <div class="relative">
+    <!-- Nút bấm Shortcut 4 -->
+    <button type="button"
+            onclick="toggleDashboardMenu('menu-hoc-lieu', event)"
+            class="w-full bg-white/80 backdrop-blur-md rounded-2xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-200/70 shadow-sm hover:shadow-xl hover:border-purple-300 transition-all duration-300 group">
+
+      <!-- Frame Icon Fluent -->
+      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-[20px] bg-gradient-to-br from-purple-50 to-indigo-100/80 border border-purple-200/60 shadow-inner transition-all duration-300 group-hover:shadow-purple-200/50">
+        <i class="bi bi-journal-richtext text-2xl sm:text-3xl text-purple-600 transition-transform duration-300 group-hover:scale-110"></i>
+      </div>
+
+      <!-- Tiêu đề -->
+      <span class="font-bold text-xs sm:text-[13px] uppercase tracking-wider text-slate-800 leading-snug">
+        HỌC LIỆU SỐ
+      </span>
+    </button>
+
+    <!-- Menu Dropdown 4 -->
+    <div id="menu-hoc-lieu" class="dashboard-dropdown hidden absolute top-full right-0 mt-2 w-64 sm:w-70 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all" onclick="event.stopPropagation()">
+      
+      <!-- Kho học liệu -->
+      <div class="dashboard-item p-2 hover:bg-purple-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-archive-fill text-purple-500 text-sm"></i> Kho học liệu</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-purple-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('kho-bo-gddt')"><i class="bi bi-bank"></i> Bộ GDĐT</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-purple-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('kho-so-gddt')"><i class="bi bi-building"></i> Sở GDĐT</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-purple-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('kho-nha-truong')"><i class="bi bi-house-door"></i> Nhà trường</div>
+        </div>
+      </div>
+
+      <!-- Video học tập -->
+      <div class="dashboard-item p-2 hover:bg-purple-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-play-btn-fill text-red-500 text-sm"></i> Video học tập</span>
           <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
         </div>
         <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
@@ -351,9 +398,22 @@ export function renderHome() {
         </div>
       </div>
 
-      <div class="dashboard-item p-2 hover:bg-teal-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+      <!-- Tài liệu số -->
+      <div class="dashboard-item p-2 hover:bg-purple-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-robot text-teal-500 text-sm"></i> AI hỗ trợ</span>
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-journal-text text-indigo-500 text-sm"></i> Tài liệu số</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('giao-an-dien-tu')"><i class="bi bi-file-earmark-code"></i> Giáo án điện tử</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('de-kiem-tra')"><i class="bi bi-file-earmark-check"></i> Ngân hàng đề thi / kiểm tra</div>
+        </div>
+      </div>
+
+      <!-- AI học tập -->
+      <div class="dashboard-item p-2 hover:bg-purple-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-robot text-teal-500 text-sm"></i> AI học tập</span>
           <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
         </div>
         <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
@@ -363,25 +423,10 @@ export function renderHome() {
         </div>
       </div>
 
-      <div class="dashboard-item p-2 hover:bg-amber-50 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
-        <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2 text-xs font-semibold text-slate-700"><i class="bi bi-archive-fill text-amber-500 text-sm"></i> Kho học liệu</span>
-          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
-        </div>
-        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-amber-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('kho-bo-gddt')"><i class="bi bi-bank"></i> Bộ GDĐT</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-amber-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('kho-so-gddt')"><i class="bi bi-building"></i> Sở GDĐT</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-amber-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('kho-nha-truong')"><i class="bi bi-house-door"></i> Nhà trường</div>
-        </div>
-      </div>
-
     </div>
   </div>
 
 </div>
-
-
-
 <!-- KHUNG BAO CHỮ CHẠY (Dùng marquee chuẩn HTML) -->
 <div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-cyan-50/80 border border-blue-100 shadow-sm p-2 mb-3 backdrop-blur-md flex items-center gap-2.5">
     
