@@ -130,22 +130,22 @@ export function renderHome() {
 <!-- ========================================== -->
 <!-- KHU VỰC 4 PHÍM TÁC VỤ NHANH (FLUENT DESIGN 4 COLUMNS) -->
 <!-- ========================================== -->
-<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 relative z-30">
+<div class="grid grid-cols-4 gap-2 sm:gap-4 mb-6 relative z-30">
 
   <!-- ================= SHORTCUT 1: LỊCH - TKB ================= -->
   <div class="relative">
     <!-- Nút bấm Shortcut 1 -->
     <button type="button"
             onclick="toggleDashboardMenu('menu-lich-tb', event)"
-            class="w-full bg-white/90 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(59,130,246,0.12)] hover:border-blue-200 transition-all duration-300 group">
+            class="w-full h-full bg-white/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(59,130,246,0.12)] hover:border-blue-200 transition-all duration-300 group">
 
       <!-- Frame Icon Fluent -->
-      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-2xl bg-blue-50 border border-blue-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-blue-100/80">
-        <i class="bi bi-calendar-event-fill text-2xl sm:text-3xl text-blue-600"></i>
+      <div class="w-11 h-11 sm:w-16 sm:h-16 flex items-center justify-center mb-1.5 sm:mb-3 rounded-xl sm:rounded-2xl bg-blue-50 border border-blue-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-blue-100/80 shrink-0">
+        <i class="bi bi-calendar-event-fill text-xl sm:text-3xl text-blue-600"></i>
       </div>
 
       <!-- Tiêu đề -->
-      <span class="font-bold text-xs sm:text-[13px] uppercase tracking-wider text-slate-800 leading-snug">
+      <span class="font-bold text-[9px] sm:text-[13px] uppercase tracking-tight sm:tracking-wider text-slate-800 leading-tight w-full truncate">
         LỊCH - TKB
       </span>
     </button>
@@ -199,15 +199,15 @@ export function renderHome() {
     <!-- Nút bấm Shortcut 2 -->
     <button type="button"
             onclick="toggleDashboardMenu('menu-thong-tin', event)"
-            class="w-full bg-white/90 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(245,158,11,0.12)] hover:border-amber-200 transition-all duration-300 group">
+            class="w-full h-full bg-white/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(245,158,11,0.12)] hover:border-amber-200 transition-all duration-300 group">
 
       <!-- Frame Icon Fluent -->
-      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-2xl bg-amber-50 border border-amber-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-amber-100/80">
-        <i class="bi bi-megaphone-fill text-2xl sm:text-3xl text-amber-500"></i>
+      <div class="w-11 h-11 sm:w-16 sm:h-16 flex items-center justify-center mb-1.5 sm:mb-3 rounded-xl sm:rounded-2xl bg-amber-50 border border-amber-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-amber-100/80 shrink-0">
+        <i class="bi bi-megaphone-fill text-xl sm:text-3xl text-amber-500"></i>
       </div>
 
       <!-- Tiêu đề -->
-      <span class="font-bold text-xs sm:text-[13px] uppercase tracking-wider text-slate-800 leading-snug">
+      <span class="font-bold text-[9px] sm:text-[13px] uppercase tracking-tight sm:tracking-wider text-slate-800 leading-tight w-full truncate">
         THÔNG TIN
       </span>
     </button>
@@ -284,15 +284,15 @@ export function renderHome() {
     <!-- Nút bấm Shortcut 3 -->
     <button type="button"
             onclick="toggleDashboardMenu('menu-van-ban', event)"
-            class="w-full bg-white/90 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(16,185,129,0.12)] hover:border-emerald-200 transition-all duration-300 group">
+            class="w-full h-full bg-white/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(16,185,129,0.12)] hover:border-emerald-200 transition-all duration-300 group">
 
       <!-- Frame Icon Fluent -->
-      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-2xl bg-emerald-50 border border-emerald-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-emerald-100/80">
-        <i class="bi bi-file-earmark-text-fill text-2xl sm:text-3xl text-emerald-600"></i>
+      <div class="w-11 h-11 sm:w-16 sm:h-16 flex items-center justify-center mb-1.5 sm:mb-3 rounded-xl sm:rounded-2xl bg-emerald-50 border border-emerald-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-emerald-100/80 shrink-0">
+        <i class="bi bi-file-earmark-text-fill text-xl sm:text-3xl text-emerald-600"></i>
       </div>
 
       <!-- Tiêu đề -->
-      <span class="font-bold text-xs sm:text-[13px] uppercase tracking-wider text-slate-800 leading-snug">
+      <span class="font-bold text-[9px] sm:text-[13px] uppercase tracking-tight sm:tracking-wider text-slate-800 leading-tight w-full truncate">
         VĂN BẢN
       </span>
     </button>
@@ -357,15 +357,15 @@ export function renderHome() {
     <!-- Nút bấm Shortcut 4 -->
     <button type="button"
             onclick="toggleDashboardMenu('menu-hoc-lieu', event)"
-            class="w-full bg-white/90 backdrop-blur-md rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-center text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(147,51,234,0.12)] hover:border-purple-200 transition-all duration-300 group">
+            class="w-full h-full bg-white/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(147,51,234,0.12)] hover:border-purple-200 transition-all duration-300 group">
 
       <!-- Frame Icon Fluent -->
-      <div class="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-3 rounded-2xl bg-purple-50 border border-purple-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-purple-100/80">
-        <i class="bi bi-journal-bookmark-fill text-2xl sm:text-3xl text-purple-600"></i>
+      <div class="w-11 h-11 sm:w-16 sm:h-16 flex items-center justify-center mb-1.5 sm:mb-3 rounded-xl sm:rounded-2xl bg-purple-50 border border-purple-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-purple-100/80 shrink-0">
+        <i class="bi bi-journal-bookmark-fill text-xl sm:text-3xl text-purple-600"></i>
       </div>
 
       <!-- Tiêu đề -->
-      <span class="font-bold text-xs sm:text-[13px] uppercase tracking-wider text-slate-800 leading-snug">
+      <span class="font-bold text-[9px] sm:text-[13px] uppercase tracking-tight sm:tracking-wider text-slate-800 leading-tight w-full truncate">
         HỌC LIỆU SỐ
       </span>
     </button>
@@ -427,6 +427,71 @@ export function renderHome() {
   </div>
 
 </div>
+
+<!-- ========================================== -->
+<!-- SCRIPT ĐIỀU KHIỂN DÁSHBOARD DROPDOWNS      -->
+<!-- ========================================== -->
+<script>
+  function toggleDashboardMenu(menuId, event) {
+    if (event) event.stopPropagation();
+    
+    // Đóng tất cả dropdowns khác
+    const allDropdowns = document.querySelectorAll('.dashboard-dropdown');
+    allDropdowns.forEach(dropdown => {
+      if (dropdown.id !== menuId) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Toggle menu hiện tại
+    const targetMenu = document.getElementById(menuId);
+    if (targetMenu) {
+      targetMenu.classList.toggle('hidden');
+    }
+  }
+
+  function toggleSubmenu(element, event) {
+    if (event) event.stopPropagation();
+    
+    const submenu = element.querySelector('.dashboard-submenu');
+    const chevron = element.querySelector('.bi-chevron-right, .bi-chevron-down');
+    
+    if (submenu) {
+      const isHidden = submenu.classList.contains('hidden');
+      
+      // Đóng các submenu khác trong cùng dropdown
+      const parentDropdown = element.closest('.dashboard-dropdown');
+      if (parentDropdown) {
+        parentDropdown.querySelectorAll('.dashboard-submenu').forEach(sub => {
+          sub.classList.add('hidden');
+        });
+        parentDropdown.querySelectorAll('.bi-chevron-down').forEach(icon => {
+          icon.classList.remove('bi-chevron-down');
+          icon.classList.add('bi-chevron-right');
+        });
+      }
+
+      // Mở/Đóng submenu hiện tại
+      if (isHidden) {
+        submenu.classList.remove('hidden');
+        if (chevron) {
+          chevron.classList.remove('bi-chevron-right');
+          chevron.classList.add('bi-chevron-down');
+        }
+      }
+    }
+  }
+
+  // Đóng dropdown khi click ra ngoài
+  document.addEventListener('click', function(event) {
+    const isClickInside = event.target.closest('.relative');
+    if (!isClickInside) {
+      document.querySelectorAll('.dashboard-dropdown').forEach(dropdown => {
+        dropdown.classList.add('hidden');
+      });
+    }
+  });
+</script>
 <!-- KHUNG BAO CHỮ CHẠY (Dùng marquee chuẩn HTML) -->
 <div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-cyan-50/80 border border-blue-100 shadow-sm p-2 mb-3 backdrop-blur-md flex items-center gap-2.5">
     
