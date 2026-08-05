@@ -727,7 +727,7 @@ export function renderHome() {
                 <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">ĐIỀU HÀNH SỐ</h3>
                 <i class="bi bi-chevron-up text-xs text-teal-100 transition-transform duration-300" data-dropdown-arrow></i>
             </div>
-            <p class="text-[10px] text-teal-50 font-medium">Giao việc • Văn bản • AI • Dashboard</p>
+            <p class="text-[10px] text-teal-50 font-medium">Giao việc • Lịch • ...</p>
         </div>
 
         <!-- Dropup Menu Điều hành số -->
