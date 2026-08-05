@@ -383,6 +383,138 @@
 </div>
 
 </form> <!-- ĐÓNG FORM CHUẨN TẠI ĐÂY -->
+    <!-- ================= KHUNG XEM VĂN BẢN VÀ IN LỊCH TUẦN TRUYỀN THỐNG ================= -->
+<section id="view-lich-tuan" class="view-tab-content space-y-4 hidden">
+    <!-- BAR THAO TÁC (ẨN KHI IN) -->
+    <div class="flex flex-wrap items-center justify-between gap-2 no-print bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+        <button type="button" onclick="backToEdit()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+            <i class="bi bi-arrow-left"></i> Quay lại chỉnh sửa
+        </button>
+
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="window.print()" class="px-4 py-2 bg-[#0F4C81] hover:bg-blue-900 text-white rounded-xl text-xs font-bold shadow-md flex items-center gap-1.5">
+                <i class="bi bi-printer-fill"></i> In Lịch Công Tác
+            </button>
+        </div>
+    </div>
+
+    <!-- KHUNG TRANG IN / XEM TRƯỚC -->
+    <div class="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm print-area">
+        <!-- HEADER VĂN BẢN -->
+        <div class="border-b border-slate-300 pb-4 mb-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start text-xs font-bold text-slate-800 gap-2">
+                <div>
+                    <div class="text-slate-700 font-semibold text-[11px]">SỞ GIÁO DỤC VÀ ĐÀO TẠO TP ĐÀ NẴNG</div>
+                    <div class="text-[#0F4C81] font-extrabold text-sm tracking-wide">TRƯỜNG THPT HÒA VANG</div>
+                </div>
+            </div>
+
+            <!-- TIÊU ĐỀ LỊCH ĐÃ CANH GIỮA -->
+            <div class="text-center mt-3">
+                <div class="text-red-600 font-extrabold text-base sm:text-lg tracking-wider uppercase">LỊCH CÔNG TÁC</div>
+                <div id="displayTitleTuan" class="text-slate-700 font-bold text-xs mt-0.5">Tuần thứ: 1 - Tháng: 8</div>
+            </div>
+        </div>
+
+        <!-- BỎ KHUNG BẢNG VÀO OVERFLOW-X-AUTO ĐỂ CHỐNG VỠ TRÊN MOBILE/APP -->
+        <div class="overflow-x-auto w-full">
+            <table class="w-full min-w-[600px] border-collapse border border-slate-800 text-xs">
+                <thead>
+                    <tr class="bg-blue-900 text-white font-bold text-center uppercase">
+                        <th class="border border-slate-800 p-2.5 w-20 sm:w-24">NGÀY</th>
+                        <th class="border border-slate-800 p-2.5 w-[38%]">SÁNG</th>
+                        <th class="border border-slate-800 p-2.5 w-[38%]">CHIỀU</th>
+                        <th class="border border-slate-800 p-2.5">GHI CHÚ</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyLichTuanView">
+                    <tr>
+                        <td class="border border-slate-800 p-2 text-center font-bold">
+                            <div class="text-red-600 text-sm">2</div>
+                            <div id="view_date_2" class="text-[11px] text-slate-500 font-normal"></div>
+                        </td>
+                        <td id="view_sang_2" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_chieu_2" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_ghichu_2" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line break-words"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-800 p-2 text-center font-bold">
+                            <div class="text-red-600 text-sm">3</div>
+                            <div id="view_date_3" class="text-[11px] text-slate-500 font-normal"></div>
+                        </td>
+                        <td id="view_sang_3" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_chieu_3" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_ghichu_3" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line break-words"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-800 p-2 text-center font-bold">
+                            <div class="text-red-600 text-sm">4</div>
+                            <div id="view_date_4" class="text-[11px] text-slate-500 font-normal"></div>
+                        </td>
+                        <td id="view_sang_4" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_chieu_4" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_ghichu_4" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line break-words"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-800 p-2 text-center font-bold">
+                            <div class="text-red-600 text-sm">5</div>
+                            <div id="view_date_5" class="text-[11px] text-slate-500 font-normal"></div>
+                        </td>
+                        <td id="view_sang_5" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_chieu_5" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_ghichu_5" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line break-words"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-800 p-2 text-center font-bold">
+                            <div class="text-red-600 text-sm">6</div>
+                            <div id="view_date_6" class="text-[11px] text-slate-500 font-normal"></div>
+                        </td>
+                        <td id="view_sang_6" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_chieu_6" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_ghichu_6" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line break-words"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-800 p-2 text-center font-bold">
+                            <div class="text-red-600 text-sm">7</div>
+                            <div id="view_date_7" class="text-[11px] text-slate-500 font-normal"></div>
+                        </td>
+                        <td id="view_sang_7" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_chieu_7" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_ghichu_7" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line break-words"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-800 p-2 text-center font-bold">
+                            <div class="text-red-600 text-sm">CN</div>
+                            <div id="view_date_CN" class="text-[11px] text-slate-500 font-normal"></div>
+                        </td>
+                        <td id="view_sang_CN" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_chieu_CN" class="border border-slate-800 p-2 align-top whitespace-pre-line break-words">Nghỉ</td>
+                        <td id="view_ghichu_CN" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line break-words"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PHẦN CHÂN TRANG VĂN BẢN (NƠI NHẬN & CHỮ KÝ) -->
+        <div class="print-footer mt-8 pt-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 sm:gap-0 text-xs">
+            <div class="text-left">
+                <div class="font-bold text-slate-700 uppercase">Nơi nhận:</div>
+                <div class="text-[11px] text-slate-600 leading-relaxed">
+                    - Ban Giám hiệu;<br>
+                    - Các Tổ CM, VP;<br>
+                    - Lưu: VT.
+                </div>
+            </div>
+            <div class="text-center w-full sm:w-auto">
+                <div id="printFooterDate" class="italic text-slate-600">Đà Nẵng, ngày ..... tháng ..... năm 2026</div>
+                <div class="font-bold text-slate-900 uppercase mt-1">NGƯỜI TẠO LỊCH</div>
+                <div class="h-14 sm:h-16"></div>
+                <div id="printUserSignature" class="font-bold text-[#0F4C81] text-sm">Nguyễn Văn Thà</div>
+                <div id="printUserPositionSignature" class="text-[11px] text-slate-600">Phó Hiệu trưởng</div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- MODAL BẬT LÊN KHI LƯU THÀNH CÔNG (ĐẶT NGOÀI FORM - CHỈ 1 KHỐI DUY NHẤT) -->
 <div id="modalThongBaoGV" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -903,73 +1035,84 @@ function autoFillWeekDays(monDateString) {
         }
     });
 }
-   function previewLichTuan() {
+  // Hàm khi bấm "XEM TRƯỚC LỊCH"
+function previewLichTuan() {
     // 1. Cập nhật Tuần / Tháng / Năm lên tiêu đề
-    const tuanInput = document.getElementById('inputTuanSo') || document.querySelector('input[name="tuan"]');
-    const thangInput = document.getElementById('inputThangSo') || document.querySelector('input[name="thang"]');
-    const namInput = document.getElementById('inputNamSo') || document.querySelector('input[name="nam"]');
-
-    const tuan = tuanInput ? tuanInput.value : '1';
-    const thang = thangInput ? thangInput.value : '8';
-    const nam = namInput ? namInput.value : '2026';
+    const tuanVal = document.getElementById('inputTuanSo')?.value || '1';
+    const thangVal = document.getElementById('inputThangSo')?.value || '8';
+    const namVal = document.getElementById('inputNamSo')?.value || '2026';
 
     const elTitle = document.getElementById('displayTitleTuan');
     if (elTitle) {
-        elTitle.innerText = `Tuần thứ: ${tuan} - Tháng: ${thang}`;
+        elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
     }
 
-    // 2. Cập nhật ngày/tháng/năm dưới chân trang (Chỗ người tạo lịch)
+    // 2. Cập nhật ngày/tháng/năm ở chân trang in
     const now = new Date();
     const elFooterDate = document.getElementById('printFooterDate');
     if (elFooterDate) {
-        elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${nam}`;
+        elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${namVal}`;
     }
 
-    // 3. Đổ dữ liệu từ các ô nhập vào bảng tĩnh
+    // 3. Đổ dữ liệu từ các ô nhập (form-nhap-lich) sang bản xem (view-lich-tuan)
     const days = ["2", "3", "4", "5", "6", "7", "CN"];
 
     days.forEach(d => {
-        // Lấy element từ khung nhập
-        const dateElem = document.getElementById(`date_${d}`);
-        const sangElem = document.getElementById(`sang_${d}`);
-        const chieuElem = document.getElementById(`chieu_${d}`);
-        const ghiChuElem = document.getElementById(`ghichu_${d}`);
+        // Lấy dữ liệu từ khung nhập
+        const dateInput = document.getElementById(`date_${d}`)?.value;
+        const sangText = document.getElementById(`sang_${d}`)?.value.trim();
+        const chieuText = document.getElementById(`chieu_${d}`)?.value.trim();
+        const ghiChuText = document.getElementById(`ghichu_${d}`)?.value.trim();
 
-        // Lấy element ở bảng xem trước
+        // Lấy thẻ hiển thị ở bản xem
         const viewDate = document.getElementById(`view_date_${d}`);
         const viewSang = document.getElementById(`view_sang_${d}`);
         const viewChieu = document.getElementById(`view_chieu_${d}`);
         const viewGhiChu = document.getElementById(`view_ghichu_${d}`);
 
-        // Chuyển định dạng ngày YYYY-MM-DD sang DD/MM
-        if (viewDate && dateElem && dateElem.value) {
-            const parts = dateElem.value.split('-');
-            if (parts.length === 3) {
-                viewDate.innerText = `${parts[2]}/${parts[1]}`;
+        // Đổ ngày tháng (chuyển từ YYYY-MM-DD sang DD/MM)
+        if (viewDate) {
+            if (dateInput) {
+                const parts = dateInput.split('-');
+                viewDate.innerText = parts.length === 3 ? `${parts[2]}/${parts[1]}` : '';
+            } else {
+                viewDate.innerText = '';
             }
         }
 
-        // Đẩy nội dung Sáng, Chiều, Ghi chú
-        if (viewSang && sangElem) {
-            const sangText = sangElem.value.trim();
+        // Đổ nội dung Sáng - Chiều - Ghi chú
+        if (viewSang) {
             viewSang.innerHTML = sangText ? sangText.replace(/\n/g, '<br>') : 'Nghỉ';
         }
-        if (viewChieu && chieuElem) {
-            const chieuText = chieuElem.value.trim();
+        if (viewChieu) {
             viewChieu.innerHTML = chieuText ? chieuText.replace(/\n/g, '<br>') : 'Nghỉ';
         }
-        if (viewGhiChu && ghiChuElem) {
-            const ghiChuText = ghiChuElem.value.trim();
+        if (viewGhiChu) {
             viewGhiChu.innerHTML = ghiChuText ? ghiChuText.replace(/\n/g, '<br>') : '';
         }
     });
 
-    // 4. Mở tab/khung xem trước và cuộn màn hình xuống
+    // 4. Ẩn khung nhập liệu
+    const formNhap = document.getElementById('form-nhap-lich');
+    if (formNhap) formNhap.classList.add('hidden');
+
+    // 5. Hiển thị khung xem trước và cuộn lên đầu trang xem
     const viewSection = document.getElementById('view-lich-tuan');
     if (viewSection) {
-        viewSection.classList.remove('hidden'); // Đảm bảo tab không bị ẩn
+        viewSection.classList.remove('hidden');
         viewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+}
+
+// Hàm khi bấm "QUAY LẠI CHỈNH SỬA"
+function backToEdit() {
+    // Ẩn khung xem
+    const viewSection = document.getElementById('view-lich-tuan');
+    if (viewSection) viewSection.classList.add('hidden');
+
+    // Hiện lại khung nhập
+    const formNhap = document.getElementById('form-nhap-lich');
+    if (formNhap) formNhap.classList.remove('hidden');
 }
 // Cập nhật hàm handleSaveLichTuanBang để bật Modal hỏi gửi thông báo
 function handleSaveLichTuanBang(e) {
