@@ -128,30 +128,45 @@ export function renderHome() {
 
 </div>
 <!-- ========================================== -->
-<!-- KHU VỰC 4 PHÍM TÁC VỤ NHANH (FLUENT DESIGN 4 COLUMNS) -->
+<!-- KHU VỰC 3 PHÍM TÁC VỤ NHANH (PHONG CÁCH VNeID) -->
 <!-- ========================================== -->
-<div class="grid grid-cols-4 gap-2 sm:gap-4 mb-6 relative z-30">
 
-  <!-- ================= SHORTCUT 1: LỊCH - TKB ================= -->
-  <div class="relative">
+<!-- TIÊU ĐỀ TÁC VỤ TRUY CẬP NHANH -->
+<div class="flex items-center justify-center my-6 sm:my-8 px-4">
+  <div class="flex-grow h-[1px] bg-gradient-to-r from-transparent via-slate-200 to-slate-300"></div>
+  <div class="flex items-center gap-2 px-4 sm:px-6">
+    <i class="bi bi-rocket-takeoff-fill text-[2563EB] text-lg sm:text-xl"></i>
+    <span class="font-bold text-sm sm:text-base tracking-wider text-[#2563EB] uppercase select-none">
+      TÁC VỤ TRUY CẬP NHANH
+    </span>
+  </div>
+  <div class="flex-grow h-[1px] bg-gradient-to-l from-transparent via-slate-200 to-slate-300"></div>
+</div>
+
+<!-- CONTAINER 3 TÁC VỤ VNeID STYLE -->
+<div class="flex justify-center items-start gap-6 sm:gap-16 md:gap-24 mb-8 relative z-30 max-w-4xl mx-auto px-2">
+
+  <!-- ================= SHORTCUT 1: LỊCH CÔNG TÁC ================= -->
+  <div class="relative flex flex-col items-center">
     <!-- Nút bấm Shortcut 1 -->
     <button type="button"
+            id="btn-menu-lich-tb"
             onclick="toggleDashboardMenu('menu-lich-tb', event)"
-            class="w-full h-full bg-white/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(59,130,246,0.12)] hover:border-blue-200 transition-all duration-300 group">
-
-      <!-- Frame Icon Fluent -->
-      <div class="w-11 h-11 sm:w-16 sm:h-16 flex items-center justify-center mb-1.5 sm:mb-3 rounded-xl sm:rounded-2xl bg-blue-50 border border-blue-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-blue-100/80 shrink-0">
-        <i class="bi bi-calendar-event-fill text-xl sm:text-3xl text-blue-600"></i>
+            class="flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer group outline-none select-none">
+      
+      <!-- Icon Outline Style VNeID -->
+      <div class="text-[#2563EB] text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 ease-out group-hover:scale-108 group-hover:text-blue-500 group-active:scale-95">
+        <i class="bi bi-calendar3"></i>
       </div>
 
-      <!-- Tiêu đề -->
-      <span class="font-bold text-[9px] sm:text-[13px] uppercase tracking-tight sm:tracking-wider text-slate-800 leading-tight w-full truncate">
-        LỊCH - TKB
+      <!-- Tiêu đề dưới Icon -->
+      <span class="font-bold text-[13px] sm:text-[15px] text-[#1E3A8A] transition-colors duration-200 group-hover:text-blue-600 text-center whitespace-nowrap">
+        Lịch công tác
       </span>
     </button>
 
     <!-- Menu Dropdown 1 -->
-    <div id="menu-lich-tb" class="dashboard-dropdown hidden absolute top-full left-0 mt-2 w-64 sm:w-70 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all" onclick="event.stopPropagation()">
+    <div id="menu-lich-tb" class="dashboard-dropdown hidden absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 sm:w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all text-left" onclick="event.stopPropagation()">
       
       <!-- Lịch công tác -->
       <div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
@@ -166,54 +181,30 @@ export function renderHome() {
         </div>
       </div>
 
-      <!-- Thời khóa biểu cá nhân -->
-      <div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
-        <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-person-badge-fill text-sky-500 text-sm"></i> Thời khóa biểu cá nhân</span>
-          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
-        </div>
-        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-sky-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tkb-canhan-tuan')"><i class="bi bi-clock"></i> TKB Theo tuần</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-sky-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tkb-canhan-thaydoi')"><i class="bi bi-arrow-repeat"></i> Báo dạy bù / Lịch dạy thay</div>
-        </div>
-      </div>
-
-      <!-- Thời khóa biểu toàn trường -->
-      <div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
-        <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-grid-3x3-gap-fill text-indigo-500 text-sm"></i> Thời khóa biểu toàn trường</span>
-          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
-        </div>
-        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tkb-truong-lop')"><i class="bi bi-building"></i> Theo Lớp học</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tkb-truong-giaovien')"><i class="bi bi-people-fill"></i> Theo Giáo viên</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('tkb-truong-phongchuyenmon')"><i class="bi bi-door-open-fill"></i> Theo Phòng bộ môn</div>
-        </div>
-      </div>
-
     </div>
   </div>
 
-  <!-- ================= SHORTCUT 2: THÔNG TIN ================= -->
-  <div class="relative">
+  <!-- ================= SHORTCUT 2: TÀI NGUYÊN SỐ ================= -->
+  <div class="relative flex flex-col items-center">
     <!-- Nút bấm Shortcut 2 -->
     <button type="button"
+            id="btn-menu-tai-nguyen"
             onclick="toggleDashboardMenu('menu-thong-tin', event)"
-            class="w-full h-full bg-white/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(245,158,11,0.12)] hover:border-amber-200 transition-all duration-300 group">
+            class="flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer group outline-none select-none">
 
-      <!-- Frame Icon Fluent -->
-      <div class="w-11 h-11 sm:w-16 sm:h-16 flex items-center justify-center mb-1.5 sm:mb-3 rounded-xl sm:rounded-2xl bg-amber-50 border border-amber-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-amber-100/80 shrink-0">
-        <i class="bi bi-megaphone-fill text-xl sm:text-3xl text-amber-500"></i>
+      <!-- Icon Outline Style VNeID -->
+      <div class="text-[#2563EB] text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 ease-out group-hover:scale-108 group-hover:text-blue-500 group-active:scale-95">
+        <i class="bi bi-folder2-open"></i>
       </div>
 
-      <!-- Tiêu đề -->
-      <span class="font-bold text-[9px] sm:text-[13px] uppercase tracking-tight sm:tracking-wider text-slate-800 leading-tight w-full truncate">
-        THÔNG TIN
+      <!-- Tiêu đề dưới Icon -->
+      <span class="font-bold text-[13px] sm:text-[15px] text-[#1E3A8A] transition-colors duration-200 group-hover:text-blue-600 text-center whitespace-nowrap">
+        Tài nguyên số
       </span>
     </button>
 
-    <!-- Menu Dropdown 2 -->
-    <div id="menu-thong-tin" class="dashboard-dropdown hidden absolute top-full left-0 sm:left-1/2 sm:-translate-x-1/2 mt-2 w-64 sm:w-70 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all" onclick="event.stopPropagation()">
+    <!-- Menu Dropdown 2 (Gộp Thông tin, Văn bản, Biểu mẫu, Học liệu số, Tra cứu) -->
+    <div id="menu-thong-tin" class="dashboard-dropdown hidden absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 sm:w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all text-left" onclick="event.stopPropagation()">
       
       <!-- 📣 Thông báo -->
       <div class="dashboard-item p-2 hover:bg-amber-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
@@ -276,30 +267,6 @@ export function renderHome() {
         </div>
       </div>
 
-    </div>
-  </div>
-
-  <!-- ================= SHORTCUT 3: VĂN BẢN ================= -->
-  <div class="relative">
-    <!-- Nút bấm Shortcut 3 -->
-    <button type="button"
-            onclick="toggleDashboardMenu('menu-van-ban', event)"
-            class="w-full h-full bg-white/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(16,185,129,0.12)] hover:border-emerald-200 transition-all duration-300 group">
-
-      <!-- Frame Icon Fluent -->
-      <div class="w-11 h-11 sm:w-16 sm:h-16 flex items-center justify-center mb-1.5 sm:mb-3 rounded-xl sm:rounded-2xl bg-emerald-50 border border-emerald-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-emerald-100/80 shrink-0">
-        <i class="bi bi-file-earmark-text-fill text-xl sm:text-3xl text-emerald-600"></i>
-      </div>
-
-      <!-- Tiêu đề -->
-      <span class="font-bold text-[9px] sm:text-[13px] uppercase tracking-tight sm:tracking-wider text-slate-800 leading-tight w-full truncate">
-        VĂN BẢN
-      </span>
-    </button>
-
-    <!-- Menu Dropdown 3 -->
-    <div id="menu-van-ban" class="dashboard-dropdown hidden absolute top-full right-0 sm:right-1/2 sm:translate-x-1/2 mt-2 w-64 sm:w-70 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all" onclick="event.stopPropagation()">
-      
       <!-- Văn bản đến -->
       <div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
@@ -349,30 +316,6 @@ export function renderHome() {
         </div>
       </div>
 
-    </div>
-  </div>
-
-  <!-- ================= SHORTCUT 4: HỌC LIỆU SỐ ================= -->
-  <div class="relative">
-    <!-- Nút bấm Shortcut 4 -->
-    <button type="button"
-            onclick="toggleDashboardMenu('menu-hoc-lieu', event)"
-            class="w-full h-full bg-white/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer active:scale-95 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_35px_rgba(147,51,234,0.12)] hover:border-purple-200 transition-all duration-300 group">
-
-      <!-- Frame Icon Fluent -->
-      <div class="w-11 h-11 sm:w-16 sm:h-16 flex items-center justify-center mb-1.5 sm:mb-3 rounded-xl sm:rounded-2xl bg-purple-50 border border-purple-100/80 transition-all duration-300 group-hover:scale-105 group-hover:bg-purple-100/80 shrink-0">
-        <i class="bi bi-journal-bookmark-fill text-xl sm:text-3xl text-purple-600"></i>
-      </div>
-
-      <!-- Tiêu đề -->
-      <span class="font-bold text-[9px] sm:text-[13px] uppercase tracking-tight sm:tracking-wider text-slate-800 leading-tight w-full truncate">
-        HỌC LIỆU SỐ
-      </span>
-    </button>
-
-    <!-- Menu Dropdown 4 -->
-    <div id="menu-hoc-lieu" class="dashboard-dropdown hidden absolute top-full right-0 mt-2 w-64 sm:w-70 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all" onclick="event.stopPropagation()">
-      
       <!-- Kho học liệu -->
       <div class="dashboard-item p-2 hover:bg-purple-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
@@ -410,10 +353,35 @@ export function renderHome() {
         </div>
       </div>
 
-      <!-- AI học tập -->
+    </div>
+  </div>
+
+  <!-- ================= SHORTCUT 3: TIỆN ÍCH SỐ ================= -->
+  <div class="relative flex flex-col items-center">
+    <!-- Nút bấm Shortcut 3 -->
+    <button type="button"
+            id="btn-menu-tien-ich"
+            onclick="toggleDashboardMenu('menu-hoc-lieu', event)"
+            class="flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer group outline-none select-none">
+
+      <!-- Icon Outline Style VNeID -->
+      <div class="text-[#2563EB] text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 ease-out group-hover:scale-108 group-hover:text-blue-500 group-active:scale-95">
+        <i class="bi bi-lightning-charge"></i>
+      </div>
+
+      <!-- Tiêu đề dưới Icon -->
+      <span class="font-bold text-[13px] sm:text-[15px] text-[#1E3A8A] transition-colors duration-200 group-hover:text-blue-600 text-center whitespace-nowrap">
+        Tiện ích số
+      </span>
+    </button>
+
+    <!-- Menu Dropdown 3 (AI, Hướng dẫn số, Công cụ, Liên kết) -->
+    <div id="menu-hoc-lieu" class="dashboard-dropdown hidden absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 sm:w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all text-left" onclick="event.stopPropagation()">
+      
+      <!-- AI -->
       <div class="dashboard-item p-2 hover:bg-purple-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
         <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-robot text-teal-500 text-sm"></i> AI học tập</span>
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-robot text-teal-500 text-sm"></i> AI</span>
           <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
         </div>
         <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
@@ -423,10 +391,52 @@ export function renderHome() {
         </div>
       </div>
 
+      <!-- Hướng dẫn số -->
+      <div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-book-half text-blue-500 text-sm"></i> Hướng dẫn số</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-blue-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('hd-google-workspace')"><i class="bi bi-google"></i> Google Workspace</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-blue-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('hd-microsoft-365')"><i class="bi bi-microsoft"></i> Microsoft 365</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-blue-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('hd-ai')"><i class="bi bi-cpu"></i> AI</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-blue-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('hd-ttdhs-hva')"><i class="bi bi-building font-bold"></i> TTĐHS_HVA</div>
+        </div>
+      </div>
+
+      <!-- Công cụ -->
+      <div class="dashboard-item p-2 hover:bg-sky-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-tools text-sky-500 text-sm"></i> Công cụ</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-sky-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('cc-qr')"><i class="bi bi-qr-code"></i> QR</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-sky-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('cc-pdf')"><i class="bi bi-file-earmark-pdf"></i> PDF</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-sky-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('cc-ocr')"><i class="bi bi-text-paragraph"></i> OCR</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-sky-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('cc-may-tinh')"><i class="bi bi-calculator"></i> Máy tính</div>
+        </div>
+      </div>
+
+      <!-- Liên kết -->
+      <div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-link-45deg text-emerald-500 text-sm"></i> Liên kết</span>
+          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+        </div>
+        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('lk-emis')"><i class="bi bi-box-arrow-up-right"></i> EMIS</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('lk-csdl-nganh')"><i class="bi bi-database"></i> CSDL ngành</div>
+          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('lk-smas')"><i class="bi bi-journal-check"></i> SMAS</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
 </div>
+
 
 <!-- ========================================== -->
 <!-- SCRIPT ĐIỀU KHIỂN DÁSHBOARD DROPDOWNS      -->
