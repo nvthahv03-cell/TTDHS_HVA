@@ -903,27 +903,74 @@ function autoFillWeekDays(monDateString) {
         }
     });
 }
-    // Hàm Xem trước: Cập nhật trực tiếp xuống khung Xem & In mà chưa lưu
-function previewLichTuan() {
-    currentTuanData.tuan = document.getElementById('inputTuanSo').value;
-    currentTuanData.thang = document.getElementById('inputThangSo').value;
+   function previewLichTuan() {
+    // 1. Cập nhật Tuần / Tháng / Năm lên tiêu đề
+    const tuanInput = document.getElementById('inputTuanSo') || document.querySelector('input[name="tuan"]');
+    const thangInput = document.getElementById('inputThangSo') || document.querySelector('input[name="thang"]');
+    const namInput = document.getElementById('inputNamSo') || document.querySelector('input[name="nam"]');
 
-    const keys = ["2", "3", "4", "5", "6", "7", "CN"];
-    keys.forEach(k => {
-        currentTuanData.chitiet[k] = {
-            sang: document.getElementById(`sang_${k}`).value || "Nghỉ",
-            chieu: document.getElementById(`chieu_${k}`).value || "Nghỉ",
-            ghichu: document.getElementById(`ghichu_${k}`) ? document.getElementById(`ghichu_${k}`).value : ""
-        };
+    const tuan = tuanInput ? tuanInput.value : '1';
+    const thang = thangInput ? thangInput.value : '8';
+    const nam = namInput ? namInput.value : '2026';
+
+    const elTitle = document.getElementById('displayTitleTuan');
+    if (elTitle) {
+        elTitle.innerText = `Tuần thứ: ${tuan} - Tháng: ${thang}`;
+    }
+
+    // 2. Cập nhật ngày/tháng/năm dưới chân trang (Chỗ người tạo lịch)
+    const now = new Date();
+    const elFooterDate = document.getElementById('printFooterDate');
+    if (elFooterDate) {
+        elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${nam}`;
+    }
+
+    // 3. Đổ dữ liệu từ các ô nhập vào bảng tĩnh
+    const days = ["2", "3", "4", "5", "6", "7", "CN"];
+
+    days.forEach(d => {
+        // Lấy element từ khung nhập
+        const dateElem = document.getElementById(`date_${d}`);
+        const sangElem = document.getElementById(`sang_${d}`);
+        const chieuElem = document.getElementById(`chieu_${d}`);
+        const ghiChuElem = document.getElementById(`ghichu_${d}`);
+
+        // Lấy element ở bảng xem trước
+        const viewDate = document.getElementById(`view_date_${d}`);
+        const viewSang = document.getElementById(`view_sang_${d}`);
+        const viewChieu = document.getElementById(`view_chieu_${d}`);
+        const viewGhiChu = document.getElementById(`view_ghichu_${d}`);
+
+        // Chuyển định dạng ngày YYYY-MM-DD sang DD/MM
+        if (viewDate && dateElem && dateElem.value) {
+            const parts = dateElem.value.split('-');
+            if (parts.length === 3) {
+                viewDate.innerText = `${parts[2]}/${parts[1]}`;
+            }
+        }
+
+        // Đẩy nội dung Sáng, Chiều, Ghi chú
+        if (viewSang && sangElem) {
+            const sangText = sangElem.value.trim();
+            viewSang.innerHTML = sangText ? sangText.replace(/\n/g, '<br>') : 'Nghỉ';
+        }
+        if (viewChieu && chieuElem) {
+            const chieuText = chieuElem.value.trim();
+            viewChieu.innerHTML = chieuText ? chieuText.replace(/\n/g, '<br>') : 'Nghỉ';
+        }
+        if (viewGhiChu && ghiChuElem) {
+            const ghiChuText = ghiChuElem.value.trim();
+            viewGhiChu.innerHTML = ghiChuText ? ghiChuText.replace(/\n/g, '<br>') : '';
+        }
     });
 
-    renderLichTuanView();
-    switchViewTab('view-lich-tuan');
-    
-    // Cuộn mượt xuống khu vực bản in
-    document.getElementById('view-lich-tuan').scrollIntoView({ behavior: 'smooth' });
+    // 4. Mở tab/khung xem trước và cuộn màn hình xuống
+    const viewSection = document.getElementById('view-lich-tuan');
+    if (viewSection) {
+        viewSection.classList.remove('hidden'); // Đảm bảo tab không bị ẩn
+        viewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
-
 // Cập nhật hàm handleSaveLichTuanBang để bật Modal hỏi gửi thông báo
 function handleSaveLichTuanBang(e) {
     e.preventDefault();
