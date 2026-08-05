@@ -507,6 +507,8 @@
                 </div>
             </div>
             <div class="text-center w-full sm:w-auto">
+                <!-- Thêm id="form-nhap-lich" vào thẻ form -->
+                <form id="form-nhap-lich" onsubmit="handleSaveLichTuanBang(event)" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto space-y-4">
                 <div id="printFooterDate" class="italic text-slate-600">Đà Nẵng, ngày ..... tháng ..... năm 2026</div>
                 <div class="font-bold text-slate-900 uppercase mt-1">NGƯỜI TẠO LỊCH</div>
                 <div id="printUserPositionSignature" class="text-[11px] text-slate-600">Phó Hiệu trưởng</div>
@@ -1040,7 +1042,89 @@ function chuyenDenMenuTacVu() {
         elLichCongTac.scrollIntoView({ behavior: 'smooth' });
         elLichCongTac.click(); // Giả lập click vào icon Lịch công tác nếu cần
     }
+}// 1. Hàm cập nhật ngày tháng chân trang in (Đà Nẵng, ngày DD tháng MM năm YYYY)
+function updatePrintFooterDate() {
+    const d = new Date();
+    const ngay = String(d.getDate()).padStart(2, '0');
+    const thang = String(d.getMonth() + 1).padStart(2, '0');
+    const nam = d.getFullYear();
+
+    const el = document.getElementById("printFooterDate");
+    if (el) {
+        el.innerText = `Đà Nẵng, ngày ${ngay} tháng ${thang} năm ${nam}`;
+    }
 }
+
+// 2. Hàm khi bấm nút "XEM TRƯỚC LỊCH"
+function previewLichTuan() {
+    // A. Cập nhật Tuần / Tháng lên tiêu đề
+    const tuanVal = document.getElementById('inputTuanSo')?.value || '1';
+    const thangVal = document.getElementById('inputThangSo')?.value || '8';
+    
+    const elTitle = document.getElementById('displayTitleTuan');
+    if (elTitle) {
+        elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
+    }
+
+    // B. Cập nhật ngày tháng chân trang
+    updatePrintFooterDate();
+
+    // C. Đổ dữ liệu 7 ngày từ Form nhập sang Bản xem
+    const days = ["2", "3", "4", "5", "6", "7", "CN"];
+    days.forEach(d => {
+        const dateInput = document.getElementById(`date_${d}`)?.value;
+        const sangText = document.getElementById(`sang_${d}`)?.value.trim();
+        const chieuText = document.getElementById(`chieu_${d}`)?.value.trim();
+        const ghiChuText = document.getElementById(`ghichu_${d}`)?.value.trim();
+
+        const viewDate = document.getElementById(`view_date_${d}`);
+        const viewSang = document.getElementById(`view_sang_${d}`);
+        const viewChieu = document.getElementById(`view_chieu_${d}`);
+        const viewGhiChu = document.getElementById(`view_ghichu_${d}`);
+
+        // Hiển thị ngày DD/MM
+        if (viewDate) {
+            if (dateInput) {
+                const parts = dateInput.split('-');
+                viewDate.innerText = parts.length === 3 ? `${parts[2]}/${parts[1]}` : '';
+            } else {
+                viewDate.innerText = '';
+            }
+        }
+
+        // Đổ nội dung (xuống dòng đổi thành <br>)
+        if (viewSang) viewSang.innerHTML = sangText ? sangText.replace(/\n/g, '<br>') : 'Nghỉ';
+        if (viewChieu) viewChieu.innerHTML = chieuText ? chieuText.replace(/\n/g, '<br>') : 'Nghỉ';
+        if (viewGhiChu) viewGhiChu.innerHTML = ghiChuText ? ghiChuText.replace(/\n/g, '<br>') : '';
+    });
+
+    // D. Ẩn form nhập - Hiện bản xem
+    const formNhap = document.getElementById('form-nhap-lich');
+    if (formNhap) formNhap.style.display = 'none';
+
+    const viewSection = document.getElementById('view-lich-tuan');
+    if (viewSection) {
+        viewSection.classList.remove('hidden');
+        viewSection.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// 3. Hàm khi bấm nút "QUAY LẠI CHỈNH SỬA"
+function backToEdit() {
+    const viewSection = document.getElementById('view-lich-tuan');
+    if (viewSection) {
+        viewSection.classList.add('hidden');
+        viewSection.style.display = 'none';
+    }
+
+    const formNhap = document.getElementById('form-nhap-lich');
+    if (formNhap) {
+        formNhap.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+   
 </script>
 
 </body>
