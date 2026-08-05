@@ -392,11 +392,7 @@
         <button type="button" onclick="handleSaveLichTuanBang('nhap', event)" class="w-full sm:w-auto px-4 h-10 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs uppercase shadow-sm transition flex items-center justify-center gap-2">
             <i class="bi bi-file-earmark-arrow-down-fill text-sm"></i>
             <span>Lưu nháp</span>
-        </button>
-        <button type="button" onclick="backToEdit(event)" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-lg text-xs border border-slate-300 shadow-sm flex items-center gap-2">
-    <i class="bi bi-pencil-square"></i>
-    <span>Quay lại chỉnh sửa</span>
-</button>
+        
         <!-- Nút Phát hành -->
         <button type="button" onclick="handleSaveLichTuanBang('phathanh', event)" class="w-full sm:w-auto px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs uppercase shadow-md transition flex items-center justify-center gap-2">
             <i class="bi bi-send-check-fill text-sm"></i>
@@ -883,38 +879,47 @@ function renderLichSoView() {
    6. PREVIEW FUNCTIONS
 ============================================================ */
 function previewLichTuan(e) {
-    if (e) e.preventDefault();
 
-    const tuanVal = document.getElementById('inputTuanSo')?.value || '';
-    const thangVal = document.getElementById('inputThangSo')?.value || '';
-    const elTitle = document.getElementById('displayTitleTuan');
-    if (elTitle) {
-        elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
-    }
+    if (e) e.preventDefault();
 
     renderTableLichTuanView();
 
-    const formNhap = document.getElementById('form-nhap-lich');
-    if (formNhap) formNhap.classList.add('hidden');
+    updatePrintFooterDate();
 
-    const viewSection = document.getElementById('view-lich-tuan');
-    if (viewSection) {
-        viewSection.classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    document.getElementById("displayTitleTuan").innerText =
+        `Tuần thứ: ${
+            document.getElementById("inputTuanSo").value
+        } - Tháng: ${
+            document.getElementById("inputThangSo").value
+        }`;
+
+    document.getElementById("view-lich-tuan")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("view-lich-tuan")
+        .scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+
 }
 
-function backToEdit(e) {
-    if (e) e.preventDefault();
+function backToEdit(e){
 
-    const viewSection = document.getElementById('view-lich-tuan');
-    if (viewSection) viewSection.classList.add('hidden');
+    if(e) e.preventDefault();
 
-    const formNhap = document.getElementById('form-nhap-lich');
-    if (formNhap) {
-        formNhap.classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    document
+        .getElementById("view-lich-tuan")
+        .classList.add("hidden");
+
+    document
+        .getElementById("form-nhap-lich")
+        .scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+
 }
 
 /* ============================================================
@@ -923,7 +928,7 @@ function backToEdit(e) {
 function handleSaveLichTuanBang(type, e) {
     if (e) e.preventDefault();
 
-    previewLichTuan();
+   previewLichTuan(e);
 
     if (type === 'nhap') {
         showToast('Đã lưu nháp Lịch Công Tác Tuần thành công!', 'success');
