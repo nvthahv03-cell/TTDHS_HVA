@@ -363,10 +363,62 @@
                 <td class="border border-slate-300 p-1">
                     <textarea id="ghichu_CN" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
                 </td>
+           <!-- Dòng 366: Kết thúc Chủ Nhật -->
             </tr>
         </tbody>
     </table>
 </div>
+
+<!-- ========================================================= -->
+<!-- 1. DÁN CỤM NÚT TÁC VỤ VÀ MODAL VÀO ĐÂY (DÒNG 370) -->
+<!-- ========================================================= -->
+<div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-200 mt-6">
+    <button type="button" onclick="previewLichTuan()" class="w-full sm:w-auto px-5 h-11 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-slate-300">
+        <i class="bi bi-eye-fill text-base"></i>
+        <span>Xem trước lịch</span>
+    </button>
+
+    <button type="submit" class="w-full sm:w-auto px-6 h-11 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs uppercase shadow-md transition flex items-center justify-center gap-2">
+        <i class="bi bi-floppy-fill text-base"></i>
+        <span>Lưu & Phát hành lịch</span>
+    </button>
+</div>
+
+<!-- MODAL BẬT LÊN KHI LƯU THÀNH CÔNG -->
+<div id="modalThongBaoGV" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
+        <div class="flex items-center gap-3 text-emerald-600">
+            <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-xl shrink-0">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div>
+                <h3 class="font-extrabold text-slate-900 text-sm">ĐÃ LƯU LỊCH THÀNH CÔNG!</h3>
+                <p class="text-xs text-slate-500">Chuyển sang giao diện Lịch công tác để gửi thông báo cho Giáo viên?</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs space-y-1.5">
+            <div class="font-bold text-slate-700"><i class="bi bi-bell-fill text-amber-500 mr-1"></i> Tác vụ tiếp theo:</div>
+            <div class="text-slate-600">- Hiển thị lịch trên Dashboard tác vụ nhanh.</div>
+            <div class="text-slate-600">- Phát thông báo / gửi mail Lịch công tác tuần cho GV.</div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+            <button type="button" onclick="closeModalThongBao()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-bold text-xs hover:bg-slate-100">
+                Để sau
+            </button>
+            <button type="button" onclick="chuyenDenMenuTacVu()" class="px-5 py-2.5 rounded-xl bg-[#0F4C81] hover:bg-blue-900 text-white font-bold text-xs shadow-md flex items-center gap-1.5">
+                <i class="bi bi-arrow-right-circle-fill"></i> Đến Lịch công tác
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- Dòng 371 tiếp theo: SANG MENU 3 (GIAO DIỆN LỊCH THÁNG) -->
+<!-- ========================================================= -->
+<!-- ================= 3. GIAO DIỆN LỊCH THÁNG TRƯỜNG (MENU 3) ================= -->
+<section id="tab-tao-lich-thang-truong" class="form-tab-content hidden space-y-4">
     <!-- ================= 3. GIAO DIỆN LỊCH THÁNG TRƯỜNG (MENU 3) ================= -->
     <section id="tab-tao-lich-thang-truong" class="form-tab-content hidden space-y-4">
         <div class="bg-purple-900 text-white p-4 rounded-2xl shadow-sm flex items-center justify-between">
@@ -744,6 +796,58 @@ function autoFillWeekDays(monDateString) {
             targetInput.value = `${yyyy}-${mm}-${dd}`;
         }
     });
+}
+    // Hàm Xem trước: Cập nhật trực tiếp xuống khung Xem & In mà chưa lưu
+function previewLichTuan() {
+    currentTuanData.tuan = document.getElementById('inputTuanSo').value;
+    currentTuanData.thang = document.getElementById('inputThangSo').value;
+
+    const keys = ["2", "3", "4", "5", "6", "7", "CN"];
+    keys.forEach(k => {
+        currentTuanData.chitiet[k] = {
+            sang: document.getElementById(`sang_${k}`).value || "Nghỉ",
+            chieu: document.getElementById(`chieu_${k}`).value || "Nghỉ",
+            ghichu: document.getElementById(`ghichu_${k}`) ? document.getElementById(`ghichu_${k}`).value : ""
+        };
+    });
+
+    renderLichTuanView();
+    switchViewTab('view-lich-tuan');
+    
+    // Cuộn mượt xuống khu vực bản in
+    document.getElementById('view-lich-tuan').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Cập nhật hàm handleSaveLichTuanBang để bật Modal hỏi gửi thông báo
+function handleSaveLichTuanBang(e) {
+    e.preventDefault();
+    previewLichTuan(); // Cập nhật dữ liệu mới nhất
+    
+    // Hiển thị Modal thông báo chuyển tác vụ
+    document.getElementById('modalThongBaoGV').classList.remove('hidden');
+}
+
+function closeModalThongBao() {
+    document.getElementById('modalThongBaoGV').classList.add('hidden');
+}
+
+function chuyenDenMenuTacVu() {
+    closeModalThongBao();
+    
+    // 1. Chuyển view/tab về phân hệ "Lịch công tác"
+    // (Nếu hệ thống dùng hàm switchTab/switchView có sẵn, Thầy truyền 'lich-cong-tac' vào)
+    if (typeof switchTab === 'function') {
+        switchTab('lich-cong-tac');
+    } else if (typeof switchViewTab === 'function') {
+        switchViewTab('lich-cong-tac');
+    }
+    
+    // 2. Cuộn mượt đến thẻ "Lịch công tác" trên dashboard
+    const elLichCongTac = document.getElementById('tab-lich-cong-tac') || document.querySelector('[data-tab="lich-cong-tac"]');
+    if (elLichCongTac) {
+        elLichCongTac.scrollIntoView({ behavior: 'smooth' });
+        elLichCongTac.click(); // Giả lập click vào icon Lịch công tác nếu cần
+    }
 }
 </script>
 
