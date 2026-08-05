@@ -928,101 +928,95 @@ function autoFillWeekDays(monDateString) {
   // Hàm khi bấm "XEM TRƯỚC LỊCH"
 // Hàm khi bấm "XEM TRƯỚC LỊCH"
 function previewLichTuan() {
-    // 1. Cập nhật Tuần / Tháng lên tiêu đề bản xem
-    const tuanVal = document.getElementById('inputTuanSo')?.value || '';
-    const thangVal = document.getElementById('inputThangSo')?.value || '';
-    const namVal = document.getElementById('inputNamSo')?.value || '';
+    try {
+        // 1. Cập nhật Tuần / Tháng lên tiêu đề bản xem
+        const tuanVal = document.getElementById('inputTuanSo')?.value || '';
+        const thangVal = document.getElementById('inputThangSo')?.value || '';
+        const namVal = document.getElementById('inputNamSo')?.value || '';
 
-    const elTitle = document.getElementById('displayTitleTuan');
-    if (elTitle) {
-        elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
-    }
+        const elTitle = document.getElementById('displayTitleTuan');
+        if (elTitle) {
+            elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
+        }
 
-    // 2. Cập nhật ngày tháng chân trang
-    const now = new Date();
-    const elFooterDate = document.getElementById('printFooterDate');
-    if (elFooterDate) {
-        elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${namVal}`;
-    }
+        // 2. Cập nhật ngày tháng chân trang
+        const now = new Date();
+        const elFooterDate = document.getElementById('printFooterDate');
+        if (elFooterDate) {
+            elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${namVal}`;
+        }
 
-    // 3. Đổ dữ liệu các ngày từ Form sang Bản xem
-    const days = ["2", "3", "4", "5", "6", "7", "CN"];
+        // 3. Đổ dữ liệu các ngày từ Form sang Bản xem (Sửa an toàn với Optional Chaining)
+        const days = ["2", "3", "4", "5", "6", "7", "CN"];
 
-    days.forEach(d => {
-        const dateInput = document.getElementById(`date_${d}`)?.value;
-        const sangText = document.getElementById(`sang_${d}`)?.value.trim();
-        const chieuText = document.getElementById(`chieu_${d}`)?.value.trim();
-        const ghiChuText = document.getElementById(`ghichu_${d}`)?.value.trim();
+        days.forEach(d => {
+            const dateInput = document.getElementById(`date_${d}`)?.value || '';
+            const sangText = (document.getElementById(`sang_${d}`)?.value || '').trim();
+            const chieuText = (document.getElementById(`chieu_${d}`)?.value || '').trim();
+            const ghiChuText = (document.getElementById(`ghichu_${d}`)?.value || '').trim();
 
-        const viewDate = document.getElementById(`view_date_${d}`);
-        const viewSang = document.getElementById(`view_sang_${d}`);
-        const viewChieu = document.getElementById(`view_chieu_${d}`);
-        const viewGhiChu = document.getElementById(`view_ghichu_${d}`);
+            const viewDate = document.getElementById(`view_date_${d}`);
+            const viewSang = document.getElementById(`view_sang_${d}`);
+            const viewChieu = document.getElementById(`view_chieu_${d}`);
+            const viewGhiChu = document.getElementById(`view_ghichu_${d}`);
 
-        // Định dạng ngày DD/MM
-        if (viewDate) {
-            if (dateInput) {
-                const parts = dateInput.split('-');
-                viewDate.innerText = parts.length === 3 ? `${parts[2]}/${parts[1]}` : '';
-            } else {
-                viewDate.innerText = '';
+            // Định dạng ngày DD/MM
+            if (viewDate) {
+                if (dateInput) {
+                    const parts = dateInput.split('-');
+                    viewDate.innerText = parts.length === 3 ? `${parts[2]}/${parts[1]}` : '';
+                } else {
+                    viewDate.innerText = '';
+                }
             }
+
+            // Đổ nội dung Sáng - Chiều - Ghi chú
+            if (viewSang) {
+                viewSang.innerHTML = sangText ? sangText.replace(/\n/g, '<br>') : 'Nghỉ';
+            }
+            if (viewChieu) {
+                viewChieu.innerHTML = chieuText ? chieuText.replace(/\n/g, '<br>') : 'Nghỉ';
+            }
+            if (viewGhiChu) {
+                viewGhiChu.innerHTML = ghiChuText ? ghiChuText.replace(/\n/g, '<br>') : '';
+            }
+        });
+
+        // 4. ẨN FORM NHẬP LIỆU
+        const formNhap = document.getElementById('form-nhap-lich');
+        if (formNhap) {
+            formNhap.classList.add('hidden');
+            formNhap.style.setProperty('display', 'none', 'important');
         }
 
-        // Đổ nội dung Sáng - Chiều - Ghi chú
-        if (viewSang) {
-            viewSang.innerHTML = sangText ? sangText.replace(/\n/g, '<br>') : 'Nghỉ';
+        // 5. HIỂN THỊ MÀN HÌNH XEM TRƯỚC
+        const viewSection = document.getElementById('view-lich-tuan');
+        if (viewSection) {
+            viewSection.classList.remove('hidden');
+            viewSection.style.setProperty('display', 'block', 'important');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        if (viewChieu) {
-            viewChieu.innerHTML = chieuText ? chieuText.replace(/\n/g, '<br>') : 'Nghỉ';
-        }
-        if (viewGhiChu) {
-            viewGhiChu.innerHTML = ghiChuText ? ghiChuText.replace(/\n/g, '<br>') : '';
-        }
-    });
-
-    // 4. ẨN HOÀN TOÀN FORM NHẬP LIỆU
-    const formNhap = document.getElementById('form-nhap-lich');
-    if (formNhap) {
-        formNhap.classList.add('hidden');
-        formNhap.style.display = 'none'; // Đảm bảo ẩn tuyệt đối
-    }
-
-    // 5. HIỂN THỊ MÀN HÌNH XEM TRƯỚC
-    const viewSection = document.getElementById('view-lich-tuan');
-    if (viewSection) {
-        viewSection.classList.remove('hidden');
-        viewSection.style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+        console.error("Lỗi khi chuyển màn hình xem trước:", err);
     }
 }
 
-// Hàm khi bấm "QUAY LẠI CHỈNH SỬA"
+// Hàm khi bấm "QUAY LẠI CHỈNH SỬA" (Chỉ giữ lại 1 hàm duy nhất)
 function backToEdit() {
     // Ẩn khung xem
     const viewSection = document.getElementById('view-lich-tuan');
     if (viewSection) {
         viewSection.classList.add('hidden');
-        viewSection.style.display = 'none';
+        viewSection.style.setProperty('display', 'none', 'important');
     }
 
     // Hiện lại form nhập
     const formNhap = document.getElementById('form-nhap-lich');
     if (formNhap) {
         formNhap.classList.remove('hidden');
-        formNhap.style.display = 'block';
+        formNhap.style.setProperty('display', 'block', 'important');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-}
-// Hàm khi bấm "QUAY LẠI CHỈNH SỬA"
-function backToEdit() {
-    // Ẩn khung xem
-    const viewSection = document.getElementById('view-lich-tuan');
-    if (viewSection) viewSection.classList.add('hidden');
-
-    // Hiện lại khung nhập
-    const formNhap = document.getElementById('form-nhap-lich');
-    if (formNhap) formNhap.classList.remove('hidden');
 }
 // Cập nhật hàm handleSaveLichTuanBang để bật Modal hỏi gửi thông báo
 function handleSaveLichTuanBang(e) {
