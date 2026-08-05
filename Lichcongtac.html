@@ -742,14 +742,25 @@ function showToast(message, type = 'info') {
    4. ĐIỀU HƯỚNG GIAO DIỆN
 ============================================================ */
 function toggleDropdownTaoLich(e) {
-    if (e) e.stopPropagation();
-    const dropdown = document.getElementById('dropdownMenuTaoLich');
-    dropdown?.classList.toggle('hidden');
+    e.preventDefault();
+    e.stopPropagation();
+
+    const dropdown = document.getElementById("dropdownMenuTaoLich");
+    if (!dropdown) return;
+
+    dropdown.classList.toggle("hidden");
 }
 
-document.addEventListener('click', () => {
-    const dropdown = document.getElementById('dropdownMenuTaoLich');
-    dropdown?.classList.add('hidden');
+// Chỉ đóng khi click ra ngoài
+document.addEventListener("click", function (e) {
+    const dropdown = document.getElementById("dropdownMenuTaoLich");
+    const button = document.getElementById("btnDropdownTaoLich");
+
+    if (!dropdown || !button) return;
+
+    if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+        dropdown.classList.add("hidden");
+    }
 });
 
 function selectTaoLichTab(tabId) {
