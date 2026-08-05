@@ -397,6 +397,7 @@
     </div>
 </div>
 </form>
+   
     <!-- ================= KHUNG XEM VĂN BẢN VÀ IN LỊCH TUẦN TRUYỀN THỐNG ================= -->
 <section id="view-lich-tuan" class="view-tab-content space-y-4 hidden">
     <!-- BAR THAO TÁC (ẨN KHI IN) -->
@@ -926,27 +927,33 @@ function autoFillWeekDays(monDateString) {
         }
     });
 }
- // 1. HÀM XEM TRƯỚC (BỔ SUNG preventDefault)
-function previewLichTuan(event) {
-    if (event) event.preventDefault(); // Ngăn form tự reload lại trang
-    
+function previewLichTuan(e) {
+    if (e) e.preventDefault(); // Ngăn trang tự reload lại khi nhấn nút
+
     try {
-        // Cập nhật Tuần / Tháng / Năm lên tiêu đề
+        // 1. Cập nhật Tuần / Tháng lên tiêu đề bản xem
         const tuanVal = document.getElementById('inputTuanSo')?.value || '';
         const thangVal = document.getElementById('inputThangSo')?.value || '';
         const namVal = document.getElementById('inputNamSo')?.value || '';
 
         const elTitle = document.getElementById('displayTitleTuan');
-        if (elTitle) elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
+        if (elTitle) {
+            elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
+        }
 
+        // 2. Cập nhật ngày tháng chân trang
         const now = new Date();
         const elFooterDate = document.getElementById('printFooterDate');
-        if (elFooterDate) elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${namVal}`;
+        if (elFooterDate) {
+            elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${namVal}`;
+        }
 
-        // Đổ dữ liệu từ Form sang Bản xem
+        // 3. Đổ dữ liệu các ngày từ Form sang Bản xem
         const days = ["2", "3", "4", "5", "6", "7", "CN"];
+
         days.forEach(d => {
             const dateInput = document.getElementById(`date_${d}`)?.value || '';
+            // Bọc an toàn để không bị crash nếu ô trống
             const sangText = (document.getElementById(`sang_${d}`)?.value || '').trim();
             const chieuText = (document.getElementById(`chieu_${d}`)?.value || '').trim();
             const ghiChuText = (document.getElementById(`ghichu_${d}`)?.value || '').trim();
@@ -956,6 +963,7 @@ function previewLichTuan(event) {
             const viewChieu = document.getElementById(`view_chieu_${d}`);
             const viewGhiChu = document.getElementById(`view_ghichu_${d}`);
 
+            // Định dạng ngày DD/MM
             if (viewDate) {
                 if (dateInput) {
                     const parts = dateInput.split('-');
@@ -965,75 +973,55 @@ function previewLichTuan(event) {
                 }
             }
 
-            if (viewSang) viewSang.innerHTML = sangText ? sangText.replace(/\n/g, '<br>') : 'Nghỉ';
-            if (viewChieu) viewChieu.innerHTML = chieuText ? chieuText.replace(/\n/g, '<br>') : 'Nghỉ';
-            if (viewGhiChu) viewGhiChu.innerHTML = ghiChuText ? ghiChuText.replace(/\n/g, '<br>') : '';
+            // Đổ nội dung Sáng - Chiều - Ghi chú
+            if (viewSang) {
+                viewSang.innerHTML = sangText ? sangText.replace(/\n/g, '<br>') : 'Nghỉ';
+            }
+            if (viewChieu) {
+                viewChieu.innerHTML = chieuText ? chieuText.replace(/\n/g, '<br>') : 'Nghỉ';
+            }
+            if (viewGhiChu) {
+                viewGhiChu.innerHTML = ghiChuText ? ghiChuText.replace(/\n/g, '<br>') : '';
+            }
         });
 
-        // ẨN FORM NHẬP - HIỆN BẢN XEM TRƯỚC (Dùng thuộc tính ẩn mạnh nhất)
+        // 4. ẨN HOÀN TOÀN FORM NHẬP LIỆU (Dùng important để chắc chắn ẩn)
         const formNhap = document.getElementById('form-nhap-lich');
-        const viewSection = document.getElementById('view-lich-tuan');
-
-        if (formNhap) formNhap.setAttribute('style', 'display: none !important;');
-        if (viewSection) {
-            viewSection.classList.remove('hidden');
-            viewSection.setAttribute('style', 'display: block !important;');
+        if (formNhap) {
+            formNhap.classList.add('hidden');
+            formNhap.style.setProperty('display', 'none', 'important');
         }
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // 5. HIỂN THỊ MÀN HÌNH XEM TRƯỚC
+        const viewSection = document.getElementById('view-lich-tuan');
+        if (viewSection) {
+            viewSection.classList.remove('hidden');
+            viewSection.style.setProperty('display', 'block', 'important');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
     } catch (err) {
-        console.error("Lỗi khi xem trước:", err);
+        console.error("Lỗi khi chuyển màn hình xem trước:", err);
     }
 }
 
-// 2. HÀM QUAY LẠI CHỈNH SỬA
-function backToEdit(event) {
-    if (event) event.preventDefault();
+// Hàm khi bấm "QUAY LẠI CHỈNH SỬA"
+function backToEdit(e) {
+    if (e) e.preventDefault();
 
-    const formNhap = document.getElementById('form-nhap-lich');
+    // Ẩn khung xem
     const viewSection = document.getElementById('view-lich-tuan');
+    if (viewSection) {
+        viewSection.classList.add('hidden');
+        viewSection.style.setProperty('display', 'none', 'important');
+    }
 
-    if (viewSection) viewSection.setAttribute('style', 'display: none !important;');
-    if (formNhap) formNhap.setAttribute('style', 'display: block !important;');
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// 3. HÀM XỬ LÝ LƯU NHÁP & PHÁT HÀNH
-function handleSaveLichTuanBang(type, event) {
-    if (event) event.preventDefault();
-
-    const tuan = document.getElementById('inputTuanSo')?.value || '';
-    const thang = document.getElementById('inputThangSo')?.value || '';
-    
-    // Thu thập toàn bộ dữ liệu form nhập
-    const days = ["2", "3", "4", "5", "6", "7", "CN"];
-    const formData = {
-        tuan: tuan,
-        thang: thang,
-        nam: document.getElementById('inputNamSo')?.value || '',
-        chitiet: {}
-    };
-
-    days.forEach(d => {
-        formData.chitiet[d] = {
-            date: document.getElementById(`date_${d}`)?.value || '',
-            sang: document.getElementById(`sang_${d}`)?.value || '',
-            chieu: document.getElementById(`chieu_${d}`)?.value || '',
-            ghichu: document.getElementById(`ghichu_${d}`)?.value || ''
-        };
-    });
-
-    if (type === 'nhap') {
-        // Lưu vào LocalStorage
-        localStorage.setItem(`lich_tuan_nhap_${tuan}`, JSON.stringify(formData));
-        alert(`Đã lưu nháp Lịch công tác Tuần ${tuan} - Tháng ${thang} thành công!`);
-    } else if (type === 'phathanh') {
-        if (confirm(`Xác nhận PHÁT HÀNH chính thức Lịch công tác Tuần ${tuan}?`)) {
-            localStorage.setItem(`lich_tuan_chinhthuc_${tuan}`, JSON.stringify(formData));
-            alert(`Đã phát hành Lịch công tác Tuần ${tuan} thành công!`);
-        }
+    // Hiện lại form nhập
+    const formNhap = document.getElementById('form-nhap-lich');
+    if (formNhap) {
+        formNhap.classList.remove('hidden');
+        formNhap.style.setProperty('display', 'block', 'important');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
 // Cập nhật hàm handleSaveLichTuanBang để bật Modal hỏi gửi thông báo
