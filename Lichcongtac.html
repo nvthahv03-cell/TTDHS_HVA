@@ -612,350 +612,388 @@
 </div>
 
 <script>
-    let lichThangList = [
-        { thang: "8", nam: "2026-2027", tieuDe: "Chuẩn bị cơ sở vật chất và Kế hoạch GD năm học 2026-2027", nguoiTao: "Nguyễn Văn Thà (Phó Hiệu trưởng)" }
+/* ============================================================
+   1. KHỞI TẠO DỮ LIỆU BAN ĐẦU
+============================================================ */
+let lichThangList = [
+    { thang: "8", nam: "2026-2027", tieuDe: "Chuẩn bị cơ sở vật chất và Kế hoạch GD năm học 2026-2027", nguoiTao: "Nguyễn Văn Thà (Phó Hiệu trưởng)" }
+];
+
+let lichSoList = [
+    { thangNam: "2026-08", tieuDe: "Lịch công tác Tháng 8/2026 Sở GD&ĐT TP Đà Nẵng", link: "#", nguoiTao: "Nguyễn Văn Thà" }
+];
+
+/* ============================================================
+   2. DOMCONTENTLOADED (DUY NHẤT)
+============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const fullName = user.fullName || "Nguyễn Văn Thà";
+    const position = user.workPosition || "Phó Hiệu trưởng";
+
+    const setElementText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+    };
+
+    setElementText("userFullName", fullName);
+    setElementText("userPosition", position);
+    setElementText("headerUserRole", `Cán bộ: ${fullName}`);
+    setElementText("printUserSignature", fullName);
+    setElementText("printUserPositionSignature", position);
+
+    updatePrintFooterDate();
+    renderLichThangView();
+    renderLichSoView();
+    renderTableLichTuanView();
+});
+
+/* ============================================================
+   3. UTILITY FUNCTIONS
+============================================================ */
+function getWeekNumber(d) {
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+}
+
+function updatePrintFooterDate() {
+    const d = new Date();
+    const ngay = String(d.getDate()).padStart(2, '0');
+    const thang = String(d.getMonth() + 1).padStart(2, '0');
+    const nam = d.getFullYear();
+
+    const elFooter = document.getElementById("printFooterDate");
+    if (elFooter) {
+        elFooter.innerText = `Đà Nẵng, ngày ${ngay} tháng ${thang} năm ${nam}`;
+    }
+}
+
+function autoFillWeekDays(monDateString) {
+    if (!monDateString) return;
+
+    const startDate = new Date(monDateString);
+    if (isNaN(startDate.getTime())) return;
+
+    const weekNum = getWeekNumber(startDate);
+    const monthNum = startDate.getMonth() + 1;
+    const yearNum = startDate.getFullYear();
+
+    const elTuan = document.getElementById('inputTuanSo');
+    const elThang = document.getElementById('inputThangSo');
+    const elNam = document.getElementById('inputNamSo');
+
+    if (elTuan) elTuan.value = weekNum;
+    if (elThang) elThang.value = monthNum;
+    if (elNam) elNam.value = yearNum;
+
+    const dayKeys = [
+        { id: 'date_3', add: 1 },
+        { id: 'date_4', add: 2 },
+        { id: 'date_5', add: 3 },
+        { id: 'date_6', add: 4 },
+        { id: 'date_7', add: 5 },
+        { id: 'date_CN', add: 6 }
     ];
 
-    let lichSoList = [
-        { thangNam: "2026-08", tieuDe: "Lịch công tác Tháng 8/2026 Sở GD&ĐT TP Đà Nẵng", link: "#", nguoiTao: "Nguyễn Văn Thà" }
+    dayKeys.forEach(item => {
+        const nextDate = new Date(startDate);
+        nextDate.setDate(startDate.getDate() + item.add);
+
+        const yyyy = nextDate.getFullYear();
+        const mm = String(nextDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(nextDate.getDate()).padStart(2, '0');
+
+        const targetInput = document.getElementById(item.id);
+        if (targetInput) {
+            targetInput.value = `${yyyy}-${mm}-${dd}`;
+        }
+    });
+}
+
+function showToast(message, type = 'info') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-rose-600' : 'bg-slate-800';
+    toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2 pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0`;
+    toast.innerHTML = `<span>${message}</span>`;
+
+    container.appendChild(toast);
+
+    requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+    });
+
+    setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        toast.addEventListener('transitionend', () => toast.remove());
+    }, 3000);
+}
+
+/* ============================================================
+   4. ĐIỀU HƯỚNG GIAO DIỆN
+============================================================ */
+function toggleDropdownTaoLich(e) {
+    if (e) e.stopPropagation();
+    const dropdown = document.getElementById('dropdownMenuTaoLich');
+    dropdown?.classList.toggle('hidden');
+}
+
+document.addEventListener('click', () => {
+    const dropdown = document.getElementById('dropdownMenuTaoLich');
+    dropdown?.classList.add('hidden');
+});
+
+function selectTaoLichTab(tabId) {
+    document.querySelectorAll('.form-tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.view-tab-content').forEach(el => el.classList.add('hidden'));
+
+    const formNhap = document.getElementById('form-nhap-lich');
+    if (formNhap) formNhap.classList.remove('hidden');
+
+    const targetTab = document.getElementById(`tab-${tabId}`);
+    if (targetTab) {
+        targetTab.classList.remove('hidden');
+        targetTab.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    const dropdown = document.getElementById('dropdownMenuTaoLich');
+    dropdown?.classList.add('hidden');
+}
+
+function switchViewTab(tabId) {
+    document.querySelectorAll('.form-tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.view-tab-content').forEach(el => el.classList.add('hidden'));
+
+    const formNhap = document.getElementById('form-nhap-lich');
+    if (formNhap) formNhap.classList.add('hidden');
+
+    document.querySelectorAll('.view-tab').forEach(btn => {
+        btn.classList.remove('bg-white/20', 'text-white');
+        btn.classList.add('hover:bg-white/10');
+    });
+
+    const targetView = document.getElementById(tabId);
+    if (targetView) targetView.classList.remove('hidden');
+
+    const activeBtn = document.getElementById(`tab-${tabId}`);
+    if (activeBtn) activeBtn.classList.add('bg-white/20', 'text-white');
+}
+
+/* ============================================================
+   5. RENDER FUNCTIONS
+============================================================ */
+function renderTableLichTuanView() {
+    const days = [
+        { key: '2', label: '2' },
+        { key: '3', label: '3' },
+        { key: '4', label: '4' },
+        { key: '5', label: '5' },
+        { key: '6', label: '6' },
+        { key: '7', label: '7' },
+        { key: 'CN', label: 'CN' }
     ];
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
-        const fullName = user.fullName || "Nguyễn Văn Thà";
-        const position = user.workPosition || "Phó Hiệu trưởng";
+    const tbody = document.getElementById('tbodyLichTuanView');
+    if (!tbody) return;
 
-        document.getElementById("userFullName").textContent = fullName;
-        document.getElementById("userPosition").textContent = position;
-        document.getElementById("headerUserRole").textContent = `Cán bộ: ${fullName}`;
-        document.getElementById("printUserSignature").textContent = fullName;
-        document.getElementById("printUserPositionSignature").textContent = position;
+    let html = '';
+    days.forEach(d => {
+        const dateVal = document.getElementById(`date_${d.key}`)?.value || '';
+        const sangVal = (document.getElementById(`sang_${d.key}`)?.value || '').trim() || 'Nghỉ';
+        const chieuVal = (document.getElementById(`chieu_${d.key}`)?.value || '').trim() || 'Nghỉ';
+        const ghiChuVal = (document.getElementById(`ghichu_${d.key}`)?.value || '').trim() || '';
 
-        renderTableLichTuanView();
-        renderLichThangView();
-        renderLichSoView();
+        let formattedDate = '';
+        if (dateVal) {
+            const parts = dateVal.split('-');
+            if (parts.length === 3) formattedDate = `${parts[2]}/${parts[1]}`;
+        }
+
+        html += `
+            <tr>
+                <td class="border border-slate-800 p-2 text-center font-bold">
+                    <div class="text-red-600 text-sm">${d.label}</div>
+                    <div class="text-[11px] text-slate-600 font-normal">${formattedDate}</div>
+                </td>
+                <td class="border border-slate-800 p-2 align-top whitespace-pre-line">${sangVal}</td>
+                <td class="border border-slate-800 p-2 align-top whitespace-pre-line">${chieuVal}</td>
+                <td class="border border-slate-800 p-2 align-top text-slate-600 whitespace-pre-line">${ghiChuVal}</td>
+            </tr>
+        `;
     });
 
- 
-    /* ==========================================================================
-       1. CÁC BIẾN KHỞI TẠO DỮ LIỆU BAN ĐẦU
-       ========================================================================== */
-    let lichThangList = [];
-    let lichSoList = [];
+    tbody.innerHTML = html;
+    updatePrintFooterDate();
+}
 
-    /* ==========================================================================
-       2. ĐIỀU HƯỚNG TÁC VỤ & GIAO DIỆN (DROPDOWN & TABS)
-       ========================================================================== */
-    function toggleDropdownTaoLich(e) {
-        e.stopPropagation();
-        const dropdown = document.getElementById('dropdownMenuTaoLich');
-        if (dropdown) dropdown.classList.toggle('hidden');
+function renderLichThangView() {
+    const container = document.getElementById('containerLichThangView');
+    if (!container) return;
+
+    container.innerHTML = lichThangList.map(item => `
+        <div class="p-3 border border-slate-200 rounded-xl bg-purple-50/40 flex items-center justify-between">
+            <div>
+                <div class="font-bold text-slate-900 text-xs">Tháng ${item.thang} (${item.nam}): ${item.tieuDe}</div>
+                <div class="text-[11px] text-slate-500 mt-0.5"><i class="bi bi-person-check"></i> Người tạo: <b>${item.nguoiTao}</b></div>
+            </div>
+            <span class="px-2.5 py-1 bg-purple-100 text-purple-800 font-bold rounded-lg text-[10px]">Lịch Tháng Trường</span>
+        </div>
+    `).join('');
+}
+
+function renderLichSoView() {
+    const container = document.getElementById('containerLichSoView');
+    if (!container) return;
+
+    container.innerHTML = lichSoList.map(item => `
+        <div class="p-3 border border-slate-200 rounded-xl bg-rose-50/40 flex items-center justify-between">
+            <div>
+                <div class="font-bold text-slate-900 text-xs">${item.tieuDe} (${item.thangNam})</div>
+                <div class="text-[11px] text-slate-500 mt-0.5"><i class="bi bi-person-check"></i> Người đăng tải: <b>${item.nguoiTao}</b></div>
+            </div>
+            <a href="${item.link}" target="_blank" class="px-3 py-1 bg-rose-700 text-white font-bold rounded-lg text-[10px] flex items-center gap-1">
+                <i class="bi bi-download"></i> Xem File
+            </a>
+        </div>
+    `).join('');
+}
+
+/* ============================================================
+   6. PREVIEW FUNCTIONS
+============================================================ */
+function previewLichTuan(e) {
+    if (e) e.preventDefault();
+
+    const tuanVal = document.getElementById('inputTuanSo')?.value || '';
+    const thangVal = document.getElementById('inputThangSo')?.value || '';
+    const elTitle = document.getElementById('displayTitleTuan');
+    if (elTitle) {
+        elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
     }
 
-    document.addEventListener('click', function() {
-        const dropdown = document.getElementById('dropdownMenuTaoLich');
-        if (dropdown) dropdown.classList.add('hidden');
+    renderTableLichTuanView();
+
+    const formNhap = document.getElementById('form-nhap-lich');
+    if (formNhap) formNhap.classList.add('hidden');
+
+    const viewSection = document.getElementById('view-lich-tuan');
+    if (viewSection) {
+        viewSection.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function backToEdit(e) {
+    if (e) e.preventDefault();
+
+    const viewSection = document.getElementById('view-lich-tuan');
+    if (viewSection) viewSection.classList.add('hidden');
+
+    const formNhap = document.getElementById('form-nhap-lich');
+    if (formNhap) {
+        formNhap.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+/* ============================================================
+   7. SAVE / PUBLISH FUNCTIONS
+============================================================ */
+function handleSaveLichTuanBang(type, e) {
+    if (e) e.preventDefault();
+
+    previewLichTuan();
+
+    if (type === 'nhap') {
+        showToast('Đã lưu nháp Lịch Công Tác Tuần thành công!', 'success');
+    } else if (type === 'phathanh') {
+        const modal = document.getElementById('modalThongBaoGV');
+        if (modal) modal.classList.remove('hidden');
+    }
+}
+
+/* ============================================================
+   8. FORM FUNCTIONS
+============================================================ */
+function handleSaveCongTacLe(e) {
+    e.preventDefault();
+    const loai = document.getElementById('loaiCuocHop')?.value || '';
+    const tieuDe = document.getElementById('tieuDeLe')?.value || '';
+    showToast(`Đã lưu thành công Lịch công tác/họp: [${loai}] ${tieuDe}`, 'success');
+}
+
+function handleSaveLichThangTruong(e) {
+    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    lichThangList.unshift({
+        thang: document.getElementById('thangTruongSo')?.value || '',
+        nam: document.getElementById('namHocText')?.value || '',
+        tieuDe: document.getElementById('tieuDeThangTruong')?.value || '',
+        nguoiTao: user.fullName || "Nguyễn Văn Thà"
     });
+    renderLichThangView();
+    showToast('Đã lưu Kế hoạch Lịch Tháng Trường!', 'success');
+    switchViewTab('view-lich-thang');
+}
 
-    function selectTaoLichTab(tabId) {
-        document.querySelectorAll('.form-tab-content').forEach(el => el.classList.add('hidden'));
-        const targetTab = document.getElementById(`tab-${tabId}`);
-        if (targetTab) {
-            targetTab.classList.remove('hidden');
-            targetTab.scrollIntoView({ behavior: 'smooth' });
-        }
-        const dropdown = document.getElementById('dropdownMenuTaoLich');
-        if (dropdown) dropdown.classList.add('hidden');
+function handleUploadLichSo(e) {
+    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    lichSoList.unshift({
+        thangNam: document.getElementById('thangNamLichSo')?.value || '',
+        tieuDe: document.getElementById('tieuDeLichSo')?.value || '',
+        link: document.getElementById('linkFileLichSo')?.value || "#",
+        nguoiTao: user.fullName || "Nguyễn Văn Thà"
+    });
+    renderLichSoView();
+    showToast('Đã đăng tải Lịch Sở GD&ĐT thành công!', 'success');
+    switchViewTab('view-lich-so');
+}
+
+function updateFileName(input) {
+    if (input?.files?.[0]) {
+        const display = document.getElementById('fileNameDisplay');
+        if (display) display.textContent = `Đã chọn tệp: ${input.files[0].name}`;
+    }
+}
+
+/* ============================================================
+   9. MODAL FUNCTIONS
+============================================================ */
+function closeModalThongBao() {
+    const modal = document.getElementById('modalThongBaoGV');
+    if (modal) modal.classList.add('hidden');
+}
+
+function chuyenDenMenuTacVu() {
+    closeModalThongBao();
+
+    if (typeof switchTab === 'function') {
+        switchTab('lich-cong-tac');
+    } else {
+        switchViewTab('view-lich-tuan');
     }
 
-    function switchViewTab(tabId) {
-        document.querySelectorAll('.view-tab-content').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.view-tab').forEach(btn => {
-            btn.classList.remove('bg-white/20', 'text-white');
-            btn.classList.add('hover:bg-white/10');
-        });
-
-        const targetView = document.getElementById(tabId);
-        if (targetView) targetView.classList.remove('hidden');
-
-        const activeBtn = document.getElementById(`tab-${tabId}`);
-        if (activeBtn) activeBtn.classList.add('bg-white/20', 'text-white');
+    const elLichCongTac = document.getElementById('tab-lich-cong-tac') || document.querySelector('[data-tab="lich-cong-tac"]');
+    if (elLichCongTac) {
+        elLichCongTac.scrollIntoView({ behavior: 'smooth' });
+        elLichCongTac.click();
     }
+}
 
-    /* ==========================================================================
-       3. HÀM DÙNG CHUNG: CẬP NHẬT NGÀY THÁNG CHÂN TRANG IN
-       ========================================================================== */
-    function updatePrintFooterDate() {
-        const d = new Date();
-        const ngay = String(d.getDate()).padStart(2, '0');
-        const thang = String(d.getMonth() + 1).padStart(2, '0');
-        const nam = d.getFullYear();
-
-        const elFooter = document.getElementById("printFooterDate");
-        if (elFooter) {
-            elFooter.innerText = `Đà Nẵng, ngày ${ngay} tháng ${thang} năm ${nam}`;
-        }
-    }
-
-    /* ==========================================================================
-       4. TỰ ĐỘNG TÍNH TUẦN / THÁNG / NĂM VÀ ĐIỀN CÁC NGÀY TRONG TUẦN
-       ========================================================================== */
-    function getWeekNumber(d) {
-        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-        return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-    }
-
-    function autoFillWeekDays(monDateString) {
-        if (!monDateString) return;
-
-        const startDate = new Date(monDateString);
-        if (isNaN(startDate.getTime())) return;
-
-        // Tính Tuần, Tháng, Năm
-        const weekNum = getWeekNumber(startDate);
-        const monthNum = startDate.getMonth() + 1;
-        const yearNum = startDate.getFullYear();
-
-        const elTuan = document.getElementById('inputTuanSo');
-        const elThang = document.getElementById('inputThangSo');
-        const elNam = document.getElementById('inputNamSo');
-
-        if (elTuan) elTuan.value = weekNum;
-        if (elThang) elThang.value = monthNum;
-        if (elNam) elNam.value = yearNum;
-
-        // Tự động điền từ Thứ 3 đến Chủ Nhật
-        const dayKeys = [
-            { id: 'date_3', add: 1 },
-            { id: 'date_4', add: 2 },
-            { id: 'date_5', add: 3 },
-            { id: 'date_6', add: 4 },
-            { id: 'date_7', add: 5 },
-            { id: 'date_CN', add: 6 }
-        ];
-
-        dayKeys.forEach(item => {
-            const nextDate = new Date(startDate);
-            nextDate.setDate(startDate.getDate() + item.add);
-
-            const yyyy = nextDate.getFullYear();
-            const mm = String(nextDate.getMonth() + 1).padStart(2, '0');
-            const dd = String(nextDate.getDate()).padStart(2, '0');
-
-            const targetInput = document.getElementById(item.id);
-            if (targetInput) {
-                targetInput.value = `${yyyy}-${mm}-${dd}`;
-            }
-        });
-    }
-
-    /* ==========================================================================
-       5. RENDER BẢNG XEM TRƯỚC LỊCH TUẦN TRUYỀN THỐNG
-       ========================================================================== */
-    function renderTableLichTuanView() {
-        const days = [
-            { key: '2', label: '2' },
-            { key: '3', label: '3' },
-            { key: '4', label: '4' },
-            { key: '5', label: '5' },
-            { key: '6', label: '6' },
-            { key: '7', label: '7' },
-            { key: 'CN', label: 'CN' }
-        ];
-
-        const tbody = document.getElementById('tbodyLichTuanView');
-        if (!tbody) return;
-
-        let html = '';
-        days.forEach(d => {
-            const dateVal = document.getElementById(`date_${d.key}`)?.value || '';
-            const sangVal = (document.getElementById(`sang_${d.key}`)?.value || '').trim() || 'Nghỉ';
-            const chieuVal = (document.getElementById(`chieu_${d.key}`)?.value || '').trim() || 'Nghỉ';
-            const ghiChuVal = (document.getElementById(`ghichu_${d.key}`)?.value || '').trim() || '';
-
-            let formattedDate = '';
-            if (dateVal) {
-                const parts = dateVal.split('-');
-                if (parts.length === 3) formattedDate = `${parts[2]}/${parts[1]}`;
-            }
-
-            html += `
-                <tr>
-                    <td class="border border-slate-800 p-2 text-center font-bold">
-                        <div class="text-red-600 text-sm">${d.label}</div>
-                        <div class="text-[11px] text-slate-600 font-normal">${formattedDate}</div>
-                    </td>
-                    <td class="border border-slate-800 p-2 align-top whitespace-pre-line">${sangVal}</td>
-                    <td class="border border-slate-800 p-2 align-top whitespace-pre-line">${chieuVal}</td>
-                    <td class="border border-slate-800 p-2 align-top text-slate-600 whitespace-pre-line">${ghiChuVal}</td>
-                </tr>
-            `;
-        });
-
-        tbody.innerHTML = html;
-        updatePrintFooterDate();
-    }
-
-    /* ==========================================================================
-       6. ĐIỀU HƯỚNG PREVIEW VÀ BACK TO EDIT LỊCH TUẦN
-       ========================================================================== */
-    function previewLichTuan(e) {
-        if (e) e.preventDefault();
-
-        // 1. Cập nhật tiêu đề bản xem
-        const tuanVal = document.getElementById('inputTuanSo')?.value || '';
-        const thangVal = document.getElementById('inputThangSo')?.value || '';
-        const elTitle = document.getElementById('displayTitleTuan');
-        if (elTitle) {
-            elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
-        }
-
-        // 2. Sinh bảng dữ liệu xem trước
-        renderTableLichTuanView();
-
-        // 3. Ẩn Form nhập - Hiển thị khung xem trước
-        const formNhap = document.getElementById('form-nhap-lich');
-        if (formNhap) {
-            formNhap.classList.add('hidden');
-            formNhap.style.setProperty('display', 'none', 'important');
-        }
-
-        const viewSection = document.getElementById('view-lich-tuan');
-        if (viewSection) {
-            viewSection.classList.remove('hidden');
-            viewSection.style.setProperty('display', 'block', 'important');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }
-
-    function backToEdit(e) {
-        if (e) e.preventDefault();
-
-        const viewSection = document.getElementById('view-lich-tuan');
-        if (viewSection) {
-            viewSection.classList.add('hidden');
-            viewSection.style.setProperty('display', 'none', 'important');
-        }
-
-        const formNhap = document.getElementById('form-nhap-lich');
-        if (formNhap) {
-            formNhap.classList.remove('hidden');
-            formNhap.style.setProperty('display', 'block', 'important');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }
-
-    /* ==========================================================================
-       7. XỬ LÝ LƯU HOẶC PHÁT HÀNH THÔNG BÁO
-       ========================================================================== */
-    function handleSaveLichTuanBang(e) {
-        if (e) e.preventDefault();
-        previewLichTuan();
-
-        const modal = document.getElementById('modalThongBaoGV');
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
-    }
-
-    function closeModalThongBao() {
-        const modal = document.getElementById('modalThongBaoGV');
-        if (modal) {
-            modal.classList.add('hidden');
-        }
-    }
-
-    function chuyenDenMenuTacVu() {
-        closeModalThongBao();
-        if (typeof switchTab === 'function') {
-            switchTab('lich-cong-tac');
-        } else if (typeof switchViewTab === 'function') {
-            switchViewTab('view-lich-tuan');
-        }
-
-        const elLichCongTac = document.getElementById('tab-lich-cong-tac') || document.querySelector('[data-tab="lich-cong-tac"]');
-        if (elLichCongTac) {
-            elLichCongTac.scrollIntoView({ behavior: 'smooth' });
-            elLichCongTac.click();
-        }
-    }
-
-    /* ==========================================================================
-       8. CÁC HÀM XỬ LÝ FORM PHỤ (LỊCH CÔNG TÁC LẺ, LỊCH THÁNG TRƯỜNG, LỊCH SỞ)
-       ========================================================================== */
-    function handleSaveCongTacLe(e) {
-        e.preventDefault();
-        const loai = document.getElementById('loaiCuocHop')?.value || '';
-        const tieuDe = document.getElementById('tieuDeLe')?.value || '';
-        alert(`Đã lưu thành công Lịch công tác/họp: [${loai}] ${tieuDe}`);
-    }
-
-    function handleSaveLichThangTruong(e) {
-        e.preventDefault();
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
-        lichThangList.unshift({
-            thang: document.getElementById('thangTruongSo')?.value || '',
-            nam: document.getElementById('namHocText')?.value || '',
-            tieuDe: document.getElementById('tieuDeThangTruong')?.value || '',
-            nguoiTao: user.fullName || "Nguyễn Văn Thà"
-        });
-        renderLichThangView();
-        alert('Đã lưu Kế hoạch Lịch Tháng Trường!');
-        switchViewTab('view-lich-thang');
-    }
-
-    function handleUploadLichSo(e) {
-        e.preventDefault();
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
-        lichSoList.unshift({
-            thangNam: document.getElementById('thangNamLichSo')?.value || '',
-            tieuDe: document.getElementById('tieuDeLichSo')?.value || '',
-            link: document.getElementById('linkFileLichSo')?.value || "#",
-            nguoiTao: user.fullName || "Nguyễn Văn Thà"
-        });
-        renderLichSoView();
-        alert('Đã đăng tải Lịch Sở GD&ĐT thành công!');
-        switchViewTab('view-lich-so');
-    }
-
-    function renderLichThangView() {
-        const container = document.getElementById('containerLichThangView');
-        if (!container) return;
-        container.innerHTML = lichThangList.map(item => `
-            <div class="p-3 border border-slate-200 rounded-xl bg-purple-50/40 flex items-center justify-between">
-                <div>
-                    <div class="font-bold text-slate-900 text-xs">Tháng ${item.thang} (${item.nam}): ${item.tieuDe}</div>
-                    <div class="text-[11px] text-slate-500 mt-0.5"><i class="bi bi-person-check"></i> Người tạo: <b>${item.nguoiTao}</b></div>
-                </div>
-                <span class="px-2.5 py-1 bg-purple-100 text-purple-800 font-bold rounded-lg text-[10px]">Lịch Tháng Trường</span>
-            </div>
-        `).join('');
-    }
-
-    function renderLichSoView() {
-        const container = document.getElementById('containerLichSoView');
-        if (!container) return;
-        container.innerHTML = lichSoList.map(item => `
-            <div class="p-3 border border-slate-200 rounded-xl bg-rose-50/40 flex items-center justify-between">
-                <div>
-                    <div class="font-bold text-slate-900 text-xs">${item.tieuDe} (${item.thangNam})</div>
-                    <div class="text-[11px] text-slate-500 mt-0.5"><i class="bi bi-person-check"></i> Người đăng tải: <b>${item.nguoiTao}</b></div>
-                </div>
-                <a href="${item.link}" target="_blank" class="px-3 py-1 bg-rose-700 text-white font-bold rounded-lg text-[10px] flex items-center gap-1">
-                    <i class="bi bi-download"></i> Xem File
-                </a>
-            </div>
-        `).join('');
-    }
-
-    function updateFileName(input) {
-        if (input.files && input.files[0]) {
-            const display = document.getElementById('fileNameDisplay');
-            if (display) display.textContent = "Đã chọn tệp: " + input.files[0].name;
-        }
-    }
+/* ============================================================
+   10. EXPORT / PRINT
+============================================================ */
+// Sẵn sàng mở rộng tích hợp in ấn / xuất PDF khi có yêu cầu.
 </script>
 
 </body>
