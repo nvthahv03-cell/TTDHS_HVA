@@ -777,71 +777,54 @@
         });
     }
 
-    function renderTableLichTuanView() {
-        const tuanVal = document.getElementById('inputTuanSo')?.value || '1';
-        const thangVal = document.getElementById('inputThangSo')?.value || '8';
-        const namVal = document.getElementById('inputNamSo')?.value || '2026';
-        
-        const elTitle = document.getElementById('displayTitleTuan');
-        if (elTitle) elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
-
-        const elFooterDate = document.getElementById('printFooterDate');
-        if (elFooterDate) {
-            const now = new Date();
-            elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${namVal}`;
-        }
-
-        const days = [
-            { key: '2', label: '2' }, { key: '3', label: '3' },
-            { key: '4', label: '4' }, { key: '5', label: '5' },
-            { key: '6', label: '6' }, { key: '7', label: '7' },
-            { key: 'CN', label: 'CN' }
-        ];
-
-        const tbody = document.getElementById('tbodyLichTuanView');
-        if (!tbody) return;
-
-        let html = '';
-        days.forEach(d => {
-            const dateVal = document.getElementById(`date_${d.key}`)?.value || '';
-            const sangVal = (document.getElementById(`sang_${d.key}`)?.value || '').trim() || 'Nghỉ';
-            const chieuVal = (document.getElementById(`chieu_${d.key}`)?.value || '').trim() || 'Nghỉ';
-            const ghiChuVal = (document.getElementById(`ghichu_${d.key}`)?.value || '').trim();
-
-            let formattedDate = '';
-            if (dateVal) {
-                const parts = dateVal.split('-');
-                if (parts.length === 3) formattedDate = `${parts[2]}/${parts[1]}`;
-            }
-
-            html += `
-                <tr>
-                    <td class="border border-slate-800 p-1.5 text-center font-bold">
-                        <div class="text-red-600 text-xs sm:text-sm">${d.label}</div>
-                        <div class="text-[10px] text-slate-600 font-normal">${formattedDate}</div>
-                    </td>
-                    <td class="border border-slate-800 p-1.5 align-top whitespace-pre-line break-words text-[11px] sm:text-xs">${sangVal}</td>
-                    <td class="border border-slate-800 p-1.5 align-top whitespace-pre-line break-words text-[11px] sm:text-xs">${chieuVal}</td>
-                    <td class="border border-slate-800 p-1.5 align-top text-slate-600 whitespace-pre-line break-words text-[10px] sm:text-xs">${ghiChuVal}</td>
-                </tr>
-            `;
-        });
-        tbody.innerHTML = html;
-    }
-
     function previewLichTuan(e) {
-        if (e) e.preventDefault();
-        renderTableLichTuanView();
-        
-        const formNhap = document.getElementById('form-nhap-lich');
-        if (formNhap) formNhap.classList.add('hidden');
-
-        const viewSection = document.getElementById('view-lich-tuan');
-        if (viewSection) {
-            viewSection.classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    if (e) e.preventDefault();
+    
+    // 1. Cập nhật dữ liệu vào bảng xem trước
+    renderTableLichTuanView();
+    
+    // 2. Ẩn TOÀN BỘ các section tạo lịch (bao gồm cả form nhập)
+    document.querySelectorAll('.form-tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.view-tab-content').forEach(el => el.classList.add('hidden'));
+    
+    // 3. Chỉ hiển thị duy nhất trang xem trước Lịch tuần
+    const viewSection = document.getElementById('view-lich-tuan');
+    if (viewSection) {
+        viewSection.classList.remove('hidden');
     }
+
+    // 4. Cập nhật trạng thái active cho nút tab trên Header
+    document.querySelectorAll('.view-tab').forEach(btn => {
+        btn.classList.remove('bg-white/20', 'text-white');
+        btn.classList.add('hover:bg-white/10');
+    });
+    const activeBtn = document.getElementById('tab-view-lich-tuan');
+    if (activeBtn) activeBtn.classList.add('bg-white/20', 'text-white');
+
+    // 5. Cuộn mượt lên đầu trang
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function backToEdit() {
+    // Ẩn trang xem trước
+    const viewSection = document.getElementById('view-lich-tuan');
+    if (viewSection) viewSection.classList.add('hidden');
+
+    // Mở lại trang nhập Lịch tuần
+    const formSection = document.getElementById('tab-tao-lich-tuan');
+    if (formSection) {
+        formSection.classList.remove('hidden');
+    }
+    
+    const formNhap = document.getElementById('form-nhap-lich');
+    if (formNhap) {
+        formNhap.classList.remove('hidden');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+    
 
     function backToEdit() {
         const viewSection = document.getElementById('view-lich-tuan');
