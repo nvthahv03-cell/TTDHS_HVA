@@ -893,27 +893,33 @@ function previewLichTuan(e) {
 
     renderTableLichTuanView();
 
-    const formNhap = document.getElementById('form-nhap-lich');
-    if (formNhap) formNhap.classList.add('hidden');
+   // Ẩn toàn bộ giao diện nhập lịch
+const sectionNhap = document.getElementById('tab-tao-lich-tuan');
+if (sectionNhap) {
+    sectionNhap.classList.add('hidden');
+}
 
-    const viewSection = document.getElementById('view-lich-tuan');
-    if (viewSection) {
-        viewSection.classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+// Hiện giao diện xem trước
+const viewSection = document.getElementById('view-lich-tuan');
+if (viewSection) {
+    viewSection.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function backToEdit(e) {
     if (e) e.preventDefault();
 
-    const viewSection = document.getElementById('view-lich-tuan');
-    if (viewSection) viewSection.classList.add('hidden');
+   // Ẩn giao diện xem trước
+const viewSection = document.getElementById('view-lich-tuan');
+if (viewSection) {
+    viewSection.classList.add('hidden');
+}
 
-    const formNhap = document.getElementById('form-nhap-lich');
-    if (formNhap) {
-        formNhap.classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+// Hiện lại toàn bộ giao diện tạo lịch tuần
+const sectionNhap = document.getElementById('tab-tao-lich-tuan');
+if (sectionNhap) {
+    sectionNhap.classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 /* ============================================================
