@@ -365,31 +365,32 @@
         </table>
     </div>
 
-   <!-- CỤM NÚT TÁC VỤ (ĐÃ TÁCH BIỆT CÁC CHỨC NĂNG) -->
+   <!-- CỤM NÚT TÁC VỤ -->
 <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-200 mt-6">
     
-    <!-- Nhóm bên trái: Hủy/Làm mới -->
-    <button type="button" onclick="resetFormLich()" class="w-full sm:w-auto px-4 h-10 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-rose-200">
+    <button type="button" onclick="if(confirm('Hủy và xóa toàn bộ nội dung?')) document.getElementById('form-nhap-lich').reset();" class="w-full sm:w-auto px-4 h-10 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-rose-200">
         <i class="bi bi-x-circle-fill text-sm"></i>
         <span>Hủy & Xóa nhập</span>
     </button>
 
-    <!-- Nhóm bên phải: Xem trước - Lưu nháp - Phát hành -->
     <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
         <!-- Nút Xem trước -->
-        <button type="button" onclick="previewLichTuan()" class="w-full sm:w-auto px-4 h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-slate-300">
+        <button type="button" onclick="previewLichTuan(event)" class="w-full sm:w-auto px-4 h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-slate-300">
             <i class="bi bi-eye-fill text-sm"></i>
             <span>Xem trước</span>
         </button>
 
         <!-- Nút Lưu nháp -->
-        <button type="button" onclick="handleSaveLichTuanBang('nhap')" class="w-full sm:w-auto px-4 h-10 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs uppercase shadow-sm transition flex items-center justify-center gap-2">
+        <button type="button" onclick="handleSaveLichTuanBang('nhap', event)" class="w-full sm:w-auto px-4 h-10 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs uppercase shadow-sm transition flex items-center justify-center gap-2">
             <i class="bi bi-file-earmark-arrow-down-fill text-sm"></i>
             <span>Lưu nháp</span>
         </button>
-
+        <button type="button" onclick="backToEdit(event)" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-lg text-xs border border-slate-300 shadow-sm flex items-center gap-2">
+    <i class="bi bi-pencil-square"></i>
+    <span>Quay lại chỉnh sửa</span>
+</button>
         <!-- Nút Phát hành -->
-        <button type="button" onclick="handleSaveLichTuanBang('phathanh')" class="w-full sm:w-auto px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs uppercase shadow-md transition flex items-center justify-center gap-2">
+        <button type="button" onclick="handleSaveLichTuanBang('phathanh', event)" class="w-full sm:w-auto px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs uppercase shadow-md transition flex items-center justify-center gap-2">
             <i class="bi bi-send-check-fill text-sm"></i>
             <span>Phát hành lịch</span>
         </button>
@@ -925,30 +926,25 @@ function autoFillWeekDays(monDateString) {
         }
     });
 }
-  // Hàm khi bấm "XEM TRƯỚC LỊCH"
-// Hàm khi bấm "XEM TRƯỚC LỊCH"
-function previewLichTuan() {
+ // 1. HÀM XEM TRƯỚC (BỔ SUNG preventDefault)
+function previewLichTuan(event) {
+    if (event) event.preventDefault(); // Ngăn form tự reload lại trang
+    
     try {
-        // 1. Cập nhật Tuần / Tháng lên tiêu đề bản xem
+        // Cập nhật Tuần / Tháng / Năm lên tiêu đề
         const tuanVal = document.getElementById('inputTuanSo')?.value || '';
         const thangVal = document.getElementById('inputThangSo')?.value || '';
         const namVal = document.getElementById('inputNamSo')?.value || '';
 
         const elTitle = document.getElementById('displayTitleTuan');
-        if (elTitle) {
-            elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
-        }
+        if (elTitle) elTitle.innerText = `Tuần thứ: ${tuanVal} - Tháng: ${thangVal}`;
 
-        // 2. Cập nhật ngày tháng chân trang
         const now = new Date();
         const elFooterDate = document.getElementById('printFooterDate');
-        if (elFooterDate) {
-            elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${namVal}`;
-        }
+        if (elFooterDate) elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${namVal}`;
 
-        // 3. Đổ dữ liệu các ngày từ Form sang Bản xem (Sửa an toàn với Optional Chaining)
+        // Đổ dữ liệu từ Form sang Bản xem
         const days = ["2", "3", "4", "5", "6", "7", "CN"];
-
         days.forEach(d => {
             const dateInput = document.getElementById(`date_${d}`)?.value || '';
             const sangText = (document.getElementById(`sang_${d}`)?.value || '').trim();
@@ -960,7 +956,6 @@ function previewLichTuan() {
             const viewChieu = document.getElementById(`view_chieu_${d}`);
             const viewGhiChu = document.getElementById(`view_ghichu_${d}`);
 
-            // Định dạng ngày DD/MM
             if (viewDate) {
                 if (dateInput) {
                     const parts = dateInput.split('-');
@@ -970,52 +965,75 @@ function previewLichTuan() {
                 }
             }
 
-            // Đổ nội dung Sáng - Chiều - Ghi chú
-            if (viewSang) {
-                viewSang.innerHTML = sangText ? sangText.replace(/\n/g, '<br>') : 'Nghỉ';
-            }
-            if (viewChieu) {
-                viewChieu.innerHTML = chieuText ? chieuText.replace(/\n/g, '<br>') : 'Nghỉ';
-            }
-            if (viewGhiChu) {
-                viewGhiChu.innerHTML = ghiChuText ? ghiChuText.replace(/\n/g, '<br>') : '';
-            }
+            if (viewSang) viewSang.innerHTML = sangText ? sangText.replace(/\n/g, '<br>') : 'Nghỉ';
+            if (viewChieu) viewChieu.innerHTML = chieuText ? chieuText.replace(/\n/g, '<br>') : 'Nghỉ';
+            if (viewGhiChu) viewGhiChu.innerHTML = ghiChuText ? ghiChuText.replace(/\n/g, '<br>') : '';
         });
 
-        // 4. ẨN FORM NHẬP LIỆU
+        // ẨN FORM NHẬP - HIỆN BẢN XEM TRƯỚC (Dùng thuộc tính ẩn mạnh nhất)
         const formNhap = document.getElementById('form-nhap-lich');
-        if (formNhap) {
-            formNhap.classList.add('hidden');
-            formNhap.style.setProperty('display', 'none', 'important');
-        }
-
-        // 5. HIỂN THỊ MÀN HÌNH XEM TRƯỚC
         const viewSection = document.getElementById('view-lich-tuan');
+
+        if (formNhap) formNhap.setAttribute('style', 'display: none !important;');
         if (viewSection) {
             viewSection.classList.remove('hidden');
-            viewSection.style.setProperty('display', 'block', 'important');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            viewSection.setAttribute('style', 'display: block !important;');
         }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
     } catch (err) {
-        console.error("Lỗi khi chuyển màn hình xem trước:", err);
+        console.error("Lỗi khi xem trước:", err);
     }
 }
 
-// Hàm khi bấm "QUAY LẠI CHỈNH SỬA" (Chỉ giữ lại 1 hàm duy nhất)
-function backToEdit() {
-    // Ẩn khung xem
-    const viewSection = document.getElementById('view-lich-tuan');
-    if (viewSection) {
-        viewSection.classList.add('hidden');
-        viewSection.style.setProperty('display', 'none', 'important');
-    }
+// 2. HÀM QUAY LẠI CHỈNH SỬA
+function backToEdit(event) {
+    if (event) event.preventDefault();
 
-    // Hiện lại form nhập
     const formNhap = document.getElementById('form-nhap-lich');
-    if (formNhap) {
-        formNhap.classList.remove('hidden');
-        formNhap.style.setProperty('display', 'block', 'important');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    const viewSection = document.getElementById('view-lich-tuan');
+
+    if (viewSection) viewSection.setAttribute('style', 'display: none !important;');
+    if (formNhap) formNhap.setAttribute('style', 'display: block !important;');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 3. HÀM XỬ LÝ LƯU NHÁP & PHÁT HÀNH
+function handleSaveLichTuanBang(type, event) {
+    if (event) event.preventDefault();
+
+    const tuan = document.getElementById('inputTuanSo')?.value || '';
+    const thang = document.getElementById('inputThangSo')?.value || '';
+    
+    // Thu thập toàn bộ dữ liệu form nhập
+    const days = ["2", "3", "4", "5", "6", "7", "CN"];
+    const formData = {
+        tuan: tuan,
+        thang: thang,
+        nam: document.getElementById('inputNamSo')?.value || '',
+        chitiet: {}
+    };
+
+    days.forEach(d => {
+        formData.chitiet[d] = {
+            date: document.getElementById(`date_${d}`)?.value || '',
+            sang: document.getElementById(`sang_${d}`)?.value || '',
+            chieu: document.getElementById(`chieu_${d}`)?.value || '',
+            ghichu: document.getElementById(`ghichu_${d}`)?.value || ''
+        };
+    });
+
+    if (type === 'nhap') {
+        // Lưu vào LocalStorage
+        localStorage.setItem(`lich_tuan_nhap_${tuan}`, JSON.stringify(formData));
+        alert(`Đã lưu nháp Lịch công tác Tuần ${tuan} - Tháng ${thang} thành công!`);
+    } else if (type === 'phathanh') {
+        if (confirm(`Xác nhận PHÁT HÀNH chính thức Lịch công tác Tuần ${tuan}?`)) {
+            localStorage.setItem(`lich_tuan_chinhthuc_${tuan}`, JSON.stringify(formData));
+            alert(`Đã phát hành Lịch công tác Tuần ${tuan} thành công!`);
+        }
     }
 }
 // Cập nhật hàm handleSaveLichTuanBang để bật Modal hỏi gửi thông báo
