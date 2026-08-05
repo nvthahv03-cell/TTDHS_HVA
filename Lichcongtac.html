@@ -504,7 +504,7 @@
         </form>
     </section>
 
-   <!-- ================= KHUNG XEM VĂN BẢN VÀ IN LỊCH TUẦN TRUYỀN THỐNG ================= -->
+  <!-- ================= KHUNG XEM VĂN BẢN VÀ IN LỊCH TUẦN TRUYỀN THỐNG ================= -->
 <section id="view-lich-tuan" class="view-tab-content space-y-4">
     <div class="flex items-center justify-between no-print bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
         <div class="text-xs font-bold text-[#0F4C81] uppercase"><i class="bi bi-printer mr-1"></i>Xem & In Lịch Tuần Truyền Thống</div>
@@ -514,22 +514,27 @@
     </div>
 
     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm print-area">
-        <!-- HEADER TIÊU ĐỀ: TÁCH TÊN TRƯỜNG VÀ TÊN VĂN BẢN ĐỂ XUỐNG DÒNG RÕ RÀNG -->
-        <div class="flex justify-between items-start text-xs font-bold text-slate-800 border-b border-slate-300 pb-4 mb-4">
-            <div>
-                <div class="text-slate-700 font-semibold text-[11px]">SỞ GIÁO DỤC VÀ ĐÀO TẠO TP ĐÀ NẴNG</div>
-                <div class="text-[#0F4C81] font-extrabold text-sm tracking-wide">TRƯỜNG THPT HÒA VANG</div>
+        <!-- HEADER VĂN BẢN -->
+        <div class="border-b border-slate-300 pb-4 mb-4">
+            <!-- Dòng tên đơn vị (bên trái) và Quốc hiệu/trống (bên phải) -->
+            <div class="flex justify-between items-start text-xs font-bold text-slate-800">
+                <div>
+                    <div class="text-slate-700 font-semibold text-[11px]">SỞ GIÁO DỤC VÀ ĐÀO TẠO TP ĐÀ NẴNG</div>
+                    <div class="text-[#0F4C81] font-extrabold text-sm tracking-wide">TRƯỜNG THPT HÒA VANG</div>
+                </div>
             </div>
-            <div class="text-right">
-                <div class="text-red-600 font-extrabold text-base leading-tight">LỊCH CÔNG TÁC</div>
+
+            <!-- TIÊU ĐỀ LỊCH CÔNG TÁC ĐƯỢC ĐƯA XUỐNG DƯỚI VÀ CANH GIỮA -->
+            <div class="text-center mt-3">
+                <div class="text-red-600 font-extrabold text-lg tracking-wider uppercase">LỊCH CÔNG TÁC</div>
                 <div id="displayTitleTuan" class="text-slate-700 font-bold text-xs mt-0.5">Tuần thứ: 1 - Tháng: 8</div>
             </div>
         </div>
 
-        <!-- BẢNG KHUNG LỊCH CHUẨN ĐỦ 4 CỘT VÀ CÓ VIỀN RÕ RÀNG -->
+        <!-- BẢNG KHUNG LỊCH CHUẨN ĐỦ 4 CỘT VÀ ĐẦY ĐỦ VIỀN -->
         <table class="w-full border-collapse border border-slate-800 text-xs">
             <thead>
-                <tr class="bg-[#1E3A8A] text-white font-bold text-center uppercase">
+                <tr class="bg-blue-900 text-white font-bold text-center uppercase">
                     <th class="border border-slate-800 p-2.5 w-24">NGÀY</th>
                     <th class="border border-slate-800 p-2.5 w-2/5">SÁNG</th>
                     <th class="border border-slate-800 p-2.5 w-2/5">CHIỀU</th>
@@ -537,69 +542,69 @@
                 </tr>
             </thead>
             <tbody id="tbodyLichTuanView">
-                <!-- KHUNG MẶC ĐỊNH SẴN CÁC DÒNG ĐỂ BẢNG KHÔNG BỊ TRỐNG -->
+                <!-- KHUNG DỰ PHÒNG TĨNH DÙNG KHI JS CHƯA LOAD RENDER DỮ LIỆU -->
                 <tr>
                     <td class="border border-slate-800 p-2 text-center font-bold">
                         <div class="text-red-600 text-sm">2</div>
                         <div id="view_date_2" class="text-[11px] text-slate-500 font-normal"></div>
                     </td>
-                    <td id="view_sang_2" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_chieu_2" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_ghichu_2" class="border border-slate-800 p-2 align-top text-slate-500"></td>
+                    <td id="view_sang_2" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_chieu_2" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_ghichu_2" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line"></td>
                 </tr>
                 <tr>
                     <td class="border border-slate-800 p-2 text-center font-bold">
                         <div class="text-red-600 text-sm">3</div>
                         <div id="view_date_3" class="text-[11px] text-slate-500 font-normal"></div>
                     </td>
-                    <td id="view_sang_3" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_chieu_3" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_ghichu_3" class="border border-slate-800 p-2 align-top text-slate-500"></td>
+                    <td id="view_sang_3" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_chieu_3" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_ghichu_3" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line"></td>
                 </tr>
                 <tr>
                     <td class="border border-slate-800 p-2 text-center font-bold">
                         <div class="text-red-600 text-sm">4</div>
                         <div id="view_date_4" class="text-[11px] text-slate-500 font-normal"></div>
                     </td>
-                    <td id="view_sang_4" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_chieu_4" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_ghichu_4" class="border border-slate-800 p-2 align-top text-slate-500"></td>
+                    <td id="view_sang_4" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_chieu_4" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_ghichu_4" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line"></td>
                 </tr>
                 <tr>
                     <td class="border border-slate-800 p-2 text-center font-bold">
                         <div class="text-red-600 text-sm">5</div>
                         <div id="view_date_5" class="text-[11px] text-slate-500 font-normal"></div>
                     </td>
-                    <td id="view_sang_5" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_chieu_5" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_ghichu_5" class="border border-slate-800 p-2 align-top text-slate-500"></td>
+                    <td id="view_sang_5" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_chieu_5" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_ghichu_5" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line"></td>
                 </tr>
                 <tr>
                     <td class="border border-slate-800 p-2 text-center font-bold">
                         <div class="text-red-600 text-sm">6</div>
                         <div id="view_date_6" class="text-[11px] text-slate-500 font-normal"></div>
                     </td>
-                    <td id="view_sang_6" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_chieu_6" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_ghichu_6" class="border border-slate-800 p-2 align-top text-slate-500"></td>
+                    <td id="view_sang_6" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_chieu_6" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_ghichu_6" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line"></td>
                 </tr>
                 <tr>
                     <td class="border border-slate-800 p-2 text-center font-bold">
                         <div class="text-red-600 text-sm">7</div>
                         <div id="view_date_7" class="text-[11px] text-slate-500 font-normal"></div>
                     </td>
-                    <td id="view_sang_7" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_chieu_7" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_ghichu_7" class="border border-slate-800 p-2 align-top text-slate-500"></td>
+                    <td id="view_sang_7" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_chieu_7" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_ghichu_7" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line"></td>
                 </tr>
                 <tr>
                     <td class="border border-slate-800 p-2 text-center font-bold">
                         <div class="text-red-600 text-sm">CN</div>
                         <div id="view_date_CN" class="text-[11px] text-slate-500 font-normal"></div>
                     </td>
-                    <td id="view_sang_CN" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_chieu_CN" class="border border-slate-800 p-2 align-top">Nghỉ</td>
-                    <td id="view_ghichu_CN" class="border border-slate-800 p-2 align-top text-slate-500"></td>
+                    <td id="view_sang_CN" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_chieu_CN" class="border border-slate-800 p-2 align-top whitespace-pre-line">Nghỉ</td>
+                    <td id="view_ghichu_CN" class="border border-slate-800 p-2 align-top text-slate-500 whitespace-pre-line"></td>
                 </tr>
             </tbody>
         </table>
@@ -617,7 +622,7 @@
             <div class="text-center">
                 <div id="printFooterDate" class="italic text-slate-600">Đà Nẵng, ngày ..... tháng ..... năm 2026</div>
                 <div class="font-bold text-slate-900 uppercase mt-1">NGƯỜI TẠO LỊCH</div>
-                <div class="h-16"></div> <!-- Khoảng trống ký tên -->
+                <div class="h-16"></div> <!-- Khoảng trống để ký tên -->
                 <div id="printUserSignature" class="font-bold text-[#0F4C81] text-sm">Nguyễn Văn Thà</div>
                 <div id="printUserPositionSignature" class="text-[11px] text-slate-600">Phó Hiệu trưởng</div>
             </div>
