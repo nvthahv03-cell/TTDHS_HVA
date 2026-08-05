@@ -505,57 +505,73 @@
     </section>
 
     <!-- ================= KHUNG XEM VĂN BẢN VÀ IN LỊCH TUẦN TRUYỀN THỐNG ================= -->
-    <section id="view-lich-tuan" class="view-tab-content space-y-4">
-        <div class="flex items-center justify-between no-print bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="text-xs font-bold text-[#0F4C81] uppercase"><i class="bi bi-printer mr-1"></i>Xem & In Lịch Tuần Truyền Thống</div>
-            <button type="button" onclick="window.print()" class="px-4 py-2 bg-[#0F4C81] hover:bg-blue-900 text-white rounded-xl text-xs font-bold shadow-md flex items-center gap-1.5">
-                <i class="bi bi-printer-fill"></i> In Lịch Công Tác
-            </button>
-        </div>
+<section id="view-lich-tuan" class="view-tab-content space-y-4">
+    <div class="flex items-center justify-between no-print bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="text-xs font-bold text-[#0F4C81] uppercase"><i class="bi bi-printer mr-1"></i>Xem & In Lịch Tuần Truyền Thống</div>
+        <button type="button" onclick="window.print()" class="px-4 py-2 bg-[#0F4C81] hover:bg-blue-900 text-white rounded-xl text-xs font-bold shadow-md flex items-center gap-1.5">
+            <i class="bi bi-printer-fill"></i> In Lịch Công Tác
+        </button>
+    </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm print-area">
-            <!-- TÊN TRƯỜNG & TÊN BẢNG LỊCH -->
-            <div class="flex justify-between items-start text-xs font-bold text-slate-800 border-b pb-4 mb-4">
-                <div>
-                    <div>SỞ GIÁO DỤC VÀ ĐÀO TẠO TP ĐÀ NẴNG</div>
-                    <div class="text-[#0F4C81] font-extrabold text-sm">TRƯỜNG THPT HÒA VANG</div>
-                </div>
-                <div class="text-right">
-                    <div class="text-red-600 font-extrabold text-base tracking-wide">LỊCH CÔNG TÁC</div>
-                    <div id="displayTitleTuan" class="text-slate-700 font-bold">Tuần thứ: 1 - Tháng: 8</div>
-                </div>
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm print-area">
+        <!-- TÊN TRƯỜNG & TÊN BẢNG LỊCH -->
+        <div class="flex justify-between items-start text-xs font-bold text-slate-800 border-b pb-4 mb-4">
+            <div>
+                <div>SỞ GIÁO DỤC VÀ ĐÀO TẠO TP ĐÀ NẴNG</div>
+                <div class="text-[#0F4C81] font-extrabold text-sm">TRƯỜNG THPT HÒA VANG</div>
             </div>
-
-            <!-- BẢNG KHUNG LỊCH CHUẨN NHƯ TRONG ẢNH -->
-            <table class="w-full border-collapse border-2 border-slate-800 text-xs">
-                <thead>
-                    <tr class="bg-blue-900 text-white font-black text-center uppercase tracking-wider text-sm">
-                        <th class="border border-slate-800 p-2.5 w-28">Ngày</th>
-                        <th class="border border-slate-800 p-2.5 w-1/2">SÁNG</th>
-                        <th class="border border-slate-800 p-2.5">CHIỀU</th>
-                    </tr>
-                </thead>
-                <tbody id="tbodyLichTuanView" class="divide-y divide-slate-800 font-medium">
-                    <!-- Javascript đổ dữ liệu vào đây -->
-                </tbody>
-            </table>
-
-            <!-- PHẦN XUẤT THÔNG TIN NGƯỜI TẠO LỊCH Ở CUỐI TRANG IN -->
-            <div class="print-footer mt-8 pt-4 border-t border-slate-200 flex justify-between items-end">
-                <div class="text-center text-xs">
-                    <div class="font-bold text-slate-500 uppercase">Nơi nhận:</div>
-                    <div class="text-[11px] text-slate-500 text-left">- Ban Giám hiệu;<br>- Các Tổ CM, VP;<br>- Lưu: VT.</div>
-                </div>
-                <div class="text-center text-xs">
-                    <div class="italic text-slate-500">Đà Nẵng, ngày ..... tháng ..... năm 2026</div>
-                    <div class="font-bold text-slate-900 uppercase mt-1">NGƯỜI TẠO LỊCH</div>
-                    <div class="h-16"></div> <!-- Khoảng trống ký tên -->
-                    <div id="printUserSignature" class="font-bold text-[#0F4C81] text-sm">Nguyễn Văn Thà</div>
-                    <div id="printUserPositionSignature" class="text-[11px] text-slate-600">Phó Hiệu trưởng</div>
-                </div>
+            <div class="text-right">
+                <div class="text-red-600 font-extrabold text-base tracking-wide">LỊCH CÔNG TÁC</div>
+                <div id="displayTitleTuan" class="text-slate-700 font-bold">Tuần thứ: 1 - Tháng: 8</div>
             </div>
         </div>
-    </section>
+
+        <!-- BẢNG KHUNG LỊCH CHUẨN ĐỦ 4 CỘT -->
+        <table class="w-full border-collapse border-2 border-slate-800 text-xs">
+            <thead>
+                <tr class="bg-blue-900 text-white font-black text-center uppercase tracking-wider text-sm">
+                    <th class="border border-slate-800 p-2.5 w-24">NGÀY</th>
+                    <th class="border border-slate-800 p-2.5 w-2/5">SÁNG</th>
+                    <th class="border border-slate-800 p-2.5 w-2/5">CHIỀU</th>
+                    <th class="border border-slate-800 p-2.5">GHI CHÚ</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyLichTuanView" class="divide-y divide-slate-800 font-medium">
+                <!-- Javascript sẽ render 7 dòng tương ứng với các ID bên dưới -->
+                <!-- Cấu trúc JS render từng dòng tương đương:
+                <tr>
+                    <td class="border border-slate-800 p-2 text-center font-bold">
+                        <div class="text-red-600 text-sm">2</div>
+                        <div id="view_date_2" class="text-[11px] text-slate-500 font-normal"></div>
+                    </td>
+                    <td id="view_sang_2" class="border border-slate-800 p-2 align-top">Nghỉ</td>
+                    <td id="view_chieu_2" class="border border-slate-800 p-2 align-top">Nghỉ</td>
+                    <td id="view_ghichu_2" class="border border-slate-800 p-2 align-top text-slate-500"></td>
+                </tr>
+                -->
+            </tbody>
+        </table>
+
+        <!-- PHẦN XUẤT THÔNG TIN NGƯỜI TẠO LỊCH Ở CUỐI TRANG IN -->
+        <div class="print-footer mt-8 pt-4 flex justify-between items-end">
+            <div class="text-center text-xs">
+                <div class="font-bold text-slate-700 uppercase text-left">Nơi nhận:</div>
+                <div class="text-[11px] text-slate-600 text-left leading-relaxed">
+                    - Ban Giám hiệu;<br>
+                    - Các Tổ CM, VP;<br>
+                    - Lưu: VT.
+                </div>
+            </div>
+            <div class="text-center text-xs">
+                <div id="printFooterDate" class="italic text-slate-600">Đà Nẵng, ngày ..... tháng ..... năm 2026</div>
+                <div class="font-bold text-slate-900 uppercase mt-1">NGƯỜI TẠO LỊCH</div>
+                <div class="h-16"></div> <!-- Khoảng trống để ký tên -->
+                <div id="printUserSignature" class="font-bold text-[#0F4C81] text-sm">Nguyễn Văn Thà</div>
+                <div id="printUserPositionSignature" class="text-[11px] text-slate-600">Phó Hiệu trưởng</div>
+            </div>
+        </div>
+    </div>
+</section>
 
     <!-- XEM LỊCH THÁNG TRƯỜNG -->
     <section id="view-lich-thang" class="view-tab-content hidden space-y-4">
@@ -702,19 +718,57 @@
         }
     }
 
-    function renderLichTuanView() {
-        document.getElementById('displayTitleTuan').textContent = `Tuần thứ: ${currentTuanData.tuan} - Tháng: ${currentTuanData.thang}`;
-        const tbody = document.getElementById('tbodyLichTuanView');
-        const dayLabels = { "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "CN": "CN" };
+    function renderTableLichTuanView() {
+    const days = [
+        { key: '2', label: '2' },
+        { key: '3', label: '3' },
+        { key: '4', label: '4' },
+        { key: '5', label: '5' },
+        { key: '6', label: '6' },
+        { key: '7', label: '7' },
+        { key: 'CN', label: 'CN' }
+    ];
 
-        tbody.innerHTML = Object.keys(currentTuanData.chitiet).map(k => `
+    const tbody = document.getElementById('tbodyLichTuanView');
+    if (!tbody) return;
+
+    let html = '';
+    days.forEach(d => {
+        // Lấy giá trị từ các ô input nhập liệu
+        const dateVal = document.getElementById(`date_${d.key}`)?.value || '';
+        const sangVal = document.getElementById(`sang_${d.key}`)?.value.trim() || 'Nghỉ';
+        const chieuVal = document.getElementById(`chieu_${d.key}`)?.value.trim() || 'Nghỉ';
+        const ghiChuVal = document.getElementById(`ghichu_${d.key}`)?.value.trim() || '';
+
+        // Định dạng lại ngày YYYY-MM-DD sang DD/MM
+        let formattedDate = '';
+        if (dateVal) {
+            const parts = dateVal.split('-');
+            if (parts.length === 3) formattedDate = `${parts[2]}/${parts[1]}`;
+        }
+
+        html += `
             <tr>
-                <td class="border border-slate-800 p-2.5 font-bold text-center text-red-700 text-lg bg-slate-50">${dayLabels[k]}</td>
-                <td class="border border-slate-800 p-2.5 text-slate-800 whitespace-pre-line">${currentTuanData.chitiet[k].sang}</td>
-                <td class="border border-slate-800 p-2.5 text-slate-800 whitespace-pre-line">${currentTuanData.chitiet[k].chieu}</td>
+                <td class="border border-slate-800 p-2 text-center font-bold">
+                    <div class="text-red-600 text-sm">${d.label}</div>
+                    <div class="text-[11px] text-slate-600 font-normal">${formattedDate}</div>
+                </td>
+                <td class="border border-slate-800 p-2 align-top whitespace-pre-line">${sangVal}</td>
+                <td class="border border-slate-800 p-2 align-top whitespace-pre-line">${chieuVal}</td>
+                <td class="border border-slate-800 p-2 align-top text-slate-600 whitespace-pre-line">${ghiChuVal}</td>
             </tr>
-        `).join('');
+        `;
+    });
+
+    tbody.innerHTML = html;
+
+    // Cập nhật ngày chân trang
+    const now = new Date();
+    const elFooterDate = document.getElementById('printFooterDate');
+    if (elFooterDate) {
+        elFooterDate.innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
     }
+}
 
     function renderLichThangView() {
         document.getElementById('containerLichThangView').innerHTML = lichThangList.map(item => `
