@@ -738,12 +738,16 @@ export function renderHome() {
                 </div>
                 <span>📋 Giao việc</span>
             </a>
-            <button onclick="alert('Chức năng đang phát triển')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors text-left">
-                <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
-                    <i class="bi bi-calendar3 text-sm"></i>
-                </div>
-                <span>📅 Lịch công tác</span>
-            </button>
+            <a href="Lichcongtac.html"
+   class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors">
+
+    <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
+        <i class="bi bi-calendar3 text-sm"></i>
+    </div>
+
+    <span>📅 Lịch công tác</span>
+
+</a>
         </div>
     </div>
 
