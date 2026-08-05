@@ -369,29 +369,22 @@
     </table>
 </div>
 
-<!-- ========================================================= -->
-<!-- 1. DÁN CỤM NÚT TÁC VỤ VÀ MODAL VÀO ĐÂY (DÒNG 370) -->
-<!-- ========================================================= -->
+<!-- CỤM NÚT TÁC VỤ (ĐẶT TRONG FORM) -->
 <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-200 mt-6">
-        <button type="button" onclick="previewLichTuan()" class="w-full sm:w-auto px-5 h-11 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-slate-300">
-            <i class="bi bi-eye-fill text-base"></i>
-            <span>Xem trước lịch</span>
-        </button>
+    <button type="button" onclick="previewLichTuan()" class="w-full sm:w-auto px-5 h-11 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-slate-300">
+        <i class="bi bi-eye-fill text-base"></i>
+        <span>Xem trước lịch</span>
+    </button>
 
-        <button type="submit" class="w-full sm:w-auto px-6 h-11 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs uppercase shadow-md transition flex items-center justify-center gap-2">
-            <i class="bi bi-floppy-fill text-base"></i>
-            <span>Lưu & Phát hành lịch</span>
-        </button>
-    </div>
+    <button type="submit" class="w-full sm:w-auto px-6 h-11 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl text-xs uppercase shadow-md transition flex items-center justify-center gap-2">
+        <i class="bi bi-floppy-fill text-base"></i>
+        <span>Lưu & Phát hành lịch</span>
+    </button>
+</div>
 
-    <!-- MODAL THÔNG BÁO -->
-    <div id="modalThongBaoGV" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        ...
-    </div>
+</form> <!-- ĐÓNG FORM CHUẨN TẠI ĐÂY -->
 
-</form> <!-- ĐÓNG FORM TẠI ĐÂY -->
-
-<!-- MODAL BẬT LÊN KHI LƯU THÀNH CÔNG -->
+<!-- MODAL BẬT LÊN KHI LƯU THÀNH CÔNG (ĐẶT NGOÀI FORM - CHỈ 1 KHỐI DUY NHẤT) -->
 <div id="modalThongBaoGV" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-4 border border-slate-100">
         <div class="flex items-center gap-3 text-emerald-600">
@@ -421,17 +414,12 @@
     </div>
 </div>
 
-<!-- ========================================================= -->
-<!-- Dòng 371 tiếp theo: SANG MENU 3 (GIAO DIỆN LỊCH THÁNG) -->
-<!-- ========================================================= -->
 <!-- ================= 3. GIAO DIỆN LỊCH THÁNG TRƯỜNG (MENU 3) ================= -->
 <section id="tab-tao-lich-thang-truong" class="form-tab-content hidden space-y-4">
-    <!-- ================= 3. GIAO DIỆN LỊCH THÁNG TRƯỜNG (MENU 3) ================= -->
-    <section id="tab-tao-lich-thang-truong" class="form-tab-content hidden space-y-4">
-        <div class="bg-purple-900 text-white p-4 rounded-2xl shadow-sm flex items-center justify-between">
-            <div class="font-bold text-sm uppercase"><i class="bi bi-calendar-month mr-2"></i>Giao diện 3: Lịch Tháng (Trường) - Kế Hoạch Trọng Tâm</div>
-            <span class="text-xs bg-white/20 px-2.5 py-1 rounded-lg">Định hướng chỉ đạo tháng</span>
-        </div>
+    <div class="bg-purple-900 text-white p-4 rounded-2xl shadow-sm flex items-center justify-between">
+        <div class="font-bold text-sm uppercase"><i class="bi bi-calendar-month mr-2"></i>Giao diện 3: Lịch Tháng (Trường) - Kế Hoạch Trọng Tâm</div>
+        <span class="text-xs bg-white/20 px-2.5 py-1 rounded-lg">Định hướng chỉ đạo tháng</span>
+    </div>
 
         <form onsubmit="handleSaveLichThangTruong(event)" class="space-y-4">
             <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
