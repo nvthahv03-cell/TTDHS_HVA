@@ -382,10 +382,11 @@
 
     <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
         <!-- Nút Xem trước -->
-        <button type="button" onclick="previewLichTuan(event)" class="w-full sm:w-auto px-4 h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-slate-300">
-            <i class="bi bi-eye-fill text-sm"></i>
-            <span>Xem trước</span>
-        </button>
+       <button type="button" onclick="previewLichTuan(event)" 
+    class="px-2 sm:px-4 h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-[11px] sm:text-xs uppercase transition flex items-center justify-center gap-1 sm:gap-2 border border-slate-300 active:scale-95">
+    <i class="bi bi-eye-fill text-sm"></i>
+    <span>Xem trước</span>
+</button>
 
         <!-- Nút Lưu nháp -->
         <button type="button" onclick="handleSaveLichTuanBang('nhap', event)" class="w-full sm:w-auto px-4 h-10 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs uppercase shadow-sm transition flex items-center justify-center gap-2">
