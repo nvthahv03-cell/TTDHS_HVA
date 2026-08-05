@@ -564,10 +564,10 @@ export function renderHome() {
         </div>
 
         <!-- Dropup Menu Nghiệp vụ số theo chuẩn sơ đồ cây -->
-        <div id="nghiepvuso-dropdown"
-            data-dropdown-menu
-            class="hidden absolute right-0 bottom-[calc(100%+0.6rem)] z-[999] w-[320px] max-w-[92vw] max-h-[80vh] overflow-y-auto bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-3 space-y-1">
-
+       
+        <div id="nghiepvuso-dropdown" 
+        data-dropdown-menu 
+        class="hidden fixed sm:absolute left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-0 bottom-4 sm:bottom-[calc(100%+0.6rem)] z-[999] w-[90vw] sm:w-[320px] max-h-[70vh] overflow-y-auto bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-3 space-y-1">
             <!-- tiêu đề MENU -->
             <div class="flex items-center gap-2 px-2 py-1 mb-2 text-xs font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800">
                 <i class="bi bi-mortarboard-fill text-purple-600"></i>
