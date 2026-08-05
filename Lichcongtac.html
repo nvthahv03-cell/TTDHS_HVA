@@ -50,14 +50,52 @@
         <!-- Hàng 2: Menu điều hướng tự động cuộn ngang trên điện thoại -->
         <div class="flex items-center gap-2 pt-3 pb-1 text-xs font-bold text-white/90 overflow-x-auto no-scrollbar scroll-smooth">
             
-            <!-- NÚT MENU TẠO LỊCH -->
-            <div class="relative inline-block text-left shrink-0">
+             <!-- MENU ĐIỀU HƯỚNG CHÍNH -->
+        <div class="flex items-center gap-2 pt-4 pb-1 text-xs font-bold text-white/90">
+            
+            <!-- NÚT MENU XỔ XUỐNG 4 MỤC -->
+            <div class="relative inline-block text-left">
                 <button type="button" id="btnDropdownTaoLich" onclick="toggleDropdownTaoLich(event)" 
-                    class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition flex items-center gap-1.5 bg-amber-400 text-slate-900 font-black shadow-md hover:bg-amber-300 active:scale-95 text-xs">
-                    <i class="bi bi-plus-circle-fill text-sm sm:text-base"></i>
-                    <span class="whitespace-nowrap">TẠO LỊCH MỚI</span>
-                    <i class="bi bi-chevron-down text-[10px]"></i>
+                    class="px-4 py-2 rounded-xl transition flex items-center gap-2 bg-amber-400 text-slate-900 font-black shadow-md hover:bg-amber-300">
+                    <i class="bi bi-plus-circle-fill text-base"></i>
+                    <span>TẠO LỊCH MỚI</span>
+                    <i class="bi bi-chevron-down text-xs"></i>
                 </button>
+
+                <div id="dropdownMenuTaoLich" class="hidden absolute left-0 mt-2 w-80 rounded-2xl bg-white shadow-2xl border border-slate-200 z-50 overflow-hidden divide-y divide-slate-100 text-slate-700">
+                    <button type="button" onclick="selectTaoLichTab('tao-lich-cong-tac')" class="w-full text-left px-4 py-3 hover:bg-blue-50 transition flex items-start gap-3">
+                        <i class="bi bi-calendar-plus text-blue-600 text-lg mt-0.5"></i>
+                        <div>
+                            <div class="font-bold text-xs text-slate-900">1. Tạo lịch công tác / họp</div>
+                            <div class="text-[10px] text-slate-500">Sự kiện lẻ: Chi bộ, BGH, Dự giờ, Tập huấn...</div>
+                        </div>
+                    </button>
+                    <button type="button" onclick="selectTaoLichTab('tao-lich-tuan')" class="w-full text-left px-4 py-3 hover:bg-emerald-50 transition flex items-start gap-3">
+                        <i class="bi bi-layout-three-columns text-emerald-600 text-lg mt-0.5"></i>
+                        <div>
+                            <div class="font-bold text-xs text-slate-900">2. Tạo lịch tuần (Bảng truyền thống)</div>
+                            <div class="text-[10px] text-slate-500">Mẫu bảng trắng truyền thống Sáng/Chiều</div>
+                        </div>
+                    </button>
+                    <button type="button" onclick="selectTaoLichTab('tao-lich-thang-truong')" class="w-full text-left px-4 py-3 hover:bg-purple-50 transition flex items-start gap-3">
+                        <i class="bi bi-calendar-month text-purple-600 text-lg mt-0.5"></i>
+                        <div>
+                            <div class="font-bold text-xs text-slate-900">3. Lịch tháng (Trường)</div>
+                            <div class="text-[10px] text-slate-500">Lập kế hoạch công tác trọng tâm tháng</div>
+                        </div>
+                    </button>
+                    <button type="button" onclick="selectTaoLichTab('tai-lich-so')" class="w-full text-left px-4 py-3 hover:bg-rose-50 transition flex items-start gap-3">
+                        <i class="bi bi-file-earmark-arrow-up text-rose-600 text-lg mt-0.5"></i>
+                        <div>
+                            <div class="font-bold text-xs text-slate-900">4. Lịch tháng (Sở GD&ĐT)</div>
+                            <div class="text-[10px] text-slate-500">Tải lên văn bản Lịch của Sở</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="h-5 w-[1px] bg-white/20 mx-1"></div>
+
 
                 <!-- Dropdown Menu tương thích mobile -->
                 <div id="dropdownMenuTaoLich" class="hidden absolute left-0 mt-2 w-72 sm:w-80 rounded-2xl bg-white shadow-2xl border border-slate-200 z-50 overflow-hidden divide-y divide-slate-100 text-slate-700">
@@ -205,200 +243,204 @@
             </button>
         </form>
     </section>
-
-    <!-- ================= 2. GIAO DIỆN TẠO LỊCH TUẦN TRUYỀN THỐNG (MENU 2) ================= -->
-    <section id="tab-tao-lich-tuan" class="form-tab-content hidden space-y-3 sm:space-y-4">
-        <div class="bg-emerald-800 text-white p-3.5 sm:p-4 rounded-2xl shadow-sm flex items-center justify-between gap-2">
-            <div class="font-bold text-xs sm:text-sm uppercase truncate"><i class="bi bi-layout-three-columns mr-1.5"></i>Tạo Lịch Tuần (Bảng Truyền Thống)</div>
-            <span class="text-[10px] sm:text-xs bg-white/20 px-2 py-0.5 sm:py-1 rounded-lg shrink-0">Khung bảng chuẩn</span>
+ <!-- ================= 2. GIAO DIỆN TẠO LỊCH TUẦN TRUYỀN THỐNG (MENU 2) ================= -->
+    <section id="tab-tao-lich-tuan" class="form-tab-content hidden space-y-4">
+        <div class="bg-emerald-800 text-white p-4 rounded-2xl shadow-sm flex items-center justify-between">
+            <div class="font-bold text-sm uppercase"><i class="bi bi-layout-three-columns mr-2"></i>Giao diện 2: Tạo Lịch Công Tác Tuần (Bảng Truyền Thống)</div>
+            <span class="text-xs bg-white/20 px-2.5 py-1 rounded-lg">Thiết kế chuẩn khung bảng trắng</span>
         </div>
 
-        <form id="form-nhap-lich" onsubmit="handleSaveLichTuanBang('phathanh', event)" class="bg-white p-3.5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            
-            <!-- HÀNG TIÊU ĐỀ ĐẦU BẢNG -->
-            <div class="space-y-3 border-b border-slate-200 pb-3">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                    <div>
-                        <div class="text-[10px] sm:text-[11px] font-bold text-slate-600 uppercase tracking-wide">SỞ GIÁO DỤC VÀ ĐÀO TẠO TP. ĐÀ NẴNG</div>
-                        <div class="text-xs sm:text-xs font-black text-[#0F4C81] uppercase tracking-wider">TRƯỜNG THPT HÒA VANG</div>
-                    </div>
-                    
-                    <!-- Nhập Tuần/Tháng/Năm tối ưu mobile -->
-                    <div class="flex items-center justify-start sm:justify-end gap-1.5 text-xs font-bold text-slate-700 w-full sm:w-auto bg-slate-50 p-2 sm:p-0 rounded-xl">
-                        <span>Tuần:</span>
-                        <input type="number" id="inputTuanSo" required min="1" max="53" value="1" class="w-10 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
-                        <span>/ Tháng:</span>
-                        <input type="number" id="inputThangSo" required min="1" max="12" value="8" class="w-10 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
-                        <span>Năm:</span>
-                        <input type="number" id="inputNamSo" required value="2026" class="w-14 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
-                    </div>
-                </div>
+        <form onsubmit="handleSaveLichTuanBang(event)" class="space-y-4">
+           
+
+           <!-- KHUNG NHẬP BẢNG TRUYỀN THỐNG CẬP NHẬT THEO YÊU CẦU -->
+<form id="form-nhap-lich" onsubmit="handleSaveLichTuanBang(event)" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto space-y-4">
+    
+    <!-- HÀNG TIÊU ĐỀ ĐẦU BẢNG (CƠ QUAN & TIÊU ĐỀ LỊCH) -->
+    <div class="space-y-3 border-b border-slate-200 pb-4">
+        <!-- Hàng 1: Cơ quan (Trái) & Tuần/Tháng/Năm (Phải) -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div>
+                <div class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">SỞ GIÁO DỤC VÀ ĐÀO TẠO TP. ĐÀ NẴNG</div>
+                <div class="text-xs font-black text-[#0F4C81] uppercase tracking-wider">TRƯỜNG THPT HÒA VANG</div>
             </div>
-
-            <!-- BẢNG NHẬP LIỆU - BAO BỎ BẰNG OVERFLOW-X-AUTO ĐỂ KHÔNG VỠ MOBILE -->
-            <div class="overflow-x-auto -mx-1 sm:mx-0">
-                <table class="w-full min-w-[650px] border-collapse border border-slate-300 text-xs">
-                    <thead>
-                        <tr class="bg-slate-100 text-[#0F4C81] uppercase font-bold text-center">
-                            <th class="border border-slate-300 p-2 w-32">NGÀY</th>
-                            <th class="border border-slate-300 p-2">SÁNG</th>
-                            <th class="border border-slate-300 p-2">CHIỀU</th>
-                            <th class="border border-slate-300 p-2 w-36">GHI CHÚ</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200">
-                        <!-- THỨ 2 -->
-                        <tr>
-                            <td class="border border-slate-300 p-1.5 bg-slate-50 text-center">
-                                <div class="font-bold text-[#0F4C81] mb-1">Thứ Hai (2)</div>
-                                <input type="date" id="date_2" onchange="autoFillWeekDays(this.value)" class="w-full text-[10px] border border-blue-400 rounded px-1 py-0.5 text-slate-700 font-bold bg-blue-50/50">
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="sang_2" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Sáng Thứ 2..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="chieu_2" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Chiều Thứ 2..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="ghichu_2" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
-                            </td>
-                        </tr>
-
-                        <!-- THỨ 3 -->
-                        <tr>
-                            <td class="border border-slate-300 p-1.5 bg-slate-50 text-center">
-                                <div class="font-bold text-[#0F4C81] mb-1">Thứ Ba (3)</div>
-                                <input type="date" id="date_3" class="w-full text-[10px] border border-slate-300 rounded px-1 py-0.5 text-slate-700 font-medium">
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="sang_3" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Sáng Thứ 3..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="chieu_3" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Chiều Thứ 3..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="ghichu_3" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
-                            </td>
-                        </tr>
-
-                        <!-- THỨ 4 -->
-                        <tr>
-                            <td class="border border-slate-300 p-1.5 bg-slate-50 text-center">
-                                <div class="font-bold text-[#0F4C81] mb-1">Thứ Tư (4)</div>
-                                <input type="date" id="date_4" class="w-full text-[10px] border border-slate-300 rounded px-1 py-0.5 text-slate-700 font-medium">
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="sang_4" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Sáng Thứ 4..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="chieu_4" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Chiều Thứ 4..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="ghichu_4" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
-                            </td>
-                        </tr>
-
-                        <!-- THỨ 5 -->
-                        <tr>
-                            <td class="border border-slate-300 p-1.5 bg-slate-50 text-center">
-                                <div class="font-bold text-[#0F4C81] mb-1">Thứ Năm (5)</div>
-                                <input type="date" id="date_5" class="w-full text-[10px] border border-slate-300 rounded px-1 py-0.5 text-slate-700 font-medium">
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="sang_5" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Sáng Thứ 5..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="chieu_5" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Chiều Thứ 5..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="ghichu_5" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
-                            </td>
-                        </tr>
-
-                        <!-- THỨ 6 -->
-                        <tr>
-                            <td class="border border-slate-300 p-1.5 bg-slate-50 text-center">
-                                <div class="font-bold text-[#0F4C81] mb-1">Thứ Sáu (6)</div>
-                                <input type="date" id="date_6" class="w-full text-[10px] border border-slate-300 rounded px-1 py-0.5 text-slate-700 font-medium">
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="sang_6" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Sáng Thứ 6..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="chieu_6" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Chiều Thứ 6..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="ghichu_6" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
-                            </td>
-                        </tr>
-
-                        <!-- THỨ 7 -->
-                        <tr>
-                            <td class="border border-slate-300 p-1.5 bg-slate-50 text-center">
-                                <div class="font-bold text-[#0F4C81] mb-1">Thứ Bảy (7)</div>
-                                <input type="date" id="date_7" class="w-full text-[10px] border border-slate-300 rounded px-1 py-0.5 text-slate-700 font-medium">
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="sang_7" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Sáng Thứ 7..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="chieu_7" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Chiều Thứ 7..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="ghichu_7" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
-                            </td>
-                        </tr>
-
-                        <!-- CHỦ NHẬT -->
-                        <tr>
-                            <td class="border border-slate-300 p-1.5 bg-slate-50 text-center">
-                                <div class="font-bold text-red-600 mb-1">Chủ Nhật (CN)</div>
-                                <input type="date" id="date_CN" class="w-full text-[10px] border border-slate-300 rounded px-1 py-0.5 text-slate-700 font-medium">
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="sang_CN" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Sáng Chủ Nhật..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="chieu_CN" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Chiều Chủ Nhật..."></textarea>
-                            </td>
-                            <td class="border border-slate-300 p-1">
-                                <textarea id="ghichu_CN" rows="2" class="w-full p-1.5 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="flex items-center justify-end gap-1.5 text-xs font-bold text-slate-700 w-full sm:w-auto">
+                <span>Tuần thứ:</span>
+                <input type="number" id="inputTuanSo" required min="1" max="53" value="1" class="w-12 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
+                <span>/ Tháng:</span>
+                <input type="number" id="inputThangSo" required min="1" max="12" value="8" class="w-12 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
+                <span>Năm:</span>
+                <input type="number" id="inputNamSo" required value="2026" class="w-16 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
             </div>
+        </div>
+    </div>
 
-            <!-- CỤM NÚT TÁC VỤ CHO MOBILE (CĂN LẠI GRID) -->
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 border-t border-slate-200">
-                <button type="button" onclick="if(confirm('Hủy và xóa toàn bộ nội dung?')) document.getElementById('form-nhap-lich').reset();" 
-                    class="w-full sm:w-auto px-4 h-10 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-rose-200 active:scale-95">
-                    <i class="bi bi-x-circle-fill text-sm"></i>
-                    <span>Hủy & Xóa nhập</span>
-                </button>
+    <!-- BẢNG NHẬP LIỆU (BỔ SUNG LẠI THẺ BỌC TABLE Ở ĐÂY) -->
+    <div class="overflow-x-auto">
+        <table class="w-full border-collapse border border-slate-300 text-xs">
+            <thead>
+                <tr class="bg-slate-100 text-[#0F4C81] uppercase font-bold text-center">
+                    <th class="border border-slate-300 p-2.5 w-36">NGÀY</th>
+                    <th class="border border-slate-300 p-2.5">SÁNG</th>
+                    <th class="border border-slate-300 p-2.5">CHIỀU</th>
+                    <th class="border border-slate-300 p-2.5 w-44">GHI CHÚ</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+                <!-- THỨ 2 -->
+                <tr>
+                    <td class="border border-slate-300 p-2 bg-slate-50 text-center">
+                        <div class="font-bold text-[#0F4C81] mb-1">Thứ Hai (2)</div>
+                        <input type="date" id="date_2" onchange="autoFillWeekDays(this.value)" class="w-full text-[11px] border border-blue-400 rounded px-1.5 py-1 text-slate-700 font-bold bg-blue-50/50">
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="sang_2" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Sáng Thứ 2..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="chieu_2" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Chiều Thứ 2..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="ghichu_2" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
+                    </td>
+                </tr>
 
-                <div class="grid grid-cols-3 sm:flex items-center gap-2 w-full sm:w-auto">
-                    <button type="button" onclick="previewLichTuan(event)" 
-                        class="px-2 sm:px-4 h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-[11px] sm:text-xs uppercase transition flex items-center justify-center gap-1 sm:gap-2 border border-slate-300 active:scale-95">
-                        <i class="bi bi-eye-fill text-sm"></i>
-                        <span>Xem trước</span>
-                    </button>
+                <!-- THỨ 3 -->
+                <tr>
+                    <td class="border border-slate-300 p-2 bg-slate-50 text-center">
+                        <div class="font-bold text-[#0F4C81] mb-1">Thứ Ba (3)</div>
+                        <input type="date" id="date_3" class="w-full text-[11px] border border-slate-300 rounded px-1.5 py-1 text-slate-700 font-medium">
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="sang_3" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Sáng Thứ 3..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="chieu_3" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Chiều Thứ 3..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="ghichu_3" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
+                    </td>
+                </tr>
 
-                    <button type="button" onclick="handleSaveLichTuanBang('nhap', event)" 
-                        class="px-2 sm:px-4 h-10 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-[11px] sm:text-xs uppercase shadow-sm transition flex items-center justify-center gap-1 sm:gap-2 active:scale-95">
-                        <i class="bi bi-file-earmark-arrow-down-fill text-sm"></i>
-                        <span>Lưu nháp</span>
-                    </button>
+                <!-- THỨ 4 -->
+                <tr>
+                    <td class="border border-slate-300 p-2 bg-slate-50 text-center">
+                        <div class="font-bold text-[#0F4C81] mb-1">Thứ Tư (4)</div>
+                        <input type="date" id="date_4" class="w-full text-[11px] border border-slate-300 rounded px-1.5 py-1 text-slate-700 font-medium">
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="sang_4" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Sáng Thứ 4..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="chieu_4" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Chiều Thứ 4..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="ghichu_4" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
+                    </td>
+                </tr>
 
-                    <button type="button" onclick="handleSaveLichTuanBang('phathanh', event)" 
-                        class="px-2 sm:px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-[11px] sm:text-xs uppercase shadow-md transition flex items-center justify-center gap-1 sm:gap-2 active:scale-95">
-                        <i class="bi bi-send-check-fill text-sm"></i>
-                        <span>Phát hành</span>
-                    </button>
-                </div>
-            </div>
-        </form>
-    </section>
+                <!-- THỨ 5 -->
+                <tr>
+                    <td class="border border-slate-300 p-2 bg-slate-50 text-center">
+                        <div class="font-bold text-[#0F4C81] mb-1">Thứ Năm (5)</div>
+                        <input type="date" id="date_5" class="w-full text-[11px] border border-slate-300 rounded px-1.5 py-1 text-slate-700 font-medium">
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="sang_5" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Sáng Thứ 5..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="chieu_5" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Chiều Thứ 5..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="ghichu_5" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
+                    </td>
+                </tr>
+
+                <!-- THỨ 6 -->
+                <tr>
+                    <td class="border border-slate-300 p-2 bg-slate-50 text-center">
+                        <div class="font-bold text-[#0F4C81] mb-1">Thứ Sáu (6)</div>
+                        <input type="date" id="date_6" class="w-full text-[11px] border border-slate-300 rounded px-1.5 py-1 text-slate-700 font-medium">
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="sang_6" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Sáng Thứ 6..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="chieu_6" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Chiều Thứ 6..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="ghichu_6" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
+                    </td>
+                </tr>
+
+                <!-- THỨ 7 -->
+                <tr>
+                    <td class="border border-slate-300 p-2 bg-slate-50 text-center">
+                        <div class="font-bold text-[#0F4C81] mb-1">Thứ Bảy (7)</div>
+                        <input type="date" id="date_7" class="w-full text-[11px] border border-slate-300 rounded px-1.5 py-1 text-slate-700 font-medium">
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="sang_7" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Sáng Thứ 7..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="chieu_7" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Chiều Thứ 7..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="ghichu_7" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
+                    </td>
+                </tr>
+
+                <!-- CHỦ NHẬT -->
+                <tr>
+                    <td class="border border-slate-300 p-2 bg-slate-50 text-center">
+                        <div class="font-bold text-red-600 mb-1">Chủ Nhật (CN)</div>
+                        <input type="date" id="date_CN" class="w-full text-[11px] border border-slate-300 rounded px-1.5 py-1 text-slate-700 font-medium">
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="sang_CN" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Sáng Chủ Nhật..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="chieu_CN" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Chiều Chủ Nhật..."></textarea>
+                    </td>
+                    <td class="border border-slate-300 p-1">
+                        <textarea id="ghichu_CN" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Ghi chú..."></textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+   <!-- CỤM NÚT TÁC VỤ -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-200 mt-6">
+    
+    <button type="button" onclick="if(confirm('Hủy và xóa toàn bộ nội dung?')) document.getElementById('form-nhap-lich').reset();" class="w-full sm:w-auto px-4 h-10 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-rose-200">
+        <i class="bi bi-x-circle-fill text-sm"></i>
+        <span>Hủy & Xóa nhập</span>
+    </button>
+
+    <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+        <!-- Nút Xem trước -->
+        <button type="button" onclick="previewLichTuan(event)" class="w-full sm:w-auto px-4 h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase transition flex items-center justify-center gap-2 border border-slate-300">
+            <i class="bi bi-eye-fill text-sm"></i>
+            <span>Xem trước</span>
+        </button>
+
+        <!-- Nút Lưu nháp -->
+        <button type="button" onclick="handleSaveLichTuanBang('nhap', event)" class="w-full sm:w-auto px-4 h-10 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs uppercase shadow-sm transition flex items-center justify-center gap-2">
+            <i class="bi bi-file-earmark-arrow-down-fill text-sm"></i>
+            <span>Lưu nháp</span>
+        </button>
+        <button type="button" onclick="backToEdit(event)" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-lg text-xs border border-slate-300 shadow-sm flex items-center gap-2">
+    <i class="bi bi-pencil-square"></i>
+    <span>Quay lại chỉnh sửa</span>
+</button>
+        <!-- Nút Phát hành -->
+        <button type="button" onclick="handleSaveLichTuanBang('phathanh', event)" class="w-full sm:w-auto px-5 h-10 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs uppercase shadow-md transition flex items-center justify-center gap-2">
+            <i class="bi bi-send-check-fill text-sm"></i>
+            <span>Phát hành lịch</span>
+        </button>
+    </div>
+</div>
+</form>
 
     <!-- ================= KHUNG XEM VĂN BẢN VÀ IN LỊCH TUẦN TRUYỀN THỐNG ================= -->
     <section id="view-lich-tuan" class="view-tab-content space-y-4 hidden">
