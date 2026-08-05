@@ -619,13 +619,59 @@ export function renderHome() {
                 </div>
             </div>
 
-            <!-- 2. BỒI DƯỠNG CHUYÊN MÔN -->
-            <a href="boiduong-chuyenmon.html" class="flex items-center gap-2.5 px-2 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-950/40 transition">
-                <div class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center text-purple-600 shrink-0">
-                    <i class="bi bi-mortarboard text-sm"></i>
-                </div>
-                <span>Bồi dưỡng chuyên môn</span>
-            </a>
+           <!-- Menu Bồi dưỡng chuyên môn -->
+<div class="relative border-y border-slate-100 dark:border-slate-700/50 my-1 py-1">
+
+    <button type="button"
+        onclick="event.stopPropagation();
+                 document.getElementById('bdcm-sub-items').classList.toggle('hidden');
+                 document.getElementById('bdcm-sub-arrow').classList.toggle('rotate-90');"
+        class="w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group">
+
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/40 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0 group-hover:scale-105 transition-transform">
+                <i class="bi bi-mortarboard text-lg"></i>
+            </div>
+
+            <span>Bồi dưỡng chuyên môn</span>
+        </div>
+
+        <i id="bdcm-sub-arrow"
+           class="bi bi-chevron-right text-xs text-slate-400 transition-transform duration-300"></i>
+    </button>
+
+    <!-- Menu cấp 2 (Giữ nguyên chính xác 5 mục và link của Thầy) -->
+    <div id="bdcm-sub-items"
+         class="hidden ml-14 mt-2 border-l-2 border-purple-200 dark:border-purple-800 pl-4 space-y-1">
+
+        <a href="baocao-tap-huan.html"
+           class="block py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-purple-700 dark:hover:text-purple-400 transition">
+            Tập huấn
+        </a>
+
+        <a href="HoiThao.html"
+           class="block py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-purple-700 dark:hover:text-purple-400 transition">
+            Hội thảo
+        </a>
+
+        <a href="baocao-shcm.html"
+           class="block py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-purple-700 dark:hover:text-purple-400 transition">
+            Sinh hoạt chuyên môn
+        </a>
+
+        <a href="baocao-bdtx.html"
+           class="block py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-purple-700 dark:hover:text-purple-400 transition">
+            Bồi dưỡng thường xuyên
+        </a>
+
+        <a href="baocao-khac.html"
+           class="block py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-purple-700 dark:hover:text-purple-400 transition">
+            Khác
+        </a>
+
+    </div>
+
+</div>
 
             <!-- 3. BÁO CÁO CHUYÊN MÔN -->
             <a href="baocao-chuyenmon.html" class="flex items-center gap-2.5 px-2 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-purple-950/40 transition">
