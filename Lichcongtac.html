@@ -207,40 +207,34 @@
         </div>
 
         <form onsubmit="handleSaveLichTuanBang(event)" class="space-y-4">
-            <!-- HEADER BẢNG -->
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-xs font-bold text-[#0F4C81] mb-1">Tuần thứ (*)</label>
-                    <input type="number" id="inputTuanSo" required min="1" max="53" value="1" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-xs font-bold">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-[#0F4C81] mb-1">Tháng (*)</label>
-                    <input type="number" id="inputThangSo" required min="1" max="12" value="8" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-xs font-bold">
-                </div>
-            </div>
+           
 
            <!-- KHUNG NHẬP BẢNG TRUYỀN THỐNG CẬP NHẬT THEO YÊU CẦU -->
 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto space-y-4">
     
     <!-- HÀNG TIÊU ĐỀ ĐẦU BẢNG (CƠ QUAN & TIÊU ĐỀ LỊCH) -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-200 pb-4">
+<div class="space-y-3 border-b border-slate-200 pb-4">
+    <!-- Hàng 1: Cơ quan (Trái) & Tuần/Tháng/Năm (Phải) -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <div>
             <div class="text-[11px] font-bold text-slate-600 uppercase tracking-wide">SỞ GIÁO DỤC VÀ ĐÀO TẠO TP. ĐÀ NẴNG</div>
             <div class="text-xs font-black text-[#0F4C81] uppercase tracking-wider">TRƯỜNG THPT HÒA VANG</div>
         </div>
-        <div class="text-right w-full sm:w-auto">
-            <h2 class="text-base font-black text-red-600 uppercase tracking-wide">LỊCH CÔNG TÁC TUẦN</h2>
-            <div class="flex items-center justify-end gap-1.5 text-xs font-bold text-slate-700 mt-0.5">
-                <span>Tuần thứ:</span>
-                <input type="number" id="inputTuanSo" required min="1" max="53" value="1" class="w-12 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
-                <span>/ Tháng:</span>
-                <input type="number" id="inputThangSo" required min="1" max="12" value="8" class="w-12 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
-                <span>Năm:</span>
-                <input type="number" id="inputNamSo" required value="2026" class="w-16 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
-            </div>
+        <div class="flex items-center justify-end gap-1.5 text-xs font-bold text-slate-700 w-full sm:w-auto">
+            <span>Tuần thứ:</span>
+            <input type="number" id="inputTuanSo" required min="1" max="53" value="1" class="w-12 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
+            <span>/ Tháng:</span>
+            <input type="number" id="inputThangSo" required min="1" max="12" value="8" class="w-12 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
+            <span>Năm:</span>
+            <input type="number" id="inputNamSo" required value="2026" class="w-16 text-center rounded-md border border-slate-300 px-1 py-0.5 text-xs font-extrabold text-[#0F4C81] focus:border-blue-500 outline-none">
         </div>
     </div>
 
+    <!-- Hàng 2: Tiêu đề LỊCH CÔNG TÁC TUẦN (Chữ lớn hơn, nằm 1 dòng riêng) -->
+    <div class="text-center pt-1">
+        <h2 class="text-xl font-black text-red-600 uppercase tracking-wider">LỊCH CÔNG TÁC TUẦN</h2>
+    </div>
+</div>
     <!-- BẢNG NHẬP LIỆU -->
     <table class="w-full border-collapse border border-slate-300 text-xs">
         <thead>
@@ -256,7 +250,7 @@
             <tr>
                 <td class="border border-slate-300 p-2 bg-slate-50 text-center">
                     <div class="font-bold text-[#0F4C81] mb-1">Thứ Hai (2)</div>
-                    <input type="date" id="date_2" class="w-full text-[11px] border border-slate-300 rounded px-1.5 py-1 text-slate-700 font-medium">
+                   <input type="date" id="date_2" onchange="autoFillWeekDays(this.value)" class="w-full text-[11px] border border-blue-400 rounded px-1.5 py-1 text-slate-700 font-bold bg-blue-50/50">
                 </td>
                 <td class="border border-slate-300 p-1">
                     <textarea id="sang_2" rows="2" class="w-full p-2 text-xs border border-slate-200 rounded-lg outline-none focus:border-blue-500 resize-y" placeholder="Nội dung công tác Sáng Thứ 2..."></textarea>
@@ -700,6 +694,57 @@
             </div>
         `).join('');
     }
+
+    // Hàm tính số tuần trong năm theo chuẩn ISO (Thứ 2 là ngày đầu tuần)
+function getWeekNumber(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    return weekNo;
+}
+
+// Hàm tự động điền các thứ còn lại và tuần/tháng/năm
+function autoFillWeekDays(monDateString) {
+    if (!monDateString) return;
+
+    const startDate = new Date(monDateString);
+    if (isNaN(startDate.getTime())) return;
+
+    // 1. Tự động tính Tuần, Tháng, Năm cho tiêu đề
+    const weekNum = getWeekNumber(startDate);
+    const monthNum = startDate.getMonth() + 1;
+    const yearNum = startDate.getFullYear();
+
+    document.getElementById('inputTuanSo').value = weekNum;
+    document.getElementById('inputThangSo').value = monthNum;
+    document.getElementById('inputNamSo').value = yearNum;
+
+    // 2. Tự động cộng ngày cho các thứ tiếp theo (Thứ 3 đến Chủ Nhật)
+    const dayKeys = [
+        { id: 'date_3', add: 1 },
+        { id: 'date_4', add: 2 },
+        { id: 'date_5', add: 3 },
+        { id: 'date_6', add: 4 },
+        { id: 'date_7', add: 5 },
+        { id: 'date_CN', add: 6 }
+    ];
+
+    dayKeys.forEach(item => {
+        const nextDate = new Date(startDate);
+        nextDate.setDate(startDate.getDate() + item.add);
+        
+        // Định dạng YYYY-MM-DD để gán vào input type="date"
+        const yyyy = nextDate.getFullYear();
+        const mm = String(nextDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(nextDate.getDate()).padStart(2, '0');
+        
+        const targetInput = document.getElementById(item.id);
+        if (targetInput) {
+            targetInput.value = `${yyyy}-${mm}-${dd}`;
+        }
+    });
+}
 </script>
 
 </body>
