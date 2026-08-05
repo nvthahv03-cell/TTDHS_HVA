@@ -25,10 +25,9 @@
 </head>
 <body class="min-h-screen text-slate-800 antialiased flex flex-col bg-slate-50 selection:bg-blue-500 selection:text-white">
 
-<!-- HEADER HỆ THỐNG -->
 <header class="sticky top-0 z-40 bg-[#0F4C81] shadow-lg">
     <div class="max-w-5xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
-        <!-- Hàng 1: Tiêu đề & Thông tin tài khoản -->
+        <!-- Hàng 1: Tiêu đề -->
         <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2 sm:gap-3 min-w-0">
                 <button type="button" onclick="window.location.href='main.html'"
@@ -47,57 +46,19 @@
             </div>
         </div>
 
-        <!-- Hàng 2: Menu điều hướng tự động cuộn ngang trên điện thoại -->
-        <div class="flex items-center gap-2 pt-3 pb-1 text-xs font-bold text-white/90 overflow-x-auto no-scrollbar scroll-smooth">
+        <!-- Hàng 2: Menu điều hướng -->
+        <div class="relative flex items-center gap-2 pt-3 pb-1 text-xs font-bold text-white/90">
             
-             <!-- MENU ĐIỀU HƯỚNG CHÍNH -->
-        <div class="flex items-center gap-2 pt-4 pb-1 text-xs font-bold text-white/90">
-            
-            <!-- NÚT MENU XỔ XUỐNG 4 MỤC -->
-            <div class="relative inline-block text-left">
+            <!-- NÚT MENU TẠO LỊCH -->
+            <div class="relative inline-block text-left shrink-0">
                 <button type="button" id="btnDropdownTaoLich" onclick="toggleDropdownTaoLich(event)" 
-                    class="px-4 py-2 rounded-xl transition flex items-center gap-2 bg-amber-400 text-slate-900 font-black shadow-md hover:bg-amber-300">
-                    <i class="bi bi-plus-circle-fill text-base"></i>
-                    <span>TẠO LỊCH MỚI</span>
-                    <i class="bi bi-chevron-down text-xs"></i>
+                    class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition flex items-center gap-1.5 bg-amber-400 text-slate-900 font-black shadow-md hover:bg-amber-300 active:scale-95 text-xs">
+                    <i class="bi bi-plus-circle-fill text-sm sm:text-base"></i>
+                    <span class="whitespace-nowrap">TẠO LỊCH MỚI</span>
+                    <i class="bi bi-chevron-down text-[10px]"></i>
                 </button>
 
-                <div id="dropdownMenuTaoLich" class="hidden absolute left-0 mt-2 w-80 rounded-2xl bg-white shadow-2xl border border-slate-200 z-50 overflow-hidden divide-y divide-slate-100 text-slate-700">
-                    <button type="button" onclick="selectTaoLichTab('tao-lich-cong-tac')" class="w-full text-left px-4 py-3 hover:bg-blue-50 transition flex items-start gap-3">
-                        <i class="bi bi-calendar-plus text-blue-600 text-lg mt-0.5"></i>
-                        <div>
-                            <div class="font-bold text-xs text-slate-900">1. Tạo lịch công tác / họp</div>
-                            <div class="text-[10px] text-slate-500">Sự kiện lẻ: Chi bộ, BGH, Dự giờ, Tập huấn...</div>
-                        </div>
-                    </button>
-                    <button type="button" onclick="selectTaoLichTab('tao-lich-tuan')" class="w-full text-left px-4 py-3 hover:bg-emerald-50 transition flex items-start gap-3">
-                        <i class="bi bi-layout-three-columns text-emerald-600 text-lg mt-0.5"></i>
-                        <div>
-                            <div class="font-bold text-xs text-slate-900">2. Tạo lịch tuần (Bảng truyền thống)</div>
-                            <div class="text-[10px] text-slate-500">Mẫu bảng trắng truyền thống Sáng/Chiều</div>
-                        </div>
-                    </button>
-                    <button type="button" onclick="selectTaoLichTab('tao-lich-thang-truong')" class="w-full text-left px-4 py-3 hover:bg-purple-50 transition flex items-start gap-3">
-                        <i class="bi bi-calendar-month text-purple-600 text-lg mt-0.5"></i>
-                        <div>
-                            <div class="font-bold text-xs text-slate-900">3. Lịch tháng (Trường)</div>
-                            <div class="text-[10px] text-slate-500">Lập kế hoạch công tác trọng tâm tháng</div>
-                        </div>
-                    </button>
-                    <button type="button" onclick="selectTaoLichTab('tai-lich-so')" class="w-full text-left px-4 py-3 hover:bg-rose-50 transition flex items-start gap-3">
-                        <i class="bi bi-file-earmark-arrow-up text-rose-600 text-lg mt-0.5"></i>
-                        <div>
-                            <div class="font-bold text-xs text-slate-900">4. Lịch tháng (Sở GD&ĐT)</div>
-                            <div class="text-[10px] text-slate-500">Tải lên văn bản Lịch của Sở</div>
-                        </div>
-                    </button>
-                </div>
-            </div>
-
-            <div class="h-5 w-[1px] bg-white/20 mx-1"></div>
-
-
-                <!-- Dropdown Menu tương thích mobile -->
+                <!-- Dropdown Menu -->
                 <div id="dropdownMenuTaoLich" class="hidden absolute left-0 mt-2 w-72 sm:w-80 rounded-2xl bg-white shadow-2xl border border-slate-200 z-50 overflow-hidden divide-y divide-slate-100 text-slate-700">
                     <button type="button" onclick="selectTaoLichTab('tao-lich-cong-tac')" class="w-full text-left px-4 py-3 hover:bg-blue-50 transition flex items-start gap-3 active:bg-blue-100">
                         <i class="bi bi-calendar-plus text-blue-600 text-lg mt-0.5"></i>
@@ -132,19 +93,21 @@
 
             <div class="h-4 w-[1px] bg-white/20 mx-0.5 shrink-0"></div>
 
-            <!-- CÁC TAB XEM DANH SÁCH / BẢN IN -->
-            <button type="button" onclick="switchViewTab('view-lich-tuan')" id="tab-view-lich-tuan" 
-                class="view-tab px-3 py-1.5 sm:py-2 rounded-xl transition flex items-center gap-1.5 bg-white/20 text-white shrink-0 whitespace-nowrap active:scale-95">
-                <i class="bi bi-calendar-week-fill"></i> Xem Lịch Tuần
-            </button>
-            <button type="button" onclick="switchViewTab('view-lich-thang')" id="tab-view-lich-thang" 
-                class="view-tab px-3 py-1.5 sm:py-2 rounded-xl transition flex items-center gap-1.5 hover:bg-white/10 shrink-0 whitespace-nowrap active:scale-95">
-                <i class="bi bi-calendar3"></i> Xem Lịch Tháng
-            </button>
-            <button type="button" onclick="switchViewTab('view-lich-so')" id="tab-view-lich-so" 
-                class="view-tab px-3 py-1.5 sm:py-2 rounded-xl transition flex items-center gap-1.5 hover:bg-white/10 shrink-0 whitespace-nowrap active:scale-95">
-                <i class="bi bi-journal-text"></i> Xem Lịch Sở
-            </button>
+            <!-- Các Tab Xem -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                <button type="button" onclick="switchViewTab('view-lich-tuan')" id="tab-view-lich-tuan" 
+                    class="view-tab px-3 py-1.5 sm:py-2 rounded-xl transition flex items-center gap-1.5 bg-white/20 text-white shrink-0 whitespace-nowrap active:scale-95">
+                    <i class="bi bi-calendar-week-fill"></i> Xem Lịch Tuần
+                </button>
+                <button type="button" onclick="switchViewTab('view-lich-thang')" id="tab-view-lich-thang" 
+                    class="view-tab px-3 py-1.5 sm:py-2 rounded-xl transition flex items-center gap-1.5 hover:bg-white/10 shrink-0 whitespace-nowrap active:scale-95">
+                    <i class="bi bi-calendar3"></i> Xem Lịch Tháng
+                </button>
+                <button type="button" onclick="switchViewTab('view-lich-so')" id="tab-view-lich-so" 
+                    class="view-tab px-3 py-1.5 sm:py-2 rounded-xl transition flex items-center gap-1.5 hover:bg-white/10 shrink-0 whitespace-nowrap active:scale-95">
+                    <i class="bi bi-journal-text"></i> Xem Lịch Sở
+                </button>
+            </div>
         </div>
     </div>
 </header>
