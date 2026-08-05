@@ -144,7 +144,7 @@ export function renderHome() {
 </div>
 
 <!-- CONTAINER 3 TÁC VỤ VNeID STYLE -->
-<div class="flex justify-center items-start gap-6 sm:gap-16 md:gap-24 mb-8 relative z-30 max-w-4xl mx-auto px-2">
+<div class="flex justify-center items-start gap-2 sm:gap-8 md:gap-12 mb-8 relative z-30 max-w-lg mx-auto px-4">
 
   <!-- ================= SHORTCUT 1: LỊCH CÔNG TÁC ================= -->
   <div class="relative flex flex-col items-center">
