@@ -166,7 +166,7 @@ export function renderHome() {
     </button>
 
     <!-- Menu Dropdown 1 -->
-    <div id="menu-lich-tb" class="dashboard-dropdown hidden absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 sm:w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all text-left" onclick="event.stopPropagation()">
+   <div id="menu-lich-tb" class="dashboard-dropdown hidden absolute top-full left-0 sm:-left-4 mt-3 w-64 sm:w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all text-left" onclick="event.stopPropagation()">
       
       <!-- Lịch công tác -->
       <div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
