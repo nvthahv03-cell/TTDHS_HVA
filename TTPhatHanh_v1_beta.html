@@ -297,49 +297,48 @@
     const eventBus = new EventBus();
 
     // =================================================================
-    // 3. STORAGE ENGINE (STORAGE ABSTRACTION LAYER)
-    // =================================================================
-    const StorageEngine = {
-        save: (key, value) => {
-            try {
-                const serialized = typeof value === 'string' ? value : JSON.stringify(value);
-                sessionStorage.setItem(key, serialized);
-                return { success: true };
-            } catch (error) {
-                return { success: false, error: error.message };
-            }
-        },
-        load: (key) => {
-            try {
-                const item = sessionStorage.getItem(key);
-                if (!item) return null;
-                try {
-                    return JSON.parse(item);
-                } catch (e) {
-                    return item;
-                }
-            } catch (error) {
-                return null;
-            }
-        },
-        remove: (key) => {
-            try {
-                sessionStorage.removeItem(key);
-                return { success: true };
-            } catch (error) {
-                return { success: false, error: error.message };
-            }
-        },
-        clear: () => {
-            try {
-                sessionStorage.clear();
-                return { success: true };
-            } catch (error) {
-                return { success: false, error: error.message };
-            }
+// 3. STORAGE ENGINE (CHUYỂN SANG LOCALSTORAGE ĐỂ CHIA SẺ ĐA TAB)
+// =================================================================
+const StorageEngine = {
+    save: (key, value) => {
+        try {
+            const serialized = typeof value === 'string' ? value : JSON.stringify(value);
+            localStorage.setItem(key, serialized); // <-- Đổi từ sessionStorage thành localStorage
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
         }
-    };
-
+    },
+    load: (key) => {
+        try {
+            const item = localStorage.getItem(key); // <-- Đổi từ sessionStorage thành localStorage
+            if (!item) return null;
+            try {
+                return JSON.parse(item);
+            } catch (e) {
+                return item;
+            }
+        } catch (error) {
+            return null;
+        }
+    },
+    remove: (key) => {
+        try {
+            localStorage.removeItem(key); // <-- Đổi từ sessionStorage thành localStorage
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    },
+    clear: () => {
+        try {
+            localStorage.clear();
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+};
     // =================================================================
     // 4. MODULE ADAPTER (DATA NORMALIZATION LAYER)
     // =================================================================
@@ -781,6 +780,65 @@ const Controller = {
       console.error("Lỗi đọc dữ liệu lịch:", e);
     }
   }
+</script>
+    <script>
+  // Hàm hiển thị Lịch lên màn hình
+  function renderPublishedSchedule() {
+    const rawData = localStorage.getItem('TTDHS_LAST_PUBLISHED');
+    if (!rawData) return;
+
+    try {
+      const payload = JSON.parse(rawData);
+      const doc = payload.document;
+
+      // Kiểm tra nếu đúng là tài liệu Lịch công tác
+      const isLich = payload.destinations && payload.destinations.some(d => d.id === 'LichCongTac' || d.name === 'Lịch công tác');
+      if (!isLich) return;
+
+      console.log("📌 Đã tìm thấy dữ liệu Lịch công tác:", doc);
+
+      // Tạo hoặc lấy khung hiển thị lịch
+      let container = document.getElementById('lich-render-box');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'lich-render-box';
+        container.className = 'max-w-6xl mx-auto my-6 px-4';
+        
+        // Chèn vào bên dưới khối thông tin cán bộ
+        const parentCard = document.querySelector('.bg-white') || document.body;
+        parentCard.after(container);
+      }
+
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-6 shadow-md border border-blue-100 space-y-4">
+          <div class="flex items-center justify-between border-b pb-3">
+            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-xs flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Lịch công tác mới phát hành
+            </span>
+            <span class="text-xs text-slate-400 font-mono">Mã: ${doc.docId || 'LCT-2026'}</span>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900">${doc.title}</h3>
+          <p class="text-xs text-slate-500"><strong>Người soạn:</strong> ${doc.author || 'Ban BGH'} | <strong>Ngày tạo:</strong> ${doc.createdAt}</p>
+          <div class="p-4 bg-blue-50/60 rounded-xl border border-blue-100 text-sm text-slate-700">
+            <i class="bi bi-info-circle-fill text-blue-600 mr-1"></i>
+            Nội dung lịch công tác đã được đồng bộ trực tiếp từ <strong>Trung tâm Điều phối Phát hành Số (TTĐHS_HVA)</strong>.
+          </div>
+        </div>
+      `;
+    } catch (e) {
+      console.error("Lỗi đọc dữ liệu Lịch công tác:", e);
+    }
+  }
+
+  // 1. Chạy ngay khi mở trang
+  document.addEventListener('DOMContentLoaded', renderPublishedSchedule);
+
+  // 2. Tải thời gian thực nếu trang đang mở sẵn
+  const channel = new BroadcastChannel('TTDHS_PUBLISH_CHANNEL');
+  channel.onmessage = (event) => {
+    console.log("📌 Tín hiệu phát hành Realtime:", event.data);
+    renderPublishedSchedule();
+  };
 </script>
 </body>
 </html>
