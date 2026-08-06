@@ -507,21 +507,30 @@
 
     async function loadDanhSachToAndNhanSu() {
         try {
-            const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`);
-            if (!res.ok) throw new Error("Không thể tải dữ liệu");
-            const listTo = await res.json();
+            // Tải danh sách tổ với cấu hình follow redirect
+            const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`, { method: 'GET', redirect: 'follow' });
+            if (!res.ok) throw new Error("Không thể tải danh sách tổ");
+            
+            const rawTo = await res.json();
+            const listTo = Array.isArray(rawTo) ? rawTo : (rawTo.data || []);
+
+            if (listTo.length === 0) throw new Error("Danh sách tổ rỗng");
 
             allToData = await Promise.all(listTo.map(async (toItem) => {
-                const tenTo = toItem.tenTo || toItem;
+                const tenTo = typeof toItem === 'string' ? toItem : (toItem.tenTo || toItem.ten || '');
+                if (!tenTo) return null;
+
                 try {
-                    const resNS = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`);
-                    const members = await resNS.json();
+                    const resNS = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`, { method: 'GET', redirect: 'follow' });
+                    const rawNS = await resNS.json();
+                    const members = Array.isArray(rawNS) ? rawNS : (rawNS.data || []);
+
                     return {
                         tenTo: tenTo,
                         soLuong: members.length || toItem.soLuong || 0,
                         members: members.map(m => ({
-                            username: m.username || m.maGV || m.hoTen,
-                            hoTen: m.hoTen || m.fullName,
+                            username: m.username || m.maGV || m.hoTen || '',
+                            hoTen: m.hoTen || m.fullName || 'Chưa đặt tên',
                             chucVu: m.chucVu || m.vaiTro || 'Giáo viên',
                             tenTo: tenTo
                         }))
@@ -531,9 +540,11 @@
                 }
             }));
 
+            allToData = allToData.filter(Boolean);
             renderAccordionTo();
+
         } catch (error) {
-            console.error("Lỗi tải dữ liệu đối tượng:", error);
+            console.error("Lỗi tải dữ liệu đối tượng từ Backend:", error);
             showToast("Không thể kết nối lấy danh sách tổ. Sử dụng dữ liệu dự phòng.", "warning");
             
             allToData = [
@@ -793,7 +804,7 @@
         `;
 
         try {
-            const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}`);
+            const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}`, { method: 'GET', redirect: 'follow' });
             const listVB = await res.json();
 
             if (!listVB || listVB.length === 0) {
