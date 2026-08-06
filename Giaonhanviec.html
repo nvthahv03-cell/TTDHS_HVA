@@ -1,1046 +1,300 @@
 <!DOCTYPE html>
-<html lang="vi" class="h-full bg-slate-50">
+<html lang="vi" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TTĐHS_HVA - Giao Nhiệm Vụ Digital Enterprise</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trung tâm Điều hành số - Giao nhiệm vụ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            200: '#bae0fd',
-                            500: '#1687D9',
-                            600: '#0F4C81',
-                            700: '#0b3e69',
-                            800: '#062B5B',
-                            900: '#041f43',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-            -webkit-tap-highlight-color: transparent; 
-        }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        .custom-accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .custom-accordion-content.open {
-            max-height: 2000px;
-        }
-        
-        @keyframes toastIn {
-            from { transform: translateY(-100%) scale(0.9); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
-        }
-        @keyframes toastOut {
-            from { transform: translateY(0) scale(1); opacity: 1; }
-            to { transform: translateY(-100%) scale(0.9); opacity: 0; }
-        }
-        .toast-enter { animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .toast-exit { animation: toastOut 0.25s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
-
-        @media print {
-            body * { visibility: hidden; }
-            #printArea, #printArea * { visibility: visible; }
-            #printArea { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 20px; }
-            .no-print { display: none !important; }
-        }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="h-full text-slate-800 antialiased flex flex-col bg-slate-50 selection:bg-blue-100 selection:text-[#0F4C81]">
+<body class="h-full bg-white text-[#0F4C81] antialiased flex flex-col">
 
-<!-- TOAST CONTAINER -->
-<div id="toastContainer" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
-
-<!-- HEADER TTĐHS_HVA -->
-<header class="relative sticky top-0 z-40 overflow-hidden shadow-md no-print">
-    <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
-    <div class="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-cyan-300/20 blur-3xl"></div>
-    <div class="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-sky-300/15 blur-3xl"></div>
-
-    <div class="absolute inset-0 opacity-[0.06]"
-        style="background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px); background-size:28px 28px;">
-    </div>
-
-    <svg class="absolute inset-0 w-full h-full opacity-[0.12]" preserveAspectRatio="none">
-        <g stroke="white" stroke-width="1.2" fill="none">
-            <path d="M35 28 H120 V68 H200"/>
-            <path d="M300 20 V55 H390 V95"/>
-            <path d="M560 28 H650 V60 H760"/>
-        </g>
-        <g fill="white">
-            <circle cx="35" cy="28" r="2.6"/>
-            <circle cx="120" cy="68" r="2.6"/>
-            <circle cx="200" cy="68" r="2.6"/>
-            <circle cx="300" cy="20" r="2.6"/>
-            <circle cx="390" cy="55" r="2.6"/>
-            <circle cx="390" cy="95" r="2.6"/>
-            <circle cx="560" cy="28" r="2.6"/>
-            <circle cx="650" cy="60" r="2.6"/>
-            <circle cx="760" cy="60" r="2.6"/>
-        </g>
-    </svg>
-
-    <div class="relative max-w-4xl mx-auto px-4 pt-4 pb-5">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <button type="button" onclick="history.back()"
-                    class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 backdrop-blur hover:bg-white/20 transition flex items-center justify-center text-white active:scale-95">
-                    <i class="bi bi-arrow-left text-lg"></i>
-                </button>
-                <div>
-                    <div class="text-white/80 font-semibold uppercase tracking-wider text-[11px]">
-                        THPT HÒA VANG - TTĐHS_HVA
-                    </div>
-                    <div class="text-white text-xl font-extrabold uppercase tracking-tight">
-                        GIAO NHIỆM VỤ ĐIỀU HÀNH
-                    </div>
-                </div>
-            </div>
-
-            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="text-white text-xs font-medium">Trực tuyến</span>
-            </div>
+   <!-- HEADER TRANG GIAO VIỆC -->
+<header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <div class="flex items-center space-x-3">
+        <button onclick="window.location.href='main.html'" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-[#0F4C81] transition">
+            <i class="bi bi-arrow-left text-xl font-bold"></i>
+        </button>
+        <div>
+            <h1 class="text-xs font-extrabold uppercase tracking-widest text-slate-500">Trung tâm Điều hành số</h1>
+            <p class="text-lg font-extrabold text-[#0F4C81]">Giao nhiệm vụ & Chỉ đạo công tác</p>
         </div>
+    </div>
+    <div class="flex items-center gap-3">
+        <button type="button" onclick="window.location.href='main.html'" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition">Hủy bỏ</button>
+        <button form="formGiaoViecFull" type="submit" id="btnSubmit" class="px-6 py-2 rounded-xl bg-[#0F4C81] text-white text-sm font-bold hover:bg-blue-900 shadow-lg shadow-blue-900/20 transition flex items-center gap-2">
+            <i class="bi bi-send-fill"></i> Xác nhận Giao việc
+        </button>
     </div>
 </header>
 
-<!-- MAIN CONTENT CONTAINER -->
-<main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 pb-32 overflow-y-auto no-print">
-    <form id="formGiaoViec" onsubmit="event.preventDefault(); submitTask();" class="space-y-6">
-        
-        <!-- PHẦN 1: NGƯỜI GIAO -->
-        <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
-            <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2.5">
-                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
-                    <i class="bi bi-person-badge-fill text-lg text-blue-600"></i>
-                    <span>PHẦN 1: Thông tin người giao việc</span>
-                </div>
-                <span id="displayNgayGiao" class="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">--/--/----</span>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <div class="relative shrink-0">
-                    <div id="avatarContainer" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0F4C81] to-sky-500 flex items-center justify-center text-white text-xl font-bold shadow-md uppercase">
-                        --
-                    </div>
-                    <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
-                </div>
-
-                <div class="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <div>
-                        <div class="text-[11px] font-semibold uppercase text-slate-400">Họ và tên</div>
-                        <div id="nguoiGiaoTen" class="text-base font-bold text-slate-800 truncate">Đang tải...</div>
-                    </div>
-                    <div>
-                        <div class="text-[11px] font-semibold uppercase text-slate-400">Chức vụ</div>
-                        <div id="nguoiGiaoChucVu" class="text-sm font-semibold text-[#0F4C81] truncate">Đang tải...</div>
-                    </div>
-                    <div>
-                        <div class="text-[11px] font-semibold uppercase text-slate-400">Tổ chuyên môn</div>
-                        <div id="nguoiGiaoTo" class="text-sm font-medium text-slate-600 truncate">Ban Giám hiệu</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PHẦN 2: NGUỒN GIAO -->
-        <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
-            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81] mb-3 border-b border-slate-100 pb-2.5">
-                <i class="bi bi-diagram-2-fill text-lg text-blue-600"></i>
-                <span>PHẦN 2: Nguồn giao công việc</span>
-            </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                    <input type="radio" name="nguonGiao" value="Theo văn bản" checked onchange="toggleNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
-                    <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Theo văn bản</span>
-                </label>
-                <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                    <input type="radio" name="nguonGiao" value="Chỉ đạo trực tiếp" onchange="toggleNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
-                    <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Chỉ đạo trực tiếp</span>
-                </label>
-                <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                    <input type="radio" name="nguonGiao" value="Công việc thường xuyên" onchange="toggleNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
-                    <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Thường xuyên</span>
-                </label>
-                <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                    <input type="radio" name="nguonGiao" value="Công việc đột xuất" onchange="toggleNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
-                    <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Đột xuất</span>
-                </label>
-            </div>
-        </section>
-
-        <!-- PHẦN 3: TÌM KIẾM VĂN BẢN (HIỂN THỊ KHI CHỌN THEO VĂN BẢN) -->
-        <section id="cardVanBan" class="bg-white rounded-2xl border border-blue-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md bg-gradient-to-b from-blue-50/30 to-transparent">
-            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81] mb-3 border-b border-blue-100 pb-2.5">
-                <i class="bi bi-file-earmark-text-fill text-lg text-blue-600"></i>
-                <span>PHẦN 3: Tra cứu & Chọn văn bản đính kèm</span>
-            </div>
-
-            <div class="space-y-3">
-                <div class="relative">
-                    <input type="text" id="inputSearchVB" oninput="debouncedSearchVanBan()" placeholder="Gõ số văn bản, từ khóa, người ký hoặc trích yếu để tìm realtime..." 
-                        class="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-10 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-[#0F4C81] focus:ring-2 focus:ring-blue-100 transition shadow-sm">
-                    <i class="bi bi-search absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                    <button type="button" id="btnClearSearchVB" onclick="clearSearchVanBan()" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 p-0.5">
-                        <i class="bi bi-x-circle-fill"></i>
-                    </button>
-                </div>
-
-                <!-- KẾT QUẢ TÌM KIẾM VĂN BẢN REALTIME -->
-                <div id="vungKetQuaVanBan" class="hidden border border-slate-200 rounded-xl bg-white max-h-56 overflow-y-auto divide-y divide-slate-100 shadow-lg"></div>
-
-                <!-- THÔNG TIN VĂN BẢN ĐÃ CHỌN -->
-                <div id="chiTietVanBanDaChon" class="p-3.5 bg-blue-50/80 rounded-xl border border-blue-200 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div><span class="font-bold text-slate-500">Số VB:</span> <span id="lblSoVB" class="font-bold text-[#0F4C81]">Chưa chọn</span></div>
-                    <div><span class="font-bold text-slate-500">Ngày ban hành:</span> <span id="lblNgayBH" class="text-slate-700">--/--/----</span></div>
-                    <div><span class="font-bold text-slate-500">Người ký:</span> <span id="lblNguoiKy" class="text-slate-700">--</span></div>
-                    <div><span class="font-bold text-slate-500">Trích yếu:</span> <span id="lblTrichYeu" class="text-slate-700 italic">--</span></div>
-                    <div class="sm:col-span-2 border-t border-blue-200/60 pt-1.5 mt-0.5">
-                        <span class="font-bold text-slate-500">Tên văn bản:</span> <span id="lblTenVB" class="text-slate-800 font-semibold">Vui lòng sử dụng ô tìm kiếm phía trên để chọn văn bản chỉ đạo.</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PHẦN 4: THÔNG TIN CÔNG VIỆC -->
-        <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md space-y-4">
-            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81] border-b border-slate-100 pb-2.5">
-                <i class="bi bi-card-checklist text-lg text-blue-600"></i>
-                <span>PHẦN 4: Thông tin chi tiết công việc</span>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <!-- NỘI DUNG CHÍNH (FULL MÀN HÌNH - NỀN TRẮNG, CHỮ XANH ĐẬM) -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-6 md:p-8 overflow-y-auto">
+        <form id="formGiaoViecFull" class="space-y-6">
+            
+            <!-- Phần 1: Thông tin người giao (Khóa tự động) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Mức độ ưu tiên <span class="text-red-500">*</span></label>
-                    <select id="mucDo" class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3 py-2.5 text-sm font-semibold text-slate-800 outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100 transition">
-                        <option value="Bình thường" selected>🟢 Bình thường</option>
-                        <option value="Quan trọng">🟠 Quan trọng</option>
-                        <option value="Khẩn">🔴 Khẩn cấp</option>
-                    </select>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Người giao nhiệm vụ</label>
+                    <input type="text" id="nguoiGiao" readonly class="w-full bg-transparent text-sm font-extrabold text-[#0F4C81] outline-none" value="Thầy Nguyễn Văn Thả">
                 </div>
-
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Loại nhiệm vụ <span class="text-red-500">*</span></label>
-                    <select id="loaiNhiemVu" class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3 py-2.5 text-sm font-semibold text-slate-800 outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100 transition">
-                        <option value="Chỉ đạo thường xuyên" selected>Chỉ đạo thường xuyên</option>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Chức vụ</label>
+                    <input type="text" id="chucVuNguoiGiao" readonly class="w-full bg-transparent text-sm font-extrabold text-[#0F4C81] outline-none" value="Phó Hiệu trưởng">
+                </div>
+            </div>
+
+            <!-- Phần 2: Loại nhiệm vụ & Thời gian -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Loại nhiệm vụ</label>
+                    <select id="loaiNhiemVu" class="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-[#0F4C81] outline-none focus:border-[#0F4C81] transition">
+                        <option value="Chỉ đạo thường xuyên">Chỉ đạo thường xuyên</option>
                         <option value="Công việc khẩn">Công việc khẩn</option>
                         <option value="Thực hiện theo Văn bản">Thực hiện theo Văn bản</option>
-                        <option value="Chuyên môn - Giảng dạy">Chuyên môn - Giảng dạy</option>
-                        <option value="Đột xuất - Phối hợp">Đột xuất - Phối hợp</option>
                     </select>
                 </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Thời gian cập nhật giao</label>
+                    <input type="text" id="thoiGianHienThi" readonly class="w-full rounded-xl border-2 border-slate-200 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-700">
+                </div>
             </div>
 
+            <!-- Phần 3: Tiêu đề nhiệm vụ -->
             <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Tiêu đề công việc <span class="text-red-500">*</span></label>
-                <input type="text" id="tieuDe" required placeholder="Nhập tiêu đề công việc ngắn gọn, rõ ràng..." 
-                    class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-sm font-semibold text-slate-800 outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100 transition">
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Tiêu đề nhiệm vụ</label>
+                <input type="text" id="tieuDe" required class="w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold text-[#0F4C81] outline-none focus:border-[#0F4C81] transition" placeholder="Nhập tóm tắt tên công việc giao...">
             </div>
 
+            <!-- Phần 4: Nội dung chi tiết (Ô văn bản hoặc tự ghi) -->
             <div>
-                <label class="block text-xs font-semibold text-slate-700 mb-1">Nội dung chỉ đạo & yêu cầu chi tiết <span class="text-red-500">*</span></label>
-                <textarea id="noiDung" rows="4" required placeholder="Nhập nội dung hướng dẫn, yêu cầu cụ thể các bước thực hiện..." 
-                    class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100 transition"></textarea>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Nội dung chi tiết yêu cầu / Chỉ đạo</label>
+                <textarea id="noiDung" rows="4" class="w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold text-[#0F4C81] outline-none focus:border-[#0F4C81] transition resize-y" placeholder="Nhập nội dung công việc hoặc chọn mẫu sẵn..."></textarea>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Yêu cầu minh chứng / báo cáo</label>
-                    <select id="yeuCauMinhChung" class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100 transition">
-                        <option value="Không" selected>Không yêu cầu minh chứng</option>
-                        <option value="Có">Có (Yêu cầu đính kèm file/hình ảnh minh chứng)</option>
-                    </select>
+            <!-- Phần 5: PHÂN CHỌN TỔ / BỘ PHẬN & ĐỐI TƯỢNG (Đúng 8 đơn vị) -->
+            <div class="border-2 border-slate-200 rounded-2xl p-5 space-y-4 bg-slate-50/50">
+                <div class="flex justify-between items-center">
+                    <label class="text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">Chọn Tổ / Bộ phận & Cán bộ nhận việc (Đa đối tượng)</label>
+                    <span id="soLuongChon" class="text-xs font-bold bg-[#0F4C81] text-white px-2.5 py-1 rounded-lg">Đã chọn: 0 người</span>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Hạn hoàn thành <span class="text-red-500">*</span></label>
-                    <input type="datetime-local" id="hanHoanThanh" required 
-                        class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-3 py-2 text-sm font-semibold text-slate-800 outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100 transition">
+                <!-- Danh sách đúng 8 Tổ chuyên môn & Văn phòng -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="danhSachTo">
+                    <button type="button" onclick="chonTo('Toán - Tin')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Toán - Tin</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Hóa học')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Hóa học</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Vật lí - Công nghệ')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Vật lí - Công nghệ</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Sinh - GDTC - QPAN')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Sinh - GDTC - QPAN</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Ngữ văn')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Ngữ văn</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Sử - Địa - GD KT&PL')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Sử - Địa - GD KT&PL</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Ngoại Ngữ')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between">
+                        <span>Ngoại Ngữ</span> <i class="bi bi-chevron-right"></i>
+                    </button>
+                    <button type="button" onclick="chonTo('Văn Phòng')" class="to-btn p-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-[#0F4C81] hover:border-[#0F4C81] transition text-left flex items-center justify-between bg-blue-50">
+                        <span>Văn Phòng</span> <i class="bi bi-chevron-right"></i>
+                    </button>
                 </div>
-            </div>
-        </section>
 
-        <!-- PHẦN 5: ĐỐI TƯỢNG NHẬN (QUAN TRỌNG NHẤT) -->
-        <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
-                    <i class="bi bi-people-fill text-lg text-blue-600"></i>
-                    <span>PHẦN 5: Chọn đối tượng nhận nhiệm vụ</span>
-                </div>
-
-                <!-- THỐNG KÊ REALTIME -->
-                <div class="flex items-center gap-2">
-                    <span id="statTo" class="px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold">0 tổ</span>
-                    <span id="statNguoi" class="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#0F4C81] text-xs font-bold">0 cá nhân</span>
-                </div>
-            </div>
-
-            <!-- Ô TÌM KIẾM ĐỐI TƯỢNG -->
-            <div class="relative">
-                <input type="text" id="inputSearchDoiTuong" oninput="filterDoiTuong(this.value)" placeholder="Tìm tổ hoặc giáo viên... (VD: 'Hiền', 'Toán')" 
-                    class="w-full rounded-xl border border-slate-300 bg-slate-50/50 pl-10 pr-10 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100 transition">
-                <i class="bi bi-search absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                <button type="button" onclick="clearSearchDoiTuong()" id="btnClearSearchDT" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 p-0.5">
-                    <i class="bi bi-x-circle-fill"></i>
-                </button>
-            </div>
-
-            <!-- DANH SÁCH TỔ & NHÂN SỰ ACCORDION -->
-            <div id="containerDanhSachTo" class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
-                <div class="space-y-2" id="skeletonLoaderTo">
-                    <div class="h-12 bg-slate-100 rounded-xl animate-pulse"></div>
-                    <div class="h-12 bg-slate-100 rounded-xl animate-pulse"></div>
-                    <div class="h-12 bg-slate-100 rounded-xl animate-pulse"></div>
-                </div>
-            </div>
-
-            <!-- CHIP ĐÃ CHỌN -->
-            <div class="pt-3 border-t border-slate-100 space-y-2">
-                <div class="flex items-center justify-between">
-                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Đã chọn:</label>
-                    <button type="button" onclick="removeAllSelections()" class="text-[11px] font-semibold text-red-600 hover:underline">Xóa toàn bộ chọn</button>
-                </div>
-                <div id="containerChips" class="p-3 bg-slate-50 rounded-xl border border-slate-200/80 min-h-[52px] flex items-center flex-wrap gap-2">
-                    <span class="text-xs text-slate-400 italic">Chưa chọn đối tượng nào...</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- PHẦN 6: NÚT CHỨC NĂNG CỐ ĐỊNH PHÍA DƯỚI -->
-        <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
-            <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                <button type="button" onclick="history.back()" 
-                    class="h-11 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition active:scale-95 flex items-center justify-center gap-1.5">
-                    <i class="bi bi-x-lg"></i>
-                    <span>Hủy</span>
-                </button>
-
-                <button type="button" onclick="resetForm()" 
-                    class="h-11 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-sm font-semibold transition active:scale-95 flex items-center justify-center gap-1.5">
-                    <i class="bi bi-arrow-counterclockwise"></i>
-                    <span>Đặt lại</span>
-                </button>
-
-                <button type="button" onclick="openPreviewModal()" 
-                    class="h-11 rounded-xl border-2 border-[#0F4C81] bg-white text-[#0F4C81] hover:bg-blue-50 text-sm font-bold transition active:scale-95 flex items-center justify-center gap-1.5">
-                    <i class="bi bi-eye-fill"></i>
-                    <span>Xem bản giao</span>
-                </button>
-
-                <button type="submit" id="btnSubmitForm" 
-                    class="h-11 rounded-xl bg-[#0F4C81] hover:bg-[#0b3e69] text-white text-sm font-bold shadow-md hover:shadow-lg transition active:scale-95 flex items-center justify-center gap-1.5">
-                    <i class="bi bi-send-fill"></i>
-                    <span>Giao việc</span>
-                </button>
-            </div>
-        </div>
-    </form>
-</main>
-
-<!-- MODAL XEM BẢN GIAO (CHUẨN HÀNH CHÍNH) -->
-<div id="modalPreview" class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden no-print">
-    <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-200">
-        
-        <div class="px-5 py-3.5 bg-[#0F4C81] text-white flex items-center justify-between">
-            <div class="flex items-center gap-2 text-sm font-bold">
-                <i class="bi bi-file-earmark-text-fill"></i>
-                <span>XEM TRƯỚC BẢN GIAO NHIỆM VỤ</span>
-            </div>
-            <button type="button" onclick="closePreviewModal()" class="w-8 h-8 rounded-lg hover:bg-white/20 transition flex items-center justify-center text-white">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-
-        <div class="p-6 overflow-y-auto flex-1 font-serif leading-relaxed text-slate-900 bg-white" id="printArea">
-            <div class="text-center border-b-2 border-slate-800 pb-4 mb-4">
-                <div class="flex justify-between items-start text-xs font-bold uppercase tracking-wider mb-2">
-                    <div class="text-left">
-                        TRƯỜNG THPT HÒA VANG<br>
-                        <span class="font-normal text-[10px]">TRUNG TÂM ĐIỀU HÀNH SỐ TTĐHS_HVA</span>
+                <!-- Khu vực hiển thị danh sách nhân sự của tổ đang chọn -->
+                <div id="vungNhanSuTo" class="bg-white p-4 rounded-xl border border-slate-200 hidden">
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b">
+                        <h4 id="tieuDeTenTo" class="text-xs font-extrabold text-[#0F4C81] uppercase">Danh sách nhân sự</h4>
+                        <button type="button" onclick="chonTatCaTrongTo()" class="text-xs font-bold text-blue-600 hover:underline">Chọn tất cả tổ này</button>
                     </div>
-                    <div class="text-right">
-                        CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
-                        <span class="font-normal text-[10px] underline">Độc lập - Tự do - Hạnh phúc</span>
+                    <div id="danhSachCheckboxNhanSu" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 max-h-48 overflow-y-auto p-1">
+                        <!-- Danh sách checkbox nhân sự load từ Sheet -->
                     </div>
                 </div>
-                <div class="text-lg font-bold uppercase tracking-wide mt-3 text-slate-900">
-                    PHIẾU GIAO NHIỆM VỤ ĐIỀU HÀNH
-                </div>
-                <div class="text-xs italic text-slate-600" id="pvNgayGiao">Ngày ... tháng ... năm ...</div>
-            </div>
 
-            <div class="space-y-3 text-xs sm:text-sm">
-                <div class="grid grid-cols-2 gap-2 border-b border-slate-100 pb-2">
-                    <div><strong>Người giao nhiệm vụ:</strong> <span id="pvNguoiGiao">--</span></div>
-                    <div><strong>Chức vụ / Đơn vị:</strong> <span id="pvChucVuNguoiGiao">--</span></div>
-                    <div><strong>Nguồn giao:</strong> <span id="pvNguonGiao">--</span></div>
-                    <div><strong>Mức độ ưu tiên:</strong> <span id="pvMucDo">--</span></div>
-                </div>
-
-                <div id="pvBoxVanBan" class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg hidden">
-                    <strong>Văn bản căn cứ / đính kèm:</strong>
-                    <div id="pvVanBanInfo" class="text-xs mt-1 text-slate-700">--</div>
-                </div>
-
+                <!-- Khung hiển thị các cá nhân/tổ đã được chọn tổng hợp -->
                 <div>
-                    <strong class="text-slate-900">Tiêu đề nhiệm vụ:</strong>
-                    <div id="pvTieuDe" class="font-bold text-base text-[#0F4C81] mt-0.5">--</div>
-                </div>
-
-                <div>
-                    <strong class="text-slate-900">Nội dung chỉ đạo & Yêu cầu:</strong>
-                    <div id="pvNoiDung" class="p-3 bg-slate-50 border border-slate-200 rounded-lg whitespace-pre-wrap mt-1 text-slate-800 font-sans text-xs sm:text-sm">--</div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 border-t border-slate-100 pt-2">
-                    <div><strong>Yêu cầu minh chứng:</strong> <span id="pvYeuCauMinhChung">--</span></div>
-                    <div><strong>Hạn hoàn thành:</strong> <span id="pvHanHoanThanh" class="font-bold text-red-600">--</span></div>
-                </div>
-
-                <div class="border-t border-slate-200 pt-3">
-                    <strong class="text-slate-900">Danh sách đối tượng nhận nhiệm vụ:</strong>
-                    <div id="pvDanhSachNhan" class="mt-1.5 font-sans text-xs flex flex-wrap gap-1.5">--</div>
-                </div>
-
-                <div class="pt-8 grid grid-cols-2 text-center text-xs font-sans">
-                    <div></div>
-                    <div>
-                        <div class="font-bold uppercase">NGƯỜI GIAO NHIỆM VỤ</div>
-                        <div class="italic text-slate-500 text-[10px]">(Ký & ghi rõ họ tên trên hệ thống)</div>
-                        <div class="h-16"></div>
-                        <div id="pvKyTen" class="font-bold text-sm">--</div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Đã tổng hợp người nhận nhiệm vụ:</label>
+                    <div id="danhSachDaChon" class="p-3 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-[#0F4C81] min-h-[42px] flex items-center flex-wrap gap-1.5">
+                        <span class="text-slate-400 italic">Chưa chọn đối tượng nào...</span>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="p-3.5 bg-slate-100 border-t border-slate-200 flex items-center justify-end gap-2">
-            <button type="button" onclick="window.print()" class="px-4 py-2 bg-[#0F4C81] text-white text-xs font-bold rounded-xl hover:bg-[#0b3e69] transition flex items-center gap-1.5">
-                <i class="bi bi-printer-fill"></i>
-                <span>In bản giao</span>
-            </button>
-            <button type="button" onclick="closePreviewModal()" class="px-4 py-2 bg-slate-300 text-slate-800 text-xs font-bold rounded-xl hover:bg-slate-400 transition">
-                Đóng
-            </button>
-        </div>
-    </div>
-</div>
+            <!-- Phần 6: Hạn hoàn thành & Ghi chú -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Hạn hoàn thành</label>
+                    <input type="date" id="hanHoanThanh" class="w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold text-[#0F4C81] outline-none focus:border-[#0F4C81] transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] mb-2">Ghi chú quản lý</label>
+                    <input type="text" id="ghiChu" class="w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-semibold text-[#0F4C81] outline-none focus:border-[#0F4C81] transition" placeholder="Ghi chú đôn đốc thêm...">
+                </div>
+            </div>
 
-<script>
-    
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7IsfWAfnsOa4SIyMiKEB-qQurwW5FpxuKcT83aeCHXhiAf60sJSc0t4KQXE3N427E/exec";
-    let currentUser = {
-        fullName: 'Nguyễn Văn Thà',
-        workPosition: 'Phó Hiệu trưởng',
-        department: 'Ban Giám hiệu',
-        username: 'nguyenvantha'
-    };
+        </form>
+    </main>
 
-    let allToData = [];
-    let selectedUsernames = new Set();
-    let vanBanChon = null;
-    let searchDebounceTimer = null;
+    <!-- SCRIPT XỬ LÝ LOGIC -->
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjq11TcDE4tyOsPl6NOw1q6r8f14r3Z3qQPuSAgic7Xf6XK4gXjwHOBem4I_IGnALZ/exec";
+        let tatCaNhanSu = [];
+        let danhSachNguoiNhanChon = [];
 
-    document.addEventListener('DOMContentLoaded', async () => {
-        initSessionUser();
-        setCurrentDate();
-        await loadDanhSachToAndNhanSu();
-    });
+        window.addEventListener('DOMContentLoaded', async function() {
+            const now = new Date();
+            document.getElementById('thoiGianHienThi').value = now.toLocaleString('vi-VN');
+            await taiDuLieuNhanSu();
+        });
 
-    function initSessionUser() {
-        try {
-            const stored = localStorage.getItem("user") || sessionStorage.getItem("user");
-            if (stored) {
-                const parsed = JSON.parse(stored);
-                currentUser.fullName = parsed.fullName || parsed.hoTen || currentUser.fullName;
-                currentUser.workPosition = parsed.workPosition || parsed.chucVu || currentUser.workPosition;
-                currentUser.department = parsed.department || parsed.toBoPhan || currentUser.department;
-                currentUser.username = parsed.username || currentUser.username;
+        async function taiDuLieuNhanSu() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getNhanSu`);
+                tatCaNhanSu = await response.json();
+            } catch (e) {
+                console.error("Lỗi tải nhân sự từ Sheet:", e);
+                tatCaNhanSu = [
+                    { hoTen: "Nguyễn Văn Thả", toBoPhan: "Toán - Tin" },
+                    { hoTen: "Trần Văn A", toBoPhan: "Hóa học" },
+                    { hoTen: "Lê Thị B", toBoPhan: "Ngữ văn" },
+                    { hoTen: "Phạm Văn C", toBoPhan: "Văn Phòng" }
+                ];
             }
-        } catch (e) {
-            console.warn("Dùng dữ liệu Session mặc định");
         }
 
-        document.getElementById('nguoiGiaoTen').innerText = currentUser.fullName;
-        document.getElementById('nguoiGiaoChucVu').innerText = currentUser.workPosition;
-        document.getElementById('nguoiGiaoTo').innerText = currentUser.department;
-
-        const initials = currentUser.fullName.split(' ').slice(-2).map(n => n[0]).join('');
-        document.getElementById('avatarContainer').innerText = initials || 'HVA';
-    }
-
-    function setCurrentDate() {
-        const now = new Date();
-        const formatted = now.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        document.getElementById('displayNgayGiao').innerText = formatted;
-
-        const nextDay = new Date(now);
-        nextDay.setDate(nextDay.getDate() + 1);
-        nextDay.setHours(17, 0, 0, 0);
-        const isoNextDay = new Date(nextDay.getTime() - (nextDay.getTimezoneOffset() * 60000)).toISOString().slice(0,16);
-        document.getElementById('hanHoanThanh').value = isoNextDay;
-    }
-
-    async function loadDanhSachToAndNhanSu() {
-        try {
-            // Tải danh sách tổ với cấu hình follow redirect
-            const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`, { method: 'GET', redirect: 'follow' });
-            if (!res.ok) throw new Error("Không thể tải danh sách tổ");
+        function chonTo(tenTo) {
+            const vungNhanSu = document.getElementById('vungNhanSuTo');
+            const tieuDeTo = document.getElementById('tieuDeTenTo');
+            const containerCheckbox = document.getElementById('danhSachCheckboxNhanSu');
             
-            const rawTo = await res.json();
-            const listTo = Array.isArray(rawTo) ? rawTo : (rawTo.data || []);
-
-            if (listTo.length === 0) throw new Error("Danh sách tổ rỗng");
-
-            allToData = await Promise.all(listTo.map(async (toItem) => {
-                const tenTo = typeof toItem === 'string' ? toItem : (toItem.tenTo || toItem.ten || '');
-                if (!tenTo) return null;
-
-                try {
-                    const resNS = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`, { method: 'GET', redirect: 'follow' });
-                    const rawNS = await resNS.json();
-                    const members = Array.isArray(rawNS) ? rawNS : (rawNS.data || []);
-
-                    return {
-                        tenTo: tenTo,
-                        soLuong: members.length || toItem.soLuong || 0,
-                        members: members.map(m => ({
-                            username: m.username || m.maGV || m.hoTen || '',
-                            hoTen: m.hoTen || m.fullName || 'Chưa đặt tên',
-                            chucVu: m.chucVu || m.vaiTro || 'Giáo viên',
-                            tenTo: tenTo
-                        }))
-                    };
-                } catch (err) {
-                    return { tenTo: tenTo, soLuong: 0, members: [] };
-                }
-            }));
-
-            allToData = allToData.filter(Boolean);
-            renderAccordionTo();
-
-        } catch (error) {
-            console.error("Lỗi tải dữ liệu đối tượng từ Backend:", error);
-            showToast("Không thể kết nối lấy danh sách tổ. Sử dụng dữ liệu dự phòng.", "warning");
+            vungNhanSu.classList.remove('hidden');
+            tieuDeTo.innerText = `Danh sách nhân sự thuộc: ${tenTo}`;
             
-            allToData = [
-                {
-                    tenTo: "Toán - Tin", soLuong: 4, members: [
-                        { username: "nguyenvantha", hoTen: "Nguyễn Văn Thà", chucVu: "Phó Hiệu trưởng", tenTo: "Toán - Tin" },
-                        { username: "nguyenngocchinh", hoTen: "Nguyễn Ngọc Chính", chucVu: "Tổ trưởng", tenTo: "Toán - Tin" },
-                        { username: "tranvanb", hoTen: "Trần Văn B", chucVu: "Giáo viên", tenTo: "Toán - Tin" },
-                        { username: "lethi c", hoTen: "Lê Thị C", chucVu: "Giáo viên", tenTo: "Toán - Tin" }
-                    ]
-                },
-                {
-                    tenTo: "Ngữ văn", soLuong: 3, members: [
-                        { username: "tranthanhhien", hoTen: "Trần Thanh Hiền", chucVu: "Tổ trưởng", tenTo: "Ngữ văn" },
-                        { username: "nguyenthihien", hoTen: "Nguyễn Thị Hiền", chucVu: "Giáo viên", tenTo: "Ngữ văn" },
-                        { username: "phamvan d", hoTen: "Phạm Văn D", chucVu: "Giáo viên", tenTo: "Ngữ văn" }
-                    ]
-                },
-                {
-                    tenTo: "Tiếng Anh", soLuong: 2, members: [
-                        { username: "hothithuthanh", hoTen: "Hồ Thị Thu Thanh", chucVu: "Tổ trưởng", tenTo: "Tiếng Anh" },
-                        { username: "dinhvane", hoTen: "Đinh Văn E", chucVu: "Giáo viên", tenTo: "Tiếng Anh" }
-                    ]
-                },
-                {
-                    tenTo: "Văn phòng", soLuong: 2, members: [
-                        { username: "nguyenvanf", hoTen: "Nguyễn Văn F", chucVu: "Tổ trưởng Văn phòng", tenTo: "Văn phòng" },
-                        { username: "tranthig", hoTen: "Trần Thị G", chucVu: "Kế toán", tenTo: "Văn phòng" }
-                    ]
-                }
-            ];
-            renderAccordionTo();
-        }
-    }
-console.log("allToData =", allToData);
-    function renderAccordionTo(filterKeyword = '') {
-        const container = document.getElementById('containerDanhSachTo');
-        container.innerHTML = '';
-
-        const kw = filterKeyword.trim().toLowerCase();
-
-        allToData.forEach((toObj, index) => {
-            const matchToName = toObj.tenTo.toLowerCase().includes(kw);
-            const matchedMembers = toObj.members.filter(m => 
-                m.hoTen.toLowerCase().includes(kw) || m.username.toLowerCase().includes(kw) || m.chucVu.toLowerCase().includes(kw)
-            );
-
-            if (kw !== '' && !matchToName && matchedMembers.length === 0) {
+            const nsThuocTo = tatCaNhanSu.filter(ns => ns.toBoPhan === tenTo);
+            
+            containerCheckbox.innerHTML = '';
+            if (nsThuocTo.length === 0) {
+                containerCheckbox.innerHTML = '<span class="text-xs text-slate-400 italic">Chưa có dữ liệu nhân sự trong tổ này ở Sheet NhanSu.</span>';
                 return;
             }
 
-            const membersToDisplay = (kw !== '' && !matchToName) ? matchedMembers : toObj.members;
-            const allMembersSelected = toObj.members.length > 0 && toObj.members.every(m => selectedUsernames.has(m.username));
-
-            const accordionDiv = document.createElement('div');
-            accordionDiv.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm transition";
-
-            const isOpenDefault = kw !== '';
-
-            accordionDiv.innerHTML = `
-                <div class="p-3 bg-slate-50/80 flex items-center justify-between gap-2 hover:bg-slate-100/80 transition select-none">
-                    <button type="button" onclick="toggleAccordion('accBody_${index}', 'accIcon_${index}')" class="flex-1 flex items-center gap-2.5 text-left font-bold text-xs text-[#0F4C81]">
-                        <i id="accIcon_${index}" class="bi bi-chevron-right text-slate-400 text-xs transition-transform duration-200 ${isOpenDefault ? 'rotate-90' : ''}"></i>
-                        <i class="bi bi-folder2-open text-blue-600 text-base"></i>
-                        <span>${toObj.tenTo}</span>
-                        <span class="text-[11px] font-normal text-slate-500">(${toObj.members.length} thành viên)</span>
-                    </button>
-
-                    <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition">
-                        <input type="checkbox" ${allMembersSelected ? 'checked' : ''} onchange="toggleSelectAllInTo('${toObj.tenTo}', this.checked)" class="w-3.5 h-3.5 text-[#0F4C81] rounded focus:ring-0">
-                        <span>Chọn toàn bộ tổ</span>
-                    </label>
-                </div>
-
-                <div id="accBody_${index}" class="custom-accordion-content ${isOpenDefault ? 'open' : ''} bg-blue-50/20 border-t border-slate-100">
-                    <div class="p-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        ${membersToDisplay.map(m => {
-                            const isChecked = selectedUsernames.has(m.username);
-                            return `
-                                <label class="flex items-center justify-between p-2 rounded-xl bg-white border ${isChecked ? 'border-blue-400 bg-blue-50/40' : 'border-slate-200/80'} hover:border-blue-300 hover:bg-blue-50/30 cursor-pointer transition shadow-2xs">
-                                    <div class="flex items-center gap-2.5 min-w-0">
-                                        <input type="checkbox" value="${m.username}" ${isChecked ? 'checked' : ''} onchange="toggleUserSelection('${m.username}', this.checked)" class="w-4 h-4 text-[#0F4C81] rounded focus:ring-0">
-                                        <div class="truncate">
-                                            <div class="text-xs font-bold text-slate-800 truncate">${m.hoTen}</div>
-                                            <div class="text-[10px] text-slate-500 truncate">${m.chucVu}</div>
-                                        </div>
-                                    </div>
-                                    <i class="bi ${isChecked ? 'bi-check-circle-fill text-blue-600' : 'bi-circle text-slate-300'} text-sm"></i>
-                                </label>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-            `;
-
-            container.appendChild(accordionDiv);
-        });
-
-        if (container.children.length === 0) {
-            container.innerHTML = '<div class="p-6 text-center text-xs text-slate-400 italic">Không tìm thấy tổ hoặc giáo viên nào khớp với từ khóa.</div>';
-        }
-
-        updateChipsAndStats();
-    }
-
-    function toggleAccordion(bodyId, iconId) {
-        const body = document.getElementById(bodyId);
-        const icon = document.getElementById(iconId);
-        if (body.classList.contains('open')) {
-            body.classList.remove('open');
-            icon.classList.remove('rotate-90');
-        } else {
-            body.classList.add('open');
-            icon.classList.add('rotate-90');
-        }
-    }
-
-    function toggleSelectAllInTo(tenTo, isChecked) {
-        const targetTo = allToData.find(t => t.tenTo === tenTo);
-        if (!targetTo) return;
-
-        targetTo.members.forEach(m => {
-            if (isChecked) {
-                selectedUsernames.add(m.username);
-            } else {
-                selectedUsernames.delete(m.username);
-            }
-        });
-
-        const inputSearch = document.getElementById('inputSearchDoiTuong').value;
-        renderAccordionTo(inputSearch);
-    }
-
-    function toggleUserSelection(username, isChecked) {
-        if (isChecked) {
-            selectedUsernames.add(username);
-        } else {
-            selectedUsernames.delete(username);
-        }
-
-        const inputSearch = document.getElementById('inputSearchDoiTuong').value;
-        renderAccordionTo(inputSearch);
-    }
-
-    function filterDoiTuong(val) {
-        const btnClear = document.getElementById('btnClearSearchDT');
-        if (val.trim() !== '') {
-            btnClear.classList.remove('hidden');
-        } else {
-            btnClear.classList.add('hidden');
-        }
-        renderAccordionTo(val);
-    }
-
-    function clearSearchDoiTuong() {
-        document.getElementById('inputSearchDoiTuong').value = '';
-        document.getElementById('btnClearSearchDT').classList.add('hidden');
-        renderAccordionTo('');
-    }
-
-    function updateChipsAndStats() {
-        const container = document.getElementById('containerChips');
-        container.innerHTML = '';
-
-        let countFullTo = 0;
-        let countUsers = selectedUsernames.size;
-
-        if (countUsers === 0) {
-            container.innerHTML = '<span class="text-xs text-slate-400 italic">Chưa chọn đối tượng nào...</span>';
-            document.getElementById('statTo').innerText = '0 tổ';
-            document.getElementById('statNguoi').innerText = '0 cá nhân';
-            return;
-        }
-
-        allToData.forEach(toObj => {
-            const isFullTo = toObj.members.length > 0 && toObj.members.every(m => selectedUsernames.has(m.username));
-            if (isFullTo) {
-                countFullTo++;
-                const chipTo = document.createElement('div');
-                chipTo.className = "px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs font-bold flex items-center gap-1.5 shadow-2xs";
-                chipTo.innerHTML = `
-                    <i class="bi bi-building"></i>
-                    <span>Tổ ${toObj.tenTo} (${toObj.members.length})</span>
-                    <button type="button" onclick="toggleSelectAllInTo('${toObj.tenTo}', false)" class="text-indigo-400 hover:text-red-500 ml-1">
-                        <i class="bi bi-x-circle-fill"></i>
-                    </button>
+            nsThuocTo.forEach(ns => {
+                const isChecked = danhSachNguoiNhanChon.includes(ns.hoTen);
+                const label = document.createElement('label');
+                label.className = "flex items-center space-x-2.5 p-2 rounded-lg hover:bg-slate-50 cursor-pointer border border-slate-100";
+                label.innerHTML = `
+                    <input type="checkbox" value="${ns.hoTen}" ${isChecked ? 'checked' : ''} onchange="capNhatChonNhanSu(this)" class="w-4 h-4 text-[#0F4C81] rounded border-slate-300 focus:ring-[#0F4C81]">
+                    <span class="text-xs font-bold text-[#0F4C81]">${ns.hoTen}</span>
                 `;
-                container.appendChild(chipTo);
-            }
-        });
-
-        allToData.forEach(toObj => {
-            const isFullTo = toObj.members.length > 0 && toObj.members.every(m => selectedUsernames.has(m.username));
-            if (!isFullTo) {
-                toObj.members.forEach(m => {
-                    if (selectedUsernames.has(m.username)) {
-                        const chipUser = document.createElement('div');
-                        chipUser.className = "px-2.5 py-1.5 rounded-xl bg-white border border-blue-200 text-[#0F4C81] text-xs font-semibold flex items-center gap-1.5 shadow-2xs";
-                        chipUser.innerHTML = `
-                            <i class="bi bi-person-fill text-blue-600"></i>
-                            <span>${m.hoTen}</span>
-                            <span class="text-[10px] text-slate-400">(${m.tenTo})</span>
-                            <button type="button" onclick="toggleUserSelection('${m.username}', false)" class="text-slate-400 hover:text-red-500 ml-1">
-                                <i class="bi bi-x-circle-fill"></i>
-                            </button>
-                        `;
-                        container.appendChild(chipUser);
-                    }
-                });
-            }
-        });
-
-        document.getElementById('statTo').innerText = `${countFullTo} tổ`;
-        document.getElementById('statNguoi').innerText = `${countUsers} cá nhân`;
-    }
-
-    function removeAllSelections() {
-        selectedUsernames.clear();
-        renderAccordionTo(document.getElementById('inputSearchDoiTuong').value);
-        showToast("Đã xóa toàn bộ đối tượng chọn", "info");
-    }
-
-    function toggleNguonGiao(val) {
-        const cardVB = document.getElementById('cardVanBan');
-        if (val === 'Theo văn bản') {
-            cardVB.classList.remove('hidden');
-        } else {
-            cardVB.classList.add('hidden');
-            vanBanChon = null;
-            resetVanBanDisplay();
-        }
-    }
-
-    function debouncedSearchVanBan() {
-        clearTimeout(searchDebounceTimer);
-        searchDebounceTimer = setTimeout(searchVanBanRealtime, 350);
-    }
-
-    async function searchVanBanRealtime() {
-        const q = document.getElementById('inputSearchVB').value.trim();
-        const vungKetQua = document.getElementById('vungKetQuaVanBan');
-        const btnClear = document.getElementById('btnClearSearchVB');
-
-        if (q === '') {
-            vungKetQua.classList.add('hidden');
-            btnClear.classList.add('hidden');
-            return;
+                containerCheckbox.appendChild(label);
+            });
         }
 
-        btnClear.classList.remove('hidden');
-        vungKetQua.classList.remove('hidden');
-        vungKetQua.innerHTML = `
-            <div class="p-3 text-xs text-slate-400 flex items-center justify-center gap-2">
-                <i class="bi bi-arrow-repeat animate-spin text-blue-600"></i>
-                <span>Đang tra cứu Kho Văn bản...</span>
-            </div>
-        `;
+        function capNhatChonNhanSu(checkbox) {
+            const ten = checkbox.value;
+            if (checkbox.checked) {
+                if (!danhSachNguoiNhanChon.includes(ten)) danhSachNguoiNhanChon.push(ten);
+            } else {
+                danhSachNguoiNhanChon = danhSachNguoiNhanChon.filter(item => item !== ten);
+            }
+            hienThiDanhSachDaChonTag();
+        }
 
-        try {
-            const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}`, { method: 'GET', redirect: 'follow' });
-            const listVB = await res.json();
-
-            if (!listVB || listVB.length === 0) {
-                vungKetQua.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center italic">Không tìm thấy văn bản nào phù hợp.</div>';
+        function hienThiDanhSachDaChonTag() {
+            const container = document.getElementById('danhSachDaChon');
+            const badgeSoLuong = document.getElementById('soLuongChon');
+            
+            badgeSoLuong.innerText = `Đã chọn: ${danhSachNguoiNhanChon.length} người`;
+            
+            if (danhSachNguoiNhanChon.length === 0) {
+                container.innerHTML = '<span class="text-slate-400 italic">Chưa chọn đối tượng nào...</span>';
                 return;
             }
 
-            vungKetQua.innerHTML = listVB.map((item) => `
-                <div onclick="selectVanBan(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="p-3 hover:bg-blue-50/80 cursor-pointer transition text-xs">
-                    <div class="flex items-center justify-between font-bold text-[#0F4C81]">
-                        <span>Số: ${item.soVanBan || 'Chưa có số'}</span>
-                        <span class="text-[10px] font-normal text-slate-400">${item.ngayBanHanh || ''}</span>
-                    </div>
-                    <div class="font-semibold text-slate-800 mt-0.5 line-clamp-1">${item.tenVanBan || ''}</div>
-                    <div class="text-slate-500 text-[11px] truncate mt-0.5">Ký bởi: ${item.nguoiKy || 'BGH'} | ${item.trichYeu || ''}</div>
-                </div>
-            `).join('');
-
-        } catch (err) {
-            vungKetQua.innerHTML = '<div class="p-3 text-xs text-red-500 text-center">Lỗi kết nối tra cứu văn bản.</div>';
-        }
-    }
-
-    function selectVanBan(item) {
-        vanBanChon = item;
-        document.getElementById('lblSoVB').innerText = item.soVanBan || 'Đã chọn';
-        document.getElementById('lblNgayBH').innerText = item.ngayBanHanh || '--/--/----';
-        document.getElementById('lblNguoiKy').innerText = item.nguoiKy || 'Ban Giám hiệu';
-        document.getElementById('lblTrichYeu').innerText = item.trichYeu || 'Không có';
-        document.getElementById('lblTenVB').innerText = item.tenVanBan || '';
-
-        document.getElementById('vungKetQuaVanBan').classList.add('hidden');
-        showToast(`Đã chọn VB: ${item.soVanBan || item.tenVanBan}`, "success");
-    }
-
-    function clearSearchVanBan() {
-        document.getElementById('inputSearchVB').value = '';
-        document.getElementById('vungKetQuaVanBan').classList.add('hidden');
-        document.getElementById('btnClearSearchVB').classList.add('hidden');
-    }
-
-    function resetVanBanDisplay() {
-        document.getElementById('lblSoVB').innerText = 'Chưa chọn';
-        document.getElementById('lblNgayBH').innerText = '--/--/----';
-        document.getElementById('lblNguoiKy').innerText = '--';
-        document.getElementById('lblTrichYeu').innerText = '--';
-        document.getElementById('lblTenVB').innerText = 'Vui lòng sử dụng ô tìm kiếm phía trên để chọn văn bản chỉ đạo.';
-        clearSearchVanBan();
-    }
-
-    function openPreviewModal() {
-        const tieuDe = document.getElementById('tieuDe').value.trim();
-        const noiDung = document.getElementById('noiDung').value.trim();
-
-        if (!tieuDe || !noiDung) {
-            showToast("Vui lòng nhập Tiêu đề và Nội dung công việc trước khi xem bản giao!", "warning");
-            return;
+            container.innerHTML = '';
+            danhSachNguoiNhanChon.forEach(ten => {
+                const tag = document.createElement('span');
+                tag.className = "bg-blue-50 text-[#0F4C81] border border-blue-200 px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5";
+                tag.innerHTML = `${ten} <i class="bi bi-x cursor-pointer hover:text-red-600" onclick="xoaNguoiChon('${ten}')"></i>`;
+                container.appendChild(tag);
+            });
         }
 
-        if (selectedUsernames.size === 0) {
-            showToast("Vui lòng chọn ít nhất một cá nhân hoặc tổ nhận nhiệm vụ!", "warning");
-            return;
+        function xoaNguoiChon(ten) {
+            danhSachNguoiNhanChon = danhSachNguoiNhanChon.filter(item => item !== ten);
+            hienThiDanhSachDaChonTag();
+            const checkboxes = document.querySelectorAll('#danhSachCheckboxNhanSu input[type="checkbox"]');
+            checkboxes.forEach(cb => { if(cb.value === ten) cb.checked = false; });
         }
 
-        const now = new Date();
-        document.getElementById('pvNgayGiao').innerText = `Đà Nẵng, ngày ${now.getDate()} tháng ${now.getMonth() + 1} năm ${now.getFullYear()}`;
-        document.getElementById('pvNguoiGiao').innerText = currentUser.fullName;
-        document.getElementById('pvChucVuNguoiGiao').innerText = `${currentUser.workPosition} - ${currentUser.department}`;
-        
-        const nguonGiaoVal = document.querySelector('input[name="nguonGiao"]:checked').value;
-        document.getElementById('pvNguonGiao').innerText = nguonGiaoVal;
-        document.getElementById('pvMucDo').innerText = document.getElementById('mucDo').value;
-
-        const boxVB = document.getElementById('pvBoxVanBan');
-        if (nguonGiaoVal === 'Theo văn bản' && vanBanChon) {
-            boxVB.classList.remove('hidden');
-            document.getElementById('pvVanBanInfo').innerText = `Số: ${vanBanChon.soVanBan || ''} - ${vanBanChon.tenVanBan || ''} (Ban hành: ${vanBanChon.ngayBanHanh || ''})`;
-        } else {
-            boxVB.classList.add('hidden');
-        }
-
-        document.getElementById('pvTieuDe').innerText = tieuDe;
-        document.getElementById('pvNoiDung').innerText = noiDung;
-        document.getElementById('pvYeuCauMinhChung').innerText = document.getElementById('yeuCauMinhChung').value;
-        
-        const hanFormat = new Date(document.getElementById('hanHoanThanh').value).toLocaleString('vi-VN', {
-            hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric'
-        });
-        document.getElementById('pvHanHoanThanh').innerText = hanFormat;
-
-        const containerNhan = document.getElementById('pvDanhSachNhan');
-        containerNhan.innerHTML = '';
-        
-        allToData.forEach(toObj => {
-            toObj.members.forEach(m => {
-                if (selectedUsernames.has(m.username)) {
-                    const tag = document.createElement('span');
-                    tag.className = "px-2 py-1 bg-slate-100 border border-slate-300 rounded font-medium text-slate-800";
-                    tag.innerText = `${m.hoTen} (${m.tenTo})`;
-                    containerNhan.appendChild(tag);
+        function chonTatCaTrongTo() {
+            const checkboxes = document.querySelectorAll('#danhSachCheckboxNhanSu input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = true;
+                if (!danhSachNguoiNhanChon.includes(cb.value)) {
+                    danhSachNguoiNhanChon.push(cb.value);
                 }
             });
-        });
-
-        document.getElementById('pvKyTen').innerText = currentUser.fullName;
-
-        document.getElementById('modalPreview').classList.remove('hidden');
-    }
-
-    function closePreviewModal() {
-        document.getElementById('modalPreview').classList.add('hidden');
-    }
-
-    async function submitTask() {
-        const tieuDe = document.getElementById('tieuDe').value.trim();
-        const noiDung = document.getElementById('noiDung').value.trim();
-        const hanHoanThanh = document.getElementById('hanHoanThanh').value;
-
-        if (!tieuDe || !noiDung || !hanHoanThanh) {
-            showToast("Vui lòng điền đầy đủ thông tin bắt buộc!", "warning");
-            return;
+            hienThiDanhSachDaChonTag();
         }
 
-        if (selectedUsernames.size === 0) {
-            showToast("Vui lòng chọn ít nhất một cá nhân hoặc tổ nhận nhiệm vụ!", "warning");
-            return;
-        }
+        function dongTrangGiaoViec() {
+    window.location.href = 'main.html';
+}
 
-        const targetList = [];
-        allToData.forEach(toObj => {
-            toObj.members.forEach(m => {
-                if (selectedUsernames.has(m.username)) {
-                    targetList.push({
-                        username: m.username,
-                        hoTen: m.hoTen,
-                        toBoPhan: m.tenTo,
-                        chucVu: m.chucVu
-                    });
-                }
-            });
-        });
+        document.getElementById('formGiaoViecFull').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-        const nguonGiaoVal = document.querySelector('input[name="nguonGiao"]:checked').value;
+            if (danhSachNguoiNhanChon.length === 0) {
+                alert('Vui lòng chọn ít nhất một cán bộ hoặc bộ phận nhận nhiệm vụ!');
+                return;
+            }
 
-        const payload = {
-            action: 'createTask',
-            nguoiGiao: currentUser.fullName,
-            chucVuNguoiGiao: currentUser.workPosition,
-            toNguoiGiao: currentUser.department,
-            loaiNhiemVu: document.getElementById('loaiNhiemVu').value,
-            nguonGiao: nguonGiaoVal,
-            soVanBan: vanBanChon ? vanBanChon.soVanBan : '',
-            tenVanBan: vanBanChon ? vanBanChon.tenVanBan : '',
-            mucDo: document.getElementById('mucDo').value,
-            tieuDe: tieuDe,
-            noiDung: noiDung,
-            yeuCauMinhChung: document.getElementById('yeuCauMinhChung').value,
-            hanHoanThanh: hanHoanThanh,
-            danhSachNguoiNhan: targetList
-        };
+            const btnSubmit = document.getElementById('btnSubmit');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = `<span class="inline-block animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></span> Đang gửi...`;
 
-        const btnSubmit = document.getElementById('btnSubmitForm');
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = `<i class="bi bi-arrow-repeat animate-spin text-lg"></i><span>Đang xử lý...</span>`;
+            const payload = {
+                nguoiGiao: document.getElementById('nguoiGiao').value,
+                chucVuNguoiGiao: document.getElementById('chucVuNguoiGiao').value,
+                loaiNhiemVu: document.getElementById('loaiNhiemVu').value,
+                tieuDe: document.getElementById('tieuDe').value,
+                noiDung: document.getElementById('noiDung').value,
+                nguoiNhan: danhSachNguoiNhanChon.join(', '),
+                hanHoanThanh: document.getElementById('hanHoanThanh').value,
+                ghiChu: document.getElementById('ghiChu').value,
+                thoiGianGiao: new Date().toISOString()
+            };
 
-        try {
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload)
-            });
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
 
-            showToast("Giao nhiệm vụ thành công! Hệ thống đã ghi nhận.", "success");
-
-            setTimeout(() => {
-                resetForm();
+                alert('Đã giao nhiệm vụ thành công cho các đối tượng đã chọn! Dữ liệu đã được lưu về Google Sheets.');
+                dongTrangGiaoViec();
+            } catch (err) {
+                console.error(err);
+                alert('Lỗi kết nối hệ thống cơ sở dữ liệu!');
+            } finally {
                 btnSubmit.disabled = false;
-                btnSubmit.innerHTML = `<i class="bi bi-send-fill"></i><span>Giao việc</span>`;
-            }, 1200);
-
-        } catch (error) {
-            console.error("Lỗi khi tạo nhiệm vụ:", error);
-            showToast("Có lỗi xảy ra trong quá trình kết nối Backend!", "error");
-            btnSubmit.disabled = false;
-            btnSubmit.innerHTML = `<i class="bi bi-send-fill"></i><span>Giao việc</span>`;
-        }
-    }
-
-    function resetForm() {
-        document.getElementById('formGiaoViec').reset();
-        selectedUsernames.clear();
-        vanBanChon = null;
-        resetVanBanDisplay();
-        toggleNguonGiao('Theo văn bản');
-        setCurrentDate();
-        renderAccordionTo('');
-        showToast("Đã đặt lại toàn bộ form giao việc", "info");
-    }
-
-    function showToast(message, type = 'info') {
-        const container = document.getElementById('toastContainer');
-        
-        const toast = document.createElement('div');
-        toast.className = `toast-enter pointer-events-auto p-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-xs font-bold text-white transition`;
-
-        let icon = 'bi-info-circle-fill';
-        if (type === 'success') {
-            toast.classList.add('bg-emerald-600');
-            icon = 'bi-check-circle-fill';
-        } else if (type === 'warning') {
-            toast.classList.add('bg-amber-500');
-            icon = 'bi-exclamation-triangle-fill';
-        } else if (type === 'error') {
-            toast.classList.add('bg-rose-600');
-            icon = 'bi-x-circle-fill';
-        } else {
-            toast.classList.add('bg-[#0F4C81]');
-        }
-
-        toast.innerHTML = `
-            <i class="bi ${icon} text-lg"></i>
-            <span class="flex-1">${message}</span>
-            <button type="button" onclick="this.parentElement.remove()" class="text-white/80 hover:text-white">
-                <i class="bi bi-x"></i>
-            </button>
-        `;
-
-        container.appendChild(toast);
-
-        setTimeout(() => {
-            toast.classList.remove('toast-enter');
-            toast.classList.add('toast-exit');
-            setTimeout(() => toast.remove(), 250);
-        }, 3500);
-    }
-</script>
+                btnSubmit.innerHTML = `<i class="bi bi-send-fill"></i> Xác nhận Giao việc`;
+            }
+        });
+    </script>
 </body>
 </html>
