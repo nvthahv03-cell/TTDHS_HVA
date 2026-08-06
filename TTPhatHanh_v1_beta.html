@@ -726,5 +726,61 @@ const Controller = {
     // Tự động khởi chạy duy nhất Controller khi DOM sẵn sàng
     document.addEventListener('DOMContentLoaded', Controller.init);
     </script>
+    <script>
+  // 1. Tự động kiểm tra và tải dữ liệu Lịch công tác khi mở trang
+  document.addEventListener('DOMContentLoaded', () => {
+    loadPublishedLich();
+  });
+
+  // 2. Lắng nghe tín hiệu phát hành Realtime nếu trang này đang mở sẵn
+  const channel = new BroadcastChannel('TTDHS_PUBLISH_CHANNEL');
+  channel.onmessage = (event) => {
+    console.log("📌 Nhận lịch mới phát hành thời gian thực:", event.data);
+    loadPublishedLich();
+  };
+
+  // Hàm đọc dữ liệu từ Storage và hiển thị lên giao diện
+  function loadPublishedLich() {
+    const rawData = localStorage.getItem('TTDHS_LAST_PUBLISHED') || sessionStorage.getItem('TTDHS_LAST_PUBLISHED');
+    if (!rawData) return;
+
+    try {
+      const payload = JSON.parse(rawData);
+      const doc = payload.document;
+
+      // Kiểm tra nếu đúng là tài liệu Lịch công tác
+      const isLich = payload.destinations && payload.destinations.some(d => d.id === 'LichCongTac' || d.name === 'Lịch công tác');
+      if (!isLich) return;
+
+      // Tìm container hiển thị nội dung lịch (hoặc tự tạo khối hiển thị)
+      let displayContainer = document.getElementById('lich-content-display');
+      if (!displayContainer) {
+        displayContainer = document.createElement('div');
+        displayContainer.id = 'lich-content-display';
+        displayContainer.className = 'max-w-7xl mx-auto mt-6 px-4';
+        document.body.appendChild(displayContainer);
+      }
+
+      // Đổ dữ liệu lịch ra màn hình
+      displayContainer.innerHTML = `
+        <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between border-b pb-3">
+            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-xs">
+              Lịch đã phát hành chính thức
+            </span>
+            <span class="text-xs text-slate-400">Mã: ${doc.docId || 'LCT-2026'}</span>
+          </div>
+          <h3 class="text-xl font-bold text-slate-800">${doc.title}</h3>
+          <p class="text-sm text-slate-600"><strong>Người soạn:</strong> ${doc.author || 'Ban BGH'} | <strong>Ngày tạo:</strong> ${doc.createdAt}</p>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm text-slate-700">
+            📌 Nội dung chi tiết lịch tuần đã được cập nhật đồng bộ từ Trung tâm Điều phối Phát hành Số (TTĐHS_HVA).
+          </div>
+        </div>
+      `;
+    } catch (e) {
+      console.error("Lỗi đọc dữ liệu lịch:", e);
+    }
+  }
+</script>
 </body>
 </html>
