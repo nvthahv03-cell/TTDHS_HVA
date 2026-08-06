@@ -272,7 +272,7 @@
             DELETE: "DELETE"
         }
     });
-        
+   const publishChannel = new BroadcastChannel('TTDHS_PUBLISH_CHANNEL');     
 
     // =================================================================
     // 2. EVENT BUS (DECOUPLED EVENT-DRIVEN COMMUNICATION)
@@ -614,105 +614,115 @@
     };
 
     // =================================================================
-    // 8. CONTROLLER (SOLE SYSTEM ORCHESTRATOR)
-    // =================================================================
-    const Controller = {
-        init: () => {
-            Controller.setupEventBusListeners();
+// 8. CONTROLLER (SOLE SYSTEM ORCHESTRATOR)
+// =================================================================
+const Controller = {
+    init: () => {
+        Controller.setupEventBusListeners();
 
-            // Storage Engine Integration
-            const storedDoc = StorageEngine.load(CONFIG.STORAGE_KEYS.CURRENT_DOC);
-            if (storedDoc) {
-                TTDHS_State.document = ModuleAdapter.toStandardDocument(storedDoc);
-            }
-
-            Controller.refreshUI();
-        },
-
-        setupEventBusListeners: () => {
-            eventBus.on("NOTIFICATION_DISPATCHED", (data) => {
-                // Controller handles side-effects/logging
-            });
-        },
-
-        refreshUI: () => {
-            const preCheckResult = PreCheckEngine.runChecks(TTDHS_State);
-            const pipeline = WorkflowEngine.generatePipeline(
-                TTDHS_State.document,
-                TTDHS_State.destinations,
-                TTDHS_State.workflowSteps
-            );
-
-            RenderEngine.renderAll(TTDHS_State, preCheckResult, pipeline);
-        },
-
-        toggleDestination: (destId) => {
-            TTDHS_State.destinations = DispatchEngine.toggleDestination(TTDHS_State.destinations, destId);
-            Controller.refreshUI();
-        },
-
-        toggleWorkflowStep: (stepId) => {
-            TTDHS_State.workflowSteps = WorkflowEngine.toggleStep(TTDHS_State.workflowSteps, stepId);
-            Controller.refreshUI();
-        },
-
-        toggleRecipient: (recipientVal) => {
-            if (TTDHS_State.recipients.includes(recipientVal)) {
-                TTDHS_State.recipients = TTDHS_State.recipients.filter(r => r !== recipientVal);
-            } else {
-                TTDHS_State.recipients.push(recipientVal);
-            }
-            Controller.refreshUI();
-        },
-
-        addLinkedDocument: () => {
-            const title = prompt("Nhập tên tài liệu liên quan:");
-            if (title && title.trim() !== "") {
-                TTDHS_State.linkedDocs.push({
-                    id: `DOC-${Date.now()}`,
-                    title: title.trim(),
-                    type: "Đính kèm"
-                });
-                RenderEngine.renderLinkedDocs(TTDHS_State.linkedDocs);
-            }
-        },
-
-        removeLinkedDoc: (docId) => {
-            TTDHS_State.linkedDocs = TTDHS_State.linkedDocs.filter(d => d.id !== docId);
-            RenderEngine.renderLinkedDocs(TTDHS_State.linkedDocs);
-        },
-
-        executePublishing: () => {
-            const preCheckResult = PreCheckEngine.runChecks(TTDHS_State);
-            if (!preCheckResult.allPassed) {
-                alert("Không thể phát hành! Vui lòng kiểm tra lại các điều kiện chưa đạt.");
-                return;
-            }
-
-            const payload = PublishEngine.preparePayload(TTDHS_State);
-            NotificationEngine.dispatch(payload);
-
-            // Tương thích Google Apps Script / SessionStorage Wrapper
-            if (typeof google !== 'undefined' && google.script && google.script.run) {
-                google.script.run.withSuccessHandler(() => {
-                    alert("🎉 Phát hành thành công lên Server Google Apps Script!");
-                }).executePublishingBackend(payload);
-            } else {
-                StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_PUBLISHED, payload);
-                alert(`🚀 PHÁT HÀNH THÀNH CÔNG!\n\nĐã phân phối [${TTDHS_State.document.title}] tới ${payload.destinations.length} điểm đến số.`);
-            }
-        },
-
-        openPreviewModal: () => {
-            alert(`XEM TRƯỚC NỘI DUNG TÀI LIỆU:\n---------------------------\nTiêu đề: ${TTDHS_State.document.title}\nNguồn: ${TTDHS_State.document.moduleSource}`);
-        },
-
-        resetDraft: () => {
-            StorageEngine.remove(CONFIG.STORAGE_KEYS.CURRENT_DOC);
-            window.location.reload();
+        // Storage Engine Integration
+        const storedDoc = StorageEngine.load(CONFIG.STORAGE_KEYS.CURRENT_DOC);
+        if (storedDoc) {
+            TTDHS_State.document = ModuleAdapter.toStandardDocument(storedDoc);
         }
-    };
 
+        Controller.refreshUI();
+    },
+
+    setupEventBusListeners: () => {
+        eventBus.on("NOTIFICATION_DISPATCHED", (data) => {
+            // Controller handles side-effects/logging
+        });
+    },
+
+    refreshUI: () => {
+        const preCheckResult = PreCheckEngine.runChecks(TTDHS_State);
+        const pipeline = WorkflowEngine.generatePipeline(
+            TTDHS_State.document,
+            TTDHS_State.destinations,
+            TTDHS_State.workflowSteps
+        );
+
+        RenderEngine.renderAll(TTDHS_State, preCheckResult, pipeline);
+    },
+
+    toggleDestination: (destId) => {
+        TTDHS_State.destinations = DispatchEngine.toggleDestination(TTDHS_State.destinations, destId);
+        Controller.refreshUI();
+    },
+
+    toggleWorkflowStep: (stepId) => {
+        TTDHS_State.workflowSteps = WorkflowEngine.toggleStep(TTDHS_State.workflowSteps, stepId);
+        Controller.refreshUI();
+    },
+
+    toggleRecipient: (recipientVal) => {
+        if (TTDHS_State.recipients.includes(recipientVal)) {
+            TTDHS_State.recipients = TTDHS_State.recipients.filter(r => r !== recipientVal);
+        } else {
+            TTDHS_State.recipients.push(recipientVal);
+        }
+        Controller.refreshUI();
+    },
+
+    addLinkedDocument: () => {
+        const title = prompt("Nhập tên tài liệu liên quan:");
+        if (title && title.trim() !== "") {
+            TTDHS_State.linkedDocs.push({
+                id: `DOC-${Date.now()}`,
+                title: title.trim(),
+                type: "Đính kèm"
+            });
+            RenderEngine.renderLinkedDocs(TTDHS_State.linkedDocs);
+        }
+    },
+
+    removeLinkedDoc: (docId) => {
+        TTDHS_State.linkedDocs = TTDHS_State.linkedDocs.filter(d => d.id !== docId);
+        RenderEngine.renderLinkedDocs(TTDHS_State.linkedDocs);
+    },
+
+    // -------------------------------------------------------------
+    // HÀM XỬ LÝ PHÁT HÀNH MỚI (ĐÃ BỔ SUNG TRUYỀN TÍN HIỆU REALTIME)
+    // -------------------------------------------------------------
+    executePublishing: () => {
+        const preCheckResult = PreCheckEngine.runChecks(TTDHS_State);
+        if (!preCheckResult.allPassed) {
+            alert("Không thể phát hành! Vui lòng kiểm tra lại các điều kiện chưa đạt.");
+            return;
+        }
+
+        const payload = PublishEngine.preparePayload(TTDHS_State);
+        NotificationEngine.dispatch(payload);
+
+        // 1. Lưu vào Storage dùng chung
+        StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_PUBLISHED, payload);
+
+        // 2. Phát tín hiệu Realtime cho các giao diện khác trên cùng Tab hoặc khác Tab
+        const publishEvent = new CustomEvent('DOCUMENT_PUBLISHED', { detail: payload });
+        window.dispatchEvent(publishEvent);
+        if (typeof publishChannel !== 'undefined') {
+            publishChannel.postMessage(payload);
+        }
+
+        // 3. Tương thích Google Apps Script (nếu có)
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+            google.script.run.executePublishingBackend(payload);
+        }
+
+        // 4. Thông báo thành công
+        alert(`🚀 PHÁT HÀNH THÀNH CÔNG!\nVăn bản đã được đẩy trực tiếp về module [Lịch công tác tuần].`);
+    },
+
+    openPreviewModal: () => {
+        alert(`XEM TRƯỚC NỘI DUNG TÀI LIỆU:\n---------------------------\nTiêu đề: ${TTDHS_State.document.title}\nNguồn: ${TTDHS_State.document.moduleSource}`);
+    },
+
+    resetDraft: () => {
+        StorageEngine.remove(CONFIG.STORAGE_KEYS.CURRENT_DOC);
+        window.location.reload();
+    }
+};
     // Tự động khởi chạy duy nhất Controller khi DOM sẵn sàng
     document.addEventListener('DOMContentLoaded', Controller.init);
     </script>
