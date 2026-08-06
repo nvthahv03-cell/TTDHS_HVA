@@ -292,14 +292,14 @@
                     <span>PHẦN 5: Chọn đối tượng nhận nhiệm vụ</span>
                 </div>
 
-                <!-- THỐNG KÊ REALTIME (J) -->
+                <!-- THỐNG KÊ REALTIME -->
                 <div class="flex items-center gap-2">
                     <span id="statTo" class="px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold">0 tổ</span>
                     <span id="statNguoi" class="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#0F4C81] text-xs font-bold">0 cá nhân</span>
                 </div>
             </div>
 
-            <!-- Ô TÌM KIẾM ĐỐI TƯỢNG (A & H) -->
+            <!-- Ô TÌM KIẾM ĐỐI TƯỢNG -->
             <div class="relative">
                 <input type="text" id="inputSearchDoiTuong" oninput="filterDoiTuong(this.value)" placeholder="Tìm tổ hoặc giáo viên... (VD: 'Hiền', 'Toán')" 
                     class="w-full rounded-xl border border-slate-300 bg-slate-50/50 pl-10 pr-10 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100 transition">
@@ -309,9 +309,8 @@
                 </button>
             </div>
 
-            <!-- B, C, D, E, F, G, H: DANH SÁCH TỔ & NHÂN SỰ ACCORDION -->
+            <!-- DANH SÁCH TỔ & NHÂN SỰ ACCORDION -->
             <div id="containerDanhSachTo" class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1">
-                <!-- SKELETON LOADING -->
                 <div class="space-y-2" id="skeletonLoaderTo">
                     <div class="h-12 bg-slate-100 rounded-xl animate-pulse"></div>
                     <div class="h-12 bg-slate-100 rounded-xl animate-pulse"></div>
@@ -319,7 +318,7 @@
                 </div>
             </div>
 
-            <!-- CHIP ĐÃ CHỌN (I) -->
+            <!-- CHIP ĐÃ CHỌN -->
             <div class="pt-3 border-t border-slate-100 space-y-2">
                 <div class="flex items-center justify-between">
                     <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Đã chọn:</label>
@@ -366,7 +365,6 @@
 <div id="modalPreview" class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden no-print">
     <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-200">
         
-        <!-- MODAL HEADER -->
         <div class="px-5 py-3.5 bg-[#0F4C81] text-white flex items-center justify-between">
             <div class="flex items-center gap-2 text-sm font-bold">
                 <i class="bi bi-file-earmark-text-fill"></i>
@@ -377,7 +375,6 @@
             </button>
         </div>
 
-        <!-- MODAL BODY PRINTABLE -->
         <div class="p-6 overflow-y-auto flex-1 font-serif leading-relaxed text-slate-900 bg-white" id="printArea">
             <div class="text-center border-b-2 border-slate-800 pb-4 mb-4">
                 <div class="flex justify-between items-start text-xs font-bold uppercase tracking-wider mb-2">
@@ -441,7 +438,6 @@
             </div>
         </div>
 
-        <!-- MODAL FOOTER -->
         <div class="p-3.5 bg-slate-100 border-t border-slate-200 flex items-center justify-end gap-2">
             <button type="button" onclick="window.print()" class="px-4 py-2 bg-[#0F4C81] text-white text-xs font-bold rounded-xl hover:bg-[#0b3e69] transition flex items-center gap-1.5">
                 <i class="bi bi-printer-fill"></i>
@@ -455,30 +451,26 @@
 </div>
 
 <script>
-    // URL Backend Apps Script giữ nguyên
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7IsfWAfnsOa4SIyMiKEB-qQurwW5FpxuKcT83aeCHXhiAf60sJSc0t4KQXE3N427E/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjq11TcDE4tyOsPl6NOw1q6r8f14r3Z3qQPuSAgic7Xf6XK4gXjwHOBem4I_IGnALZ/exec";
 
-    // STATE TOÀN CỤC HỆ THỐNG
     let currentUser = {
-        fullName: 'Thầy Nguyễn Văn Thà',
+        fullName: 'Nguyễn Văn Thà',
         workPosition: 'Phó Hiệu trưởng',
         department: 'Ban Giám hiệu',
         username: 'nguyenvantha'
     };
 
-    let allToData = []; // Danh sách tổ & nhân sự
-    let selectedUsernames = new Set(); // Set các username cá nhân được chọn
-    let vanBanChon = null; // Văn bản chọn từ kho
+    let allToData = [];
+    let selectedUsernames = new Set();
+    let vanBanChon = null;
     let searchDebounceTimer = null;
 
-    // KHI TRANG TẢI XONG
     document.addEventListener('DOMContentLoaded', async () => {
         initSessionUser();
         setCurrentDate();
         await loadDanhSachToAndNhanSu();
     });
 
-    // 1. KHỞI TẠO USER TỪ SESSION / LOCALSTORAGE
     function initSessionUser() {
         try {
             const stored = localStorage.getItem("user") || sessionStorage.getItem("user");
@@ -497,7 +489,6 @@
         document.getElementById('nguoiGiaoChucVu').innerText = currentUser.workPosition;
         document.getElementById('nguoiGiaoTo').innerText = currentUser.department;
 
-        // Tạo Avatar ký tự
         const initials = currentUser.fullName.split(' ').slice(-2).map(n => n[0]).join('');
         document.getElementById('avatarContainer').innerText = initials || 'HVA';
     }
@@ -507,7 +498,6 @@
         const formatted = now.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
         document.getElementById('displayNgayGiao').innerText = formatted;
 
-        // Set mặc định hạn hoàn thành là 17:00 ngày hôm sau
         const nextDay = new Date(now);
         nextDay.setDate(nextDay.getDate() + 1);
         nextDay.setHours(17, 0, 0, 0);
@@ -515,16 +505,12 @@
         document.getElementById('hanHoanThanh').value = isoNextDay;
     }
 
-    // 2. TẢI DANH SÁCH TỔ VÀ NHÂN SỰ TỪ BACKEND
     async function loadDanhSachToAndNhanSu() {
-        const container = document.getElementById('containerDanhSachTo');
-        
         try {
             const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`);
             if (!res.ok) throw new Error("Không thể tải dữ liệu");
             const listTo = await res.json();
 
-            // Lấy thông tin nhân sự cho tất cả các tổ
             allToData = await Promise.all(listTo.map(async (toItem) => {
                 const tenTo = toItem.tenTo || toItem;
                 try {
@@ -550,7 +536,6 @@
             console.error("Lỗi tải dữ liệu đối tượng:", error);
             showToast("Không thể kết nối lấy danh sách tổ. Sử dụng dữ liệu dự phòng.", "warning");
             
-            // Dữ liệu fallback chuẩn Enterprise cho THPT Hòa Vang
             allToData = [
                 {
                     tenTo: "Toán - Tin", soLuong: 4, members: [
@@ -584,7 +569,6 @@
         }
     }
 
-    // RENDER B, C, D, E, F, G: DANH SÁCH TỔ & ACCORDION
     function renderAccordionTo(filterKeyword = '') {
         const container = document.getElementById('containerDanhSachTo');
         container.innerHTML = '';
@@ -592,21 +576,17 @@
         const kw = filterKeyword.trim().toLowerCase();
 
         allToData.forEach((toObj, index) => {
-            // Lọc theo từ khóa
             const matchToName = toObj.tenTo.toLowerCase().includes(kw);
             const matchedMembers = toObj.members.filter(m => 
                 m.hoTen.toLowerCase().includes(kw) || m.username.toLowerCase().includes(kw) || m.chucVu.toLowerCase().includes(kw)
             );
 
             if (kw !== '' && !matchToName && matchedMembers.length === 0) {
-                return; // Không khớp thì bỏ qua
+                return;
             }
 
             const membersToDisplay = (kw !== '' && !matchToName) ? matchedMembers : toObj.members;
-
-            // Kiểm tra trạng thái chọn trọn tổ
             const allMembersSelected = toObj.members.length > 0 && toObj.members.every(m => selectedUsernames.has(m.username));
-            const someMembersSelected = toObj.members.some(m => selectedUsernames.has(m.username));
 
             const accordionDiv = document.createElement('div');
             accordionDiv.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm transition";
@@ -659,7 +639,6 @@
         updateChipsAndStats();
     }
 
-    // ACCORDION TOGGLE
     function toggleAccordion(bodyId, iconId) {
         const body = document.getElementById(bodyId);
         const icon = document.getElementById(iconId);
@@ -672,7 +651,6 @@
         }
     }
 
-    // CHỌN / BỎ CHỌN TOÀN BỘ TỔ (D, F)
     function toggleSelectAllInTo(tenTo, isChecked) {
         const targetTo = allToData.find(t => t.tenTo === tenTo);
         if (!targetTo) return;
@@ -689,7 +667,6 @@
         renderAccordionTo(inputSearch);
     }
 
-    // CHỌN / BỎ CHỌN MỘT CÁ NHÂN (E, F, G)
     function toggleUserSelection(username, isChecked) {
         if (isChecked) {
             selectedUsernames.add(username);
@@ -701,7 +678,6 @@
         renderAccordionTo(inputSearch);
     }
 
-    // TÌM KIẾM ĐỐI TƯỢNG REALTIME (A & H)
     function filterDoiTuong(val) {
         const btnClear = document.getElementById('btnClearSearchDT');
         if (val.trim() !== '') {
@@ -718,7 +694,6 @@
         renderAccordionTo('');
     }
 
-    // CẬP NHẬT CHIP & THỐNG KÊ REALTIME (I & J)
     function updateChipsAndStats() {
         const container = document.getElementById('containerChips');
         container.innerHTML = '';
@@ -733,12 +708,10 @@
             return;
         }
 
-        // Phân loại hiển thị Chip: Nếu chọn trọn tổ -> Hiện chip Tổ. Nếu chọn lẻ -> Hiện chip Cá nhân
         allToData.forEach(toObj => {
             const isFullTo = toObj.members.length > 0 && toObj.members.every(m => selectedUsernames.has(m.username));
             if (isFullTo) {
                 countFullTo++;
-                // Chip Tổ (I)
                 const chipTo = document.createElement('div');
                 chipTo.className = "px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs font-bold flex items-center gap-1.5 shadow-2xs";
                 chipTo.innerHTML = `
@@ -752,13 +725,11 @@
             }
         });
 
-        // Hiển thị Chip cá nhân đối với các tổ không được chọn trọn gói
         allToData.forEach(toObj => {
             const isFullTo = toObj.members.length > 0 && toObj.members.every(m => selectedUsernames.has(m.username));
             if (!isFullTo) {
                 toObj.members.forEach(m => {
                     if (selectedUsernames.has(m.username)) {
-                        // Chip Cá nhân (I)
                         const chipUser = document.createElement('div');
                         chipUser.className = "px-2.5 py-1.5 rounded-xl bg-white border border-blue-200 text-[#0F4C81] text-xs font-semibold flex items-center gap-1.5 shadow-2xs";
                         chipUser.innerHTML = `
@@ -775,7 +746,6 @@
             }
         });
 
-        // Cập nhật Badge Thống kê Realtime (J)
         document.getElementById('statTo').innerText = `${countFullTo} tổ`;
         document.getElementById('statNguoi').innerText = `${countUsers} cá nhân`;
     }
@@ -786,7 +756,6 @@
         showToast("Đã xóa toàn bộ đối tượng chọn", "info");
     }
 
-    // 3. NGUỒN GIAO & TÌM KIẾM VĂN BẢN REALTIME (PHẦN 2 & 3)
     function toggleNguonGiao(val) {
         const cardVB = document.getElementById('cardVanBan');
         if (val === 'Theo văn bản') {
@@ -832,7 +801,7 @@
                 return;
             }
 
-            vungKetQua.innerHTML = listVB.map((item, idx) => `
+            vungKetQua.innerHTML = listVB.map((item) => `
                 <div onclick="selectVanBan(${JSON.stringify(item).replace(/"/g, '&quot;')})" class="p-3 hover:bg-blue-50/80 cursor-pointer transition text-xs">
                     <div class="flex items-center justify-between font-bold text-[#0F4C81]">
                         <span>Số: ${item.soVanBan || 'Chưa có số'}</span>
@@ -875,7 +844,6 @@
         clearSearchVanBan();
     }
 
-    // 4. XEM BẢN GIAO (PREVIEW MODAL CHUẨN HÀNH CHÍNH)
     function openPreviewModal() {
         const tieuDe = document.getElementById('tieuDe').value.trim();
         const noiDung = document.getElementById('noiDung').value.trim();
@@ -899,7 +867,6 @@
         document.getElementById('pvNguonGiao').innerText = nguonGiaoVal;
         document.getElementById('pvMucDo').innerText = document.getElementById('mucDo').value;
 
-        // Xử lý thông tin văn bản
         const boxVB = document.getElementById('pvBoxVanBan');
         if (nguonGiaoVal === 'Theo văn bản' && vanBanChon) {
             boxVB.classList.remove('hidden');
@@ -917,7 +884,6 @@
         });
         document.getElementById('pvHanHoanThanh').innerText = hanFormat;
 
-        // Render danh sách nhận
         const containerNhan = document.getElementById('pvDanhSachNhan');
         containerNhan.innerHTML = '';
         
@@ -941,7 +907,6 @@
         document.getElementById('modalPreview').classList.add('hidden');
     }
 
-    // 5. GỬI DỮ LIỆU TẠO TASK LÊN BACKEND (POST)
     async function submitTask() {
         const tieuDe = document.getElementById('tieuDe').value.trim();
         const noiDung = document.getElementById('noiDung').value.trim();
@@ -957,7 +922,6 @@
             return;
         }
 
-        // Lấy danh sách đối tượng chọn đầy đủ thông tin
         const targetList = [];
         allToData.forEach(toObj => {
             toObj.members.forEach(m => {
@@ -1019,7 +983,6 @@
         }
     }
 
-    // RESET FORM
     function resetForm() {
         document.getElementById('formGiaoViec').reset();
         selectedUsernames.clear();
@@ -1031,7 +994,6 @@
         showToast("Đã đặt lại toàn bộ form giao việc", "info");
     }
 
-    // 6. HỆ THỐNG TOAST NOTIFICATION KHÔNG DÙNG ALERT()
     function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
         
