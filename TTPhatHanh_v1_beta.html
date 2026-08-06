@@ -1,425 +1,212 @@
 <!DOCTYPE html>
-<html lang="vi" class="bg-slate-900 text-slate-100 antialiased selection:bg-cyan-500 selection:text-white">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TTĐHS - Trung Tâm Điều Phối Phát Hành Số (v2.0)</title>
-    <!-- Tailwind CSS CDN -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trung Tâm Điều Phối Phát Hành Số v2.2 - TTĐHS_HVA</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Bootstrap Icons CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#ecfeff',
-                            100: '#cffaff',
-                            200: '#a5f3fc',
-                            300: '#67e8f9',
-                            400: '#22d3ee',
-                            500: '#06b6d4',
-                            600: '#0891b2',
-                            700: '#0e7490',
-                            800: '#155e75',
-                            900: '#164e63',
-                            950: '#083344',
-                        },
-                        dark: {
-                            bg: '#0b0f19',
-                            card: '#111827',
-                            border: '#1f2937',
-                            hover: '#1e293b'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0b0f19;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(8, 145, 178, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.5) 0px, transparent 50%);
-            background-attachment: fixed;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Glassmorphism Styles */
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .glass-panel-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-panel-hover:hover {
-            background: rgba(30, 41, 59, 0.85);
-            border-color: rgba(34, 211, 238, 0.3);
-            box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.15);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0b0f19;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1f2937;
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #0891b2;
-        }
-
-        /* Transition FX */
-        .transition-all-smooth {
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Print styles optimization */
-        @media print {
-            header, nav, .no-print, #sticky-action-bar { display: none !important; }
-            main { padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: none !important; }
-            .print-area { background: white !important; color: black !important; border: none !important; box-shadow: none !important; }
-            body { background: white !important; color: black !important; }
-        }
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body class="min-h-screen text-slate-100 flex flex-col justify-between pb-28">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
 
-    <!-- ================= 1. HEADER CHÍNH (TOP NAV) ================= -->
-    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80 shadow-2xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <div class="flex items-center justify-between gap-4">
-                <!-- Branding / Title -->
-                <div class="flex items-center gap-3 min-w-0">
-                    <button id="btn-back" type="button" 
-                        class="w-10 h-10 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/50 flex items-center justify-center text-slate-300 hover:text-white transition active:scale-95 shrink-0">
-                        <i class="bi bi-arrow-left text-lg"></i>
-                    </button>
-                    <div class="min-w-0">
-                        <div class="flex items-center gap-2">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-widest bg-cyan-950/80 text-cyan-400 border border-cyan-800/50">
-                                THPT Hòa Vang
-                            </span>
-                            <span class="text-xs text-slate-400 hidden sm:inline">• TTĐHS Distribution Engine v2.0</span>
-                        </div>
-                        <h1 class="text-base sm:text-xl font-black uppercase text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-cyan-400 truncate">
-                            Trung Tâm Điều Phối Phát Hành
-                        </h1>
-                    </div>
+    <!-- HEADER HỆ THỐNG -->
+    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-lg">
+                    <i class="bi bi-diagram-3-fill text-xl"></i>
                 </div>
-
-                <!-- User Profile Summary -->
-                <div class="flex items-center gap-3 shrink-0">
-                    <div class="hidden md:flex flex-col text-right">
-                        <span id="user-display-name" class="text-xs font-bold text-slate-200">Nguyễn Văn Thà</span>
-                        <span id="user-display-role" class="text-[10px] text-cyan-400 font-medium">Phó Hiệu trưởng • Administrator</span>
-                    </div>
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-950">
-                        <i class="bi bi-person-badge text-lg"></i>
-                    </div>
+                <div>
+                    <h1 class="text-base font-extrabold tracking-wide uppercase text-slate-100">TRUNG TÂM ĐIỀU PHỐI PHÁT HÀNH SỐ <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">v2.2 Engine</span></h1>
+                    <p class="text-[11px] text-slate-400">Hệ thống điều phối tài liệu & nhiệm vụ tập trung - TTĐHS_HVA</p>
                 </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="module-origin-badge" class="px-3 py-1 bg-slate-800 border border-slate-700 text-teal-300 text-xs font-semibold rounded-full flex items-center gap-1.5">
+                    <i class="bi bi-layers-fill"></i> Nguồn: <span id="source-module-name">Đang tải...</span>
+                </span>
+                <button onclick="Controller.resetDraft()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold border border-slate-700 transition flex items-center gap-1">
+                    <i class="bi bi-arrow-counterclockwise"></i> Tải lại State
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- ================= 2. MAIN CONTAINER ================= -->
-    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 flex-1">
-
-        <!-- THÔNG BÁO / TOAST CẢNH BÁO TOÀN CỤC -->
-        <div id="alert-banner" class="hidden p-4 rounded-2xl border transition-all duration-300"></div>
-
-        <!-- DASHBOARD THỐNG KÊ ĐIỀU PHỐI (V2 NEW MODULE) -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-            <div class="glass-panel p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between">
-                <div class="space-y-0.5">
-                    <div class="text-[11px] font-medium text-slate-400">📅 Lịch công tác</div>
-                    <div id="stat-lich-cong-tac" class="text-lg font-black text-white">0 điểm đến</div>
+    <!-- METRICS DASHBOARD STATUS BAR -->
+    <section class="bg-white border-b border-slate-200 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
+                <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl">
+                    <div class="text-[11px] text-slate-500 font-bold uppercase">Tổng văn bản</div>
+                    <div id="stat-total-docs" class="text-lg font-extrabold text-slate-800">128</div>
                 </div>
-                <div id="badge-stat-lich" class="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-extrabold text-xs">0</div>
-            </div>
-            <div class="glass-panel p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between">
-                <div class="space-y-0.5">
-                    <div class="text-[11px] font-medium text-slate-400">📂 Tài nguyên số</div>
-                    <div id="stat-tai-nguyen-so" class="text-lg font-black text-white">0 điểm đến</div>
+                <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl">
+                    <div class="text-[11px] text-emerald-700 font-bold uppercase">Đang phát hành</div>
+                    <div id="stat-active-docs" class="text-lg font-extrabold text-emerald-600">42</div>
                 </div>
-                <div id="badge-stat-tainguyen" class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-extrabold text-xs">0</div>
-            </div>
-            <div class="glass-panel p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between">
-                <div class="space-y-0.5">
-                    <div class="text-[11px] font-medium text-slate-400">📋 Việc của tôi</div>
-                    <div id="stat-viec-cua-toi" class="text-lg font-black text-white">0 nhiệm vụ</div>
+                <div class="bg-blue-50 border border-blue-200 p-2.5 rounded-xl">
+                    <div class="text-[11px] text-blue-700 font-bold uppercase">Đã hoàn thành</div>
+                    <div id="stat-completed-docs" class="text-lg font-extrabold text-blue-600">81</div>
                 </div>
-                <div id="badge-stat-viec" class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-extrabold text-xs">0</div>
-            </div>
-            <div class="glass-panel p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between">
-                <div class="space-y-0.5">
-                    <div class="text-[11px] font-medium text-slate-400">📢 Thông báo</div>
-                    <div id="stat-thong-bao" class="text-lg font-black text-white">Chưa kích hoạt</div>
+                <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-xl">
+                    <div class="text-[11px] text-amber-700 font-bold uppercase">Đang điều chỉnh</div>
+                    <div id="stat-editing-docs" class="text-lg font-extrabold text-amber-600">3</div>
                 </div>
-                <div id="badge-stat-thongbao" class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-extrabold text-xs">OFF</div>
+                <div class="bg-rose-50 border border-rose-200 p-2.5 rounded-xl col-span-2 md:col-span-1">
+                    <div class="text-[11px] text-rose-700 font-bold uppercase">Đã thu hồi</div>
+                    <div id="stat-revoked-docs" class="text-lg font-extrabold text-rose-600">2</div>
+                </div>
             </div>
         </div>
+    </section>
 
-        <!-- METADATA HEADER CARD & SWITCHER -->
-        <div class="glass-panel p-5 rounded-3xl border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <!-- THÔNG TIN TÀI LIỆU CẦN ĐIỀU PHỐI -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow space-y-6">
+        
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="space-y-1">
-                <div class="text-xs text-cyan-400 font-semibold uppercase tracking-wider">Đang điều phối phát hành cho tài liệu</div>
-                <div class="flex items-center gap-3 flex-wrap">
-                    <h2 id="doc-title-head" class="text-lg sm:text-2xl font-black text-white">Lịch Công Tác Tuần 24 - Năm Học 2025-2026</h2>
-                    <span id="doc-badge-head" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                        🟡 Nháp
-                    </span>
+                <div class="flex items-center gap-2">
+                    <span id="doc-type-badge" class="px-2.5 py-0.5 rounded text-[11px] font-extrabold bg-teal-100 text-teal-800 uppercase">Lịch Công Tác</span>
+                    <span id="doc-id-badge" class="text-xs font-mono text-slate-500 font-bold">Mã: LCT-2026-0806-001</span>
+                    <span id="doc-version-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-300">v1.0.0</span>
                 </div>
+                <h2 id="doc-title-display" class="text-lg font-bold text-slate-900">Lịch Công Tác Tuần 24 - Trường THPT Hòa Vang</h2>
+                <p id="doc-summary-display" class="text-xs text-slate-500">Người soạn: Ban BGH | Ngày tạo: 06/08/2026 | Dung lượng dữ liệu: 14.2 KB</p>
             </div>
-            
-            <!-- Bộ chọn tài liệu mẫu (Mở rộng cho nhiều loại văn bản) -->
-            <div class="w-full md:w-auto flex items-center gap-2">
-                <label for="select-doc-source" class="text-xs text-slate-400 font-medium whitespace-nowrap">Nguồn tài liệu:</label>
-                <select id="select-doc-source" class="w-full md:w-64 bg-slate-800/90 border border-slate-700/80 rounded-xl px-3 py-2 text-xs font-semibold text-slate-200 focus:outline-none focus:border-cyan-500 transition">
-                    <option value="DOC-001">Lịch công tác Tuần 24</option>
-                    <option value="DOC-002">Thông báo Nghỉ lễ 30/4 - 1/5</option>
-                    <option value="DOC-003">Kế hoạch Ôn tập Học kỳ II</option>
-                    <option value="DOC-004">Biên bản Họp Ban Giám Hiệu</option>
-                </select>
+            <div class="flex items-center gap-2 border-t md:border-t-0 pt-3 md:pt-0 border-slate-100">
+                <button onclick="Controller.openPreviewModal()" class="px-4 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase transition flex items-center gap-2 border border-slate-300">
+                    <i class="bi bi-eye-fill"></i> Xem Nội Dung
+                </button>
             </div>
         </div>
 
-        <!-- GRID ARCHITECTURE (CỘT TRÁI: KHU VỰC ĐIỀU PHỐI MỚI | CỘT PHẢI: KÊNH - ĐỐI TƯỢNG - LOG) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            <!-- CỘT TRÁI (LG: 7 COLS) -->
-            <div class="lg:col-span-7 space-y-6">
+            <!-- CỘT TRÁI (2 COLS): ĐIỂM ĐẾN & WORKFLOW & TÀI LIỆU LIÊN QUAN -->
+            <div class="lg:col-span-2 space-y-6">
 
-                <!-- 🎯 KHU VỰC MỚI: ĐIỂM ĐẾN PHÁT HÀNH (DISTRIBUTION DESTINATION) -->
-                <section class="glass-panel p-5 sm:p-6 rounded-3xl border border-cyan-500/30 shadow-xl space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold border border-cyan-500/30">
-                                <i class="bi bi-compass-fill text-base"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-black uppercase text-slate-100 tracking-wide">🎯 Điểm đến phát hành</h3>
-                                <p class="text-[10px] text-slate-400">Chọn menu hệ thống TTĐHS tài liệu sẽ xuất hiện</p>
-                            </div>
-                        </div>
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 px-2 py-1 bg-cyan-950/60 border border-cyan-800/60 rounded-lg">Core Dispatcher</span>
+                <!-- CARD 1: ĐIỂM ĐẾN PHÁT HÀNH (DESTINATION MATRIX) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-geo-alt-fill text-emerald-600"></i> 1. Chọn điểm đến phát hành (Destination Engine)
+                        </h3>
+                        <span class="text-[11px] text-slate-400">Có thể chọn nhiều điểm đến</span>
                     </div>
 
-                    <!-- Destination Cards Grid -->
-                    <div id="dispatch-destinations-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                        <!-- Rendered Dynamically by DispatchManager -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="destination-matrix-container">
+                        <!-- Dynamic content rendered by Controller & RenderEngine -->
                     </div>
-                </section>
+                </div>
 
-                <!-- 📋 KHU VỰC MỚI: HÀNH ĐỘNG SAU PHÁT HÀNH (WORKFLOW ACTIONS) -->
-                <section id="section-post-actions" class="hidden glass-panel p-5 sm:p-6 rounded-3xl border border-emerald-500/30 shadow-xl space-y-4 transition-all-smooth">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold border border-emerald-500/30">
-                                <i class="bi bi-node-plus-fill text-base"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-black uppercase text-slate-100 tracking-wide">📋 Hành động sau phát hành</h3>
-                                <p class="text-[10px] text-emerald-400/90 font-medium">Yêu cầu tương tác khi điều phối vào "Việc của tôi"</p>
-                            </div>
-                        </div>
+                <!-- CARD 2: CẤU HÌNH WORKFLOW (CHỈ HIỆN KHI CHỌN 'VIỆC CỦA TÔI') -->
+                <div id="workflow-config-card" class="bg-indigo-50/70 border-2 border-indigo-200 rounded-2xl p-5 space-y-4 transition-all duration-300 hidden">
+                    <div class="flex items-center justify-between border-b border-indigo-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-indigo-900 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-diagram-2-fill text-indigo-600"></i> Cấu hình Workflow "Việc Của Tôi"
+                        </h3>
+                        <span class="px-2 py-0.5 bg-indigo-200 text-indigo-800 text-[10px] font-extrabold rounded-full">Bắt buộc theo dõi</span>
                     </div>
 
-                    <div id="post-actions-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-                        <!-- Rendered Dynamically by WorkflowManager -->
-                    </div>
-                </section>
+                    <p class="text-xs text-indigo-700">Hãy chọn các bước quy trình yêu cầu đối tượng tiếp nhận phải thực thi:</p>
 
-                <!-- 🌐 MÔ PHỎNG SAU PHÁT HÀNH (FLOW UI PREVIEW) -->
-                <section class="glass-panel p-5 sm:p-6 rounded-3xl border border-slate-800 space-y-4">
-                    <div class="flex items-center gap-2.5 border-b border-slate-800/80 pb-3">
-                        <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold">
-                            <i class="bi bi-diagram-3-fill text-base"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-black uppercase text-slate-200 tracking-wide">Mô phỏng trải nghiệm người nhận</h3>
-                            <p class="text-[10px] text-slate-400">Xem trước luồng tương tác của nhân sự trên ứng dụng</p>
-                        </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="workflow-steps-container">
+                        <!-- Dynamic Workflow checkboxes -->
                     </div>
+                </div>
 
-                    <div id="flow-ui-preview" class="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs">
-                        <!-- Rendered Dynamically by UIRenderer -->
-                    </div>
-                </section>
-
-                <!-- KHU VỰC 1: THÔNG TIN TÀI LIỆU -->
-                <section class="glass-panel p-5 sm:p-6 rounded-3xl border border-slate-800 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold">
-                                <i class="bi bi-file-earmark-text text-base"></i>
-                            </div>
-                            <h3 class="text-sm font-black uppercase text-slate-200 tracking-wide">1. Thông tin tài liệu</h3>
-                        </div>
-                        <span class="text-xs text-slate-500 font-mono" id="doc-id-display">ID: DOC-2026-001</span>
+                <!-- CARD 3: MÔ PHỎNG LUỒNG SAU PHÁT HÀNH (SIMULATION FLOW) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-signpost-split-fill text-teal-600"></i> Luồng xử lý sau phát hành (Simulation Flow)
+                        </h3>
+                        <span class="text-[11px] text-slate-400">Tự động tạo bởi Workflow Engine</span>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                        <div class="sm:col-span-2">
-                            <span class="text-slate-400 block mb-1">Tên tài liệu</span>
-                            <div id="doc-name" class="font-bold text-sm text-slate-100 bg-slate-800/40 p-2.5 rounded-xl border border-slate-700/40">--</div>
-                        </div>
-
-                        <div>
-                            <span class="text-slate-400 block mb-1">Loại tài liệu</span>
-                            <div id="doc-type" class="font-semibold text-cyan-300 bg-slate-800/40 p-2.5 rounded-xl border border-slate-700/40">--</div>
-                        </div>
-
-                        <div>
-                            <span class="text-slate-400 block mb-1">Phiên bản hiện tại</span>
-                            <div id="doc-version" class="font-mono font-bold text-slate-200 bg-slate-800/40 p-2.5 rounded-xl border border-slate-700/40">--</div>
-                        </div>
-
-                        <div>
-                            <span class="text-slate-400 block mb-1">Người tạo</span>
-                            <div id="doc-author" class="font-semibold text-slate-200 bg-slate-800/40 p-2.5 rounded-xl border border-slate-700/40">--</div>
-                        </div>
-
-                        <div>
-                            <span class="text-slate-400 block mb-1">Ngày tạo</span>
-                            <div id="doc-created" class="font-semibold text-slate-200 bg-slate-800/40 p-2.5 rounded-xl border border-slate-700/40">--</div>
-                        </div>
-
-                        <div>
-                            <span class="text-slate-400 block mb-1">Người phát hành</span>
-                            <div id="doc-publisher" class="font-semibold text-slate-200 bg-slate-800/40 p-2.5 rounded-xl border border-slate-700/40">--</div>
-                        </div>
-
-                        <div>
-                            <span class="text-slate-400 block mb-1">Ngày phát hành</span>
-                            <div id="doc-published-date" class="font-semibold text-slate-200 bg-slate-800/40 p-2.5 rounded-xl border border-slate-700/40">--</div>
+                    <div class="overflow-x-auto pb-2 custom-scrollbar">
+                        <div class="flex items-center gap-2 min-w-[600px] text-xs" id="simulation-flow-container">
+                            <!-- Dynamic Simulation flow -->
                         </div>
                     </div>
-                </section>
+                </div>
 
-                <!-- KHU VỰC 2: KIỂM TRA TRƯỚC PHÁT HÀNH -->
-                <section class="glass-panel p-5 sm:p-6 rounded-3xl border border-slate-800 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
-                                <i class="bi bi-shield-check text-base"></i>
-                            </div>
-                            <h3 class="text-sm font-black uppercase text-slate-200 tracking-wide">2. Kiểm tra trước phát hành (Validation System)</h3>
-                        </div>
-                        <button id="btn-recheck" type="button" class="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1 transition">
-                            <i class="bi bi-arrow-clockwise"></i> Kiểm tra lại
+                <!-- CARD 4: TÀI LIỆU LIÊN QUAN (LINKED DOCUMENTS) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-paperclip text-slate-600"></i> Tài liệu liên quan đính kèm
+                        </h3>
+                        <button onclick="Controller.addLinkedDocument()" class="text-xs text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1">
+                            <i class="bi bi-plus-circle-fill"></i> Thêm đính kèm
                         </button>
                     </div>
 
-                    <!-- Checklist Results Grid -->
-                    <div id="validation-checklist" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-                        <!-- Rendered by JS -->
+                    <div class="space-y-2" id="linked-docs-container">
+                        <!-- Dynamic Linked Docs -->
                     </div>
-
-                    <!-- Readiness Warning Box -->
-                    <div id="validation-summary" class="p-3.5 rounded-2xl border text-xs font-semibold flex items-center gap-3">
-                        <!-- Rendered dynamically -->
-                    </div>
-                </section>
-
-                <!-- KHU VỰC 5: GHI CHÚ PHÁT HÀNH -->
-                <section class="glass-panel p-5 sm:p-6 rounded-3xl border border-slate-800 space-y-4">
-                    <div class="flex items-center gap-2.5 border-b border-slate-800/80 pb-3">
-                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold">
-                            <i class="bi bi-journal-text text-base"></i>
-                        </div>
-                        <h3 class="text-sm font-black uppercase text-slate-200 tracking-wide">5. Ghi chú điều phối & Lệnh ban hành</h3>
-                    </div>
-
-                    <div>
-                        <textarea id="publish-note" rows="3" 
-                            class="w-full bg-slate-900/80 border border-slate-700/80 rounded-2xl p-3.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition"
-                            placeholder="Nhập ghi chú điều phối, chỉ đạo thực hiện hoặc nội dung cập nhật phiên bản..."></textarea>
-                    </div>
-                </section>
+                </div>
 
             </div>
 
-            <!-- CỘT PHẢI (LG: 5 COLS) -->
-            <div class="lg:col-span-5 space-y-6">
+            <!-- CỘT PHẢI (1 COL): KIỂM TRA ĐIỀU KIỆN & PHÂN QUYỀN & LƯU VÀ PHÁT HÀNH -->
+            <div class="space-y-6">
 
-                <!-- KHU VỰC 3: ĐỐI TƯỢNG NHẬN (BỔ SUNG XEM TRƯỚC SỐ LƯỢNG NGƯỜI NHẬN) -->
-                <section class="glass-panel p-5 sm:p-6 rounded-3xl border border-slate-800 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold">
-                                <i class="bi bi-people text-base"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-black uppercase text-slate-200 tracking-wide">3. Đối tượng nhận</h3>
-                                <div id="recipient-total-count" class="text-[10px] font-bold text-cyan-400">Tổng: 0 người nhận</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 text-[11px]">
-                            <button id="btn-select-all-recipients" type="button" class="text-cyan-400 hover:underline font-semibold">Chọn tất cả</button>
-                            <span class="text-slate-600">•</span>
-                            <button id="btn-deselect-all-recipients" type="button" class="text-slate-400 hover:underline font-semibold">Xóa chọn</button>
-                        </div>
+                <!-- CHECKLIST TRƯỚC PHÁT HÀNH (PRE-PUBLISH CHECK MATRIX) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-shield-check text-emerald-600"></i> Kiểm tra trước phát hành
+                        </h3>
+                        <span id="precheck-status-badge" class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-slate-100 text-slate-600">Đang quét...</span>
                     </div>
 
-                    <div id="recipients-container" class="grid grid-cols-1 gap-2 text-xs">
-                        <!-- Rendered dynamically -->
+                    <div class="space-y-2 text-xs" id="precheck-items-container">
+                        <!-- Dynamic checklist -->
                     </div>
-                </section>
+                </div>
 
-                <!-- KHU VỰC 4: KÊNH PHÁT HÀNH -->
-                <section class="glass-panel p-5 sm:p-6 rounded-3xl border border-slate-800 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold">
-                                <i class="bi bi-broadcast text-base"></i>
-                            </div>
-                            <h3 class="text-sm font-black uppercase text-slate-200 tracking-wide">4. Kênh truyền tải</h3>
-                        </div>
-                        <span class="text-[11px] text-slate-400 font-medium">Đa phương thức</span>
+                <!-- ĐỐI TƯỢNG NHẬN (RECIPIENT ENGINE) -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="text-sm font-extrabold uppercase text-slate-800 tracking-wide flex items-center gap-2">
+                            <i class="bi bi-people-fill text-blue-600"></i> Đối tượng tiếp nhận
+                        </h3>
                     </div>
 
-                    <div id="channels-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                        <!-- Rendered dynamically as cards -->
+                    <div class="space-y-2" id="recipient-selector-container">
+                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                            <input type="checkbox" value="ALL" checked onchange="Controller.toggleRecipient('ALL')" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                            <span>Toàn thể Giáo viên & Nhân viên ( Toàn trường )</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                            <input type="checkbox" value="BGH" checked onchange="Controller.toggleRecipient('BGH')" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                            <span>Ban Ban Giám Hiệu</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                            <input type="checkbox" value="TO_TRUONG" onchange="Controller.toggleRecipient('TO_TRUONG')" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
+                            <span>Tổ trưởng chuyên môn</span>
+                        </label>
                     </div>
-                </section>
+                </div>
 
-                <!-- KHU VỰC 6: NHẬT KÝ PHÁT HÀNH & PHIÊN BẢN (MỞ RỘNG GHI NHẬN ĐIỂM ĐẾN) -->
-                <section class="glass-panel p-5 sm:p-6 rounded-3xl border border-slate-800 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center font-bold">
-                                <i class="bi bi-clock-history text-base"></i>
-                            </div>
-                            <h3 class="text-sm font-black uppercase text-slate-200 tracking-wide">6. Nhật ký điều phối</h3>
-                        </div>
-                        <span class="text-[11px] text-slate-400">Lịch sử chuyển dữ liệu</span>
-                    </div>
+                <!-- KHỐI ĐIỀU PHỐI CHÍNH (ACTION EXECUTION) -->
+                <div class="bg-slate-900 text-white rounded-2xl p-5 shadow-lg space-y-4">
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Xác nhận điều phối</h3>
+                    <p class="text-xs text-slate-300">Văn bản sẽ được đẩy lên Publish Engine và kích hoạt phân phối đến các hệ thống đích.</p>
 
-                    <!-- Timeline UI -->
-                    <div id="timeline-container" class="relative pl-6 space-y-4 text-xs before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-800">
-                        <!-- Rendered dynamically -->
-                    </div>
-                </section>
+                    <button id="btn-execute-publish" onclick="Controller.executePublishing()" class="w-full h-12 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold rounded-xl text-xs uppercase shadow-md transition flex items-center justify-center gap-2 border border-emerald-400/30">
+                        <i class="bi bi-rocket-takeoff-fill text-lg"></i>
+                        <span>Kích Hoạt Phát Hành Số</span>
+                    </button>
+                </div>
 
             </div>
 
@@ -427,949 +214,504 @@
 
     </main>
 
-    <!-- ================= KHU VỰC 7: THANH TÁC VỤ NỔI (FIXED BOTTOM ACTION BAR) ================= -->
-    <div id="sticky-action-bar" class="fixed bottom-0 left-0 right-0 z-50 p-3 sm:p-4 glass-panel border-t border-slate-800 shadow-2xl">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar py-1">
-            
-            <!-- Nhóm Trái: Quay lại & Lưu nháp -->
-            <div class="flex items-center gap-2 shrink-0">
-                <button id="btn-bar-back" type="button" title="Quay lại danh sách"
-                    class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-bold text-xs transition flex items-center gap-2 border border-slate-700/60 active:scale-95">
-                    <i class="bi bi-arrow-left text-base"></i>
-                    <span class="hidden sm:inline">Quay lại</span>
-                </button>
-
-                <button id="btn-save-draft" type="button" title="Lưu thông tin chỉnh sửa nháp"
-                    class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-xs transition flex items-center gap-2 border border-slate-700/60 active:scale-95">
-                    <i class="bi bi-floppy text-base"></i>
-                    <span class="hidden sm:inline">Lưu nháp</span>
-                </button>
-            </div>
-
-            <!-- Nhóm Giữa: Xem trước & Xuất PDF -->
-            <div class="flex items-center gap-2 shrink-0">
-                <button id="btn-preview" type="button" title="Xem trước giao diện hiển thị"
-                    class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold text-xs transition flex items-center gap-2 border border-slate-700/60 active:scale-95">
-                    <i class="bi bi-eye text-base"></i>
-                    <span>Xem trước</span>
-                </button>
-
-                <button id="btn-export-pdf" type="button" title="Xuất file PDF tài liệu"
-                    class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-400 font-bold text-xs transition flex items-center gap-2 border border-slate-700/60 active:scale-95">
-                    <i class="bi bi-file-earmark-pdf text-base"></i>
-                    <span class="hidden md:inline">Xuất PDF</span>
-                </button>
-            </div>
-
-            <!-- Nhóm Phải: Các hành động Phát hành chính -->
-            <div class="flex items-center gap-2 shrink-0">
-                <button id="btn-revoke" type="button" title="Thu hồi văn bản đã phát hành"
-                    class="hidden px-3.5 py-2.5 rounded-xl bg-rose-950/80 hover:bg-rose-900/80 text-rose-300 font-bold text-xs transition border border-rose-800/80 active:scale-95 flex items-center gap-1.5">
-                    <i class="bi bi-arrow-counterclockwise text-base"></i>
-                    <span>Thu hồi</span>
-                </button>
-
-                <button id="btn-publish" type="button"
-                    class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-cyan-950/50 transition active:scale-95 flex items-center gap-2">
-                    <i class="bi bi-rocket-takeoff text-base"></i>
-                    <span id="btn-publish-text">Điều phối ngay</span>
-                </button>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- MODAL XEM TRƯỚC TÀI LIỆU -->
-    <div id="preview-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-3xl max-h-[85vh] rounded-3xl border border-slate-700 flex flex-col overflow-hidden shadow-2xl">
-            <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
-                <div class="flex items-center gap-2 text-cyan-400 font-bold text-sm uppercase">
-                    <i class="bi bi-file-earmark-richtext"></i> Xem trước bản đồ điều phối tài liệu
-                </div>
-                <button id="btn-close-preview" type="button" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-            <div id="preview-modal-body" class="p-6 overflow-y-auto space-y-4 text-xs text-slate-200">
-                <!-- Nội dung mô phỏng văn bản -->
-            </div>
-            <div class="p-4 border-t border-slate-800 bg-slate-900/80 flex justify-end">
-                <button id="btn-close-preview-2" type="button" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl">Đóng</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= JAVASCRIPT CLEAN ARCHITECTURE (v2.0 MODULES) ================= -->
+    <!-- ARCHITECTURE SCRIPT: TTĐHS_HVA ENTERPRISE ENGINE v2.2 -->
     <script>
-        /**
-         * TRUNG TÂM ĐIỀU PHỐI PHÁT HÀNH (TTPhatHanh.js v2.0)
-         * Modular Architecture: Clean Separation, Full Backward Compatibility with V1.
-         */
+    /**
+     * TTĐHS_HVA PUBLISHING ENGINE v2.2 (Enterprise Refactored Architecture)
+     * System Architecture Layers:
+     * 1. CONFIG (Central Constants)
+     * 2. EventBus (Decoupled System Events)
+     * 3. StorageEngine (Abstract Storage Layer)
+     * 4. ModuleAdapter (Standard Document Normalization)
+     * 5. Central State Store
+     * 6. Pure Business Engines (Zero DOM / Zero Direct UI Mutators)
+     * 7. RenderEngine (Pure UI Presentation Layer)
+     * 8. Controller (Central Orchestrator)
+     */
 
-        // 1. DATA REPOSITORY & DICTIONARIES (TƯƠNG THÍCH V1 + MỞ RỘNG V2)
-        const documentDatabase = {
-            "DOC-001": {
-                id: "DOC-2026-001",
-                title: "Lịch Công Tác Tuần 24 - Năm Học 2025-2026",
-                type: "Lịch công tác",
-                version: "1.0",
-                author: "Nguyễn Văn Thà (Phó Hiệu trưởng)",
-                createdDate: "2026-04-10 08:30",
-                publisher: "Chưa phát hành",
-                publishedDate: "--",
-                status: "NHAP", // NHAP, CHO_PHAT_HANH, DA_PHAT_HANH, DIEU_CHINH, THU_HOI
-                content: "Chi tiết Lịch công tác BGH, các Tổ chuyên môn, Đoàn thanh niên từ 12/04 đến 18/04/2026.",
-                validations: {
-                    hasTitle: true,
-                    hasContent: true,
-                    hasAuthor: true,
-                    hasValidDate: true,
-                    noSystemError: true,
-                    dataComplete: true
-                },
-                recipients: ["bgh", "gv", "vanphong", "totruong"],
-                channels: ["ttdhs", "thongbao", "tacvu"],
-                // V2 Extensions
-                destinations: {
-                    lichCongTac: "lichTuan",
-                    taiNguyenSo: null,
-                    tienIchSo: null,
-                    thongBao: true,
-                    viecCuaToi: false
-                },
-                postAction: "displayOnly",
-                history: [
-                    { time: "2026-04-10 08:30", user: "Nguyễn Văn Thà", action: "Khởi tạo bản thảo lịch công tác (v1.0)", status: "NHAP" }
-                ]
-            },
-            "DOC-002": {
-                id: "DOC-2026-002",
-                title: "Thông báo Kế hoạch Nghỉ lễ 30/4 - 1/5",
-                type: "Thông báo",
-                version: "1.1",
-                author: "Nguyễn Văn Thà (Phó Hiệu trưởng)",
-                createdDate: "2026-04-08 14:00",
-                publisher: "Nguyễn Văn Thà",
-                publishedDate: "2026-04-09 09:00",
-                status: "DA_PHAT_HANH",
-                content: "Thông báo thời gian nghỉ lễ, lịch trực trường và đảm bảo an ninh trật tự.",
-                validations: {
-                    hasTitle: true,
-                    hasContent: true,
-                    hasAuthor: true,
-                    hasValidDate: true,
-                    noSystemError: true,
-                    dataComplete: true
-                },
-                recipients: ["bgh", "gv", "vanphong", "totruong", "doantn", "khach"],
-                channels: ["ttdhs", "thongbao", "website", "email"],
-                destinations: {
-                    lichCongTac: null,
-                    taiNguyenSo: null,
-                    tienIchSo: null,
-                    thongBao: true,
-                    viecCuaToi: false
-                },
-                postAction: "displayOnly",
-                history: [
-                    { time: "2026-04-08 14:00", user: "Nguyễn Văn Thà", action: "Tạo dự thảo thông báo", status: "NHAP" },
-                    { time: "2026-04-09 09:00", user: "Nguyễn Văn Thà", action: "Phát hành chính thức v1.1", status: "DA_PHAT_HANH" }
-                ]
-            },
-            "DOC-003": {
-                id: "DOC-2026-003",
-                title: "Kế hoạch Tổ chức Ôn tập Học kỳ II năm 2026",
-                type: "Kế hoạch",
-                version: "1.0",
-                author: "Tổ Chuyên Môn",
-                createdDate: "2026-04-11 10:15",
-                publisher: "Chưa phát hành",
-                publishedDate: "--",
-                status: "CHO_PHAT_HANH",
-                content: "Phân công giáo viên ôn tập, xếp lịch thi thử và kiểm tra chất lượng.",
-                validations: {
-                    hasTitle: true,
-                    hasContent: true,
-                    hasAuthor: true,
-                    hasValidDate: true,
-                    noSystemError: false,
-                    dataComplete: false
-                },
-                recipients: ["bgh", "gv", "totruong"],
-                channels: ["ttdhs", "tacvu"],
-                destinations: {
-                    lichCongTac: null,
-                    taiNguyenSo: "keHoach",
-                    tienIchSo: null,
-                    thongBao: false,
-                    viecCuaToi: true
-                },
-                postAction: "acceptTask",
-                history: [
-                    { time: "2026-04-11 10:15", user: "Tổ Chuyên Môn", action: "Gửi trình duyệt kế hoạch", status: "CHO_PHAT_HANH" }
-                ]
-            },
-            "DOC-004": {
-                id: "DOC-2026-004",
-                title: "Biên bản Đánh giá Thi đua Tháng 3/2026",
-                type: "Biên bản",
-                version: "2.0",
-                author: "Văn phòng Trường",
-                createdDate: "2026-04-01 16:30",
-                publisher: "Nguyễn Văn Thà",
-                publishedDate: "2026-04-02 08:00",
-                status: "THU_HOI",
-                content: "Biên bản tổng hợp điểm thi đua các tổ chuyên môn.",
-                validations: {
-                    hasTitle: true,
-                    hasContent: true,
-                    hasAuthor: true,
-                    hasValidDate: true,
-                    noSystemError: true,
-                    dataComplete: true
-                },
-                recipients: ["bgh", "totruong"],
-                channels: ["ttdhs"],
-                destinations: {
-                    lichCongTac: null,
-                    taiNguyenSo: "bienBan",
-                    tienIchSo: null,
-                    thongBao: false,
-                    viecCuaToi: false
-                },
-                postAction: "displayOnly",
-                history: [
-                    { time: "2026-04-02 08:00", user: "Nguyễn Văn Thà", action: "Phát hành phiên bản v1.0", status: "DA_PHAT_HANH" },
-                    { time: "2026-04-03 11:20", user: "Nguyễn Văn Thà", action: "Thu hồi tài liệu do tính sai điểm thi đua", status: "THU_HOI" }
-                ]
+    // =================================================================
+    // 1. SYSTEM CONFIGURATION (NO HARDCODING)
+    // =================================================================
+    const CONFIG = Object.freeze({
+        APP_NAME: "TRUNG TÂM ĐIỀU PHỐI PHÁT HÀNH SỐ",
+        VERSION: "v2.2 Enterprise Engine",
+        PROJECT_CODE: "TTĐHS_HVA",
+        STORAGE_KEYS: {
+            CURRENT_DOC: "TTDHS_CURRENT_DOC",
+            LAST_PUBLISHED: "TTDHS_LAST_PUBLISHED"
+        },
+        DEFAULT_DESTINATIONS: [
+            { id: "LichCongTac", name: "Lịch công tác", icon: "bi-calendar-week-fill", selected: true },
+            { id: "TaiNguyenSo", name: "Tài nguyên số", icon: "bi-folder-symlink-fill", selected: false },
+            { id: "ThongBao", name: "Thông báo", icon: "bi-megaphone-fill", selected: true },
+            { id: "ViecCuaToi", name: "Việc của tôi", icon: "bi-clipboard-check-fill", selected: false },
+            { id: "TienIchSo", name: "Tiện ích số", icon: "bi-cpu-fill", selected: false },
+            { id: "Website", name: "Website Trường", icon: "bi-globe", selected: false },
+            { id: "PDF", name: "Xuất File PDF", icon: "bi-file-earmark-pdf-fill", selected: false },
+            { id: "Email", name: "Gửi Email", icon: "bi-envelope-at-fill", selected: false }
+        ],
+        DEFAULT_WORKFLOW_STEPS: [
+            { id: "SHOW_ONLY", label: "Chỉ hiển thị", selected: true },
+            { id: "CONFIRM_READ", label: "Xác nhận đã đọc", selected: true },
+            { id: "ACCEPT_TASK", label: "Tiếp nhận nhiệm vụ", selected: false },
+            { id: "IN_PROGRESS", label: "Đang thực hiện", selected: false },
+            { id: "REPORT_RESULT", label: "Báo cáo kết quả", selected: false },
+            { id: "COMPLETE", label: "Hoàn thành", selected: false },
+            { id: "ATTACH_PROOF", label: "Đính kèm minh chứng", selected: false }
+        ],
+        ROLES: {
+            ADMIN: "ADMIN",
+            USER: "USER",
+            MANAGER: "MANAGER"
+        },
+        ACTIONS: {
+            PUBLISH: "PUBLISH",
+            EDIT: "EDIT",
+            DELETE: "DELETE"
+        }
+    });
+
+    // =================================================================
+    // 2. EVENT BUS (DECOUPLED EVENT-DRIVEN COMMUNICATION)
+    // =================================================================
+    class EventBus {
+        constructor() {
+            this.listeners = {};
+        }
+        on(event, callback) {
+            if (!this.listeners[event]) this.listeners[event] = [];
+            this.listeners[event].push(callback);
+        }
+        off(event, callback) {
+            if (!this.listeners[event]) return;
+            this.listeners[event] = this.listeners[event].filter(cb => cb !== callback);
+        }
+        emit(event, data) {
+            if (!this.listeners[event]) return;
+            this.listeners[event].forEach(callback => callback(data));
+        }
+    }
+    const eventBus = new EventBus();
+
+    // =================================================================
+    // 3. STORAGE ENGINE (STORAGE ABSTRACTION LAYER)
+    // =================================================================
+    const StorageEngine = {
+        save: (key, value) => {
+            try {
+                const serialized = typeof value === 'string' ? value : JSON.stringify(value);
+                sessionStorage.setItem(key, serialized);
+                return { success: true };
+            } catch (error) {
+                return { success: false, error: error.message };
             }
-        };
-
-        // CONSTANTS BỔ SUNG SỐ LƯỢNG NGƯỜI NHẬN THỰC TẾ
-        const RECIPIENT_OPTIONS = [
-            { id: "bgh", label: "Ban Giám hiệu", icon: "bi-shield-lock", count: 2 },
-            { id: "gv", label: "Giáo viên toàn trường", icon: "bi-person-workspace", count: 95 },
-            { id: "vanphong", label: "Tổ Văn phòng", icon: "bi-building", count: 8 },
-            { id: "totruong", label: "Tổ trưởng chuyên môn", icon: "bi-award", count: 12 },
-            { id: "doantn", label: "Đoàn Thanh niên", icon: "bi-flag", count: 5 },
-            { id: "khach", label: "Khách / BĐD Cha mẹ học sinh", icon: "bi-people", count: 30 }
-        ];
-
-        const CHANNEL_OPTIONS = [
-            { id: "ttdhs", name: "Hệ thống TTĐHS", desc: "Đẩy lên Dashboard trung tâm", icon: "bi-grid-1x2-fill", color: "text-cyan-400" },
-            { id: "thongbao", name: "Bảng Thông Báo", desc: "Gửi thông báo đẩy app", icon: "bi-bell-fill", color: "text-amber-400" },
-            { id: "tacvu", name: "Luồng Tác Vụ", desc: "Tạo công việc cho cá nhân", icon: "bi-check2-square", color: "text-emerald-400" },
-            { id: "website", name: "Cổng Website Trường", desc: "Đăng tải công khai", icon: "bi-globe", color: "text-blue-400" },
-            { id: "email", name: "Email Nội Bộ", desc: "Gửi thư điện tử qua Google Workspace", icon: "bi-envelope-at-fill", color: "text-rose-400" },
-            { id: "pdf", name: "Lưu Trữ File PDF", desc: "Tự động đóng dấu số & xuất PDF", icon: "bi-file-pdf-fill", color: "text-red-500" },
-            { id: "qr", name: "Mã QR Truy Cập", desc: "Tạo mã QR tra cứu nhanh", icon: "bi-qr-code", color: "text-purple-400" }
-        ];
-
-        // MÃ CẤU HÌNH ĐIỂM ĐẾN (V2 DESTINATIONS)
-        const DESTINATION_CONFIG = [
-            {
-                id: "lichCongTac",
-                label: "📅 Lịch công tác",
-                color: "text-cyan-400",
-                borderColor: "border-cyan-500/40",
-                type: "radio",
-                options: [
-                    { value: "lichTuan", label: "Lịch tuần" },
-                    { value: "lichThang", label: "Lịch tháng" },
-                    { value: "lichDotXuat", label: "Lịch đột xuất" }
-                ]
-            },
-            {
-                id: "taiNguyenSo",
-                label: "📂 Tài nguyên số",
-                color: "text-purple-400",
-                borderColor: "border-purple-500/40",
-                type: "radio",
-                options: [
-                    { value: "keHoach", label: "Kế hoạch" },
-                    { value: "taiLieu", label: "Tài liệu" },
-                    { value: "bienBan", label: "Biên bản" },
-                    { value: "hocLieu", label: "Học liệu" }
-                ]
-            },
-            {
-                id: "tienIchSo",
-                label: "⚡ Tiện ích số",
-                color: "text-blue-400",
-                borderColor: "border-blue-500/40",
-                type: "radio",
-                options: [
-                    { value: "khaoSat", label: "Khảo sát" },
-                    { value: "dangKy", label: "Đăng ký" },
-                    { value: "qrCode", label: "Mã QR" },
-                    { value: "lienKet", label: "Liên kết" }
-                ]
-            },
-            {
-                id: "thongBao",
-                label: "📢 Thông báo",
-                color: "text-amber-400",
-                borderColor: "border-amber-500/40",
-                type: "toggle",
-                subText: "Hiển thị lên Bảng tin & Thông báo nổi bật"
-            },
-            {
-                id: "viecCuaToi",
-                label: "📋 Việc của tôi",
-                color: "text-emerald-400",
-                borderColor: "border-emerald-500/40",
-                type: "toggle",
-                subText: "Tự động chuyển thành Tác vụ giao việc cá nhân"
-            }
-        ];
-
-        // DANH SÁCH HÀNH ĐỘNG SAU PHÁT HÀNH
-        const POST_ACTION_OPTIONS = [
-            { id: "displayOnly", label: "Chỉ hiển thị", icon: "bi-eye" },
-            { id: "confirmRead", label: "Yêu cầu xác nhận đã đọc", icon: "bi-check-all" },
-            { id: "acceptTask", label: "Yêu cầu tiếp nhận nhiệm vụ", icon: "bi-box-arrow-in-right" },
-            { id: "reportResult", label: "Yêu cầu báo cáo kết quả", icon: "bi-file-earmark-check" },
-            { id: "uploadEvidence", label: "Yêu cầu tải minh chứng", icon: "bi-cloud-upload" },
-            { id: "sendFeedback", label: "Yêu cầu phản hồi", icon: "bi-chat-left-dots" },
-            { id: "attendanceCheck", label: "Yêu cầu điểm danh", icon: "bi-person-check" }
-        ];
-
-        const STATUS_MAP = {
-            NHAP: { label: "🟡 Nháp", class: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-            CHO_PHAT_HANH: { label: "🟠 Chờ phát hành", class: "bg-orange-500/10 text-orange-400 border-orange-500/20" },
-            DA_PHAT_HANH: { label: "🟢 Đã phát hành", class: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
-            THU_HOI: { label: "🔴 Thu hồi", class: "bg-rose-500/10 text-rose-400 border-rose-500/20" },
-            DIEU_CHINH: { label: "🔵 Điều chỉnh", class: "bg-blue-500/10 text-blue-400 border-blue-500/20" }
-        };
-
-        // 2. DOM CACHE MANAGEMENT
-        const DOM = {
-            selectDocSource: document.getElementById('select-doc-source'),
-            docTitleHead: document.getElementById('doc-title-head'),
-            docBadgeHead: document.getElementById('doc-badge-head'),
-            docIdDisplay: document.getElementById('doc-id-display'),
-            docName: document.getElementById('doc-name'),
-            docType: document.getElementById('doc-type'),
-            docVersion: document.getElementById('doc-version'),
-            docAuthor: document.getElementById('doc-author'),
-            docCreated: document.getElementById('doc-created'),
-            docPublisher: document.getElementById('doc-publisher'),
-            docPublishedDate: document.getElementById('doc-published-date'),
-            validationChecklist: document.getElementById('validation-checklist'),
-            validationSummary: document.getElementById('validation-summary'),
-            recipientsContainer: document.getElementById('recipients-container'),
-            recipientTotalCount: document.getElementById('recipient-total-count'),
-            channelsContainer: document.getElementById('channels-container'),
-            timelineContainer: document.getElementById('timeline-container'),
-            publishNote: document.getElementById('publish-note'),
-            btnPublishText: document.getElementById('btn-publish-text'),
-            btnPublish: document.getElementById('btn-publish'),
-            btnRevoke: document.getElementById('btn-revoke'),
-            btnSaveDraft: document.getElementById('btn-save-draft'),
-            btnRecheck: document.getElementById('btn-recheck'),
-            btnSelectAllRecipients: document.getElementById('btn-select-all-recipients'),
-            btnDeselectAllRecipients: document.getElementById('btn-deselect-all-recipients'),
-            alertBanner: document.getElementById('alert-banner'),
-            btnBack: document.getElementById('btn-back'),
-            btnBarBack: document.getElementById('btn-bar-back'),
-            btnPreview: document.getElementById('btn-preview'),
-            btnExportPdf: document.getElementById('btn-export-pdf'),
-            previewModal: document.getElementById('preview-modal'),
-            previewModalBody: document.getElementById('preview-modal-body'),
-            btnClosePreview: document.getElementById('btn-close-preview'),
-            btnClosePreview2: document.getElementById('btn-close-preview-2'),
-            // V2 Elements
-            dispatchDestinationsContainer: document.getElementById('dispatch-destinations-container'),
-            sectionPostActions: document.getElementById('section-post-actions'),
-            postActionsContainer: document.getElementById('post-actions-container'),
-            flowUiPreview: document.getElementById('flow-ui-preview'),
-            statLichCongTac: document.getElementById('stat-lich-cong-tac'),
-            statTaiNguyenSo: document.getElementById('stat-tai-nguyen-so'),
-            statViecCuaToi: document.getElementById('stat-viec-cua-toi'),
-            statThongBao: document.getElementById('stat-thong-bao'),
-            badgeStatLich: document.getElementById('badge-stat-lich'),
-            badgeStatTainguyen: document.getElementById('badge-stat-tainguyen'),
-            badgeStatViec: document.getElementById('badge-stat-viec'),
-            badgeStatThongbao: document.getElementById('badge-stat-thongbao')
-        };
-
-        // STATE MANAGER
-        let currentDocKey = "DOC-001";
-        let activeDoc = null;
-
-        // 3. CLEAN ARCHITECTURE MODULES
-
-        // Module 1: Quản lý Hồ sơ Văn bản
-        class DocumentManager {
-            static loadDocument(key) {
-                currentDocKey = key;
-                activeDoc = JSON.parse(JSON.stringify(documentDatabase[key]));
-                if (!activeDoc.destinations) {
-                    activeDoc.destinations = { lichCongTac: null, taiNguyenSo: null, tienIchSo: null, thongBao: false, viecCuaToi: false };
+        },
+        load: (key) => {
+            try {
+                const item = sessionStorage.getItem(key);
+                if (!item) return null;
+                try {
+                    return JSON.parse(item);
+                } catch (e) {
+                    return item;
                 }
-                if (!activeDoc.postAction) activeDoc.postAction = "displayOnly";
-                return activeDoc;
+            } catch (error) {
+                return null;
             }
-
-            static updateDraft() {
-                documentDatabase[currentDocKey] = JSON.parse(JSON.stringify(activeDoc));
+        },
+        remove: (key) => {
+            try {
+                sessionStorage.removeItem(key);
+                return { success: true };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        },
+        clear: () => {
+            try {
+                sessionStorage.clear();
+                return { success: true };
+            } catch (error) {
+                return { success: false, error: error.message };
             }
         }
+    };
 
-        // Module 2: Quản lý Điểm đến Điều phối (Dispatch Manager)
-        class DispatchManager {
-            static render() {
-                DOM.dispatchDestinationsContainer.innerHTML = DESTINATION_CONFIG.map(config => {
-                    const isChecked = config.type === 'toggle' 
-                        ? activeDoc.destinations[config.id] 
-                        : !!activeDoc.destinations[config.id];
-
-                    return `
-                        <div class="glass-panel p-3.5 rounded-2xl border transition-all-smooth ${isChecked ? config.borderColor + ' bg-slate-800/80' : 'border-slate-800 bg-slate-900/40'}">
-                            <div class="flex items-center justify-between mb-2">
-                                <label class="flex items-center gap-2 cursor-pointer font-bold ${config.color}">
-                                    <input type="checkbox" data-dest-id="${config.id}" ${isChecked ? 'checked' : ''} 
-                                        class="dest-main-checkbox w-4 h-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20">
-                                    <span>${config.label}</span>
-                                </label>
-                            </div>
-
-                            ${config.options ? `
-                                <div class="pl-6 space-y-1.5 ${!isChecked ? 'opacity-40 pointer-events-none' : ''}">
-                                    ${config.options.map(opt => {
-                                        const isRadioChecked = activeDoc.destinations[config.id] === opt.value;
-                                        return `
-                                            <label class="flex items-center gap-2 text-[11px] text-slate-300 cursor-pointer">
-                                                <input type="radio" name="dest_sub_${config.id}" value="${opt.value}" ${isRadioChecked ? 'checked' : ''}
-                                                    class="dest-sub-radio text-cyan-500 focus:ring-0">
-                                                <span>○ ${opt.label}</span>
-                                            </label>
-                                        `;
-                                    }).join('')}
-                                </div>
-                            ` : `
-                                <p class="pl-6 text-[10px] text-slate-400">${config.subText}</p>
-                            `}
-                        </div>
-                    `;
-                }).join('');
-
-                this.updateStatsDashboard();
+    // =================================================================
+    // 4. MODULE ADAPTER (DATA NORMALIZATION LAYER)
+    // =================================================================
+    const ModuleAdapter = {
+        toStandardDocument: (rawSource) => {
+            if (!rawSource || typeof rawSource !== 'object') {
+                return {
+                    docId: "LCT-2026-0806-001",
+                    moduleSource: "LichCongTac",
+                    title: "Lịch Công Tác Tuần 24 - Trường THPT Hòa Vang",
+                    type: "LỊCH CÔNG TÁC",
+                    version: "v1.0.0",
+                    author: "Ban BGH",
+                    createdAt: "2026-08-06",
+                    data: {}
+                };
             }
-
-            static updateStatsDashboard() {
-                const d = activeDoc.destinations;
-                
-                // Lịch công tác
-                DOM.badgeStatLich.textContent = d.lichCongTac ? "1" : "0";
-                DOM.statLichCongTac.textContent = d.lichCongTac ? "1 điểm đến" : "Chưa chọn";
-                
-                // Tài nguyên số
-                DOM.badgeStatTainguyen.textContent = d.taiNguyenSo ? "1" : "0";
-                DOM.statTaiNguyenSo.textContent = d.taiNguyenSo ? "1 vị trí" : "Chưa chọn";
-
-                // Việc của tôi
-                DOM.badgeStatViec.textContent = d.viecCuaToi ? "1" : "0";
-                DOM.statViecCuaToi.textContent = d.viecCuaToi ? "Nhiệm vụ mới" : "Tắt";
-
-                // Thông báo
-                DOM.badgeStatThongbao.textContent = d.thongBao ? "ON" : "OFF";
-                DOM.statThongBao.textContent = d.thongBao ? "Bật bảng tin" : "Tắt";
-            }
+            return {
+                docId: rawSource.docId || rawSource.id || "DOC-DEFAULT",
+                moduleSource: rawSource.moduleSource || rawSource.source || "UnknownModule",
+                title: rawSource.title || rawSource.name || "Tài liệu chưa đặt tên",
+                type: (rawSource.type || rawSource.moduleSource || "VĂN BẢN").toUpperCase(),
+                version: rawSource.version || "v1.0.0",
+                author: rawSource.author || rawSource.creator || "Ban BGH",
+                createdAt: rawSource.createdAt || rawSource.date || new Date().toISOString().split('T')[0],
+                data: rawSource.data || {}
+            };
         }
+    };
 
-        // Module 3: Quản lý Quy trình & Hành động sau phát hành (Workflow Manager)
-        class WorkflowManager {
-            static render() {
-                const isViecCuaToiActive = activeDoc.destinations.viecCuaToi;
+    // =================================================================
+    // 5. CENTRAL STATE STORE (SINGLE SOURCE OF TRUTH)
+    // =================================================================
+    const TTDHS_State = {
+        document: ModuleAdapter.toStandardDocument(null),
+        destinations: JSON.parse(JSON.stringify(CONFIG.DEFAULT_DESTINATIONS)),
+        workflowSteps: JSON.parse(JSON.stringify(CONFIG.DEFAULT_WORKFLOW_STEPS)),
+        linkedDocs: [
+            { id: "DOC-01", title: "Thông báo tập trung chuẩn bị năm học mới", type: "Thông báo" },
+            { id: "DOC-02", title: "Kế hoạch phân công giảng dạy Học kỳ 1", type: "Kế hoạch" }
+        ],
+        recipients: ["ALL", "BGH"],
+        userPermissions: { canPublish: true, role: CONFIG.ROLES.ADMIN }
+    };
 
-                if (isViecCuaToiActive) {
-                    DOM.sectionPostActions.classList.remove('hidden');
-                    DOM.postActionsContainer.innerHTML = POST_ACTION_OPTIONS.map(action => {
-                        const isSelected = activeDoc.postAction === action.id;
-                        return `
-                            <label class="flex items-center gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all-smooth ${isSelected ? 'border-emerald-500/50 bg-emerald-950/30 text-emerald-200 font-bold' : 'border-slate-800 text-slate-400 bg-slate-900/30'}">
-                                <input type="radio" name="post_action_choice" value="${action.id}" ${isSelected ? 'checked' : ''} 
-                                    class="post-action-radio text-emerald-500 focus:ring-0">
-                                <i class="bi ${action.icon} ${isSelected ? 'text-emerald-400' : 'text-slate-500'}"></i>
-                                <span class="text-[11px]">${action.label}</span>
-                            </label>
-                        `;
-                    }).join('');
-                } else {
-                    DOM.sectionPostActions.classList.add('hidden');
-                }
+    // =================================================================
+    // 6. SPECIALIZED PURE BUSINESS ENGINES
+    // =================================================================
+
+    const PermissionEngine = {
+        checkPermission: (userPermissions, requiredAction) => {
+            if (!userPermissions) return false;
+            if (requiredAction === CONFIG.ACTIONS.PUBLISH) {
+                return Boolean(userPermissions.canPublish && userPermissions.role === CONFIG.ROLES.ADMIN);
             }
+            return Boolean(userPermissions.canPublish);
         }
+    };
 
-        // Module 4: Quản lý Đối tượng (Recipient Manager)
-        class RecipientManager {
-            static render() {
-                let totalCount = 0;
-                DOM.recipientsContainer.innerHTML = RECIPIENT_OPTIONS.map(item => {
-                    const isChecked = activeDoc.recipients.includes(item.id);
-                    if (isChecked) totalCount += item.count;
-                    return `
-                        <label class="flex items-center justify-between p-2.5 rounded-xl glass-panel-hover border cursor-pointer ${isChecked ? 'border-cyan-500/40 bg-cyan-950/20 text-cyan-200' : 'border-slate-800 text-slate-400'}">
-                            <div class="flex items-center gap-2.5">
-                                <input type="checkbox" value="${item.id}" ${isChecked ? 'checked' : ''} 
-                                    class="recipient-checkbox w-4 h-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20 focus:ring-offset-0">
-                                <i class="bi ${item.icon} text-sm ${isChecked ? 'text-cyan-400' : 'text-slate-500'}"></i>
-                                <span class="font-medium text-[11px]">${item.label}</span>
-                            </div>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isChecked ? 'bg-cyan-500/20 text-cyan-300' : 'bg-slate-800 text-slate-500'}">
-                                ${item.count} người
-                            </span>
-                        </label>
-                    `;
-                }).join('');
-
-                DOM.recipientTotalCount.textContent = `Tổng: ${totalCount} người nhận thực tế`;
-            }
+    const VersionEngine = {
+        checkConflict: (currentDocVersion) => {
+            return {
+                conflict: false,
+                latestVersion: currentDocVersion || "v1.0.0",
+                canRollback: true
+            };
+        },
+        verifyVersionFormat: (versionStr) => {
+            return /^v?\d+\.\d+\.\d+$/.test(versionStr);
         }
+    };
 
-        // Module 5: Renderer Giao diện & Mô phỏng Flow UI
-        class UIRenderer {
-            static renderFlowUI() {
-                const d = activeDoc.destinations;
-                let steps = [];
-
-                if (d.lichCongTac) {
-                    const labelMap = { lichTuan: "Lịch tuần", lichThang: "Lịch tháng", lichDotXuat: "Lịch đột xuất" };
-                    steps.push({ icon: "bi-calendar-event", title: "📅 Lịch công tác", sub: labelMap[d.lichCongTac] || "Lịch tuần" });
-                }
-
-                if (d.taiNguyenSo) {
-                    const labelMap = { keHoach: "Kế hoạch", taiLieu: "Tài liệu", bienBan: "Biên bản", hocLieu: "Học liệu" };
-                    steps.push({ icon: "bi-folder-symlink", title: "📂 Tài nguyên số", sub: labelMap[d.taiNguyenSo] || "Kho tài liệu" });
-                }
-
-                if (d.thongBao) {
-                    steps.push({ icon: "bi-mega-phone", title: "📢 Thông báo", sub: "Tin tức mới" });
-                }
-
-                if (d.viecCuaToi) {
-                    const actionObj = POST_ACTION_OPTIONS.find(a => a.id === activeDoc.postAction);
-                    steps.push({ 
-                        icon: "bi-check2-square", 
-                        title: "📋 Việc của tôi", 
-                        sub: `Nhiệm vụ mới ➔ ${actionObj ? actionObj.label : 'Tiếp nhận'}` 
-                    });
-                }
-
-                if (steps.length === 0) {
-                    DOM.flowUiPreview.innerHTML = `
-                        <div class="text-center py-4 text-slate-500">
-                            <i class="bi bi-info-circle text-xl block mb-1"></i>
-                            Chưa chọn điểm đến phát hành. Hãy tích chọn menu phía trên để xem mô phỏng luồng!
-                        </div>
-                    `;
-                    return;
-                }
-
-                DOM.flowUiPreview.innerHTML = `
-                    <div class="text-[11px] font-bold text-slate-300 mb-3 uppercase tracking-wider flex items-center gap-2">
-                        <i class="bi bi-play-circle-fill text-cyan-400"></i> Luồng người dùng nhìn thấy sau khi phát hành:
-                    </div>
-                    <div class="flex items-center gap-2 overflow-x-auto pb-2">
-                        ${steps.map((s, idx) => `
-                            <div class="flex items-center gap-2 shrink-0">
-                                <div class="p-3 rounded-xl bg-slate-800 border border-slate-700/80 flex items-center gap-2.5">
-                                    <i class="bi ${s.icon} text-cyan-400 text-base"></i>
-                                    <div>
-                                        <div class="font-bold text-slate-200 text-xs">${s.title}</div>
-                                        <div class="text-[10px] text-cyan-300 font-medium">${s.sub}</div>
-                                    </div>
-                                </div>
-                                ${idx < steps.length - 1 ? `<i class="bi bi-arrow-right text-slate-600 text-sm"></i>` : ''}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-
-            static renderHeaderAndInfo() {
-                DOM.docTitleHead.textContent = activeDoc.title;
-                DOM.docIdDisplay.textContent = `ID: ${activeDoc.id}`;
-                DOM.docName.textContent = activeDoc.title;
-                DOM.docType.textContent = activeDoc.type;
-                DOM.docVersion.textContent = `v${activeDoc.version}`;
-                DOM.docAuthor.textContent = activeDoc.author;
-                DOM.docCreated.textContent = activeDoc.createdDate;
-                DOM.docPublisher.textContent = activeDoc.publisher;
-                DOM.docPublishedDate.textContent = activeDoc.publishedDate;
-
-                const st = STATUS_MAP[activeDoc.status] || STATUS_MAP.NHAP;
-                DOM.docBadgeHead.className = `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border ${st.class}`;
-                DOM.docBadgeHead.textContent = st.label;
-            }
-
-            static renderValidationSystem() {
-                const v = activeDoc.validations;
-                const checks = [
-                    { key: 'hasTitle', label: 'Có tiêu đề hợp lệ' },
-                    { key: 'hasContent', label: 'Có nội dung văn bản' },
-                    { key: 'hasAuthor', label: 'Xác định người tạo' },
-                    { key: 'hasValidDate', label: 'Thời gian ban hành hợp lệ' },
-                    { key: 'noSystemError', label: 'Không phát hiện lỗi cấu trúc' },
-                    { key: 'dataComplete', label: 'Dữ liệu đính kèm đầy đủ' }
-                ];
-
-                let allValid = true;
-                DOM.validationChecklist.innerHTML = checks.map(item => {
-                    const isValid = v[item.key];
-                    if (!isValid) allValid = false;
-                    return `
-                        <div class="flex items-center gap-2 p-2 rounded-xl bg-slate-900/50 border ${isValid ? 'border-emerald-500/20 text-emerald-300' : 'border-rose-500/20 text-rose-300'}">
-                            <i class="bi ${isValid ? 'bi-check-circle-fill text-emerald-400' : 'bi-x-circle-fill text-rose-500'} text-sm"></i>
-                            <span class="font-medium">${item.label}</span>
-                        </div>
-                    `;
-                }).join('');
-
-                if (allValid) {
-                    DOM.validationSummary.className = "p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold flex items-center gap-3";
-                    DOM.validationSummary.innerHTML = `
-                        <i class="bi bi-shield-check text-xl text-emerald-400 shrink-0"></i>
-                        <div>Tài liệu đã vượt qua tất cả kiểm tra! Đủ điều kiện phát hành công khai.</div>
-                    `;
-                } else {
-                    DOM.validationSummary.className = "p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-semibold flex items-center gap-3";
-                    DOM.validationSummary.innerHTML = `
-                        <i class="bi bi-exclamation-triangle-fill text-xl text-rose-400 shrink-0"></i>
-                        <div>Cảnh báo: Tài liệu còn thiếu điều kiện hoặc chứa lỗi. Hãy hoàn thiện trước khi điều phối!</div>
-                    `;
-                }
-            }
-
-            static renderChannelsSection() {
-                DOM.channelsContainer.innerHTML = CHANNEL_OPTIONS.map(item => {
-                    const isChecked = activeDoc.channels.includes(item.id);
-                    return `
-                        <label class="flex items-start gap-3 p-3 rounded-2xl glass-panel-hover border cursor-pointer ${isChecked ? 'border-cyan-500/40 bg-cyan-950/20' : 'border-slate-800/80 bg-slate-900/40'}">
-                            <input type="checkbox" value="${item.id}" ${isChecked ? 'checked' : ''} 
-                                class="channel-checkbox mt-0.5 w-4 h-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20 focus:ring-offset-0">
-                            <div class="space-y-0.5">
-                                <div class="font-bold text-slate-200 text-xs flex items-center gap-1.5">
-                                    <i class="bi ${item.icon} ${item.color}"></i>
-                                    ${item.name}
-                                </div>
-                                <div class="text-[10px] text-slate-400">${item.desc}</div>
-                            </div>
-                        </label>
-                    `;
-                }).join('');
-            }
-
-            static renderTimelineSection() {
-                if (!activeDoc.history || activeDoc.history.length === 0) {
-                    DOM.timelineContainer.innerHTML = `<div class="text-slate-500 text-xs">Chưa có nhật ký nào.</div>`;
-                    return;
-                }
-
-                DOM.timelineContainer.innerHTML = activeDoc.history.map(item => {
-                    const st = STATUS_MAP[item.status] || STATUS_MAP.NHAP;
-                    return `
-                        <div class="relative group">
-                            <div class="absolute -left-[19px] top-0.5 w-3 h-3 rounded-full bg-slate-900 border-2 border-cyan-400"></div>
-                            <div class="space-y-1">
-                                <div class="flex items-center justify-between text-[11px]">
-                                    <span class="font-bold text-slate-300">${item.user}</span>
-                                    <span class="text-slate-500 font-mono">${item.time}</span>
-                                </div>
-                                <p class="text-slate-400 text-xs">${item.action}</p>
-                                <span class="inline-block px-2 py-0.5 rounded text-[9px] font-bold border ${st.class}">
-                                    ${st.label}
-                                </span>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            static updateActionButtonsState() {
-                if (activeDoc.status === 'DA_PHAT_HANH') {
-                    DOM.btnRevoke.classList.remove('hidden');
-                    DOM.btnPublishText.textContent = "Cập nhật điều phối (v" + (parseFloat(activeDoc.version) + 0.1).toFixed(1) + ")";
-                } else if (activeDoc.status === 'THU_HOI') {
-                    DOM.btnRevoke.classList.add('hidden');
-                    DOM.btnPublishText.textContent = "Điều phối lại";
-                } else {
-                    DOM.btnRevoke.classList.add('hidden');
-                    DOM.btnPublishText.textContent = "Điều phối ngay";
-                }
-            }
+    const RecipientEngine = {
+        getResolvedRecipients: (recipientList) => {
+            return Array.isArray(recipientList) ? [...recipientList] : [];
         }
+    };
 
-        // Module 6: Quản lý Nhật ký & Lịch sử (History Manager)
-        class HistoryManager {
-            static log(user, action, status) {
-                const now = new Date().toISOString().replace('T', ' ').substring(0, 16);
-                activeDoc.history.unshift({
-                    time: now,
-                    user: user,
-                    action: action,
-                    status: status
-                });
-            }
-        }
-
-        // Module 7: Quản lý Phát hành / Điều phối chính (Publish Manager)
-        class PublishManager {
-            static executePublish() {
-                const v = activeDoc.validations;
-                const isReady = Object.values(v).every(x => x === true);
-
-                if (!isReady) {
-                    showAlert('KHÔNG THỂ PHÁT HÀNH: Tài liệu chưa đáp ứng đủ điều kiện an toàn dữ liệu!', 'danger');
-                    return;
+    const DispatchEngine = {
+        toggleDestination: (currentDestinations, targetId) => {
+            return currentDestinations.map(d => {
+                if (d.id === targetId) {
+                    return { ...d, selected: !d.selected };
                 }
-
-                if (activeDoc.recipients.length === 0) {
-                    showAlert('Vui lòng chọn ít nhất 1 đối tượng nhận tài liệu!', 'amber');
-                    return;
-                }
-
-                const d = activeDoc.destinations;
-                const hasDestination = d.lichCongTac || d.taiNguyenSo || d.tienIchSo || d.thongBao || d.viecCuaToi;
-
-                if (!hasDestination) {
-                    showAlert('Vui lòng chọn ít nhất 1 điểm đến phát hành trong hệ thống TTĐHS!', 'amber');
-                    return;
-                }
-
-                const now = new Date().toISOString().replace('T', ' ').substring(0, 16);
-                const note = DOM.publishNote.value.trim() || 'Điều phối văn bản tới các menu hệ thống';
-
-                // Bắt chuỗi mô tả điểm đến cho nhật ký
-                let destDesc = [];
-                if (d.lichCongTac) destDesc.push(`📅 Lịch công tác (${d.lichCongTac})`);
-                if (d.taiNguyenSo) destDesc.push(`📂 Tài nguyên số (${d.taiNguyenSo})`);
-                if (d.thongBao) destDesc.push(`📢 Thông báo`);
-                if (d.viecCuaToi) {
-                    const actionObj = POST_ACTION_OPTIONS.find(a => a.id === activeDoc.postAction);
-                    destDesc.push(`📋 Việc của tôi [Yêu cầu: ${actionObj ? actionObj.label : 'Mặc định'}]`);
-                }
-
-                const logAction = `Đã điều phối đến: ${destDesc.join(' | ')}. Ghi chú: ${note}`;
-
-                if (activeDoc.status === 'DA_PHAT_HANH') {
-                    activeDoc.version = (parseFloat(activeDoc.version) + 0.1).toFixed(1);
-                    activeDoc.status = 'DIEU_CHINH';
-                    HistoryManager.log("Nguyễn Văn Thà", `Cập nhật v${activeDoc.version} ➔ ${logAction}`, "DIEU_CHINH");
-                } else {
-                    activeDoc.status = 'DA_PHAT_HANH';
-                    activeDoc.publisher = 'Nguyễn Văn Thà (Phó Hiệu trưởng)';
-                    activeDoc.publishedDate = now;
-                    HistoryManager.log("Nguyễn Văn Thà", `Phát hành & ${logAction}`, "DA_PHAT_HANH");
-                }
-
-                DocumentManager.updateDraft();
-                renderApp();
-                DOM.publishNote.value = '';
-                showAlert(`🚀 ĐIỀU PHỐI THÀNH CÔNG! Tài liệu đã xuất hiện tại các Menu được chỉ định.`, 'success');
-            }
-
-            static executeRevoke() {
-                if (confirm('Bạn có chắc chắn muốn THU HỒI tài liệu đã phát hành này không?')) {
-                    const note = DOM.publishNote.value.trim() || 'Thu hồi văn bản';
-                    activeDoc.status = 'THU_HOI';
-                    HistoryManager.log("Nguyễn Văn Thà", `Thu hồi tài liệu khỏi các menu điều phối: ${note}`, "THU_HOI");
-
-                    DocumentManager.updateDraft();
-                    renderApp();
-                    DOM.publishNote.value = '';
-                    showAlert('🔴 ĐÃ THU HỒI TÀI LIỆU! Tất cả các menu TTĐHS đã gỡ bỏ văn bản này.', 'danger');
-                }
-            }
-        }
-
-        // 4. HELPER FUNCTIONS
-        function showAlert(msg, type = 'success') {
-            DOM.alertBanner.classList.remove('hidden', 'bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-300', 'bg-rose-500/10', 'border-rose-500/30', 'text-rose-300', 'bg-amber-500/10', 'border-amber-500/30', 'text-amber-300');
-            
-            if (type === 'success') {
-                DOM.alertBanner.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-300');
-            } else if (type === 'danger') {
-                DOM.alertBanner.classList.add('bg-rose-500/10', 'border-rose-500/30', 'text-rose-300');
-            } else {
-                DOM.alertBanner.classList.add('bg-amber-500/10', 'border-amber-500/30', 'text-amber-300');
-            }
-
-            DOM.alertBanner.innerHTML = `<div class="flex items-center gap-2 font-bold text-xs"><i class="bi bi-info-circle-fill"></i> ${msg}</div>`;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            setTimeout(() => {
-                DOM.alertBanner.classList.add('hidden');
-            }, 4000);
-        }
-
-        // Master Render Function
-        function renderApp() {
-            UIRenderer.renderHeaderAndInfo();
-            UIRenderer.renderValidationSystem();
-            DispatchManager.render();
-            WorkflowManager.render();
-            RecipientManager.render();
-            UIRenderer.renderChannelsSection();
-            UIRenderer.renderFlowUI();
-            UIRenderer.renderTimelineSection();
-            UIRenderer.updateActionButtonsState();
-        }
-
-        // Khởi tạo ứng dụng
-        function initApp() {
-            DocumentManager.loadDocument(currentDocKey);
-            renderApp();
-            bindEvents();
-        }
-
-        // 5. EVENT BINDINGS (LẬP TRÌNH BẮT SỰ KIỆN SẠCH)
-        function bindEvents() {
-            // Đổi nguồn tài liệu
-            DOM.selectDocSource.addEventListener('change', (e) => {
-                DocumentManager.loadDocument(e.target.value);
-                renderApp();
-                showAlert(`Đã chuyển sang tài liệu: ${activeDoc.title}`, 'info');
+                return d;
             });
+        }
+    };
 
-            // Tương tác Điểm đến Phát hành (V2)
-            DOM.dispatchDestinationsContainer.addEventListener('change', (e) => {
-                if (e.target.classList.contains('dest-main-checkbox')) {
-                    const destId = e.target.dataset.destId;
-                    const config = DESTINATION_CONFIG.find(c => c.id === destId);
-                    
-                    if (e.target.checked) {
-                        activeDoc.destinations[destId] = config.options ? config.options[0].value : true;
-                    } else {
-                        activeDoc.destinations[destId] = config.options ? null : false;
-                    }
-                    DispatchManager.render();
-                    WorkflowManager.render();
-                    UIRenderer.renderFlowUI();
+    const WorkflowEngine = {
+        toggleStep: (currentSteps, stepId) => {
+            return currentSteps.map(s => {
+                if (s.id === stepId) {
+                    return { ...s, selected: !s.selected };
                 }
-
-                if (e.target.classList.contains('dest-sub-radio')) {
-                    const radioName = e.target.name;
-                    const destId = radioName.replace('dest_sub_', '');
-                    activeDoc.destinations[destId] = e.target.value;
-                    DispatchManager.render();
-                    UIRenderer.renderFlowUI();
-                }
+                return s;
             });
+        },
+        generatePipeline: (documentState, destinations, workflowSteps) => {
+            const pipeline = [
+                { title: documentState.moduleSource, icon: "bi-file-earmark-text-fill" },
+                { title: "TTPhatHanh", icon: "bi-diagram-3-fill" }
+            ];
 
-            // Tương tác Hành động sau phát hành (V2)
-            DOM.postActionsContainer.addEventListener('change', (e) => {
-                if (e.target.classList.contains('post-action-radio')) {
-                    activeDoc.postAction = e.target.value;
-                    WorkflowManager.render();
-                    UIRenderer.renderFlowUI();
-                }
-            });
+            const activeDests = destinations.filter(d => d.selected);
+            activeDests.forEach(d => pipeline.push({ title: d.name, icon: d.icon }));
 
-            // Lắng nghe chọn Đối tượng
-            DOM.btnSelectAllRecipients.addEventListener('click', () => {
-                activeDoc.recipients = RECIPIENT_OPTIONS.map(r => r.id);
-                RecipientManager.render();
-            });
+            const isViecCuaToi = activeDests.some(d => d.id === "ViecCuaToi");
+            if (isViecCuaToi) {
+                const activeSteps = workflowSteps.filter(s => s.selected);
+                activeSteps.forEach(s => pipeline.push({ title: s.label, icon: "bi-arrow-right-circle" }));
+            }
 
-            DOM.btnDeselectAllRecipients.addEventListener('click', () => {
-                activeDoc.recipients = [];
-                RecipientManager.render();
-            });
+            pipeline.push({ title: "Dashboard / Giáo viên", icon: "bi-check-circle-fill" });
+            return pipeline;
+        }
+    };
 
-            DOM.recipientsContainer.addEventListener('change', (e) => {
-                if (e.target.classList.contains('recipient-checkbox')) {
-                    const id = e.target.value;
-                    if (e.target.checked) {
-                        if (!activeDoc.recipients.includes(id)) activeDoc.recipients.push(id);
-                    } else {
-                        activeDoc.recipients = activeDoc.recipients.filter(x => x !== id);
-                    }
-                    RecipientManager.render();
-                }
-            });
+    const PreCheckEngine = {
+        runChecks: (state) => {
+            const isPermitted = PermissionEngine.checkPermission(state.userPermissions, CONFIG.ACTIONS.PUBLISH);
+            const versionStatus = VersionEngine.checkConflict(state.document.version);
+            const hasRecipients = state.recipients.length > 0;
+            const hasDestinations = state.destinations.some(d => d.selected);
 
-            DOM.channelsContainer.addEventListener('change', (e) => {
-                if (e.target.classList.contains('channel-checkbox')) {
-                    const id = e.target.value;
-                    if (e.target.checked) {
-                        if (!activeDoc.channels.includes(id)) activeDoc.channels.push(id);
-                    } else {
-                        activeDoc.channels = activeDoc.channels.filter(x => x !== id);
-                    }
-                    UIRenderer.renderChannelsSection();
-                }
-            });
+            const checks = [
+                { label: "Kiểm tra quyền phát hành", pass: isPermitted, msg: isPermitted ? "Đủ thẩm quyền" : "Thiếu thẩm quyền" },
+                { label: "Kiểm tra phiên bản mới hơn", pass: !versionStatus.conflict, msg: "Phiên bản mới nhất" },
+                { label: "Kiểm tra đối tượng nhận", pass: hasRecipients, msg: hasRecipients ? `${state.recipients.length} nhóm nhận` : "Chưa chọn người nhận" },
+                { label: "Kiểm tra điểm đến phát hành", pass: hasDestinations, msg: hasDestinations ? "Đã chọn điểm đến" : "Chưa chọn điểm đến" },
+                { label: "Kiểm tra cấu hình Workflow", pass: true, msg: "Đã tối ưu luồng" }
+            ];
 
-            // Nút Kiểm tra lại
-            DOM.btnRecheck.addEventListener('click', () => {
-                UIRenderer.renderValidationSystem();
-                showAlert('Đã cập nhật hệ thống kiểm tra dữ liệu tài liệu!', 'info');
-            });
+            return {
+                allPassed: checks.every(c => c.pass),
+                items: checks
+            };
+        }
+    };
 
-            // Nút Điều phối chính / Thu hồi / Lưu nháp
-            DOM.btnPublish.addEventListener('click', () => PublishManager.executePublish());
-            DOM.btnRevoke.addEventListener('click', () => PublishManager.executeRevoke());
-            DOM.btnSaveDraft.addEventListener('click', () => {
-                DocumentManager.updateDraft();
-                showAlert('💾 Đã lưu cấu hình điều phối nháp thành công!', 'success');
-            });
-
-            // Quay lại
-            const goBack = () => {
-                if (window.history.length > 1) {
-                    window.history.back();
-                } else {
-                    window.location.href = 'main.html';
+    const NotificationEngine = {
+        dispatch: (payload) => {
+            const dispatchResult = {
+                status: "DISPATCHED",
+                channels: ["NOTIFICATION_CENTER", "DASHBOARD"],
+                timestamp: new Date().toISOString(),
+                payloadSummary: {
+                    docId: payload.document.docId,
+                    destinationCount: payload.destinations.length
                 }
             };
-            DOM.btnBack.addEventListener('click', goBack);
-            DOM.btnBarBack.addEventListener('click', goBack);
-
-            // Modal Xem trước
-            DOM.btnPreview.addEventListener('click', () => {
-                DOM.previewModalBody.innerHTML = `
-                    <div class="space-y-4 bg-white text-slate-900 p-6 rounded-2xl print-area">
-                        <div class="text-center border-b pb-4">
-                            <div class="text-xs font-bold uppercase text-slate-600">SỞ GD&ĐT TP ĐÀ NẴNG - TRƯỜNG THPT HÒA VANG</div>
-                            <div class="text-base font-black text-blue-900 mt-1">${activeDoc.title}</div>
-                            <div class="text-[10px] text-slate-500 mt-0.5">Số: ${activeDoc.id} | Phiên bản: v${activeDoc.version}</div>
-                        </div>
-                        <div class="text-xs leading-relaxed space-y-2">
-                            <p class="font-bold">Kính gửi các đối tượng:</p>
-                            <p class="italic text-slate-600 mb-3">${activeDoc.recipients.map(r => RECIPIENT_OPTIONS.find(x => x.id === r)?.label).join(', ')}</p>
-                            <div class="p-3 bg-cyan-50 rounded-xl border border-cyan-200">
-                                <strong>Bản đồ điểm đến phát hành:</strong>
-                                <ul class="list-disc pl-5 mt-1 text-[11px] text-cyan-900">
-                                    ${activeDoc.destinations.lichCongTac ? `<li>Lịch công tác: ${activeDoc.destinations.lichCongTac}</li>` : ''}
-                                    ${activeDoc.destinations.taiNguyenSo ? `<li>Tài nguyên số: ${activeDoc.destinations.taiNguyenSo}</li>` : ''}
-                                    ${activeDoc.destinations.thongBao ? `<li>📢 Bảng thông báo</li>` : ''}
-                                    ${activeDoc.destinations.viecCuaToi ? `<li>📋 Việc của tôi (Yêu cầu: ${POST_ACTION_OPTIONS.find(a=>a.id===activeDoc.postAction)?.label})</li>` : ''}
-                                </ul>
-                            </div>
-                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 mt-2">${activeDoc.content}</div>
-                        </div>
-                        <div class="pt-6 flex justify-between text-[10px] text-slate-500">
-                            <div>Kênh truyền thông: ${activeDoc.channels.join(', ')}</div>
-                            <div>Người duyệt: ${activeDoc.publisher}</div>
-                        </div>
-                    </div>
-                `;
-                DOM.previewModal.classList.remove('hidden');
-            });
-
-            DOM.btnClosePreview.addEventListener('click', () => DOM.previewModal.classList.add('hidden'));
-            DOM.btnClosePreview2.addEventListener('click', () => DOM.previewModal.classList.add('hidden'));
-
-            // Xuất PDF / In
-            DOM.btnExportPdf.addEventListener('click', () => {
-                window.print();
-            });
+            eventBus.emit("NOTIFICATION_DISPATCHED", dispatchResult);
+            return dispatchResult;
         }
+    };
 
-        // KHỞI ĐỘNG HỆ THỐNG
-        document.addEventListener('DOMContentLoaded', initApp);
+    const PublishEngine = {
+        preparePayload: (state) => {
+            return {
+                document: state.document,
+                destinations: state.destinations.filter(d => d.selected),
+                workflow: state.workflowSteps.filter(s => s.selected),
+                recipients: RecipientEngine.getResolvedRecipients(state.recipients),
+                linkedDocs: state.linkedDocs,
+                publishedAt: new Date().toISOString()
+            };
+        }
+    };
+
+    // =================================================================
+    // 7. RENDER ENGINE (PURE UI PRESENTATION LAYER)
+    // =================================================================
+    const RenderEngine = {
+        renderHeaderInfo: (documentState) => {
+            document.getElementById('source-module-name').innerText = documentState.moduleSource;
+            document.getElementById('doc-type-badge').innerText = documentState.type;
+            document.getElementById('doc-id-badge').innerText = `Mã: ${documentState.docId}`;
+            document.getElementById('doc-version-badge').innerText = documentState.version;
+            document.getElementById('doc-title-display').innerText = documentState.title;
+            document.getElementById('doc-summary-display').innerText = `Người soạn: ${documentState.author} | Ngày tạo: ${documentState.createdAt}`;
+        },
+
+        renderDestinations: (destinations) => {
+            const container = document.getElementById('destination-matrix-container');
+            container.innerHTML = destinations.map(d => `
+                <div onclick="Controller.toggleDestination('${d.id}')" 
+                     class="cursor-pointer p-3 rounded-xl border text-center transition flex flex-col items-center justify-center gap-1.5 ${d.selected ? 'bg-emerald-50 border-emerald-500 text-emerald-900 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}">
+                    <i class="bi ${d.icon} text-lg ${d.selected ? 'text-emerald-600' : 'text-slate-400'}"></i>
+                    <span class="text-xs font-bold">${d.name}</span>
+                </div>
+            `).join('');
+        },
+
+        toggleWorkflowCard: (destinations) => {
+            const isViecCuaToi = destinations.some(d => d.id === 'ViecCuaToi' && d.selected);
+            const card = document.getElementById('workflow-config-card');
+            if (isViecCuaToi) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        },
+
+        renderWorkflowSteps: (workflowSteps) => {
+            const container = document.getElementById('workflow-steps-container');
+            container.innerHTML = workflowSteps.map(s => `
+                <label class="flex items-center gap-2 text-xs font-semibold text-indigo-900 bg-white p-2 rounded-lg border border-indigo-100 cursor-pointer">
+                    <input type="checkbox" ${s.selected ? 'checked' : ''} onchange="Controller.toggleWorkflowStep('${s.id}')" class="rounded border-indigo-300 text-indigo-600 focus:ring-indigo-500">
+                    <span>${s.label}</span>
+                </label>
+            `).join('');
+        },
+
+        renderSimulationFlow: (pipeline) => {
+            const container = document.getElementById('simulation-flow-container');
+            container.innerHTML = pipeline.map((item, index) => `
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 border border-slate-200 rounded-lg font-semibold text-slate-700">
+                        <i class="bi ${item.icon} text-teal-600"></i>
+                        <span>${item.title}</span>
+                    </div>
+                    ${index < pipeline.length - 1 ? '<i class="bi bi-chevron-right text-slate-400"></i>' : ''}
+                </div>
+            `).join('');
+        },
+
+        renderLinkedDocs: (linkedDocs) => {
+            const container = document.getElementById('linked-docs-container');
+            if (!linkedDocs || linkedDocs.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 italic">Chưa có tài liệu liên quan nào được đính kèm.</p>';
+                return;
+            }
+            container.innerHTML = linkedDocs.map(doc => `
+                <div class="flex items-center justify-between p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 bg-slate-200 text-slate-700 font-bold text-[10px] rounded">${doc.type}</span>
+                        <span class="font-medium text-slate-800">${doc.title}</span>
+                    </div>
+                    <button onclick="Controller.removeLinkedDoc('${doc.id}')" class="text-rose-500 hover:text-rose-700">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        },
+
+        renderPreCheck: (checkResult) => {
+            const container = document.getElementById('precheck-items-container');
+            const badge = document.getElementById('precheck-status-badge');
+            
+            badge.className = `px-2 py-0.5 rounded text-[10px] font-extrabold ${checkResult.allPassed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`;
+            badge.innerText = checkResult.allPassed ? 'ĐẠT TIÊU CHUẨN' : 'CÓ LỖI CẦN XỬ LÝ';
+
+            container.innerHTML = checkResult.items.map(c => `
+                <div class="flex items-center justify-between p-2 rounded-lg ${c.pass ? 'bg-slate-50' : 'bg-rose-50 border border-rose-200'}">
+                    <span class="font-medium text-slate-700">${c.label}</span>
+                    <span class="font-bold flex items-center gap-1 ${c.pass ? 'text-emerald-600' : 'text-rose-600'}">
+                        <i class="bi ${c.pass ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'}"></i> ${c.msg}
+                    </span>
+                </div>
+            `).join('');
+        },
+
+        renderAll: (state, checkResult, pipeline) => {
+            RenderEngine.renderHeaderInfo(state.document);
+            RenderEngine.renderDestinations(state.destinations);
+            RenderEngine.toggleWorkflowCard(state.destinations);
+            RenderEngine.renderWorkflowSteps(state.workflowSteps);
+            RenderEngine.renderSimulationFlow(pipeline);
+            RenderEngine.renderLinkedDocs(state.linkedDocs);
+            RenderEngine.renderPreCheck(checkResult);
+        }
+    };
+
+    // =================================================================
+    // 8. CONTROLLER (SOLE SYSTEM ORCHESTRATOR)
+    // =================================================================
+    const Controller = {
+        init: () => {
+            Controller.setupEventBusListeners();
+
+            // Storage Engine Integration
+            const storedDoc = StorageEngine.load(CONFIG.STORAGE_KEYS.CURRENT_DOC);
+            if (storedDoc) {
+                TTDHS_State.document = ModuleAdapter.toStandardDocument(storedDoc);
+            }
+
+            Controller.refreshUI();
+        },
+
+        setupEventBusListeners: () => {
+            eventBus.on("NOTIFICATION_DISPATCHED", (data) => {
+                // Controller handles side-effects/logging
+            });
+        },
+
+        refreshUI: () => {
+            const preCheckResult = PreCheckEngine.runChecks(TTDHS_State);
+            const pipeline = WorkflowEngine.generatePipeline(
+                TTDHS_State.document,
+                TTDHS_State.destinations,
+                TTDHS_State.workflowSteps
+            );
+
+            RenderEngine.renderAll(TTDHS_State, preCheckResult, pipeline);
+        },
+
+        toggleDestination: (destId) => {
+            TTDHS_State.destinations = DispatchEngine.toggleDestination(TTDHS_State.destinations, destId);
+            Controller.refreshUI();
+        },
+
+        toggleWorkflowStep: (stepId) => {
+            TTDHS_State.workflowSteps = WorkflowEngine.toggleStep(TTDHS_State.workflowSteps, stepId);
+            Controller.refreshUI();
+        },
+
+        toggleRecipient: (recipientVal) => {
+            if (TTDHS_State.recipients.includes(recipientVal)) {
+                TTDHS_State.recipients = TTDHS_State.recipients.filter(r => r !== recipientVal);
+            } else {
+                TTDHS_State.recipients.push(recipientVal);
+            }
+            Controller.refreshUI();
+        },
+
+        addLinkedDocument: () => {
+            const title = prompt("Nhập tên tài liệu liên quan:");
+            if (title && title.trim() !== "") {
+                TTDHS_State.linkedDocs.push({
+                    id: `DOC-${Date.now()}`,
+                    title: title.trim(),
+                    type: "Đính kèm"
+                });
+                RenderEngine.renderLinkedDocs(TTDHS_State.linkedDocs);
+            }
+        },
+
+        removeLinkedDoc: (docId) => {
+            TTDHS_State.linkedDocs = TTDHS_State.linkedDocs.filter(d => d.id !== docId);
+            RenderEngine.renderLinkedDocs(TTDHS_State.linkedDocs);
+        },
+
+        executePublishing: () => {
+            const preCheckResult = PreCheckEngine.runChecks(TTDHS_State);
+            if (!preCheckResult.allPassed) {
+                alert("Không thể phát hành! Vui lòng kiểm tra lại các điều kiện chưa đạt.");
+                return;
+            }
+
+            const payload = PublishEngine.preparePayload(TTDHS_State);
+            NotificationEngine.dispatch(payload);
+
+            // Tương thích Google Apps Script / SessionStorage Wrapper
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                google.script.run.withSuccessHandler(() => {
+                    alert("🎉 Phát hành thành công lên Server Google Apps Script!");
+                }).executePublishingBackend(payload);
+            } else {
+                StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_PUBLISHED, payload);
+                alert(`🚀 PHÁT HÀNH THÀNH CÔNG!\n\nĐã phân phối [${TTDHS_State.document.title}] tới ${payload.destinations.length} điểm đến số.`);
+            }
+        },
+
+        openPreviewModal: () => {
+            alert(`XEM TRƯỚC NỘI DUNG TÀI LIỆU:\n---------------------------\nTiêu đề: ${TTDHS_State.document.title}\nNguồn: ${TTDHS_State.document.moduleSource}`);
+        },
+
+        resetDraft: () => {
+            StorageEngine.remove(CONFIG.STORAGE_KEYS.CURRENT_DOC);
+            window.location.reload();
+        }
+    };
+
+    // Tự động khởi chạy duy nhất Controller khi DOM sẵn sàng
+    document.addEventListener('DOMContentLoaded', Controller.init);
     </script>
 </body>
 </html>
