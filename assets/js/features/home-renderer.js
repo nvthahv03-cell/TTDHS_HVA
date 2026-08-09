@@ -131,16 +131,116 @@ export function renderHome() {
 <!-- KHU VỰC 3 PHÍM TÁC VỤ NHANH (PHONG CÁCH VNeID) -->
 <!-- ========================================== -->
 
-<!-- TIÊU ĐỀ TÁC VỤ TRUY CẬP NHANH -->
-<div class="flex items-center justify-center my-6 sm:my-8 px-4">
-  <div class="flex-grow h-[1px] bg-gradient-to-r from-transparent via-slate-200 to-slate-300"></div>
-  <div class="flex items-center gap-2 px-4 sm:px-6">
-    <i class="bi bi-rocket-takeoff-fill text-[2563EB] text-lg sm:text-xl"></i>
-    <span class="font-bold text-sm sm:text-base tracking-wider text-[#2563EB] uppercase select-none">
-      TÁC VỤ TRUY CẬP NHANH
-    </span>
+<!-- ==================== VIỆC CỦA TÔI ==================== -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 px-4 mb-6">
+
+  <!-- ========== VIỆC ĐƯỢC GIAO ========== -->
+  <div class="relative flex flex-col items-center">
+    <button type="button"
+      id="btn-my-assigned"
+      onclick="openMyTasks('ASSIGNED', event)"
+      class="group relative flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer">
+
+      <span id="countAssigned"
+        class="absolute -top-1 right-0 min-w-[22px] h-[22px] px-1.5 rounded-full bg-blue-600 text-white text-[11px] font-bold flex items-center justify-center">
+        0
+      </span>
+
+      <div class="text-[#2563EB] text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 group-hover:scale-110">
+        <i class="bi bi-inbox-fill"></i>
+      </div>
+
+      <span class="font-bold text-[13px] sm:text-[15px] text-[#1E3A8A] text-center">
+        Việc được giao
+      </span>
+
+      <span class="text-[10px] sm:text-xs text-slate-500 mt-1">
+        Chưa tiếp nhận
+      </span>
+    </button>
   </div>
-  <div class="flex-grow h-[1px] bg-gradient-to-l from-transparent via-slate-200 to-slate-300"></div>
+
+
+  <!-- ========== ĐANG THỰC HIỆN ========== -->
+  <div class="relative flex flex-col items-center">
+    <button type="button"
+      id="btn-my-doing"
+      onclick="openMyTasks('DOING', event)"
+      class="group relative flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer">
+
+      <span id="countDoing"
+        class="absolute -top-1 right-0 min-w-[22px] h-[22px] px-1.5 rounded-full bg-amber-500 text-white text-[11px] font-bold flex items-center justify-center">
+        0
+      </span>
+
+      <div class="text-amber-500 text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 group-hover:scale-110">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+
+      <span class="font-bold text-[13px] sm:text-[15px] text-slate-800 text-center">
+        Đang thực hiện
+      </span>
+
+      <span class="text-[10px] sm:text-xs text-slate-500 mt-1">
+        Đã tiếp nhận
+      </span>
+    </button>
+  </div>
+
+
+  <!-- ========== QUÁ HẠN ========== -->
+  <div class="relative flex flex-col items-center">
+    <button type="button"
+      id="btn-my-overdue"
+      onclick="openMyTasks('OVERDUE', event)"
+      class="group relative flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer">
+
+      <span id="countOverdue"
+        class="absolute -top-1 right-0 min-w-[22px] h-[22px] px-1.5 rounded-full bg-red-600 text-white text-[11px] font-bold flex items-center justify-center">
+        0
+      </span>
+
+      <div class="text-red-600 text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 group-hover:scale-110">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+
+      <span class="font-bold text-[13px] sm:text-[15px] text-red-700 text-center">
+        Quá hạn
+      </span>
+
+      <span class="text-[10px] sm:text-xs text-red-500 mt-1">
+        Chưa hoàn thành
+      </span>
+    </button>
+  </div>
+
+
+  <!-- ========== ĐÃ HOÀN THÀNH ========== -->
+  <div class="relative flex flex-col items-center">
+    <button type="button"
+      id="btn-my-completed"
+      onclick="openMyTasks('COMPLETED', event)"
+      class="group relative flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer">
+
+      <span id="countCompleted"
+        class="absolute -top-1 right-0 min-w-[22px] h-[22px] px-1.5 rounded-full bg-emerald-600 text-white text-[11px] font-bold flex items-center justify-center">
+        0
+      </span>
+
+      <div class="text-emerald-600 text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 group-hover:scale-110">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+
+      <span class="font-bold text-[13px] sm:text-[15px] text-emerald-700 text-center">
+        Đã hoàn thành
+      </span>
+
+      <span class="text-[10px] sm:text-xs text-slate-500 mt-1">
+        Đã xác nhận
+      </span>
+    </button>
+  </div>
+
 </div>
 
 <!-- CONTAINER 3 TÁC VỤ VNeID STYLE -->
