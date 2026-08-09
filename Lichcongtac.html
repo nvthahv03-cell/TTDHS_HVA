@@ -1009,39 +1009,42 @@ function chuyenDenMenuTacVu() {
 
 <!-- Các phần giao diện HTML của trang Lichcongtac.html -->
 
-    <!-- Khối JavaScript ở cuối file -->
-    <script>
-        function luuHoacPhatHanhLich(actionType) {
-            // 1. Thu thập dữ liệu từ Form/Bảng
-            const payload = {
-                tuan: 33,
-                thang: 8,
-                nam: 2026,
-                chiTietLich: [
-                    { ngay: "10/08", sang: "Họp BGH", chieu: "Nghi", ghiChu: "P. HT" },
-                    { ngay: "11/08", sang: "QĐ thành lập tổ công tác CĐS", chieu: "Nghi", ghiChu: "" }
-                ],
-                // Lấy toàn bộ HTML của bản xem trước để in PDF
-                htmlContent: document.getElementById('previewPrintArea')?.outerHTML || ''
-            };
+   <script>
+// Link Google Apps Script Web App của thầy
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyxKlRSYRvwFp-n1DqQTp6L7CLeR8rv1djF3zxhTy7vtAE8obJ7GDcnJETAGFQRzq45ZQ/exec";
 
-            // 2. Gửi sang Google Apps Script
-            google.script.run
-                .withSuccessHandler(function(res) {
-                    if (res.success) {
-                        if (actionType === 'phathanh') {
-                            alert("Phát hành thành công!\nLink PDF Drive: " + res.pdfUrl);
-                        } else {
-                            alert("Đã lưu nháp dữ liệu vào Google Sheet!");
-                        }
-                    } else {
-                        alert("Có lỗi xảy ra: " + res.error);
-                    }
-                })
-                .processLichTuan(payload, actionType);
+function luuHoacPhatHanhLich(actionType) {
+    // 1. Thu thập dữ liệu từ Form/Bảng
+    const payload = {
+        tuan: 33,
+        thang: 8,
+        nam: 2026,
+        chiTietLich: [
+            { ngay: "10/08", sang: "Họp BGH", chieu: "Nghi", ghiChu: "P. HT" },
+            { ngay: "11/08", sang: "QĐ thành lập tổ công tác CĐS", chieu: "Nghi", ghiChu: "" }
+        ],
+        // Lấy toàn bộ HTML bản xem trước để tự động xuất PDF khi phát hành
+        htmlContent: document.getElementById('previewPrintArea')?.outerHTML || ''
+    };
+
+    // 2. Gửi dữ liệu tới Google Apps Script qua Web App URL
+    fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: actionType, data: payload })
+    })
+    .then(() => {
+        if (actionType === 'phathanh') {
+            alert("Đã phát hành lịch công tác thành công và xuất bản PDF lên Google Drive!");
+        } else {
+            alert("Đã lưu nháp lịch công tác vào Google Sheet thành công!");
         }
-    </script>
-</body>
-</html>
+    })
+    .catch(err => {
+        alert("Lỗi kết nối khi lưu lịch: " + err);
+    });
+}
+</script>
 </body>
 </html>
