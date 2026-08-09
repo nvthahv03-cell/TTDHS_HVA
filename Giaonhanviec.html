@@ -34,7 +34,6 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
             -webkit-tap-highlight-color: transparent; 
         }
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
@@ -45,45 +44,14 @@
 
     <!-- HEADER TTĐHS_HVA CỐ ĐỊNH -->
     <header class="sticky top-0 z-40 w-full overflow-hidden shadow-md">
-        <!-- Digital Blue Gradient Background -->
         <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
-        
-        <!-- Glow Effects -->
         <div class="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-cyan-300/20 blur-3xl pointer-events-none"></div>
         <div class="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-sky-300/15 blur-3xl pointer-events-none"></div>
 
-        <!-- Grid Pattern Overlay -->
-        <div class="absolute inset-0 opacity-[0.06] pointer-events-none"
-            style="background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px); background-size:28px 28px;">
-        </div>
-
-        <!-- Circuit Pattern SVG Overlay -->
-        <svg class="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" preserveAspectRatio="none">
-            <g stroke="white" stroke-width="1.2" fill="none" vector-effect="non-scaling-stroke">
-                <path d="M35 28 H120 V68 H200"/>
-                <path d="M300 20 V55 H390 V95"/>
-                <path d="M560 28 H650 V60 H760"/>
-            </g>
-            <g fill="white">
-                <circle cx="35" cy="28" r="2.6"/>
-                <circle cx="120" cy="68" r="2.6"/>
-                <circle cx="200" cy="68" r="2.6"/>
-                <circle cx="300" cy="20" r="2.6"/>
-                <circle cx="390" cy="55" r="2.6"/>
-                <circle cx="390" cy="95" r="2.6"/>
-                <circle cx="560" cy="28" r="2.6"/>
-                <circle cx="650" cy="60" r="2.6"/>
-                <circle cx="760" cy="60" r="2.6"/>
-            </g>
-        </svg>
-
-        <!-- Header Content Container -->
         <div class="relative max-w-5xl mx-auto px-4 py-3 sm:py-4">
             <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-3 min-w-0">
-                    <a href="main.html"
-                        class="w-10 h-10 rounded-2xl bg-white/12 border border-white/20 backdrop-blur hover:bg-white/20 transition flex items-center justify-center text-white shrink-0 active:scale-95"
-                        aria-label="Quay lại">
+                    <a href="main.html" class="w-10 h-10 rounded-2xl bg-white/12 border border-white/20 backdrop-blur hover:bg-white/20 transition flex items-center justify-center text-white shrink-0 active:scale-95">
                         <i class="bi bi-arrow-left text-lg"></i>
                     </a>
                     <div class="text-white font-bold uppercase tracking-wide text-xs sm:text-sm truncate">
@@ -335,7 +303,7 @@
         </form>
     </main>
 
-    <!-- SCRIPT LOGIC XỬ LÝ FULL -->
+    <!-- SCRIPT LOGIC BẮT LỖI VÀ TẢI DỮ LIỆU -->
     <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjq11TcDE4tyOsPl6NOw1q6r8f14r3Z3qQPuSAgic7Xf6XK4gXjwHOBem4I_IGnALZ/exec";
 
@@ -353,13 +321,35 @@
         await loadDanhSachTo();
     });
 
+    // TẢI DANH SÁCH TỔ VỚI BỘ BẮT LỖI CHI TIẾT
     async function loadDanhSachTo() {
         const container = document.getElementById('danhSachToAccordion');
+        if (container) {
+            container.innerHTML = `
+                <div class="p-6 text-center text-xs text-slate-400 space-y-2">
+                    <i class="bi bi-arrow-repeat animate-spin text-lg text-blue-500 inline-block"></i>
+                    <div class="italic">Đang tải danh sách tổ...</div>
+                </div>`;
+        }
+
         try {
-            const response = await fetch(`${SCRIPT_URL}?action=getDanhSachTo&_=${Date.now()}`);
-            if (!response.ok) throw new Error('HTTP Error status: ' + response.status);
+            const url = `${SCRIPT_URL}?action=getDanhSachTo&_=${Date.now()}`;
+            const res = await fetch(url);
             
-            const data = await response.json();
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: Không thể kết nối tới Google Script`);
+            }
+
+            const rawText = await res.text();
+            let data;
+            
+            try {
+                data = JSON.parse(rawText);
+            } catch (errParse) {
+                console.error("Nội dung phản hồi không phải JSON:", rawText);
+                throw new Error("Phản hồi không phải JSON (Vui lòng chọn 'Anyone' khi Deploy Web App trên Apps Script)");
+            }
+
             dsToData = Array.isArray(data) ? data : [];
             renderToAccordion();
         } catch (e) {
@@ -367,8 +357,9 @@
             if (container) {
                 container.innerHTML = `
                     <div class="p-4 text-center space-y-2">
-                        <div class="text-xs text-red-500 font-medium">Không thể tải danh sách tổ. Vui lòng thử lại!</div>
-                        <button type="button" onclick="loadDanhSachTo()" class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition">
+                        <div class="text-xs text-red-500 font-semibold">${e.message || 'Không thể tải danh sách tổ.'}</div>
+                        <div class="text-[11px] text-slate-500">Mở Console (F12) hoặc kiểm tra cài đặt "Anyone" trong Google Apps Script.</div>
+                        <button type="button" onclick="loadDanhSachTo()" class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition shadow-xs">
                             <i class="bi bi-arrow-clockwise"></i> Thử lại
                         </button>
                     </div>`;
@@ -446,7 +437,8 @@
             const res = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}&_=${Date.now()}`);
             if (!res.ok) throw new Error('HTTP Error ' + res.status);
             
-            const cleanList = await res.json();
+            const rawText = await res.text();
+            const cleanList = JSON.parse(rawText);
             dsNhanSuLoadedByTo[tenTo] = Array.isArray(cleanList) ? cleanList : [];
 
             if (loading) loading.classList.add('hidden');
@@ -674,7 +666,8 @@
             const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}&_=${Date.now()}`);
             if (!res.ok) throw new Error('HTTP Error ' + res.status);
             
-            cachedVanBanResults = await res.json();
+            const rawText = await res.text();
+            cachedVanBanResults = JSON.parse(rawText);
             if (!Array.isArray(cachedVanBanResults)) cachedVanBanResults = [];
 
             if (cachedVanBanResults.length === 0) {
