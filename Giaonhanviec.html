@@ -3,418 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TTĐHS_HVA - Giao Nhiệm Vụ</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Trung tâm Điều hành số - Giao nhiệm vụ v2</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            dark: '#062B5B',
-                            DEFAULT: '#0F4C81',
-                            light: '#1687D9',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="min-h-full text-slate-800 antialiased flex flex-col bg-slate-50 selection:bg-blue-100 selection:text-[#0F4C81] pb-24 md:pb-8">
+<body class="h-full text-slate-800 antialiased flex flex-col bg-slate-50 selection:bg-blue-100 selection:text-[#0F4C81]">
 
-    <!-- HEADER TTĐHS_HVA CỐ ĐỊNH -->
-    <header class="sticky top-0 z-40 w-full overflow-hidden shadow-md">
-        <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
-        <div class="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-cyan-300/20 blur-3xl pointer-events-none"></div>
-        <div class="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-sky-300/15 blur-3xl pointer-events-none"></div>
+<!-- HEADER TTĐHS_HVA -->
+<header class="relative sticky top-0 z-40 overflow-hidden shadow-lg">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
+    <div class="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-cyan-300/20 blur-3xl"></div>
+    <div class="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-sky-300/15 blur-3xl"></div>
 
-        <div class="relative max-w-5xl mx-auto px-4 py-3 sm:py-4">
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-3 min-w-0">
-                    <a href="main.html" class="w-10 h-10 rounded-2xl bg-white/12 border border-white/20 backdrop-blur hover:bg-white/20 transition flex items-center justify-center text-white shrink-0 active:scale-95">
-                        <i class="bi bi-arrow-left text-lg"></i>
-                    </a>
-                    <div class="text-white font-bold uppercase tracking-wide text-xs sm:text-sm truncate">
-                        HVA - THPT HÒA VANG
-                    </div>
-                </div>
+    <div class="absolute inset-0 opacity-[0.06]"
+        style="background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px); background-size:28px 28px;">
+    </div>
 
-                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/12 border border-white/15 backdrop-blur shrink-0">
-                    <span class="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
-                    <span class="text-white text-xs font-semibold">Hệ thống kết nối</span>
+    <svg class="absolute inset-0 w-full h-full opacity-[0.12]" preserveAspectRatio="none">
+        <g stroke="white" stroke-width="1.2" fill="none">
+            <path d="M35 28 H120 V68 H200"/>
+            <path d="M300 20 V55 H390 V95"/>
+            <path d="M560 28 H650 V60 H760"/>
+        </g>
+        <g fill="white">
+            <circle cx="35" cy="28" r="2.6"/>
+            <circle cx="120" cy="68" r="2.6"/>
+            <circle cx="200" cy="68" r="2.6"/>
+            <circle cx="300" cy="20" r="2.6"/>
+            <circle cx="390" cy="55" r="2.6"/>
+            <circle cx="390" cy="95" r="2.6"/>
+            <circle cx="560" cy="28" r="2.6"/>
+            <circle cx="650" cy="60" r="2.6"/>
+            <circle cx="760" cy="60" r="2.6"/>
+        </g>
+    </svg>
+
+    <div class="relative max-w-3xl mx-auto px-4 pt-4 pb-5">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="window.location.href='main.html'"
+                    class="w-11 h-11 rounded-2xl bg-white/12 border border-white/20 backdrop-blur hover:bg-white/20 transition flex items-center justify-center">
+                    <i class="bi bi-arrow-left text-white text-xl"></i>
+                </button>
+                <div class="text-white font-bold uppercase tracking-wide text-sm">
+                    HVA - THPT HÒA VANG
                 </div>
             </div>
 
-            <div class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
-                <h1 id="page-title" class="text-white font-extrabold text-base sm:text-lg tracking-wide uppercase flex items-center gap-2 drop-shadow-sm">
-                    <i class="bi bi-send-check-fill text-cyan-300"></i>
-                    GIAO CÔNG VIỆC
-                </h1>
-                <span class="text-white/70 text-xs font-normal hidden sm:inline-block">TTĐHS_HVA v2.1</span>
+            <div class="flex items-center gap-2 px-3 py-2 rounded-full bg-white/12 border border-white/15 backdrop-blur">
+                <span class="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
+                <span class="text-white text-xs font-semibold">Hệ thống kết nối</span>
             </div>
         </div>
-    </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="flex-1 max-w-4xl w-full mx-auto px-4 pt-6 pb-28 space-y-5">
-        <form id="formGiaoViecFull" class="space-y-5">
-            
-            <!-- Thông tin Người giao -->
-            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/80 border border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#0F4C81] flex items-center justify-center text-lg shadow-sm">
-                        <i class="bi bi-person-circle"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <label class="block text-[11px] font-medium text-slate-400">Người giao</label>
-                        <input type="text" id="nguoiGiao" readonly class="w-full bg-transparent text-sm font-bold text-[#0F4C81] outline-none truncate" value="Thầy Nguyễn Văn Thả">
-                    </div>
+        <div class="mt-2 ml-14">
+            <div class="text-white text-[24px] leading-none font-black uppercase">
+                TRANG GIAO VIỆC
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- NỘI DUNG FORM -->
+<main class="flex-1 max-w-3xl w-full mx-auto p-4 sm:p-6 pb-28 overflow-y-auto">
+    <form id="formGiaoViecFull" class="space-y-5">
+        
+        <!-- NGƯỜI GIAO -->
+        <div class="bg-gradient-to-br from-[#F5FAFF] to-[#EDF7FF] border border-blue-100 rounded-2xl shadow-sm p-3 mb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-[#0F4C81] to-[#29B6F6] flex items-center justify-center shadow-md">
+                    <i class="bi bi-person-badge-fill text-white text-xl"></i>
                 </div>
-
-                <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50/80 border border-slate-100">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#0F4C81] flex items-center justify-center text-lg shadow-sm">
-                        <i class="bi bi-briefcase-fill"></i>
+                <div class="flex-1">
+                    <div id="nguoiGiao" class="text-base font-bold text-[#0F4C81] leading-tight">
+                        Thầy Nguyễn Văn Thà
                     </div>
-                    <div class="flex-1 min-w-0">
-                        <label class="block text-[11px] font-medium text-slate-400">Chức vụ</label>
-                        <input type="text" id="chucVuNguoiGiao" readonly class="w-full bg-transparent text-sm font-bold text-[#0F4C81] outline-none truncate" value="Phó Hiệu trưởng">
+                    <div class="mt-0.5 text-sm text-slate-600">
+                        Chức vụ:
+                        <span id="chucVuNguoiGiao" class="font-semibold">
+                            Phó Hiệu trưởng
+                        </span>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- NGUỒN GIAO -->
-            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
-                <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
-                    <i class="bi bi-folder-symlink-fill text-blue-600"></i>
-                    <span>Nguồn giao</span>
+        <!-- NGUỒN GIAO -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+            <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
+                <i class="bi bi-folder-symlink-fill text-blue-600"></i>
+                <span>Nguồn giao</span>
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 cursor-pointer transition">
+                    <input type="radio" name="nguonGiaoRadio" value="Theo văn bản" checked onchange="xuLyThayDoiNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81]">
+                    <span class="text-xs font-semibold text-slate-700">Theo văn bản</span>
                 </label>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 cursor-pointer transition">
-                        <input type="radio" name="nguonGiaoRadio" value="Theo văn bản" checked onchange="xuLyThayDoiNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81]">
-                        <span class="text-xs font-semibold text-slate-700">Theo văn bản</span>
-                    </label>
-                    <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 cursor-pointer transition">
-                        <input type="radio" name="nguonGiaoRadio" value="Chỉ đạo trực tiếp" onchange="xuLyThayDoiNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81]">
-                        <span class="text-xs font-semibold text-slate-700">Chỉ đạo trực tiếp</span>
-                    </label>
-                    <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 cursor-pointer transition">
-                        <input type="radio" name="nguonGiaoRadio" value="Công việc thường xuyên" onchange="xuLyThayDoiNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81]">
-                        <span class="text-xs font-semibold text-slate-700">Thường xuyên</span>
-                    </label>
-                    <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 cursor-pointer transition">
-                        <input type="radio" name="nguonGiaoRadio" value="Công việc đột xuất" onchange="xuLyThayDoiNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81]">
-                        <span class="text-xs font-semibold text-slate-700">Đột xuất</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- CARD CHỌN VĂN BẢN -->
-            <div id="cardVanBan" class="bg-white p-4 rounded-2xl border border-blue-200/80 bg-blue-50/10 shadow-sm space-y-3">
-                <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
-                    <i class="bi bi-file-earmark-text-fill text-blue-600"></i>
-                    <span>Văn bản chỉ đạo từ Kho Văn bản</span>
+                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 cursor-pointer transition">
+                    <input type="radio" name="nguonGiaoRadio" value="Chỉ đạo trực tiếp" onchange="xuLyThayDoiNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81]">
+                    <span class="text-xs font-semibold text-slate-700">Chỉ đạo trực tiếp</span>
                 </label>
-                <div class="flex gap-2">
-                    <div class="relative flex-1">
-                        <input type="text" id="inputTimVanBan" placeholder="Nhập số VB, từ khóa, tên văn bản..." class="w-full rounded-xl border border-slate-200 bg-slate-50/50 pl-9 pr-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81] focus:bg-white transition">
-                        <i class="bi bi-search absolute left-3 top-3 text-slate-400"></i>
-                    </div>
-                    <button type="button" onclick="timKiemVanBan()" class="px-4 py-2.5 bg-[#0F4C81] hover:bg-[#0c3d68] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition active:scale-95 shrink-0">
-                        <i class="bi bi-search"></i>
-                        <span>Tìm kiếm</span>
-                    </button>
-                </div>
+                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 cursor-pointer transition">
+                    <input type="radio" name="nguonGiaoRadio" value="Công việc thường xuyên" onchange="xuLyThayDoiNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81]">
+                    <span class="text-xs font-semibold text-slate-700">Thường xuyên</span>
+                </label>
+                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 cursor-pointer transition">
+                    <input type="radio" name="nguonGiaoRadio" value="Công việc đột xuất" onchange="xuLyThayDoiNguonGiao(this.value)" class="w-4 h-4 text-[#0F4C81]">
+                    <span class="text-xs font-semibold text-slate-700">Đột xuất</span>
+                </label>
+            </div>
+        </div>
 
-                <div id="vungKetQuaVanBan" class="hidden border border-slate-200 rounded-xl bg-white max-h-48 overflow-y-auto divide-y divide-slate-100 shadow-sm"></div>
-
-                <div id="chiTietVanBanDaChon" class="p-3 bg-blue-50/60 rounded-xl border border-blue-100 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div><span class="font-bold text-slate-500">Số VB:</span> <span id="lblSoVB" class="font-bold text-[#0F4C81]">Chưa chọn</span></div>
-                    <div><span class="font-bold text-slate-500">Ngày BH:</span> <span id="lblNgayBH" class="text-slate-700">--/--/----</span></div>
-                    <div class="sm:col-span-2"><span class="font-bold text-slate-500">Tên VB:</span> <span id="lblTenVB" class="text-slate-800 font-medium">Bấm tìm kiếm để chọn từ Kho Văn bản...</span></div>
+        <!-- CARD CHỌN VĂN BẢN -->
+        <div id="cardVanBan" class="bg-white p-4 rounded-2xl border border-blue-200/80 bg-blue-50/10 shadow-sm space-y-3">
+            <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
+                <i class="bi bi-file-earmark-text-fill text-blue-600"></i>
+                <span>Văn bản chỉ đạo từ Kho Văn bản</span>
+            </label>
+            <div class="flex gap-2">
+                <div class="relative flex-1">
+                    <input type="text" id="inputTimVanBan" onkeypress="if(event.key==='Enter'){event.preventDefault();timKiemVanBan();}" placeholder="Nhập số VB, từ khóa, tên văn bản..." class="w-full rounded-xl border border-slate-200 bg-slate-50/50 pl-9 pr-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81] focus:bg-white transition">
+                    <i class="bi bi-search absolute left-3 top-3 text-slate-400"></i>
                 </div>
+                <button type="button" onclick="timKiemVanBan()" class="px-4 py-2.5 bg-[#0F4C81] hover:bg-[#0c3d68] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition active:scale-95 shrink-0">
+                    <i class="bi bi-search"></i>
+                    <span>Tìm kiếm</span>
+                </button>
             </div>
 
-            <!-- MỨC ĐỘ & LOẠI NHIỆM VỤ -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
-                    <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
-                        <i class="bi bi-exclamation-triangle-fill text-blue-600"></i>
-                        <span>Mức độ ưu tiên</span>
-                    </label>
-                    <select id="mucDo" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-[#0F4C81]">
-                        <option value="Khẩn">🔴 Khẩn</option>
-                        <option value="Quan trọng">🟠 Quan trọng</option>
-                        <option value="Bình thường" selected>🟢 Bình thường</option>
-                    </select>
-                </div>
+            <div id="vungKetQuaVanBan" class="hidden border border-slate-200 rounded-xl bg-white max-h-48 overflow-y-auto divide-y divide-slate-100 shadow-sm"></div>
 
-                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
-                    <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
-                        <i class="bi bi-pin-angle-fill text-blue-600"></i>
-                        <span>Loại nhiệm vụ</span>
-                    </label>
-                    <select id="loaiNhiemVu" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-[#0F4C81]">
-                        <option value="Chỉ đạo thường xuyên">Chỉ đạo thường xuyên</option>
-                        <option value="Công việc khẩn">Công việc khẩn</option>
-                        <option value="Thực hiện theo Văn bản">Thực hiện theo Văn bản</option>
-                    </select>
-                </div>
+            <div id="chiTietVanBanDaChon" class="p-3 bg-blue-50/60 rounded-xl border border-blue-100 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div><span class="font-bold text-slate-500">Số VB:</span> <span id="lblSoVB" class="font-bold text-[#0F4C81]">Chưa chọn</span></div>
+                <div><span class="font-bold text-slate-500">Ngày BH:</span> <span id="lblNgayBH" class="text-slate-700">--/--/----</span></div>
+                <div class="sm:col-span-2"><span class="font-bold text-slate-500">Tên VB:</span> <span id="lblTenVB" class="text-slate-800 font-medium">Bấm tìm kiếm để chọn từ Kho Văn bản...</span></div>
             </div>
+        </div>
 
-            <!-- TIÊU ĐỀ & NỘI DUNG -->
+        <!-- MỨC ĐỘ & LOẠI NHIỆM VỤ -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
                 <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
-                    <i class="bi bi-pencil-square text-blue-600"></i>
-                    <span>Tiêu đề công việc</span>
+                    <i class="bi bi-exclamation-triangle-fill text-blue-600"></i>
+                    <span>Mức độ ưu tiên</span>
                 </label>
-                <input type="text" id="tieuDe" required class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]" placeholder="Nhập tóm tắt tiêu đề...">
+                <select id="mucDo" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-[#0F4C81]">
+                    <option value="Khẩn">🔴 Khẩn</option>
+                    <option value="Quan trọng">🟠 Quan trọng</option>
+                    <option value="Bình thường" selected>🟢 Bình thường</option>
+                </select>
             </div>
 
             <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
                 <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
-                    <i class="bi bi-file-earmark-text-fill text-blue-600"></i>
-                    <span>Nội dung chi tiết</span>
+                    <i class="bi bi-pin-angle-fill text-blue-600"></i>
+                    <span>Loại nhiệm vụ</span>
                 </label>
-                <textarea id="noiDung" rows="3" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]" placeholder="Nội dung chỉ đạo chi tiết..."></textarea>
+                <select id="loaiNhiemVu" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-[#0F4C81]">
+                    <option value="Chỉ đạo thường xuyên">Chỉ đạo thường xuyên</option>
+                    <option value="Công việc khẩn">Công việc khẩn</option>
+                    <option value="Thực hiện theo Văn bản">Thực hiện theo Văn bản</option>
+                </select>
             </div>
+        </div>
 
-            <!-- ĐỐI TƯỢNG NHẬN NHIỆM VỤ -->
-            <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
-                    <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-lg bg-blue-50 border border-blue-100/80 flex items-center justify-center text-blue-600">
-                            <i class="bi bi-people-fill text-sm"></i>
-                        </div>
-                        <label class="text-xs font-bold text-[#0F4C81] uppercase tracking-wide">
-                            Đối tượng nhận nhiệm vụ
-                        </label>
-                    </div>
+        <!-- TIÊU ĐỀ & NỘI DUNG -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
+            <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
+                <i class="bi bi-pencil-square text-blue-600"></i>
+                <span>Tiêu đề công việc</span>
+            </label>
+            <input type="text" id="tieuDe" required class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]" placeholder="Nhập tóm tắt tiêu đề...">
+        </div>
 
-                    <div class="flex items-center gap-1.5">
-                        <span id="badgeThongKeTo" class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100/80 text-[11px] font-bold">
-                            0 tổ
-                        </span>
-                        <span id="badgeThongKeNguoi" class="px-2.5 py-1 rounded-lg bg-blue-50 text-[#0F4C81] border border-blue-100/80 text-[11px] font-bold">
-                            0 cá nhân
-                        </span>
-                    </div>
-                </div>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
+            <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
+                <i class="bi bi-file-earmark-text-fill text-blue-600"></i>
+                <span>Nội dung chi tiết</span>
+            </label>
+            <textarea id="noiDung" rows="3" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]" placeholder="Nội dung chỉ đạo chi tiết..."></textarea>
+        </div>
 
-                <div class="relative group">
-                    <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
-                    <input id="txtTimDoiTuong" type="text" oninput="timKiemDoiTuong(this.value)" placeholder="Tìm theo tên tổ hoặc giáo viên..." class="w-full rounded-xl border border-slate-200 bg-slate-50/60 pl-10 pr-4 py-2.5 text-xs outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition placeholder:text-slate-400">
-                </div>
-
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                    <div class="flex items-center gap-1.5">
-                        <button type="button" onclick="expandAllTo()" class="px-2.5 py-1.5 rounded-lg bg-slate-100/80 hover:bg-blue-50 hover:text-blue-700 border border-transparent hover:border-blue-200 text-slate-600 text-[11px] font-semibold transition flex items-center gap-1.5">
-                            <i class="bi bi-arrows-expand text-xs"></i>
-                            <span>Mở tất cả</span>
-                        </button>
-
-                        <button type="button" onclick="collapseAllTo()" class="px-2.5 py-1.5 rounded-lg bg-slate-100/80 hover:bg-slate-200/70 border border-transparent text-slate-600 text-[11px] font-semibold transition flex items-center gap-1.5">
-                            <i class="bi bi-arrows-collapse text-xs"></i>
-                            <span>Thu gọn</span>
-                        </button>
-                    </div>
-
-                    <button type="button" onclick="clearAllSelection()" class="px-2.5 py-1.5 rounded-lg bg-red-50/80 hover:bg-red-100 border border-red-100 text-red-600 text-[11px] font-semibold transition flex items-center gap-1.5">
-                        <i class="bi bi-x-circle text-xs"></i>
-                        <span>Bỏ chọn tất cả</span>
-                    </button>
-                </div>
-
-                <div id="danhSachToAccordion" class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
-                    <div class="p-6 text-center text-xs text-slate-400 space-y-2">
-                        <i class="bi bi-arrow-repeat animate-spin text-lg text-blue-500 inline-block"></i>
-                        <div class="italic">Đang tải danh sách tổ...</div>
-                    </div>
-                </div>
-
-                <div class="pt-3 border-t border-slate-100 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                            <i class="bi bi-check2-square text-blue-500"></i> Đã chọn
-                        </span>
-
-                        <button type="button" onclick="clearAllSelection()" class="text-[11px] font-medium text-red-500 hover:text-red-700 hover:underline transition">
-                            Xóa tất cả
-                        </button>
-                    </div>
-
-                    <div id="danhSachDaChon" class="p-2.5 bg-slate-50/60 rounded-xl border border-dashed border-slate-200 min-h-[52px] flex flex-wrap gap-1.5 items-center">
-                        <span class="text-xs text-slate-400 italic px-1">Chưa chọn đối tượng nào...</span>
-                    </div>
+        <!-- CHỌN ĐỐI TƯỢNG NHẬN -->
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
+                    <i class="bi bi-people-fill text-blue-600"></i>
+                    <span>Đối tượng nhận nhiệm vụ</span>
+                </label>
+                <div class="flex items-center gap-2">
+                    <span id="badgeThongKeTo" class="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100 text-xs font-bold">0 tổ</span>
+                    <span id="badgeThongKeNguoi" class="px-2.5 py-1 rounded-full bg-blue-50 text-[#0F4C81] border border-blue-100 text-xs font-bold">0 cá nhân</span>
                 </div>
             </div>
 
-            <!-- YÊU CẦU MINH CHỨNG & HẠN HOÀN THÀNH -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
-                    <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
-                        <i class="bi bi-check-circle-fill text-blue-600"></i>
-                        <span>Yêu cầu minh chứng</span>
-                    </label>
-                    <select id="yeuCauMinhChung" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-[#0F4C81]">
-                        <option value="Không" selected>Không yêu cầu</option>
-                        <option value="Có">Có yêu cầu minh chứng/báo cáo</option>
-                    </select>
-                </div>
-
-                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
-                    <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
-                        <i class="bi bi-calendar-event-fill text-blue-600"></i>
-                        <span>Hạn hoàn thành</span>
-                    </label>
-                    <input type="date" id="hanHoanThanh" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]">
-                </div>
+            <!-- Accordion Danh sách Tổ -->
+            <div class="space-y-2.5" id="danhSachToAccordion">
+                <div class="p-3 text-center text-xs text-slate-400 italic">Đang tải danh sách tổ...</div>
             </div>
 
-            <!-- NÚT FIX BOTTOM -->
-            <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-200/80 p-3 sm:p-4 z-40 shadow-lg">
-                <div class="max-w-4xl mx-auto">
-                    <button type="submit" id="btnSubmit" class="w-full h-12 bg-gradient-to-r from-[#062B5B] to-[#0F4C81] hover:from-[#0F4C81] hover:to-[#1687D9] text-white font-bold text-base rounded-2xl shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
-                        <i class="bi bi-send-fill"></i>
-                        <span>Xác nhận Giao việc</span>
-                    </button>
+            <!-- Chip đã chọn -->
+            <div class="pt-2 border-t border-slate-100">
+                <label class="block text-[11px] font-semibold text-slate-400 mb-1.5">Đã chọn:</label>
+                <div id="danhSachDaChon" class="p-3 bg-slate-50 rounded-xl border border-slate-200/60 min-h-[46px] flex items-center flex-wrap gap-2">
+                    <span class="text-xs text-slate-400 italic">Chưa chọn đối tượng nào...</span>
                 </div>
             </div>
+        </div>
 
-        </form>
-    </main>
+        <!-- MINH CHỨNG & HẠN HOÀN THÀNH -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
+                <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
+                    <i class="bi bi-check-circle-fill text-blue-600"></i>
+                    <span>Yêu cầu minh chứng</span>
+                </label>
+                <select id="yeuCauMinhChung" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-700 outline-none focus:border-[#0F4C81]">
+                    <option value="Không" selected>Không yêu cầu</option>
+                    <option value="Có">Có yêu cầu minh chứng/báo cáo</option>
+                </select>
+            </div>
 
-    <!-- SCRIPT LOGIC BẮT LỖI VÀ TẢI DỮ LIỆU -->
-    <script>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
+                <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
+                    <i class="bi bi-calendar-event-fill text-blue-600"></i>
+                    <span>Hạn hoàn thành</span>
+                </label>
+                <input type="date" id="hanHoanThanh" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]">
+            </div>
+        </div>
+
+        <!-- NÚT CHỨC NĂNG CỐ ĐỊNH -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
+            <div class="max-w-3xl mx-auto grid grid-cols-4 gap-2">
+                <button type="button" onclick="history.back()" class="h-11 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition active:scale-95">
+                    Hủy
+                </button>
+                <button type="reset" onclick="selectedObjects=[]; updateTagDisplay();" class="h-11 rounded-xl bg-slate-500 hover:bg-slate-600 text-white text-sm font-semibold transition active:scale-95">
+                    Đặt lại
+                </button>
+                <button type="button" onclick="previewTask()" class="h-11 rounded-xl border border-[#0F4C81] bg-white text-[#0F4C81] hover:bg-blue-50 text-sm font-semibold transition active:scale-95">
+                    Xem bản giao
+                </button>
+                <button type="submit" id="btnSubmit" class="h-11 rounded-xl bg-[#0F4C81] hover:bg-[#0B3E69] text-white text-sm font-bold transition active:scale-95">
+                    Giao việc
+                </button>
+            </div>
+        </div>
+    </form>
+</main>
+
+<!-- MODAL PREVIEW XEM BẢN GIAO -->
+<div id="modalPreview" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div class="p-4 bg-[#0F4C81] text-white flex items-center justify-between">
+            <h3 class="font-bold text-base flex items-center gap-2">
+                <i class="bi bi-eye-fill"></i> Xem trước thông tin giao việc
+            </h3>
+            <button type="button" onclick="closePreview()" class="text-white/80 hover:text-white text-xl">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div id="contentPreview" class="p-5 space-y-3 overflow-y-auto text-sm">
+            <!-- Nội dung sẽ tự động chèn vào đây -->
+        </div>
+        <div class="p-3 bg-slate-50 border-t border-slate-100 flex justify-end">
+            <button type="button" onclick="closePreview()" class="px-5 py-2 bg-slate-600 text-white rounded-xl text-xs font-semibold">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjq11TcDE4tyOsPl6NOw1q6r8f14r3Z3qQPuSAgic7Xf6XK4gXjwHOBem4I_IGnALZ/exec";
 
     let dsToData = [];
-    let dsNhanSuLoadedByTo = {}; 
-    let selectedObjects = [];     
+    let dsNhanSuLoadedByTo = {};
+    let selectedObjects = [];
     let vanBanChon = { soVanBan: '', tenVanBan: '' };
-    let cachedVanBanResults = []; 
-
-    function safeId(str) {
-        return String(str || '').replace(/[^a-zA-Z0-9_-]/g, '_');
-    }
+    window.tmpVanBanList = [];
 
     window.addEventListener('DOMContentLoaded', async function() {
+        // Cập nhật thông tin người giao từ LocalStorage nếu có
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        if (user.fullName) document.getElementById("nguoiGiao").textContent = user.fullName;
+        if (user.workPosition) document.getElementById("chucVuNguoiGiao").textContent = user.workPosition;
+
         await loadDanhSachTo();
     });
 
-    // TẢI DANH SÁCH TỔ VỚI BỘ BẮT LỖI CHI TIẾT
+    // 1. Lấy danh sách Tổ
     async function loadDanhSachTo() {
-        const container = document.getElementById('danhSachToAccordion');
-        if (container) {
-            container.innerHTML = `
-                <div class="p-6 text-center text-xs text-slate-400 space-y-2">
-                    <i class="bi bi-arrow-repeat animate-spin text-lg text-blue-500 inline-block"></i>
-                    <div class="italic">Đang tải danh sách tổ...</div>
-                </div>`;
-        }
-
         try {
-            const url = `${SCRIPT_URL}?action=getDanhSachTo&_=${Date.now()}`;
-            const res = await fetch(url);
-            
-            if (!res.ok) {
-                throw new Error(`HTTP ${res.status}: Không thể kết nối tới Google Script`);
-            }
-
-            const rawText = await res.text();
-            let data;
-            
-            try {
-                data = JSON.parse(rawText);
-            } catch (errParse) {
-                console.error("Nội dung phản hồi không phải JSON:", rawText);
-                throw new Error("Phản hồi không phải JSON (Vui lòng chọn 'Anyone' khi Deploy Web App trên Apps Script)");
-            }
-
-            dsToData = Array.isArray(data) ? data : [];
+            const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`);
+            dsToData = await res.json();
             renderToAccordion();
         } catch (e) {
             console.error("Lỗi lấy danh sách tổ:", e);
-            if (container) {
-                container.innerHTML = `
-                    <div class="p-4 text-center space-y-2">
-                        <div class="text-xs text-red-500 font-semibold">${e.message || 'Không thể tải danh sách tổ.'}</div>
-                        <div class="text-[11px] text-slate-500">Mở Console (F12) hoặc kiểm tra cài đặt "Anyone" trong Google Apps Script.</div>
-                        <button type="button" onclick="loadDanhSachTo()" class="px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition shadow-xs">
-                            <i class="bi bi-arrow-clockwise"></i> Thử lại
-                        </button>
-                    </div>`;
-            }
         }
     }
 
     function renderToAccordion() {
         const container = document.getElementById('danhSachToAccordion');
-        if (!container) return;
         container.innerHTML = '';
 
         if (!dsToData || dsToData.length === 0) {
-            container.innerHTML = '<div class="p-3 text-xs text-slate-400 italic text-center">Không tìm thấy danh sách tổ.</div>';
+            container.innerHTML = '<div class="text-xs text-slate-400 italic p-2">Không tìm thấy danh sách tổ.</div>';
             return;
         }
 
         dsToData.forEach(item => {
             const tenTo = item.tenTo;
-            const sId = safeId(tenTo);
-            const encodedTo = encodeURIComponent(tenTo);
-
             const div = document.createElement('div');
-            div.id = `groupTo-${sId}`;
-            div.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm item-to-group";
-            div.setAttribute('data-tento', tenTo.toLowerCase());
+            div.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm";
             div.innerHTML = `
                 <div class="p-3 bg-slate-50/50 flex items-center justify-between text-xs font-bold text-[#0F4C81]">
-                    <button type="button" onclick="toggleToAccordion('${encodedTo}')" class="flex-1 flex items-center gap-2 text-left">
-                        <i id="iconTo-${sId}" class="bi bi-chevron-right text-slate-400 transition-transform"></i>
+                    <button type="button" onclick="toggleToAccordion('${tenTo}')" class="flex-1 flex items-center gap-2 text-left">
+                        <i id="iconTo-${tenTo}" class="bi bi-chevron-right text-slate-400 transition-transform"></i>
                         <i class="bi bi-folder2-open text-blue-500"></i>
-                        <span class="lbl-tento-name">${tenTo}</span>
-                        <span class="text-[10px] font-normal text-slate-400">(${item.soLuong || 0} người)</span>
+                        <span>${tenTo}</span>
+                        <span class="text-[10px] font-normal text-slate-400">(${item.soLuong} người)</span>
                     </button>
-                    <button type="button" onclick="chonTronTo('${encodedTo}')" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-semibold transition active:scale-95">
+                    <button type="button" onclick="chonTronTo('${tenTo}')" class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-semibold transition">
                         <i class="bi bi-check-all"></i> Chọn trọn tổ
                     </button>
                 </div>
-                <div id="bodyTo-${sId}" class="hidden p-3 bg-blue-50/10 border-t border-slate-100">
-                    <div class="p-2 text-xs text-slate-400 italic text-center" id="loadingTo-${sId}">Đang tải nhân sự...</div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 hidden" id="gridTo-${sId}"></div>
+                <div id="bodyTo-${tenTo}" class="hidden p-3 bg-blue-50/10 border-t border-slate-100">
+                    <div class="p-2 text-xs text-slate-400 italic" id="loadingTo-${tenTo}">Đang tải nhân sự...</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 hidden" id="gridTo-${tenTo}"></div>
                 </div>
             `;
             container.appendChild(div);
         });
     }
 
-    async function toggleToAccordion(tenToEncoded) {
-        const tenTo = decodeURIComponent(tenToEncoded);
-        const sId = safeId(tenTo);
-        const body = document.getElementById(`bodyTo-${sId}`);
-        const icon = document.getElementById(`iconTo-${sId}`);
+    // 2. Mở/Đóng Accordion & Lazy Load Nhân sự
+    async function toggleToAccordion(tenTo) {
+        const body = document.getElementById(`bodyTo-${tenTo}`);
+        const icon = document.getElementById(`iconTo-${tenTo}`);
         
-        if (!body) return;
-
         if (body.classList.contains('hidden')) {
             body.classList.remove('hidden');
             if (icon) icon.classList.add('rotate-90');
@@ -429,90 +362,46 @@
     }
 
     async function loadNhanSuCuaTo(tenTo) {
-        const sId = safeId(tenTo);
-        const loading = document.getElementById(`loadingTo-${sId}`);
-        const grid = document.getElementById(`gridTo-${sId}`);
+        const loading = document.getElementById(`loadingTo-${tenTo}`);
+        const grid = document.getElementById(`gridTo-${tenTo}`);
 
         try {
-            const res = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}&_=${Date.now()}`);
-            if (!res.ok) throw new Error('HTTP Error ' + res.status);
-            
-            const rawText = await res.text();
-            const cleanList = JSON.parse(rawText);
-            dsNhanSuLoadedByTo[tenTo] = Array.isArray(cleanList) ? cleanList : [];
+            const res = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`);
+            const listNS = await res.json();
+            dsNhanSuLoadedByTo[tenTo] = listNS;
 
-            if (loading) loading.classList.add('hidden');
-            if (!grid) return;
-            
+            loading.classList.add('hidden');
             grid.classList.remove('hidden');
 
-            if (dsNhanSuLoadedByTo[tenTo].length === 0) {
-                grid.innerHTML = '<div class="col-span-2 text-xs text-slate-400 italic p-2 text-center">Không có dữ liệu nhân sự.</div>';
-                return;
-            }
-
-            const isToAlreadySelected = selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO');
-
-            grid.innerHTML = dsNhanSuLoadedByTo[tenTo].map(ns => {
-                const username = ns.username || '';
-                const hoTen = ns.hoTen || '';
-                const isChecked = isToAlreadySelected || selectedObjects.some(x => x.username === username && x.loai === 'CANHAN');
-                const encodedTo = encodeURIComponent(tenTo);
-                const encodedName = encodeURIComponent(hoTen);
-                const encodedUser = encodeURIComponent(username);
-
+            grid.innerHTML = listNS.map(ns => {
+                const isChecked = selectedObjects.some(x => x.username === ns.username && x.loai === 'CANHAN');
                 return `
-                    <label class="item-ns-label flex items-center space-x-2.5 p-2 rounded-xl bg-white hover:bg-blue-50/50 cursor-pointer border border-slate-200/60 transition shadow-sm" data-hoten="${hoTen.toLowerCase()}">
-                        <input type="checkbox" 
-                               data-username="${username}" 
-                               data-hoten="${hoTen}" 
-                               data-tobophan="${tenTo}" 
-                               ${isChecked ? 'checked' : ''} 
-                               onchange="toggleChonCaNhan(this, '${encodedUser}', '${encodedName}', '${encodedTo}')" 
-                               class="w-4 h-4 text-[#0F4C81] rounded border-slate-300">
-                        <span class="text-xs font-semibold text-slate-700">${hoTen}</span>
+                    <label class="flex items-center space-x-2.5 p-2 rounded-xl bg-white hover:bg-blue-50/50 cursor-pointer border border-slate-200/60 transition shadow-sm">
+                        <input type="checkbox" data-username="${ns.username}" data-hoten="${ns.hoTen}" data-to="${tenTo}" ${isChecked ? 'checked' : ''} onchange="toggleChonCaNhan(this, '${ns.username}', '${ns.hoTen}', '${tenTo}')" class="w-4 h-4 text-[#0F4C81] rounded border-slate-300">
+                        <span class="text-xs font-semibold text-slate-700">${ns.hoTen}</span>
                         <span class="text-[10px] text-slate-400">(${ns.vaiTro || 'Thành viên'})</span>
                     </label>
                 `;
             }).join('');
         } catch (e) {
-            console.error("Lỗi load nhân sự tổ:", e);
-            if (loading) {
-                loading.innerText = 'Không thể tải danh sách nhân sự.';
-                loading.classList.remove('hidden');
-            }
+            loading.innerText = 'Lỗi tải danh sách nhân sự.';
         }
     }
 
-    function chonTronTo(tenToEncoded) {
-        const tenTo = decodeURIComponent(tenToEncoded);
-        
+    function chonTronTo(tenTo) {
         if (!selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO')) {
             selectedObjects.push({ username: '', hoTen: `Tổ ${tenTo}`, toBoPhan: tenTo, loai: 'TO' });
         }
-
-        const sId = safeId(tenTo);
-        const grid = document.getElementById(`gridTo-${sId}`);
-        if (grid) {
-            const checkboxes = grid.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(cb => { cb.checked = true; });
-        }
-
         updateTagDisplay();
     }
 
-    function toggleChonCaNhan(cb, usernameEncoded, hoTenEncoded, toBoPhanEncoded) {
-        const username = decodeURIComponent(usernameEncoded);
-        const hoTen = decodeURIComponent(hoTenEncoded);
-        const toBoPhan = decodeURIComponent(toBoPhanEncoded);
-
+    function toggleChonCaNhan(cb, username, hoTen, toBoPhan) {
         if (cb.checked) {
             if (!selectedObjects.some(x => x.username === username && x.loai === 'CANHAN')) {
                 selectedObjects.push({ username, hoTen, toBoPhan, loai: 'CANHAN' });
             }
         } else {
             selectedObjects = selectedObjects.filter(x => !(x.username === username && x.loai === 'CANHAN'));
-            selectedObjects = selectedObjects.filter(x => !(x.toBoPhan === toBoPhan && x.loai === 'TO'));
         }
         updateTagDisplay();
     }
@@ -522,16 +411,14 @@
         const badgeNguoi = document.getElementById('badgeThongKeNguoi');
         const badgeTo = document.getElementById('badgeThongKeTo');
 
-        if (!container) return;
-
         const countTo = selectedObjects.filter(x => x.loai === 'TO').length;
         const countNguoi = selectedObjects.filter(x => x.loai === 'CANHAN').length;
 
-        if (badgeTo) badgeTo.innerText = `${countTo} tổ`;
-        if (badgeNguoi) badgeNguoi.innerText = `${countNguoi} cá nhân`;
+        badgeTo.innerText = `${countTo} tổ`;
+        badgeNguoi.innerText = `${countNguoi} cá nhân`;
 
         if (selectedObjects.length === 0) {
-            container.innerHTML = '<span class="text-xs text-slate-400 italic px-1">Chưa chọn đối tượng nào...</span>';
+            container.innerHTML = '<span class="text-xs text-slate-400 italic">Chưa chọn đối tượng nào...</span>';
             return;
         }
 
@@ -539,113 +426,19 @@
             <span class="px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm ${item.loai === 'TO' ? 'bg-indigo-50 text-indigo-800 border border-indigo-200' : 'bg-white text-[#0F4C81] border border-blue-200'}">
                 <i class="bi ${item.loai === 'TO' ? 'bi-diagram-3-fill' : 'bi-person-fill'}"></i>
                 ${item.hoTen}
-                <i class="bi bi-x-circle-fill text-slate-400 hover:text-red-500 cursor-pointer transition-colors" onclick="removeSelected(${idx})"></i>
+                <i class="bi bi-x-circle-fill text-slate-400 hover:text-red-500 cursor-pointer" onclick="removeSelected(${idx})"></i>
             </span>
         `).join('');
     }
 
     function removeSelected(idx) {
-        const item = selectedObjects[idx];
-        if (item) {
-            if (item.loai === 'CANHAN') {
-                const sId = safeId(item.toBoPhan);
-                const grid = document.getElementById(`gridTo-${sId}`);
-                if (grid) {
-                    const cb = grid.querySelector(`input[data-username="${item.username}"]`);
-                    if (cb) cb.checked = false;
-                }
-            }
-        }
         selectedObjects.splice(idx, 1);
         updateTagDisplay();
     }
 
-    function clearAllSelection() {
-        selectedObjects = [];
-        const container = document.getElementById('danhSachToAccordion');
-        if (container) {
-            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(cb => { cb.checked = false; });
-        }
-        updateTagDisplay();
-    }
-
-    async function expandAllTo() {
-        for (const item of dsToData) {
-            const tenTo = item.tenTo;
-            const sId = safeId(tenTo);
-            const body = document.getElementById(`bodyTo-${sId}`);
-            const icon = document.getElementById(`iconTo-${sId}`);
-            if (body && body.classList.contains('hidden')) {
-                body.classList.remove('hidden');
-                if (icon) icon.classList.add('rotate-90');
-                if (!dsNhanSuLoadedByTo[tenTo]) {
-                    await loadNhanSuCuaTo(tenTo);
-                }
-            }
-        }
-    }
-
-    function collapseAllTo() {
-        dsToData.forEach(item => {
-            const sId = safeId(item.tenTo);
-            const body = document.getElementById(`bodyTo-${sId}`);
-            const icon = document.getElementById(`iconTo-${sId}`);
-            if (body) body.classList.add('hidden');
-            if (icon) icon.classList.remove('rotate-90');
-        });
-    }
-
-    async function timKiemDoiTuong(keyword) {
-        const q = keyword.trim().toLowerCase();
-        if (!q) {
-            document.querySelectorAll('.item-to-group').forEach(el => el.classList.remove('hidden'));
-            document.querySelectorAll('.item-ns-label').forEach(el => el.classList.remove('hidden'));
-            return;
-        }
-
-        for (const item of dsToData) {
-            const tenTo = item.tenTo;
-            const sId = safeId(tenTo);
-            const groupEl = document.getElementById(`groupTo-${sId}`);
-
-            if (!dsNhanSuLoadedByTo[tenTo]) {
-                await loadNhanSuCuaTo(tenTo);
-            }
-
-            const body = document.getElementById(`bodyTo-${sId}`);
-            const icon = document.getElementById(`iconTo-${sId}`);
-            const nsList = dsNhanSuLoadedByTo[tenTo] || [];
-
-            const matchTo = tenTo.toLowerCase().includes(q);
-            const hasMatchNS = nsList.some(ns => (ns.hoTen || '').toLowerCase().includes(q));
-
-            if (matchTo || hasMatchNS) {
-                if (groupEl) groupEl.classList.remove('hidden');
-                if (body) body.classList.remove('hidden');
-                if (icon) icon.classList.add('rotate-90');
-
-                const grid = document.getElementById(`gridTo-${sId}`);
-                if (grid) {
-                    const labels = grid.querySelectorAll('.item-ns-label');
-                    labels.forEach(lbl => {
-                        const name = (lbl.getAttribute('data-hoten') || '').toLowerCase();
-                        if (matchTo || name.includes(q)) {
-                            lbl.classList.remove('hidden');
-                        } else {
-                            lbl.classList.add('hidden');
-                        }
-                    });
-                }
-            } else {
-                if (groupEl) groupEl.classList.add('hidden');
-            }
-        }
-    }
-
+    // 3. Nguồn giao & Tra cứu Văn bản
     function xuLyThayDoiNguonGiao(val) {
         const card = document.getElementById('cardVanBan');
-        if (!card) return;
         if (val === 'Theo văn bản') {
             card.classList.remove('hidden');
         } else {
@@ -653,91 +446,154 @@
             vanBanChon = { soVanBan: '', tenVanBan: '' };
         }
     }
+    async function chonTronTo(tenTo) {
+    // 1. Tự động tải danh sách nhân sự của tổ nếu chưa tải
+    if (!dsNhanSuLoadedByTo[tenTo]) {
+        // Mở accordion nếu đang đóng để hiển thị UI
+        const body = document.getElementById(`bodyTo-${tenTo}`);
+        const icon = document.getElementById(`iconTo-${tenTo}`);
+        if (body && body.classList.contains('hidden')) {
+            body.classList.remove('hidden');
+            if (icon) icon.classList.add('rotate-90');
+        }
+        await loadNhanSuCuaTo(tenTo);
+    }
+
+    const listNS = dsNhanSuLoadedByTo[tenTo] || [];
+    if (listNS.length === 0) return;
+
+    // 2. Kiểm tra xem tất cả cá nhân trong tổ đã được chọn chưa
+    const isAllSelected = listNS.every(ns => 
+        selectedObjects.some(x => x.username === ns.username && x.loai === 'CANHAN')
+    );
+
+    if (isAllSelected) {
+        // Nếu đã chọn đủ -> Hủy chọn toàn bộ cá nhân thuộc tổ này
+        selectedObjects = selectedObjects.filter(x => !(x.toBoPhan === tenTo && x.loai === 'CANHAN'));
+    } else {
+        // Nếu chưa chọn đủ -> Thêm những ai chưa có vào mảng
+        listNS.forEach(ns => {
+            if (!selectedObjects.some(x => x.username === ns.username && x.loai === 'CANHAN')) {
+                selectedObjects.push({ username: ns.username, hoTen: ns.hoTen, toBoPhan: tenTo, loai: 'CANHAN' });
+            }
+        });
+    }
+
+    // 3. Đồng bộ lại trạng thái Checkbox trên giao diện
+    const grid = document.getElementById(`gridTo-${tenTo}`);
+    if (grid) {
+        const checkboxes = grid.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+            const u = cb.getAttribute('data-username');
+            cb.checked = selectedObjects.some(x => x.username === u && x.loai === 'CANHAN');
+        });
+    }
+
+    // 4. Cập nhật thẻ hiển thị và bộ đếm
+    updateTagDisplay();
+}
 
     async function timKiemVanBan() {
         const q = document.getElementById('inputTimVanBan').value.trim();
         const vung = document.getElementById('vungKetQuaVanBan');
-        if (!vung) return;
-
         vung.classList.remove('hidden');
-        vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center"><i class="bi bi-arrow-repeat animate-spin"></i> Đang tra cứu Kho Văn bản...</div>';
+        vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">Đang tra cứu Kho Văn bản...</div>';
 
         try {
-            const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}&_=${Date.now()}`);
-            if (!res.ok) throw new Error('HTTP Error ' + res.status);
-            
-            const rawText = await res.text();
-            cachedVanBanResults = JSON.parse(rawText);
-            if (!Array.isArray(cachedVanBanResults)) cachedVanBanResults = [];
+            const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}`);
+            const list = await res.json();
 
-            if (cachedVanBanResults.length === 0) {
-                vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">Không tìm thấy văn bản phù hợp.</div>';
+            if (!list || list.length === 0) {
+                vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">Không thấy văn bản.</div>';
                 return;
             }
 
-            vung.innerHTML = cachedVanBanResults.map((item, idx) => `
-                <div onclick="selectVanBanByIndex(${idx})" class="p-2.5 hover:bg-blue-50 cursor-pointer text-xs border-b border-slate-100 last:border-0 transition">
+            window.tmpVanBanList = list;
+            vung.innerHTML = list.map((item, index) => `
+                <div onclick='selectVanBan(${index})' class="p-2.5 hover:bg-blue-50 cursor-pointer text-xs">
                     <div class="font-bold text-[#0F4C81]">${item.soVanBan || 'Không số'}</div>
-                    <div class="text-slate-800 truncate font-medium">${item.tenVanBan || ''}</div>
-                    <div class="text-[10px] text-slate-400">${item.donViBanHanh || ''} ${item.ngayBanHanh ? ' - ' + item.ngayBanHanh : ''}</div>
+                    <div class="text-slate-800 truncate">${item.tenVanBan || ''}</div>
                 </div>
             `).join('');
         } catch (e) {
-            console.error("Lỗi tìm văn bản:", e);
-            vung.innerHTML = '<div class="p-3 text-xs text-red-500 text-center">Lỗi khi kết nối Kho Văn bản.</div>';
+            vung.innerHTML = '<div class="p-3 text-xs text-red-500 text-center">Lỗi tìm văn bản.</div>';
         }
     }
 
-    function selectVanBanByIndex(index) {
-        const item = cachedVanBanResults[index];
+    function selectVanBan(index) {
+        const item = window.tmpVanBanList[index];
         if (!item) return;
 
         vanBanChon = item;
-        const lblSoVB = document.getElementById('lblSoVB');
-        const lblNgayBH = document.getElementById('lblNgayBH');
-        const lblTenVB = document.getElementById('lblTenVB');
-        const vung = document.getElementById('vungKetQuaVanBan');
-
-        if (lblSoVB) lblSoVB.innerText = item.soVanBan || 'Không số';
-        if (lblNgayBH) lblNgayBH.innerText = item.ngayBanHanh || '--/--/----';
-        if (lblTenVB) lblTenVB.innerText = item.tenVanBan || '';
-        if (vung) vung.classList.add('hidden');
+        document.getElementById('lblSoVB').innerText = item.soVanBan || 'Không số';
+        document.getElementById('lblNgayBH').innerText = item.ngayBanHanh || '--/--/----';
+        document.getElementById('lblTenVB').innerText = item.tenVanBan || '';
+        document.getElementById('vungKetQuaVanBan').classList.add('hidden');
     }
 
+    // 4. Xem trước (Preview Task)
+    function previewTask() {
+        const tieuDe = document.getElementById('tieuDe').value.trim();
+        const noiDung = document.getElementById('noiDung').value.trim();
+        const nguoiGiao = document.getElementById('nguoiGiao').innerText.trim();
+        const chucVu = document.getElementById('chucVuNguoiGiao').innerText.trim();
+        const mucDo = document.getElementById('mucDo').value;
+        const loaiNV = document.getElementById('loaiNhiemVu').value;
+        const han = document.getElementById('hanHoanThanh').value || 'Chưa đặt';
+        const minhChung = document.getElementById('yeuCauMinhChung').value;
+
+        if (!tieuDe) {
+            alert('Vui lòng nhập Tiêu đề công việc trước khi xem bản giao!');
+            return;
+        }
+
+        const listNguoiNhanHtml = selectedObjects.length > 0 
+            ? selectedObjects.map(x => `<span class="inline-block px-2 py-0.5 text-xs bg-blue-100 text-[#0F4C81] font-semibold rounded mr-1 mb-1">${x.hoTen}</span>`).join('')
+            : '<span class="text-red-500 italic">Chưa chọn đối tượng</span>';
+
+        const html = `
+            <div><strong class="text-slate-500">Người giao:</strong> ${nguoiGiao} (${chucVu})</div>
+            <div><strong class="text-slate-500">Tiêu đề:</strong> <span class="font-bold text-[#0F4C81]">${tieuDe}</span></div>
+            <div><strong class="text-slate-500">Loại & Mức độ:</strong> ${loaiNV} | <span class="font-bold">${mucDo}</span></div>
+            ${vanBanChon.soVanBan ? `<div><strong class="text-slate-500">Căn cứ VB:</strong> ${vanBanChon.soVanBan} - ${vanBanChon.tenVanBan}</div>` : ''}
+            <div><strong class="text-slate-500">Nội dung:</strong> <p class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 mt-1 whitespace-pre-line">${noiDung || 'Không có nội dung chi tiết'}</p></div>
+            <div><strong class="text-slate-500">Người / Tổ nhận:</strong> <div class="mt-1">${listNguoiNhanHtml}</div></div>
+            <div><strong class="text-slate-500">Hạn hoàn thành:</strong> ${han}</div>
+            <div><strong class="text-slate-500">Minh chứng:</strong> ${minhChung}</div>
+        `;
+
+        document.getElementById('contentPreview').innerHTML = html;
+        document.getElementById('modalPreview').classList.remove('hidden');
+    }
+
+    function closePreview() {
+        document.getElementById('modalPreview').classList.add('hidden');
+    }
+
+    // 5. Submit Form
     document.getElementById('formGiaoViecFull').addEventListener('submit', async function(e) {
         e.preventDefault();
 
         if (selectedObjects.length === 0) {
-            alert('Vui lòng chọn ít nhất một tổ hoặc cá nhân nhận nhiệm vụ!');
-            return;
-        }
-
-        const tieuDeVal = document.getElementById('tieuDe').value.trim();
-        if (!tieuDeVal) {
-            alert('Vui lòng nhập tiêu đề công việc!');
-            document.getElementById('tieuDe').focus();
+            alert('Vui lòng chọn ít nhất một cá nhân hoặc tổ nhận nhiệm vụ!');
             return;
         }
 
         const btn = document.getElementById('btnSubmit');
-        const originalBtnText = btn.innerHTML;
-        
         btn.disabled = true;
-        btn.innerHTML = `<i class="bi bi-arrow-repeat animate-spin"></i> <span>Đang lưu dữ liệu...</span>`;
-
-        const nguonGiaoVal = document.querySelector('input[name="nguonGiaoRadio"]:checked')?.value || 'Theo văn bản';
+        btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i><span>Đang lưu...</span>';
 
         const payload = {
             action: 'createTask',
-            nguoiGiao: document.getElementById('nguoiGiao').value,
-            chucVuNguoiGiao: document.getElementById('chucVuNguoiGiao').value,
+            nguoiGiao: document.getElementById('nguoiGiao').innerText.trim(),
+            chucVuNguoiGiao: document.getElementById('chucVuNguoiGiao').innerText.trim(),
             loaiNhiemVu: document.getElementById('loaiNhiemVu').value,
-            nguonGiao: nguonGiaoVal,
-            soVanBan: nguonGiaoVal === 'Theo văn bản' ? (vanBanChon.soVanBan || '') : '',
-            tenVanBan: nguonGiaoVal === 'Theo văn bản' ? (vanBanChon.tenVanBan || '') : '',
+            nguonGiao: document.querySelector('input[name="nguonGiaoRadio"]:checked').value,
+            soVanBan: vanBanChon.soVanBan || '',
+            tenVanBan: vanBanChon.tenVanBan || '',
             mucDo: document.getElementById('mucDo').value,
-            tieuDe: tieuDeVal,
-            noiDung: document.getElementById('noiDung').value.trim(),
+            tieuDe: document.getElementById('tieuDe').value,
+            noiDung: document.getElementById('noiDung').value,
             yeuCauMinhChung: document.getElementById('yeuCauMinhChung').value,
             hanHoanThanh: document.getElementById('hanHoanThanh').value,
             danhSachNguoiNhan: selectedObjects
@@ -754,12 +610,12 @@
             alert('Giao nhiệm vụ thành công! Dữ liệu đã được ghi nhận.');
             window.location.href = 'main.html';
         } catch (err) {
-            console.error("Lỗi gửi createTask:", err);
-            alert('Có lỗi xảy ra khi kết nối máy chủ. Vui lòng thử lại!');
+            alert('Lỗi khi gửi dữ liệu!');
+        } finally {
             btn.disabled = false;
-            btn.innerHTML = originalBtnText;
+            btn.innerHTML = '<i class="bi bi-send-fill"></i><span>Giao việc</span>';
         }
     });
-    </script>
+</script>
 </body>
 </html>
