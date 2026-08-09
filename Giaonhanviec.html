@@ -158,10 +158,10 @@
                 <textarea id="noiDung" rows="3" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]" placeholder="Nội dung chỉ đạo chi tiết..."></textarea>
             </div>
 
-           <!-- ĐỐI TƯỢNG NHẬN NHIỆM VỤ -->
+         <!-- ĐỐI TƯỢNG NHẬN NHIỆM VỤ -->
 <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
 
-    <!-- Header & Thống kê Badge -->
+    <!-- 1. Header & Thống kê Badge -->
     <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
         <div class="flex items-center gap-2">
             <div class="w-7 h-7 rounded-lg bg-blue-50 border border-blue-100/80 flex items-center justify-center text-blue-600">
@@ -185,7 +185,7 @@
         </div>
     </div>
 
-    <!-- Thanh tìm kiếm -->
+    <!-- 2. Thanh tìm kiếm -->
     <div class="relative group">
         <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
 
@@ -197,7 +197,7 @@
             class="w-full rounded-xl border border-slate-200 bg-slate-50/60 pl-10 pr-4 py-2.5 text-xs outline-none focus:border-blue-500 focus:bg-white focus:ring-3 focus:ring-blue-500/10 transition placeholder:text-slate-400">
     </div>
 
-    <!-- Thanh công cụ hành động -->
+    <!-- 3. Thanh công cụ thao tác danh sách -->
     <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-1.5">
             <button type="button"
@@ -223,7 +223,7 @@
         </button>
     </div>
 
-    <!-- Accordion Danh sách tổ -->
+    <!-- 4. Accordion Danh sách tổ & Giáo viên -->
     <div id="danhSachToAccordion"
         class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
 
@@ -234,7 +234,7 @@
 
     </div>
 
-    <!-- Vùng Tag đã chọn -->
+    <!-- 5. Vùng Tag đã chọn -->
     <div class="pt-3 border-t border-slate-100 space-y-2">
         <div class="flex items-center justify-between">
             <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
@@ -259,8 +259,39 @@
         </div>
     </div>
 
-</div>
+    <!-- 6. Thanh hành động Xác nhận & Chọn lại -->
+    <div class="pt-3 border-t border-slate-100 space-y-2">
+        <!-- Thông báo trạng thái -->
+        <div id="msgXacNhanDoiTuong" class="hidden p-2 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-700 font-semibold">
+            <i class="bi bi-check-circle-fill text-emerald-600"></i>
+            <span>Đã xác nhận đối tượng nhận nhiệm vụ.</span>
+        </div>
 
+        <div class="flex items-center gap-2">
+            <!-- Nút Xác nhận -->
+            <button
+                type="button"
+                id="btnXacNhanDoiTuong"
+                onclick="confirmSelection()"
+                class="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                <i class="bi bi-check-circle text-xs"></i>
+                <span>Xác nhận đối tượng</span>
+            </button>
+
+            <!-- Nút Chọn lại -->
+            <button
+                type="button"
+                id="btnChonLaiDoiTuong"
+                onclick="editSelection()"
+                disabled
+                class="py-2 px-3 rounded-xl bg-slate-100 text-slate-400 border border-slate-200 text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-not-allowed">
+                <i class="bi bi-pencil-square text-xs"></i>
+                <span>Chọn lại</span>
+            </button>
+        </div>
+    </div>
+
+</div>
             <!-- YÊU CẦU MINH CHỨNG & HẠN HOÀN THÀNH -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
@@ -300,7 +331,7 @@
     // =========================================================================
     // 1. KHAI BÁO BIẾN CẤU HÌNH VÀ BỘ NHỚ ĐỆM (CACHE)
     // =========================================================================
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjq11TcDE4tyOsPl6NOw1q6r8f14r3Z3qQPuSAgic7Xf6XK4gXjwHOBem4I_IGnALZ/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7IsfWAfnsOa4SIyMiKEB-qQurwW5FpxuKcT83aeCHXhiAf60sJSc0t4KQXE3N427E/exec";
 
     let dsToData = [];
     let dsNhanSuLoadedByTo = {}; // Cache danh sách nhân sự theo từng tổ
