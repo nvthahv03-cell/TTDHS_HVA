@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TTĐHS_HVA - Layout v1.0</title>
-    <!-- Tailwind CSS CDN -->
+    <title>TTĐHS_HVA - Giao việc</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
    
     <script>
-        // Cấu hình Tailwind Color Palette thống nhất
         tailwind.config = {
             theme: {
                 extend: {
@@ -35,52 +31,68 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* CSS Preview A4 */
+        .a4-preview-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm 15mm 20mm 25mm;
+            margin: auto;
+            background: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            font-family: 'Times New Roman', Times, serif;
+            color: #000000;
+            line-height: 1.4;
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #modalPreview, #modalPreview * { visibility: visible; }
+            #modalPreview {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: #ffffff !important;
+                padding: 0 !important;
+            }
+            #modalPreview .no-print { display: none !important; }
+            .a4-preview-page {
+                box-shadow: none !important;
+                margin: 0 !important;
+                width: 100% !important;
+                padding: 20mm 15mm 20mm 25mm !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .a4-preview-container { padding: 0.5rem !important; }
+            .a4-preview-page {
+                width: 100% !important;
+                min-height: auto !important;
+                padding: 15px !important;
+                font-size: 13px !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-full text-slate-800 antialiased flex flex-col bg-slate-50 selection:bg-blue-100 selection:text-[#0F4C81] pb-24 md:pb-8">
+
+    <!-- HEADER -->
     <header class="sticky top-0 z-40 w-full overflow-hidden shadow-md">
-        <!-- Digital Blue Gradient Background -->
         <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
-       
-        <!-- Glow Effects -->
         <div class="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-cyan-300/20 blur-3xl pointer-events-none"></div>
         <div class="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-sky-300/15 blur-3xl pointer-events-none"></div>
-        <!-- Grid Pattern Overlay -->
         <div class="absolute inset-0 opacity-[0.06] pointer-events-none"
             style="background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px); background-size:28px 28px;">
         </div>
-        <!-- Circuit Pattern SVG Overlay -->
-        <svg class="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" preserveAspectRatio="none">
-            <g stroke="white" stroke-width="1.2" fill="none">
-                <path d="M35 28 H120 V68 H200"/>
-                <path d="M300 20 V55 H390 V95"/>
-                <path d="M560 28 H650 V60 H760"/>
-            </g>
-            <g fill="white">
-                <circle cx="35" cy="28" r="2.6"/>
-                <circle cx="120" cy="68" r="2.6"/>
-                <circle cx="200" cy="68" r="2.6"/>
-                <circle cx="300" cy="20" r="2.6"/>
-                <circle cx="390" cy="55" r="2.6"/>
-                <circle cx="390" cy="95" r="2.6"/>
-                <circle cx="560" cy="28" r="2.6"/>
-                <circle cx="650" cy="60" r="2.6"/>
-                <circle cx="760" cy="60" r="2.6"/>
-            </g>
-        </svg>
-        <!-- Header Content Container -->
         <div class="relative max-w-6xl mx-auto px-4 py-3 sm:py-4">
-            <!-- Dòng trên: Navigation & System Status -->
             <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-3">
                     <button type="button" onclick="window.location.href='main.html'"
-                        class="w-10 h-10 rounded-2xl bg-white/12 border border-white/20 backdrop-blur hover:bg-white/20 transition flex items-center justify-center text-white shrink-0 active:scale-95"
-                        aria-label="Quay lại">
+                        class="w-10 h-10 rounded-2xl bg-white/12 border border-white/20 backdrop-blur hover:bg-white/20 transition flex items-center justify-center text-white shrink-0 active:scale-95">
                         <i class="bi bi-arrow-left text-lg"></i>
                     </button>
                     <div class="text-white font-bold uppercase tracking-wide text-xs sm:text-sm truncate">
@@ -92,67 +104,17 @@
                     <span class="text-white text-xs font-semibold">Hệ thống kết nối</span>
                 </div>
             </div>
-            <!-- Dòng dưới: Tên Phân Hệ -->
             <div class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
-                <h1 id="page-title" class="text-white font-extrabold text-base sm:text-lg tracking-wide uppercase flex items-center gap-2">
+                <h1 class="text-white font-extrabold text-base sm:text-lg tracking-wide uppercase flex items-center gap-2">
                     <i class="bi bi-grid-1x2-fill text-cyan-300"></i>
-                    TRANG GIAO VIỆC0908
+                    TRANG GIAO VIỆC
                 </h1>
-                <span class="text-white/70 text-xs font-normal hidden sm:inline-block">TTĐHS_HVA v2.0</span>
+                <span class="text-white/70 text-xs font-normal hidden sm:inline-block">TTĐHS_HVA v2.1</span>
             </div>
         </div>
-<style>
-    /* CSS dành riêng cho Giao diện Preview Biên bản A4 */
-    .a4-preview-page {
-        width: 210mm;
-        min-height: 297mm;
-        padding: 20mm 15mm 20mm 25mm; /* Căn lề chuẩn văn bản hành chính: Trên 2cm, Dưới 2cm, Phải 1.5cm, Trái 2.5cm */
-        margin: auto;
-        background: #ffffff;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        font-family: 'Times New Roman', Times, serif; /* Chuẩn font văn bản hành chính */
-        color: #000000;
-        line-height: 1.4;
-    }
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-        #modalPreview, #modalPreview * {
-            visibility: visible;
-        }
-        #modalPreview {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            background: #ffffff !important;
-            padding: 0 !important;
-        }
-        #modalPreview .no-print {
-            display: none !important;
-        }
-        .a4-preview-page {
-            box-shadow: none !important;
-            margin: 0 !important;
-            width: 100% !important;
-            padding: 20mm 15mm 20mm 25mm !important;
-        }
-    }
-    /* Đảm bảo responsive mượt mà trên mobile */
-    @media (max-width: 768px) {
-        .a4-preview-container {
-            padding: 0.5rem !important;
-        }
-        .a4-preview-page {
-            width: 100% !important;
-            min-height: auto !important;
-            padding: 15px !important;
-            font-size: 13px !important;
-        }
-    }
-</style>
     </header>
+
+    <!-- MAIN FORM -->
     <main class="flex-1 max-w-6xl w-full mx-auto px-4 pt-6 pb-8 space-y-6">
         <form id="formGiaoViecFull" class="space-y-5">
            
@@ -163,18 +125,14 @@
                         <i class="bi bi-person-badge-fill text-white text-xl"></i>
                     </div>
                     <div class="flex-1">
-                        <div id="nguoiGiao" class="text-base font-bold text-[#0F4C81] leading-tight">
-                            Thầy Nguyễn Văn Thà
-                        </div>
+                        <div id="nguoiGiao" class="text-base font-bold text-[#0F4C81] leading-tight">Thầy Nguyễn Văn Thà</div>
                         <div class="mt-0.5 text-sm text-slate-600">
-                            Chức vụ:
-                            <span id="chucVuNguoiGiao" class="font-semibold">
-                                Phó Hiệu trưởng
-                            </span>
+                            Chức vụ: <span id="chucVuNguoiGiao" class="font-semibold">Phó Hiệu trưởng</span>
                         </div>
                     </div>
                 </div>
             </div>
+
             <!-- NGUỒN GIAO -->
             <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
                 <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
@@ -200,7 +158,8 @@
                     </label>
                 </div>
             </div>
-            <!-- CARD CHỌN VĂN BẢN -->
+
+            <!-- CARD VĂN BẢN -->
             <div id="cardVanBan" class="bg-white p-4 rounded-2xl border border-blue-200/80 bg-blue-50/10 shadow-sm space-y-3">
                 <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
                     <i class="bi bi-file-earmark-text-fill text-blue-600"></i>
@@ -212,8 +171,7 @@
                         <i class="bi bi-search absolute left-3 top-3 text-slate-400"></i>
                     </div>
                     <button type="button" onclick="timKiemVanBan()" class="px-4 py-2.5 bg-[#0F4C81] hover:bg-[#0c3d68] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition active:scale-95 shrink-0">
-                        <i class="bi bi-search"></i>
-                        <span>Tìm kiếm</span>
+                        <i class="bi bi-search"></i> <span>Tìm kiếm</span>
                     </button>
                 </div>
                 <div id="vungKetQuaVanBan" class="hidden border border-slate-200 rounded-xl bg-white max-h-48 overflow-y-auto divide-y divide-slate-100 shadow-sm"></div>
@@ -223,6 +181,7 @@
                     <div class="sm:col-span-2"><span class="font-bold text-slate-500">Tên VB:</span> <span id="lblTenVB" class="text-slate-800 font-medium">Bấm tìm kiếm để chọn từ Kho Văn bản...</span></div>
                 </div>
             </div>
+
             <!-- MỨC ĐỘ & LOẠI NHIỆM VỤ -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
@@ -248,6 +207,7 @@
                     </select>
                 </div>
             </div>
+
             <!-- TIÊU ĐỀ & NỘI DUNG -->
             <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
                 <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
@@ -263,7 +223,8 @@
                 </label>
                 <textarea id="noiDung" rows="3" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]" placeholder="Nội dung chỉ đạo chi tiết..."></textarea>
             </div>
-            <!-- CHỌN ĐỐI TƯỢNG NHẬN -->
+
+            <!-- ĐỐI TƯỢNG NHẬN -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                     <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
@@ -275,11 +236,9 @@
                         <span id="badgeThongKeNguoi" class="px-2.5 py-1 rounded-full bg-blue-50 text-[#0F4C81] border border-blue-100 text-xs font-bold">0 cá nhân</span>
                     </div>
                 </div>
-                <!-- Accordion Danh sách Tổ -->
                 <div class="space-y-2.5" id="danhSachToAccordion">
                     <div class="p-3 text-center text-xs text-slate-400 italic">Đang tải danh sách tổ...</div>
                 </div>
-                <!-- Chip đã chọn -->
                 <div class="pt-2 border-t border-slate-100">
                     <label class="block text-[11px] font-semibold text-slate-400 mb-1.5">Đã chọn:</label>
                     <div id="danhSachDaChon" class="p-3 bg-slate-50 rounded-xl border border-slate-200/60 min-h-[46px] flex items-center flex-wrap gap-2">
@@ -287,8 +246,9 @@
                     </div>
                 </div>
             </div>
-            <!-- MINH CHỨNG & HẠN HOÀN THÀNH -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-42">
+
+            <!-- MINH CHỨNG & HẠN -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
                     <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
                         <i class="bi bi-check-circle-fill text-blue-600"></i>
@@ -307,34 +267,22 @@
                     <input type="date" id="hanHoanThanh" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]">
                 </div>
             </div>
+
             <!-- NÚT CHỨC NĂNG -->
             <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
                 <div class="max-w-4xl mx-auto grid grid-cols-4 gap-2">
-                    <button type="button" onclick="history.back()" class="h-11 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold">
-                        Hủy
-                    </button>
-                    <button type="reset" class="h-11 rounded-xl bg-slate-500 hover:bg-slate-600 text-white text-sm font-semibold">
-                        Đặt lại
-                    </button>
-                    <button type="button" onclick="previewTask()" class="h-11 rounded-xl border border-[#0F4C81] bg-white text-[#0F4C81] hover:bg-blue-50 text-sm font-semibold">
-                        Xem bản giao
-                    </button>
-                    <button type="submit" id="btnSubmit" class="h-11 rounded-xl bg-[#0F4C81] hover:bg-[#0B3E69] text-white text-sm font-bold">
-                        Giao việc
-                    </button>
+                    <button type="button" onclick="history.back()" class="h-11 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-semibold">Hủy</button>
+                    <button type="reset" class="h-11 rounded-xl bg-slate-500 hover:bg-slate-600 text-white text-sm font-semibold">Đặt lại</button>
+                    <button type="button" onclick="previewTask()" class="h-11 rounded-xl border border-[#0F4C81] bg-white text-[#0F4C81] hover:bg-blue-50 text-sm font-semibold">Xem bản giao</button>
+                    <button type="submit" id="btnSubmit" class="h-11 rounded-xl bg-[#0F4C81] hover:bg-[#0B3E69] text-white text-sm font-bold">Giao việc</button>
                 </div>
             </div>
         </form>
     </main>
-    <div id="bottom-action-bar"></div>
-    <div id="system-modal"></div>
-    <div id="toast-container"></div>
 
-    <!-- MODAL XEM TRƯỚC BIÊN BẢN GIAO NHIỆM VỤ -->
+    <!-- MODAL PREVIEW BIÊN BẢN -->
     <div id="modalPreview" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm overflow-y-auto p-2 sm:p-4 md:p-6 a4-preview-container">
         <div class="max-w-4xl mx-auto space-y-4">
-           
-            <!-- Thanh công cụ Modal (Không in khi xuất/in) -->
             <div class="no-print bg-white p-3 rounded-2xl shadow-md flex items-center justify-between border border-slate-200">
                 <div class="flex items-center gap-2 text-slate-700 font-bold text-sm">
                     <i class="bi bi-file-earmark-text text-blue-600 text-lg"></i>
@@ -344,15 +292,10 @@
                     <button type="button" onclick="window.print()" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#0F4C81] font-semibold rounded-xl text-xs flex items-center gap-1.5 transition">
                         <i class="bi bi-printer-fill"></i> In / Xuất PDF
                     </button>
-                    <button type="button" onclick="closePreviewModal()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition">
-                        Đóng
-                    </button>
+                    <button type="button" onclick="closePreviewModal()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition">Đóng</button>
                 </div>
             </div>
-            <!-- KHỔ GIẤY A4 BIÊN BẢN -->
             <div class="a4-preview-page text-sm">
-               
-                <!-- 1 & 2. Quốc hiệu / Tên đơn vị -->
                 <div class="grid grid-cols-12 gap-2 text-center mb-6">
                     <div class="col-span-5 font-bold uppercase tracking-tight text-xs sm:text-sm">
                         TRƯỜNG THPT HÒA VANG<br>
@@ -363,12 +306,10 @@
                         <span class="font-semibold text-xs border-b border-black pb-0.5 inline-block mt-0.5">Độc lập - Tự do - Hạnh phúc</span>
                     </div>
                 </div>
-                <!-- 3. Tiêu đề -->
                 <div class="text-center my-6">
                     <h2 class="text-xl font-bold uppercase tracking-wider">BIÊN BẢN GIAO NHIỆM VỤ</h2>
-                    <p class="italic text-xs text-slate-600 mt-1" id="prevMaBienBan">(Mã ghi nhận hệ thống: Auto-generated)</p>
+                    <p class="italic text-xs text-slate-600 mt-1">(Mã ghi nhận hệ thống: Auto-generated)</p>
                 </div>
-                <!-- 4. Thông tin chung -->
                 <div class="space-y-1.5 mb-5 text-justify">
                     <p><strong>• Thời gian lập biên bản:</strong> <span id="prevThoiGianLap">--/--/---- --:--</span></p>
                     <p><strong>• Người giao:</strong> <span id="prevNguoiGiao" class="font-bold">--</span> &nbsp;&nbsp;&nbsp;&nbsp; <strong>Chức vụ:</strong> <span id="prevChucVuNguoiGiao">--</span></p>
@@ -376,25 +317,18 @@
                     <p><strong>• Nguồn giao nhiệm vụ:</strong> <span id="prevNguonGiao">--</span></p>
                     <p><strong>• Văn bản liên quan:</strong> <span id="prevVanBan">Không có</span></p>
                 </div>
-                <!-- NỘI DUNG GIAO NHIỆM VỤ -->
                 <div class="space-y-4 text-justify">
                     <div>
                         <h3 class="font-bold uppercase text-base mb-1">I. Nội dung nhiệm vụ</h3>
-                        <div id="prevTieuDeNoiDung" class="pl-3 border-l-2 border-slate-300 italic min-h-[40px]">
-                            --
-                        </div>
+                        <div id="prevTieuDeNoiDung" class="pl-3 border-l-2 border-slate-300 italic min-h-[40px]">--</div>
                     </div>
                     <div>
                         <h3 class="font-bold uppercase text-base mb-1">II. Mục tiêu</h3>
-                        <div id="prevMucTieu" class="pl-3 min-h-[30px]">
-                            Thực hiện đầy đủ, chính xác và đúng quy định nội dung chỉ đạo được giao.
-                        </div>
+                        <div class="pl-3 min-h-[30px]">Thực hiện đầy đủ, chính xác và đúng quy định nội dung chỉ đạo được giao.</div>
                     </div>
                     <div>
                         <h3 class="font-bold uppercase text-base mb-1">III. Kết quả cần đạt</h3>
-                        <div id="prevKetQua" class="pl-3 min-h-[30px]">
-                            Hoàn thành sản phẩm/kết quả công việc đúng tiêu chuẩn chuyên môn và thời hạn.
-                        </div>
+                        <div class="pl-3 min-h-[30px]">Hoàn thành sản phẩm/kết quả công việc đúng tiêu chuẩn chuyên môn và thời hạn.</div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
@@ -413,9 +347,8 @@
                     </div>
                     <div>
                         <h3 class="font-bold uppercase text-base mb-1">VII. Ghi chú</h3>
-                        <p class="pl-3 italic text-slate-700" id="prevGhiChu">Trường hợp có vướng mắc phát sinh, đơn vị/cá nhân nhận nhiệm vụ kịp thời báo cáo Người giao để xử lý.</p>
+                        <p class="pl-3 italic text-slate-700">Trường hợp có vướng mắc phát sinh, đơn vị/cá nhân nhận nhiệm vụ kịp thời báo cáo Người giao để xử lý.</p>
                     </div>
-                    <!-- VIII. CHẾ ĐỘ BÁO CÁO -->
                     <div>
                         <h3 class="font-bold uppercase text-base mb-1">VIII. CHẾ ĐỘ BÁO CÁO</h3>
                         <div class="pl-3 space-y-2">
@@ -443,7 +376,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- CUỐI BIÊN BẢN -->
                 <div class="mt-8 pt-4 grid grid-cols-12 gap-2 text-center">
                     <div class="col-span-6"></div>
                     <div class="col-span-6">
@@ -454,7 +386,6 @@
                         <p class="font-bold text-base mt-10" id="prevHoTenKy">Nguyễn Văn Thà</p>
                     </div>
                 </div>
-                <!-- CHÂN TRANG -->
                 <div class="mt-12 pt-3 border-t border-slate-200 text-center text-[11px] text-slate-400 italic">
                     Biên bản được tạo tự động từ Trung tâm Điều hành số TTĐHS_HVA - Trường THPT Hòa Vang.
                 </div>
@@ -464,37 +395,26 @@
 
 <script>
     // =========================================================================
-    // 1. KHAI BÁO BIẾN CẤU HÌNH VÀ BỘ NHỚ ĐỆM (CACHE)
+    // BẢN SCRIPT V2.1 - ĐÃ XÁC NHẬN TẢI ĐƯỢC ĐỐI TƯỢNG GIAO
     // =========================================================================
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7IsfWAfnsOa4SIyMiKEB-qQurwW5FpxuKcT83aeCHXhiAf60sJSc0t4KQXE3N427E/exec";
-    
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjq11TcDE4tyOsPl6NOw1q6r8f14r3Z3qQPuSAgic7Xf6XK4gXjwHOBem4I_IGnALZ/exec";
     let dsToData = [];
-    let dsNhanSuLoadedByTo = {}; // Cache danh sách nhân sự theo từng tổ
-    let selectedObjects = []; // Mảng các đối tượng đã chọn {username, hoTen, toBoPhan, loai}
+    let dsNhanSuLoadedByTo = {};
+    let selectedObjects = [];
     let vanBanChon = { soVanBan: '', tenVanBan: '' };
-    let cachedVanBanResults = []; // Cache kết quả tìm kiếm văn bản tránh lỗi DOM stringify
+    let cachedVanBanResults = [];
 
-    // Helper chuyển đổi tên tổ/chuỗi thành ID HTML hợp lệ (tránh lỗi ký tự đặc biệt/khoảng trắng)
     function safeId(str) {
         return String(str || '').replace(/[^a-zA-Z0-9_-]/g, '_');
     }
 
-    // =========================================================================
-    // 2. KHỞI TẠO TRANG
-    // =========================================================================
     window.addEventListener('DOMContentLoaded', async function() {
         // Lấy thông tin người giao từ localStorage
         try {
             const user = JSON.parse(localStorage.getItem("user") || "{}");
-            if (user.fullName) {
-                document.getElementById("nguoiGiao").textContent = user.fullName;
-            }
-            if (user.workPosition) {
-                document.getElementById("chucVuNguoiGiao").textContent = user.workPosition;
-            }
-        } catch (e) {
-            console.warn("Không đọc được thông tin user từ localStorage");
-        }
+            if (user.fullName) document.getElementById("nguoiGiao").textContent = user.fullName;
+            if (user.workPosition) document.getElementById("chucVuNguoiGiao").textContent = user.workPosition;
+        } catch (e) {}
 
         await loadDanhSachTo();
     });
@@ -515,9 +435,6 @@
         }
     }
 
-    // =========================================================================
-    // 3. XỬ LÝ ACCORDION & TẢI DỮ LIỆU NHÂN SỰ (LAZY LOADING)
-    // =========================================================================
     function renderToAccordion() {
         const container = document.getElementById('danhSachToAccordion');
         if (!container) return;
@@ -563,7 +480,6 @@
         if (body.classList.contains('hidden')) {
             body.classList.remove('hidden');
             if (icon) icon.classList.add('rotate-90');
-            // Lazy load: Chỉ gọi API nếu tổ này chưa từng được tải
             if (!dsNhanSuLoadedByTo[tenTo]) {
                 await loadNhanSuCuaTo(tenTo);
             }
@@ -623,16 +539,12 @@
         }
     }
 
-    // =========================================================================
-    // 4. QUẢN LÝ LỰA CHỌN TỔ & CÁ NHÂN (TAGS DISPLAY)
-    // =========================================================================
     function chonTronTo(tenToEncoded) {
         const tenTo = decodeURIComponent(tenToEncoded);
        
         if (!selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO')) {
             selectedObjects.push({ username: '', hoTen: `Tổ ${tenTo}`, toBoPhan: tenTo, loai: 'TO' });
         }
-        // Tự động tích chọn tất cả checkbox cá nhân thuộc tổ này đang có trên giao diện
         const sId = safeId(tenTo);
         const grid = document.getElementById(`gridTo-${sId}`);
         if (grid) {
@@ -652,7 +564,6 @@
             }
         } else {
             selectedObjects = selectedObjects.filter(x => !(x.username === username && x.loai === 'CANHAN'));
-            // Nếu bỏ chọn cá nhân thì cũng bỏ luôn "chọn trọn tổ" (nếu có)
             selectedObjects = selectedObjects.filter(x => !(x.toBoPhan === toBoPhan && x.loai === 'TO'));
         }
         updateTagDisplay();
@@ -681,28 +592,10 @@
     }
 
     function removeSelected(idx) {
-        const removed = selectedObjects[idx];
         selectedObjects.splice(idx, 1);
         updateTagDisplay();
-
-        // Đồng bộ lại checkbox nếu đang mở accordion
-        if (removed && removed.loai === 'CANHAN') {
-            document.querySelectorAll(`input[data-username="${removed.username}"]`).forEach(cb => {
-                cb.checked = false;
-            });
-        }
-        if (removed && removed.loai === 'TO') {
-            const sId = safeId(removed.toBoPhan);
-            const grid = document.getElementById(`gridTo-${sId}`);
-            if (grid) {
-                grid.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            }
-        }
     }
 
-    // =========================================================================
-    // 5. TRA CỨU VĂN BẢN VÀ NGUỒN GIAO
-    // =========================================================================
     function xuLyThayDoiNguonGiao(val) {
         const card = document.getElementById('cardVanBan');
         if (!card) return;
@@ -712,10 +605,6 @@
         } else {
             card.classList.add('hidden');
             vanBanChon = { soVanBan: '', tenVanBan: '' };
-            // Reset hiển thị
-            document.getElementById('lblSoVB').innerText = 'Chưa chọn';
-            document.getElementById('lblNgayBH').innerText = '--/--/----';
-            document.getElementById('lblTenVB').innerText = 'Bấm tìm kiếm để chọn từ Kho Văn bản...';
         }
     }
 
@@ -752,30 +641,21 @@
         const item = cachedVanBanResults[index];
         if (!item) return;
         vanBanChon = item;
-        const lblSoVB = document.getElementById('lblSoVB');
-        const lblNgayBH = document.getElementById('lblNgayBH');
-        const lblTenVB = document.getElementById('lblTenVB');
-        const vung = document.getElementById('vungKetQuaVanBan');
-        if (lblSoVB) lblSoVB.innerText = item.soVanBan || 'Không số';
-        if (lblNgayBH) lblNgayBH.innerText = item.ngayBanHanh || '--/--/----';
-        if (lblTenVB) lblTenVB.innerText = item.tenVanBan || '';
-        if (vung) vung.classList.add('hidden');
+        document.getElementById('lblSoVB').innerText = item.soVanBan || 'Không số';
+        document.getElementById('lblNgayBH').innerText = item.ngayBanHanh || '--/--/----';
+        document.getElementById('lblTenVB').innerText = item.tenVanBan || '';
+        document.getElementById('vungKetQuaVanBan').classList.add('hidden');
     }
 
-    // =========================================================================
-    // 6. PREVIEW BIÊN BẢN
-    // =========================================================================
+    // Preview Biên bản
     function previewTask() {
         const now = new Date();
-       
-        // 1. Cập nhật thông tin thời gian
         document.getElementById('prevThoiGianLap').innerText = now.toLocaleString('vi-VN');
         document.getElementById('prevNgayGiao').innerText = now.toLocaleDateString('vi-VN');
         document.getElementById('prevNgayLap').innerText = String(now.getDate()).padStart(2, '0');
         document.getElementById('prevThangLap').innerText = String(now.getMonth() + 1).padStart(2, '0');
         document.getElementById('prevNamLap').innerText = now.getFullYear();
 
-        // 2. Lấy tự động thông tin người giao
         const nguoiGiaoText = document.getElementById('nguoiGiao').innerText.trim();
         const chucVuText = document.getElementById('chucVuNguoiGiao').innerText.trim();
        
@@ -784,14 +664,12 @@
         document.getElementById('prevChucVuKy').innerText = chucVuText;
         document.getElementById('prevHoTenKy').innerText = nguoiGiaoText.replace(/^(Thầy|Cô)\s+/i, '');
 
-        // 3. Đối tượng nhận
         if (selectedObjects.length > 0) {
             document.getElementById('prevNguoiNhan').innerText = selectedObjects.map(x => x.hoTen).join(', ');
         } else {
             document.getElementById('prevNguoiNhan').innerText = "(Chưa chọn đối tượng nhận)";
         }
 
-        // 4. Nguồn giao & Văn bản
         const nguonGiaoRadio = document.querySelector('input[name="nguonGiaoRadio"]:checked');
         document.getElementById('prevNguonGiao').innerText = nguonGiaoRadio ? nguonGiaoRadio.value : 'Theo văn bản';
         if (vanBanChon && vanBanChon.soVanBan) {
@@ -800,14 +678,12 @@
             document.getElementById('prevVanBan').innerText = "Không có";
         }
 
-        // 5. Mức độ, Tiêu đề, Nội dung
         document.getElementById('prevMucDo').innerText = document.getElementById('mucDo').value;
        
         const tieuDe = document.getElementById('tieuDe').value.trim();
         const noiDung = document.getElementById('noiDung').value.trim();
         document.getElementById('prevTieuDeNoiDung').innerHTML = `<strong>${tieuDe || '(Chưa nhập tiêu đề)'}</strong><br>${noiDung || ''}`;
 
-        // 6. Minh chứng & Hạn hoàn thành
         const yeuCauMC = document.getElementById('yeuCauMinhChung').value;
         document.getElementById('prevMinhChung').innerText = yeuCauMC === 'Có' ? 'Có yêu cầu minh chứng / báo cáo kết quả' : 'Không yêu cầu';
 
@@ -821,7 +697,6 @@
             document.getElementById('prevThoiHanBaoCao').innerText = 'Theo hạn hoàn thành nhiệm vụ';
         }
 
-        // 7. Chế độ báo cáo (Checkbox)
         if (yeuCauMC === 'Không') {
             document.getElementById('chkBc1').innerText = '☑';
             document.getElementById('chkBc2').innerText = '☐';
@@ -830,7 +705,6 @@
             document.getElementById('chkBc2').innerText = '☑';
         }
 
-        // Hiển thị modal
         document.getElementById('modalPreview').classList.remove('hidden');
     }
 
@@ -838,13 +712,9 @@
         document.getElementById('modalPreview').classList.add('hidden');
     }
 
-    // =========================================================================
-    // 7. SUBMIT FORM THỰC HIỆN GIAO VIỆC (createTask)
-    // =========================================================================
+    // Submit
     document.getElementById('formGiaoViecFull').addEventListener('submit', async function(e) {
         e.preventDefault();
-
-        // Kiểm tra validation bắt buộc
         if (selectedObjects.length === 0) {
             alert('Vui lòng chọn ít nhất một tổ hoặc cá nhân nhận nhiệm vụ!');
             return;
@@ -855,15 +725,12 @@
             document.getElementById('tieuDe').focus();
             return;
         }
-
         const btn = document.getElementById('btnSubmit');
         const originalBtnText = btn.innerHTML;
        
         btn.disabled = true;
         btn.innerHTML = `<i class="bi bi-arrow-repeat animate-spin"></i> <span>Đang lưu dữ liệu...</span>`;
-
         const nguonGiaoVal = document.querySelector('input[name="nguonGiaoRadio"]:checked')?.value || 'Theo văn bản';
-
         const payload = {
             action: 'createTask',
             nguoiGiao: document.getElementById('nguoiGiao').innerText.trim(),
@@ -879,9 +746,7 @@
             hanHoanThanh: document.getElementById('hanHoanThanh').value,
             danhSachNguoiNhan: selectedObjects
         };
-
         try {
-            // Gửi dữ liệu theo phương thức POST không vi phạm CORS của Google Apps Script
             await fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
