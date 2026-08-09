@@ -358,8 +358,8 @@
     <div id="toast-container"></div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7IsfWAfnsOa4SIyMiKEB-qQurwW5FpxuKcT83aeCHXhiAf60sJSc0t4KQXE3N427E/exec";
-        
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjq11TcDE4tyOsPl6NOw1q6r8f14r3Z3qQPuSAgic7Xf6XK4gXjwHOBem4I_IGnALZ/exec";
+
         let dsToData = [];
         let dsNhanSuLoadedByTo = {};
         let selectedObjects = [];
@@ -556,6 +556,81 @@
             document.getElementById('lblTenVB').innerText = item.tenVanBan || '';
             document.getElementById('vungKetQuaVanBan').classList.add('hidden');
         }
+// Hàm hiển thị Modal Preview Biên bản
+function previewTask() {
+    const now = new Date();
+    
+    // 1. Cập nhật thông tin thời gian
+    document.getElementById('prevThoiGianLap').innerText = now.toLocaleString('vi-VN');
+    document.getElementById('prevNgayGiao').innerText = now.toLocaleDateString('vi-VN');
+    document.getElementById('prevNgayLap').innerText = String(now.getDate()).padStart(2, '0');
+    document.getElementById('prevThangLap').innerText = String(now.getMonth() + 1).padStart(2, '0');
+    document.getElementById('prevNamLap').innerText = now.getFullYear();
+
+    // 2. Lấy tự động thông tin người giao theo tài khoản/giao diện
+    const nguoiGiaoText = document.getElementById('nguoiGiao').innerText.trim();
+    const chucVuText = document.getElementById('chucVuNguoiGiao').innerText.trim();
+    
+    document.getElementById('prevNguoiGiao').innerText = nguoiGiaoText;
+    document.getElementById('prevChucVuNguoiGiao').innerText = chucVuText;
+    document.getElementById('prevChucVuKy').innerText = chucVuText;
+    document.getElementById('prevHoTenKy').innerText = nguoiGiaoText.replace(/^(Thầy|Cô)\s+/i, '');
+
+    // 3. Đối tượng nhận
+    if (typeof selectedObjects !== 'undefined' && selectedObjects.length > 0) {
+        document.getElementById('prevNguoiNhan').innerText = selectedObjects.map(x => x.hoTen).join(', ');
+    } else {
+        document.getElementById('prevNguoiNhan').innerText = "(Chưa chọn đối tượng nhận)";
+    }
+
+    // 4. Nguồn giao & Văn bản
+    const nguonGiaoRadio = document.querySelector('input[name="nguonGiaoRadio"]:checked');
+    document.getElementById('prevNguonGiao').innerText = nguonGiaoRadio ? nguonGiaoRadio.value : 'Theo văn bản';
+
+    if (typeof vanBanChon !== 'undefined' && vanBanChon.soVanBan) {
+        document.getElementById('prevVanBan').innerText = `${vanBanChon.soVanBan} - ${vanBanChon.tenVanBan || ''}`;
+    } else {
+        document.getElementById('prevVanBan').innerText = "Không có";
+    }
+
+    // 5. Mức độ, Tiêu đề, Nội dung
+    document.getElementById('prevMucDo').innerText = document.getElementById('mucDo').value;
+    
+    const tieuDe = document.getElementById('tieuDe').value.trim();
+    const noiDung = document.getElementById('noiDung').value.trim();
+    document.getElementById('prevTieuDeNoiDung').innerHTML = `<strong>${tieuDe || '(Chưa nhập tiêu đề)'}</strong><br>${noiDung || ''}`;
+
+    // 6. Minh chứng & Hạn hoàn thành
+    const yeuCauMC = document.getElementById('yeuCauMinhChung').value;
+    document.getElementById('prevMinhChung').innerText = yeuCauMC === 'Có' ? 'Có yêu cầu minh chứng / báo cáo kết quả' : 'Không yêu cầu';
+
+    const hanHT = document.getElementById('hanHoanThanh').value;
+    if (hanHT) {
+        const [yyyy, mm, dd] = hanHT.split('-');
+        document.getElementById('prevHanHoanThanh').innerText = `${dd}/${mm}/${yyyy}`;
+        document.getElementById('prevThoiHanBaoCao').innerText = `${dd}/${mm}/${yyyy}`;
+    } else {
+        document.getElementById('prevHanHoanThanh').innerText = 'Chưa thiết lập';
+        document.getElementById('prevThoiHanBaoCao').innerText = 'Theo hạn hoàn thành nhiệm vụ';
+    }
+
+    // 7. Chế độ báo cáo (Checkbox)
+    if (yeuCauMC === 'Không') {
+        document.getElementById('chkBc1').innerText = '☑';
+        document.getElementById('chkBc2').innerText = '☐';
+    } else {
+        document.getElementById('chkBc1').innerText = '☐';
+        document.getElementById('chkBc2').innerText = '☑';
+    }
+
+    // Hiển thị modal
+    document.getElementById('modalPreview').classList.remove('hidden');
+}
+
+// Hàm đóng Modal Preview
+function closePreviewModal() {
+    document.getElementById('modalPreview').classList.add('hidden');
+}
 
         // 4. Submit Form
         document.getElementById('formGiaoViecFull').addEventListener('submit', async function(e) {
@@ -742,17 +817,17 @@
             </div>
 
             <!-- CUỐI BIÊN BẢN -->
-            <!-- CUỐI BIÊN BẢN -->
-<div class="mt-8 pt-4 grid grid-cols-12 gap-2 text-center">
-    <div class="col-span-6"></div>
-    <div class="col-span-6">
-        <p class="italic text-xs mb-2">Đà Nẵng, ngày <span id="prevNgayLap">.....</span> tháng <span id="prevThangLap">.....</span> năm <span id="prevNamLap">.....</span></p>
-        <p class="font-bold uppercase">NGƯỜI GIAO NHIỆM VỤ</p>
-        <p class="font-bold" id="prevChucVuKy">.....</p>
-        <p class="italic text-xs text-slate-500 my-8">(Ký, ghi rõ họ và tên)</p>
-        <p class="font-bold text-base mt-10" id="prevHoTenKy">.....</p>
-    </div>
-</div>
+            <div class="mt-8 pt-4 grid grid-cols-12 gap-2 text-center">
+                <div class="col-span-6"></div>
+                <div class="col-span-6">
+                    <p class="italic text-xs mb-2">Đà Nẵng, ngày <span id="prevNgayLap">.....</span> tháng <span id="prevThangLap">.....</span> năm <span id="prevNamLap">2026</span></p>
+                    <p class="font-bold uppercase">NGƯỜI GIAO NHIỆM VỤ</p>
+                    <p class="font-bold" id="prevChucVuKy">Phó Hiệu trưởng</p>
+                    <p class="italic text-xs text-slate-500 my-8">(Ký, ghi rõ họ và tên)</p>
+                    <p class="font-bold text-base mt-10" id="prevHoTenKy">Nguyễn Văn Thà</p>
+                </div>
+            </div>
+
             <!-- CHÂN TRANG -->
             <div class="mt-12 pt-3 border-t border-slate-200 text-center text-[11px] text-slate-400 italic">
                 Biên bản được tạo tự động từ Trung tâm Điều hành số TTĐHS_HVA - Trường THPT Hòa Vang.
