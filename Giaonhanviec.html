@@ -188,12 +188,14 @@
         
         <!-- PHẦN 1: NGƯỜI GIAO -->
 <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
-    <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2.5">
-        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
-            <i class="bi bi-person-badge-fill text-lg text-blue-600"></i>
-            <span>PHẦN 1: Thông tin người giao việc</span>
+    <div class="flex items-center justify-between gap-2 mb-3 border-b border-slate-100 pb-2.5 min-w-0">
+        <!-- Thêm whitespace-nowrap và truncate để giữ chữ trên 1 dòng -->
+        <div class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0F4C81] min-w-0 truncate">
+            <i class="bi bi-person-badge-fill text-lg text-blue-600 shrink-0"></i>
+            <span class="whitespace-nowrap truncate">PHẦN 1: Thông tin người giao việc</span>
         </div>
-        <span id="displayNgayGiao" class="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">--/--/----</span>
+        <!-- Thêm shrink-0 để thẻ ngày tháng không chèn ép tiêu đề -->
+        <span id="displayNgayGiao" class="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg shrink-0 whitespace-nowrap">--/--/----</span>
     </div>
 
     <div class="flex items-center gap-3.5">
