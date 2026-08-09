@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TTĐHS_HVA - Giao Nhiệm Vụ Tha</title>
+    <title>TTĐHS_HVA - Giao Nhiệm Vụ</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Inter -->
@@ -100,7 +100,7 @@
             <div class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
                 <h1 id="page-title" class="text-white font-extrabold text-base sm:text-lg tracking-wide uppercase flex items-center gap-2 drop-shadow-sm">
                     <i class="bi bi-send-check-fill text-cyan-300"></i>
-                    GIAO NHIỆM VỤ thammath
+                    GIAO NHIỆM VỤ CÔNG VIỆC
                 </h1>
                 <span class="text-white/70 text-xs font-normal hidden sm:inline-block">TTĐHS_HVA v2.1</span>
             </div>
@@ -335,7 +335,7 @@
         </form>
     </main>
 
-    <!-- SCRIPT LOGIC XỬ LÝ -->
+    <!-- SCRIPT LOGIC XỬ LÝ FULL -->
     <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjq11TcDE4tyOsPl6NOw1q6r8f14r3Z3qQPuSAgic7Xf6XK4gXjwHOBem4I_IGnALZ/exec";
 
@@ -367,7 +367,7 @@
             if (container) {
                 container.innerHTML = `
                     <div class="p-4 text-center space-y-2">
-                        <div class="text-xs text-red-500 font-medium">Không thể tải danh sách tổ (Cần re-deploy Web App ở quyền Anyone).</div>
+                        <div class="text-xs text-red-500 font-medium">Không thể tải danh sách tổ. Vui lòng thử lại!</div>
                         <button type="button" onclick="loadDanhSachTo()" class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition">
                             <i class="bi bi-arrow-clockwise"></i> Thử lại
                         </button>
