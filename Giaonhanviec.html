@@ -187,39 +187,40 @@
     <form id="formGiaoViec" onsubmit="event.preventDefault(); submitTask();" class="space-y-6">
         
         <!-- PHẦN 1: NGƯỜI GIAO -->
-        <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
-            <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2.5">
-                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
-                    <i class="bi bi-person-badge-fill text-lg text-blue-600"></i>
-                    <span>PHẦN 1: Thông tin người giao việc</span>
-                </div>
-                <span id="displayNgayGiao" class="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">--/--/----</span>
+<section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
+    <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2.5">
+        <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
+            <i class="bi bi-person-badge-fill text-lg text-blue-600"></i>
+            <span>PHẦN 1: Thông tin người giao việc</span>
+        </div>
+        <span id="displayNgayGiao" class="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">--/--/----</span>
+    </div>
+
+    <div class="flex items-center gap-3.5">
+        <!-- Avatar -->
+        <div class="relative shrink-0">
+            <div id="avatarContainer" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0F4C81] to-sky-500 flex items-center justify-center text-white text-xl font-bold shadow-md uppercase">
+                --
+            </div>
+            <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
+        </div>
+
+        <!-- Thông tin 2 dòng căn chỉnh vừa khít chiều cao Avatar -->
+        <div class="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
+            <!-- Dòng 1: Họ tên -->
+            <div id="nguoiGiaoTen" class="text-base font-extrabold text-slate-800 leading-snug truncate">
+                Đang tải...
             </div>
 
-            <div class="flex items-center gap-4">
-                <div class="relative shrink-0">
-                    <div id="avatarContainer" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0F4C81] to-sky-500 flex items-center justify-center text-white text-xl font-bold shadow-md uppercase">
-                        --
-                    </div>
-                    <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
-                </div>
-
-                <div class="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <div>
-                        <div class="text-[11px] font-semibold uppercase text-slate-400">Họ và tên</div>
-                        <div id="nguoiGiaoTen" class="text-base font-bold text-slate-800 truncate">Đang tải...</div>
-                    </div>
-                    <div>
-                        <div class="text-[11px] font-semibold uppercase text-slate-400">Chức vụ</div>
-                        <div id="nguoiGiaoChucVu" class="text-sm font-semibold text-[#0F4C81] truncate">Đang tải...</div>
-                    </div>
-                    <div>
-                        <div class="text-[11px] font-semibold uppercase text-slate-400">Tổ chuyên môn</div>
-                        <div id="nguoiGiaoTo" class="text-sm font-medium text-slate-600 truncate">Ban Giám hiệu</div>
-                    </div>
-                </div>
+            <!-- Dòng 2: Chức vụ + Tổ chuyên môn -->
+            <div class="flex items-center gap-1.5 text-xs text-slate-600 leading-snug truncate">
+                <span id="nguoiGiaoChucVu" class="font-semibold text-[#0F4C81]">Đang tải...</span>
+                <span class="text-slate-300 font-bold">•</span>
+                <span id="nguoiGiaoTo" class="font-medium text-slate-500">Ban Giám hiệu</span>
             </div>
-        </section>
+        </div>
+    </div>
+</section>
 
         <!-- PHẦN 2: NGUỒN GIAO -->
         <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
