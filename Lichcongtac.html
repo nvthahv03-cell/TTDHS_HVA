@@ -1006,7 +1006,42 @@ function chuyenDenMenuTacVu() {
         elLichCongTac.click();
     }
 }
-</script>
 
+<!-- Các phần giao diện HTML của trang Lichcongtac.html -->
+
+    <!-- Khối JavaScript ở cuối file -->
+    <script>
+        function luuHoacPhatHanhLich(actionType) {
+            // 1. Thu thập dữ liệu từ Form/Bảng
+            const payload = {
+                tuan: 33,
+                thang: 8,
+                nam: 2026,
+                chiTietLich: [
+                    { ngay: "10/08", sang: "Họp BGH", chieu: "Nghi", ghiChu: "P. HT" },
+                    { ngay: "11/08", sang: "QĐ thành lập tổ công tác CĐS", chieu: "Nghi", ghiChu: "" }
+                ],
+                // Lấy toàn bộ HTML của bản xem trước để in PDF
+                htmlContent: document.getElementById('previewPrintArea')?.outerHTML || ''
+            };
+
+            // 2. Gửi sang Google Apps Script
+            google.script.run
+                .withSuccessHandler(function(res) {
+                    if (res.success) {
+                        if (actionType === 'phathanh') {
+                            alert("Phát hành thành công!\nLink PDF Drive: " + res.pdfUrl);
+                        } else {
+                            alert("Đã lưu nháp dữ liệu vào Google Sheet!");
+                        }
+                    } else {
+                        alert("Có lỗi xảy ra: " + res.error);
+                    }
+                })
+                .processLichTuan(payload, actionType);
+        }
+    </script>
+</body>
+</html>
 </body>
 </html>
