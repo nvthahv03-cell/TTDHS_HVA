@@ -508,265 +508,244 @@
         document.getElementById('hanHoanThanh').value = isoNextDay;
     }
 
-    // =========================================================================
-    // 3. TẢI VÀ QUẢN LÝ TỔ/NHÂN SỰ (ENGINE V2 DÙNG TRỌN VẸN)
-    // =========================================================================
-    async function loadDanhSachTo() {
-        try {
-            const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`);
-            if (!res.ok) throw new Error('HTTP Error ' + res.status);
-            const data = await res.json();
-            dsToData = Array.isArray(data) ? data : [];
-            renderToAccordion();
-        } catch (e) {
-            console.error("Lỗi lấy danh sách tổ:", e);
-            const container = document.getElementById('danhSachToAccordion');
-            if (container) {
-                container.innerHTML = '<div class="p-3 text-xs text-red-500 italic text-center">Không thể tải danh sách tổ. Vui lòng kiểm tra kết nối!</div>';
-            }
-        }
-    }
+   // =========================================================================
+// 3 & 4. QUẢN LÝ TỔ, NHÂN SỰ VÀ TRẠNG THÁI CHỌN (CHUẨN HÓA DỮ LIỆU)
+// =========================================================================
 
-    function renderToAccordion(filterKw = '') {
+// 3.1 Tải danh sách Tổ ban đầu
+async function loadDanhSachTo() {
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`);
+        if (!res.ok) throw new Error('HTTP Error ' + res.status);
+        const data = await res.json();
+        dsToData = Array.isArray(data) ? data : [];
+        renderToAccordion();
+    } catch (e) {
+        console.error("Lỗi lấy danh sách tổ:", e);
         const container = document.getElementById('danhSachToAccordion');
-        if (!container) return;
-        container.innerHTML = '';
-
-        if (!dsToData || dsToData.length === 0) {
-            container.innerHTML = '<div class="p-3 text-xs text-slate-400 italic text-center">Không tìm thấy danh sách tổ.</div>';
-            return;
+        if (container) {
+            container.innerHTML = '<div class="p-3 text-xs text-red-500 italic text-center">Không thể tải danh sách tổ. Vui lòng kiểm tra kết nối!</div>';
         }
+    }
+}
 
-        const kw = filterKw.trim().toLowerCase();
+// 3.2 Render danh sách Tổ (Hỗ trợ tìm kiếm độc lập)
+function timKiemDoiTuong(val) {
+    renderToAccordion(val);
+}
 
-        dsToData.forEach(item => {
-            const tenTo = item.tenTo;
-            if (kw && !tenTo.toLowerCase().includes(kw)) {
-                // Kiểm tra xem nhân sự đã load của tổ này có ai khớp kw không
-                const listNS = dsNhanSuLoadedByTo[tenTo] || [];
-                const hasMatchNS = listNS.some(ns => (ns.hoTen||'').toLowerCase().includes(kw));
-                if (!hasMatchNS && listNS.length > 0) return;
-            }
+function renderToAccordion(filterKw = '') {
+    const container = document.getElementById('danhSachToAccordion');
+    if (!container) return;
+    container.innerHTML = '';
 
-            const sId = safeId(tenTo);
-            const encodedTo = encodeURIComponent(tenTo);
-
-            const div = document.createElement('div');
-            div.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm transition";
-            div.innerHTML = `
-                <div class="p-3 bg-slate-50/80 flex items-center justify-between text-xs font-bold text-[#0F4C81]">
-                    <button type="button" onclick="toggleToAccordion('${encodedTo}')" class="flex-1 flex items-center gap-2 text-left">
-                        <i id="iconTo-${sId}" class="bi bi-chevron-right text-slate-400 transition-transform duration-200"></i>
-                        <i class="bi bi-folder2-open text-blue-500 text-base"></i>
-                        <span>${tenTo}</span>
-                        <span class="text-[10px] font-normal text-slate-400">(${item.soLuong} người)</span>
-                    </button>
-                    <button type="button" onclick="chonTronTo('${encodedTo}')" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-semibold transition flex items-center gap-1">
-                        <i class="bi bi-check-all text-sm"></i> Chọn trọn tổ
-                    </button>
-                </div>
-                <div id="bodyTo-${sId}" class="hidden p-3 bg-blue-50/10 border-t border-slate-100">
-                    <div class="p-2 text-xs text-slate-400 italic text-center" id="loadingTo-${sId}">Đang tải nhân sự...</div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 hidden" id="gridTo-${sId}"></div>
-                </div>
-            `;
-            container.appendChild(div);
-        });
+    if (!dsToData || dsToData.length === 0) {
+        container.innerHTML = '<div class="p-3 text-xs text-slate-400 italic text-center">Không tìm thấy danh sách tổ.</div>';
+        return;
     }
 
-    async function toggleToAccordion(tenToEncoded) {
-        const tenTo = decodeURIComponent(tenToEncoded);
+    const kw = filterKw.trim().toLowerCase();
+
+    dsToData.forEach(item => {
+        const tenTo = item.tenTo;
+        const listNS = dsNhanSuLoadedByTo[tenTo] || [];
+        
+        const matchTo = tenTo.toLowerCase().includes(kw);
+        const matchNS = listNS.some(ns => 
+            (ns.hoTen || '').toLowerCase().includes(kw) || 
+            (ns.username || '').toLowerCase().includes(kw)
+        );
+
+        // Lọc: Nếu đang gõ tìm kiếm mà cả tên Tổ lẫn Nhân sự trong tổ đều không khớp thì bỏ qua
+        if (kw && !matchTo && !matchNS) return;
+
         const sId = safeId(tenTo);
+        const encodedTo = encodeURIComponent(tenTo);
+
+        const div = document.createElement('div');
+        div.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-xs transition mb-2";
+        div.innerHTML = `
+            <div class="p-3 bg-slate-50/80 flex items-center justify-between text-xs font-bold text-[#0F4C81]">
+                <button type="button" onclick="toggleToAccordion('${encodedTo}')" class="flex-1 flex items-center gap-2 text-left">
+                    <i id="iconTo-${sId}" class="bi bi-chevron-right text-slate-400 transition-transform duration-200"></i>
+                    <i class="bi bi-folder2-open text-blue-500 text-base"></i>
+                    <span>${tenTo}</span>
+                    <span class="text-[10px] font-normal text-slate-400">(${item.soLuong || 0} người)</span>
+                </button>
+                <button type="button" onclick="chonTronTo('${encodedTo}')" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-semibold transition flex items-center gap-1">
+                    <i class="bi bi-check-all text-sm"></i> Chọn trọn tổ
+                </button>
+            </div>
+            <div id="bodyTo-${sId}" class="hidden p-3 bg-blue-50/10 border-t border-slate-100">
+                <div class="p-2 text-xs text-slate-400 italic text-center" id="loadingTo-${sId}">Đang tải nhân sự...</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 hidden" id="gridTo-${sId}"></div>
+            </div>
+        `;
+        container.appendChild(div);
+
+        // Tự mở nếu người dùng đang tìm kiếm khớp tên giáo viên
+        if (kw && matchNS) {
+            const body = document.getElementById(`bodyTo-${sId}`);
+            if (body && body.classList.contains('hidden')) {
+                toggleToAccordion(encodedTo);
+            }
+        }
+    });
+}
+
+// 3.3 Đóng mở Accordion & Tải Nhân sự
+async function toggleToAccordion(tenToEncoded) {
+    const tenTo = decodeURIComponent(tenToEncoded);
+    const sId = safeId(tenTo);
+    const body = document.getElementById(`bodyTo-${sId}`);
+    const icon = document.getElementById(`iconTo-${sId}`);
+    if (!body) return;
+
+    const isOpening = body.classList.contains('hidden');
+    body.classList.toggle('hidden', !isOpening);
+    if (icon) icon.classList.toggle('rotate-90', isOpening);
+
+    if (isOpening && !dsNhanSuLoadedByTo[tenTo]) {
+        await loadNhanSuCuaTo(tenTo);
+    }
+}
+
+async function loadNhanSuCuaTo(tenTo) {
+    const sId = safeId(tenTo);
+    const loading = document.getElementById(`loadingTo-${sId}`);
+    const grid = document.getElementById(`gridTo-${sId}`);
+
+    try {
+        const res = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`);
+        if (!res.ok) throw new Error('HTTP Error ' + res.status);
+        
+        const listNS = await res.json();
+        dsNhanSuLoadedByTo[tenTo] = Array.isArray(listNS) ? listNS : [];
+
+        if (loading) loading.classList.add('hidden');
+        if (grid) {
+            grid.classList.remove('hidden');
+            renderGridNhanSu(tenTo); // Render nhân sự dựa theo State
+        }
+    } catch (e) {
+        console.error("Lỗi load nhân sự tổ:", e);
+        if (loading) {
+            loading.innerText = 'Không thể tải danh sách nhân sự.';
+            loading.classList.remove('hidden');
+        }
+    }
+}
+
+// 3.4 Hàm Render Grid Nhân sự theo đúng trạng thái trong `selectedObjects`
+function renderGridNhanSu(tenTo) {
+    const sId = safeId(tenTo);
+    const grid = document.getElementById(`gridTo-${sId}`);
+    if (!grid) return;
+
+    const cleanList = dsNhanSuLoadedByTo[tenTo] || [];
+    if (cleanList.length === 0) {
+        grid.innerHTML = '<div class="col-span-2 text-xs text-slate-400 italic p-2 text-center">Không có dữ liệu nhân sự.</div>';
+        return;
+    }
+
+    const isToSelected = selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO');
+
+    grid.innerHTML = cleanList.map(ns => {
+        const username = ns.username || '';
+        const hoTen = ns.hoTen || '';
+        const isChecked = isToSelected || selectedObjects.some(x => x.username === username && x.loai === 'CANHAN');
+        const encodedTo = encodeURIComponent(tenTo);
+        const encodedName = encodeURIComponent(hoTen);
+        const encodedUser = encodeURIComponent(username);
+
+        return `
+            <label class="flex items-center space-x-2.5 p-2 rounded-xl bg-white hover:bg-blue-50/50 cursor-pointer border border-slate-200/60 transition shadow-xs">
+                <input type="checkbox" 
+                       ${isChecked ? 'checked' : ''} 
+                       onchange="toggleChonCaNhan(this, '${encodedUser}', '${encodedName}', '${encodedTo}')" 
+                       class="w-4 h-4 text-[#0F4C81] rounded border-slate-300 focus:ring-0">
+                <div class="truncate">
+                    <span class="text-xs font-semibold text-slate-700 block truncate">${hoTen}</span>
+                    <span class="text-[10px] text-slate-400 block truncate">(${ns.vaiTro || 'Thành viên'})</span>
+                </div>
+            </label>
+        `;
+    }).join('');
+}
+
+// =========================================================================
+// 4. QUẢN LÝ BIẾN STATE `selectedObjects` & DỒN LUỒNG XỬ LÝ GIAO DIỆN
+// =========================================================================
+
+function chonTronTo(tenToEncoded) {
+    const tenTo = decodeURIComponent(tenToEncoded);
+    
+    if (!selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO')) {
+        selectedObjects.push({ username: '', hoTen: `Tổ ${tenTo}`, toBoPhan: tenTo, loai: 'TO' });
+    }
+
+    renderGridNhanSu(tenTo);
+    updateTagDisplay();
+    showToast(`Đã chọn trọn Tổ ${tenTo}`, "success");
+}
+
+function toggleChonCaNhan(cb, usernameEncoded, hoTenEncoded, toBoPhanEncoded) {
+    const username = decodeURIComponent(usernameEncoded);
+    const hoTen = decodeURIComponent(hoTenEncoded);
+    const toBoPhan = decodeURIComponent(toBoPhanEncoded);
+
+    if (cb.checked) {
+        if (!selectedObjects.some(x => x.username === username && x.loai === 'CANHAN')) {
+            selectedObjects.push({ username, hoTen, toBoPhan, loai: 'CANHAN' });
+        }
+    } else {
+        // Nếu bỏ tích cá nhân -> Bỏ luôn thẻ cá nhân đó VÀ bỏ thẻ "Trọn tổ" (nếu có)
+        selectedObjects = selectedObjects.filter(x => !(x.username === username && x.loai === 'CANHAN'));
+        selectedObjects = selectedObjects.filter(x => !(x.toBoPhan === toBoPhan && x.loai === 'TO'));
+    }
+    
+    renderGridNhanSu(toBoPhan);
+    updateTagDisplay();
+}
+
+function removeSelected(idx) {
+    const removed = selectedObjects[idx];
+    selectedObjects.splice(idx, 1);
+    
+    if (removed) {
+        renderGridNhanSu(removed.toBoPhan);
+    }
+    updateTagDisplay();
+}
+
+function clearAllSelection() {
+    selectedObjects = [];
+    Object.keys(dsNhanSuLoadedByTo).forEach(tenTo => renderGridNhanSu(tenTo));
+    updateTagDisplay();
+    showToast("Đã xoá toàn bộ lựa chọn", "info");
+}
+
+function expandAllTo() {
+    dsToData.forEach(item => {
+        const sId = safeId(item.tenTo);
+        const body = document.getElementById(`bodyTo-${sId}`);
+        if (body && body.classList.contains('hidden')) {
+            toggleToAccordion(encodeURIComponent(item.tenTo));
+        }
+    });
+}
+
+function collapseAllTo() {
+    dsToData.forEach(item => {
+        const sId = safeId(item.tenTo);
         const body = document.getElementById(`bodyTo-${sId}`);
         const icon = document.getElementById(`iconTo-${sId}`);
-        
-        if (!body) return;
-
-        if (body.classList.contains('hidden')) {
-            body.classList.remove('hidden');
-            if (icon) icon.classList.add('rotate-90');
-
-            if (!dsNhanSuLoadedByTo[tenTo]) {
-                await loadNhanSuCuaTo(tenTo);
-            }
-        } else {
+        if (body && !body.classList.contains('hidden')) {
             body.classList.add('hidden');
             if (icon) icon.classList.remove('rotate-90');
         }
-    }
-
-    async function loadNhanSuCuaTo(tenTo) {
-        const sId = safeId(tenTo);
-        const loading = document.getElementById(`loadingTo-${sId}`);
-        const grid = document.getElementById(`gridTo-${sId}`);
-
-        try {
-            const res = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`);
-            if (!res.ok) throw new Error('HTTP Error ' + res.status);
-            
-            const listNS = await res.json();
-            const cleanList = Array.isArray(listNS) ? listNS : [];
-            dsNhanSuLoadedByTo[tenTo] = cleanList;
-
-            if (loading) loading.classList.add('hidden');
-            if (!grid) return;
-            
-            grid.classList.remove('hidden');
-
-            if (cleanList.length === 0) {
-                grid.innerHTML = '<div class="col-span-2 text-xs text-slate-400 italic p-2 text-center">Không có dữ liệu nhân sự.</div>';
-                return;
-            }
-
-            const isToAlreadySelected = selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO');
-
-            grid.innerHTML = cleanList.map(ns => {
-                const username = ns.username || '';
-                const hoTen = ns.hoTen || '';
-                const isChecked = isToAlreadySelected || selectedObjects.some(x => x.username === username && x.loai === 'CANHAN');
-                const encodedTo = encodeURIComponent(tenTo);
-                const encodedName = encodeURIComponent(hoTen);
-                const encodedUser = encodeURIComponent(username);
-
-                return `
-                    <label class="flex items-center space-x-2.5 p-2 rounded-xl bg-white hover:bg-blue-50/50 cursor-pointer border border-slate-200/60 transition shadow-xs">
-                        <input type="checkbox" 
-                               data-username="${username}" 
-                               data-hoten="${hoTen}" 
-                               data-tobophan="${tenTo}" 
-                               ${isChecked ? 'checked' : ''} 
-                               onchange="toggleChonCaNhan(this, '${encodedUser}', '${encodedName}', '${encodedTo}')" 
-                               class="w-4 h-4 text-[#0F4C81] rounded border-slate-300 focus:ring-0">
-                        <div class="truncate">
-                            <span class="text-xs font-semibold text-slate-700 block truncate">${hoTen}</span>
-                            <span class="text-[10px] text-slate-400 block truncate">(${ns.vaiTro || 'Thành viên'})</span>
-                        </div>
-                    </label>
-                `;
-            }).join('');
-        } catch (e) {
-            console.error("Lỗi load nhân sự tổ:", e);
-            if (loading) {
-                loading.innerText = 'Không thể tải danh sách nhân sự.';
-                loading.classList.remove('hidden');
-            }
-        }
-    }
-
-    // =========================================================================
-    // 4. QUẢN LÝ CHỌN LỰA ĐỐI TƯỢNG (DỮ LIỆU CHUẨN LOẠI V2)
-    // =========================================================================
-    function chonTronTo(tenToEncoded) {
-        const tenTo = decodeURIComponent(tenToEncoded);
-        
-        if (!selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO')) {
-            selectedObjects.push({ username: '', hoTen: `Tổ ${tenTo}`, toBoPhan: tenTo, loai: 'TO' });
-        }
-
-        const sId = safeId(tenTo);
-        const grid = document.getElementById(`gridTo-${sId}`);
-        if (grid) {
-            const checkboxes = grid.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(cb => { cb.checked = true; });
-        }
-
-        updateTagDisplay();
-        showToast(`Đã chọn trọn Tổ ${tenTo}`, "success");
-    }
-
-    function toggleChonCaNhan(cb, usernameEncoded, hoTenEncoded, toBoPhanEncoded) {
-        const username = decodeURIComponent(usernameEncoded);
-        const hoTen = decodeURIComponent(hoTenEncoded);
-        const toBoPhan = decodeURIComponent(toBoPhanEncoded);
-
-        if (cb.checked) {
-            if (!selectedObjects.some(x => x.username === username && x.loai === 'CANHAN')) {
-                selectedObjects.push({ username, hoTen, toBoPhan, loai: 'CANHAN' });
-            }
-        } else {
-            selectedObjects = selectedObjects.filter(x => !(x.username === username && x.loai === 'CANHAN'));
-            selectedObjects = selectedObjects.filter(x => !(x.toBoPhan === toBoPhan && x.loai === 'TO'));
-        }
-        updateTagDisplay();
-    }
-
-    function updateTagDisplay() {
-        const container = document.getElementById('danhSachDaChon');
-        const badgeNguoi = document.getElementById('badgeThongKeNguoi');
-        const badgeTo = document.getElementById('badgeThongKeTo');
-
-        if (!container) return;
-
-        const countTo = selectedObjects.filter(x => x.loai === 'TO').length;
-        const countNguoi = selectedObjects.filter(x => x.loai === 'CANHAN').length;
-
-        if (badgeTo) badgeTo.innerText = `${countTo} tổ`;
-        if (badgeNguoi) badgeNguoi.innerText = `${countNguoi} cá nhân`;
-
-        if (selectedObjects.length === 0) {
-            container.innerHTML = '<span class="text-xs text-slate-400 italic">Chưa chọn đối tượng nào...</span>';
-            return;
-        }
-
-        container.innerHTML = selectedObjects.map((item, idx) => `
-            <span class="px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs ${item.loai === 'TO' ? 'bg-indigo-50 text-indigo-800 border border-indigo-200' : 'bg-white text-[#0F4C81] border border-blue-200'}">
-                <i class="bi ${item.loai === 'TO' ? 'bi-diagram-3-fill' : 'bi-person-fill'}"></i>
-                ${item.hoTen}
-                <i class="bi bi-x-circle-fill text-slate-400 hover:text-red-500 cursor-pointer transition" onclick="removeSelected(${idx})"></i>
-            </span>
-        `).join('');
-    }
-
-    function removeSelected(idx) {
-        const removed = selectedObjects[idx];
-        selectedObjects.splice(idx, 1);
-        
-        // Nếu xóa tổ, bỏ check trên giao diện nếu đang hiển thị
-        if (removed && removed.loai === 'TO') {
-            const sId = safeId(removed.toBoPhan);
-            const grid = document.getElementById(`gridTo-${sId}`);
-            if (grid) {
-                const checkboxes = grid.querySelectorAll('input[type="checkbox"]');
-                checkboxes.forEach(cb => { cb.checked = false; });
-            }
-        }
-        updateTagDisplay();
-    }
-
-    function expandAllTo() {
-        dsToData.forEach(item => {
-            const sId = safeId(item.tenTo);
-            const body = document.getElementById(`bodyTo-${sId}`);
-            const icon = document.getElementById(`iconTo-${sId}`);
-            if (body && body.classList.contains('hidden')) {
-                toggleToAccordion(encodeURIComponent(item.tenTo));
-            }
-        });
-    }
-
-    function collapseAllTo() {
-        dsToData.forEach(item => {
-            const sId = safeId(item.tenTo);
-            const body = document.getElementById(`bodyTo-${sId}`);
-            const icon = document.getElementById(`iconTo-${sId}`);
-            if (body && !body.classList.contains('hidden')) {
-                body.classList.add('hidden');
-                if (icon) icon.classList.remove('rotate-90');
-            }
-        });
-    }
-
-    function clearAllSelection() {
-        selectedObjects = [];
-        const checkboxes = document.querySelectorAll('#danhSachToAccordion input[type="checkbox"]');
-        checkboxes.forEach(cb => cb.checked = false);
-        updateTagDisplay();
-        showToast("Đã xoá toàn bộ lựa chọn", "info");
-    }
-
-    function timKiemDoiTuong(val) {
-        renderToAccordion(val);
-    }
+    });
+}
 
     // =========================================================================
     // 5. TRA CỨU VĂN BẢN VÀ NGUỒN GIAO
