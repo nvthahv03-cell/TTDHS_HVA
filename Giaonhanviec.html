@@ -101,7 +101,7 @@
             <!-- Dòng dưới: Tên Phân Hệ -->
             <div class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
                 <h1 id="page-title" class="text-white font-extrabold text-base sm:text-lg tracking-wide uppercase flex items-center gap-2 drop-shadow-sm">
-                    <i class="bi bi-[#0F4C81] bi-send-check-fill text-cyan-300"></i>
+                    <i class="bi bi-send-check-fill text-cyan-300"></i>
                     GIAO NHIỆM VỤ CÔNG VIỆC
                 </h1>
                 <span class="text-white/70 text-xs font-normal hidden sm:inline-block">TTĐHS_HVA v2.1</span>
@@ -109,7 +109,7 @@
         </div>
     </header>
 
-    <!-- MAIN CONTAINER (RUỘT GIAO NHIỆM VỤ V2.1) -->
+    <!-- MAIN CONTAINER -->
     <main class="flex-1 max-w-4xl w-full mx-auto px-4 pt-6 pb-28 space-y-5">
         <form id="formGiaoViecFull" class="space-y-5">
             
@@ -383,17 +383,35 @@
     });
 
     async function loadDanhSachTo() {
+        const container = document.getElementById('danhSachToAccordion');
         try {
-            const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`);
+            const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`, {
+                method: 'GET',
+                redirect: 'follow'
+            });
             if (!res.ok) throw new Error('HTTP Error ' + res.status);
-            const data = await res.json();
+            
+            const textData = await res.text();
+            let data = [];
+            try {
+                data = JSON.parse(textData);
+            } catch (errParse) {
+                console.error("Lỗi định dạng dữ liệu:", textData);
+                throw new Error("Phản hồi không phải định dạng JSON hợp lệ.");
+            }
+
             dsToData = Array.isArray(data) ? data : [];
             renderToAccordion();
         } catch (e) {
             console.error("Lỗi lấy danh sách tổ:", e);
-            const container = document.getElementById('danhSachToAccordion');
             if (container) {
-                container.innerHTML = '<div class="p-3 text-xs text-red-500 italic text-center">Không thể tải danh sách tổ. Vui lòng kiểm tra kết nối!</div>';
+                container.innerHTML = `
+                    <div class="p-4 text-center space-y-2">
+                        <div class="text-xs text-red-500 font-medium">Không thể tải danh sách tổ. Vui lòng kiểm tra lại kết nối API hoặc Apps Script!</div>
+                        <button type="button" onclick="loadDanhSachTo()" class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition">
+                            <i class="bi bi-arrow-clockwise"></i> Thử lại
+                        </button>
+                    </div>`;
             }
         }
     }
@@ -414,15 +432,16 @@
             const encodedTo = encodeURIComponent(tenTo);
 
             const div = document.createElement('div');
+            div.id = `groupTo-${sId}`;
             div.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm item-to-group";
-            div.setAttribute('data-[#0F4C81]-tento', tenTo.toLowerCase());
+            div.setAttribute('data-tento', tenTo.toLowerCase());
             div.innerHTML = `
                 <div class="p-3 bg-slate-50/50 flex items-center justify-between text-xs font-bold text-[#0F4C81]">
                     <button type="button" onclick="toggleToAccordion('${encodedTo}')" class="flex-1 flex items-center gap-2 text-left">
                         <i id="iconTo-${sId}" class="bi bi-chevron-right text-slate-400 transition-transform"></i>
                         <i class="bi bi-folder2-open text-blue-500"></i>
                         <span class="lbl-tento-name">${tenTo}</span>
-                        <span class="text-[10px] font-normal text-slate-400">(${item.soLuong} người)</span>
+                        <span class="text-[10px] font-normal text-slate-400">(${item.soLuong || 0} người)</span>
                     </button>
                     <button type="button" onclick="chonTronTo('${encodedTo}')" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-semibold transition active:scale-95">
                         <i class="bi bi-check-all"></i> Chọn trọn tổ
@@ -464,10 +483,20 @@
         const grid = document.getElementById(`gridTo-${sId}`);
 
         try {
-            const res = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`);
+            const res = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`, {
+                method: 'GET',
+                redirect: 'follow'
+            });
             if (!res.ok) throw new Error('HTTP Error ' + res.status);
             
-            const listNS = await res.json();
+            const textData = await res.text();
+            let listNS = [];
+            try {
+                listNS = JSON.parse(textData);
+            } catch (errParse) {
+                console.error("Lỗi parse nhân sự:", textData);
+            }
+
             const cleanList = Array.isArray(listNS) ? listNS : [];
             dsNhanSuLoadedByTo[tenTo] = cleanList;
 
@@ -492,7 +521,7 @@
                 const encodedUser = encodeURIComponent(username);
 
                 return `
-                    <label class="item-ns-label flex items-center space-x-2.5 p-2 rounded-xl bg-white hover:bg-blue-50/50 cursor-pointer border border-slate-200/60 transition shadow-sm" data-[#0F4C81]-hoten="${hoTen.toLowerCase()}">
+                    <label class="item-ns-label flex items-center space-x-2.5 p-2 rounded-xl bg-white hover:bg-blue-50/50 cursor-pointer border border-slate-200/60 transition shadow-sm" data-hoten="${hoTen.toLowerCase()}">
                         <input type="checkbox" 
                                data-username="${username}" 
                                data-hoten="${hoTen}" 
@@ -557,7 +586,6 @@
 
         if (!container) return;
 
-        // Thống kê đồng thời cả số tổ và số cá nhân
         const countTo = selectedObjects.filter(x => x.loai === 'TO').length;
         const countNguoi = selectedObjects.filter(x => x.loai === 'CANHAN').length;
 
@@ -604,7 +632,7 @@
         updateTagDisplay();
     }
 
-    // BẬT / TẮT BỎ CÁC TỔ
+    // MỞ / THU GỌN ALL
     async function expandAllTo() {
         for (const item of dsToData) {
             const tenTo = item.tenTo;
@@ -631,7 +659,7 @@
         });
     }
 
-    // TÌM KIẾM ĐỐI TƯỢNG VÀ TỰ ĐỘNG LỌC TỔ/GIÁO VIÊN
+    // TÌM KIẾM ĐỐI TƯỢNG VÀ TỰ ĐỘNG LỌC
     async function timKiemDoiTuong(keyword) {
         const q = keyword.trim().toLowerCase();
         if (!q) {
@@ -643,7 +671,7 @@
         for (const item of dsToData) {
             const tenTo = item.tenTo;
             const sId = safeId(tenTo);
-            const groupEl = document.querySelector(`.item-to-group[data-[#0F4C81]-tento*="${safeId(tenTo).toLowerCase()}"]`) || document.getElementById(`bodyTo-${sId}`)?.parentElement;
+            const groupEl = document.getElementById(`groupTo-${sId}`);
 
             if (!dsNhanSuLoadedByTo[tenTo]) {
                 await loadNhanSuCuaTo(tenTo);
@@ -665,7 +693,7 @@
                 if (grid) {
                     const labels = grid.querySelectorAll('.item-ns-label');
                     labels.forEach(lbl => {
-                        const name = lbl.getAttribute('data-[#0F4C81]-hoten') || '';
+                        const name = (lbl.getAttribute('data-hoten') || '').toLowerCase();
                         if (matchTo || name.includes(q)) {
                             lbl.classList.remove('hidden');
                         } else {
@@ -700,10 +728,16 @@
         vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center"><i class="bi bi-arrow-repeat animate-spin"></i> Đang tra cứu Kho Văn bản...</div>';
 
         try {
-            const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}`);
+            const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}`, {
+                method: 'GET',
+                redirect: 'follow'
+            });
             if (!res.ok) throw new Error('HTTP Error ' + res.status);
             
-            const list = await res.json();
+            const textData = await res.text();
+            let list = [];
+            try { list = JSON.parse(textData); } catch(err) {}
+
             cachedVanBanResults = Array.isArray(list) ? list : [];
 
             if (cachedVanBanResults.length === 0) {
