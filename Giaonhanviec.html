@@ -79,7 +79,6 @@
 
         <!-- Header Content Container -->
         <div class="relative max-w-5xl mx-auto px-4 py-3 sm:py-4">
-            <!-- Dòng trên: Navigation & System Status -->
             <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-3 min-w-0">
                     <a href="main.html"
@@ -98,7 +97,6 @@
                 </div>
             </div>
 
-            <!-- Dòng dưới: Tên Phân Hệ -->
             <div class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
                 <h1 id="page-title" class="text-white font-extrabold text-base sm:text-lg tracking-wide uppercase flex items-center gap-2 drop-shadow-sm">
                     <i class="bi bi-send-check-fill text-cyan-300"></i>
@@ -234,8 +232,6 @@
 
             <!-- ĐỐI TƯỢNG NHẬN NHIỆM VỤ -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-
-                <!-- Header & Thống kê Badge đồng thời Tổ và Giáo viên -->
                 <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
                     <div class="flex items-center gap-2">
                         <div class="w-7 h-7 rounded-lg bg-blue-50 border border-blue-100/80 flex items-center justify-center text-blue-600">
@@ -246,57 +242,40 @@
                         </label>
                     </div>
 
-                    <!-- Hiển thị đồng thời cả Tổ và Cá nhân -->
                     <div class="flex items-center gap-1.5">
-                        <span id="badgeThongKeTo"
-                            class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100/80 text-[11px] font-bold">
+                        <span id="badgeThongKeTo" class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100/80 text-[11px] font-bold">
                             0 tổ
                         </span>
-                        <span id="badgeThongKeNguoi"
-                            class="px-2.5 py-1 rounded-lg bg-blue-50 text-[#0F4C81] border border-blue-100/80 text-[11px] font-bold">
+                        <span id="badgeThongKeNguoi" class="px-2.5 py-1 rounded-lg bg-blue-50 text-[#0F4C81] border border-blue-100/80 text-[11px] font-bold">
                             0 cá nhân
                         </span>
                     </div>
                 </div>
 
-                <!-- Thanh tìm kiếm -->
                 <div class="relative group">
                     <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
-                    <input
-                        id="txtTimDoiTuong"
-                        type="text"
-                        oninput="timKiemDoiTuong(this.value)"
-                        placeholder="Tìm theo tên tổ hoặc giáo viên..."
-                        class="w-full rounded-xl border border-slate-200 bg-slate-50/60 pl-10 pr-4 py-2.5 text-xs outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition placeholder:text-slate-400">
+                    <input id="txtTimDoiTuong" type="text" oninput="timKiemDoiTuong(this.value)" placeholder="Tìm theo tên tổ hoặc giáo viên..." class="w-full rounded-xl border border-slate-200 bg-slate-50/60 pl-10 pr-4 py-2.5 text-xs outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition placeholder:text-slate-400">
                 </div>
 
-                <!-- Thanh công cụ hành động -->
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <div class="flex items-center gap-1.5">
-                        <button type="button"
-                            onclick="expandAllTo()"
-                            class="px-2.5 py-1.5 rounded-lg bg-slate-100/80 hover:bg-blue-50 hover:text-blue-700 border border-transparent hover:border-blue-200 text-slate-600 text-[11px] font-semibold transition flex items-center gap-1.5">
+                        <button type="button" onclick="expandAllTo()" class="px-2.5 py-1.5 rounded-lg bg-slate-100/80 hover:bg-blue-50 hover:text-blue-700 border border-transparent hover:border-blue-200 text-slate-600 text-[11px] font-semibold transition flex items-center gap-1.5">
                             <i class="bi bi-arrows-expand text-xs"></i>
                             <span>Mở tất cả</span>
                         </button>
 
-                        <button type="button"
-                            onclick="collapseAllTo()"
-                            class="px-2.5 py-1.5 rounded-lg bg-slate-100/80 hover:bg-slate-200/70 border border-transparent text-slate-600 text-[11px] font-semibold transition flex items-center gap-1.5">
+                        <button type="button" onclick="collapseAllTo()" class="px-2.5 py-1.5 rounded-lg bg-slate-100/80 hover:bg-slate-200/70 border border-transparent text-slate-600 text-[11px] font-semibold transition flex items-center gap-1.5">
                             <i class="bi bi-arrows-collapse text-xs"></i>
                             <span>Thu gọn</span>
                         </button>
                     </div>
 
-                    <button type="button"
-                        onclick="clearAllSelection()"
-                        class="px-2.5 py-1.5 rounded-lg bg-red-50/80 hover:bg-red-100 border border-red-100 text-red-600 text-[11px] font-semibold transition flex items-center gap-1.5">
+                    <button type="button" onclick="clearAllSelection()" class="px-2.5 py-1.5 rounded-lg bg-red-50/80 hover:bg-red-100 border border-red-100 text-red-600 text-[11px] font-semibold transition flex items-center gap-1.5">
                         <i class="bi bi-x-circle text-xs"></i>
                         <span>Bỏ chọn tất cả</span>
                     </button>
                 </div>
 
-                <!-- Accordion Danh sách tổ -->
                 <div id="danhSachToAccordion" class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
                     <div class="p-6 text-center text-xs text-slate-400 space-y-2">
                         <i class="bi bi-arrow-repeat animate-spin text-lg text-blue-500 inline-block"></i>
@@ -304,29 +283,21 @@
                     </div>
                 </div>
 
-                <!-- Vùng Tag đã chọn -->
                 <div class="pt-3 border-t border-slate-100 space-y-2">
                     <div class="flex items-center justify-between">
                         <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                             <i class="bi bi-check2-square text-blue-500"></i> Đã chọn
                         </span>
 
-                        <button
-                            type="button"
-                            onclick="clearAllSelection()"
-                            class="text-[11px] font-medium text-red-500 hover:text-red-700 hover:underline transition">
+                        <button type="button" onclick="clearAllSelection()" class="text-[11px] font-medium text-red-500 hover:text-red-700 hover:underline transition">
                             Xóa tất cả
                         </button>
                     </div>
 
-                    <div id="danhSachDaChon"
-                        class="p-2.5 bg-slate-50/60 rounded-xl border border-dashed border-slate-200 min-h-[52px] flex flex-wrap gap-1.5 items-center">
-                        <span class="text-xs text-slate-400 italic px-1">
-                            Chưa chọn đối tượng nào...
-                        </span>
+                    <div id="danhSachDaChon" class="p-2.5 bg-slate-50/60 rounded-xl border border-dashed border-slate-200 min-h-[52px] flex flex-wrap gap-1.5 items-center">
+                        <span class="text-xs text-slate-400 italic px-1">Chưa chọn đối tượng nào...</span>
                     </div>
                 </div>
-
             </div>
 
             <!-- YÊU CẦU MINH CHỨNG & HẠN HOÀN THÀNH -->
@@ -364,438 +335,438 @@
         </form>
     </main>
 
+    <!-- SCRIPT LOGIC XỬ LÝ -->
+    <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjq11TcDE4tyOsPl6NOw1q6r8f14r3Z3qQPuSAgic7Xf6XK4gXjwHOBem4I_IGnALZ/exec";
 
-let dsToData = [];
-let dsNhanSuLoadedByTo = {}; 
-let selectedObjects = [];     
-let vanBanChon = { soVanBan: '', tenVanBan: '' };
-let cachedVanBanResults = []; 
+    let dsToData = [];
+    let dsNhanSuLoadedByTo = {}; 
+    let selectedObjects = [];     
+    let vanBanChon = { soVanBan: '', tenVanBan: '' };
+    let cachedVanBanResults = []; 
 
-function safeId(str) {
-    return String(str || '').replace(/[^a-zA-Z0-9_-]/g, '_');
-}
-
-window.addEventListener('DOMContentLoaded', async function() {
-    await loadDanhSachTo();
-});
-
-async function loadDanhSachTo() {
-    const container = document.getElementById('danhSachToAccordion');
-    try {
-        // Thêm timestamp chống cache và gọi fetch chuẩn Web App
-        const response = await fetch(`${SCRIPT_URL}?action=getDanhSachTo&_=${Date.now()}`);
-        if (!response.ok) throw new Error('HTTP Error status: ' + response.status);
-        
-        const data = await response.json();
-        dsToData = Array.isArray(data) ? data : [];
-        renderToAccordion();
-    } catch (e) {
-        console.error("Lỗi lấy danh sách tổ:", e);
-        if (container) {
-            container.innerHTML = `
-                <div class="p-4 text-center space-y-2">
-                    <div class="text-xs text-red-500 font-medium">Không thể tải danh sách tổ (Lỗi kết nối API/CORS).</div>
-                    <button type="button" onclick="loadDanhSachTo()" class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition">
-                        <i class="bi bi-arrow-clockwise"></i> Thử lại
-                    </button>
-                </div>`;
-        }
-    }
-}
-
-function renderToAccordion() {
-    const container = document.getElementById('danhSachToAccordion');
-    if (!container) return;
-    container.innerHTML = '';
-
-    if (!dsToData || dsToData.length === 0) {
-        container.innerHTML = '<div class="p-3 text-xs text-slate-400 italic text-center">Không tìm thấy danh sách tổ.</div>';
-        return;
+    function safeId(str) {
+        return String(str || '').replace(/[^a-zA-Z0-9_-]/g, '_');
     }
 
-    dsToData.forEach(item => {
-        const tenTo = item.tenTo;
-        const sId = safeId(tenTo);
-        const encodedTo = encodeURIComponent(tenTo);
-
-        const div = document.createElement('div');
-        div.id = `groupTo-${sId}`;
-        div.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm item-to-group";
-        div.setAttribute('data-tento', tenTo.toLowerCase());
-        div.innerHTML = `
-            <div class="p-3 bg-slate-50/50 flex items-center justify-between text-xs font-bold text-[#0F4C81]">
-                <button type="button" onclick="toggleToAccordion('${encodedTo}')" class="flex-1 flex items-center gap-2 text-left">
-                    <i id="iconTo-${sId}" class="bi bi-chevron-right text-slate-400 transition-transform"></i>
-                    <i class="bi bi-folder2-open text-blue-500"></i>
-                    <span class="lbl-tento-name">${tenTo}</span>
-                    <span class="text-[10px] font-normal text-slate-400">(${item.soLuong || 0} người)</span>
-                </button>
-                <button type="button" onclick="chonTronTo('${encodedTo}')" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-semibold transition active:scale-95">
-                    <i class="bi bi-check-all"></i> Chọn trọn tổ
-                </button>
-            </div>
-            <div id="bodyTo-${sId}" class="hidden p-3 bg-blue-50/10 border-t border-slate-100">
-                <div class="p-2 text-xs text-slate-400 italic text-center" id="loadingTo-${sId}">Đang tải nhân sự...</div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 hidden" id="gridTo-${sId}"></div>
-            </div>
-        `;
-        container.appendChild(div);
+    window.addEventListener('DOMContentLoaded', async function() {
+        await loadDanhSachTo();
     });
-}
 
-async function toggleToAccordion(tenToEncoded) {
-    const tenTo = decodeURIComponent(tenToEncoded);
-    const sId = safeId(tenTo);
-    const body = document.getElementById(`bodyTo-${sId}`);
-    const icon = document.getElementById(`iconTo-${sId}`);
-    
-    if (!body) return;
-
-    if (body.classList.contains('hidden')) {
-        body.classList.remove('hidden');
-        if (icon) icon.classList.add('rotate-90');
-
-        if (!dsNhanSuLoadedByTo[tenTo]) {
-            await loadNhanSuCuaTo(tenTo);
-        }
-    } else {
-        body.classList.add('hidden');
-        if (icon) icon.classList.remove('rotate-90');
-    }
-}
-
-async function loadNhanSuCuaTo(tenTo) {
-    const sId = safeId(tenTo);
-    const loading = document.getElementById(`loadingTo-${sId}`);
-    const grid = document.getElementById(`gridTo-${sId}`);
-
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}&_=${Date.now()}`);
-        if (!res.ok) throw new Error('HTTP Error ' + res.status);
-        
-        const cleanList = await res.json();
-        dsNhanSuLoadedByTo[tenTo] = Array.isArray(cleanList) ? cleanList : [];
-
-        if (loading) loading.classList.add('hidden');
-        if (!grid) return;
-        
-        grid.classList.remove('hidden');
-
-        if (dsNhanSuLoadedByTo[tenTo].length === 0) {
-            grid.innerHTML = '<div class="col-span-2 text-xs text-slate-400 italic p-2 text-center">Không có dữ liệu nhân sự.</div>';
-            return;
-        }
-
-        const isToAlreadySelected = selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO');
-
-        grid.innerHTML = dsNhanSuLoadedByTo[tenTo].map(ns => {
-            const username = ns.username || '';
-            const hoTen = ns.hoTen || '';
-            const isChecked = isToAlreadySelected || selectedObjects.some(x => x.username === username && x.loai === 'CANHAN');
-            const encodedTo = encodeURIComponent(tenTo);
-            const encodedName = encodeURIComponent(hoTen);
-            const encodedUser = encodeURIComponent(username);
-
-            return `
-                <label class="item-ns-label flex items-center space-x-2.5 p-2 rounded-xl bg-white hover:bg-blue-50/50 cursor-pointer border border-slate-200/60 transition shadow-sm" data-hoten="${hoTen.toLowerCase()}">
-                    <input type="checkbox" 
-                           data-username="${username}" 
-                           data-hoten="${hoTen}" 
-                           data-tobophan="${tenTo}" 
-                           ${isChecked ? 'checked' : ''} 
-                           onchange="toggleChonCaNhan(this, '${encodedUser}', '${encodedName}', '${encodedTo}')" 
-                           class="w-4 h-4 text-[#0F4C81] rounded border-slate-300">
-                    <span class="text-xs font-semibold text-slate-700">${hoTen}</span>
-                    <span class="text-[10px] text-slate-400">(${ns.vaiTro || 'Thành viên'})</span>
-                </label>
-            `;
-        }).join('');
-    } catch (e) {
-        console.error("Lỗi load nhân sự tổ:", e);
-        if (loading) {
-            loading.innerText = 'Không thể tải danh sách nhân sự.';
-            loading.classList.remove('hidden');
-        }
-    }
-}
-
-function chonTronTo(tenToEncoded) {
-    const tenTo = decodeURIComponent(tenToEncoded);
-    
-    if (!selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO')) {
-        selectedObjects.push({ username: '', hoTen: `Tổ ${tenTo}`, toBoPhan: tenTo, loai: 'TO' });
-    }
-
-    const sId = safeId(tenTo);
-    const grid = document.getElementById(`gridTo-${sId}`);
-    if (grid) {
-        const checkboxes = grid.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(cb => { cb.checked = true; });
-    }
-
-    updateTagDisplay();
-}
-
-function toggleChonCaNhan(cb, usernameEncoded, hoTenEncoded, toBoPhanEncoded) {
-    const username = decodeURIComponent(usernameEncoded);
-    const hoTen = decodeURIComponent(hoTenEncoded);
-    const toBoPhan = decodeURIComponent(toBoPhanEncoded);
-
-    if (cb.checked) {
-        if (!selectedObjects.some(x => x.username === username && x.loai === 'CANHAN')) {
-            selectedObjects.push({ username, hoTen, toBoPhan, loai: 'CANHAN' });
-        }
-    } else {
-        selectedObjects = selectedObjects.filter(x => !(x.username === username && x.loai === 'CANHAN'));
-        selectedObjects = selectedObjects.filter(x => !(x.toBoPhan === toBoPhan && x.loai === 'TO'));
-    }
-    updateTagDisplay();
-}
-
-function updateTagDisplay() {
-    const container = document.getElementById('danhSachDaChon');
-    const badgeNguoi = document.getElementById('badgeThongKeNguoi');
-    const badgeTo = document.getElementById('badgeThongKeTo');
-
-    if (!container) return;
-
-    const countTo = selectedObjects.filter(x => x.loai === 'TO').length;
-    const countNguoi = selectedObjects.filter(x => x.loai === 'CANHAN').length;
-
-    if (badgeTo) badgeTo.innerText = `${countTo} tổ`;
-    if (badgeNguoi) badgeNguoi.innerText = `${countNguoi} cá nhân`;
-
-    if (selectedObjects.length === 0) {
-        container.innerHTML = '<span class="text-xs text-slate-400 italic px-1">Chưa chọn đối tượng nào...</span>';
-        return;
-    }
-
-    container.innerHTML = selectedObjects.map((item, idx) => `
-        <span class="px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm ${item.loai === 'TO' ? 'bg-indigo-50 text-indigo-800 border border-indigo-200' : 'bg-white text-[#0F4C81] border border-blue-200'}">
-            <i class="bi ${item.loai === 'TO' ? 'bi-diagram-3-fill' : 'bi-person-fill'}"></i>
-            ${item.hoTen}
-            <i class="bi bi-x-circle-fill text-slate-400 hover:text-red-500 cursor-pointer transition-colors" onclick="removeSelected(${idx})"></i>
-        </span>
-    `).join('');
-}
-
-function removeSelected(idx) {
-    const item = selectedObjects[idx];
-    if (item) {
-        if (item.loai === 'CANHAN') {
-            const sId = safeId(item.toBoPhan);
-            const grid = document.getElementById(`gridTo-${sId}`);
-            if (grid) {
-                const cb = grid.querySelector(`input[data-username="${item.username}"]`);
-                if (cb) cb.checked = false;
+    async function loadDanhSachTo() {
+        const container = document.getElementById('danhSachToAccordion');
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=getDanhSachTo&_=${Date.now()}`);
+            if (!response.ok) throw new Error('HTTP Error status: ' + response.status);
+            
+            const data = await response.json();
+            dsToData = Array.isArray(data) ? data : [];
+            renderToAccordion();
+        } catch (e) {
+            console.error("Lỗi lấy danh sách tổ:", e);
+            if (container) {
+                container.innerHTML = `
+                    <div class="p-4 text-center space-y-2">
+                        <div class="text-xs text-red-500 font-medium">Không thể tải danh sách tổ (Cần re-deploy Web App ở quyền Anyone).</div>
+                        <button type="button" onclick="loadDanhSachTo()" class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-100 transition">
+                            <i class="bi bi-arrow-clockwise"></i> Thử lại
+                        </button>
+                    </div>`;
             }
         }
     }
-    selectedObjects.splice(idx, 1);
-    updateTagDisplay();
-}
 
-function clearAllSelection() {
-    selectedObjects = [];
-    const container = document.getElementById('danhSachToAccordion');
-    if (container) {
-        const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(cb => { cb.checked = false; });
+    function renderToAccordion() {
+        const container = document.getElementById('danhSachToAccordion');
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (!dsToData || dsToData.length === 0) {
+            container.innerHTML = '<div class="p-3 text-xs text-slate-400 italic text-center">Không tìm thấy danh sách tổ.</div>';
+            return;
+        }
+
+        dsToData.forEach(item => {
+            const tenTo = item.tenTo;
+            const sId = safeId(tenTo);
+            const encodedTo = encodeURIComponent(tenTo);
+
+            const div = document.createElement('div');
+            div.id = `groupTo-${sId}`;
+            div.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm item-to-group";
+            div.setAttribute('data-tento', tenTo.toLowerCase());
+            div.innerHTML = `
+                <div class="p-3 bg-slate-50/50 flex items-center justify-between text-xs font-bold text-[#0F4C81]">
+                    <button type="button" onclick="toggleToAccordion('${encodedTo}')" class="flex-1 flex items-center gap-2 text-left">
+                        <i id="iconTo-${sId}" class="bi bi-chevron-right text-slate-400 transition-transform"></i>
+                        <i class="bi bi-folder2-open text-blue-500"></i>
+                        <span class="lbl-tento-name">${tenTo}</span>
+                        <span class="text-[10px] font-normal text-slate-400">(${item.soLuong || 0} người)</span>
+                    </button>
+                    <button type="button" onclick="chonTronTo('${encodedTo}')" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-semibold transition active:scale-95">
+                        <i class="bi bi-check-all"></i> Chọn trọn tổ
+                    </button>
+                </div>
+                <div id="bodyTo-${sId}" class="hidden p-3 bg-blue-50/10 border-t border-slate-100">
+                    <div class="p-2 text-xs text-slate-400 italic text-center" id="loadingTo-${sId}">Đang tải nhân sự...</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 hidden" id="gridTo-${sId}"></div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
     }
-    updateTagDisplay();
-}
 
-async function expandAllTo() {
-    for (const item of dsToData) {
-        const tenTo = item.tenTo;
+    async function toggleToAccordion(tenToEncoded) {
+        const tenTo = decodeURIComponent(tenToEncoded);
         const sId = safeId(tenTo);
         const body = document.getElementById(`bodyTo-${sId}`);
         const icon = document.getElementById(`iconTo-${sId}`);
-        if (body && body.classList.contains('hidden')) {
+        
+        if (!body) return;
+
+        if (body.classList.contains('hidden')) {
             body.classList.remove('hidden');
             if (icon) icon.classList.add('rotate-90');
+
             if (!dsNhanSuLoadedByTo[tenTo]) {
                 await loadNhanSuCuaTo(tenTo);
             }
+        } else {
+            body.classList.add('hidden');
+            if (icon) icon.classList.remove('rotate-90');
         }
     }
-}
 
-function collapseAllTo() {
-    dsToData.forEach(item => {
-        const sId = safeId(item.tenTo);
-        const body = document.getElementById(`bodyTo-${sId}`);
-        const icon = document.getElementById(`iconTo-${sId}`);
-        if (body) body.classList.add('hidden');
-        if (icon) icon.classList.remove('rotate-90');
-    });
-}
-
-async function timKiemDoiTuong(keyword) {
-    const q = keyword.trim().toLowerCase();
-    if (!q) {
-        document.querySelectorAll('.item-to-group').forEach(el => el.classList.remove('hidden'));
-        document.querySelectorAll('.item-ns-label').forEach(el => el.classList.remove('hidden'));
-        return;
-    }
-
-    for (const item of dsToData) {
-        const tenTo = item.tenTo;
+    async function loadNhanSuCuaTo(tenTo) {
         const sId = safeId(tenTo);
-        const groupEl = document.getElementById(`groupTo-${sId}`);
+        const loading = document.getElementById(`loadingTo-${sId}`);
+        const grid = document.getElementById(`gridTo-${sId}`);
 
-        if (!dsNhanSuLoadedByTo[tenTo]) {
-            await loadNhanSuCuaTo(tenTo);
+        try {
+            const res = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}&_=${Date.now()}`);
+            if (!res.ok) throw new Error('HTTP Error ' + res.status);
+            
+            const cleanList = await res.json();
+            dsNhanSuLoadedByTo[tenTo] = Array.isArray(cleanList) ? cleanList : [];
+
+            if (loading) loading.classList.add('hidden');
+            if (!grid) return;
+            
+            grid.classList.remove('hidden');
+
+            if (dsNhanSuLoadedByTo[tenTo].length === 0) {
+                grid.innerHTML = '<div class="col-span-2 text-xs text-slate-400 italic p-2 text-center">Không có dữ liệu nhân sự.</div>';
+                return;
+            }
+
+            const isToAlreadySelected = selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO');
+
+            grid.innerHTML = dsNhanSuLoadedByTo[tenTo].map(ns => {
+                const username = ns.username || '';
+                const hoTen = ns.hoTen || '';
+                const isChecked = isToAlreadySelected || selectedObjects.some(x => x.username === username && x.loai === 'CANHAN');
+                const encodedTo = encodeURIComponent(tenTo);
+                const encodedName = encodeURIComponent(hoTen);
+                const encodedUser = encodeURIComponent(username);
+
+                return `
+                    <label class="item-ns-label flex items-center space-x-2.5 p-2 rounded-xl bg-white hover:bg-blue-50/50 cursor-pointer border border-slate-200/60 transition shadow-sm" data-hoten="${hoTen.toLowerCase()}">
+                        <input type="checkbox" 
+                               data-username="${username}" 
+                               data-hoten="${hoTen}" 
+                               data-tobophan="${tenTo}" 
+                               ${isChecked ? 'checked' : ''} 
+                               onchange="toggleChonCaNhan(this, '${encodedUser}', '${encodedName}', '${encodedTo}')" 
+                               class="w-4 h-4 text-[#0F4C81] rounded border-slate-300">
+                        <span class="text-xs font-semibold text-slate-700">${hoTen}</span>
+                        <span class="text-[10px] text-slate-400">(${ns.vaiTro || 'Thành viên'})</span>
+                    </label>
+                `;
+            }).join('');
+        } catch (e) {
+            console.error("Lỗi load nhân sự tổ:", e);
+            if (loading) {
+                loading.innerText = 'Không thể tải danh sách nhân sự.';
+                loading.classList.remove('hidden');
+            }
+        }
+    }
+
+    function chonTronTo(tenToEncoded) {
+        const tenTo = decodeURIComponent(tenToEncoded);
+        
+        if (!selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO')) {
+            selectedObjects.push({ username: '', hoTen: `Tổ ${tenTo}`, toBoPhan: tenTo, loai: 'TO' });
         }
 
-        const body = document.getElementById(`bodyTo-${sId}`);
-        const icon = document.getElementById(`iconTo-${sId}`);
-        const nsList = dsNhanSuLoadedByTo[tenTo] || [];
+        const sId = safeId(tenTo);
+        const grid = document.getElementById(`gridTo-${sId}`);
+        if (grid) {
+            const checkboxes = grid.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => { cb.checked = true; });
+        }
 
-        const matchTo = tenTo.toLowerCase().includes(q);
-        const hasMatchNS = nsList.some(ns => (ns.hoTen || '').toLowerCase().includes(q));
+        updateTagDisplay();
+    }
 
-        if (matchTo || hasMatchNS) {
-            if (groupEl) groupEl.classList.remove('hidden');
-            if (body) body.classList.remove('hidden');
-            if (icon) icon.classList.add('rotate-90');
+    function toggleChonCaNhan(cb, usernameEncoded, hoTenEncoded, toBoPhanEncoded) {
+        const username = decodeURIComponent(usernameEncoded);
+        const hoTen = decodeURIComponent(hoTenEncoded);
+        const toBoPhan = decodeURIComponent(toBoPhanEncoded);
 
-            const grid = document.getElementById(`gridTo-${sId}`);
-            if (grid) {
-                const labels = grid.querySelectorAll('.item-ns-label');
-                labels.forEach(lbl => {
-                    const name = (lbl.getAttribute('data-hoten') || '').toLowerCase();
-                    if (matchTo || name.includes(q)) {
-                        lbl.classList.remove('hidden');
-                    } else {
-                        lbl.classList.add('hidden');
-                    }
-                });
+        if (cb.checked) {
+            if (!selectedObjects.some(x => x.username === username && x.loai === 'CANHAN')) {
+                selectedObjects.push({ username, hoTen, toBoPhan, loai: 'CANHAN' });
             }
         } else {
-            if (groupEl) groupEl.classList.add('hidden');
+            selectedObjects = selectedObjects.filter(x => !(x.username === username && x.loai === 'CANHAN'));
+            selectedObjects = selectedObjects.filter(x => !(x.toBoPhan === toBoPhan && x.loai === 'TO'));
         }
+        updateTagDisplay();
     }
-}
 
-function xuLyThayDoiNguonGiao(val) {
-    const card = document.getElementById('cardVanBan');
-    if (!card) return;
-    if (val === 'Theo văn bản') {
-        card.classList.remove('hidden');
-    } else {
-        card.classList.add('hidden');
-        vanBanChon = { soVanBan: '', tenVanBan: '' };
-    }
-}
+    function updateTagDisplay() {
+        const container = document.getElementById('danhSachDaChon');
+        const badgeNguoi = document.getElementById('badgeThongKeNguoi');
+        const badgeTo = document.getElementById('badgeThongKeTo');
 
-async function timKiemVanBan() {
-    const q = document.getElementById('inputTimVanBan').value.trim();
-    const vung = document.getElementById('vungKetQuaVanBan');
-    if (!vung) return;
+        if (!container) return;
 
-    vung.classList.remove('hidden');
-    vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center"><i class="bi bi-arrow-repeat animate-spin"></i> Đang tra cứu Kho Văn bản...</div>';
+        const countTo = selectedObjects.filter(x => x.loai === 'TO').length;
+        const countNguoi = selectedObjects.filter(x => x.loai === 'CANHAN').length;
 
-    try {
-        const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}&_=${Date.now()}`);
-        if (!res.ok) throw new Error('HTTP Error ' + res.status);
-        
-        cachedVanBanResults = await res.json();
-        if (!Array.isArray(cachedVanBanResults)) cachedVanBanResults = [];
+        if (badgeTo) badgeTo.innerText = `${countTo} tổ`;
+        if (badgeNguoi) badgeNguoi.innerText = `${countNguoi} cá nhân`;
 
-        if (cachedVanBanResults.length === 0) {
-            vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">Không tìm thấy văn bản phù hợp.</div>';
+        if (selectedObjects.length === 0) {
+            container.innerHTML = '<span class="text-xs text-slate-400 italic px-1">Chưa chọn đối tượng nào...</span>';
             return;
         }
 
-        vung.innerHTML = cachedVanBanResults.map((item, idx) => `
-            <div onclick="selectVanBanByIndex(${idx})" class="p-2.5 hover:bg-blue-50 cursor-pointer text-xs border-b border-slate-100 last:border-0 transition">
-                <div class="font-bold text-[#0F4C81]">${item.soVanBan || 'Không số'}</div>
-                <div class="text-slate-800 truncate font-medium">${item.tenVanBan || ''}</div>
-                <div class="text-[10px] text-slate-400">${item.donViBanHanh || ''} ${item.ngayBanHanh ? ' - ' + item.ngayBanHanh : ''}</div>
-            </div>
+        container.innerHTML = selectedObjects.map((item, idx) => `
+            <span class="px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm ${item.loai === 'TO' ? 'bg-indigo-50 text-indigo-800 border border-indigo-200' : 'bg-white text-[#0F4C81] border border-blue-200'}">
+                <i class="bi ${item.loai === 'TO' ? 'bi-diagram-3-fill' : 'bi-person-fill'}"></i>
+                ${item.hoTen}
+                <i class="bi bi-x-circle-fill text-slate-400 hover:text-red-500 cursor-pointer transition-colors" onclick="removeSelected(${idx})"></i>
+            </span>
         `).join('');
-    } catch (e) {
-        console.error("Lỗi tìm văn bản:", e);
-        vung.innerHTML = '<div class="p-3 text-xs text-red-500 text-center">Lỗi khi kết nối Kho Văn bản.</div>';
-    }
-}
-
-function selectVanBanByIndex(index) {
-    const item = cachedVanBanResults[index];
-    if (!item) return;
-
-    vanBanChon = item;
-    const lblSoVB = document.getElementById('lblSoVB');
-    const lblNgayBH = document.getElementById('lblNgayBH');
-    const lblTenVB = document.getElementById('lblTenVB');
-    const vung = document.getElementById('vungKetQuaVanBan');
-
-    if (lblSoVB) lblSoVB.innerText = item.soVanBan || 'Không số';
-    if (lblNgayBH) lblNgayBH.innerText = item.ngayBanHanh || '--/--/----';
-    if (lblTenVB) lblTenVB.innerText = item.tenVanBan || '';
-    if (vung) vung.classList.add('hidden');
-}
-
-// SUBMIT FORM (Gửi POST dạng text/plain để tránh CORS trên Apps Script)
-document.getElementById('formGiaoViecFull').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    if (selectedObjects.length === 0) {
-        alert('Vui lòng chọn ít nhất một tổ hoặc cá nhân nhận nhiệm vụ!');
-        return;
     }
 
-    const tieuDeVal = document.getElementById('tieuDe').value.trim();
-    if (!tieuDeVal) {
-        alert('Vui lòng nhập tiêu đề công việc!');
-        document.getElementById('tieuDe').focus();
-        return;
+    function removeSelected(idx) {
+        const item = selectedObjects[idx];
+        if (item) {
+            if (item.loai === 'CANHAN') {
+                const sId = safeId(item.toBoPhan);
+                const grid = document.getElementById(`gridTo-${sId}`);
+                if (grid) {
+                    const cb = grid.querySelector(`input[data-username="${item.username}"]`);
+                    if (cb) cb.checked = false;
+                }
+            }
+        }
+        selectedObjects.splice(idx, 1);
+        updateTagDisplay();
     }
 
-    const btn = document.getElementById('btnSubmit');
-    const originalBtnText = btn.innerHTML;
-    
-    btn.disabled = true;
-    btn.innerHTML = `<i class="bi bi-arrow-repeat animate-spin"></i> <span>Đang lưu dữ liệu...</span>`;
+    function clearAllSelection() {
+        selectedObjects = [];
+        const container = document.getElementById('danhSachToAccordion');
+        if (container) {
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => { cb.checked = false; });
+        }
+        updateTagDisplay();
+    }
 
-    const nguonGiaoVal = document.querySelector('input[name="nguonGiaoRadio"]:checked')?.value || 'Theo văn bản';
+    async function expandAllTo() {
+        for (const item of dsToData) {
+            const tenTo = item.tenTo;
+            const sId = safeId(tenTo);
+            const body = document.getElementById(`bodyTo-${sId}`);
+            const icon = document.getElementById(`iconTo-${sId}`);
+            if (body && body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                if (icon) icon.classList.add('rotate-90');
+                if (!dsNhanSuLoadedByTo[tenTo]) {
+                    await loadNhanSuCuaTo(tenTo);
+                }
+            }
+        }
+    }
 
-    const payload = {
-        action: 'createTask',
-        nguoiGiao: document.getElementById('nguoiGiao').value,
-        chucVuNguoiGiao: document.getElementById('chucVuNguoiGiao').value,
-        loaiNhiemVu: document.getElementById('loaiNhiemVu').value,
-        nguonGiao: nguonGiaoVal,
-        soVanBan: nguonGiaoVal === 'Theo văn bản' ? (vanBanChon.soVanBan || '') : '',
-        tenVanBan: nguonGiaoVal === 'Theo văn bản' ? (vanBanChon.tenVanBan || '') : '',
-        mucDo: document.getElementById('mucDo').value,
-        tieuDe: tieuDeVal,
-        noiDung: document.getElementById('noiDung').value.trim(),
-        yeuCauMinhChung: document.getElementById('yeuCauMinhChung').value,
-        hanHoanThanh: document.getElementById('hanHoanThanh').value,
-        danhSachNguoiNhan: selectedObjects
-    };
-
-    try {
-        await fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
+    function collapseAllTo() {
+        dsToData.forEach(item => {
+            const sId = safeId(item.tenTo);
+            const body = document.getElementById(`bodyTo-${sId}`);
+            const icon = document.getElementById(`iconTo-${sId}`);
+            if (body) body.classList.add('hidden');
+            if (icon) icon.classList.remove('rotate-90');
         });
-
-        alert('Giao nhiệm vụ thành công! Dữ liệu đã được ghi nhận.');
-        window.location.href = 'main.html';
-    } catch (err) {
-        console.error("Lỗi gửi createTask:", err);
-        alert('Có lỗi xảy ra khi kết nối máy chủ. Vui lòng thử lại!');
-        btn.disabled = false;
-        btn.innerHTML = originalBtnText;
     }
-});
+
+    async function timKiemDoiTuong(keyword) {
+        const q = keyword.trim().toLowerCase();
+        if (!q) {
+            document.querySelectorAll('.item-to-group').forEach(el => el.classList.remove('hidden'));
+            document.querySelectorAll('.item-ns-label').forEach(el => el.classList.remove('hidden'));
+            return;
+        }
+
+        for (const item of dsToData) {
+            const tenTo = item.tenTo;
+            const sId = safeId(tenTo);
+            const groupEl = document.getElementById(`groupTo-${sId}`);
+
+            if (!dsNhanSuLoadedByTo[tenTo]) {
+                await loadNhanSuCuaTo(tenTo);
+            }
+
+            const body = document.getElementById(`bodyTo-${sId}`);
+            const icon = document.getElementById(`iconTo-${sId}`);
+            const nsList = dsNhanSuLoadedByTo[tenTo] || [];
+
+            const matchTo = tenTo.toLowerCase().includes(q);
+            const hasMatchNS = nsList.some(ns => (ns.hoTen || '').toLowerCase().includes(q));
+
+            if (matchTo || hasMatchNS) {
+                if (groupEl) groupEl.classList.remove('hidden');
+                if (body) body.classList.remove('hidden');
+                if (icon) icon.classList.add('rotate-90');
+
+                const grid = document.getElementById(`gridTo-${sId}`);
+                if (grid) {
+                    const labels = grid.querySelectorAll('.item-ns-label');
+                    labels.forEach(lbl => {
+                        const name = (lbl.getAttribute('data-hoten') || '').toLowerCase();
+                        if (matchTo || name.includes(q)) {
+                            lbl.classList.remove('hidden');
+                        } else {
+                            lbl.classList.add('hidden');
+                        }
+                    });
+                }
+            } else {
+                if (groupEl) groupEl.classList.add('hidden');
+            }
+        }
+    }
+
+    function xuLyThayDoiNguonGiao(val) {
+        const card = document.getElementById('cardVanBan');
+        if (!card) return;
+        if (val === 'Theo văn bản') {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+            vanBanChon = { soVanBan: '', tenVanBan: '' };
+        }
+    }
+
+    async function timKiemVanBan() {
+        const q = document.getElementById('inputTimVanBan').value.trim();
+        const vung = document.getElementById('vungKetQuaVanBan');
+        if (!vung) return;
+
+        vung.classList.remove('hidden');
+        vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center"><i class="bi bi-arrow-repeat animate-spin"></i> Đang tra cứu Kho Văn bản...</div>';
+
+        try {
+            const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}&_=${Date.now()}`);
+            if (!res.ok) throw new Error('HTTP Error ' + res.status);
+            
+            cachedVanBanResults = await res.json();
+            if (!Array.isArray(cachedVanBanResults)) cachedVanBanResults = [];
+
+            if (cachedVanBanResults.length === 0) {
+                vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">Không tìm thấy văn bản phù hợp.</div>';
+                return;
+            }
+
+            vung.innerHTML = cachedVanBanResults.map((item, idx) => `
+                <div onclick="selectVanBanByIndex(${idx})" class="p-2.5 hover:bg-blue-50 cursor-pointer text-xs border-b border-slate-100 last:border-0 transition">
+                    <div class="font-bold text-[#0F4C81]">${item.soVanBan || 'Không số'}</div>
+                    <div class="text-slate-800 truncate font-medium">${item.tenVanBan || ''}</div>
+                    <div class="text-[10px] text-slate-400">${item.donViBanHanh || ''} ${item.ngayBanHanh ? ' - ' + item.ngayBanHanh : ''}</div>
+                </div>
+            `).join('');
+        } catch (e) {
+            console.error("Lỗi tìm văn bản:", e);
+            vung.innerHTML = '<div class="p-3 text-xs text-red-500 text-center">Lỗi khi kết nối Kho Văn bản.</div>';
+        }
+    }
+
+    function selectVanBanByIndex(index) {
+        const item = cachedVanBanResults[index];
+        if (!item) return;
+
+        vanBanChon = item;
+        const lblSoVB = document.getElementById('lblSoVB');
+        const lblNgayBH = document.getElementById('lblNgayBH');
+        const lblTenVB = document.getElementById('lblTenVB');
+        const vung = document.getElementById('vungKetQuaVanBan');
+
+        if (lblSoVB) lblSoVB.innerText = item.soVanBan || 'Không số';
+        if (lblNgayBH) lblNgayBH.innerText = item.ngayBanHanh || '--/--/----';
+        if (lblTenVB) lblTenVB.innerText = item.tenVanBan || '';
+        if (vung) vung.classList.add('hidden');
+    }
+
+    document.getElementById('formGiaoViecFull').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        if (selectedObjects.length === 0) {
+            alert('Vui lòng chọn ít nhất một tổ hoặc cá nhân nhận nhiệm vụ!');
+            return;
+        }
+
+        const tieuDeVal = document.getElementById('tieuDe').value.trim();
+        if (!tieuDeVal) {
+            alert('Vui lòng nhập tiêu đề công việc!');
+            document.getElementById('tieuDe').focus();
+            return;
+        }
+
+        const btn = document.getElementById('btnSubmit');
+        const originalBtnText = btn.innerHTML;
+        
+        btn.disabled = true;
+        btn.innerHTML = `<i class="bi bi-arrow-repeat animate-spin"></i> <span>Đang lưu dữ liệu...</span>`;
+
+        const nguonGiaoVal = document.querySelector('input[name="nguonGiaoRadio"]:checked')?.value || 'Theo văn bản';
+
+        const payload = {
+            action: 'createTask',
+            nguoiGiao: document.getElementById('nguoiGiao').value,
+            chucVuNguoiGiao: document.getElementById('chucVuNguoiGiao').value,
+            loaiNhiemVu: document.getElementById('loaiNhiemVu').value,
+            nguonGiao: nguonGiaoVal,
+            soVanBan: nguonGiaoVal === 'Theo văn bản' ? (vanBanChon.soVanBan || '') : '',
+            tenVanBan: nguonGiaoVal === 'Theo văn bản' ? (vanBanChon.tenVanBan || '') : '',
+            mucDo: document.getElementById('mucDo').value,
+            tieuDe: tieuDeVal,
+            noiDung: document.getElementById('noiDung').value.trim(),
+            yeuCauMinhChung: document.getElementById('yeuCauMinhChung').value,
+            hanHoanThanh: document.getElementById('hanHoanThanh').value,
+            danhSachNguoiNhan: selectedObjects
+        };
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+
+            alert('Giao nhiệm vụ thành công! Dữ liệu đã được ghi nhận.');
+            window.location.href = 'main.html';
+        } catch (err) {
+            console.error("Lỗi gửi createTask:", err);
+            alert('Có lỗi xảy ra khi kết nối máy chủ. Vui lòng thử lại!');
+            btn.disabled = false;
+            btn.innerHTML = originalBtnText;
+        }
+    });
     </script>
 </body>
 </html>
