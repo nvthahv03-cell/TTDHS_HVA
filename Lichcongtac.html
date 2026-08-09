@@ -1008,71 +1008,53 @@ function chuyenDenMenuTacVu() {
 }
 
    
-
-// Link Google Apps Script Web App
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyxKlRSYRvwFp-n1DqQTp6L7CLeR8rv1djF3zxhTy7vtAE8obJ7GDcnJETAGFQRzq45ZQ/exec";
 
-// Hàm xử lý khớp đúng tên handleSaveLichTuanBang trong HTML của thầy
 function handleSaveLichTuanBang(actionType, evt) {
     if (evt && typeof evt.preventDefault === 'function') {
         evt.preventDefault();
     }
 
     try {
-        // 1. Quét dữ liệu thực tế từ các ô trong bảng
         const chiTietLich = [];
-        const rows = document.querySelectorAll('#tableLichTuan tbody tr, .table-lich tbody tr, table tbody tr');
+        // Chỉ quét duy nhất bảng nhập liệu chính (tránh quét lặp sang bảng xem trước)
+        const rows = document.querySelectorAll('#tableLichTuanBody tr, #tbodyLichTuan tr');
         
         rows.forEach(row => {
             const ngay = row.querySelector('.cell-ngay, td:nth-child(1)')?.innerText?.trim() || '';
-            const sang = row.querySelector('.cell-sang input, .cell-sang textarea, td:nth-child(2) input')?.value || 
-                         row.querySelector('.cell-sang, td:nth-child(2)')?.innerText?.trim() || '';
-            const chieu = row.querySelector('.cell-chieu input, .cell-chieu textarea, td:nth-child(3) input')?.value || 
-                          row.querySelector('.cell-chieu, td:nth-child(3)')?.innerText?.trim() || '';
-            const ghiChu = row.querySelector('.cell-ghichu input, .cell-ghichu textarea, td:nth-child(4) input')?.value || 
-                           row.querySelector('.cell-ghichu, td:nth-child(4)')?.innerText?.trim() || '';
+            const sang = row.querySelector('.cell-sang input, .cell-sang textarea, td:nth-child(2) input, td:nth-child(2) textarea')?.value || '';
+            const chieu = row.querySelector('.cell-chieu input, .cell-chieu textarea, td:nth-child(3) input, td:nth-child(3) textarea')?.value || '';
+            const ghiChu = row.querySelector('.cell-ghichu input, .cell-ghichu textarea, td:nth-child(4) input, td:nth-child(4) textarea')?.value || '';
 
-            if (ngay) {
-                chiTietLich.push({ ngay, sang, chieu, ghiChu });
-            }
+            chiTietLich.push({ ngay, sang, chieu, ghiChu });
         });
 
-        // 2. Đóng gói dữ liệu gửi đi
         const payload = {
-            tuan: document.getElementById('selectTuan')?.value || document.getElementById('tuan')?.value || 33,
-            thang: document.getElementById('selectThang')?.value || document.getElementById('thang')?.value || 8,
+            tuan: document.getElementById('selectTuan')?.value || 33,
+            thang: document.getElementById('selectThang')?.value || 8,
             nam: 2026,
-            chiTietLich: chiTietLich,
-            htmlContent: document.getElementById('previewPrintArea')?.outerHTML || document.getElementById('printArea')?.outerHTML || ''
+            chiTietLich: chiTietLich
         };
 
-        // 3. Gửi sang Apps Script
         fetch(WEB_APP_URL, {
             method: "POST",
             mode: "no-cors",
-            headers: {
-                "Content-Type": "text/plain"
-            },
-            body: JSON.stringify({
-                action: actionType, // Nhận giá trị 'nhap' hoặc 'phathanh'
-                data: payload
-            })
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify({ action: actionType, data: payload })
         })
         .then(() => {
             if (actionType === 'phathanh') {
-                alert("Đã phát hành lịch công tác thành công!\nFile PDF đã được xuất tự động vào Google Drive.");
+                alert("Đã phát hành lịch thành công!\nFile PDF chuẩn đã được lưu vào Google Drive.");
             } else {
-                alert("Đã lưu nháp dữ liệu lịch công tác vào Google Sheet!");
+                alert("Đã lưu nháp lịch công tác vào Google Sheet!");
             }
         })
         .catch(err => {
-            console.error("Lỗi gửi dữ liệu:", err);
-            alert("Không thể kết nối tới Google Apps Script: " + err.message);
+            alert("Lỗi kết nối: " + err.message);
         });
 
     } catch (err) {
-        console.error("Lỗi xử lý:", err);
-        alert("Lỗi khi gom dữ liệu bảng: " + err.message);
+        alert("Lỗi gom dữ liệu: " + err.message);
     }
 }
 </script>
