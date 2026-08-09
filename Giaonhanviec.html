@@ -160,6 +160,13 @@
             font-size: 13px !important;
         }
     }
+    /* Hiệu ứng khóa vùng chọn đối tượng */
+        .area-locked {
+            pointer-events: none;
+            opacity: 0.65;
+            user-select: none;
+            filter: grayscale(20%);
+        }
 </style>
     </header>
 
@@ -308,7 +315,17 @@
                     </div>
                 </div>
             </div>
-
+<!-- Nút thao tác đối tượng nhận -->
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" id="btnChonLaiDoiTuong" onclick="chonLaiDoiTuong()" class="px-3.5 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition flex items-center gap-1.5 shadow-sm active:scale-95">
+                        <i class="bi bi-arrow-counterclockwise text-slate-500"></i>
+                        <span>Chọn lại đối tượng</span>
+                    </button>
+                    <button type="button" id="btnXacNhanDoiTuong" onclick="xacNhanDoiTuong()" class="px-4 py-2 rounded-xl bg-[#0F4C81] hover:bg-[#0c3d68] text-white font-bold text-xs transition flex items-center gap-1.5 shadow-sm active:scale-95">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Xác nhận đối tượng</span>
+                    </button>
+                </div>
             <!-- MINH CHỨNG & HẠN HOÀN THÀNH -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-42">
                 <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
@@ -556,6 +573,57 @@
             document.getElementById('lblTenVB').innerText = item.tenVanBan || '';
             document.getElementById('vungKetQuaVanBan').classList.add('hidden');
         }
+        // ===== BỔ SUNG TÍNH NĂNG 02 NÚT THAO TÁC ĐỐI TƯỢNG ===== //
+
+        // 1. Hàm XÁC NHẬN ĐỐI TƯỢNG
+        function xacNhanDoiTuong() {
+            if (!selectedObjects || selectedObjects.length === 0) {
+                alert('Vui lòng chọn ít nhất một tổ hoặc cá nhân nhận nhiệm vụ!');
+                return;
+            }
+
+            // Khóa vùng chọn đối tượng & vùng đã chọn
+            const accordion = document.getElementById('danhSachToAccordion');
+            const daChon = document.getElementById('danhSachDaChon');
+            if (accordion) accordion.classList.add('area-locked');
+            if (daChon) daChon.classList.add('area-locked');
+
+            // Thu gọn tất cả Accordion
+            if (Array.isArray(dsToData)) {
+                dsToData.forEach(item => {
+                    const body = document.getElementById(`bodyTo-${item.tenTo}`);
+                    const icon = document.getElementById(`iconTo-${item.tenTo}`);
+                    if (body) body.classList.add('hidden');
+                    if (icon) icon.classList.remove('rotate-90');
+                });
+            }
+
+            // Cuộn mượt xuống phần nhập Tiêu đề / Nội dung công việc
+            const target = document.getElementById('tieuDe');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.focus();
+            }
+        }
+
+        // 2. Hàm CHỌN LẠI ĐỐI TƯỢNG
+        function chonLaiDoiTuong() {
+            // Xóa toàn bộ mảng dữ liệu đã chọn
+            selectedObjects = [];
+
+            // Cập nhật lại giao diện các chip tag "Đã chọn" và badge thống kê
+            updateTagDisplay();
+
+            // Bỏ chọn tất cả các checkbox đã tích
+            const checkboxes = document.querySelectorAll('#danhSachToAccordion input[type="checkbox"]');
+            checkboxes.forEach(cb => { cb.checked = false; });
+
+            // Mở khóa vùng chọn đối tượng
+            const accordion = document.getElementById('danhSachToAccordion');
+            const daChon = document.getElementById('danhSachDaChon');
+            if (accordion) accordion.classList.remove('area-locked');
+            if (daChon) daChon.classList.remove('area-locked');
+        }
 // Hàm hiển thị Modal Preview Biên bản
 function previewTask() {
     const now = new Date();
@@ -689,152 +757,7 @@ function closePreviewModal() {
                 user.workPosition || "";
         });
     </script>
-<!-- MODAL XEM TRƯỚC BIÊN BẢN GIAO NHIỆM VỤ -->
-<div id="modalPreview" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm overflow-y-auto p-2 sm:p-4 md:p-6 a4-preview-container">
-    <div class="max-w-4xl mx-auto space-y-4">
-        
-        <!-- Thanh công cụ Modal (Không in khi xuất/in) -->
-        <div class="no-print bg-white p-3 rounded-2xl shadow-md flex items-center justify-between border border-slate-200">
-            <div class="flex items-center gap-2 text-slate-700 font-bold text-sm">
-                <i class="bi bi-file-earmark-[#0F4C81] text-blue-600 text-lg"></i>
-                <span>Xem trước Biên bản giao nhiệm vụ (A4)</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <button type="button" onclick="window.print()" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#0F4C81] font-semibold rounded-xl text-xs flex items-center gap-1.5 transition">
-                    <i class="bi bi-printer-fill"></i> In / Xuất PDF
-                </button>
-                <button type="button" onclick="closePreviewModal()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition">
-                    Đóng
-                </button>
-            </div>
-        </div>
 
-        <!-- KHỔ GIẤY A4 BIÊN BẢN -->
-        <div class="a4-preview-page text-sm">
-            
-            <!-- 1 & 2. Quốc hiệu / Tên đơn vị -->
-            <div class="grid grid-cols-12 gap-2 text-center mb-6">
-                <div class="col-span-5 font-bold uppercase tracking-tight text-xs sm:text-sm">
-                    TRƯỜNG THPT HÒA VANG<br>
-                    <span class="font-normal capitalize border-t border-black pt-0.5 inline-block mt-1">Trung tâm Điều hành số TTĐHS_HVA</span>
-                </div>
-                <div class="col-span-7 font-bold text-xs sm:text-sm">
-                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
-                    <span class="font-semibold text-xs border-b border-black pb-0.5 inline-block mt-0.5">Độc lập - Tự do - Hạnh phúc</span>
-                </div>
-            </div>
-
-            <!-- 3. Tiêu đề -->
-            <div class="text-center my-6">
-                <h2 class="text-xl font-bold uppercase tracking-wider">BIÊN BẢN GIAO NHIỆM VỤ</h2>
-                <p class="italic text-xs text-slate-600 mt-1" id="prevMaBienBan">(Mã ghi nhận hệ thống: Auto-generated)</p>
-            </div>
-
-            <!-- 4. Thông tin chung -->
-            <div class="space-y-1.5 mb-5 text-justify">
-                <p><strong>• Thời gian lập biên bản:</strong> <span id="prevThoiGianLap">--/--/---- --:--</span></p>
-                <p><strong>• Người giao:</strong> <span id="prevNguoiGiao" class="font-bold">--</span> &nbsp;&nbsp;&nbsp;&nbsp; <strong>Chức vụ:</strong> <span id="prevChucVuNguoiGiao">--</span></p>
-                <p><strong>• Người nhận / Đơn vị:</strong> <span id="prevNguoiNhan" class="font-semibold">--</span></p>
-                <p><strong>• Nguồn giao nhiệm vụ:</strong> <span id="prevNguonGiao">--</span></p>
-                <p><strong>• Văn bản liên quan:</strong> <span id="prevVanBan">Không có</span></p>
-            </div>
-
-            <!-- NỘI DUNG GIAO NHIỆM VỤ -->
-            <div class="space-y-4 text-justify">
-                <div>
-                    <h3 class="font-bold uppercase text-base mb-1">I. Nội dung nhiệm vụ</h3>
-                    <div id="prevTieuDeNoiDung" class="pl-3 border-l-2 border-slate-300 italic min-h-[40px]">
-                        --
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="font-bold uppercase text-base mb-1">II. Mục tiêu</h3>
-                    <div id="prevMucTieu" class="pl-3 min-h-[30px]">
-                        Thực hiện đầy đủ, chính xác và đúng quy định nội dung chỉ đạo được giao.
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="font-bold uppercase text-base mb-1">III. Kết quả cần đạt</h3>
-                    <div id="prevKetQua" class="pl-3 min-h-[30px]">
-                        Hoàn thành sản phẩm/kết quả công việc đúng tiêu chuẩn chuyên môn và thời hạn.
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <h3 class="font-bold uppercase text-base mb-1">IV. Thời gian thực hiện</h3>
-                        <p class="pl-3"><strong>- Ngày giao:</strong> <span id="prevNgayGiao">--/--/----</span></p>
-                        <p class="pl-3"><strong>- Hạn hoàn thành:</strong> <span id="prevHanHoanThanh" class="font-bold text-red-700">--/--/----</span></p>
-                    </div>
-
-                    <div>
-                        <h3 class="font-bold uppercase text-base mb-1">V. Mức độ ưu tiên</h3>
-                        <p class="pl-3 font-semibold" id="prevMucDo">Bình thường</p>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="font-bold uppercase text-base mb-1">VI. Minh chứng cần nộp</h3>
-                    <p class="pl-3" id="prevMinhChung">Không yêu cầu</p>
-                </div>
-
-                <div>
-                    <h3 class="font-bold uppercase text-base mb-1">VII. Ghi chú</h3>
-                    <p class="pl-3 italic text-slate-700" id="prevGhiChu">Trường hợp có vướng mắc phát sinh, đơn vị/cá nhân nhận nhiệm vụ kịp thời báo cáo Người giao để xử lý.</p>
-                </div>
-
-                <!-- VIII. CHẾ ĐỘ BÁO CÁO -->
-                <div>
-                    <h3 class="font-bold uppercase text-base mb-1">VIII. CHẾ ĐỘ BÁO CÁO</h3>
-                    <div class="pl-3 space-y-2">
-                        <div>
-                            <p class="font-semibold mb-1">Yêu cầu báo cáo:</p>
-                            <div class="grid grid-cols-2 gap-1 text-xs">
-                                <div><span id="chkBc1">☐</span> Không yêu cầu báo cáo</div>
-                                <div><span id="chkBc2">☐</span> Báo cáo sau khi hoàn thành</div>
-                                <div><span id="chkBc3">☐</span> Báo cáo theo tiến độ</div>
-                                <div><span id="chkBc4">☐</span> Báo cáo định kỳ</div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <p><strong>Thời hạn báo cáo:</strong> <span id="prevThoiHanBaoCao">Theo hạn hoàn thành nhiệm vụ</span></p>
-                        </div>
-
-                        <div>
-                            <p class="font-semibold mb-1">Hình thức báo cáo:</p>
-                            <div class="grid grid-cols-2 gap-1 text-xs">
-                                <div><span id="chkHt1">☑</span> Trực tuyến trên TTĐHS_HVA</div>
-                                <div><span id="chkHt2">☐</span> Báo cáo bằng văn bản</div>
-                                <div><span id="chkHt3">☐</span> Báo cáo trực tiếp</div>
-                                <div><span id="chkHt4">☐</span> Khác</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CUỐI BIÊN BẢN -->
-            <div class="mt-8 pt-4 grid grid-cols-12 gap-2 text-center">
-                <div class="col-span-6"></div>
-                <div class="col-span-6">
-                    <p class="italic text-xs mb-2">Đà Nẵng, ngày <span id="prevNgayLap">.....</span> tháng <span id="prevThangLap">.....</span> năm <span id="prevNamLap">2026</span></p>
-                    <p class="font-bold uppercase">NGƯỜI GIAO NHIỆM VỤ</p>
-                    <p class="font-bold" id="prevChucVuKy">Phó Hiệu trưởng</p>
-                    <p class="italic text-xs text-slate-500 my-8">(Ký, ghi rõ họ và tên)</p>
-                    <p class="font-bold text-base mt-10" id="prevHoTenKy">Nguyễn Văn Thà</p>
-                </div>
-            </div>
-
-            <!-- CHÂN TRANG -->
-            <div class="mt-12 pt-3 border-t border-slate-200 text-center text-[11px] text-slate-400 italic">
-                Biên bản được tạo tự động từ Trung tâm Điều hành số TTĐHS_HVA - Trường THPT Hòa Vang.
-            </div>
-
-        </div>
-    </div>
 </div>
 </body>
 </html>
