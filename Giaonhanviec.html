@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="vi" class="h-full bg-slate-50">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -11,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    
+   
     <script>
         // Cấu hình Tailwind Color Palette thống nhất
         tailwind.config = {
@@ -32,9 +31,9 @@
         }
     </script>
     <style>
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-            -webkit-tap-highlight-color: transparent; 
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -44,20 +43,17 @@
     </style>
 </head>
 <body class="min-h-full text-slate-800 antialiased flex flex-col bg-slate-50 selection:bg-blue-100 selection:text-[#0F4C81] pb-24 md:pb-8">
-
     <header class="sticky top-0 z-40 w-full overflow-hidden shadow-md">
         <!-- Digital Blue Gradient Background -->
         <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
-        
+       
         <!-- Glow Effects -->
         <div class="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-cyan-300/20 blur-3xl pointer-events-none"></div>
         <div class="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-sky-300/15 blur-3xl pointer-events-none"></div>
-
         <!-- Grid Pattern Overlay -->
         <div class="absolute inset-0 opacity-[0.06] pointer-events-none"
             style="background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px); background-size:28px 28px;">
         </div>
-
         <!-- Circuit Pattern SVG Overlay -->
         <svg class="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" preserveAspectRatio="none">
             <g stroke="white" stroke-width="1.2" fill="none">
@@ -77,7 +73,6 @@
                 <circle cx="760" cy="60" r="2.6"/>
             </g>
         </svg>
-
         <!-- Header Content Container -->
         <div class="relative max-w-6xl mx-auto px-4 py-3 sm:py-4">
             <!-- Dòng trên: Navigation & System Status -->
@@ -92,13 +87,11 @@
                         HVA - THPT HÒA VANG
                     </div>
                 </div>
-
                 <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/12 border border-white/15 backdrop-blur shrink-0">
                     <span class="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
                     <span class="text-white text-xs font-semibold">Hệ thống kết nối</span>
                 </div>
             </div>
-
             <!-- Dòng dưới: Tên Phân Hệ -->
             <div class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
                 <h1 id="page-title" class="text-white font-extrabold text-base sm:text-lg tracking-wide uppercase flex items-center gap-2">
@@ -121,7 +114,6 @@
         color: #000000;
         line-height: 1.4;
     }
-
     @media print {
         body * {
             visibility: hidden;
@@ -147,7 +139,6 @@
             padding: 20mm 15mm 20mm 25mm !important;
         }
     }
-
     /* Đảm bảo responsive mượt mà trên mobile */
     @media (max-width: 768px) {
         .a4-preview-container {
@@ -162,10 +153,9 @@
     }
 </style>
     </header>
-
     <main class="flex-1 max-w-6xl w-full mx-auto px-4 pt-6 pb-8 space-y-6">
         <form id="formGiaoViecFull" class="space-y-5">
-            
+           
             <!-- NGƯỜI GIAO -->
             <div class="bg-gradient-to-br from-[#F5FAFF] to-[#EDF7FF] border border-blue-100 rounded-2xl shadow-sm p-3 mb-4">
                 <div class="flex items-center gap-3">
@@ -185,7 +175,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- NGUỒN GIAO -->
             <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
                 <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
@@ -211,7 +200,6 @@
                     </label>
                 </div>
             </div>
-
             <!-- CARD CHỌN VĂN BẢN -->
             <div id="cardVanBan" class="bg-white p-4 rounded-2xl border border-blue-200/80 bg-blue-50/10 shadow-sm space-y-3">
                 <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
@@ -228,16 +216,13 @@
                         <span>Tìm kiếm</span>
                     </button>
                 </div>
-
                 <div id="vungKetQuaVanBan" class="hidden border border-slate-200 rounded-xl bg-white max-h-48 overflow-y-auto divide-y divide-slate-100 shadow-sm"></div>
-
                 <div id="chiTietVanBanDaChon" class="p-3 bg-blue-50/60 rounded-xl border border-blue-100 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                     <div><span class="font-bold text-slate-500">Số VB:</span> <span id="lblSoVB" class="font-bold text-[#0F4C81]">Chưa chọn</span></div>
                     <div><span class="font-bold text-slate-500">Ngày BH:</span> <span id="lblNgayBH" class="text-slate-700">--/--/----</span></div>
                     <div class="sm:col-span-2"><span class="font-bold text-slate-500">Tên VB:</span> <span id="lblTenVB" class="text-slate-800 font-medium">Bấm tìm kiếm để chọn từ Kho Văn bản...</span></div>
                 </div>
             </div>
-
             <!-- MỨC ĐỘ & LOẠI NHIỆM VỤ -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
@@ -251,7 +236,6 @@
                         <option value="Bình thường" selected>🟢 Bình thường</option>
                     </select>
                 </div>
-
                 <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
                     <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
                         <i class="bi bi-pin-angle-fill text-blue-600"></i>
@@ -264,7 +248,6 @@
                     </select>
                 </div>
             </div>
-
             <!-- TIÊU ĐỀ & NỘI DUNG -->
             <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
                 <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
@@ -273,7 +256,6 @@
                 </label>
                 <input type="text" id="tieuDe" required class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]" placeholder="Nhập tóm tắt tiêu đề...">
             </div>
-
             <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
                 <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
                     <i class="bi bi-file-earmark-text-fill text-blue-600"></i>
@@ -281,7 +263,6 @@
                 </label>
                 <textarea id="noiDung" rows="3" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]" placeholder="Nội dung chỉ đạo chi tiết..."></textarea>
             </div>
-
             <!-- CHỌN ĐỐI TƯỢNG NHẬN -->
             <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -294,12 +275,10 @@
                         <span id="badgeThongKeNguoi" class="px-2.5 py-1 rounded-full bg-blue-50 text-[#0F4C81] border border-blue-100 text-xs font-bold">0 cá nhân</span>
                     </div>
                 </div>
-
                 <!-- Accordion Danh sách Tổ -->
                 <div class="space-y-2.5" id="danhSachToAccordion">
                     <div class="p-3 text-center text-xs text-slate-400 italic">Đang tải danh sách tổ...</div>
                 </div>
-
                 <!-- Chip đã chọn -->
                 <div class="pt-2 border-t border-slate-100">
                     <label class="block text-[11px] font-semibold text-slate-400 mb-1.5">Đã chọn:</label>
@@ -308,7 +287,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- MINH CHỨNG & HẠN HOÀN THÀNH -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-42">
                 <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
@@ -321,7 +299,6 @@
                         <option value="Có">Có yêu cầu minh chứng/báo cáo</option>
                     </select>
                 </div>
-
                 <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-1.5">
                     <label class="flex items-center gap-2 text-xs font-semibold text-[#0F4C81]">
                         <i class="bi bi-calendar-event-fill text-blue-600"></i>
@@ -330,7 +307,6 @@
                     <input type="date" id="hanHoanThanh" class="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-medium text-slate-800 outline-none focus:border-[#0F4C81]">
                 </div>
             </div>
-
             <!-- NÚT CHỨC NĂNG -->
             <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
                 <div class="max-w-4xl mx-auto grid grid-cols-4 gap-2">
@@ -350,127 +326,245 @@
             </div>
         </form>
     </main>
-
     <div id="bottom-action-bar"></div>
-
     <div id="system-modal"></div>
-
     <div id="toast-container"></div>
 
-    <script>
+    <!-- MODAL XEM TRƯỚC BIÊN BẢN GIAO NHIỆM VỤ -->
+    <div id="modalPreview" class="fixed inset-0 z-50 hidden bg-slate-900/70 backdrop-blur-sm overflow-y-auto p-2 sm:p-4 md:p-6 a4-preview-container">
+        <div class="max-w-4xl mx-auto space-y-4">
+           
+            <!-- Thanh công cụ Modal (Không in khi xuất/in) -->
+            <div class="no-print bg-white p-3 rounded-2xl shadow-md flex items-center justify-between border border-slate-200">
+                <div class="flex items-center gap-2 text-slate-700 font-bold text-sm">
+                    <i class="bi bi-file-earmark-text text-blue-600 text-lg"></i>
+                    <span>Xem trước Biên bản giao nhiệm vụ (A4)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="window.print()" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#0F4C81] font-semibold rounded-xl text-xs flex items-center gap-1.5 transition">
+                        <i class="bi bi-printer-fill"></i> In / Xuất PDF
+                    </button>
+                    <button type="button" onclick="closePreviewModal()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs transition">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+            <!-- KHỔ GIẤY A4 BIÊN BẢN -->
+            <div class="a4-preview-page text-sm">
+               
+                <!-- 1 & 2. Quốc hiệu / Tên đơn vị -->
+                <div class="grid grid-cols-12 gap-2 text-center mb-6">
+                    <div class="col-span-5 font-bold uppercase tracking-tight text-xs sm:text-sm">
+                        TRƯỜNG THPT HÒA VANG<br>
+                        <span class="font-normal capitalize border-t border-black pt-0.5 inline-block mt-1">Trung tâm Điều hành số TTĐHS_HVA</span>
+                    </div>
+                    <div class="col-span-7 font-bold text-xs sm:text-sm">
+                        CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
+                        <span class="font-semibold text-xs border-b border-black pb-0.5 inline-block mt-0.5">Độc lập - Tự do - Hạnh phúc</span>
+                    </div>
+                </div>
+                <!-- 3. Tiêu đề -->
+                <div class="text-center my-6">
+                    <h2 class="text-xl font-bold uppercase tracking-wider">BIÊN BẢN GIAO NHIỆM VỤ</h2>
+                    <p class="italic text-xs text-slate-600 mt-1" id="prevMaBienBan">(Mã ghi nhận hệ thống: Auto-generated)</p>
+                </div>
+                <!-- 4. Thông tin chung -->
+                <div class="space-y-1.5 mb-5 text-justify">
+                    <p><strong>• Thời gian lập biên bản:</strong> <span id="prevThoiGianLap">--/--/---- --:--</span></p>
+                    <p><strong>• Người giao:</strong> <span id="prevNguoiGiao" class="font-bold">--</span> &nbsp;&nbsp;&nbsp;&nbsp; <strong>Chức vụ:</strong> <span id="prevChucVuNguoiGiao">--</span></p>
+                    <p><strong>• Người nhận / Đơn vị:</strong> <span id="prevNguoiNhan" class="font-semibold">--</span></p>
+                    <p><strong>• Nguồn giao nhiệm vụ:</strong> <span id="prevNguonGiao">--</span></p>
+                    <p><strong>• Văn bản liên quan:</strong> <span id="prevVanBan">Không có</span></p>
+                </div>
+                <!-- NỘI DUNG GIAO NHIỆM VỤ -->
+                <div class="space-y-4 text-justify">
+                    <div>
+                        <h3 class="font-bold uppercase text-base mb-1">I. Nội dung nhiệm vụ</h3>
+                        <div id="prevTieuDeNoiDung" class="pl-3 border-l-2 border-slate-300 italic min-h-[40px]">
+                            --
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold uppercase text-base mb-1">II. Mục tiêu</h3>
+                        <div id="prevMucTieu" class="pl-3 min-h-[30px]">
+                            Thực hiện đầy đủ, chính xác và đúng quy định nội dung chỉ đạo được giao.
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold uppercase text-base mb-1">III. Kết quả cần đạt</h3>
+                        <div id="prevKetQua" class="pl-3 min-h-[30px]">
+                            Hoàn thành sản phẩm/kết quả công việc đúng tiêu chuẩn chuyên môn và thời hạn.
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="font-bold uppercase text-base mb-1">IV. Thời gian thực hiện</h3>
+                            <p class="pl-3"><strong>- Ngày giao:</strong> <span id="prevNgayGiao">--/--/----</span></p>
+                            <p class="pl-3"><strong>- Hạn hoàn thành:</strong> <span id="prevHanHoanThanh" class="font-bold text-red-700">--/--/----</span></p>
+                        </div>
+                        <div>
+                            <h3 class="font-bold uppercase text-base mb-1">V. Mức độ ưu tiên</h3>
+                            <p class="pl-3 font-semibold" id="prevMucDo">Bình thường</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold uppercase text-base mb-1">VI. Minh chứng cần nộp</h3>
+                        <p class="pl-3" id="prevMinhChung">Không yêu cầu</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold uppercase text-base mb-1">VII. Ghi chú</h3>
+                        <p class="pl-3 italic text-slate-700" id="prevGhiChu">Trường hợp có vướng mắc phát sinh, đơn vị/cá nhân nhận nhiệm vụ kịp thời báo cáo Người giao để xử lý.</p>
+                    </div>
+                    <!-- VIII. CHẾ ĐỘ BÁO CÁO -->
+                    <div>
+                        <h3 class="font-bold uppercase text-base mb-1">VIII. CHẾ ĐỘ BÁO CÁO</h3>
+                        <div class="pl-3 space-y-2">
+                            <div>
+                                <p class="font-semibold mb-1">Yêu cầu báo cáo:</p>
+                                <div class="grid grid-cols-2 gap-1 text-xs">
+                                    <div><span id="chkBc1">☐</span> Không yêu cầu báo cáo</div>
+                                    <div><span id="chkBc2">☐</span> Báo cáo sau khi hoàn thành</div>
+                                    <div><span id="chkBc3">☐</span> Báo cáo theo tiến độ</div>
+                                    <div><span id="chkBc4">☐</span> Báo cáo định kỳ</div>
+                                </div>
+                            </div>
+                            <div>
+                                <p><strong>Thời hạn báo cáo:</strong> <span id="prevThoiHanBaoCao">Theo hạn hoàn thành nhiệm vụ</span></p>
+                            </div>
+                            <div>
+                                <p class="font-semibold mb-1">Hình thức báo cáo:</p>
+                                <div class="grid grid-cols-2 gap-1 text-xs">
+                                    <div><span id="chkHt1">☑</span> Trực tuyến trên TTĐHS_HVA</div>
+                                    <div><span id="chkHt2">☐</span> Báo cáo bằng văn bản</div>
+                                    <div><span id="chkHt3">☐</span> Báo cáo trực tiếp</div>
+                                    <div><span id="chkHt4">☐</span> Khác</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CUỐI BIÊN BẢN -->
+                <div class="mt-8 pt-4 grid grid-cols-12 gap-2 text-center">
+                    <div class="col-span-6"></div>
+                    <div class="col-span-6">
+                        <p class="italic text-xs mb-2">Đà Nẵng, ngày <span id="prevNgayLap">.....</span> tháng <span id="prevThangLap">.....</span> năm <span id="prevNamLap">2026</span></p>
+                        <p class="font-bold uppercase">NGƯỜI GIAO NHIỆM VỤ</p>
+                        <p class="font-bold" id="prevChucVuKy">Phó Hiệu trưởng</p>
+                        <p class="italic text-xs text-slate-500 my-8">(Ký, ghi rõ họ và tên)</p>
+                        <p class="font-bold text-base mt-10" id="prevHoTenKy">Nguyễn Văn Thà</p>
+                    </div>
+                </div>
+                <!-- CHÂN TRANG -->
+                <div class="mt-12 pt-3 border-t border-slate-200 text-center text-[11px] text-slate-400 italic">
+                    Biên bản được tạo tự động từ Trung tâm Điều hành số TTĐHS_HVA - Trường THPT Hòa Vang.
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // =========================================================================
+    // 1. KHAI BÁO BIẾN CẤU HÌNH VÀ BỘ NHỚ ĐỆM (CACHE)
+    // =========================================================================
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjq11TcDE4tyOsPl6NOw1q6r8f14r3Z3qQPuSAgic7Xf6XK4gXjwHOBem4I_IGnALZ/exec";
     let dsToData = [];
-    let dsNhanSuLoadedByTo = {};
-    let selectedObjects = [];
+    let dsNhanSuLoadedByTo = {}; // Cache danh sách nhân sự theo từng tổ
+    let selectedObjects = []; // Mảng các đối tượng đã chọn {username, hoTen, toBoPhan, loai}
     let vanBanChon = { soVanBan: '', tenVanBan: '' };
-    window.tmpVanBanList = [];
+    let cachedVanBanResults = []; // Cache kết quả tìm kiếm văn bản tránh lỗi DOM stringify
 
-    // Hàm tạo ID an toàn từ tên Tổ (loại bỏ dấu cách, ký tự đặc biệt)
+    // Helper chuyển đổi tên tổ/chuỗi thành ID HTML hợp lệ (tránh lỗi ký tự đặc biệt/khoảng trắng)
     function safeId(str) {
-        return String(str || '')
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/[^a-zA-Z0-9]/g, '_')
-            .replace(/_+/g, '_')
-            .replace(/^_|_$/g, '') || 'to';
+        return String(str || '').replace(/[^a-zA-Z0-9_-]/g, '_');
     }
 
-    window.addEventListener('DOMContentLoaded', async function () {
+    // =========================================================================
+    // 2. KHỞI TẠO TRANG
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', async function() {
         // Lấy thông tin người giao từ localStorage
         try {
             const user = JSON.parse(localStorage.getItem("user") || "{}");
-            if (user.fullName) document.getElementById("nguoiGiao").textContent = user.fullName;
-            if (user.workPosition) document.getElementById("chucVuNguoiGiao").textContent = user.workPosition;
-        } catch (e) {}
+            if (user.fullName) {
+                document.getElementById("nguoiGiao").textContent = user.fullName;
+            }
+            if (user.workPosition) {
+                document.getElementById("chucVuNguoiGiao").textContent = user.workPosition;
+            }
+        } catch (e) {
+            console.warn("Không đọc được thông tin user từ localStorage");
+        }
 
         await loadDanhSachTo();
     });
 
-    // 1. Lấy danh sách Tổ
     async function loadDanhSachTo() {
-        const container = document.getElementById('danhSachToAccordion');
-        container.innerHTML = '<div class="p-3 text-center text-xs text-slate-400 italic">Đang tải danh sách tổ...</div>';
-
         try {
             const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`);
-            const text = await res.text();
-
-            // Kiểm tra nếu backend trả HTML lỗi
-            if (text.trim().startsWith('<!DOCTYPE') || text.includes('did not return anything')) {
-                throw new Error('Backend không trả về dữ liệu JSON. Kiểm tra hàm doGet trong Google Apps Script.');
-            }
-
-            dsToData = JSON.parse(text);
-            if (!Array.isArray(dsToData)) dsToData = [];
-
+            if (!res.ok) throw new Error('HTTP Error ' + res.status);
+            const data = await res.json();
+            dsToData = Array.isArray(data) ? data : [];
             renderToAccordion();
         } catch (e) {
             console.error("Lỗi lấy danh sách tổ:", e);
-            container.innerHTML = `
-                <div class="p-3 text-center text-xs text-red-500">
-                    Không tải được danh sách tổ.<br>
-                    <span class="text-[10px]">${e.message}</span>
-                </div>`;
+            const container = document.getElementById('danhSachToAccordion');
+            if (container) {
+                container.innerHTML = '<div class="p-3 text-xs text-red-500 italic text-center">Không thể tải danh sách tổ. Vui lòng kiểm tra kết nối!</div>';
+            }
         }
     }
 
+    // =========================================================================
+    // 3. XỬ LÝ ACCORDION & TẢI DỮ LIỆU NHÂN SỰ (LAZY LOADING)
+    // =========================================================================
     function renderToAccordion() {
         const container = document.getElementById('danhSachToAccordion');
+        if (!container) return;
         container.innerHTML = '';
-
         if (!dsToData || dsToData.length === 0) {
-            container.innerHTML = '<div class="text-xs text-slate-400 italic p-2">Không tìm thấy danh sách tổ.</div>';
+            container.innerHTML = '<div class="p-3 text-xs text-slate-400 italic text-center">Không tìm thấy danh sách tổ.</div>';
             return;
         }
-
         dsToData.forEach(item => {
-            const tenTo = item.tenTo || item.TenTo || 'Không tên';
-            const soLuong = item.soLuong || item.SoLuong || 0;
-            const idSafe = safeId(tenTo);
-
+            const tenTo = item.tenTo;
+            const sId = safeId(tenTo);
+            const encodedTo = encodeURIComponent(tenTo);
             const div = document.createElement('div');
             div.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm";
             div.innerHTML = `
                 <div class="p-3 bg-slate-50/50 flex items-center justify-between text-xs font-bold text-[#0F4C81]">
-                    <button type="button" class="btn-toggle-to flex-1 flex items-center gap-2 text-left" data-ten-to="${tenTo.replace(/"/g, '&quot;')}" data-id-safe="${idSafe}">
-                        <i id="iconTo-${idSafe}" class="bi bi-chevron-right text-slate-400 transition-transform"></i>
+                    <button type="button" onclick="toggleToAccordion('${encodedTo}')" class="flex-1 flex items-center gap-2 text-left">
+                        <i id="iconTo-${sId}" class="bi bi-chevron-right text-slate-400 transition-transform"></i>
                         <i class="bi bi-folder2-open text-blue-500"></i>
                         <span>${tenTo}</span>
-                        <span class="text-[10px] font-normal text-slate-400">(${soLuong} người)</span>
+                        <span class="text-[10px] font-normal text-slate-400">(${item.soLuong} người)</span>
                     </button>
-                    <button type="button" class="btn-chon-tron-to px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-semibold transition" data-ten-to="${tenTo.replace(/"/g, '&quot;')}">
+                    <button type="button" onclick="chonTronTo('${encodedTo}')" class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-semibold transition">
                         <i class="bi bi-check-all"></i> Chọn trọn tổ
                     </button>
                 </div>
-                <div id="bodyTo-${idSafe}" class="hidden p-3 bg-blue-50/10 border-t border-slate-100">
-                    <div class="p-2 text-xs text-slate-400 italic" id="loadingTo-${idSafe}">Đang tải nhân sự...</div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 hidden" id="gridTo-${idSafe}"></div>
+                <div id="bodyTo-${sId}" class="hidden p-3 bg-blue-50/10 border-t border-slate-100">
+                    <div class="p-2 text-xs text-slate-400 italic text-center" id="loadingTo-${sId}">Đang tải nhân sự...</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 hidden" id="gridTo-${sId}"></div>
                 </div>
             `;
             container.appendChild(div);
         });
-
-        // Gắn event (tránh lỗi inline onclick với chuỗi đặc biệt)
-        container.querySelectorAll('.btn-toggle-to').forEach(btn => {
-            btn.addEventListener('click', () => toggleToAccordion(btn.dataset.tenTo, btn.dataset.idSafe));
-        });
-        container.querySelectorAll('.btn-chon-tron-to').forEach(btn => {
-            btn.addEventListener('click', () => chonTronTo(btn.dataset.tenTo));
-        });
     }
 
-    // 2. Mở/Đóng Accordion & Lazy Load Nhân sự
-    async function toggleToAccordion(tenTo, idSafe) {
-        const body = document.getElementById(`bodyTo-${idSafe}`);
-        const icon = document.getElementById(`iconTo-${idSafe}`);
-
+    async function toggleToAccordion(tenToEncoded) {
+        const tenTo = decodeURIComponent(tenToEncoded);
+        const sId = safeId(tenTo);
+        const body = document.getElementById(`bodyTo-${sId}`);
+        const icon = document.getElementById(`iconTo-${sId}`);
+       
         if (!body) return;
-
         if (body.classList.contains('hidden')) {
             body.classList.remove('hidden');
             if (icon) icon.classList.add('rotate-90');
+            // Lazy load: Chỉ gọi API nếu tổ này chưa từng được tải
             if (!dsNhanSuLoadedByTo[tenTo]) {
-                await loadNhanSuCuaTo(tenTo, idSafe);
+                await loadNhanSuCuaTo(tenTo);
             }
         } else {
             body.classList.add('hidden');
@@ -478,76 +572,87 @@
         }
     }
 
-    async function loadNhanSuCuaTo(tenTo, idSafe) {
-        const loading = document.getElementById(`loadingTo-${idSafe}`);
-        const grid = document.getElementById(`gridTo-${idSafe}`);
-
+    async function loadNhanSuCuaTo(tenTo) {
+        const sId = safeId(tenTo);
+        const loading = document.getElementById(`loadingTo-${sId}`);
+        const grid = document.getElementById(`gridTo-${sId}`);
         try {
             const res = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`);
-            const text = await res.text();
-
-            if (text.trim().startsWith('<!DOCTYPE') || text.includes('did not return anything')) {
-                throw new Error('Backend không trả dữ liệu nhân sự');
-            }
-
-            const listNS = JSON.parse(text);
-            if (!Array.isArray(listNS)) throw new Error('Dữ liệu nhân sự không hợp lệ');
-
-            dsNhanSuLoadedByTo[tenTo] = listNS;
-            loading.classList.add('hidden');
+            if (!res.ok) throw new Error('HTTP Error ' + res.status);
+           
+            const listNS = await res.json();
+            const cleanList = Array.isArray(listNS) ? listNS : [];
+            dsNhanSuLoadedByTo[tenTo] = cleanList;
+            if (loading) loading.classList.add('hidden');
+            if (!grid) return;
+           
             grid.classList.remove('hidden');
-
-            grid.innerHTML = listNS.map(ns => {
-                const username = ns.username || ns.Username || '';
-                const hoTen = ns.hoTen || ns.HoTen || 'Không tên';
-                const vaiTro = ns.vaiTro || ns.VaiTro || 'Thành viên';
-                const isChecked = selectedObjects.some(x => x.username === username && x.loai === 'CANHAN');
-
+            if (cleanList.length === 0) {
+                grid.innerHTML = '<div class="col-span-2 text-xs text-slate-400 italic p-2 text-center">Không có dữ liệu nhân sự.</div>';
+                return;
+            }
+            const isToAlreadySelected = selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO');
+            grid.innerHTML = cleanList.map(ns => {
+                const username = ns.username || '';
+                const hoTen = ns.hoTen || '';
+                const isChecked = isToAlreadySelected || selectedObjects.some(x => x.username === username && x.loai === 'CANHAN');
+                const encodedTo = encodeURIComponent(tenTo);
+                const encodedName = encodeURIComponent(hoTen);
+                const encodedUser = encodeURIComponent(username);
                 return `
                     <label class="flex items-center space-x-2.5 p-2 rounded-xl bg-white hover:bg-blue-50/50 cursor-pointer border border-slate-200/60 transition shadow-sm">
                         <input type="checkbox"
-                            data-username="${username}"
-                            data-hoten="${hoTen.replace(/"/g, '&quot;')}"
-                            data-to="${tenTo.replace(/"/g, '&quot;')}"
-                            ${isChecked ? 'checked' : ''}
-                            class="chk-canhan w-4 h-4 text-[#0F4C81] rounded border-slate-300">
+                               data-username="${username}"
+                               data-hoten="${hoTen}"
+                               data-tobophan="${tenTo}"
+                               ${isChecked ? 'checked' : ''}
+                               onchange="toggleChonCaNhan(this, '${encodedUser}', '${encodedName}', '${encodedTo}')"
+                               class="w-4 h-4 text-[#0F4C81] rounded border-slate-300">
                         <span class="text-xs font-semibold text-slate-700">${hoTen}</span>
-                        <span class="text-[10px] text-slate-400">(${vaiTro})</span>
+                        <span class="text-[10px] text-slate-400">(${ns.vaiTro || 'Thành viên'})</span>
                     </label>
                 `;
             }).join('');
-
-            // Gắn event checkbox
-            grid.querySelectorAll('.chk-canhan').forEach(cb => {
-                cb.addEventListener('change', function () {
-                    toggleChonCaNhan(this, this.dataset.username, this.dataset.hoten, this.dataset.to);
-                });
-            });
         } catch (e) {
-            console.error(e);
-            loading.innerHTML = `<span class="text-red-500">Lỗi tải nhân sự: ${e.message}</span>`;
+            console.error("Lỗi load nhân sự tổ:", e);
+            if (loading) {
+                loading.innerText = 'Không thể tải danh sách nhân sự.';
+                loading.classList.remove('hidden');
+            }
         }
     }
 
-    function chonTronTo(tenTo) {
+    // =========================================================================
+    // 4. QUẢN LÝ LỰA CHỌN TỔ & CÁ NHÂN (TAGS DISPLAY)
+    // =========================================================================
+    function chonTronTo(tenToEncoded) {
+        const tenTo = decodeURIComponent(tenToEncoded);
+       
         if (!selectedObjects.some(x => x.toBoPhan === tenTo && x.loai === 'TO')) {
-            selectedObjects.push({
-                username: '',
-                hoTen: `Tổ ${tenTo}`,
-                toBoPhan: tenTo,
-                loai: 'TO'
-            });
+            selectedObjects.push({ username: '', hoTen: `Tổ ${tenTo}`, toBoPhan: tenTo, loai: 'TO' });
+        }
+        // Tự động tích chọn tất cả checkbox cá nhân thuộc tổ này đang có trên giao diện
+        const sId = safeId(tenTo);
+        const grid = document.getElementById(`gridTo-${sId}`);
+        if (grid) {
+            const checkboxes = grid.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => { cb.checked = true; });
         }
         updateTagDisplay();
     }
 
-    function toggleChonCaNhan(cb, username, hoTen, toBoPhan) {
+    function toggleChonCaNhan(cb, usernameEncoded, hoTenEncoded, toBoPhanEncoded) {
+        const username = decodeURIComponent(usernameEncoded);
+        const hoTen = decodeURIComponent(hoTenEncoded);
+        const toBoPhan = decodeURIComponent(toBoPhanEncoded);
         if (cb.checked) {
             if (!selectedObjects.some(x => x.username === username && x.loai === 'CANHAN')) {
                 selectedObjects.push({ username, hoTen, toBoPhan, loai: 'CANHAN' });
             }
         } else {
             selectedObjects = selectedObjects.filter(x => !(x.username === username && x.loai === 'CANHAN'));
+            // Nếu bỏ chọn cá nhân thì cũng bỏ luôn "chọn trọn tổ" (nếu có)
+            selectedObjects = selectedObjects.filter(x => !(x.toBoPhan === toBoPhan && x.loai === 'TO'));
         }
         updateTagDisplay();
     }
@@ -556,18 +661,15 @@
         const container = document.getElementById('danhSachDaChon');
         const badgeNguoi = document.getElementById('badgeThongKeNguoi');
         const badgeTo = document.getElementById('badgeThongKeTo');
-
+        if (!container) return;
         const countTo = selectedObjects.filter(x => x.loai === 'TO').length;
         const countNguoi = selectedObjects.filter(x => x.loai === 'CANHAN').length;
-
-        badgeTo.innerText = `${countTo} tổ`;
-        badgeNguoi.innerText = `${countNguoi} cá nhân`;
-
+        if (badgeTo) badgeTo.innerText = `${countTo} tổ`;
+        if (badgeNguoi) badgeNguoi.innerText = `${countNguoi} cá nhân`;
         if (selectedObjects.length === 0) {
             container.innerHTML = '<span class="text-xs text-slate-400 italic">Chưa chọn đối tượng nào...</span>';
             return;
         }
-
         container.innerHTML = selectedObjects.map((item, idx) => `
             <span class="px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm ${item.loai === 'TO' ? 'bg-indigo-50 text-indigo-800 border border-indigo-200' : 'bg-white text-[#0F4C81] border border-blue-200'}">
                 <i class="bi ${item.loai === 'TO' ? 'bi-diagram-3-fill' : 'bi-person-fill'}"></i>
@@ -578,102 +680,133 @@
     }
 
     function removeSelected(idx) {
+        const removed = selectedObjects[idx];
         selectedObjects.splice(idx, 1);
         updateTagDisplay();
+
         // Đồng bộ lại checkbox nếu đang mở accordion
-        document.querySelectorAll('.chk-canhan').forEach(cb => {
-            const stillSelected = selectedObjects.some(x => x.username === cb.dataset.username && x.loai === 'CANHAN');
-            cb.checked = stillSelected;
-        });
+        if (removed && removed.loai === 'CANHAN') {
+            document.querySelectorAll(`input[data-username="${removed.username}"]`).forEach(cb => {
+                cb.checked = false;
+            });
+        }
+        if (removed && removed.loai === 'TO') {
+            const sId = safeId(removed.toBoPhan);
+            const grid = document.getElementById(`gridTo-${sId}`);
+            if (grid) {
+                grid.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            }
+        }
     }
 
-    // 3. Nguồn giao & Tra cứu Văn bản
+    // =========================================================================
+    // 5. TRA CỨU VĂN BẢN VÀ NGUỒN GIAO
+    // =========================================================================
     function xuLyThayDoiNguonGiao(val) {
         const card = document.getElementById('cardVanBan');
+        if (!card) return;
+       
         if (val === 'Theo văn bản') {
             card.classList.remove('hidden');
         } else {
             card.classList.add('hidden');
             vanBanChon = { soVanBan: '', tenVanBan: '' };
+            // Reset hiển thị
+            document.getElementById('lblSoVB').innerText = 'Chưa chọn';
+            document.getElementById('lblNgayBH').innerText = '--/--/----';
+            document.getElementById('lblTenVB').innerText = 'Bấm tìm kiếm để chọn từ Kho Văn bản...';
         }
     }
 
     async function timKiemVanBan() {
         const q = document.getElementById('inputTimVanBan').value.trim();
         const vung = document.getElementById('vungKetQuaVanBan');
+        if (!vung) return;
         vung.classList.remove('hidden');
-        vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">Đang tra cứu Kho Văn bản...</div>';
-
+        vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center"><i class="bi bi-arrow-repeat animate-spin"></i> Đang tra cứu Kho Văn bản...</div>';
         try {
             const res = await fetch(`${SCRIPT_URL}?action=searchVanBan&q=${encodeURIComponent(q)}`);
-            const text = await res.text();
-            const list = JSON.parse(text);
-
-            if (!list || list.length === 0) {
-                vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">Không thấy văn bản.</div>';
+            if (!res.ok) throw new Error('HTTP Error ' + res.status);
+           
+            const list = await res.json();
+            cachedVanBanResults = Array.isArray(list) ? list : [];
+            if (cachedVanBanResults.length === 0) {
+                vung.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">Không tìm thấy văn bản phù hợp.</div>';
                 return;
             }
-            window.tmpVanBanList = list;
-            vung.innerHTML = list.map((item, index) => `
-                <div onclick="selectVanBan(${index})" class="p-2.5 hover:bg-blue-50 cursor-pointer text-xs">
+            vung.innerHTML = cachedVanBanResults.map((item, idx) => `
+                <div onclick="selectVanBanByIndex(${idx})" class="p-2.5 hover:bg-blue-50 cursor-pointer text-xs border-b border-slate-100 last:border-0 transition">
                     <div class="font-bold text-[#0F4C81]">${item.soVanBan || 'Không số'}</div>
-                    <div class="text-slate-800 truncate">${item.tenVanBan || ''}</div>
+                    <div class="text-slate-800 truncate font-medium">${item.tenVanBan || ''}</div>
+                    <div class="text-[10px] text-slate-400">${item.donViBanHanh || ''} ${item.ngayBanHanh ? ' - ' + item.ngayBanHanh : ''}</div>
                 </div>
             `).join('');
         } catch (e) {
-            vung.innerHTML = '<div class="p-3 text-xs text-red-500 text-center">Lỗi tìm văn bản.</div>';
+            console.error("Lỗi tìm văn bản:", e);
+            vung.innerHTML = '<div class="p-3 text-xs text-red-500 text-center">Lỗi khi kết nối Kho Văn bản.</div>';
         }
     }
 
-    function selectVanBan(index) {
-        const item = window.tmpVanBanList[index];
+    function selectVanBanByIndex(index) {
+        const item = cachedVanBanResults[index];
         if (!item) return;
         vanBanChon = item;
-        document.getElementById('lblSoVB').innerText = item.soVanBan || 'Không số';
-        document.getElementById('lblNgayBH').innerText = item.ngayBanHanh || '--/--/----';
-        document.getElementById('lblTenVB').innerText = item.tenVanBan || '';
-        document.getElementById('vungKetQuaVanBan').classList.add('hidden');
+        const lblSoVB = document.getElementById('lblSoVB');
+        const lblNgayBH = document.getElementById('lblNgayBH');
+        const lblTenVB = document.getElementById('lblTenVB');
+        const vung = document.getElementById('vungKetQuaVanBan');
+        if (lblSoVB) lblSoVB.innerText = item.soVanBan || 'Không số';
+        if (lblNgayBH) lblNgayBH.innerText = item.ngayBanHanh || '--/--/----';
+        if (lblTenVB) lblTenVB.innerText = item.tenVanBan || '';
+        if (vung) vung.classList.add('hidden');
     }
 
-    // Hàm hiển thị Modal Preview Biên bản
+    // =========================================================================
+    // 6. PREVIEW BIÊN BẢN
+    // =========================================================================
     function previewTask() {
         const now = new Date();
-
+       
+        // 1. Cập nhật thông tin thời gian
         document.getElementById('prevThoiGianLap').innerText = now.toLocaleString('vi-VN');
         document.getElementById('prevNgayGiao').innerText = now.toLocaleDateString('vi-VN');
         document.getElementById('prevNgayLap').innerText = String(now.getDate()).padStart(2, '0');
         document.getElementById('prevThangLap').innerText = String(now.getMonth() + 1).padStart(2, '0');
         document.getElementById('prevNamLap').innerText = now.getFullYear();
 
+        // 2. Lấy tự động thông tin người giao
         const nguoiGiaoText = document.getElementById('nguoiGiao').innerText.trim();
         const chucVuText = document.getElementById('chucVuNguoiGiao').innerText.trim();
-
+       
         document.getElementById('prevNguoiGiao').innerText = nguoiGiaoText;
         document.getElementById('prevChucVuNguoiGiao').innerText = chucVuText;
         document.getElementById('prevChucVuKy').innerText = chucVuText;
         document.getElementById('prevHoTenKy').innerText = nguoiGiaoText.replace(/^(Thầy|Cô)\s+/i, '');
 
+        // 3. Đối tượng nhận
         if (selectedObjects.length > 0) {
             document.getElementById('prevNguoiNhan').innerText = selectedObjects.map(x => x.hoTen).join(', ');
         } else {
             document.getElementById('prevNguoiNhan').innerText = "(Chưa chọn đối tượng nhận)";
         }
 
+        // 4. Nguồn giao & Văn bản
         const nguonGiaoRadio = document.querySelector('input[name="nguonGiaoRadio"]:checked');
         document.getElementById('prevNguonGiao').innerText = nguonGiaoRadio ? nguonGiaoRadio.value : 'Theo văn bản';
-
-        if (vanBanChon.soVanBan) {
+        if (vanBanChon && vanBanChon.soVanBan) {
             document.getElementById('prevVanBan').innerText = `${vanBanChon.soVanBan} - ${vanBanChon.tenVanBan || ''}`;
         } else {
             document.getElementById('prevVanBan').innerText = "Không có";
         }
 
+        // 5. Mức độ, Tiêu đề, Nội dung
         document.getElementById('prevMucDo').innerText = document.getElementById('mucDo').value;
-
+       
         const tieuDe = document.getElementById('tieuDe').value.trim();
         const noiDung = document.getElementById('noiDung').value.trim();
         document.getElementById('prevTieuDeNoiDung').innerHTML = `<strong>${tieuDe || '(Chưa nhập tiêu đề)'}</strong><br>${noiDung || ''}`;
 
+        // 6. Minh chứng & Hạn hoàn thành
         const yeuCauMC = document.getElementById('yeuCauMinhChung').value;
         document.getElementById('prevMinhChung').innerText = yeuCauMC === 'Có' ? 'Có yêu cầu minh chứng / báo cáo kết quả' : 'Không yêu cầu';
 
@@ -687,6 +820,7 @@
             document.getElementById('prevThoiHanBaoCao').innerText = 'Theo hạn hoàn thành nhiệm vụ';
         }
 
+        // 7. Chế độ báo cáo (Checkbox)
         if (yeuCauMC === 'Không') {
             document.getElementById('chkBc1').innerText = '☑';
             document.getElementById('chkBc2').innerText = '☐';
@@ -695,6 +829,7 @@
             document.getElementById('chkBc2').innerText = '☑';
         }
 
+        // Hiển thị modal
         document.getElementById('modalPreview').classList.remove('hidden');
     }
 
@@ -702,35 +837,50 @@
         document.getElementById('modalPreview').classList.add('hidden');
     }
 
-    // 4. Submit Form
-    document.getElementById('formGiaoViecFull').addEventListener('submit', async function (e) {
+    // =========================================================================
+    // 7. SUBMIT FORM THỰC HIỆN GIAO VIỆC (createTask)
+    // =========================================================================
+    document.getElementById('formGiaoViecFull').addEventListener('submit', async function(e) {
         e.preventDefault();
+
+        // Kiểm tra validation bắt buộc
         if (selectedObjects.length === 0) {
-            alert('Vui lòng chọn ít nhất một cá nhân hoặc tổ nhận nhiệm vụ!');
+            alert('Vui lòng chọn ít nhất một tổ hoặc cá nhân nhận nhiệm vụ!');
+            return;
+        }
+        const tieuDeVal = document.getElementById('tieuDe').value.trim();
+        if (!tieuDeVal) {
+            alert('Vui lòng nhập tiêu đề công việc!');
+            document.getElementById('tieuDe').focus();
             return;
         }
 
         const btn = document.getElementById('btnSubmit');
+        const originalBtnText = btn.innerHTML;
+       
         btn.disabled = true;
-        btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i><span>Đang lưu...</span>';
+        btn.innerHTML = `<i class="bi bi-arrow-repeat animate-spin"></i> <span>Đang lưu dữ liệu...</span>`;
+
+        const nguonGiaoVal = document.querySelector('input[name="nguonGiaoRadio"]:checked')?.value || 'Theo văn bản';
 
         const payload = {
             action: 'createTask',
             nguoiGiao: document.getElementById('nguoiGiao').innerText.trim(),
             chucVuNguoiGiao: document.getElementById('chucVuNguoiGiao').innerText.trim(),
             loaiNhiemVu: document.getElementById('loaiNhiemVu').value,
-            nguonGiao: document.querySelector('input[name="nguonGiaoRadio"]:checked').value,
-            soVanBan: vanBanChon.soVanBan || '',
-            tenVanBan: vanBanChon.tenVanBan || '',
+            nguonGiao: nguonGiaoVal,
+            soVanBan: nguonGiaoVal === 'Theo văn bản' ? (vanBanChon.soVanBan || '') : '',
+            tenVanBan: nguonGiaoVal === 'Theo văn bản' ? (vanBanChon.tenVanBan || '') : '',
             mucDo: document.getElementById('mucDo').value,
-            tieuDe: document.getElementById('tieuDe').value,
-            noiDung: document.getElementById('noiDung').value,
+            tieuDe: tieuDeVal,
+            noiDung: document.getElementById('noiDung').value.trim(),
             yeuCauMinhChung: document.getElementById('yeuCauMinhChung').value,
             hanHoanThanh: document.getElementById('hanHoanThanh').value,
             danhSachNguoiNhan: selectedObjects
         };
 
         try {
+            // Gửi dữ liệu theo phương thức POST không vi phạm CORS của Google Apps Script
             await fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -740,10 +890,10 @@
             alert('Giao nhiệm vụ thành công! Dữ liệu đã được ghi nhận.');
             window.location.href = 'main.html';
         } catch (err) {
-            alert('Lỗi khi gửi dữ liệu!');
-        } finally {
+            console.error("Lỗi gửi createTask:", err);
+            alert('Có lỗi xảy ra khi kết nối máy chủ. Vui lòng thử lại!');
             btn.disabled = false;
-            btn.innerHTML = '<i class="bi bi-send-fill"></i><span>Giao việc</span>';
+            btn.innerHTML = originalBtnText;
         }
     });
 </script>
