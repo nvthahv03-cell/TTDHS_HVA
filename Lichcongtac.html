@@ -1016,8 +1016,12 @@ async function handleSaveLichTuanBang(actionType, evt) {
         evt.preventDefault();
     }
 
+    // Hiển thị thông báo đang xử lý để thầy biết hệ thống đang chạy
+    const statusMsg = actionType === 'phathanh' ? "Đang tạo PDF và phát hành, thầy vui lòng đợi trong giây lát..." : "Đang lưu nháp dữ liệu...";
+    console.log(statusMsg);
+
     try {
-        // 1. Quét dữ liệu bảng
+        // 1. Gom dữ liệu lịch từ các ô nhập
         const chiTietLich = [];
         const rows = document.querySelectorAll('#tableLichTuanBody tr, #tbodyLichTuan tr, table tbody tr');
         
@@ -1035,26 +1039,29 @@ async function handleSaveLichTuanBang(actionType, evt) {
             }
         });
 
-        // 2. Chụp ảnh khung Xem trước biến thành PDF (Base64) trực tiếp trên GitHub
+        // 2. Chụp khung xem trước tạo PDF Base64
         let pdfBase64 = "";
         if (actionType === 'phathanh') {
-            const previewEl = document.getElementById('previewPrintArea') || document.querySelector('.max-w-4xl');
-            if (previewEl) {
+            const previewEl = document.getElementById('previewPrintArea') || 
+                              document.querySelector('#tab-xemtruoc') || 
+                              document.querySelector('.max-w-4xl');
+
+            if (previewEl && typeof html2pdf !== 'undefined') {
                 const opt = {
-                    margin:       0.2,
+                    margin:       [0.3, 0.3, 0.3, 0.3],
                     filename:     'LichCongTac.pdf',
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true, logging: false },
+                    image:        { type: 'jpeg', quality: 0.95 },
+                    html2canvas:  { scale: 1.5, useCORS: true, logging: false },
                     jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
                 };
                 
-                // Xuất file PDF dạng ArrayBuffer rồi đổi sang chuỗi Base64
+                // Đợi html2pdf tạo xong buffer
                 const pdfBuffer = await html2pdf().set(opt).from(previewEl).output('arraybuffer');
                 pdfBase64 = arrayBufferToBase64(pdfBuffer);
             }
         }
 
-        // 3. Đóng gói dữ liệu gửi sang Apps Script
+        // 3. Đóng gói Payload
         const payload = {
             tuan: document.getElementById('selectTuan')?.value || 33,
             thang: document.getElementById('selectThang')?.value || 8,
@@ -1063,34 +1070,31 @@ async function handleSaveLichTuanBang(actionType, evt) {
             pdfBase64: pdfBase64
         };
 
-        // 4. Gửi sang Apps Script
-        fetch(WEB_APP_URL, {
+        // 4. Gửi Request POST sang Google Apps Script
+        await fetch(WEB_APP_URL, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "text/plain" },
             body: JSON.stringify({ action: actionType, data: payload })
-        })
-        .then(() => {
-            if (actionType === 'phathanh') {
-                alert("Đã phát hành lịch!\nFile PDF đã được chụp nguyên bản và lưu vào Google Drive.");
-            } else {
-                alert("Đã lưu nháp dữ liệu lịch công tác vào Google Sheet!");
-            }
-        })
-        .catch(err => {
-            alert("Lỗi kết nối: " + err.message);
         });
 
+        if (actionType === 'phathanh') {
+            alert(" TẢI DỮ LIỆU & BẢN PDF THÀNH CÔNG!\nThầy kiểm tra Google Sheet và thư mục Google Drive nhé.");
+        } else {
+            alert(" Đã lưu nháp dữ liệu thành công!");
+        }
+
     } catch (err) {
-        alert("Lỗi xử lý PDF: " + err.message);
+        alert("Lỗi quá trình xử lý: " + err.message);
     }
 }
 
-// Hàm hỗ trợ mã hóa file PDF sang Base64
+// Hàm hỗ trợ chuyển đổi ArrayBuffer sang Base64
 function arrayBufferToBase64(buffer) {
     let binary = '';
     const bytes = new Uint8Array(buffer);
-    for (let i = 0; i < bytes.byteLength; i++) {
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
         binary += String.fromCharCode(bytes[i]);
     }
     return window.btoa(binary);
