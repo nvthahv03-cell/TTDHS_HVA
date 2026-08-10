@@ -614,7 +614,7 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 /* ============================================================
    1. KHỞI TẠO DỮ LIỆU BAN ĐẦU
@@ -1008,34 +1008,62 @@ function chuyenDenMenuTacVu() {
 }
 
    
+
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyxKlRSYRvwFp-n1DqQTp6L7CLeR8rv1djF3zxhTy7vtAE8obJ7GDcnJETAGFQRzq45ZQ/exec";
 
-function handleSaveLichTuanBang(actionType, evt) {
+async function handleSaveLichTuanBang(actionType, evt) {
     if (evt && typeof evt.preventDefault === 'function') {
         evt.preventDefault();
     }
 
     try {
+        // 1. Quét dữ liệu bảng
         const chiTietLich = [];
-        // Chỉ quét duy nhất bảng nhập liệu chính (tránh quét lặp sang bảng xem trước)
-        const rows = document.querySelectorAll('#tableLichTuanBody tr, #tbodyLichTuan tr');
+        const rows = document.querySelectorAll('#tableLichTuanBody tr, #tbodyLichTuan tr, table tbody tr');
         
         rows.forEach(row => {
             const ngay = row.querySelector('.cell-ngay, td:nth-child(1)')?.innerText?.trim() || '';
-            const sang = row.querySelector('.cell-sang input, .cell-sang textarea, td:nth-child(2) input, td:nth-child(2) textarea')?.value || '';
-            const chieu = row.querySelector('.cell-chieu input, .cell-chieu textarea, td:nth-child(3) input, td:nth-child(3) textarea')?.value || '';
-            const ghiChu = row.querySelector('.cell-ghichu input, .cell-ghichu textarea, td:nth-child(4) input, td:nth-child(4) textarea')?.value || '';
+            const sang = row.querySelector('.cell-sang input, .cell-sang textarea, td:nth-child(2) input, td:nth-child(2) textarea')?.value || 
+                         row.querySelector('td:nth-child(2)')?.innerText?.trim() || '';
+            const chieu = row.querySelector('.cell-chieu input, .cell-chieu textarea, td:nth-child(3) input, td:nth-child(3) textarea')?.value || 
+                          row.querySelector('td:nth-child(3)')?.innerText?.trim() || '';
+            const ghiChu = row.querySelector('.cell-ghichu input, .cell-ghichu textarea, td:nth-child(4) input, td:nth-child(4) textarea')?.value || 
+                           row.querySelector('td:nth-child(4)')?.innerText?.trim() || '';
 
-            chiTietLich.push({ ngay, sang, chieu, ghiChu });
+            if (ngay || sang || chieu) {
+                chiTietLich.push({ ngay, sang, chieu, ghiChu });
+            }
         });
 
+        // 2. Chụp ảnh khung Xem trước biến thành PDF (Base64) trực tiếp trên GitHub
+        let pdfBase64 = "";
+        if (actionType === 'phathanh') {
+            const previewEl = document.getElementById('previewPrintArea') || document.querySelector('.max-w-4xl');
+            if (previewEl) {
+                const opt = {
+                    margin:       0.2,
+                    filename:     'LichCongTac.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true, logging: false },
+                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                };
+                
+                // Xuất file PDF dạng ArrayBuffer rồi đổi sang chuỗi Base64
+                const pdfBuffer = await html2pdf().set(opt).from(previewEl).output('arraybuffer');
+                pdfBase64 = arrayBufferToBase64(pdfBuffer);
+            }
+        }
+
+        // 3. Đóng gói dữ liệu gửi sang Apps Script
         const payload = {
             tuan: document.getElementById('selectTuan')?.value || 33,
             thang: document.getElementById('selectThang')?.value || 8,
             nam: 2026,
-            chiTietLich: chiTietLich
+            chiTietLich: chiTietLich,
+            pdfBase64: pdfBase64
         };
 
+        // 4. Gửi sang Apps Script
         fetch(WEB_APP_URL, {
             method: "POST",
             mode: "no-cors",
@@ -1044,9 +1072,9 @@ function handleSaveLichTuanBang(actionType, evt) {
         })
         .then(() => {
             if (actionType === 'phathanh') {
-                alert("Đã phát hành lịch thành công!\nFile PDF chuẩn đã được lưu vào Google Drive.");
+                alert("Đã phát hành lịch!\nFile PDF đã được chụp nguyên bản và lưu vào Google Drive.");
             } else {
-                alert("Đã lưu nháp lịch công tác vào Google Sheet!");
+                alert("Đã lưu nháp dữ liệu lịch công tác vào Google Sheet!");
             }
         })
         .catch(err => {
@@ -1054,8 +1082,18 @@ function handleSaveLichTuanBang(actionType, evt) {
         });
 
     } catch (err) {
-        alert("Lỗi gom dữ liệu: " + err.message);
+        alert("Lỗi xử lý PDF: " + err.message);
     }
+}
+
+// Hàm hỗ trợ mã hóa file PDF sang Base64
+function arrayBufferToBase64(buffer) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
 }
 </script>
 </body>
