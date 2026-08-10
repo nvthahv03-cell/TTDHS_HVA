@@ -1006,15 +1006,17 @@ function chuyenDenMenuTacVu() {
         elLichCongTac.click();
     }
 }
-
    
-
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzlx9XF_JfHQmXHAFOsrBrzeSrz419OCQnU5qhcd93Su58--hoHp6V6zgu11S3lcjalIA/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz7IsfWAfnsOa4SIyMiKEB-qQurwW5FpxuKcT83aeCHXhiAf60sJSc0t4KQXE3N427E/exec";
 
 async function handleSaveLichTuanBang(actionType, evt) {
     if (evt && typeof evt.preventDefault === 'function') {
         evt.preventDefault();
     }
+
+    // Lấy nút vừa bấm để tạo hiệu ứng chờ
+    const targetBtn = evt?.target || document.activeElement;
+    const originalText = targetBtn?.innerText || "";
 
     try {
         const chiTietLich = [];
@@ -1069,19 +1071,37 @@ async function handleSaveLichTuanBang(actionType, evt) {
             chiTietLich: chiTietLich
         };
 
-        await fetch(WEB_APP_URL, {
+        // Khóa nút bấm để tránh bị kích đúp (Double click)
+        if (targetBtn && targetBtn.tagName === 'BUTTON') {
+            targetBtn.disabled = true;
+            targetBtn.innerText = "Đang xử lý...";
+        }
+
+        // Gửi dữ liệu về Gateway chuẩn CORS
+        const response = await fetch(WEB_APP_URL, {
             method: "POST",
-            mode: "no-cors",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({ action: actionType, data: payload })
         });
 
-        alert(actionType === 'phathanh' 
-            ? "ĐÃ PHÁT HÀNH THÀNH CÔNG!\nDữ liệu đã đổ vào tab DB_01_LichCongTac." 
-            : "Đã lưu nháp dữ liệu thành công!");
+        const resData = await response.json();
+
+        if (resData && (resData.success || resData.status === "success")) {
+            alert(actionType === 'phathanh' 
+                ? "ĐÃ PHÁT HÀNH THÀNH CÔNG!\nDữ liệu đã đổ vào tab DB_01_LichCongTac." 
+                : "Đã lưu nháp dữ liệu thành công!");
+        } else {
+            alert("Hệ thống nhận dữ liệu nhưng báo lỗi: " + (resData.message || resData.error || "Không rõ nguyên nhân"));
+        }
 
     } catch (err) {
-        alert("Lỗi gửi dữ liệu: " + err.message);
+        alert("Lỗi kết nối Gateway: " + err.message);
+    } finally {
+        // Mở lại nút bấm sau khi hoàn thành
+        if (targetBtn && targetBtn.tagName === 'BUTTON') {
+            targetBtn.disabled = false;
+            targetBtn.innerText = originalText;
+        }
     }
 }
 </script>
