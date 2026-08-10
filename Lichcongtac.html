@@ -1024,12 +1024,10 @@ async function handleSaveLichTuanBang(actionType, evt) {
             const inputs = row.querySelectorAll('input, textarea');
             const cellNgayRaw = row.cells[0]?.innerText?.trim() || '';
 
-            // Tách Thứ và Ngày (Loại bỏ các số trong ngoặc như (2), (3)...)
             let thuText = cellNgayRaw.split('\n')[0] || cellNgayRaw;
             thuText = thuText.replace(/\s*\(\d+|CN\)/gi, '').trim();
 
             let ngayText = "";
-            // Tìm chuỗi ngày YYYY-MM-DD hoặc DD/MM/YYYY trong ô hoặc ô nhập
             const dateMatch = cellNgayRaw.match(/\d{4}-\d{2}-\d{2}/) || cellNgayRaw.match(/\d{1,2}\/\d{1,2}\/\d{4}/);
             if (dateMatch) {
                 ngayText = dateMatch[0];
@@ -1040,7 +1038,6 @@ async function handleSaveLichTuanBang(actionType, evt) {
                 let chieuVal = inputs[1]?.value?.trim() || '';
                 let ghiChuVal = inputs[2]?.value?.trim() || '';
 
-                // Nếu cột sáng lỡ bị dính chuỗi ngày dạng YYYY-MM-DD thì lọc bỏ
                 if (!ngayText && sangVal.match(/^\d{4}-\d{2}-\d{2}$/)) {
                     ngayText = sangVal;
                     sangVal = "";
@@ -1068,11 +1065,10 @@ async function handleSaveLichTuanBang(actionType, evt) {
         const payload = {
             tuan: document.getElementById('selectTuan')?.value || 33,
             thang: document.getElementById('selectThang')?.value || 8,
-            nam: 2026,
+            namHoc: "2025-2026",
             chiTietLich: chiTietLich
         };
 
-        // Gửi dữ liệu sang Google Apps Script
         await fetch(WEB_APP_URL, {
             method: "POST",
             mode: "no-cors",
@@ -1081,7 +1077,7 @@ async function handleSaveLichTuanBang(actionType, evt) {
         });
 
         alert(actionType === 'phathanh' 
-            ? "ĐÃ PHÁT HÀNH THÀNH CÔNG!\nDữ liệu đã ghi vào Sheet và PDF chuẩn hành chính đã lưu trên Drive." 
+            ? "ĐÃ PHÁT HÀNH THÀNH CÔNG!\nDữ liệu đã đổ vào tab DB_01_LichCongTac." 
             : "Đã lưu nháp dữ liệu thành công!");
 
     } catch (err) {
