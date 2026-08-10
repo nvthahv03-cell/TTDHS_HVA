@@ -1009,95 +1009,65 @@ function chuyenDenMenuTacVu() {
 
    
 
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyxKlRSYRvwFp-n1DqQTp6L7CLeR8rv1djF3zxhTy7vtAE8obJ7GDcnJETAGFQRzq45ZQ/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyGSfPyviZN-oJ-_XQz4KoY-9W2TRpjITMFcCtRBVhITfxLxbpf78-L1FEVJZUnwf22Dw/exec";
 
 async function handleSaveLichTuanBang(actionType, evt) {
     if (evt && typeof evt.preventDefault === 'function') {
         evt.preventDefault();
     }
 
-    // Hiển thị thông báo đang xử lý để thầy biết hệ thống đang chạy
-    const statusMsg = actionType === 'phathanh' ? "Đang tạo PDF và phát hành, thầy vui lòng đợi trong giây lát..." : "Đang lưu nháp dữ liệu...";
-    console.log(statusMsg);
-
     try {
-        // 1. Gom dữ liệu lịch từ các ô nhập
         const chiTietLich = [];
-        const rows = document.querySelectorAll('#tableLichTuanBody tr, #tbodyLichTuan tr, table tbody tr');
+        // Quét tất cả các hàng trong bảng nhập liệu
+        const rows = document.querySelectorAll('table tbody tr');
         
-        rows.forEach(row => {
-            const ngay = row.querySelector('.cell-ngay, td:nth-child(1)')?.innerText?.trim() || '';
-            const sang = row.querySelector('.cell-sang input, .cell-sang textarea, td:nth-child(2) input, td:nth-child(2) textarea')?.value || 
-                         row.querySelector('td:nth-child(2)')?.innerText?.trim() || '';
-            const chieu = row.querySelector('.cell-chieu input, .cell-chieu textarea, td:nth-child(3) input, td:nth-child(3) textarea')?.value || 
-                          row.querySelector('td:nth-child(3)')?.innerText?.trim() || '';
-            const ghiChu = row.querySelector('.cell-ghichu input, .cell-ghichu textarea, td:nth-child(4) input, td:nth-child(4) textarea')?.value || 
-                           row.querySelector('td:nth-child(4)')?.innerText?.trim() || '';
+        rows.forEach((row) => {
+            const inputs = row.querySelectorAll('input, textarea');
+            // Nếu hàng chứa ô nhập
+            if (inputs.length >= 2) {
+                const sangVal = inputs[0]?.value || '';
+                const chieuVal = inputs[1]?.value || '';
+                const ghiChuVal = inputs[2]?.value || '';
+                const ngayText = row.cells[0]?.innerText?.trim() || '';
 
-            if (ngay || sang || chieu) {
-                chiTietLich.push({ ngay, sang, chieu, ghiChu });
+                if (sangVal || chieuVal || ghiChuVal) {
+                    chiTietLich.push({
+                        ngay: ngayText,
+                        sang: sangVal,
+                        chieu: chieuVal,
+                        ghiChu: ghiChuVal
+                    });
+                }
             }
         });
 
-        // 2. Chụp khung xem trước tạo PDF Base64
-        let pdfBase64 = "";
-        if (actionType === 'phathanh') {
-            const previewEl = document.getElementById('previewPrintArea') || 
-                              document.querySelector('#tab-xemtruoc') || 
-                              document.querySelector('.max-w-4xl');
-
-            if (previewEl && typeof html2pdf !== 'undefined') {
-                const opt = {
-                    margin:       [0.3, 0.3, 0.3, 0.3],
-                    filename:     'LichCongTac.pdf',
-                    image:        { type: 'jpeg', quality: 0.95 },
-                    html2canvas:  { scale: 1.5, useCORS: true, logging: false },
-                    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-                };
-                
-                // Đợi html2pdf tạo xong buffer
-                const pdfBuffer = await html2pdf().set(opt).from(previewEl).output('arraybuffer');
-                pdfBase64 = arrayBufferToBase64(pdfBuffer);
-            }
+        if (chiTietLich.length === 0) {
+            alert("Chưa có nội dung nhập trong bảng. Thầy vui lòng nhập lịch trước khi bấm!");
+            return;
         }
 
-        // 3. Đóng gói Payload
         const payload = {
             tuan: document.getElementById('selectTuan')?.value || 33,
             thang: document.getElementById('selectThang')?.value || 8,
             nam: 2026,
-            chiTietLich: chiTietLich,
-            pdfBase64: pdfBase64
+            chiTietLich: chiTietLich
         };
 
-        // 4. Gửi Request POST sang Google Apps Script
+        // Gửi dữ liệu nhẹ sang Google Apps Script
         await fetch(WEB_APP_URL, {
             method: "POST",
             mode: "no-cors",
-            headers: { "Content-Type": "text/plain" },
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({ action: actionType, data: payload })
         });
 
-        if (actionType === 'phathanh') {
-            alert(" TẢI DỮ LIỆU & BẢN PDF THÀNH CÔNG!\nThầy kiểm tra Google Sheet và thư mục Google Drive nhé.");
-        } else {
-            alert(" Đã lưu nháp dữ liệu thành công!");
-        }
+        alert(actionType === 'phathanh' 
+            ? "Đã phát hành lịch thành công!\nDữ liệu đã lưu vào Sheet và PDF đã được tạo trên Drive." 
+            : "Đã lưu nháp dữ liệu thành công!");
 
     } catch (err) {
-        alert("Lỗi quá trình xử lý: " + err.message);
+        alert("Lỗi gửi dữ liệu: " + err.message);
     }
-}
-
-// Hàm hỗ trợ chuyển đổi ArrayBuffer sang Base64
-function arrayBufferToBase64(buffer) {
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
 }
 </script>
 </body>
