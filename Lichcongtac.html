@@ -1014,101 +1014,135 @@ async function handleSaveLichTuanBang(actionType, evt) {
         evt.preventDefault();
     }
 
-    // Lấy nút vừa bấm để tạo hiệu ứng chờ
+    // 1. Lấy nút đang thao tác để tạo hiệu ứng chờ
     const targetBtn = evt?.target || document.activeElement;
     const originalText = targetBtn?.innerText || "";
 
     try {
+        // 2. Lấy thông tin tài khoản đang đăng nhập từ hệ thống (Session / LocalStorage)
+        let currentUser = {};
+        try {
+            currentUser = JSON.parse(localStorage.getItem("currentUser")) || 
+                          JSON.parse(sessionStorage.getItem("currentUser")) || 
+                          (typeof window.currentUser !== 'undefined' ? window.currentUser : {});
+        } catch (e) {
+            currentUser = {};
+        }
+
+        const nguoiTao = currentUser.fullName || currentUser.hoTen || currentUser.name || "Nguyễn Văn Thà";
+        const chucVu = currentUser.chucVu || currentUser.roleTitle || currentUser.role || "TPCM";
+
+        // 3. Thu thập dữ liệu tuần, tháng, năm học từ giao diện
+        const tuan = document.getElementById('selectTuan')?.value || 
+                     document.getElementById('tuanSelect')?.value || 
+                     document.getElementById('tuan')?.value || "3";
+                     
+        const thang = document.getElementById('selectThang')?.value || 
+                      document.getElementById('thangSelect')?.value || 
+                      document.getElementById('thang')?.value || "8";
+                      
+        const namHoc = document.getElementById('selectNamHoc')?.value || 
+                       document.getElementById('namHocSelect')?.value || 
+                       document.getElementById('namHoc')?.value || "2025-2026";
+
+        // 4. Quét chính xác toàn bộ các hàng trong bảng dữ liệu
         const chiTietLich = [];
-        // Ưu tiên chọn đúng bảng nhập liệu (thay selector nếu thầy có đặt id bảng)
-        const rows = document.querySelectorAll('#bangNhapLich tbody tr, table tbody tr');
-        
+        const rows = document.querySelectorAll('#bangNhapLich tbody tr, #tableLich tbody tr, table tbody tr');
+
         rows.forEach((row) => {
             const inputs = row.querySelectorAll('input, textarea');
             const cellNgayRaw = row.cells[0]?.innerText?.trim() || '';
 
+            // Lấy nhãn Thứ (2, 3, 4, 5, 6, 7, CN)
             let thuText = cellNgayRaw.split('\n')[0] || cellNgayRaw;
             thuText = thuText.replace(/\s*\(\d+|CN\)/gi, '').trim();
 
+            // Lấy Ngày tháng
             let ngayText = "";
-            const dateMatch = cellNgayRaw.match(/\d{4}-\d{2}-\d{2}/) || cellNgayRaw.match(/\d{1,2}\/\d{1,2}\/\d{4}/);
+            const dateMatch = cellNgayRaw.match(/\d{4}[-/]\d{1,2}[-/]\d{1,2}/) || 
+                             cellNgayRaw.match(/\d{1,2}[-/]\d{1,2}[-/]\d{4}/) ||
+                             cellNgayRaw.match(/\d{1,2}\/\d{1,2}/);
             if (dateMatch) {
                 ngayText = dateMatch[0];
             }
 
+            // Lấy nội dung Sáng, Chiều, Ghi chú
             if (inputs.length >= 2) {
                 let sangVal = inputs[0]?.value?.trim() || '';
                 let chieuVal = inputs[1]?.value?.trim() || '';
                 let ghiChuVal = inputs[2]?.value?.trim() || '';
 
-                if (!ngayText && sangVal.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    ngayText = sangVal;
-                    sangVal = "";
-                } else if (sangVal.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                    sangVal = "";
+                // Trường hợp ô đầu tiên là input chọn ngày
+                if (!ngayText && inputs[0]?.type === 'date') {
+                    ngayText = inputs[0].value;
+                    sangVal = inputs[1]?.value?.trim() || '';
+                    chieuVal = inputs[2]?.value?.trim() || '';
+                    ghiChuVal = inputs[3]?.value?.trim() || '';
                 }
 
-                if (thuText || sangVal || chieuVal) {
-                    chiTietLich.push({
-                        thu: thuText,
-                        ngay: ngayText,
-                        sang: sangVal,
-                        chieu: chieuVal,
-                        ghiChu: ghiChuVal
-                    });
-                }
+                chiTietLich.push({
+                    thu: thuText,
+                    ngay: ngayText,
+                    sang: sangVal,
+                    chieu: chieuVal,
+                    ghiChu: ghiChuVal
+                });
             }
         });
 
         if (chiTietLich.length === 0) {
-            alert("Chưa có nội dung nhập trong bảng. Thầy vui lòng nhập lịch trước khi bấm!");
+            alert("Chưa có nội dung lịch để lưu. Vui lòng kiểm tra lại bảng nhập!");
             return;
         }
 
-        const payload = {
-            tuan: document.getElementById('selectTuan')?.value || "35",
-            thang: document.getElementById('selectThang')?.value || "05",
-            namHoc: document.getElementById('selectNamHoc')?.value || "2025-2026",
+        // 5. Đóng gói Payload chứa dữ liệu thật và thông tin người tạo
+        const payloadData = {
+            tuan: tuan,
+            thang: thang,
+            namHoc: namHoc,
+            nguoiTao: nguoiTao,
+            chucVu: chucVu,
             chiTietLich: chiTietLich
         };
 
-        // Khóa nút bấm để tránh kích đúp
+        // Khóa nút để tránh click trùng lặp
         if (targetBtn && targetBtn.tagName === 'BUTTON') {
             targetBtn.disabled = true;
             targetBtn.innerText = "Đang xử lý...";
         }
 
-        // Gửi dữ liệu về Gateway Backend
+        // 6. Gửi request sang Apps Script
         const response = await fetch(WEB_APP_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: actionType, data: payload })
+            body: JSON.stringify({ action: actionType, data: payloadData })
         });
 
         const resData = await response.json();
 
+        // 7. Xử lý phản hồi
         if (resData && (resData.success || resData.status === "success")) {
             if (actionType === 'phathanh') {
                 const pdfUrl = resData.pdfUrl || "";
                 if (pdfUrl) {
-                    const xemNgay = confirm("🎉 ĐÃ PHÁT HÀNH VÀ XUẤT PDF THÀNH CÔNG!\n\nThầy có muốn mở xem file PDF trên Google Drive ngay không?");
+                    const xemNgay = confirm("🎉 ĐÃ PHÁT HÀNH VÀ XUẤT PDF THÀNH CÔNG!\n\nBạn có muốn mở xem file PDF trên Google Drive ngay không?");
                     if (xemNgay) {
                         window.open(pdfUrl, '_blank');
                     }
                 } else {
-                    alert("ĐÃ PHÁT HÀNH THÀNH CÔNG!\nDữ liệu đã lưu vào Sheet (chưa tạo được link PDF).");
+                    alert("ĐÃ PHÁT HÀNH THÀNH CÔNG!\nDữ liệu đã được lưu vào Sheet.");
                 }
             } else {
-                alert("Đã lưu nháp dữ liệu thành công vào hệ thống!");
+                alert("Đã lưu tạm lịch công tác thành công!");
             }
         } else {
             alert("Lỗi: " + (resData.message || resData.error || "Không thể lưu dữ liệu"));
         }
 
     } catch (err) {
-        alert("Lỗi kết nối Gateway: " + err.message);
+        alert("Lỗi kết nối máy chủ: " + err.message);
     } finally {
-        // Mở lại trạng thái nút bấm
+        // Mở lại nút bấm
         if (targetBtn && targetBtn.tagName === 'BUTTON') {
             targetBtn.disabled = false;
             targetBtn.innerText = originalText;
