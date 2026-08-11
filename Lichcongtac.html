@@ -36,7 +36,7 @@
                 </button>
                 <div class="min-w-0">
                     <div class="text-white/80 font-bold uppercase text-[9px] sm:text-[10px] tracking-wider truncate">SỞ GD&ĐT TP ĐÀ NẴNG - THPT HÒA VANG</div>
-                    <div class="text-white text-sm sm:text-lg font-black uppercase truncate">QUẢN LÝ LỊCH CÔNG TÁC HVA_v20</div>
+                    <div class="text-white text-sm sm:text-lg font-black uppercase truncate">QUẢN LÝ LỊCH CÔNG TÁC HVA_v22</div>
                 </div>
             </div>
 
@@ -927,14 +927,31 @@ function backToEdit(e) {
 /* ============================================================
    7. SAVE / PUBLISH FUNCTIONS
 ============================================================ */
-function handleSaveLichTuanBang(type, e) {
+async function handleSaveLichTuanBang(type, e) {
     if (e) e.preventDefault();
 
     if (type === 'nhap') {
         showToast('Đã lưu nháp Lịch Công Tác Tuần thành công!', 'success');
     } else if (type === 'phathanh') {
-        const modal = document.getElementById('modalThongBaoGV');
-        if (modal) modal.classList.remove('hidden');
+        try {
+            // Bước 2: Gọi hàm tạo và lưu PDF lên Drive (chạy ngầm, đã bỏ alert trung gian)
+            const pdfResult = await taoPdfLichVaLuuDrive();
+
+            // Xử lý lỗi nếu tạo PDF thất bại
+            if (!pdfResult || !pdfResult.success) {
+                alert("Đã lưu dữ liệu lịch nhưng chưa tạo được PDF. Chi tiết: " + (pdfResult?.message || "Lỗi tạo PDF"));
+                return;
+            }
+
+            // Bước 4: CHỈ KHI PDF thành công mới mở modal thông báo
+            const modal = document.getElementById('modalThongBaoGV');
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+        } catch (err) {
+            console.error("Lỗi tiến trình phát hành PDF:", err);
+            alert("Đã xảy ra lỗi khi tạo PDF: " + err.message);
+        }
     }
 }
 
@@ -1086,15 +1103,13 @@ function chuyenDenMenuTacVu() {
         const result = await response.json();
         if (result.success) {
             console.log("Lưu PDF thành công:", result.pdfUrl);
-            alert("Đã tạo và lưu PDF thành công lên Google Drive!");
-            return result;
+            return result; // Trả về kết quả mà không bật alert trung gian
         } else {
             throw new Error(result.message || "Lỗi không xác định từ backend.");
         }
 
     } catch (error) {
         console.error("Lỗi tạo/lưu PDF:", error);
-        alert("Lỗi: " + error.message);
         return { success: false, message: error.message };
     }
 }
