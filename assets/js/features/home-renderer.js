@@ -247,11 +247,12 @@ export function renderHome() {
 <div class="flex justify-center items-start gap-2 sm:gap-8 md:gap-12 mb-8 relative z-30 max-w-lg mx-auto px-4">
 
   <!-- ================= SHORTCUT 1: LỊCH CÔNG TÁC ================= -->
+  <!-- ================= SHORTCUT 1: LỊCH CÔNG TÁC ================= -->
   <div class="relative flex flex-col items-center">
     <!-- Nút bấm Shortcut 1 -->
     <button type="button"
             id="btn-menu-lich-tb"
-            onclick="toggleDashboardMenu('menu-lich-tb', event)"
+            onclick="toggleDashboardMenu('menu-lich-tb', event); loadModule('lich-tuan');"
             class="flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer group outline-none select-none">
       
       <!-- Icon Outline Style VNeID -->
@@ -269,7 +270,7 @@ export function renderHome() {
    <div id="menu-lich-tb" class="dashboard-dropdown hidden absolute top-full left-0 sm:-left-4 mt-3 w-64 sm:w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/80 p-2 z-50 transition-all text-left" onclick="event.stopPropagation()">
       
       <!-- Lịch công tác -->
-      <div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+      <div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event); loadModule('lich-tuan');">
         <div class="flex items-center justify-between">
           <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-calendar3 text-blue-500 text-sm"></i> Lịch công tác</span>
           <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
