@@ -36,7 +36,7 @@
                 </button>
                 <div class="min-w-0">
                     <div class="text-white/80 font-bold uppercase text-[9px] sm:text-[10px] tracking-wider truncate">SỞ GD&ĐT TP ĐÀ NẴNG - THPT HÒA VANG</div>
-                    <div class="text-white text-sm sm:text-lg font-black uppercase truncate">QUẢN LÝ LỊCH CÔNG TÁC HVA_v6</div>
+                    <div class="text-white text-sm sm:text-lg font-black uppercase truncate">QUẢN LÝ LỊCH CÔNG TÁC HVA_v7</div>
                 </div>
             </div>
 
@@ -1012,53 +1012,67 @@ function chuyenDenMenuTacVu() {
 /* ============================================================
    8. FORM FUNCTIONS & XỬ LÝ LỊCH TUẦN (HOÀN CHỈNH)
 ============================================================ */
+/* ============================================================
+   HÀM XỬ LÝ LỊCH TUẦN ĐỒNG NHẤT VÀ AN TOÀN (FULL CODE)
+============================================================ */
 async function handleSaveLichTuanBang(actionType, evt) {
     if (evt && typeof evt.preventDefault === 'function') {
         evt.preventDefault();
     }
 
-    // 1. Lấy thông tin tài khoản đang đăng nhập
+    // 1. Lấy thông tin cấu hình chung từ form
+    const tuan = document.getElementById('tuanSo')?.value || document.getElementById('tuan')?.value || "35";
+    const thang = document.getElementById('thangSo')?.value || document.getElementById('thang')?.value || "08";
+    const namHoc = document.getElementById('namHocText')?.value || document.getElementById('namHoc')?.value || "2025-2026";
+
+    // Lấy thông tin người tạo từ phiên đăng nhập hiện tại
     let currentUser = {};
     try {
         currentUser = JSON.parse(localStorage.getItem("currentUser")) || 
-                      JSON.parse(sessionStorage.getItem("currentUser")) || 
-                      (typeof window.currentUser !== 'undefined' ? window.currentUser : {});
-    } catch (e) {
-        currentUser = {};
-    }
+                      JSON.parse(sessionStorage.getItem("currentUser")) || {};
+    } catch (e) {}
 
     const nguoiTao = currentUser.fullName || currentUser.hoTen || currentUser.name || "Nguyễn Văn Thà";
-    const chucVu = currentUser.chucVu || currentUser.roleTitle || currentUser.role || "TPCM";
+    const chucVu = currentUser.chucVu || currentUser.roleTitle || "Phó Hiệu trưởng";
 
-    // 2. Thu thập dữ liệu từ form Lịch tuần của thầy
-    // (Điều chỉnh lại các ID cho khớp với các trường input thực tế trong form HTML của thầy)
-    const payloadData = {
-        tuan: document.getElementById('tuanSo')?.value || document.getElementById('tuan')?.value || "1",
-        thang: document.getElementById('thangSo')?.value || document.getElementById('thang')?.value || "",
-        namHoc: document.getElementById('namHocText')?.value || document.getElementById('namHoc')?.value || "2025-2026",
-        nguoiTao: nguoiTao,
-        chucVu: chucVu,
-        chiTietLich: window.currentChiTietLich || [] // Hoặc hàm lấy mảng chi tiết lịch của thầy
-    };
+    // 2. Thu thập dữ liệu thật trực tiếp từ các ô input/textarea trên bảng
+    let chiTietLich = [];
+    const thuLabels = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"];
 
-    // Kiểm tra nếu là lưu nháp thì có thể chỉ cần báo toast, hoặc gọi action 'nhap' lên server
-    if (actionType === 'nhap') {
-        if (typeof showToast === 'function') {
-            showToast('Đang lưu nháp...', 'info');
-        }
-    } else {
-        if (typeof showToast === 'function') {
-            showToast('Đang khởi tạo và xuất tệp PDF, vui lòng đợi...', 'info');
-        }
+    for (let i = 0; i < 7; i++) {
+        const idx = i + 2; // Tương ứng từ Thứ 2 (2) đến Chủ Nhật (8)
+        
+        // Quét an toàn theo nhiều kiểu ID hoặc Class phổ biến trên form của thầy
+        const ngayEl = document.getElementById(`ngay_${idx}`) || document.getElementById(`ngay${idx}`);
+        const sangEl = document.getElementById(`sang_${idx}`) || document.getElementById(`sang${idx}`) || document.querySelectorAll('textarea[name*="sang"], input[name*="sang"]')[i];
+        const chieuEl = document.getElementById(`chieu_${idx}`) || document.getElementById(`chieu${idx}`) || document.querySelectorAll('textarea[name*="chieu"], input[name*="chieu"]')[i];
+        const ghiChuEl = document.getElementById(`ghichu_${idx}`) || document.getElementById(`ghichu${idx}`) || document.querySelectorAll('textarea[name*="ghichu"], textarea[name*="ghiChu"]')[i];
+
+        chiTietLich.push({
+            thu: thuLabels[i],
+            ngay: ngayEl ? ngayEl.value.trim() : "",
+            sang: sangEl ? sangEl.value.trim() : "",
+            chieu: chieuEl ? chieuEl.value.trim() : "",
+            ghiChu: ghiChuEl ? ghiChuEl.value.trim() : ""
+        });
     }
 
+    const payload = {
+        tuan: tuan,
+        thang: thang,
+        namHoc: namHoc,
+        nguoiTao: nguoiTao,
+        chucVu: chucVu,
+        chiTietLich: chiTietLich
+    };
+
+    // 3. Gửi gói dữ liệu hoàn chỉnh lên Google Apps Script
     try {
-        // 3. Gửi dữ liệu qua Web App URL của Apps Script
         const response = await fetch(WEB_APP_URL, {
             method: "POST",
             body: JSON.stringify({
-                action: actionType, // 'nhap' hoặc 'phathanh'
-                data: payloadData
+                action: actionType,
+                data: payload
             })
         });
 
@@ -1066,37 +1080,25 @@ async function handleSaveLichTuanBang(actionType, evt) {
 
         if (result.success) {
             if (actionType === 'phathanh') {
-                if (typeof showToast === 'function') {
-                    showToast('Đã phát hành và xuất PDF thành công!', 'success');
-                } else {
-                    alert('Đã phát hành và xuất PDF thành công!');
-                }
-
-                // QUAN TRỌNG: Tự động mở file PDF trong tab mới ngay khi nhận được link từ server
                 if (result.pdfUrl && result.pdfUrl.trim() !== "") {
                     window.open(result.pdfUrl, '_blank');
                 } else {
-                    console.warn("Server đã lưu nhưng không trả về đường dẫn PDF.");
+                    alert("Đã lưu dữ liệu vào Sheet nhưng chưa tạo được liên kết PDF.");
                 }
 
-                // Hiển thị Modal thông báo giáo viên (nếu hệ thống của thầy cần)
+                // Kích hoạt hiển thị modal thông báo nếu giao diện yêu cầu
                 const modal = document.getElementById('modalThongBaoGV');
                 if (modal) modal.classList.remove('hidden');
-
             } else {
-                if (typeof showToast === 'function') {
-                    showToast('Đã lưu nháp Lịch Công Tác Tuần thành công!', 'success');
-                } else {
-                    alert('Đã lưu nháp thành công!');
-                }
+                alert("Đã lưu nháp Lịch Công Tác Tuần thành công!");
             }
         } else {
-            alert("Lỗi từ hệ thống: " + (result.message || "Không rõ nguyên nhân"));
+            alert("Lỗi từ hệ thống: " + (result.message || "Không xác định"));
         }
 
     } catch (err) {
         console.error("Lỗi kết nối:", err);
-        alert("Lỗi kết nối đến máy chủ Google Apps Script.");
+        alert("Không thể kết nối đến máy chủ Google Apps Script.");
     }
 }
 </script>
