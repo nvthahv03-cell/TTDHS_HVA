@@ -599,7 +599,8 @@
 updateCurrentDate();
     </script>
     <script>
-    // Kiểm tra an toàn trước khi gán sự kiện để tránh lỗi null
+    
+    // 1. Kiểm tra an toàn để tránh lỗi "Cannot read properties of null" tại dòng 602
     const btnLich = document.getElementById('btnLichCongTac');
     if (btnLich) {
         btnLich.addEventListener('click', function() {
@@ -607,7 +608,7 @@ updateCurrentDate();
         });
     }
 
-    // Khai báo hàm loadModule toàn cục để tránh lỗi "is not defined"
+    // 2. Khai báo hàm loadModule toàn cục để tránh lỗi "loadModule is not defined"
     window.loadModule = function(moduleName) {
         console.log("Đang tải module:", moduleName);
         
