@@ -1020,7 +1020,8 @@ async function handleSaveLichTuanBang(actionType, evt) {
 
     try {
         const chiTietLich = [];
-        const rows = document.querySelectorAll('table tbody tr');
+        // Ưu tiên chọn đúng bảng nhập liệu (thay selector nếu thầy có đặt id bảng)
+        const rows = document.querySelectorAll('#bangNhapLich tbody tr, table tbody tr');
         
         rows.forEach((row) => {
             const inputs = row.querySelectorAll('input, textarea');
@@ -1065,19 +1066,19 @@ async function handleSaveLichTuanBang(actionType, evt) {
         }
 
         const payload = {
-            tuan: document.getElementById('selectTuan')?.value || 33,
-            thang: document.getElementById('selectThang')?.value || 8,
-            namHoc: "2025-2026",
+            tuan: document.getElementById('selectTuan')?.value || "35",
+            thang: document.getElementById('selectThang')?.value || "05",
+            namHoc: document.getElementById('selectNamHoc')?.value || "2025-2026",
             chiTietLich: chiTietLich
         };
 
-        // Khóa nút bấm để tránh bị kích đúp (Double click)
+        // Khóa nút bấm để tránh kích đúp
         if (targetBtn && targetBtn.tagName === 'BUTTON') {
             targetBtn.disabled = true;
             targetBtn.innerText = "Đang xử lý...";
         }
 
-        // Gửi dữ liệu về Gateway chuẩn CORS
+        // Gửi dữ liệu về Gateway Backend
         const response = await fetch(WEB_APP_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -1087,17 +1088,27 @@ async function handleSaveLichTuanBang(actionType, evt) {
         const resData = await response.json();
 
         if (resData && (resData.success || resData.status === "success")) {
-            alert(actionType === 'phathanh' 
-                ? "ĐÃ PHÁT HÀNH THÀNH CÔNG!\nDữ liệu đã đổ vào tab DB_01_LichCongTac." 
-                : "Đã lưu nháp dữ liệu thành công!");
+            if (actionType === 'phathanh') {
+                const pdfUrl = resData.pdfUrl || "";
+                if (pdfUrl) {
+                    const xemNgay = confirm("🎉 ĐÃ PHÁT HÀNH VÀ XUẤT PDF THÀNH CÔNG!\n\nThầy có muốn mở xem file PDF trên Google Drive ngay không?");
+                    if (xemNgay) {
+                        window.open(pdfUrl, '_blank');
+                    }
+                } else {
+                    alert("ĐÃ PHÁT HÀNH THÀNH CÔNG!\nDữ liệu đã lưu vào Sheet (chưa tạo được link PDF).");
+                }
+            } else {
+                alert("Đã lưu nháp dữ liệu thành công vào hệ thống!");
+            }
         } else {
-            alert("Hệ thống nhận dữ liệu nhưng báo lỗi: " + (resData.message || resData.error || "Không rõ nguyên nhân"));
+            alert("Lỗi: " + (resData.message || resData.error || "Không thể lưu dữ liệu"));
         }
 
     } catch (err) {
         alert("Lỗi kết nối Gateway: " + err.message);
     } finally {
-        // Mở lại nút bấm sau khi hoàn thành
+        // Mở lại trạng thái nút bấm
         if (targetBtn && targetBtn.tagName === 'BUTTON') {
             targetBtn.disabled = false;
             targetBtn.innerText = originalText;
