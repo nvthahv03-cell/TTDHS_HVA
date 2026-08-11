@@ -599,9 +599,36 @@
 updateCurrentDate();
     </script>
     <script>
-    document.getElementById('btnLichCongTac').addEventListener('click', function() {
-        window.location.href = 'Lichcongtac.html';
-    });
+    // Kiểm tra an toàn trước khi gán sự kiện để tránh lỗi null
+    const btnLich = document.getElementById('btnLichCongTac');
+    if (btnLich) {
+        btnLich.addEventListener('click', function() {
+            window.location.href = 'Lichcongtac.html';
+        });
+    }
+
+    // Khai báo hàm loadModule toàn cục để tránh lỗi "is not defined"
+    window.loadModule = function(moduleName) {
+        console.log("Đang tải module:", moduleName);
+        
+        if (typeof window.routerNavigate === 'function') {
+            window.routerNavigate(moduleName);
+            return;
+        }
+
+        const container = document.getElementById('app-main-content') || document.getElementById('main-content');
+        if (container) {
+            fetch(`modules/${moduleName}.html`)
+                .then(res => res.text())
+                .then(html => {
+                    container.innerHTML = html;
+                })
+                .catch(err => console.error("Không thể tải module:", err));
+        } else {
+            console.warn("Chưa cấu hình hàm loadModule chi tiết cho:", moduleName);
+        }
+    };
 </script>
+    
 </body>
 </html>
