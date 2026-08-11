@@ -36,7 +36,7 @@
                 </button>
                 <div class="min-w-0">
                     <div class="text-white/80 font-bold uppercase text-[9px] sm:text-[10px] tracking-wider truncate">SỞ GD&ĐT TP ĐÀ NẴNG - THPT HÒA VANG</div>
-                    <div class="text-white text-sm sm:text-lg font-black uppercase truncate">QUẢN LÝ LỊCH CÔNG TÁC HVA_v12</div>
+                    <div class="text-white text-sm sm:text-lg font-black uppercase truncate">QUẢN LÝ LỊCH CÔNG TÁC HVA_v13</div>
                 </div>
             </div>
 
@@ -1008,110 +1008,94 @@ function chuyenDenMenuTacVu() {
 }
    
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec";
-
-/* ============================================================
-   8. FORM FUNCTIONS & XỬ LÝ LỊCH TUẦN (HOÀN CHỈNH)
-============================================================ */
-
-async function handleSaveLichTuanBang(actionType = 'phathanh', evt) {
-    if (evt && typeof evt.preventDefault === 'function') {
-        evt.preventDefault();
-    }
-
-    // 1. Lấy thông tin cấu hình chung từ form
-    const tuan = document.getElementById('tuanSo')?.value || document.getElementById('tuan')?.value || "35";
-    const thang = document.getElementById('thangSo')?.value || document.getElementById('thang')?.value || "08";
-    const namHoc = document.getElementById('namHocText')?.value || document.getElementById('namHoc')?.value || "2025-2026";
-
-    // Lấy thông tin người tạo từ phiên đăng nhập hiện tại
-    let currentUser = {};
+   async function taoPdfLichVaLuuDrive() {
     try {
-        currentUser = JSON.parse(localStorage.getItem("currentUser")) || 
-                      JSON.parse(sessionStorage.getItem("currentUser")) || {};
-    } catch (e) {}
+        // 1. Cập nhật bản Xem trước mới nhất bằng hàm hiện có (không sửa hàm này)
+        if (typeof renderTableLichTuanView === 'function') {
+            renderTableLichTuanView();
+        }
 
-    const nguoiTao = currentUser.fullName || currentUser.hoTen || currentUser.name || "Nguyễn Văn Thà";
-    const chucVu = currentUser.chucVu || currentUser.roleTitle || "Phó Hiệu trưởng";
+        // 2 & 3. Lấy và clone phần tử print-area để không ảnh hưởng giao diện Web
+        const originalElement = document.querySelector('#view-lich-tuan .print-area');
+        if (!originalElement) {
+            throw new Error("Không tìm thấy vùng #view-lich-tuan .print-area");
+        }
+        const clonedElement = originalElement.cloneNode(true);
 
-   // 2. Thu thập dữ liệu thật trực tiếp từ các ô input/textarea trên bảng
-    let chiTietLich = [];
-    const thuLabels = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"];
+        // 4. Chuẩn hóa riêng cho bản clone (ép kiểu hiển thị ngang, ẩn scroll, reset min-width)
+        clonedElement.style.width = '100%';
+        clonedElement.style.maxWidth = 'none';
+        clonedElement.style.minWidth = '0';
+        clonedElement.style.background = '#ffffff';
+        clonedElement.style.padding = '10mm';
+        clonedElement.style.boxSizing = 'border-box';
 
-    for (let i = 0; i < 7; i++) {
-        const idx = i + 2; // Tương ứng từ Thứ 2 (2) đến Chủ Nhật (8)
+        // Tối ưu các cột trong bảng lịch cho khổ ngang (landscape)
+        const styleTag = document.createElement('style');
+        styleTag.innerHTML = `
+            table { width: 100% !important; border-collapse: collapse !important; table-layout: fixed !important; }
+            th, td { word-wrap: break-word !important; overflow-wrap: break-word !important; font-size: 11pt !important; color: #000 !important; }
+            th:nth-child(1), td:nth-child(1) { width: 15% !important; text-align: center; } /* NGÀY */
+            th:nth-child(2), td:nth-child(2) { width: 35% !important; } /* SÁNG */
+            th:nth-child(3), td:nth-child(3) { width: 35% !important; } /* CHIỀU */
+            th:nth-child(4), td:nth-child(4) { width: 15% !important; } /* GHI CHÚ */
+            tr { page-break-inside: avoid !important; }
+        `;
+        clonedElement.appendChild(styleTag);
+
+        // Lấy thông tin tuần/tháng để đặt tên file
+        const tuanEl = document.getElementById('inputTuanSo');
+        const thangEl = document.getElementById('inputThangSo');
+        const tuanVal = tuanEl?.value || '1';
+        const thangVal = thangEl?.value || '1';
         
-        // Quét trực tiếp và an toàn theo đúng ID từng ngày
-        const ngayEl = document.getElementById(`ngay_${idx}`) || document.getElementById(`ngay${idx}`);
-        const sangEl = document.getElementById(`sang_${idx}`) || document.getElementById(`sang${idx}`);
-        const chieuEl = document.getElementById(`chieu_${idx}`) || document.getElementById(`chieu${idx}`);
-        const ghiChuEl = document.getElementById(`ghichu_${idx}`) || document.getElementById(`ghichu${idx}`) || document.getElementById(`ghiChu_${idx}`);
+        const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
+        const fileName = `Lich_cong_tac_Tuan_${tuanVal}_Thang_${thangVal}_${timestamp}.pdf`;
 
-        chiTietLich.push({
-            thu: thuLabels[i],
-            ngay: ngayEl ? ngayEl.value.trim() : "",
-            sang: sangEl ? sangEl.value.trim() : "",
-            chieu: chieuEl ? chieuEl.value.trim() : "",
-            ghiChu: ghiChuEl ? ghiChuEl.value.trim() : ""
+        // 5, 6, 7. Cấu hình html2pdf
+        const opt = {
+            margin:       [5, 5, 5, 5],
+            filename:     fileName,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true, logging: false },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+        };
+
+        // 8 & 9. Tạo PDF dưới dạng Blob rồi chuyển sang Base64
+        const pdfWorker = html2pdf().from(clonedElement).set(opt);
+        const pdfBlob = await pdfWorker.output('blob');
+        
+        const base64Data = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(pdfBlob);
         });
-    }
 
-    const payload = {
-        tuan: tuan,
-        thang: thang,
-        namHoc: namHoc,
-        nguoiTao: nguoiTao,
-        chucVu: chucVu,
-        chiTietLich: chiTietLich
-    };
-
-    // Hiển thị trạng thái đang xử lý trên nút bấm (nếu có)
-    const btnSubmit = document.getElementById('btnPhatHanhLich') || document.getElementById('btnSubmit');
-    let oldBtnText = "";
-    if (btnSubmit) {
-        oldBtnText = btnSubmit.innerHTML;
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i><span>Đang tạo PDF & Lưu Drive...</span>';
-    }
-
-    // 3. Gửi gói dữ liệu lên Google Apps Script để tiến hành tạo PDF và lưu vào Drive
-    try {
+        // Gửi sang Apps Script Web App
+        console.log("Đang gửi PDF lên Google Drive...");
         const response = await fetch(WEB_APP_URL, {
-            method: "POST",
+            method: 'POST',
             body: JSON.stringify({
-                action: actionType || 'phathanh',
-                data: payload
+                action: "savePdf",
+                fileName: fileName,
+                base64Data: base64Data
             })
         });
 
         const result = await response.json();
-
         if (result.success) {
-            if (actionType === 'phathanh' || result.pdfUrl) {
-                if (result.pdfUrl && result.pdfUrl.trim() !== "") {
-                    alert("Đã xuất file PDF và lưu thành công lên Google Drive!");
-                    window.open(result.pdfUrl, '_blank'); // Mở file PDF trực tiếp từ Drive
-                } else {
-                    alert("Đã lưu dữ liệu lịch vào hệ thống nhưng chưa nhận được liên kết PDF.");
-                }
-
-                // Kích hoạt hiển thị modal thông báo nếu giao diện yêu cầu
-                const modal = document.getElementById('modalThongBaoGV');
-                if (modal) modal.classList.remove('hidden');
-            } else {
-                alert("Đã lưu nháp Lịch Công Tác Tuần thành công!");
-            }
+            console.log("Lưu PDF thành công:", result.pdfUrl);
+            alert("Đã tạo và lưu PDF thành công lên Google Drive!");
+            return result;
         } else {
-            alert("Lỗi từ hệ thống: " + (result.message || "Không xác định"));
+            throw new Error(result.message || "Lỗi không xác định từ backend.");
         }
 
-    } catch (err) {
-        console.error("Lỗi kết nối:", err);
-        alert("Không thể kết nối đến máy chủ Google Apps Script để tạo PDF.");
-    } finally {
-        if (btnSubmit) {
-            btnSubmit.disabled = false;
-            btnSubmit.innerHTML = oldBtnText;
-        }
+    } catch (error) {
+        console.error("Lỗi tạo/lưu PDF:", error);
+        alert("Lỗi: " + error.message);
+        return { success: false, message: error.message };
     }
 }
 </script>
