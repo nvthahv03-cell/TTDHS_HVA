@@ -610,25 +610,27 @@ updateCurrentDate();
 
     // 2. Khai báo hàm loadModule toàn cục để tránh lỗi "loadModule is not defined"
     window.loadModule = function(moduleName) {
-        console.log("Đang tải module:", moduleName);
-        
-        if (typeof window.routerNavigate === 'function') {
-            window.routerNavigate(moduleName);
-            return;
-        }
+    console.log("Đang mở module:", moduleName);
+    
+    // Nếu là các module liên quan đến lịch, trỏ thẳng tới trang Lichcongtac.html
+    if (moduleName.includes('lich')) {
+        window.location.href = 'Lichcongtac.html';
+        return;
+    }
 
-        const container = document.getElementById('app-main-content') || document.getElementById('main-content');
-        if (container) {
-            fetch(`modules/${moduleName}.html`)
-                .then(res => res.text())
-                .then(html => {
-                    container.innerHTML = html;
-                })
-                .catch(err => console.error("Không thể tải module:", err));
-        } else {
-            console.warn("Chưa cấu hình hàm loadModule chi tiết cho:", moduleName);
-        }
-    };
+    // Các module khác (nếu có) giữ nguyên logic hoặc cấu hình đường dẫn tương ứng
+    const container = document.getElementById('app-main-content') || document.getElementById('main-content');
+    if (container) {
+        fetch(`${moduleName}.html`)
+            .then(res => res.text())
+            .then(html => {
+                container.innerHTML = html;
+            })
+            .catch(err => console.error("Không thể tải module:", err));
+    } else {
+        window.location.href = `${moduleName}.html`;
+    }
+};
 </script>
     
 </body>
