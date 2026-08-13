@@ -745,16 +745,14 @@ window.loadModule = function(moduleName) {
         .catch(err => console.error("Lỗi tải module:", err));
 };
 
-
-       window.toggleReadStatus = function(id) {
+window.toggleReadStatus = function(id) {
     const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
     const allLogs = JSON.parse(rawLogs);
 
-    const idx = allLogs.findIndex(item => item.ID === id);
+    const idx = allLogs.findIndex(item => String(item.ID || item.id || item.SoVanBan) === String(id));
     if (idx === -1) return;
 
     allLogs[idx].DaDoc = !allLogs[idx].DaDoc;
-
     localStorage.setItem('TTDHS_PUBLISHED_LOGS', JSON.stringify(allLogs));
 
     const row = document.querySelector(`tr[data-id="${id}"]`);
@@ -764,13 +762,12 @@ window.loadModule = function(moduleName) {
     if (!statusCell) return;
 
     statusCell.textContent = allLogs[idx].DaDoc ? '✓ Đã đọc' : '○ Chưa đọc';
-
-    statusCell.className =
-        `status-cell px-2 py-1 text-xs rounded-full ${
-            allLogs[idx].DaDoc
-                ? 'text-slate-500'
-                : 'text-emerald-600 font-bold'
-        };
+    statusCell.className = `status-cell px-2 py-1 text-xs rounded-full ${
+        allLogs[idx].DaDoc
+            ? 'text-slate-500'
+            : 'text-emerald-600 font-bold'
+    }`;
+};
 </script>
 </body>
 </html>
