@@ -881,7 +881,7 @@
     /* ==========================================================================
        3. TẢI DỮ LIỆU TỪ GOOGLE SHEETS VIA GATEWAY
        ========================================================================== */
-   async function fetchDataFromGateway() {
+  async function fetchDataFromGateway() {
     const tbody = document.getElementById('danhSachData') || document.getElementById('desktopTableBody');
     if (tbody) {
         tbody.innerHTML = `
@@ -894,28 +894,40 @@
     }
 
     try {
-        // TRUYỀN THÊM ?action=searchVanBan VÀO LINK CALL API
         const apiUrl = `${GATEWAY_URL}?action=searchVanBan`;
-        
         const response = await fetch(apiUrl);
         const result = await response.json();
         
-        // Kiểm tra dữ liệu trả về
-        const rawData = Array.isArray(result) ? result : (result.data || result.result || []);
+        // Log dữ liệu thực tế ra Console để dễ kiểm tra
+        console.log("Dữ liệu gốc từ GAS trả về:", result);
+
+        // Lấy mảng dữ liệu dù GAS trả về trực tiếp mảng hay nằm trong object { data: [...] } hoặc { result: [...] }
+        let rawData = [];
+        if (Array.isArray(result)) {
+            rawData = result;
+        } else if (result && Array.isArray(result.data)) {
+            rawData = result.data;
+        } else if (result && Array.isArray(result.result)) {
+            rawData = result.result;
+        } else if (result && typeof result === 'object') {
+            // Trường hợp GAS trả về object có chứa mảng bên trong
+            const possibleArray = Object.values(result).find(v => Array.isArray(v));
+            if (possibleArray) rawData = possibleArray;
+        }
         
-        // Chuẩn hóa dữ liệu hiển thị
+        // Chuẩn hóa dữ liệu linh hoạt nhất có thể
         AppState.documents = rawData.map((doc, index) => ({
-            id: doc.id || (index + 1),
-            soVB: doc.SoVanBan || doc.soVB || doc["Số văn bản"] || '---',
-            ngayBH: doc.NgayBanHanh || doc.ngayBH || doc["Ngày ban hành"] || '---',
-            loaiVB: doc.LoaiVanBan || doc.loaiVB || doc["Loại văn bản"] || '---',
-            moduleKey: doc.LuongVanBan || doc.moduleKey || doc["Phân loại"] || 'tat-ca',
-            trichYeu: doc.TrichYeu || doc.trichYeu || doc["Trích yếu"] || '---',
-            coQuan: doc.CoQuan || doc.coQuan || 'THPT Hòa Vang',
-            nguoiKy: doc.NguoiKy || doc.nguoiKy || 'Ban BGH',
-            fileID: doc.FileID || doc.fileID || doc.fileId || '',
+            id: doc.id || doc.ID || (index + 1),
+            soVB: doc.SoVanBan || doc.soVB || doc["SoVanBan"] || doc["Số văn bản"] || doc["Số VB"] || '---',
+            ngayBH: doc.NgayBanHanh || doc.ngayBH || doc["NgayBanHanh"] || doc["Ngày ban hành"] || doc["Ngày BH"] || doc.Ngay || '---',
+            loaiVB: doc.LoaiVanBan || doc.loaiVB || doc["LoaiVanBan"] || doc["Loại văn bản"] || doc["Loại VB"] || '---',
+            moduleKey: doc.LuongVanBan || doc.moduleKey || doc["LuongVanBan"] || doc["Luồng văn bản"] || doc["Phân loại"] || 'tat-ca',
+            trichYeu: doc.TrichYeu || doc.trichYeu || doc["TrichYeu"] || doc["Trích yếu"] || '---',
+            coQuan: doc.CoQuan || doc.coQuan || doc["CoQuan"] || doc["Cơ quan ban hành"] || 'THPT Hòa Vang',
+            nguoiKy: doc.NguoiKy || doc.nguoiKy || doc["NguoiKy"] || doc["Người ký"] || 'Ban BGH',
+            fileID: doc.FileID || doc.fileID || doc.fileId || doc["FileID"] || doc["File ID"] || doc["Link"] || '',
             fileType: 'pdf',
-            status: doc.Status || doc.status || 'Đã phát hành'
+            status: doc.Status || doc.status || doc["Status"] || doc["Trạng thái"] || 'Đã phát hành'
         }));
 
         if (AppState.documents.length > 0 && !AppState.selectedDocId) {
@@ -930,13 +942,12 @@
                 <tr>
                     <td colspan="8" class="p-6 text-center text-red-500 text-xs bg-red-50">
                         <i class="bi bi-exclamation-triangle-fill mr-1 text-base block mb-1"></i>
-                        Không nạp được dữ liệu. Thầy kiểm tra lại kết nối hoặc link Gateway nhé!
+                        Không nạp được dữ liệu. Thầy kiểm tra lại đường truyền hoặc link Gateway nhé!
                     </td>
                 </tr>`;
         }
     }
 }
-
     /* ==========================================================================
        4. ĐIỀU HƯỚNG & LỌC DỮ LIỆU (ROUTER & FILTER)
        ========================================================================== */
