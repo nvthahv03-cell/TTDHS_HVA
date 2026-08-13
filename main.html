@@ -616,13 +616,30 @@ updateCurrentDate();
    // Xử lý nhóm Văn bản đến/đi thông qua Gateway / LocalStorage đồng bộ
    if (moduleName.startsWith('vb-den-') || moduleName.startsWith('vb-di-')) {
         const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
-        const data = JSON.parse(rawLogs); // Lấy thẳng toàn bộ dữ liệu đã đồng bộ
+        const allLogs = JSON.parse(rawLogs);
+        
+        // Lọc dữ liệu thông minh dựa theo module hoặc nội dung payload (ví dụ: lọc theo cơ quan ban hành hoặc loại văn bản)
+        const data = allLogs.filter(item => {
+            const coQuan = (item.PayloadJSON?.coQuanBanHanh || '').toLowerCase();
+            const soVB = (item.PayloadJSON?.soVanBan || '').toLowerCase();
+            
+            // Nếu bấm vào mục Trung ương, chỉ hiện văn bản của Trung ương/Bộ/Chính phủ
+            if (moduleName.includes('trung-uong')) {
+                return coQuan.includes('trung ương') || coQuan.includes('bộ') || coQuan.includes('chính phủ');
+            }
+            // Nếu bấm vào mục Sở GD&ĐT, chỉ hiện văn bản của Sở
+            if (moduleName.includes('so-gddt')) {
+                return coQuan.includes('sở') || soVB.includes('sgdđ');
+            }
+            // Các mục khác hiển thị toàn bộ
+            return true;
+        });
         
         container.innerHTML = `
             <div class="p-6 bg-white rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-bold text-emerald-700 uppercase">DANH SÁCH: ${moduleName}</h2>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-semibold">Đã qua Gateway</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-semibold">Đã lọc qua Gateway (${data.length} văn bản)</span>
                 </div>
                 <table class="w-full text-sm text-left">
                     <thead class="text-xs uppercase bg-slate-50 text-slate-600">
@@ -640,13 +657,12 @@ updateCurrentDate();
                                 <td class="p-3 font-medium text-slate-800">${item.PayloadJSON?.soVanBan || 'Văn bản phát hành'}</td>
                                 <td class="p-3"><span class="text-emerald-600 font-bold">${item.TrangThai}</span></td>
                                 <td class="p-3">
-                                    <!-- Đổi từ button thành thẻ <a>, href trỏ tới fileUrl -->
-                                   <a href="${item.fileUrl}" target="_blank" class="text-blue-600 hover:underline font-medium">
-                                    Mở tệp văn bản
-                                    </a>
+                                    <a href="${item.fileUrl || '#'}" target="_blank" class="text-blue-600 hover:underline font-medium">Mở tệp</a>
                                 </td>
                             </tr>
-                        `).join('') : '<tr><td colspan="4" ...>Chưa có dữ liệu.</td></tr>'}
+                        `).join('') : `
+                            <tr><td colspan="4" class="p-6 text-center text-slate-400 italic">Không có văn bản nào khớp với mục này.</td></tr>
+                        `}
                     </tbody>
                 </table>
             </div>
