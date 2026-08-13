@@ -608,29 +608,41 @@ updateCurrentDate();
         });
     }
 
-   window.loadModule = function(moduleName) {
-    console.log("Đang mở module:", moduleName);
+  window.loadModule = function(moduleName) {
+    const container = document.getElementById('app-main-content') || document.getElementById('main-content');
     
-    // 1. Nếu là các module liên quan đến lịch, trỏ thẳng tới trang Lichcongtac.html
-    if (moduleName.includes('lich')) {
-        window.location.href = 'Lichcongtac.html?tab=tuan';
+    // Kiểm tra xem có phải nhóm văn bản cần hiển thị dữ liệu không
+    if (moduleName.startsWith('vb-den-')) {
+        const data = window.getPublishedDataByModule(moduleName); // Lấy dữ liệu qua Gateway
+        
+        // Render bảng dữ liệu từ dữ liệu đã lấy được
+        container.innerHTML = `
+            <div class="p-6 bg-white rounded-2xl shadow-sm">
+                <h2 class="text-lg font-bold mb-4 text-emerald-700">Danh sách: ${moduleName.toUpperCase()}</h2>
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs uppercase bg-emerald-50">
+                        <tr>
+                            <th class="p-3">Thời gian</th>
+                            <th class="p-3">Trích yếu văn bản</th>
+                            <th class="p-3">Trạng thái</th>
+                            <th class="p-3">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(item => `
+                            <tr class="border-b">
+                                <td class="p-3">${item.ThoiGian}</td>
+                                <td class="p-3">${item.PayloadJSON.soVanBan || 'Đang cập nhật...'}</td>
+                                <td class="p-3"><span class="text-emerald-600 font-semibold">${item.TrangThai}</span></td>
+                                <td class="p-3"><a href="#" class="text-blue-500">Xem tệp</a></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
         return;
-    }
-
-    // 2. Tạm thời chặn các module văn bản đến/đi chưa có file vật lý để không bị lỗi 404
-    if (moduleName.startsWith('vb-den-') || moduleName.startsWith('vb-di-')) {
-        const container = document.getElementById('app-main-content') || document.getElementById('main-content');
-        if (container) {
-            container.innerHTML = `
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-3">
-                    <h3 class="text-base font-bold text-slate-800 uppercase">Mô đun: ${moduleName}</h3>
-                    <p class="text-xs text-slate-500">Hệ thống đang tích hợp luồng dữ liệu điều phối cho mục này. Giao diện sẽ hiển thị ở đây.</p>
-                </div>
-            `;
-        }
-        return;
-    }
-
+   
     // 3. Các module khác vẫn giữ nguyên logic cũ
     const container = document.getElementById('app-main-content') || document.getElementById('main-content');
     if (container) {
