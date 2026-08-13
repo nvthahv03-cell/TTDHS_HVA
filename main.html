@@ -608,30 +608,24 @@ updateCurrentDate();
         });
     }
 
- window.loadModule = function(moduleName) {
+window.loadModule = function(moduleName) {
     const container = document.getElementById('app-main-content') || document.getElementById('main-content');
     if (!container) { window.location.href = `${moduleName}.html`; return; }
 
-    // Xử lý các mục Văn bản đến/đi (Không dùng fetch file nữa để tránh 404)
-   // Xử lý nhóm Văn bản đến/đi thông qua Gateway / LocalStorage đồng bộ
-  if (moduleName.startsWith('vb-den-') || moduleName.startsWith('vb-di-')) {
+    if (moduleName.startsWith('vb-den-') || moduleName.startsWith('vb-di-')) {
         const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
         const allLogs = JSON.parse(rawLogs);
         
-        // Lọc thông minh: Kiểm tra nếu module trùng khớp hoặc từ khóa xuất hiện trong Payload
+        // Lọc chính xác theo Cơ quan ban hành trong cột CoQuanBanHanh
         const data = allLogs.filter(item => {
-            const jsonStr = JSON.stringify(item.PayloadJSON || {}).toLowerCase();
-            const mod = (item.Module || '').toLowerCase();
+            const coQuan = (item.CoQuanBanHanh || item.coQuanBanHanh || '').toLowerCase();
             
-            // Nếu bấm vào Sở GD&ĐT, tìm các bản ghi có chứa từ khóa 'sgdđ', 'sở', hoặc 'đà nẵng'
             if (moduleName.includes('so-gddt')) {
-                return jsonStr.includes('sgdđ') || jsonStr.includes('sở') || jsonStr.includes('đà nẵng');
+                return coQuan.includes('sở gd&đt') || coQuan.includes('sở giáo dục');
             }
-            // Nếu bấm vào Trung ương, tìm các bản ghi chứa từ khóa trung ương, bộ, chính phủ...
             if (moduleName.includes('trung-uong')) {
-                return jsonStr.includes('trung ương') || jsonStr.includes('bộ') || jsonStr.includes('chính phủ');
+                return coQuan.includes('trung ương') || coQuan.includes('bộ') || coQuan.includes('chính phủ');
             }
-            // Mặc định nếu chưa phân loại chi tiết thì hiển thị toàn bộ danh sách văn bản đã phát hành
             return true;
         });
         
@@ -639,29 +633,29 @@ updateCurrentDate();
             <div class="p-6 bg-white rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-bold text-emerald-700 uppercase">DANH SÁCH: ${moduleName}</h2>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-semibold">Đã lọc qua Gateway (${data.length} văn bản)</span>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-semibold">Tổng số: ${data.length} văn bản</span>
                 </div>
                 <table class="w-full text-sm text-left">
                     <thead class="text-xs uppercase bg-slate-50 text-slate-600">
                         <tr>
-                            <th class="p-3">Thời gian</th>
-                            <th class="p-3">Số / Trích yếu văn bản</th>
-                            <th class="p-3">Trạng thái</th>
+                            <th class="p-3">Ngày BH</th>
+                            <th class="p-3">Số văn bản</th>
+                            <th class="p-3">Trích yếu văn bản</th>
                             <th class="p-3">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${data.length > 0 ? data.map(item => `
                             <tr class="border-b hover:bg-slate-50">
-                                <td class="p-3 text-slate-600">${item.ThoiGian}</td>
-                                <td class="p-3 font-medium text-slate-800">${item.PayloadJSON?.soVanBan || item.PayloadJSON?.trichYeu || 'Văn bản phát hành'}</td>
-                                <td class="p-3"><span class="text-emerald-600 font-bold">${item.TrangThai}</span></td>
-                                <td class="p-3">
-                                    <a href="${item.fileUrl || '#'}" target="_blank" class="text-blue-600 hover:underline font-medium">Mở tệp</a>
+                                <td class="p-3 text-slate-600 whitespace-nowrap">${item.NgayBanHanh || item.ngayBanHanh || ''}</td>
+                                <td class="p-3 font-medium text-slate-800 whitespace-nowrap">${item.SoVanBan || item.soVanBan || ''}</td>
+                                <td class="p-3 text-slate-700">${item.TrichYeu || item.trichYeu || ''}</td>
+                                <td class="p-3 whitespace-nowrap">
+                                    <a href="https://drive.google.com/file/d/${item.FileID || item.fileId || ''}/view" target="_blank" class="text-blue-600 hover:underline font-medium">Mở tệp</a>
                                 </td>
                             </tr>
                         `).join('') : `
-                            <tr><td colspan="4" class="p-6 text-center text-slate-400 italic">Không tìm thấy văn bản phù hợp.</td></tr>
+                            <tr><td colspan="4" class="p-6 text-center text-slate-400 italic">Không có văn bản nào phù hợp.</td></tr>
                         `}
                     </tbody>
                 </table>
@@ -670,31 +664,10 @@ updateCurrentDate();
         return;
     }
 
-    // Xử lý các module thông thường (vẫn giữ cơ chế cũ)
     fetch(`${moduleName}.html`)
         .then(res => res.text())
         .then(html => container.innerHTML = html)
         .catch(err => console.error("Lỗi:", err));
-};
-       window.syncDataFromGateway = function() {
-    // Bổ sung fileUrl vào dữ liệu mẫu của thầy
-    const dataFromSheets = [
-        { 
-            ThoiGian: '2026-08-13 12:06:34', 
-            PayloadJSON: { soVanBan: '3992.SGDDT.GDTrHSSV' }, 
-            TrangThai: 'ĐÃ PHÁT HÀNH',
-            fileUrl: 'https://docs.google.com/document/d/1.../edit?usp=sharing' // <-- Thầy dán link Google Drive thật vào đây
-        },
-        { 
-            ThoiGian: '2026-08-13 11:47:36', 
-            PayloadJSON: { soVanBan: '3535.SGDDT.GDTrHSSV' }, 
-            TrangThai: 'ĐÃ PHÁT HÀNH',
-            fileUrl: 'https://docs.google.com/document/d/2.../edit?usp=sharing' // <-- Tương tự cho tệp còn lại
-        }
-    ];
-    
-    localStorage.setItem('TTDHS_PUBLISHED_LOGS', JSON.stringify(dataFromSheets));
-    console.log("Đã đồng bộ kèm URL!");
 };
 window.syncDataFromGateway(); // Chạy lại đồng bộ
 </script>
