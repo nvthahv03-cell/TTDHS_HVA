@@ -640,12 +640,13 @@ updateCurrentDate();
                                 <td class="p-3 font-medium text-slate-800">${item.PayloadJSON?.soVanBan || 'Văn bản phát hành'}</td>
                                 <td class="p-3"><span class="text-emerald-600 font-bold">${item.TrangThai}</span></td>
                                 <td class="p-3">
-                                    <button class="text-blue-600 hover:underline font-medium">Mở tệp</button>
+                                    <!-- Đổi từ button thành thẻ <a>, href trỏ tới fileUrl -->
+                                    <a href="${item.fileUrl || '#'}" target="_blank" class="text-blue-600 hover:underline font-medium">
+                                        Mở tệp
+                                    </a>
                                 </td>
                             </tr>
-                        `).join('') : `
-                            <tr><td colspan="4" class="p-6 text-center text-slate-400 italic">Chưa có dữ liệu trong Gateway.</td></tr>
-                        `}
+                        `).join('') : '<tr><td colspan="4" ...>Chưa có dữ liệu.</td></tr>'}
                     </tbody>
                 </table>
             </div>
@@ -659,20 +660,27 @@ updateCurrentDate();
         .then(html => container.innerHTML = html)
         .catch(err => console.error("Lỗi:", err));
 };
-        window.syncDataFromGateway = function() {
-    // Đây là danh sách các bản ghi thầy đã phát hành thành công (lấy từ Sheets của thầy)
+       window.syncDataFromGateway = function() {
+    // Bổ sung fileUrl vào dữ liệu mẫu của thầy
     const dataFromSheets = [
-        { ThoiGian: '2026-08-13 12:06:34', PayloadJSON: { soVanBan: '3992.SGDDT.GDTrHSSV' }, TrangThai: 'ĐÃ PHÁT HÀNH' },
-        { ThoiGian: '2026-08-13 11:47:36', PayloadJSON: { soVanBan: '3535.SGDDT.GDTrHSSV' }, TrangThai: 'ĐÃ PHÁT HÀNH' }
+        { 
+            ThoiGian: '2026-08-13 12:06:34', 
+            PayloadJSON: { soVanBan: '3992.SGDDT.GDTrHSSV' }, 
+            TrangThai: 'ĐÃ PHÁT HÀNH',
+            fileUrl: 'https://docs.google.com/document/d/1.../edit?usp=sharing' // <-- Thầy dán link Google Drive thật vào đây
+        },
+        { 
+            ThoiGian: '2026-08-13 11:47:36', 
+            PayloadJSON: { soVanBan: '3535.SGDDT.GDTrHSSV' }, 
+            TrangThai: 'ĐÃ PHÁT HÀNH',
+            fileUrl: 'https://docs.google.com/document/d/2.../edit?usp=sharing' // <-- Tương tự cho tệp còn lại
+        }
     ];
     
-    // Lưu vào bộ nhớ cục bộ để loadModule đọc
     localStorage.setItem('TTDHS_PUBLISHED_LOGS', JSON.stringify(dataFromSheets));
-    console.log("Đã đồng bộ dữ liệu từ Sheets về Gateway!");
+    console.log("Đã đồng bộ kèm URL!");
 };
-
-// Gọi đồng bộ ngay khi load trang
-window.syncDataFromGateway();
+window.syncDataFromGateway(); // Chạy lại đồng bộ
 </script>
 </body>
 </html>
