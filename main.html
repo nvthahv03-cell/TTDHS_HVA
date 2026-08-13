@@ -667,6 +667,20 @@ updateCurrentDate();
         .then(html => container.innerHTML = html)
         .catch(err => console.error("Lỗi:", err));
 };
+        window.syncDataFromGateway = function() {
+    // Đây là danh sách các bản ghi thầy đã phát hành thành công (lấy từ Sheets của thầy)
+    const dataFromSheets = [
+        { ThoiGian: '2026-08-13 12:06:34', PayloadJSON: { soVanBan: '3992.SGDDT.GDTrHSSV' }, TrangThai: 'ĐÃ PHÁT HÀNH' },
+        { ThoiGian: '2026-08-13 11:47:36', PayloadJSON: { soVanBan: '3535.SGDDT.GDTrHSSV' }, TrangThai: 'ĐÃ PHÁT HÀNH' }
+    ];
+    
+    // Lưu vào bộ nhớ cục bộ để loadModule đọc
+    localStorage.setItem('TTDHS_PUBLISHED_LOGS', JSON.stringify(dataFromSheets));
+    console.log("Đã đồng bộ dữ liệu từ Sheets về Gateway!");
+};
+
+// Gọi đồng bộ ngay khi load trang
+window.syncDataFromGateway();
 </script>
 </body>
 </html>
