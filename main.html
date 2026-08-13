@@ -608,25 +608,44 @@ updateCurrentDate();
         });
     }
 
-    // 2. Khai báo hàm loadModule toàn cục để tránh lỗi "loadModule is not defined"
-    window.loadModule = function(moduleName) {
+   window.loadModule = function(moduleName) {
     console.log("Đang mở module:", moduleName);
     
-    // Nếu là các module liên quan đến lịch, trỏ thẳng tới trang Lichcongtac.html
+    // 1. Nếu là các module liên quan đến lịch, trỏ thẳng tới trang Lichcongtac.html
     if (moduleName.includes('lich')) {
         window.location.href = 'Lichcongtac.html?tab=tuan';
         return;
     }
 
-    // Các module khác (nếu có) giữ nguyên logic hoặc cấu hình đường dẫn tương ứng
+    // 2. Tạm thời chặn các module văn bản đến/đi chưa có file vật lý để không bị lỗi 404
+    if (moduleName.startsWith('vb-den-') || moduleName.startsWith('vb-di-')) {
+        const container = document.getElementById('app-main-content') || document.getElementById('main-content');
+        if (container) {
+            container.innerHTML = `
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                    <h3 class="text-base font-bold text-slate-800 uppercase">Mô đun: ${moduleName}</h3>
+                    <p class="text-xs text-slate-500">Hệ thống đang tích hợp luồng dữ liệu điều phối cho mục này. Giao diện sẽ hiển thị ở đây.</p>
+                </div>
+            `;
+        }
+        return;
+    }
+
+    // 3. Các module khác vẫn giữ nguyên logic cũ
     const container = document.getElementById('app-main-content') || document.getElementById('main-content');
     if (container) {
         fetch(`${moduleName}.html`)
-            .then(res => res.text())
+            .then(res => {
+                if (!res.ok) throw new Error('Không tìm thấy file');
+                return res.text();
+            })
             .then(html => {
                 container.innerHTML = html;
             })
-            .catch(err => console.error("Không thể tải module:", err));
+            .catch(err => {
+                console.error("Không thể tải module:", err);
+                alert("Đang cập nhật giao diện cho mô đun này!");
+            });
     } else {
         window.location.href = `${moduleName}.html`;
     }
