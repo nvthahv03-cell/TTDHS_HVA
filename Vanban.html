@@ -115,7 +115,7 @@
     <!-- TOAST CONTAINER -->
     <div id="toastContainer" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
 
-    <!-- HEADER TTĐHS_HVA CỐ ĐỊNH (CHUẨN GIAONHIEMVU_V6) -->
+    <!-- HEADER TTĐHS_HVA CỐ ĐỊNH -->
     <header class="sticky top-0 z-40 w-full overflow-hidden shadow-md no-print">
         <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
         
@@ -190,15 +190,23 @@
                 </div>
 
                 <div class="space-y-2">
+                    <!-- Nút Xem tất cả -->
+                    <div onclick="loadModule('tat-ca', event)" class="p-2.5 bg-slate-100/80 hover:bg-blue-50 border border-slate-200 rounded-xl cursor-pointer transition flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-xs font-bold text-[#0F4C81]">
+                            <i class="bi bi-collection-fill text-blue-600"></i> TẤT CẢ VĂN BẢN
+                        </span>
+                        <i class="bi bi-chevron-right text-xs opacity-50"></i>
+                    </div>
+
                     <!-- 1. Menu "Văn bản đến" -->
-                    <div class="dashboard-item p-2.5 bg-slate-50/70 border border-slate-200/80 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-all" onclick="toggleSubmenu(this, event)">
+                    <div id="group-vb-den" class="dashboard-item p-2.5 bg-slate-50/70 border border-slate-200/80 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-all" onclick="toggleSubmenu('vb-den-submenu', 'vb-den-chevron')">
                         <div class="flex items-center justify-between">
                             <span class="flex items-center gap-2.5 text-xs font-bold text-slate-800">
                                 <i class="bi bi-inbox-fill text-emerald-600 text-base"></i> VĂN BẢN ĐẾN
                             </span>
-                            <i class="bi bi-chevron-right text-xs opacity-60 transition-transform duration-200 chevron-icon"></i>
+                            <i id="vb-den-chevron" class="bi bi-chevron-right text-xs opacity-60 transition-transform duration-200 chevron-icon"></i>
                         </div>
-                        <div class="dashboard-submenu hidden pl-4 pt-2.5 space-y-1.5 border-t border-slate-200/60 mt-2">
+                        <div id="vb-den-submenu" class="dashboard-submenu hidden pl-4 pt-2.5 space-y-1.5 border-t border-slate-200/60 mt-2">
                             <div class="p-2 text-xs text-slate-700 hover:text-emerald-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-den-trung-uong', event)">
                                 <i class="bi bi-folder-fill text-amber-500"></i> 01. Văn bản Trung ương
                             </div>
@@ -215,14 +223,14 @@
                     </div>
 
                     <!-- 2. Menu "Văn bản đi" -->
-                    <div class="dashboard-item p-2.5 bg-slate-50/70 border border-slate-200/80 hover:bg-teal-50/80 rounded-xl cursor-pointer transition-all" onclick="toggleSubmenu(this, event)">
+                    <div id="group-vb-di" class="dashboard-item p-2.5 bg-slate-50/70 border border-slate-200/80 hover:bg-teal-50/80 rounded-xl cursor-pointer transition-all" onclick="toggleSubmenu('vb-di-submenu', 'vb-di-chevron')">
                         <div class="flex items-center justify-between">
                             <span class="flex items-center gap-2.5 text-xs font-bold text-slate-800">
                                 <i class="bi bi-send-fill text-teal-600 text-base"></i> VĂN BẢN ĐI (NỘI BỘ)
                             </span>
-                            <i class="bi bi-chevron-right text-xs opacity-60 transition-transform duration-200 chevron-icon"></i>
+                            <i id="vb-di-chevron" class="bi bi-chevron-right text-xs opacity-60 transition-transform duration-200 chevron-icon"></i>
                         </div>
-                        <div class="dashboard-submenu hidden pl-4 pt-2.5 space-y-1.5 border-t border-slate-200/60 mt-2">
+                        <div id="vb-di-submenu" class="dashboard-submenu hidden pl-4 pt-2.5 space-y-1.5 border-t border-slate-200/60 mt-2">
                             <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-quyet-dinh', event)">
                                 <i class="bi bi-file-earmark-text-fill text-red-500"></i> Quyết định
                             </div>
@@ -421,7 +429,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM ACTION BAR CỐ ĐỊNH (CHUẨN GIAONHIEMVU_V6) -->
+    <!-- BOTTOM ACTION BAR CỐ ĐỊNH -->
     <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.08)] no-print">
         <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <button type="button" onclick="handleGoBack()" 
@@ -452,14 +460,15 @@
 
 <script>
     /**
-     * STATE MANAGEMENT (CẤU TRÚC CHUẨN GIAONHIEMVU_V6)
+     * STATE MANAGEMENT
      */
     const AppState = {
-        activeModule: 'vb-den-so-gddt',
+        activeModule: 'tat-ca', // Mặc định hiển thị tất cả nếu không có tham số URL
         timeFilter: 'homNay',
         searchQuery: '',
         selectedDocId: 1,
         modulesMap: {
+            'tat-ca': 'Tất cả văn bản',
             'vb-den-trung-uong': '01. Văn bản Trung ương',
             'vb-den-da-nang': '02. Văn bản Thành phố Đà Nẵng',
             'vb-den-so-gddt': '03. Sở GD&ĐT Đà Nẵng',
@@ -490,9 +499,35 @@
 
     function initApp() {
         renderDate();
+        checkUrlCategory(); // Tự động kiểm tra tham số URL khi mở trang
         renderDocumentList();
         renderSelectedDocCard();
         setupEventListeners();
+    }
+
+    /* ĐỌC THAM SỐ CATEGORY TỪ URL */
+    function checkUrlCategory() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const category = urlParams.get('category');
+
+        if (category && AppState.modulesMap[category]) {
+            AppState.activeModule = category;
+            
+            // Tự động mở Accordion tương ứng
+            if (category.startsWith('vb-den-')) {
+                openSubmenu('vb-den-submenu', 'vb-den-chevron');
+            } else if (category.startsWith('vb-di-')) {
+                openSubmenu('vb-di-submenu', 'vb-di-chevron');
+            }
+
+            const moduleName = AppState.modulesMap[category];
+            const titleEl = document.getElementById('lblCategoryTitle');
+            if (titleEl) titleEl.innerText = `DANH SÁCH: ${moduleName.toUpperCase()}`;
+        } else {
+            AppState.activeModule = 'tat-ca';
+            const titleEl = document.getElementById('lblCategoryTitle');
+            if (titleEl) titleEl.innerText = `DANH SÁCH VĂN BẢN (TẤT CẢ)`;
+        }
     }
 
     function setupEventListeners() {
@@ -509,24 +544,27 @@
     }
 
     /* SUBMENU TOGGLE & ROUTER HANDLERS */
-    function toggleSubmenu(element, event) {
-        // Tránh toggle khi click vào submenu con
-        if (event.target.closest('.dashboard-submenu')) return;
+    function toggleSubmenu(submenuId, iconId) {
+        const submenu = document.getElementById(submenuId);
+        const icon = document.getElementById(iconId);
 
-        const submenu = element.querySelector('.dashboard-submenu');
-        const icon = element.querySelector('.chevron-icon');
-        
         if (submenu) {
             const isHidden = submenu.classList.contains('hidden');
-            
-            // Đóng tất cả các submenu khác
-            document.querySelectorAll('.dashboard-submenu').forEach(sub => sub.classList.add('hidden'));
-            document.querySelectorAll('.chevron-icon').forEach(i => i.classList.remove('rotate-90'));
-
             if (isHidden) {
-                submenu.classList.remove('hidden');
-                if (icon) icon.classList.add('rotate-90');
+                openSubmenu(submenuId, iconId);
+            } else {
+                submenu.classList.add('hidden');
+                if (icon) icon.classList.remove('rotate-90');
             }
+        }
+    }
+
+    function openSubmenu(submenuId, iconId) {
+        const submenu = document.getElementById(submenuId);
+        const icon = document.getElementById(iconId);
+        if (submenu) {
+            submenu.classList.remove('hidden');
+            if (icon) icon.classList.add('rotate-90');
         }
     }
 
@@ -541,7 +579,7 @@
         if (titleEl) titleEl.innerText = `DANH SÁCH: ${moduleName.toUpperCase()}`;
 
         renderDocumentList();
-        showToast(`Đã tải phân hệ: ${moduleName}`, 'info');
+        showToast(`Đã chọn phân hệ: ${moduleName}`, 'info');
     }
 
     /* FILTER & SEARCH HANDLERS */
@@ -578,7 +616,7 @@
     /* RENDER LIST (DESKTOP & MOBILE) */
     function getFilteredDocs() {
         return AppState.documents.filter(doc => {
-            const matchModule = !AppState.activeModule || doc.moduleKey === AppState.activeModule;
+            const matchModule = (AppState.activeModule === 'tat-ca') || (doc.moduleKey === AppState.activeModule);
             const q = AppState.searchQuery;
             const matchQuery = !q || doc.soVB.toLowerCase().includes(q) || doc.trichYeu.toLowerCase().includes(q) || doc.coQuan.toLowerCase().includes(q);
             return matchModule && matchQuery;
@@ -666,7 +704,7 @@
         `;
     }
 
-    /* MODAL SYSTEM (CHUẨN GIAONHIEMVU_V6) */
+    /* MODAL SYSTEM */
     function openCreateModal() {
         const modal = document.getElementById('actionModal');
         const content = document.getElementById('modalContent');
@@ -729,9 +767,10 @@
 
     /* BOTTOM ACTION BUTTON HANDLERS */
     function handleGoBack() {
-        showToast('Quay lại trang trước', 'info');
         if (window.history.length > 1) {
             window.history.back();
+        } else {
+            window.location.href = 'main.html';
         }
     }
 
@@ -745,7 +784,7 @@
         showToast('Mở bộ lọc tra cứu nâng cao', 'info');
     }
 
-    /* TOAST NOTIFICATION SYSTEM (CHUẨN GIAONHIEMVU_V6) */
+    /* TOAST NOTIFICATION SYSTEM */
     function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
         if (!container) return;
