@@ -607,13 +607,25 @@ updateCurrentDate();
             window.location.href = 'Lichcongtac.html';
         });
     }
-// Định nghĩa hàm loadModule ở phạm vi toàn cục trong file chính (main.html)
 window.loadModule = function(moduleName, element) {
-    // Thêm logic xử lý mở module hoặc chuyển trang tại đây
     console.log("Đang mở module:", moduleName);
     
-    // Ví dụ nếu gọi tới file Vanban.html hoặc xử lý hiển thị nội dung:
-    // window.location.href = `${moduleName}.html`;
+    const container = document.getElementById('app-container');
+    if (!container) return;
+
+    // Dùng fetch để tải nội dung file HTML tương ứng với tên module
+    fetch(`${moduleName}.html`)
+        .then(response => {
+            if (!response.ok) throw new Error("Không thể tải module");
+            return response.text();
+        })
+        .then(html => {
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            console.error("Lỗi khi load module:", error);
+            container.innerHTML = `<div class="p-4 text-red-500">Không thể tải nội dung cho module: ${moduleName}</div>`;
+        });
 };
 </script>
 </body>
