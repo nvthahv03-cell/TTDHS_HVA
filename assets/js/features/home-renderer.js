@@ -368,38 +368,21 @@ export function renderHome() {
         </div>
       </div>
 
-     <!-- 1. Menu "Văn bản đến" phản ánh đúng cấu trúc Drive -->
-<div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+    <!-- Menu "KHO VĂN BẢN" trên trang chủ - Click chuyển thẳng sang giao diện VanBan.html -->
+<div class="dashboard-item p-3 bg-white hover:bg-blue-50/80 rounded-xl border border-slate-200/80 shadow-sm cursor-pointer transition-all hover:shadow-md" onclick="openKhoVanBan()">
   <div class="flex items-center justify-between">
-    <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700">
-      <i class="bi bi-inbox-fill text-emerald-500 text-sm"></i> Văn bản đến
-    </span>
-    <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
-  </div>
-  <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-    <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-den-trung-uong')"><i class="bi bi-folder text-amber-500"></i> 01. Văn bản Trung ương</div>
-    <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-den-da-nang')"><i class="bi bi-folder text-blue-500"></i> 02. Văn bản Thành phố Đà Nẵng</div>
-    <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-den-so-gddt')"><i class="bi bi-folder text-emerald-500"></i> 03. Sở GD&ĐT Đà Nẵng</div>
-    <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-den-co-quan-khac')"><i class="bi bi-folder text-slate-500"></i> 04. Cơ quan khác</div>
-  </div>
-</div>
-
-<!-- 2. Menu "Văn bản đi" phản ánh đúng cấu trúc loại văn bản nội bộ -->
-<div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
-  <div class="flex items-center justify-between">
-    <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700">
-      <i class="bi bi-send-fill text-teal-500 text-sm"></i> Văn bản đi
-    </span>
-    <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
-  </div>
-  <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-quyet-dinh')"><i class="bi bi-file-earmark-text text-red-500"></i> Quyết định</div>
-    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-ke-hoach')"><i class="bi bi-calendar-check text-blue-500"></i> Kế hoạch</div>
-    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-bao-cao')"><i class="bi bi-file-earmark-bar-graph text-amber-500"></i> Báo cáo</div>
-    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-to-trinh')"><i class="bi bi-file-earmark-richtext text-purple-500"></i> Tờ trình</div>
-    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-thong-bao')"><i class="bi bi-bell text-orange-500"></i> Thông báo</div>
-    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-cong-van')"><i class="bi bi-envelope-paper text-teal-500"></i> Công văn</div>
-    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-giao-nhiem-vu')"><i class="bi bi-check2-square text-emerald-500"></i> Giao nhiệm vụ</div>
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-blue-100 text-[#0F4C81] flex items-center justify-center font-bold">
+        <i class="bi bi-archive-fill text-lg"></i>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold text-[#0F4C81] uppercase tracking-wide">KHO VĂN BẢN</h4>
+        <p class="text-[11px] text-slate-500 font-medium">Quản lý Văn bản đến & Văn bản đi</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-1 text-slate-400 group-hover:text-[#0F4C81]">
+      <i class="bi bi-arrow-right-circle-fill text-lg text-blue-600"></i>
+    </div>
   </div>
 </div>
 
@@ -1267,4 +1250,8 @@ function bindHomeEvents() {
             setTimeout(() => showPWAPopup(true), 1500);
         }
     }
+}
+function openKhoVanBan() {
+    // Chuyển trực tiếp sang giao diện trang Kho Văn Bản
+    window.location.href = 'VanBan.html';
 }
