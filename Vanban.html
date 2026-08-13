@@ -459,38 +459,7 @@
     </div>
 
 <script>
-    /**
-     * STATE MANAGEMENT
-     */
-    const AppState = {
-        activeModule: 'tat-ca', // Mặc định hiển thị tất cả nếu không có tham số URL
-        timeFilter: 'homNay',
-        searchQuery: '',
-        selectedDocId: 1,
-        modulesMap: {
-            'tat-ca': 'Tất cả văn bản',
-            'vb-den-trung-uong': '01. Văn bản Trung ương',
-            'vb-den-da-nang': '02. Văn bản Thành phố Đà Nẵng',
-            'vb-den-so-gddt': '03. Sở GD&ĐT Đà Nẵng',
-            'vb-den-co-quan-khac': '04. Cơ quan khác',
-            'vb-di-quyet-dinh': 'Văn bản đi: Quyết định',
-            'vb-di-ke-hoach': 'Văn bản đi: Kế hoạch',
-            'vb-di-bao-cao': 'Văn bản đi: Báo cáo',
-            'vb-di-to-trinh': 'Văn bản đi: Tờ trình',
-            'vb-di-thong-bao': 'Văn bản đi: Thông báo',
-            'vb-di-cong-van': 'Văn bản đi: Công văn',
-            'vb-di-giao-nhiem-vu': 'Văn bản đi: Giao nhiệm vụ'
-        },
-        documents: [
-            { id: 1, moduleKey: 'vb-den-so-gddt', ngayBH: '12/08/2026', soVB: '245/SGDĐT-VP', loaiVB: 'Công văn', coQuan: 'Sở GD&ĐT Đà Nẵng', nguoiKy: 'Nguyễn Văn B - Giám đốc', trichYeu: 'Hướng dẫn thực hiện nhiệm vụ năm học 2026-2027 và nâng cao chất lượng quản lý hồ sơ điện tử.', fileType: 'pdf', status: 'Đã phát hành' },
-            { id: 2, moduleKey: 'vb-den-da-nang', ngayBH: '11/08/2026', soVB: '102/UBND-VX', loaiVB: 'Quyết định', coQuan: 'UBND TP Đà Nẵng', nguoiKy: 'Lê Văn C - Phó Chủ tịch', trichYeu: 'Phê duyệt kế hoạch chuyển đổi số ngành GD&ĐT giai đoạn 2026-2030.', fileType: 'pdf', status: 'Đã phát hành' },
-            { id: 3, moduleKey: 'vb-di-giao-nhiem-vu', ngayBH: '10/08/2026', soVB: '89/GNV-THPTHV', loaiVB: 'Giao nhiệm vụ', coQuan: 'THPT Hòa Vang', nguoiKy: 'Hiệu trưởng', trichYeu: 'Giao nhiệm vụ tập huấn ứng dụng AI và Rasch Model cho Tổ Chuyên môn Toán.', fileType: 'docx', status: 'Đang xử lý' },
-            { id: 4, moduleKey: 'vb-di-ke-hoach', ngayBH: '08/08/2026', soVB: '56/KH-THPTHV', loaiVB: 'Kế hoạch', coQuan: 'THPT Hòa Vang', nguoiKy: 'Nguyễn Văn Thà - Phó Hiệu trưởng', trichYeu: 'Kế hoạch bồi dưỡng học sinh giỏi Toán 12 theo tiếp cận đánh giá năng lực dựa trên Rasch Model.', fileType: 'pdf', status: 'Đã phát hành' },
-            { id: 5, moduleKey: 'vb-di-quyet-dinh', ngayBH: '05/08/2026', soVB: '12/QĐ-THPTHV', loaiVB: 'Quyết định', coQuan: 'THPT Hòa Vang', nguoiKy: 'Hiệu trưởng', trichYeu: 'Quyết định thành lập Hội đồng xây dựng Ngân hàng câu hỏi phân tích Rasch.', fileType: 'pdf', status: 'Đã phát hành' }
-        ]
-    };
-
-    let searchDebounceTimer = null;
+   
 
     /* INITIALIZATION */
     document.addEventListener('DOMContentLoaded', () => {
