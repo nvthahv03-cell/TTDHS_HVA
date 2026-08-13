@@ -595,11 +595,18 @@
     function renderDocumentList() {
     const filtered = getFilteredDocs();
     
-    // Cập nhật đếm số văn bản
+    // Cập nhật các Badge đếm số
     const badge = document.getElementById('docCountBadge');
     if (badge) badge.innerText = `${filtered.length} văn bản`;
+    
+    const countBadges = document.querySelectorAll('.rounded-full');
+    countBadges.forEach(b => {
+        if (b.textContent.includes('văn bản')) {
+            b.textContent = `${filtered.length} văn bản`;
+        }
+    });
 
-    // 1. RENDER BẢNG DESKTOP
+    // 1. Render Bảng Desktop
     const tbody = document.getElementById('danhSachData') || document.getElementById('desktopTableBody');
     if (tbody) {
         if (filtered.length === 0) {
@@ -612,19 +619,14 @@
                 </tr>`;
         } else {
             tbody.innerHTML = filtered.map((doc, idx) => {
-                // ÉP ID VỀ CHUỖI VÀ ESCAPE DẤU NGOẶC ĐƠN AN TOÀN
-                const safeId = String(doc.id || (idx + 1)).replace(/'/g, "\\'");
-                
                 let fileUrl = "";
                 if (doc.fileID) {
                     fileUrl = doc.fileID.startsWith("http") ? doc.fileID : `https://drive.google.com/file/d/${doc.fileID}/view?usp=sharing`;
                 }
 
-                // Gọi đúng hàm chọn văn bản với ID đã được bọc ngoặc đơn chuẩn
-                const onClickAction = `handleSelectDoc('${safeId}')`; 
-
+                // LƯU Ý: '${doc.id}' ĐÃ ĐƯỢC BỌC TRONG NGOẶC ĐƠN
                 return `
-                    <tr onclick="${onClickAction}" class="border-b border-slate-100 hover:bg-blue-50/50 cursor-pointer transition-colors text-xs text-slate-700 ${doc.id === AppState.selectedDocId ? 'bg-blue-50/70 font-semibold' : ''}">
+                    <tr onclick="handleSelectDoc('${doc.id}')" class="border-b border-slate-100 hover:bg-blue-50/50 cursor-pointer transition-colors text-xs text-slate-700 ${doc.id === AppState.selectedDocId ? 'bg-blue-50/70 font-semibold' : ''}">
                         <td class="p-3 text-center font-medium text-slate-400">${idx + 1}</td>
                         <td class="p-3 whitespace-nowrap">${doc.ngayBH || '---'}</td>
                         <td class="p-3 font-bold text-[#0F4C81] whitespace-nowrap">${doc.soVB || '---'}</td>
@@ -652,24 +654,25 @@
         }
     }
 
-    // 2. RENDER CARD MOBILE
+    // 2. Render Card Mobile
     const mobileContainer = document.getElementById('mobileCardContainer');
     if (mobileContainer) {
         if (filtered.length === 0) {
             mobileContainer.innerHTML = `<div class="p-6 text-center text-slate-400 italic bg-white rounded-xl border border-slate-200">Không có văn bản nào trong danh mục này</div>`;
         } else {
-            mobileContainer.innerHTML = filtered.map((doc, idx) => {
-                const safeId = String(doc.id || (idx + 1)).replace(/'/g, "\\'");
-                return `
-                    <div onclick="handleSelectDoc('${safeId}')" class="p-3.5 bg-slate-50/80 rounded-xl border ${doc.id === AppState.selectedDocId ? 'border-[#0F4C81] bg-blue-50/50' : 'border-slate-200'} space-y-2 cursor-pointer">
-                        <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
-                            <span class="font-bold text-[#0F4C81] text-xs">${doc.soVB || '---'}</span>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${doc.status === 'Đã phát hành' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${doc.status || 'Đã phát hành'}</span>
-                        </div>
-                        <div class="text-xs font-semibold text-slate-800 line-clamp-2">${doc.trichYeu || '---'}</div>
+            mobileContainer.innerHTML = filtered.map(doc => `
+                <div onclick="handleSelectDoc('${doc.id}')" class="p-3.5 bg-slate-50/80 rounded-xl border ${doc.id === AppState.selectedDocId ? 'border-[#0F4C81] bg-blue-50/50' : 'border-slate-200'} space-y-2 cursor-pointer">
+                    <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
+                        <span class="font-bold text-[#0F4C81] text-xs">${doc.soVB || '---'}</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${doc.status === 'Đã phát hành' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${doc.status || 'Đã phát hành'}</span>
                     </div>
-                `;
-            }).join('');
+                    <div class="text-xs font-semibold text-slate-800 line-clamp-2">${doc.trichYeu || '---'}</div>
+                    <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
+                        <div><strong>Ngày:</strong> ${doc.ngayBH || '---'}</div>
+                        <div><strong>Loại:</strong> ${doc.loaiVB || 'Công văn'}</div>
+                    </div>
+                </div>
+            `).join('');
         }
     }
 }
