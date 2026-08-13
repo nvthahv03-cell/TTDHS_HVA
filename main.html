@@ -613,25 +613,47 @@ updateCurrentDate();
     if (!container) { window.location.href = `${moduleName}.html`; return; }
 
     // Xử lý các mục Văn bản đến/đi (Không dùng fetch file nữa để tránh 404)
+   // Xử lý nhóm Văn bản đến/đi thông qua Gateway / LocalStorage đồng bộ
     if (moduleName.startsWith('vb-den-') || moduleName.startsWith('vb-di-')) {
-        // Dữ liệu giả lập (thầy sẽ thay bằng dữ liệu thực từ Google Sheets sau)
-        const data = [{ ThoiGian: '13/08/2026', PayloadJSON: { soVanBan: 'Văn bản mẫu' }, TrangThai: 'ĐÃ PHÁT HÀNH' }];
+        // Lấy dữ liệu thực tế từ kho lưu trữ do Gateway quản lý
+        const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
+        const allLogs = JSON.parse(rawLogs);
         
+        // Lọc các bản ghi khớp với module hiện tại qua Gateway
+        const data = allLogs.filter(item => item.Module === 'VanBan' || item.module === moduleName);
+
         container.innerHTML = `
-            <div class="p-6 bg-white rounded-2xl shadow-sm border">
-                <h2 class="text-lg font-bold mb-4 text-emerald-700">DANH SÁCH: ${moduleName.toUpperCase()}</h2>
-                <table class="w-full text-sm">
-                    <thead class="bg-gray-50 text-left">
-                        <tr><th class="p-3">Thời gian</th><th class="p-3">Trích yếu</th><th class="p-3">Trạng thái</th></tr>
+            <div class="p-6 bg-white rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-emerald-700 uppercase">DANH SÁCH: ${moduleName}</h2>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-semibold">Đã qua Gateway</span>
+                </div>
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs uppercase bg-slate-50 text-slate-600">
+                        <tr>
+                            <th class="p-3">Thời gian</th>
+                            <th class="p-3">Trích yếu / Số văn bản</th>
+                            <th class="p-3">Trạng thái</th>
+                            <th class="p-3">Thao tác qua Gateway</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        ${data.map(item => `
-                            <tr class="border-b">
-                                <td class="p-3">${item.ThoiGian}</td>
-                                <td class="p-3">${item.PayloadJSON.soVanBan}</td>
-                                <td class="p-3 text-emerald-600 font-bold">${item.TrangThai}</td>
+                        ${data.length > 0 ? data.map(item => `
+                            <tr class="border-b hover:bg-slate-50">
+                                <td class="p-3 text-slate-600">${item.ThoiGian}</td>
+                                <td class="p-3 font-medium text-slate-800">${item.PayloadJSON?.soVanBan || item.PayloadJSON?.trichYeu || 'Văn bản phát hành'}</td>
+                                <td class="p-3"><span class="text-emerald-600 font-bold">${item.TrangThai}</span></td>
+                                <td class="p-3">
+                                    <a href="${item.PayloadJSON?.fileUrl || '#'}" target="_blank" class="text-blue-600 hover:underline font-medium">Mở tệp văn bản</a>
+                                </td>
                             </tr>
-                        `).join('')}
+                        `).join('') : `
+                            <tr>
+                                <td colspan="4" class="p-6 text-center text-slate-400 italic">
+                                    Chưa có văn bản nào được phát hành qua Gateway cho mô đun này.
+                                </td>
+                            </tr>
+                        `}
                     </tbody>
                 </table>
             </div>
