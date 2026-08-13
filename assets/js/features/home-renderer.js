@@ -368,21 +368,13 @@ export function renderHome() {
         </div>
       </div>
 
-    <!-- Menu "KHO VĂN BẢN" trên trang chủ - Click chuyển thẳng sang giao diện VanBan.html -->
-<div class="dashboard-item p-3 bg-white hover:bg-blue-50/80 rounded-xl border border-slate-200/80 shadow-sm cursor-pointer transition-all hover:shadow-md" onclick="openKhoVanBan()">
+   <!-- Nút "KHO VĂN BẢN" duy nhất - Bấm vào là mở ngay giao diện trang VanBan.html -->
+<div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="window.location.href='VanBan.html'">
   <div class="flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-lg bg-blue-100 text-[#0F4C81] flex items-center justify-center font-bold">
-        <i class="bi bi-archive-fill text-lg"></i>
-      </div>
-      <div>
-        <h4 class="text-xs font-bold text-[#0F4C81] uppercase tracking-wide">KHO VĂN BẢN</h4>
-        <p class="text-[11px] text-slate-500 font-medium">Quản lý Văn bản đến & Văn bản đi</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-1 text-slate-400 group-hover:text-[#0F4C81]">
-      <i class="bi bi-arrow-right-circle-fill text-lg text-blue-600"></i>
-    </div>
+    <span class="flex items-center gap-2.5 text-xs font-bold text-[#0F4C81]">
+      <i class="bi bi-archive-fill text-blue-600 text-sm"></i> KHO VĂN BẢN
+    </span>
+    <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
   </div>
 </div>
 
