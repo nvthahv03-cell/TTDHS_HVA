@@ -608,6 +608,31 @@ updateCurrentDate();
         });
     }
 
+window.syncDataFromGateway = function() {
+    const dataFromSheets = [
+        {
+            NgayBanHanh: '2026-08-13',
+            SoVanBan: '3992.SGDDT.GDTrHSSV',
+            CoQuanBanHanh: '03. Sở GD&ĐT Đà Nẵng',
+            TrichYeu: 'V/v hướng dẫn xét lên lớp, đánh giá học sinh...',
+            FileID: '16jd1Je3tuY4dLu0nzD8fztG1mbY7vkDG',
+            TrangThai: 'PHÁT HÀNH'
+        },
+        {
+            NgayBanHanh: '2026-08-05',
+            SoVanBan: '3155.SGDDT.QLCL.30.06',
+            CoQuanBanHanh: 'UBND THÀNH PHỐ ĐÀ NẴNG',
+            TrichYeu: 'Ngày 15/6/2026, Sở Giáo dục và Đào tạo ban hành...',
+            FileID: '1Wqwp07jojo8iMHETe_VoSn5qjnEnGEp',
+            TrangThai: 'PHÁT HÀNH'
+        }
+    ];
+    localStorage.setItem('TTDHS_PUBLISHED_LOGS', JSON.stringify(dataFromSheets));
+};
+
+// Tự động kích hoạt đồng bộ khi nạp trang
+window.syncDataFromGateway();
+
 window.loadModule = function(moduleName) {
     const container = document.getElementById('app-main-content') || document.getElementById('main-content');
     if (!container) { window.location.href = `${moduleName}.html`; return; }
@@ -616,15 +641,19 @@ window.loadModule = function(moduleName) {
         const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
         const allLogs = JSON.parse(rawLogs);
         
-        // Lọc chính xác theo Cơ quan ban hành trong cột CoQuanBanHanh
+        // Lọc chuẩn xác theo từng mục menu tương ứng
         const data = allLogs.filter(item => {
             const coQuan = (item.CoQuanBanHanh || item.coQuanBanHanh || '').toLowerCase();
+            const soVB = (item.SoVanBan || item.soVanBan || '').toLowerCase();
             
             if (moduleName.includes('so-gddt')) {
-                return coQuan.includes('sở gd&đt') || coQuan.includes('sở giáo dục');
+                return coQuan.includes('sở') || soVB.includes('sgdđ');
+            }
+            if (moduleName.includes('da-nang') || moduleName.includes('tp') || moduleName.includes('ubnd')) {
+                return coQuan.includes('ubnd') || coQuan.includes('đà nẵng');
             }
             if (moduleName.includes('trung-uong')) {
-                return coQuan.includes('trung ương') || coQuan.includes('bộ') || coQuan.includes('chính phủ');
+                return coQuan.includes('trung ương') || coQuan.includes('bộ');
             }
             return true;
         });
@@ -669,7 +698,6 @@ window.loadModule = function(moduleName) {
         .then(html => container.innerHTML = html)
         .catch(err => console.error("Lỗi:", err));
 };
-window.syncDataFromGateway(); // Chạy lại đồng bộ
 </script>
 </body>
 </html>
