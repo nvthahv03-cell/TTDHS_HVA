@@ -48,14 +48,9 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* Accordion Custom */
-        .custom-accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .custom-accordion-content.open {
-            max-height: 2000px;
+        /* Accordion Transitions */
+        .dashboard-submenu {
+            transition: all 0.25s ease-in-out;
         }
         
         /* Toast Animations */
@@ -120,7 +115,7 @@
     <!-- TOAST CONTAINER -->
     <div id="toastContainer" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
 
-    <!-- HEADER TTĐHS_HVA CỐ ĐỊNH -->
+    <!-- HEADER TTĐHS_HVA CỐ ĐỊNH (CHUẨN GIAONHIEMVU_V6) -->
     <header class="sticky top-0 z-40 w-full overflow-hidden shadow-md no-print">
         <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
         
@@ -171,7 +166,7 @@
 
                 <div class="hidden sm:flex shrink-0 items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span id="connectionStatus" class="text-white text-xs font-medium whitespace-nowrap">Trực tuyến</span>
+                    <span class="text-white text-xs font-medium whitespace-nowrap">Trực tuyến</span>
                 </div>
             </div>
         </div>
@@ -181,24 +176,76 @@
     <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 pb-32 overflow-y-auto no-print">
         <div class="space-y-6">
             
-            <!-- PHẦN 1: KHO VĂN BẢN (THƯ MỤC) -->
+            <!-- PHẦN 1: CẤU TRÚC KHO VĂN BẢN (GỒM VĂN BẢN ĐẾN VÀ VĂN BẢN ĐI) -->
             <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
-                <div class="flex items-start justify-between gap-2 mb-3 border-b border-slate-100 pb-2.5">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-3">
                     <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
                         <i class="bi bi-folder-fill text-lg text-blue-600 shrink-0"></i>
-                        <span>KHO VĂN BẢN</span>
+                        <span>DANH MỤC PHÂN LOẠI VĂN BẢN</span>
                     </div>
-
-                    <div class="flex items-center gap-2 shrink-0">
-                        <div id="displayNgayHienTai" class="flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
-                            <i class="bi bi-calendar3 text-slate-400"></i>
-                            <span id="txtCurrentDate">--/--/----</span>
-                        </div>
+                    <div id="displayNgayHienTai" class="flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                        <i class="bi bi-calendar3 text-slate-400"></i>
+                        <span id="txtCurrentDate">--/--/----</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1" id="folderGrid">
-                    <!-- Dynamic rendering qua JS -->
+                <div class="space-y-2">
+                    <!-- 1. Menu "Văn bản đến" -->
+                    <div class="dashboard-item p-2.5 bg-slate-50/70 border border-slate-200/80 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-all" onclick="toggleSubmenu(this, event)">
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2.5 text-xs font-bold text-slate-800">
+                                <i class="bi bi-inbox-fill text-emerald-600 text-base"></i> VĂN BẢN ĐẾN
+                            </span>
+                            <i class="bi bi-chevron-right text-xs opacity-60 transition-transform duration-200 chevron-icon"></i>
+                        </div>
+                        <div class="dashboard-submenu hidden pl-4 pt-2.5 space-y-1.5 border-t border-slate-200/60 mt-2">
+                            <div class="p-2 text-xs text-slate-700 hover:text-emerald-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-den-trung-uong', event)">
+                                <i class="bi bi-folder-fill text-amber-500"></i> 01. Văn bản Trung ương
+                            </div>
+                            <div class="p-2 text-xs text-slate-700 hover:text-emerald-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-den-da-nang', event)">
+                                <i class="bi bi-folder-fill text-blue-500"></i> 02. Văn bản Thành phố Đà Nẵng
+                            </div>
+                            <div class="p-2 text-xs text-slate-700 hover:text-emerald-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-den-so-gddt', event)">
+                                <i class="bi bi-folder-fill text-emerald-500"></i> 03. Sở GD&ĐT Đà Nẵng
+                            </div>
+                            <div class="p-2 text-xs text-slate-700 hover:text-emerald-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-den-co-quan-khac', event)">
+                                <i class="bi bi-folder-fill text-slate-500"></i> 04. Cơ quan khác
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Menu "Văn bản đi" -->
+                    <div class="dashboard-item p-2.5 bg-slate-50/70 border border-slate-200/80 hover:bg-teal-50/80 rounded-xl cursor-pointer transition-all" onclick="toggleSubmenu(this, event)">
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2.5 text-xs font-bold text-slate-800">
+                                <i class="bi bi-send-fill text-teal-600 text-base"></i> VĂN BẢN ĐI (NỘI BỘ)
+                            </span>
+                            <i class="bi bi-chevron-right text-xs opacity-60 transition-transform duration-200 chevron-icon"></i>
+                        </div>
+                        <div class="dashboard-submenu hidden pl-4 pt-2.5 space-y-1.5 border-t border-slate-200/60 mt-2">
+                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-quyet-dinh', event)">
+                                <i class="bi bi-file-earmark-text-fill text-red-500"></i> Quyết định
+                            </div>
+                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-ke-hoach', event)">
+                                <i class="bi bi-calendar-check-fill text-blue-500"></i> Kế hoạch
+                            </div>
+                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-bao-cao', event)">
+                                <i class="bi bi-file-earmark-bar-graph-fill text-amber-500"></i> Báo cáo
+                            </div>
+                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-to-trinh', event)">
+                                <i class="bi bi-file-earmark-richtext-fill text-purple-500"></i> Tờ trình
+                            </div>
+                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-thong-bao', event)">
+                                <i class="bi bi-bell-fill text-orange-500"></i> Thông báo
+                            </div>
+                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-cong-van', event)">
+                                <i class="bi bi-envelope-paper-fill text-teal-500"></i> Công văn
+                            </div>
+                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-giao-nhiem-vu', event)">
+                                <i class="bi bi-check2-square text-emerald-500"></i> Giao nhiệm vụ
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -258,10 +305,10 @@
                 <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
                     <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
                         <i class="bi bi-list-task text-lg text-blue-600"></i>
-                        <span>DANH SÁCH VĂN BẢN</span>
+                        <span id="lblCategoryTitle">DANH SÁCH VĂN BẢN (TẤT CẢ)</span>
                     </div>
                     <span id="docCountBadge" class="px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-100 text-[#0F4C81] text-xs font-bold">
-                        Tổng số: 0 văn bản
+                        0 văn bản
                     </span>
                 </div>
 
@@ -274,7 +321,7 @@
                                 <th class="p-3 w-24">Ngày BH</th>
                                 <th class="p-3 w-32">Số văn bản</th>
                                 <th class="p-3 w-24">Loại</th>
-                                <th class="p-3 w-32">Lĩnh vực</th>
+                                <th class="p-3 w-32">Phân loại</th>
                                 <th class="p-3">Trích yếu</th>
                                 <th class="p-3 text-center w-16">Tệp</th>
                                 <th class="p-3 text-center w-28">Trạng thái</th>
@@ -295,13 +342,13 @@
         </div>
     </main>
 
-    <!-- MODAL TIẾP NHẬN / TẠO VĂN BẢN MỚI (GIỮ NGUYÊN KHUNG MODAL GIAONHIEMVU_V6) -->
+    <!-- MODAL TIẾP NHẬN / TẠO VĂN BẢN MỚI -->
     <div id="actionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300 no-print">
         <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform scale-95 transition-transform duration-300" id="modalContent">
             <div class="bg-gradient-to-r from-[#062B5B] to-[#0F4C81] px-5 py-4 flex items-center justify-between text-white">
                 <div class="flex items-center gap-2">
                     <i class="bi bi-file-earmark-plus text-lg"></i>
-                    <h3 class="font-bold text-sm uppercase tracking-wide" id="modalTitle">TIẾP NHẬN VĂN BẢN MỚI</h3>
+                    <h3 class="font-bold text-sm uppercase tracking-wide" id="modalTitle">TIẾP NHẬN / TẠO VĂN BẢN MỚI</h3>
                 </div>
                 <button type="button" onclick="closeModal()" class="text-white/80 hover:text-white text-lg">
                     <i class="bi bi-x-lg"></i>
@@ -319,30 +366,42 @@
                         <input type="date" id="formNgayBH" required class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
                     </div>
                     <div>
+                        <label class="block font-bold text-slate-700 mb-1">Phân loại danh mục</label>
+                        <select id="formModule" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
+                            <optgroup label="Văn bản đến">
+                                <option value="vb-den-trung-uong">01. Văn bản Trung ương</option>
+                                <option value="vb-den-da-nang">02. Văn bản Thành phố Đà Nẵng</option>
+                                <option value="vb-den-so-gddt" selected>03. Sở GD&ĐT Đà Nẵng</option>
+                                <option value="vb-den-co-quan-khac">04. Cơ quan khác</option>
+                            </optgroup>
+                            <optgroup label="Văn bản đi (Nội bộ)">
+                                <option value="vb-di-quyet-dinh">Quyết định</option>
+                                <option value="vb-di-ke-hoach">Kế hoạch</option>
+                                <option value="vb-di-bao-cao">Báo cáo</option>
+                                <option value="vb-di-to-trinh">Tờ trình</option>
+                                <option value="vb-di-thong-bao">Thông báo</option>
+                                <option value="vb-di-cong-van">Công văn</option>
+                                <option value="vb-di-giao-nhiem-vu">Giao nhiệm vụ</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div>
                         <label class="block font-bold text-slate-700 mb-1">Loại văn bản</label>
                         <select id="formLoaiVB" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
                             <option value="Công văn">Công văn</option>
                             <option value="Quyết định">Quyết định</option>
                             <option value="Thông báo">Thông báo</option>
                             <option value="Kế hoạch">Kế hoạch</option>
+                            <option value="Báo cáo">Báo cáo</option>
+                            <option value="Tờ trình">Tờ trình</option>
                             <option value="Hướng dẫn">Hướng dẫn</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Kho thư mục</label>
-                        <select id="formFolder" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
-                            <option value="01">01. Văn bản Trung ương</option>
-                            <option value="02">02. Văn bản Thành phố Đà Nẵng</option>
-                            <option value="03" selected>03. Sở GD&ĐT Đà Nẵng</option>
-                            <option value="04">04. Cơ quan khác</option>
-                            <option value="05">05. Văn bản đi</option>
                         </select>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">Cơ quan ban hành</label>
-                    <input type="text" id="formCoQuan" placeholder="Sở Giáo dục và Đào tạo TP Đà Nẵng" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
+                    <label class="block font-bold text-slate-700 mb-1">Cơ quan ban hành / Đơn vị ban hành</label>
+                    <input type="text" id="formCoQuan" placeholder="Sở Giáo dục và Đào tạo TP Đà Nẵng / THPT Hòa Vang" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
                 </div>
 
                 <div>
@@ -362,7 +421,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM ACTION BAR CỐ ĐỊNH (GIỮ NGUYÊN KHUNG VÀ EVENT CỦA GIAONHIEMVU_V6) -->
+    <!-- BOTTOM ACTION BAR CỐ ĐỊNH (CHUẨN GIAONHIEMVU_V6) -->
     <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.08)] no-print">
         <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             <button type="button" onclick="handleGoBack()" 
@@ -386,53 +445,57 @@
             <button type="button" onclick="openCreateModal()" 
                 class="h-11 rounded-xl bg-[#0F4C81] hover:bg-[#0b3e69] text-white text-sm font-bold shadow-md hover:shadow-lg transition active:scale-95 flex items-center justify-center gap-1.5">
                 <i class="bi bi-plus-lg"></i>
-                <span>Tiếp nhận văn bản</span>
+                <span>Tiếp nhận / Tạo mới</span>
             </button>
         </div>
     </div>
 
 <script>
     /**
-     * STATE MANAGEMENT (GIỮ NGUYÊN CẤU TRÚC STATE CỦA GIAONHIEMVU_V6)
+     * STATE MANAGEMENT (CẤU TRÚC CHUẨN GIAONHIEMVU_V6)
      */
     const AppState = {
-        activeFolder: '03',
+        activeModule: 'vb-den-so-gddt',
         timeFilter: 'homNay',
         searchQuery: '',
         selectedDocId: 1,
-        folders: [
-            { id: '01', name: '01. Văn bản Trung ương' },
-            { id: '02', name: '02. Văn bản Thành phố Đà Nẵng' },
-            { id: '03', name: '03. Sở GD&ĐT Đà Nẵng' },
-            { id: '04', name: '04. Cơ quan khác' },
-            { id: '05', name: '05. Văn bản đi' }
-        ],
+        modulesMap: {
+            'vb-den-trung-uong': '01. Văn bản Trung ương',
+            'vb-den-da-nang': '02. Văn bản Thành phố Đà Nẵng',
+            'vb-den-so-gddt': '03. Sở GD&ĐT Đà Nẵng',
+            'vb-den-co-quan-khac': '04. Cơ quan khác',
+            'vb-di-quyet-dinh': 'Văn bản đi: Quyết định',
+            'vb-di-ke-hoach': 'Văn bản đi: Kế hoạch',
+            'vb-di-bao-cao': 'Văn bản đi: Báo cáo',
+            'vb-di-to-trinh': 'Văn bản đi: Tờ trình',
+            'vb-di-thong-bao': 'Văn bản đi: Thông báo',
+            'vb-di-cong-van': 'Văn bản đi: Công văn',
+            'vb-di-giao-nhiem-vu': 'Văn bản đi: Giao nhiệm vụ'
+        },
         documents: [
-            { id: 1, folderId: '03', ngayBH: '12/08/2026', soVB: '245/SGDĐT-VP', loaiVB: 'Công văn', linhVuc: 'Chuyên môn', coQuan: 'Sở GD&ĐT Đà Nẵng', nguoiKy: 'Nguyễn Văn B - Giám đốc', trichYeu: 'Hướng dẫn thực hiện nhiệm vụ năm học 2026-2027 và nâng cao chất lượng quản lý hồ sơ điện tử.', fileType: 'pdf', status: 'Đã phát hành' },
-            { id: 2, folderId: '02', ngayBH: '11/08/2026', soVB: '102/UBND-VX', loaiVB: 'Quyết định', linhVuc: 'Hành chính', coQuan: 'UBND TP Đà Nẵng', nguoiKy: 'Lê Văn C - Phó Chủ tịch', trichYeu: 'Phê duyệt kế hoạch chuyển đổi số ngành GD&ĐT giai đoạn 2026-2030.', fileType: 'pdf', status: 'Đã phát hành' },
-            { id: 3, folderId: '03', ngayBH: '10/08/2026', soVB: '89/TB-THPTHV', loaiVB: 'Thông báo', linhVuc: 'Khảo sát', coQuan: 'THPT Hòa Vang', nguoiKy: 'Hiệu trưởng', trichYeu: 'Thông báo tập huấn ứng dụng AI và Rasch Model trong quản lý giáo dục.', fileType: 'docx', status: 'Đang xử lý' },
-            { id: 4, folderId: '03', ngayBH: '08/08/2026', soVB: '56/KH-SGDĐT', loaiVB: 'Kế hoạch', linhVuc: 'Thi đua', coQuan: 'Sở GD&ĐT Đà Nẵng', nguoiKy: 'Trần Văn D - Phó Giám đốc', trichYeu: 'Kế hoạch tổ chức hội thi Giáo viên dạy giỏi cấp Thành phố năm học 2026-2027.', fileType: 'pdf', status: 'Đã phát hành' },
-            { id: 5, folderId: '05', ngayBH: '05/08/2026', soVB: '12/HD-THPTHV', loaiVB: 'Hướng dẫn', linhVuc: 'Nội bộ', coQuan: 'THPT Hòa Vang', nguoiKy: 'Ban BGH', trichYeu: 'Hướng dẫn khai thác Ngân hàng đề thi phân tích Rasch cho tổ chuyên môn.', fileType: 'pdf', status: 'Đã phát hành' }
+            { id: 1, moduleKey: 'vb-den-so-gddt', ngayBH: '12/08/2026', soVB: '245/SGDĐT-VP', loaiVB: 'Công văn', coQuan: 'Sở GD&ĐT Đà Nẵng', nguoiKy: 'Nguyễn Văn B - Giám đốc', trichYeu: 'Hướng dẫn thực hiện nhiệm vụ năm học 2026-2027 và nâng cao chất lượng quản lý hồ sơ điện tử.', fileType: 'pdf', status: 'Đã phát hành' },
+            { id: 2, moduleKey: 'vb-den-da-nang', ngayBH: '11/08/2026', soVB: '102/UBND-VX', loaiVB: 'Quyết định', coQuan: 'UBND TP Đà Nẵng', nguoiKy: 'Lê Văn C - Phó Chủ tịch', trichYeu: 'Phê duyệt kế hoạch chuyển đổi số ngành GD&ĐT giai đoạn 2026-2030.', fileType: 'pdf', status: 'Đã phát hành' },
+            { id: 3, moduleKey: 'vb-di-giao-nhiem-vu', ngayBH: '10/08/2026', soVB: '89/GNV-THPTHV', loaiVB: 'Giao nhiệm vụ', coQuan: 'THPT Hòa Vang', nguoiKy: 'Hiệu trưởng', trichYeu: 'Giao nhiệm vụ tập huấn ứng dụng AI và Rasch Model cho Tổ Chuyên môn Toán.', fileType: 'docx', status: 'Đang xử lý' },
+            { id: 4, moduleKey: 'vb-di-ke-hoach', ngayBH: '08/08/2026', soVB: '56/KH-THPTHV', loaiVB: 'Kế hoạch', coQuan: 'THPT Hòa Vang', nguoiKy: 'Nguyễn Văn Thà - Phó Hiệu trưởng', trichYeu: 'Kế hoạch bồi dưỡng học sinh giỏi Toán 12 theo tiếp cận đánh giá năng lực dựa trên Rasch Model.', fileType: 'pdf', status: 'Đã phát hành' },
+            { id: 5, moduleKey: 'vb-di-quyet-dinh', ngayBH: '05/08/2026', soVB: '12/QĐ-THPTHV', loaiVB: 'Quyết định', coQuan: 'THPT Hòa Vang', nguoiKy: 'Hiệu trưởng', trichYeu: 'Quyết định thành lập Hội đồng xây dựng Ngân hàng câu hỏi phân tích Rasch.', fileType: 'pdf', status: 'Đã phát hành' }
         ]
     };
 
     let searchDebounceTimer = null;
 
-    /* ROUTER & EVENT INITIALIZATION */
+    /* INITIALIZATION */
     document.addEventListener('DOMContentLoaded', () => {
         initApp();
     });
 
     function initApp() {
         renderDate();
-        renderFolders();
         renderDocumentList();
         renderSelectedDocCard();
         setupEventListeners();
     }
 
     function setupEventListeners() {
-        // Lắng nghe sự kiện phím Esc đóng modal
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
@@ -445,31 +508,40 @@
         if (el) el.innerText = formatted;
     }
 
-    /* RENDER FOLDERS */
-    function renderFolders() {
-        const container = document.getElementById('folderGrid');
-        if (!container) return;
+    /* SUBMENU TOGGLE & ROUTER HANDLERS */
+    function toggleSubmenu(element, event) {
+        // Tránh toggle khi click vào submenu con
+        if (event.target.closest('.dashboard-submenu')) return;
 
-        container.innerHTML = AppState.folders.map(f => {
-            const isActive = f.id === AppState.activeFolder;
-            return `
-                <button type="button" onclick="handleFolderSelect('${f.id}')" 
-                    class="folder-btn flex items-center justify-between p-3 rounded-xl border ${isActive ? 'border-[#0F4C81] bg-blue-50/80 shadow-sm' : 'border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300'} transition text-left group">
-                    <div class="flex items-center gap-2.5 truncate">
-                        <span class="text-base">📂</span>
-                        <span class="text-xs font-bold ${isActive ? 'text-[#0F4C81]' : 'text-slate-700 group-hover:text-[#0F4C81]'} truncate">${f.name}</span>
-                    </div>
-                    <i class="bi bi-chevron-right text-xs ${isActive ? 'text-[#0F4C81]' : 'text-slate-400 group-hover:text-[#0F4C81]'}"></i>
-                </button>
-            `;
-        }).join('');
+        const submenu = element.querySelector('.dashboard-submenu');
+        const icon = element.querySelector('.chevron-icon');
+        
+        if (submenu) {
+            const isHidden = submenu.classList.contains('hidden');
+            
+            // Đóng tất cả các submenu khác
+            document.querySelectorAll('.dashboard-submenu').forEach(sub => sub.classList.add('hidden'));
+            document.querySelectorAll('.chevron-icon').forEach(i => i.classList.remove('rotate-90'));
+
+            if (isHidden) {
+                submenu.classList.remove('hidden');
+                if (icon) icon.classList.add('rotate-90');
+            }
+        }
     }
 
-    function handleFolderSelect(id) {
-        AppState.activeFolder = id;
-        renderFolders();
+    function loadModule(moduleKey, event) {
+        if (event) event.stopPropagation();
+        
+        AppState.activeModule = moduleKey;
+        const moduleName = AppState.modulesMap[moduleKey] || moduleKey;
+
+        // Cập nhật Tiêu đề danh sách
+        const titleEl = document.getElementById('lblCategoryTitle');
+        if (titleEl) titleEl.innerText = `DANH SÁCH: ${moduleName.toUpperCase()}`;
+
         renderDocumentList();
-        showToast(`Đã chọn kho: ${AppState.folders.find(f => f.id === id)?.name}`, 'info');
+        showToast(`Đã tải phân hệ: ${moduleName}`, 'info');
     }
 
     /* FILTER & SEARCH HANDLERS */
@@ -506,23 +578,23 @@
     /* RENDER LIST (DESKTOP & MOBILE) */
     function getFilteredDocs() {
         return AppState.documents.filter(doc => {
-            const matchFolder = !AppState.activeFolder || doc.folderId === AppState.activeFolder;
+            const matchModule = !AppState.activeModule || doc.moduleKey === AppState.activeModule;
             const q = AppState.searchQuery;
             const matchQuery = !q || doc.soVB.toLowerCase().includes(q) || doc.trichYeu.toLowerCase().includes(q) || doc.coQuan.toLowerCase().includes(q);
-            return matchFolder && matchQuery;
+            return matchModule && matchQuery;
         });
     }
 
     function renderDocumentList() {
         const filtered = getFilteredDocs();
         const badge = document.getElementById('docCountBadge');
-        if (badge) badge.innerText = `Tổng số: ${filtered.length} văn bản`;
+        if (badge) badge.innerText = `${filtered.length} văn bản`;
 
         // Render Desktop Table
         const desktopBody = document.getElementById('desktopTableBody');
         if (desktopBody) {
             if (filtered.length === 0) {
-                desktopBody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">Không tìm thấy văn bản phù hợp</td></tr>`;
+                desktopBody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">Không tìm thấy văn bản phù hợp trong danh mục này</td></tr>`;
             } else {
                 desktopBody.innerHTML = filtered.map((doc, idx) => `
                     <tr onclick="handleSelectDoc(${doc.id})" class="hover:bg-blue-50/40 cursor-pointer transition ${doc.id === AppState.selectedDocId ? 'bg-blue-50/70 font-semibold' : ''}">
@@ -530,7 +602,7 @@
                         <td class="p-3">${doc.ngayBH}</td>
                         <td class="p-3 font-bold text-[#0F4C81]">${doc.soVB}</td>
                         <td class="p-3">${doc.loaiVB}</td>
-                        <td class="p-3">${doc.linhVuc}</td>
+                        <td class="p-3 text-slate-600">${AppState.modulesMap[doc.moduleKey] || doc.moduleKey}</td>
                         <td class="p-3 truncate max-w-xs">${doc.trichYeu}</td>
                         <td class="p-3 text-center">
                             <i class="bi bi-file-earmark-${doc.fileType === 'pdf' ? 'pdf-fill text-red-500' : 'word-fill text-blue-500'} text-base"></i>
@@ -547,7 +619,7 @@
         const mobileContainer = document.getElementById('mobileCardContainer');
         if (mobileContainer) {
             if (filtered.length === 0) {
-                mobileContainer.innerHTML = `<div class="p-6 text-center text-slate-400 italic bg-white rounded-xl border border-slate-200">Không có văn bản nào</div>`;
+                mobileContainer.innerHTML = `<div class="p-6 text-center text-slate-400 italic bg-white rounded-xl border border-slate-200">Không có văn bản nào trong danh mục này</div>`;
             } else {
                 mobileContainer.innerHTML = filtered.map(doc => `
                     <div onclick="handleSelectDoc(${doc.id})" class="p-3.5 bg-slate-50/80 rounded-xl border ${doc.id === AppState.selectedDocId ? 'border-[#0F4C81] bg-blue-50/50' : 'border-slate-200'} space-y-2 cursor-pointer">
@@ -559,10 +631,7 @@
                         <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
                             <div><strong>Ngày:</strong> ${doc.ngayBH}</div>
                             <div><strong>Loại:</strong> ${doc.loaiVB}</div>
-                            <div><strong>Lĩnh vực:</strong> ${doc.linhVuc}</div>
-                            <div class="flex items-center gap-1">
-                                <strong>Tệp:</strong> <span class="uppercase font-bold text-slate-700">${doc.fileType}</span>
-                            </div>
+                            <div class="col-span-2"><strong>Danh mục:</strong> ${AppState.modulesMap[doc.moduleKey] || doc.moduleKey}</div>
                         </div>
                     </div>
                 `).join('');
@@ -588,16 +657,16 @@
             <div><span class="font-bold text-slate-500">Số văn bản:</span> <span class="font-bold text-[#0F4C81]">${doc.soVB}</span></div>
             <div><span class="font-bold text-slate-500">Ngày ban hành:</span> <span class="text-slate-700">${doc.ngayBH}</span></div>
             <div><span class="font-bold text-slate-500">Loại văn bản:</span> <span class="text-slate-700">${doc.loaiVB}</span></div>
+            <div><span class="font-bold text-slate-500">Phân loại:</span> <span class="text-slate-700">${AppState.modulesMap[doc.moduleKey] || doc.moduleKey}</span></div>
             <div><span class="font-bold text-slate-500">Cơ quan ban hành:</span> <span class="text-slate-700">${doc.coQuan}</span></div>
             <div><span class="font-bold text-slate-500">Người ký:</span> <span class="text-slate-700">${doc.nguoiKy}</span></div>
-            <div><span class="font-bold text-slate-500">Lĩnh vực:</span> <span class="text-slate-700">${doc.linhVuc}</span></div>
             <div class="sm:col-span-2 border-t border-blue-200/60 pt-1.5 mt-0.5">
                 <span class="font-bold text-slate-500">Trích yếu:</span> <span class="text-slate-800 font-semibold italic">${doc.trichYeu}</span>
             </div>
         `;
     }
 
-    /* MODAL SYSTEM (GIỮ NGUYÊN HOÀN TOÀN CẤU TRÚC MODAL) */
+    /* MODAL SYSTEM (CHUẨN GIAONHIEMVU_V6) */
     function openCreateModal() {
         const modal = document.getElementById('actionModal');
         const content = document.getElementById('modalContent');
@@ -629,17 +698,16 @@
         const soVB = document.getElementById('formSoVB').value.trim();
         const ngayBH = document.getElementById('formNgayBH').value;
         const loaiVB = document.getElementById('formLoaiVB').value;
-        const folderId = document.getElementById('formFolder').value;
+        const moduleKey = document.getElementById('formModule').value;
         const coQuan = document.getElementById('formCoQuan').value.trim() || 'THPT Hòa Vang';
         const trichYeu = document.getElementById('formTrichYeu').value.trim();
 
         const newDoc = {
             id: Date.now(),
-            folderId: folderId,
+            moduleKey: moduleKey,
             ngayBH: ngayBH.split('-').reverse().join('/'),
             soVB: soVB,
             loaiVB: loaiVB,
-            linhVuc: 'Hành chính',
             coQuan: coQuan,
             nguoiKy: 'Ban BGH',
             trichYeu: trichYeu,
@@ -649,11 +717,12 @@
 
         AppState.documents.unshift(newDoc);
         AppState.selectedDocId = newDoc.id;
-        
+        AppState.activeModule = moduleKey;
+
         closeModal();
         renderDocumentList();
         renderSelectedDocCard();
-        showToast('Đã tiếp nhận và lưu văn bản thành công!', 'success');
+        showToast('Đã lưu văn bản mới vào hệ thống thành công!', 'success');
 
         document.getElementById('docForm').reset();
     }
@@ -667,7 +736,6 @@
     }
 
     function handleRefreshData() {
-        renderFolders();
         renderDocumentList();
         renderSelectedDocCard();
         showToast('Đã làm mới dữ liệu hệ thống!', 'success');
@@ -677,7 +745,7 @@
         showToast('Mở bộ lọc tra cứu nâng cao', 'info');
     }
 
-    /* TOAST NOTIFICATION SYSTEM */
+    /* TOAST NOTIFICATION SYSTEM (CHUẨN GIAONHIEMVU_V6) */
     function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
         if (!container) return;
