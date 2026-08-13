@@ -368,29 +368,40 @@ export function renderHome() {
         </div>
       </div>
 
-      <!-- Văn bản đến -->
-      <div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
-        <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-inbox-fill text-emerald-500 text-sm"></i> Văn bản đến</span>
-          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
-        </div>
-        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-den')"><i class="bi bi-file-earmark-arrow-down"></i> Tất cả văn bản đến</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-den-chua-xu-ly')"><i class="bi bi-exclamation-circle"></i> Chưa xử lý</div>
-        </div>
-      </div>
+     <!-- 1. Menu "Văn bản đến" phản ánh đúng cấu trúc Drive -->
+<div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+  <div class="flex items-center justify-between">
+    <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700">
+      <i class="bi bi-inbox-fill text-emerald-500 text-sm"></i> Văn bản đến
+    </span>
+    <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+  </div>
+  <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+    <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-den-trung-uong')"><i class="bi bi-folder text-amber-500"></i> 01. Văn bản Trung ương</div>
+    <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-den-da-nang')"><i class="bi bi-folder text-blue-500"></i> 02. Văn bản Thành phố Đà Nẵng</div>
+    <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-den-so-gddt')"><i class="bi bi-folder text-emerald-500"></i> 03. Sở GD&ĐT Đà Nẵng</div>
+    <div class="p-1.5 text-xs text-slate-600 hover:text-emerald-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-den-co-quan-khac')"><i class="bi bi-folder text-slate-500"></i> 04. Cơ quan khác</div>
+  </div>
+</div>
 
-      <!-- Văn bản đi -->
-      <div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
-        <div class="flex items-center justify-between">
-          <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700"><i class="bi bi-send-fill text-teal-500 text-sm"></i> Văn bản đi</span>
-          <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
-        </div>
-        <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
-          <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-di')"><i class="bi bi-file-earmark-arrow-up"></i> Văn bản đã phát hành</div>
-          <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('van-ban-noi-bo')"><i class="bi bi-building"></i> Văn bản nội bộ</div>
-        </div>
-      </div>
+<!-- 2. Menu "Văn bản đi" phản ánh đúng cấu trúc loại văn bản nội bộ -->
+<div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
+  <div class="flex items-center justify-between">
+    <span class="flex items-center gap-2.5 text-xs font-semibold text-slate-700">
+      <i class="bi bi-send-fill text-teal-500 text-sm"></i> Văn bản đi
+    </span>
+    <i class="bi bi-chevron-right text-[10px] opacity-60"></i>
+  </div>
+  <div class="dashboard-submenu hidden pl-6 pt-2 space-y-1">
+    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-quyet-dinh')"><i class="bi bi-file-earmark-text text-red-500"></i> Quyết định</div>
+    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-ke-hoach')"><i class="bi bi-calendar-check text-blue-500"></i> Kế hoạch</div>
+    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-bao-cao')"><i class="bi bi-file-earmark-bar-graph text-amber-500"></i> Báo cáo</div>
+    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-to-trinh')"><i class="bi bi-file-earmark-richtext text-purple-500"></i> Tờ trình</div>
+    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-thong-bao')"><i class="bi bi-bell text-orange-500"></i> Thông báo</div>
+    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-cong-van')"><i class="bi bi-envelope-paper text-teal-500"></i> Công văn</div>
+    <div class="p-1.5 text-xs text-slate-600 hover:text-teal-600 rounded-lg hover:bg-white flex items-center gap-2" onclick="loadModule('vb-di-giao-nhiem-vu')"><i class="bi bi-check2-square text-emerald-500"></i> Giao nhiệm vụ</div>
+  </div>
+</div>
 
       <!-- Biểu mẫu -->
       <div class="dashboard-item p-2 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-colors" onclick="toggleSubmenu(this, event)">
