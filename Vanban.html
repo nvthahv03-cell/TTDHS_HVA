@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản lý và Tra cứu Văn bản</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4C81',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50/50 min-h-screen font-sans antialiased text-slate-800 pb-28">
+
+    <!-- TOP HEADER NAVBAR -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition flex items-center justify-center text-sm" title="Quay lại trang chủ">
+                    <i class="bi bi-house-door text-base"></i>
+                </a>
+                <div>
+                    <h1 id="page-main-title" class="text-base sm:text-lg font-bold text-slate-900 uppercase tracking-tight">HỆ THỐNG QUẢN LÝ VĂN BẢN</h1>
+                    <p class="text-xs text-slate-500 font-medium">Hệ thống số hóa quản lý và tra cứu dữ liệu điều hành</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl flex items-center gap-2 border border-slate-200">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="hidden sm:inline">Trực tuyến</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER (Bung rộng toàn màn hình max-w-7xl) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 space-y-6">
+
+        <!-- PHẦN 1: THỐNG KÊ TỔNG QUAN -->
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="p-2.5 bg-blue-50 text-[#0F4C81] rounded-xl text-xl flex items-center justify-center shadow-inner"><i class="bi bi-folder2-open"></i></span> 
+                    <div>
+                        <h3 id="kho-hien-thi-title" class="text-slate-900 font-bold text-base sm:text-lg uppercase tracking-tight">VĂN BẢN ĐẾN - SỞ GD&ĐT ĐÀ NẴNG</h3>
+                        <p class="text-xs text-slate-500 font-medium">Tra cứu, điều hành và quản lý tệp tin văn bản điện tử</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="loadDataAndRender()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
+                        <i class="bi bi-arrow-clockwise"></i> <span>Tải lại dữ liệu</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 pt-3 border-t border-slate-100 text-xs sm:text-sm text-slate-600 font-medium">
+                <div class="bg-slate-50/80 p-3.5 rounded-xl border border-slate-200/60">
+                    <span class="text-slate-500 block text-[11px] font-semibold uppercase">Tổng số</span> 
+                    <span id="stat-total" class="text-slate-900 font-bold text-base sm:text-xl mt-0.5 block">0 <span class="text-xs font-normal text-slate-500">VB</span></span>
+                </div>
+                <div class="bg-rose-50/40 p-3.5 rounded-xl border border-rose-100">
+                    <span id="stat-active-label" class="text-rose-600/80 block text-[11px] font-semibold uppercase">Chưa đọc</span> 
+                    <span id="stat-active" class="text-rose-600 font-bold text-base sm:text-xl mt-0.5 block">0</span>
+                </div>
+                <div class="bg-emerald-50/40 p-3.5 rounded-xl border border-emerald-100">
+                    <span class="text-emerald-600/80 block text-[11px] font-semibold uppercase">Hôm nay</span> 
+                    <span id="stat-today" class="text-emerald-600 font-bold text-base sm:text-xl mt-0.5 block">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHẦN 2: TRA CỨU & BỘ LỌC NÂNG CAO -->
+        <div class="bg-white rounded-2xl border border-blue-200/80 shadow-sm p-4 sm:p-5 bg-gradient-to-b from-blue-50/20 to-transparent space-y-4">
+            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81] border-b border-blue-100 pb-2">
+                <i class="bi bi-funnel text-base text-blue-600"></i>
+                <span>Tra cứu nhanh & Bộ lọc nâng cao</span>
+            </div>
+
+            <!-- Ô tìm kiếm chính -->
+            <div class="relative">
+                <input type="text" id="search-vb" placeholder="Gõ số văn bản, trích yếu hoặc cơ quan ban hành để tìm kiếm..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81] focus:border-[#0F4C81] shadow-sm transition-all">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 text-sm"><i class="bi bi-search"></i></span>
+            </div>
+
+            <!-- Các ô lọc nâng cao -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <select id="filter-loai" class="w-full py-2 px-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-[#0F4C81]">
+                    <option value="">Loại: Tất cả</option>
+                    <option value="Công văn">Công văn</option>
+                    <option value="Quyết định">Quyết định</option>
+                    <option value="Kế hoạch">Kế hoạch</option>
+                    <option value="Thông báo">Thông báo</option>
+                </select>
+                <select id="filter-linhvuc" class="w-full py-2 px-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-[#0F4C81]">
+                    <option value="">Lĩnh vực: Tất cả</option>
+                    <option value="Chuyên môn">Chuyên môn</option>
+                    <option value="Tổ chức - Cán bộ">Tổ chức - Cán bộ</option>
+                    <option value="Hành chính - Tổng hợp">Hành chính - Tổng hợp</option>
+                    <option value="Tài chính - Cơ sở vật chất">Tài chính - CSVC</option>
+                </select>
+                <select id="filter-coquan" class="w-full py-2 px-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-[#0F4C81]">
+                    <option value="">Cơ quan: Tất cả</option>
+                    <option value="Sở GD&ĐT Đà Nẵng">Sở GD&ĐT Đà Nẵng</option>
+                    <option value="UBND TP. Đà Nẵng">UBND TP. Đà Nẵng</option>
+                    <option value="Bộ GD&ĐT">Bộ GD&ĐT</option>
+                </select>
+                <select id="filter-trangthai" class="w-full py-2 px-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-[#0F4C81]">
+                    <option value="">Trạng thái: Tất cả</option>
+                    <option id="opt-status-1" value="Chưa đọc">Chưa đọc</option>
+                    <option id="opt-status-2" value="Đã đọc">Đã đọc</option>
+                </select>
+            </div>
+
+            <!-- Khung xem chi tiết văn bản chọn nhanh -->
+            <div class="p-3.5 bg-blue-50/70 rounded-xl border border-blue-200/80 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs shadow-inner">
+                <div><span class="font-bold text-slate-500">Số/Ký hiệu:</span> <span id="lblKhoSoVB" class="font-bold text-[#0F4C81]">Chọn văn bản ở danh sách bên dưới</span></div>
+                <div><span class="font-bold text-slate-500">Ngày ban hành:</span> <span id="lblKhoNgayBH" class="text-slate-700">--/--/----</span></div>
+                <div><span class="font-bold text-slate-500">Lĩnh vực:</span> <span id="lblKhoLinhVuc" class="text-slate-700 font-semibold">--</span></div>
+                <div class="sm:col-span-2"><span class="font-bold text-slate-500">Cơ quan ban hành:</span> <span id="lblKhoCoQuan" class="text-slate-700 font-semibold">--</span></div>
+                <div class="sm:col-span-3"><span class="font-bold text-slate-500">Trích yếu:</span> <span id="lblKhoTrichYeu" class="text-slate-700 italic">--</span></div>
+            </div>
+        </div>
+
+        <!-- PHẦN 3: DANH SÁCH VĂN BẢN CHI TIẾT -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1 bg-slate-50/50">
+                <span class="font-bold text-slate-800 text-sm" id="table-count-label">Danh sách văn bản chi tiết (0)</span>
+                <span class="text-xs text-slate-400 italic">Nhấn vào một dòng bất kỳ để xem nhanh thông tin chi tiết phía trên</span>
+            </div>
+
+            <!-- DESKTOP TABLE VIEW -->
+            <div class="hidden md:block w-full overflow-x-auto">
+                <table class="w-full text-sm text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100/80 text-slate-600 font-semibold text-[11px] uppercase tracking-wider border-b border-slate-200">
+                            <th class="py-3 px-4 text-center w-12">STT</th>
+                            <th class="py-3 px-4 w-28">Ngày BH</th>
+                            <th class="py-3 px-4 w-36">Số văn bản</th>
+                            <th class="py-3 px-4 w-28">Loại VB</th>
+                            <th class="py-3 px-4 w-36">Lĩnh vực</th>
+                            <th class="py-3 px-4">Trích yếu nội dung</th>
+                            <th class="py-3 px-4 text-center w-32">Tệp</th>
+                            <th class="py-3 px-4 text-center w-32">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vb-table-body" class="divide-y divide-slate-100 text-slate-700">
+                        <!-- Render qua JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- MOBILE CARD VIEW -->
+            <div id="vb-mobile-body" class="block md:hidden divide-y divide-slate-100">
+                <!-- Render qua JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- BOTTOM ACTION BAR -->
+    <footer class="fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200/80 shadow-lg px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                <i class="bi bi-info-circle text-[#0F4C81] text-base"></i>
+                <span class="hidden sm:inline">Hệ thống quản lý văn bản số:</span>
+                <span class="text-[#0F4C81] font-bold" id="footer-count">0 văn bản</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="window.location.reload()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
+                    <i class="bi bi-arrow-clockwise"></i> <span>Làm mới</span>
+                </button>
+                <button onclick="window.print()" class="px-4 py-2 bg-[#0F4C81] hover:bg-[#0b3e69] text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-md">
+                    <i class="bi bi-printer"></i> <span>In danh sách</span>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LOGIC SCRIPT XỬ LÝ DỮ LIỆU -->
+    <script>
+        let allLogs = [];
+        let isVanBanDi = false;
+
+        function loadDataAndRender() {
+            // Lấy tham số trên URL (Ví dụ: Vanban.html?type=vb-di hoặc Vanban.html?type=so-gddt)
+            const urlParams = new URLSearchParams(window.location.search);
+            const typeParam = (urlParams.get('type') || 'vb-den-so-gddt').toLowerCase();
+
+            isVanBanDi = typeParam.includes('vb-di') || typeParam.includes('di');
+            
+            const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
+            const parsedLogs = JSON.parse(rawLogs);
+
+            // Lọc dữ liệu theo phân loại kho
+            allLogs = parsedLogs.filter(item => {
+                const coQuan = (item.CoQuanBanHanh || item.coQuanBanHanh || '').toLowerCase();
+                const soVB = (item.SoVanBan || item.soVanBan || '').toLowerCase();
+                
+                if (typeParam.includes('so-gddt')) {
+                    return coQuan.includes('sở') || soVB.includes('sgdđ');
+                }
+                if (typeParam.includes('ubnd') || typeParam.includes('da-nang')) {
+                    return coQuan.includes('ubnd') || coQuan.includes('đà nẵng');
+                }
+                if (typeParam.includes('trung-uong')) {
+                    return coQuan.includes('trung ương') || coQuan.includes('bộ');
+                }
+                return true;
+            });
+
+            // Tùy chỉnh tiêu đề hiển thị giao diện
+            let titleText = "VĂN BẢN ĐẾN - SỞ GD&ĐT ĐÀ NẴNG";
+            if (typeParam.includes('ubnd')) titleText = "VĂN BẢN ĐẾN - UBND TP. ĐÀ NẴNG";
+            else if (typeParam.includes('trung-uong')) titleText = "VĂN BẢN ĐẾN - CƠ QUAN TRUNG ƯƠNG";
+            else if (isVanBanDi) {
+                titleText = "QUẢN LÝ VĂN BẢN ĐI";
+                document.getElementById('stat-active-label').textContent = "Chờ phát hành";
+                document.getElementById('opt-status-1').value = "Chờ phát hành";
+                document.getElementById('opt-status-1').textContent = "Chờ phát hành";
+                document.getElementById('opt-status-2').value = "Đã phát hành";
+                document.getElementById('opt-status-2').textContent = "Đã phát hành";
+            }
+
+            document.getElementById('kho-hien-thi-title').textContent = titleText;
+            document.getElementById('page-main-title').textContent = titleText;
+
+            updateStatsAndRender(allLogs);
+        }
+
+        function updateStatsAndRender(dataToRender) {
+            const totalVB = dataToRender.length;
+            const activeCount = dataToRender.filter(item => isVanBanDi ? (item.TrangThai === 'Đã phát hành' || !item.TrangThai) : !item.DaDoc).length;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const todayVB = dataToRender.filter(item => (item.NgayBanHanh || '').includes(todayStr)).length;
+
+            document.getElementById('stat-total').innerHTML = `${totalVB} <span class="text-xs font-normal text-slate-500">VB</span>`;
+            document.getElementById('stat-active').textContent = activeCount < 10 ? '0' + activeCount : activeCount;
+            document.getElementById('stat-today').textContent = todayVB < 10 ? '0' + todayVB : todayVB;
+
+            renderTable(dataToRender);
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('vb-table-body');
+            const mobileBody = document.getElementById('vb-mobile-body');
+            const countLabel = document.getElementById('table-count-label');
+            const footerCount = document.getElementById('footer-count');
+
+            countLabel.textContent = `Danh sách văn bản chi tiết (${data.length})`;
+            footerCount.textContent = `${data.length} văn bản`;
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="py-10 text-center text-slate-400 italic text-sm">Không tìm thấy văn bản phù hợp trong hệ thống.</td></tr>`;
+                mobileBody.innerHTML = `<div class="p-8 text-center text-slate-400 italic text-sm">Không tìm thấy văn bản phù hợp trong hệ thống.</div>`;
+                return;
+            }
+
+            tbody.innerHTML = data.map((item, index) => {
+                const fileID = item.FileID || item.fileId || '';
+                const fileUrl = fileID ? `https://drive.google.com/file/d/${fileID}/view` : '#';
+                const downloadUrl = fileID ? `https://drive.google.com/uc?export=download&id=${fileID}` : '#';
+                const itemID = item.ID || item.id || item.SoVanBan;
+                const loaiVB = item.LoaiVanBan || item.loaiVanBan || 'Công văn';
+                const linhVuc = item.LinhVuc || item.linhVuc || 'Chuyên môn';
+                
+                let trangThai = item.TrangThai || (isVanBanDi ? 'Đã phát hành' : (item.DaDoc ? 'Đã đọc' : 'Chưa đọc'));
+                let badgeClass = 'bg-slate-100 text-slate-600';
+                if (trangThai === 'Chưa đọc' || trangThai === 'Chờ phát hành') {
+                    badgeClass = 'bg-rose-50 text-rose-700 font-bold border border-rose-200';
+                } else if (trangThai === 'Đã phát hành' || trangThai === 'Đã đọc') {
+                    badgeClass = 'bg-emerald-50 text-emerald-700 font-medium border border-emerald-200';
+                } else if (trangThai === 'Đã thu hồi') {
+                    badgeClass = 'bg-amber-50 text-amber-700 font-medium border border-amber-200';
+                }
+
+                return `
+                    <tr class="hover:bg-blue-50/40 transition-colors cursor-pointer group" onclick="chonXemChiTietVanBan('${encodeURIComponent(JSON.stringify(item))}')">
+                        <td class="py-3.5 px-4 text-center text-slate-400 font-medium text-xs">${index + 1}</td>
+                        <td class="py-3.5 px-4 text-slate-600 whitespace-nowrap text-xs">${item.NgayBanHanh || ''}</td>
+                        <td class="py-3.5 px-4 font-bold text-[#0F4C81] text-xs">${item.SoVanBan || ''}</td>
+                        <td class="py-3.5 px-4"><span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700">${loaiVB}</span></td>
+                        <td class="py-3.5 px-4"><span class="text-xs text-slate-600 font-medium">${linhVuc}</span></td>
+                        <td class="py-3.5 px-4 text-slate-800 text-xs leading-relaxed">
+                            <div class="line-clamp-2 font-normal">${item.TrichYeu || ''}</div>
+                        </td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap" onclick="event.stopPropagation()">
+                            ${fileID ? `
+                                <div class="inline-flex items-center justify-center gap-1.5 text-xs font-medium">
+                                    <a href="${fileUrl}" target="_blank" class="text-blue-600 hover:bg-blue-100 px-2.5 py-1 bg-blue-50 rounded-lg transition-colors" title="Xem tệp"><i class="bi bi-eye"></i> Mở</a>
+                                    <a href="${downloadUrl}" class="text-emerald-600 hover:bg-emerald-100 px-2.5 py-1 bg-emerald-50 rounded-lg transition-colors" title="Tải xuống"><i class="bi bi-download"></i> Tải</a>
+                                </div>
+                            ` : '<span class="text-slate-300 italic text-xs">Trống</span>'}
+                        </td>
+                        <td class="py-3.5 px-4 text-center" onclick="event.stopPropagation()">
+                            <button onclick="cycleStatus('${itemID}')" class="px-3 py-1 text-xs rounded-full transition-all shadow-sm ${badgeClass}">
+                                ${trangThai}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            mobileBody.innerHTML = data.map((item, index) => {
+                const fileID = item.FileID || item.fileId || '';
+                const fileUrl = fileID ? `https://drive.google.com/file/d/${fileID}/view` : '#';
+                const downloadUrl = fileID ? `https://drive.google.com/uc?export=download&id=${fileID}` : '#';
+                const itemID = item.ID || item.id || item.SoVanBan;
+                const loaiVB = item.LoaiVanBan || item.loaiVanBan || 'Công văn';
+                const linhVuc = item.LinhVuc || item.linhVuc || 'Chuyên môn';
+                let trangThai = item.TrangThai || (isVanBanDi ? 'Đã phát hành' : (item.DaDoc ? 'Đã đọc' : 'Chưa đọc'));
+
+                return `
+                    <div class="p-4 space-y-2.5 bg-white hover:bg-slate-50 transition-colors" onclick="chonXemChiTietVanBan('${encodeURIComponent(JSON.stringify(item))}')">
+                        <div class="flex items-start justify-between gap-2">
+                            <div>
+                                <span class="text-xs font-bold text-slate-400">#${index + 1} • ${linhVuc}</span>
+                                <h4 class="font-bold text-[#0F4C81] text-sm mt-0.5">${item.SoVanBan || ''}</h4>
+                            </div>
+                            <button onclick="event.stopPropagation(); cycleStatus('${itemID}')" class="px-2.5 py-1 text-xs rounded-full font-medium transition-all bg-slate-100 text-slate-700">
+                                ${trangThai}
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs text-slate-500">
+                            <span>📅 ${item.NgayBanHanh || ''}</span>
+                            <span>•</span>
+                            <span class="px-2 py-0.5 bg-slate-100 rounded text-slate-700 font-medium">${loaiVB}</span>
+                        </div>
+                        <p class="text-slate-700 text-xs leading-relaxed">${item.TrichYeu || ''}</p>
+                        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100" onclick="event.stopPropagation()">
+                            ${fileID ? `
+                                <a href="${fileUrl}" target="_blank" class="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="bi bi-eye"></i> Mở</a>
+                                <a href="${downloadUrl}" class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="bi bi-download"></i> Tải xuống</a>
+                            ` : '<span class="text-slate-400 text-xs italic">Không có tệp</span>'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterTableData() {
+            const keyword = (document.getElementById('search-vb').value || '').toLowerCase().trim();
+            const fLoai = document.getElementById('filter-loai').value;
+            const fLinhVuc = document.getElementById('filter-linhvuc').value;
+            const fCoQuan = document.getElementById('filter-coquan').value;
+            const fTrangThai = document.getElementById('filter-trangthai').value;
+
+            const filtered = allLogs.filter(item => {
+                const soVB = (item.SoVanBan || '').toLowerCase();
+                const trichYeu = (item.TrichYeu || '').toLowerCase();
+                const coQuanBH = (item.CoQuanBanHanh || item.coQuanBanHanh || '').toLowerCase();
+                
+                const matchKeyword = !keyword || soVB.includes(keyword) || trichYeu.includes(keyword) || coQuanBH.includes(keyword);
+                const matchLoai = !fLoai || (item.LoaiVanBan || item.loaiVanBan || 'Công văn') === fLoai;
+                const matchLinhVuc = !fLinhVuc || (item.LinhVuc || item.linhVuc || 'Chuyên môn') === fLinhVuc;
+                const matchCoQuan = !fCoQuan || coQuanBH.includes(fCoQuan.toLowerCase());
+                
+                const trangThai = item.TrangThai || (isVanBanDi ? 'Đã phát hành' : (item.DaDoc ? 'Đã đọc' : 'Chưa đọc'));
+                const matchTrangThai = !fTrangThai || trangThai === fTrangThai;
+
+                return matchKeyword && matchLoai && matchLinhVuc && matchCoQuan && matchTrangThai;
+            });
+
+            renderTable(filtered);
+        }
+
+        function cycleStatus(id) {
+            const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
+            let parsedLogs = JSON.parse(rawLogs);
+
+            const idx = parsedLogs.findIndex(item => String(item.ID || item.id || item.SoVanBan) === String(id));
+            if (idx === -1) return;
+
+            if (isVanBanDi) {
+                const current = parsedLogs[idx].TrangThai || 'Đã phát hành';
+                if (current === 'Chờ phát hành') parsedLogs[idx].TrangThai = 'Đã phát hành';
+                else if (current === 'Đã phát hành') parsedLogs[idx].TrangThai = 'Đã thu hồi';
+                else parsedLogs[idx].TrangThai = 'Chờ phát hành';
+            } else {
+                parsedLogs[idx].DaDoc = !parsedLogs[idx].DaDoc;
+                parsedLogs[idx].TrangThai = parsedLogs[idx].DaDoc ? 'Đã đọc' : 'Chưa đọc';
+            }
+
+            localStorage.setItem('TTDHS_PUBLISHED_LOGS', JSON.stringify(parsedLogs));
+            loadDataAndRender();
+        }
+
+        function chonXemChiTietVanBan(encodedItem) {
+            try {
+                const item = JSON.parse(decodeURIComponent(encodedItem));
+                document.getElementById('lblKhoSoVB').textContent = item.SoVanBan || '--';
+                document.getElementById('lblKhoNgayBH').textContent = item.NgayBanHanh || '--/--/----';
+                document.getElementById('lblKhoLinhVuc').textContent = item.LinhVuc || item.linhVuc || 'Chuyên môn';
+                document.getElementById('lblKhoCoQuan').textContent = item.CoQuanBanHanh || item.coQuanBanHanh || '--';
+                document.getElementById('lblKhoTrichYeu').textContent = item.TrichYeu || '--';
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        // Đăng ký sự kiện lắng nghe bộ lọc
+        document.getElementById('search-vb').addEventListener('input', filterTableData);
+        document.getElementById('filter-loai').addEventListener('change', filterTableData);
+        document.getElementById('filter-linhvuc').addEventListener('change', filterTableData);
+        document.getElementById('filter-coquan').addEventListener('change', filterTableData);
+        document.getElementById('filter-trangthai').addEventListener('change', filterTableData);
+
+        // Khởi chạy khi tải trang xong
+        window.onload = loadDataAndRender;
+    </script>
+</body>
+</html>
