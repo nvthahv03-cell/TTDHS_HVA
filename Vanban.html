@@ -1,421 +1,608 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ thống Quản lý và Tra cứu Văn bản</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TTĐHS_HVA - Kho Văn Bản Điện Tử</title>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts & Bootstrap Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#0F4C81',
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            200: '#bae0fd',
+                            500: '#1687D9',
+                            600: '#0F4C81',
+                            700: '#0b3e69',
+                            800: '#062B5B',
+                            900: '#041f43',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
-</head>
-<body class="bg-slate-50/50 min-h-screen font-sans antialiased text-slate-800 pb-28">
 
-    <!-- TOP HEADER NAVBAR -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <a href="index.html" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition flex items-center justify-center text-sm" title="Quay lại trang chủ">
-                    <i class="bi bi-house-door text-base"></i>
-                </a>
-                <div>
-                    <h1 id="page-main-title" class="text-base sm:text-lg font-bold text-slate-900 uppercase tracking-tight">HỆ THỐNG QUẢN LÝ VĂN BẢN</h1>
-                    <p class="text-xs text-slate-500 font-medium">Hệ thống số hóa quản lý và tra cứu dữ liệu điều hành</p>
+    <style>
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Accordion Custom */
+        .custom-accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .custom-accordion-content.open {
+            max-height: 2000px;
+        }
+        
+        /* Toast Animations */
+        @keyframes toastIn {
+            from { transform: translateY(-100%) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        @keyframes toastOut {
+            from { transform: translateY(0) scale(1); opacity: 1; }
+            to { transform: translateY(-100%) scale(0.9); opacity: 0; }
+        }
+        .toast-enter { animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .toast-exit { animation: toastOut 0.25s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
+
+        /* Mobile Responsiveness Rules */
+        .mobile-safe-text {
+            min-width: 0;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-break: normal;
+        }
+
+        @media (max-width: 640px) {
+            .page-header-wrap {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+
+            .page-header-title {
+                font-size: 15px !important;
+                line-height: 1.2 !important;
+                letter-spacing: -0.01em !important;
+                white-space: normal;
+                overflow-wrap: break-word;
+            }
+
+            .page-header-subtitle {
+                font-size: 9px !important;
+                line-height: 1.25 !important;
+                letter-spacing: 0.04em !important;
+                white-space: normal;
+            }
+
+            .page-header-back {
+                width: 36px !important;
+                height: 36px !important;
+                min-width: 36px !important;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 20px; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="h-full text-slate-800 antialiased flex flex-col bg-slate-50 selection:bg-blue-100 selection:text-[#0F4C81]">
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- HEADER TTĐHS_HVA CỐ ĐỊNH -->
+    <header class="sticky top-0 z-40 w-full overflow-hidden shadow-md no-print">
+        <!-- Digital Blue Gradient Background -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
+        
+        <!-- Glow Effects -->
+        <div class="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-cyan-300/20 blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-sky-300/15 blur-3xl pointer-events-none"></div>
+
+        <!-- Grid Pattern Overlay -->
+        <div class="absolute inset-0 opacity-[0.06] pointer-events-none"
+            style="background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px); background-size:28px 28px;">
+        </div>
+
+        <!-- Circuit Pattern SVG Overlay -->
+        <svg class="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" preserveAspectRatio="none">
+            <g stroke="white" stroke-width="1.2" fill="none">
+                <path d="M35 28 H120 V68 H200"/>
+                <path d="M300 20 V55 H390 V95"/>
+                <path d="M560 28 H650 V60 H760"/>
+            </g>
+            <g fill="white">
+                <circle cx="35" cy="28" r="2.6"/>
+                <circle cx="120" cy="68" r="2.6"/>
+                <circle cx="200" cy="68" r="2.6"/>
+                <circle cx="300" cy="20" r="2.6"/>
+                <circle cx="390" cy="55" r="2.6"/>
+                <circle cx="390" cy="95" r="2.6"/>
+                <circle cx="560" cy="28" r="2.6"/>
+                <circle cx="650" cy="60" r="2.6"/>
+                <circle cx="760" cy="60" r="2.6"/>
+            </g>
+        </svg>
+
+        <!-- Header Content Container -->
+        <div class="relative max-w-4xl mx-auto px-4 pt-4 pb-5 page-header-wrap">
+            <div class="flex items-center justify-between gap-3 min-w-0">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                    <button type="button" onclick="history.back()"
+                        class="page-header-back w-10 h-10 rounded-xl bg-white/10 border border-white/20 backdrop-blur hover:bg-white/20 transition flex items-center justify-center text-white active:scale-95 shrink-0"
+                        aria-label="Quay lại">
+                        <i class="bi bi-arrow-left text-lg"></i>
+                    </button>
+
+                    <div class="min-w-0 flex-1 mobile-safe-text">
+                        <div class="page-header-subtitle text-white/80 font-semibold uppercase tracking-wider text-[11px]">
+                            THPT HÒA VANG - TTĐHS_HVA
+                        </div>
+                        <h1 class="page-header-title text-white text-xl font-extrabold uppercase tracking-tight">
+                            KHO VĂN BẢN ĐIỆN TỬ
+                        </h1>
+                    </div>
                 </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl flex items-center gap-2 border border-slate-200">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="hidden sm:inline">Trực tuyến</span>
+
+                <div class="hidden sm:flex shrink-0 items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-white text-xs font-medium whitespace-nowrap">Trực tuyến</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CONTAINER (Bung rộng toàn màn hình max-w-7xl) -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 space-y-6">
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 pb-32 overflow-y-auto no-print">
+        <div class="space-y-6">
+            
+            <!-- PHẦN 1: KHO VĂN BẢN -->
+            <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
+                <!-- KHỐI TIÊU ĐỀ HÀNG TRÊN -->
+                <div class="flex items-start justify-between gap-2 mb-3 border-b border-slate-100 pb-2.5">
+                    <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
+                        <i class="bi bi-folder-fill text-lg text-blue-600 shrink-0"></i>
+                        <span>KHO VĂN BẢN</span>
+                    </div>
 
-        <!-- PHẦN 1: THỐNG KÊ TỔNG QUAN -->
-        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm space-y-4">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                <div class="flex items-center gap-3">
-                    <span class="p-2.5 bg-blue-50 text-[#0F4C81] rounded-xl text-xl flex items-center justify-center shadow-inner"><i class="bi bi-folder2-open"></i></span> 
-                    <div>
-                        <h3 id="kho-hien-thi-title" class="text-slate-900 font-bold text-base sm:text-lg uppercase tracking-tight">VĂN BẢN ĐẾN - SỞ GD&ĐT ĐÀ NẴNG</h3>
-                        <p class="text-xs text-slate-500 font-medium">Tra cứu, điều hành và quản lý tệp tin văn bản điện tử</p>
+                    <!-- Bên phải: Ngày hiện tại & Trực tuyến -->
+                    <div class="flex items-center gap-2 shrink-0">
+                        <div id="displayNgayHienTai" class="flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                            <i class="bi bi-calendar3 text-slate-400"></i>
+                            <span>--/--/----</span>
+                        </div>
+                        <div class="flex sm:hidden items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-50 border border-emerald-200">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-emerald-700 text-[10px] font-semibold">Online</span>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="loadDataAndRender()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
-                        <i class="bi bi-arrow-clockwise"></i> <span>Tải lại dữ liệu</span>
+
+                <!-- Danh sách thư mục phân loại văn bản -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                    <button type="button" onclick="selectFolder('01')" class="folder-btn flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300 transition text-left group">
+                        <div class="flex items-center gap-2.5 truncate">
+                            <span class="text-base">📂</span>
+                            <span class="text-xs font-bold text-slate-700 group-hover:text-[#0F4C81] truncate">01. Văn bản Trung ương</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-xs text-slate-400 group-hover:text-[#0F4C81]"></i>
+                    </button>
+
+                    <button type="button" onclick="selectFolder('02')" class="folder-btn flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300 transition text-left group">
+                        <div class="flex items-center gap-2.5 truncate">
+                            <span class="text-base">📂</span>
+                            <span class="text-xs font-bold text-slate-700 group-hover:text-[#0F4C81] truncate">02. Văn bản Thành phố Đà Nẵng</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-xs text-slate-400 group-hover:text-[#0F4C81]"></i>
+                    </button>
+
+                    <button type="button" onclick="selectFolder('03')" class="folder-btn flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300 transition text-left group">
+                        <div class="flex items-center gap-2.5 truncate">
+                            <span class="text-base">📂</span>
+                            <span class="text-xs font-bold text-slate-700 group-hover:text-[#0F4C81] truncate">03. Sở GD&ĐT Đà Nẵng</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-xs text-slate-400 group-hover:text-[#0F4C81]"></i>
+                    </button>
+
+                    <button type="button" onclick="selectFolder('04')" class="folder-btn flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300 transition text-left group">
+                        <div class="flex items-center gap-2.5 truncate">
+                            <span class="text-base">📂</span>
+                            <span class="text-xs font-bold text-slate-700 group-hover:text-[#0F4C81] truncate">04. Cơ quan khác</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-xs text-slate-400 group-hover:text-[#0F4C81]"></i>
+                    </button>
+
+                    <button type="button" onclick="selectFolder('05')" class="folder-btn sm:col-span-2 flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300 transition text-left group">
+                        <div class="flex items-center gap-2.5 truncate">
+                            <span class="text-base">📂</span>
+                            <span class="text-xs font-bold text-slate-700 group-hover:text-[#0F4C81] truncate">05. Văn bản đi</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-xs text-slate-400 group-hover:text-[#0F4C81]"></i>
                     </button>
                 </div>
-            </div>
+            </section>
 
-            <div class="grid grid-cols-3 gap-3 pt-3 border-t border-slate-100 text-xs sm:text-sm text-slate-600 font-medium">
-                <div class="bg-slate-50/80 p-3.5 rounded-xl border border-slate-200/60">
-                    <span class="text-slate-500 block text-[11px] font-semibold uppercase">Tổng số</span> 
-                    <span id="stat-total" class="text-slate-900 font-bold text-base sm:text-xl mt-0.5 block">0 <span class="text-xs font-normal text-slate-500">VB</span></span>
+            <!-- PHẦN 2: CẬP NHẬT VĂN BẢN -->
+            <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
+                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81] mb-3 border-b border-slate-100 pb-2.5">
+                    <i class="bi bi-clock-history text-lg text-blue-600"></i>
+                    <span>CẬP NHẬT VĂN BẢN</span>
                 </div>
-                <div class="bg-rose-50/40 p-3.5 rounded-xl border border-rose-100">
-                    <span id="stat-active-label" class="text-rose-600/80 block text-[11px] font-semibold uppercase">Chưa đọc</span> 
-                    <span id="stat-active" class="text-rose-600 font-bold text-base sm:text-xl mt-0.5 block">0</span>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
+                        <input type="radio" name="locCapNhat" value="homNay" checked onchange="filterTime(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
+                        <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Văn bản hôm nay</span>
+                    </label>
+                    <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
+                        <input type="radio" name="locCapNhat" value="3ngay" onchange="filterTime(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
+                        <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">03 ngày gần nhất</span>
+                    </label>
+                    <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
+                        <input type="radio" name="locCapNhat" value="tuanNay" onchange="filterTime(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
+                        <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Tuần này</span>
+                    </label>
+                    <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
+                        <input type="radio" name="locCapNhat" value="thangNay" onchange="filterTime(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
+                        <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Tháng này</span>
+                    </label>
                 </div>
-                <div class="bg-emerald-50/40 p-3.5 rounded-xl border border-emerald-100">
-                    <span class="text-emerald-600/80 block text-[11px] font-semibold uppercase">Hôm nay</span> 
-                    <span id="stat-today" class="text-emerald-600 font-bold text-base sm:text-xl mt-0.5 block">0</span>
+            </section>
+
+            <!-- PHẦN 3: TRA CỨU VĂN BẢN -->
+            <section class="bg-white rounded-2xl border border-blue-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md bg-gradient-to-b from-blue-50/30 to-transparent">
+                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81] mb-3 border-b border-blue-100 pb-2.5">
+                    <i class="bi bi-search text-lg text-blue-600"></i>
+                    <span>TRA CỨU VĂN BẢN</span>
                 </div>
-            </div>
-        </div>
 
-        <!-- PHẦN 2: TRA CỨU & BỘ LỌC NÂNG CAO -->
-        <div class="bg-white rounded-2xl border border-blue-200/80 shadow-sm p-4 sm:p-5 bg-gradient-to-b from-blue-50/20 to-transparent space-y-4">
-            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81] border-b border-blue-100 pb-2">
-                <i class="bi bi-funnel text-base text-blue-600"></i>
-                <span>Tra cứu nhanh & Bộ lọc nâng cao</span>
-            </div>
+                <div class="space-y-3">
+                    <div class="relative">
+                        <input type="text" id="inputSearchVB" oninput="debouncedSearchVanBan()" placeholder="Tìm theo số văn bản, trích yếu, người ký hoặc cơ quan ban hành..." 
+                            class="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-10 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-[#0F4C81] focus:ring-2 focus:ring-blue-100 transition shadow-sm">
+                        <i class="bi bi-search absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+                        <button type="button" id="btnClearSearchVB" onclick="clearSearchVanBan()" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 p-0.5">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </button>
+                    </div>
 
-            <!-- Ô tìm kiếm chính -->
-            <div class="relative">
-                <input type="text" id="search-vb" placeholder="Gõ số văn bản, trích yếu hoặc cơ quan ban hành để tìm kiếm..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0F4C81] focus:border-[#0F4C81] shadow-sm transition-all">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 text-sm"><i class="bi bi-search"></i></span>
-            </div>
-
-            <!-- Các ô lọc nâng cao -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                <select id="filter-loai" class="w-full py-2 px-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-[#0F4C81]">
-                    <option value="">Loại: Tất cả</option>
-                    <option value="Công văn">Công văn</option>
-                    <option value="Quyết định">Quyết định</option>
-                    <option value="Kế hoạch">Kế hoạch</option>
-                    <option value="Thông báo">Thông báo</option>
-                </select>
-                <select id="filter-linhvuc" class="w-full py-2 px-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-[#0F4C81]">
-                    <option value="">Lĩnh vực: Tất cả</option>
-                    <option value="Chuyên môn">Chuyên môn</option>
-                    <option value="Tổ chức - Cán bộ">Tổ chức - Cán bộ</option>
-                    <option value="Hành chính - Tổng hợp">Hành chính - Tổng hợp</option>
-                    <option value="Tài chính - Cơ sở vật chất">Tài chính - CSVC</option>
-                </select>
-                <select id="filter-coquan" class="w-full py-2 px-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-[#0F4C81]">
-                    <option value="">Cơ quan: Tất cả</option>
-                    <option value="Sở GD&ĐT Đà Nẵng">Sở GD&ĐT Đà Nẵng</option>
-                    <option value="UBND TP. Đà Nẵng">UBND TP. Đà Nẵng</option>
-                    <option value="Bộ GD&ĐT">Bộ GD&ĐT</option>
-                </select>
-                <select id="filter-trangthai" class="w-full py-2 px-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-[#0F4C81]">
-                    <option value="">Trạng thái: Tất cả</option>
-                    <option id="opt-status-1" value="Chưa đọc">Chưa đọc</option>
-                    <option id="opt-status-2" value="Đã đọc">Đã đọc</option>
-                </select>
-            </div>
-
-            <!-- Khung xem chi tiết văn bản chọn nhanh -->
-            <div class="p-3.5 bg-blue-50/70 rounded-xl border border-blue-200/80 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs shadow-inner">
-                <div><span class="font-bold text-slate-500">Số/Ký hiệu:</span> <span id="lblKhoSoVB" class="font-bold text-[#0F4C81]">Chọn văn bản ở danh sách bên dưới</span></div>
-                <div><span class="font-bold text-slate-500">Ngày ban hành:</span> <span id="lblKhoNgayBH" class="text-slate-700">--/--/----</span></div>
-                <div><span class="font-bold text-slate-500">Lĩnh vực:</span> <span id="lblKhoLinhVuc" class="text-slate-700 font-semibold">--</span></div>
-                <div class="sm:col-span-2"><span class="font-bold text-slate-500">Cơ quan ban hành:</span> <span id="lblKhoCoQuan" class="text-slate-700 font-semibold">--</span></div>
-                <div class="sm:col-span-3"><span class="font-bold text-slate-500">Trích yếu:</span> <span id="lblKhoTrichYeu" class="text-slate-700 italic">--</span></div>
-            </div>
-        </div>
-
-        <!-- PHẦN 3: DANH SÁCH VĂN BẢN CHI TIẾT -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-            <div class="px-5 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1 bg-slate-50/50">
-                <span class="font-bold text-slate-800 text-sm" id="table-count-label">Danh sách văn bản chi tiết (0)</span>
-                <span class="text-xs text-slate-400 italic">Nhấn vào một dòng bất kỳ để xem nhanh thông tin chi tiết phía trên</span>
-            </div>
-
-            <!-- DESKTOP TABLE VIEW -->
-            <div class="hidden md:block w-full overflow-x-auto">
-                <table class="w-full text-sm text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-100/80 text-slate-600 font-semibold text-[11px] uppercase tracking-wider border-b border-slate-200">
-                            <th class="py-3 px-4 text-center w-12">STT</th>
-                            <th class="py-3 px-4 w-28">Ngày BH</th>
-                            <th class="py-3 px-4 w-36">Số văn bản</th>
-                            <th class="py-3 px-4 w-28">Loại VB</th>
-                            <th class="py-3 px-4 w-36">Lĩnh vực</th>
-                            <th class="py-3 px-4">Trích yếu nội dung</th>
-                            <th class="py-3 px-4 text-center w-32">Tệp</th>
-                            <th class="py-3 px-4 text-center w-32">Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody id="vb-table-body" class="divide-y divide-slate-100 text-slate-700">
-                        <!-- Render qua JS -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- MOBILE CARD VIEW -->
-            <div id="vb-mobile-body" class="block md:hidden divide-y divide-slate-100">
-                <!-- Render qua JS -->
-            </div>
-        </div>
-
-    </main>
-
-    <!-- BOTTOM ACTION BAR -->
-    <footer class="fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200/80 shadow-lg px-4 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
-            <div class="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                <i class="bi bi-info-circle text-[#0F4C81] text-base"></i>
-                <span class="hidden sm:inline">Hệ thống quản lý văn bản số:</span>
-                <span class="text-[#0F4C81] font-bold" id="footer-count">0 văn bản</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <button onclick="window.location.reload()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
-                    <i class="bi bi-arrow-clockwise"></i> <span>Làm mới</span>
-                </button>
-                <button onclick="window.print()" class="px-4 py-2 bg-[#0F4C81] hover:bg-[#0b3e69] text-white rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-md">
-                    <i class="bi bi-printer"></i> <span>In danh sách</span>
-                </button>
-            </div>
-        </div>
-    </footer>
-
-    <!-- LOGIC SCRIPT XỬ LÝ DỮ LIỆU -->
-    <script>
-        let allLogs = [];
-        let isVanBanDi = false;
-
-        function loadDataAndRender() {
-            // Lấy tham số trên URL (Ví dụ: Vanban.html?type=vb-di hoặc Vanban.html?type=so-gddt)
-            const urlParams = new URLSearchParams(window.location.search);
-            const typeParam = (urlParams.get('type') || 'vb-den-so-gddt').toLowerCase();
-
-            isVanBanDi = typeParam.includes('vb-di') || typeParam.includes('di');
-            
-            const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
-            const parsedLogs = JSON.parse(rawLogs);
-
-            // Lọc dữ liệu theo phân loại kho
-            allLogs = parsedLogs.filter(item => {
-                const coQuan = (item.CoQuanBanHanh || item.coQuanBanHanh || '').toLowerCase();
-                const soVB = (item.SoVanBan || item.soVanBan || '').toLowerCase();
-                
-                if (typeParam.includes('so-gddt')) {
-                    return coQuan.includes('sở') || soVB.includes('sgdđ');
-                }
-                if (typeParam.includes('ubnd') || typeParam.includes('da-nang')) {
-                    return coQuan.includes('ubnd') || coQuan.includes('đà nẵng');
-                }
-                if (typeParam.includes('trung-uong')) {
-                    return coQuan.includes('trung ương') || coQuan.includes('bộ');
-                }
-                return true;
-            });
-
-            // Tùy chỉnh tiêu đề hiển thị giao diện
-            let titleText = "VĂN BẢN ĐẾN - SỞ GD&ĐT ĐÀ NẴNG";
-            if (typeParam.includes('ubnd')) titleText = "VĂN BẢN ĐẾN - UBND TP. ĐÀ NẴNG";
-            else if (typeParam.includes('trung-uong')) titleText = "VĂN BẢN ĐẾN - CƠ QUAN TRUNG ƯƠNG";
-            else if (isVanBanDi) {
-                titleText = "QUẢN LÝ VĂN BẢN ĐI";
-                document.getElementById('stat-active-label').textContent = "Chờ phát hành";
-                document.getElementById('opt-status-1').value = "Chờ phát hành";
-                document.getElementById('opt-status-1').textContent = "Chờ phát hành";
-                document.getElementById('opt-status-2').value = "Đã phát hành";
-                document.getElementById('opt-status-2').textContent = "Đã phát hành";
-            }
-
-            document.getElementById('kho-hien-thi-title').textContent = titleText;
-            document.getElementById('page-main-title').textContent = titleText;
-
-            updateStatsAndRender(allLogs);
-        }
-
-        function updateStatsAndRender(dataToRender) {
-            const totalVB = dataToRender.length;
-            const activeCount = dataToRender.filter(item => isVanBanDi ? (item.TrangThai === 'Đã phát hành' || !item.TrangThai) : !item.DaDoc).length;
-            const todayStr = new Date().toISOString().split('T')[0];
-            const todayVB = dataToRender.filter(item => (item.NgayBanHanh || '').includes(todayStr)).length;
-
-            document.getElementById('stat-total').innerHTML = `${totalVB} <span class="text-xs font-normal text-slate-500">VB</span>`;
-            document.getElementById('stat-active').textContent = activeCount < 10 ? '0' + activeCount : activeCount;
-            document.getElementById('stat-today').textContent = todayVB < 10 ? '0' + todayVB : todayVB;
-
-            renderTable(dataToRender);
-        }
-
-        function renderTable(data) {
-            const tbody = document.getElementById('vb-table-body');
-            const mobileBody = document.getElementById('vb-mobile-body');
-            const countLabel = document.getElementById('table-count-label');
-            const footerCount = document.getElementById('footer-count');
-
-            countLabel.textContent = `Danh sách văn bản chi tiết (${data.length})`;
-            footerCount.textContent = `${data.length} văn bản`;
-
-            if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="py-10 text-center text-slate-400 italic text-sm">Không tìm thấy văn bản phù hợp trong hệ thống.</td></tr>`;
-                mobileBody.innerHTML = `<div class="p-8 text-center text-slate-400 italic text-sm">Không tìm thấy văn bản phù hợp trong hệ thống.</div>`;
-                return;
-            }
-
-            tbody.innerHTML = data.map((item, index) => {
-                const fileID = item.FileID || item.fileId || '';
-                const fileUrl = fileID ? `https://drive.google.com/file/d/${fileID}/view` : '#';
-                const downloadUrl = fileID ? `https://drive.google.com/uc?export=download&id=${fileID}` : '#';
-                const itemID = item.ID || item.id || item.SoVanBan;
-                const loaiVB = item.LoaiVanBan || item.loaiVanBan || 'Công văn';
-                const linhVuc = item.LinhVuc || item.linhVuc || 'Chuyên môn';
-                
-                let trangThai = item.TrangThai || (isVanBanDi ? 'Đã phát hành' : (item.DaDoc ? 'Đã đọc' : 'Chưa đọc'));
-                let badgeClass = 'bg-slate-100 text-slate-600';
-                if (trangThai === 'Chưa đọc' || trangThai === 'Chờ phát hành') {
-                    badgeClass = 'bg-rose-50 text-rose-700 font-bold border border-rose-200';
-                } else if (trangThai === 'Đã phát hành' || trangThai === 'Đã đọc') {
-                    badgeClass = 'bg-emerald-50 text-emerald-700 font-medium border border-emerald-200';
-                } else if (trangThai === 'Đã thu hồi') {
-                    badgeClass = 'bg-amber-50 text-amber-700 font-medium border border-amber-200';
-                }
-
-                return `
-                    <tr class="hover:bg-blue-50/40 transition-colors cursor-pointer group" onclick="chonXemChiTietVanBan('${encodeURIComponent(JSON.stringify(item))}')">
-                        <td class="py-3.5 px-4 text-center text-slate-400 font-medium text-xs">${index + 1}</td>
-                        <td class="py-3.5 px-4 text-slate-600 whitespace-nowrap text-xs">${item.NgayBanHanh || ''}</td>
-                        <td class="py-3.5 px-4 font-bold text-[#0F4C81] text-xs">${item.SoVanBan || ''}</td>
-                        <td class="py-3.5 px-4"><span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700">${loaiVB}</span></td>
-                        <td class="py-3.5 px-4"><span class="text-xs text-slate-600 font-medium">${linhVuc}</span></td>
-                        <td class="py-3.5 px-4 text-slate-800 text-xs leading-relaxed">
-                            <div class="line-clamp-2 font-normal">${item.TrichYeu || ''}</div>
-                        </td>
-                        <td class="py-3.5 px-4 text-center whitespace-nowrap" onclick="event.stopPropagation()">
-                            ${fileID ? `
-                                <div class="inline-flex items-center justify-center gap-1.5 text-xs font-medium">
-                                    <a href="${fileUrl}" target="_blank" class="text-blue-600 hover:bg-blue-100 px-2.5 py-1 bg-blue-50 rounded-lg transition-colors" title="Xem tệp"><i class="bi bi-eye"></i> Mở</a>
-                                    <a href="${downloadUrl}" class="text-emerald-600 hover:bg-emerald-100 px-2.5 py-1 bg-emerald-50 rounded-lg transition-colors" title="Tải xuống"><i class="bi bi-download"></i> Tải</a>
-                                </div>
-                            ` : '<span class="text-slate-300 italic text-xs">Trống</span>'}
-                        </td>
-                        <td class="py-3.5 px-4 text-center" onclick="event.stopPropagation()">
-                            <button onclick="cycleStatus('${itemID}')" class="px-3 py-1 text-xs rounded-full transition-all shadow-sm ${badgeClass}">
-                                ${trangThai}
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-            mobileBody.innerHTML = data.map((item, index) => {
-                const fileID = item.FileID || item.fileId || '';
-                const fileUrl = fileID ? `https://drive.google.com/file/d/${fileID}/view` : '#';
-                const downloadUrl = fileID ? `https://drive.google.com/uc?export=download&id=${fileID}` : '#';
-                const itemID = item.ID || item.id || item.SoVanBan;
-                const loaiVB = item.LoaiVanBan || item.loaiVanBan || 'Công văn';
-                const linhVuc = item.LinhVuc || item.linhVuc || 'Chuyên môn';
-                let trangThai = item.TrangThai || (isVanBanDi ? 'Đã phát hành' : (item.DaDoc ? 'Đã đọc' : 'Chưa đọc'));
-
-                return `
-                    <div class="p-4 space-y-2.5 bg-white hover:bg-slate-50 transition-colors" onclick="chonXemChiTietVanBan('${encodeURIComponent(JSON.stringify(item))}')">
-                        <div class="flex items-start justify-between gap-2">
-                            <div>
-                                <span class="text-xs font-bold text-slate-400">#${index + 1} • ${linhVuc}</span>
-                                <h4 class="font-bold text-[#0F4C81] text-sm mt-0.5">${item.SoVanBan || ''}</h4>
-                            </div>
-                            <button onclick="event.stopPropagation(); cycleStatus('${itemID}')" class="px-2.5 py-1 text-xs rounded-full font-medium transition-all bg-slate-100 text-slate-700">
-                                ${trangThai}
-                            </button>
-                        </div>
-                        <div class="flex items-center gap-2 text-xs text-slate-500">
-                            <span>📅 ${item.NgayBanHanh || ''}</span>
-                            <span>•</span>
-                            <span class="px-2 py-0.5 bg-slate-100 rounded text-slate-700 font-medium">${loaiVB}</span>
-                        </div>
-                        <p class="text-slate-700 text-xs leading-relaxed">${item.TrichYeu || ''}</p>
-                        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100" onclick="event.stopPropagation()">
-                            ${fileID ? `
-                                <a href="${fileUrl}" target="_blank" class="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="bi bi-eye"></i> Mở</a>
-                                <a href="${downloadUrl}" class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg flex items-center gap-1"><i class="bi bi-download"></i> Tải xuống</a>
-                            ` : '<span class="text-slate-400 text-xs italic">Không có tệp</span>'}
+                    <!-- CARD HIỂN THỊ THÔNG TIN VĂN BẢN TRA CỨU / ĐÃ CHỌN -->
+                    <div id="cardThongTinVanBan" class="p-3.5 bg-blue-50/80 rounded-xl border border-blue-200 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div><span class="font-bold text-slate-500">Số văn bản:</span> <span id="lblSoVB" class="font-bold text-[#0F4C81]">245/SGDĐT-VP</span></div>
+                        <div><span class="font-bold text-slate-500">Ngày ban hành:</span> <span id="lblNgayBH" class="text-slate-700">12/08/2026</span></div>
+                        <div><span class="font-bold text-slate-500">Loại văn bản:</span> <span id="lblLoaiVB" class="text-slate-700">Công văn</span></div>
+                        <div><span class="font-bold text-slate-500">Cơ quan ban hành:</span> <span id="lblCoQuan" class="text-slate-700">Sở GD&ĐT Đà Nẵng</span></div>
+                        <div><span class="font-bold text-slate-500">Người ký:</span> <span id="lblNguoiKy" class="text-slate-700">Nguyễn Văn B - Giám đốc</span></div>
+                        <div><span class="font-bold text-slate-500">Lĩnh vực:</span> <span id="lblLinhVuc" class="text-slate-700">Giáo dục Trung học</span></div>
+                        <div class="sm:col-span-2 border-t border-blue-200/60 pt-1.5 mt-0.5">
+                            <span class="font-bold text-slate-500">Trích yếu:</span> <span id="lblTrichYeu" class="text-slate-800 font-semibold italic">Về việc hướng dẫn triển khai nhiệm vụ năm học mới và nâng cao chất lượng quản lý hồ sơ điện tử.</span>
                         </div>
                     </div>
-                `;
-            }).join('');
-        }
+                </div>
+            </section>
 
-        function filterTableData() {
-            const keyword = (document.getElementById('search-vb').value || '').toLowerCase().trim();
-            const fLoai = document.getElementById('filter-loai').value;
-            const fLinhVuc = document.getElementById('filter-linhvuc').value;
-            const fCoQuan = document.getElementById('filter-coquan').value;
-            const fTrangThai = document.getElementById('filter-trangthai').value;
+            <!-- PHẦN 4: DANH SÁCH VĂN BẢN -->
+            <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                    <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
+                        <i class="bi bi-list-task text-lg text-blue-600"></i>
+                        <span>DANH SÁCH VĂN BẢN</span>
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-100 text-[#0F4C81] text-xs font-bold">
+                        Tổng số: 5 văn bản
+                    </span>
+                </div>
 
-            const filtered = allLogs.filter(item => {
-                const soVB = (item.SoVanBan || '').toLowerCase();
-                const trichYeu = (item.TrichYeu || '').toLowerCase();
-                const coQuanBH = (item.CoQuanBanHanh || item.coQuanBanHanh || '').toLowerCase();
-                
-                const matchKeyword = !keyword || soVB.includes(keyword) || trichYeu.includes(keyword) || coQuanBH.includes(keyword);
-                const matchLoai = !fLoai || (item.LoaiVanBan || item.loaiVanBan || 'Công văn') === fLoai;
-                const matchLinhVuc = !fLinhVuc || (item.LinhVuc || item.linhVuc || 'Chuyên môn') === fLinhVuc;
-                const matchCoQuan = !fCoQuan || coQuanBH.includes(fCoQuan.toLowerCase());
-                
-                const trangThai = item.TrangThai || (isVanBanDi ? 'Đã phát hành' : (item.DaDoc ? 'Đã đọc' : 'Chưa đọc'));
-                const matchTrangThai = !fTrangThai || trangThai === fTrangThai;
+                <!-- DESKTOP TABLE DISPLAY -->
+                <div class="hidden md:block overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100/80 text-slate-700 font-bold uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-3 text-center w-12">STT</th>
+                                <th class="p-3 w-24">Ngày</th>
+                                <th class="p-3 w-32">Số văn bản</th>
+                                <th class="p-3 w-24">Loại</th>
+                                <th class="p-3 w-32">Lĩnh vực</th>
+                                <th class="p-3">Trích yếu</th>
+                                <th class="p-3 text-center w-16">Tệp</th>
+                                <th class="p-3 text-center w-28">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 font-medium text-slate-800" id="desktopTableBody">
+                            <tr class="hover:bg-blue-50/40 transition">
+                                <td class="p-3 text-center font-bold text-slate-500">1</td>
+                                <td class="p-3">12/08/2026</td>
+                                <td class="p-3 font-bold text-[#0F4C81]">245/SGDĐT-VP</td>
+                                <td class="p-3">Công văn</td>
+                                <td class="p-3">Chuyên môn</td>
+                                <td class="p-3">Hướng dẫn thực hiện nhiệm vụ năm học 2026-2027</td>
+                                <td class="p-3 text-center">
+                                    <a href="#" class="text-red-500 hover:text-red-700 text-base" title="Tải tệp PDF"><i class="bi bi-file-earmark-pdf-fill"></i></a>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/40 transition">
+                                <td class="p-3 text-center font-bold text-slate-500">2</td>
+                                <td class="p-3">11/08/2026</td>
+                                <td class="p-3 font-bold text-[#0F4C81]">102/UBND-VX</td>
+                                <td class="p-3">Quyết định</td>
+                                <td class="p-3">Hành chính</td>
+                                <td class="p-3">Phê duyệt kế hoạch chuyển đổi số ngành GD&ĐT</td>
+                                <td class="p-3 text-center">
+                                    <a href="#" class="text-red-500 hover:text-red-700 text-base" title="Tải tệp PDF"><i class="bi bi-file-earmark-pdf-fill"></i></a>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/40 transition">
+                                <td class="p-3 text-center font-bold text-slate-500">3</td>
+                                <td class="p-3">10/08/2026</td>
+                                <td class="p-3 font-bold text-[#0F4C81]">89/TB-THPTHV</td>
+                                <td class="p-3">Thông báo</td>
+                                <td class="p-3">Khảo sát</td>
+                                <td class="p-3">Thông báo tập huấn ứng dụng AI trong quản lý giáo dục</td>
+                                <td class="p-3 text-center">
+                                    <a href="#" class="text-blue-500 hover:text-blue-700 text-base" title="Tải tệp Word"><i class="bi bi-file-earmark-word-fill"></i></a>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Đang xử lý</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/40 transition">
+                                <td class="p-3 text-center font-bold text-slate-500">4</td>
+                                <td class="p-3">08/08/2026</td>
+                                <td class="p-3 font-bold text-[#0F4C81]">56/KH-SGDĐT</td>
+                                <td class="p-3">Kế hoạch</td>
+                                <td class="p-3">Thi đua</td>
+                                <td class="p-3">Kế hoạch tổ chức hội thi Giáo viên dạy giỏi cấp Thành phố</td>
+                                <td class="p-3 text-center">
+                                    <a href="#" class="text-red-500 hover:text-red-700 text-base" title="Tải tệp PDF"><i class="bi bi-file-earmark-pdf-fill"></i></a>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-blue-50/40 transition">
+                                <td class="p-3 text-center font-bold text-slate-500">5</td>
+                                <td class="p-3">05/08/2026</td>
+                                <td class="p-3 font-bold text-[#0F4C81]">12/HD-THPTHV</td>
+                                <td class="p-3">Hướng dẫn</td>
+                                <td class="p-3">Nội bộ</td>
+                                <td class="p-3">Hướng dẫn khai thác Ngân hàng đề thi phân tích Rasch</td>
+                                <td class="p-3 text-center">
+                                    <a href="#" class="text-red-500 hover:text-red-700 text-base" title="Tải tệp PDF"><i class="bi bi-file-earmark-pdf-fill"></i></a>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                return matchKeyword && matchLoai && matchLinhVuc && matchCoQuan && matchTrangThai;
-            });
+                <!-- MOBILE CARD RESPONSIVE DISPLAY -->
+                <div class="block md:hidden space-y-3" id="mobileCardContainer">
+                    <!-- Item 1 -->
+                    <div class="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200 space-y-2">
+                        <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
+                            <span class="font-bold text-[#0F4C81] text-xs">245/SGDĐT-VP</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-800 line-clamp-2">
+                            Hướng dẫn thực hiện nhiệm vụ năm học 2026-2027
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
+                            <div><strong>Ngày:</strong> 12/08/2026</div>
+                            <div><strong>Loại:</strong> Công văn</div>
+                            <div><strong>Lĩnh vực:</strong> Chuyên môn</div>
+                            <div class="flex items-center gap-1">
+                                <strong>Tệp:</strong> 
+                                <a href="#" class="text-red-500 font-bold"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+                            </div>
+                        </div>
+                    </div>
 
-            renderTable(filtered);
-        }
+                    <!-- Item 2 -->
+                    <div class="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200 space-y-2">
+                        <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
+                            <span class="font-bold text-[#0F4C81] text-xs">102/UBND-VX</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-800 line-clamp-2">
+                            Phê duyệt kế hoạch chuyển đổi số ngành GD&ĐT
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
+                            <div><strong>Ngày:</strong> 11/08/2026</div>
+                            <div><strong>Loại:</strong> Quyết định</div>
+                            <div><strong>Lĩnh vực:</strong> Hành chính</div>
+                            <div class="flex items-center gap-1">
+                                <strong>Tệp:</strong> 
+                                <a href="#" class="text-red-500 font-bold"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
+                            </div>
+                        </div>
+                    </div>
 
-        function cycleStatus(id) {
-            const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
-            let parsedLogs = JSON.parse(rawLogs);
+                    <!-- Item 3 -->
+                    <div class="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200 space-y-2">
+                        <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
+                            <span class="font-bold text-[#0F4C81] text-xs">89/TB-THPTHV</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Đang xử lý</span>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-800 line-clamp-2">
+                            Thông báo tập huấn ứng dụng AI trong quản lý giáo dục
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
+                            <div><strong>Ngày:</strong> 10/08/2026</div>
+                            <div><strong>Loại:</strong> Thông báo</div>
+                            <div><strong>Lĩnh vực:</strong> Khảo sát</div>
+                            <div class="flex items-center gap-1">
+                                <strong>Tệp:</strong> 
+                                <a href="#" class="text-blue-500 font-bold"><i class="bi bi-file-earmark-word-fill"></i> DOCX</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-            const idx = parsedLogs.findIndex(item => String(item.ID || item.id || item.SoVanBan) === String(id));
-            if (idx === -1) return;
+        </div>
+    </main>
 
-            if (isVanBanDi) {
-                const current = parsedLogs[idx].TrangThai || 'Đã phát hành';
-                if (current === 'Chờ phát hành') parsedLogs[idx].TrangThai = 'Đã phát hành';
-                else if (current === 'Đã phát hành') parsedLogs[idx].TrangThai = 'Đã thu hồi';
-                else parsedLogs[idx].TrangThai = 'Chờ phát hành';
+    <!-- BOTTOM ACTION BAR CỐ ĐỊNH -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.08)] no-print">
+        <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <button type="button" onclick="history.back()" 
+                class="h-11 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition active:scale-95 flex items-center justify-center gap-1.5">
+                <i class="bi bi-house-door-fill"></i>
+                <span>Quay lại</span>
+            </button>
+
+            <button type="button" onclick="refreshData()" 
+                class="h-11 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-sm font-semibold transition active:scale-95 flex items-center justify-center gap-1.5">
+                <i class="bi bi-arrow-clockwise"></i>
+                <span>Làm mới</span>
+            </button>
+
+            <button type="button" onclick="openAdvancedSearch()" 
+                class="h-11 rounded-xl border-2 border-[#0F4C81] bg-white text-[#0F4C81] hover:bg-blue-50 text-sm font-bold transition active:scale-95 flex items-center justify-center gap-1.5">
+                <i class="bi bi-search text-base"></i>
+                <span>Tra cứu nâng cao</span>
+            </button>
+
+            <button type="button" onclick="receiveDocument()" 
+                class="h-11 rounded-xl bg-[#0F4C81] hover:bg-[#0b3e69] text-white text-sm font-bold shadow-md hover:shadow-lg transition active:scale-95 flex items-center justify-center gap-1.5">
+                <i class="bi bi-plus-lg"></i>
+                <span>Tiếp nhận văn bản</span>
+            </button>
+        </div>
+    </div>
+
+<script>
+    let searchDebounceTimer = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setCurrentDate();
+    });
+
+    function setCurrentDate() {
+        const now = new Date();
+        const formatted = now.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        document.getElementById('displayNgayHienTai').innerText = formatted;
+    }
+
+    // Chọn thư mục ở Phần 1
+    function selectFolder(code) {
+        showToast(`Đã chọn Kho thư mục: ${code}`, "info");
+    }
+
+    // Lọc theo thời gian ở Phần 2
+    function filterTime(val) {
+        showToast(`Đã lọc danh sách theo: ${val}`, "success");
+    }
+
+    // Tìm kiếm realtime ở Phần 3
+    function debouncedSearchVanBan() {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+            const q = document.getElementById('inputSearchVB').value.trim();
+            const btnClear = document.getElementById('btnClearSearchVB');
+            if (q !== '') {
+                btnClear.classList.remove('hidden');
+                showToast(`Đang lọc văn bản theo từ khóa: "${q}"`, "info");
             } else {
-                parsedLogs[idx].DaDoc = !parsedLogs[idx].DaDoc;
-                parsedLogs[idx].TrangThai = parsedLogs[idx].DaDoc ? 'Đã đọc' : 'Chưa đọc';
+                btnClear.classList.add('hidden');
             }
+        }, 350);
+    }
 
-            localStorage.setItem('TTDHS_PUBLISHED_LOGS', JSON.stringify(parsedLogs));
-            loadDataAndRender();
+    function clearSearchVanBan() {
+        document.getElementById('inputSearchVB').value = '';
+        document.getElementById('btnClearSearchVB').classList.add('hidden');
+        showToast("Đã xóa từ khóa tìm kiếm", "info");
+    }
+
+    // Nút ở Bottom Action Bar
+    function refreshData() {
+        showToast("Đã làm mới dữ liệu Kho Văn bản!", "success");
+    }
+
+    function openAdvancedSearch() {
+        showToast("Mở giao diện Tra cứu nâng cao", "info");
+    }
+
+    function receiveDocument() {
+        showToast("Mở màn hình Tiếp nhận văn bản mới", "info");
+    }
+
+    // Hệ thống Toast Notification
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast-enter pointer-events-auto p-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-xs font-bold text-white transition`;
+
+        let icon = 'bi-info-circle-fill';
+        if (type === 'success') {
+            toast.classList.add('bg-emerald-600');
+            icon = 'bi-check-circle-fill';
+        } else if (type === 'warning') {
+            toast.classList.add('bg-amber-500');
+            icon = 'bi-exclamation-triangle-fill';
+        } else if (type === 'error') {
+            toast.classList.add('bg-rose-600');
+            icon = 'bi-x-circle-fill';
+        } else {
+            toast.classList.add('bg-[#0F4C81]');
         }
 
-        function chonXemChiTietVanBan(encodedItem) {
-            try {
-                const item = JSON.parse(decodeURIComponent(encodedItem));
-                document.getElementById('lblKhoSoVB').textContent = item.SoVanBan || '--';
-                document.getElementById('lblKhoNgayBH').textContent = item.NgayBanHanh || '--/--/----';
-                document.getElementById('lblKhoLinhVuc').textContent = item.LinhVuc || item.linhVuc || 'Chuyên môn';
-                document.getElementById('lblKhoCoQuan').textContent = item.CoQuanBanHanh || item.coQuanBanHanh || '--';
-                document.getElementById('lblKhoTrichYeu').textContent = item.TrichYeu || '--';
-            } catch(e) {
-                console.error(e);
-            }
-        }
+        toast.innerHTML = `
+            <i class="bi ${icon} text-lg"></i>
+            <span class="flex-1">${message}</span>
+            <button type="button" onclick="this.parentElement.remove()" class="text-white/80 hover:text-white">
+                <i class="bi bi-x"></i>
+            </button>
+        `;
 
-        // Đăng ký sự kiện lắng nghe bộ lọc
-        document.getElementById('search-vb').addEventListener('input', filterTableData);
-        document.getElementById('filter-loai').addEventListener('change', filterTableData);
-        document.getElementById('filter-linhvuc').addEventListener('change', filterTableData);
-        document.getElementById('filter-coquan').addEventListener('change', filterTableData);
-        document.getElementById('filter-trangthai').addEventListener('change', filterTableData);
+        container.appendChild(toast);
 
-        // Khởi chạy khi tải trang xong
-        window.onload = loadDataAndRender;
-    </script>
+        setTimeout(() => {
+            toast.classList.remove('toast-enter');
+            toast.classList.add('toast-exit');
+            setTimeout(() => toast.remove(), 250);
+        }, 3000);
+    }
+</script>
 </body>
 </html>
