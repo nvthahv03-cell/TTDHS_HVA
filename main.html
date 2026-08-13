@@ -607,6 +607,11 @@ updateCurrentDate();
             window.location.href = 'Lichcongtac.html';
         });
     }
+// Gắn hàm vào window để HTML ở trang chính có thể gọi được bất cứ lúc nào
+window.moVanBan = function(id) {
+    // Code xử lý mở chi tiết văn bản
+    window.location.href = `Vanban.html?id=${id}`;
+};
 
 </script>
 </body>
