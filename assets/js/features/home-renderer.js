@@ -369,7 +369,7 @@ export function renderHome() {
       </div>
 
   <!-- Nút KHO VĂN BẢN - Chuyển sang file vanban.html -->
-<div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="window.location.href='vanban.html'">
+<div class="dashboard-item p-2 hover:bg-blue-50/80 rounded-xl cursor-pointer transition-colors" onclick="window.location.href='Vanban.html'">
   <div class="flex items-center justify-between">
     <span class="flex items-center gap-2.5 text-xs font-bold text-[#0F4C81]">
       <i class="bi bi-archive-fill text-blue-600 text-sm"></i> KHO VĂN BẢN
