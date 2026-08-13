@@ -822,20 +822,18 @@
             setTimeout(() => toast.remove(), 250);
         }, 3000);
     }
-    <!-- ================= SCRIPT XỬ LÝ DỮ LIỆU TỪ GATEWAY ================= -->
+   <!-- ================= SCRIPT HỢP NHẤT TOÀN BỘ CHO VANBAN.HTML ================= -->
 
- 
-    // 1. Thầy dán URL Web App (Gateway Apps Script) thực tế của Thầy vào đây
-     const GATEWAY_URL = "https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec"; 
+    // 1. LINK GATEWAY APPS SCRIPT ĐÃ CÓ CỦA THẦY
+    const GATEWAY_URL = "https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec";
 
-    // 2. STATE MANAGEMENT (Giữ nguyên các thuộc tính lọc, nhưng 'documents' sẽ nạp DỮ LIỆU THẬT)
+    // 2. KHAI BÁO APPSTATE DUY NHẤT (Đã hợp nhất toàn bộ trạng thái)
     const AppState = {
         activeModule: 'tat-ca',
-        timeFilter: 'homNay',
+        timeFilter: 'tatCa', // Mặc định hiện tất cả văn bản
         searchQuery: '',
-        selectedDocId: null,
         modulesMap: {
-            'tat-ca': 'Tất cả văn bản',
+            'tat-ca': 'TẤT CẢ VĂN BẢN',
             'vb-den-trung-uong': '01. Văn bản Trung ương',
             'vb-den-da-nang': '02. Văn bản Thành phố Đà Nẵng',
             'vb-den-so-gddt': '03. Sở GD&ĐT Đà Nẵng',
@@ -848,27 +846,55 @@
             'vb-di-cong-van': 'Văn bản đi: Công văn',
             'vb-di-giao-nhiem-vu': 'Văn bản đi: Giao nhiệm vụ'
         },
-        documents: [] // 👈 Rỗng ban đầu, sẽ nạp từ Google Sheets
+        documents: [] // Dữ liệu thật từ Google Sheets
     };
 
-    /* INITIALIZATION */
-    document.addEventListener('DOMContentLoaded', () => {
-        initApp();
-    });
-
-    function initApp() {
-        // Đọc tham số modul trên URL nếu có (ví dụ: ?module=vb-den-so-gddt)
-        const urlParams = new URLSearchParams(window.location.search);
-        const moduleParam = urlParams.get('module');
-        if (moduleParam && AppState.modulesMap[moduleParam]) {
-            AppState.activeModule = moduleParam;
+    // 3. CÁC HÀM XỬ LÝ GIAO DIỆN (Đã định nghĩa đầy đủ để sửa lỗi Not Defined)
+    
+    // Hàm ẩn/hiện menu con
+    function toggleSubmenu(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.toggle('hidden');
         }
-
-        // Tải dữ liệu thật từ Google Sheets qua Gateway
-        fetchDataFromGateway();
     }
 
-    // 3. HÀM TẢI DỮ LIỆU THẬT TỪ GOOGLE SHEETS
+    // Hàm chọn Danh mục (Module)
+    function loadModule(moduleKey) {
+        AppState.activeModule = moduleKey;
+        
+        // Cập nhật tiêu đề danh mục trên màn hình
+        const titleEl = document.getElementById('currentModuleTitle') || document.querySelector('h2');
+        if (titleEl && AppState.modulesMap[moduleKey]) {
+            titleEl.textContent = AppState.modulesMap[moduleKey].toUpperCase();
+        }
+        
+        renderTable();
+    }
+
+    // Hàm lọc theo thời gian (Hôm nay, 3 ngày, Tuần này...)
+    function handleTimeFilterChange(val) {
+        AppState.timeFilter = val;
+        renderTable();
+    }
+
+    // Hàm tìm kiếm theo ô nhập
+    function handleSearchInput(event) {
+        AppState.searchQuery = event.target.value || '';
+        renderTable();
+    }
+
+    // 4. KHỞI TẠO VÀ TẢI DỮ LIỆU TỪ GATEWAY
+    document.addEventListener('DOMContentLoaded', () => {
+        // Lắng nghe sự kiện gõ ô tìm kiếm
+        const searchBox = document.querySelector('input[type="text"]') || document.querySelector('input[placeholder*="Tìm"]');
+        if (searchBox) {
+            searchBox.addEventListener('input', handleSearchInput);
+        }
+
+        fetchDataFromGateway();
+    });
+
     async function fetchDataFromGateway() {
         const tbody = document.getElementById('danhSachData');
         if (tbody) {
@@ -876,64 +902,67 @@
                 <tr>
                     <td colspan="8" class="p-8 text-center text-slate-500 text-xs">
                         <i class="bi bi-arrow-repeat text-2xl inline-block animate-spin text-blue-600 mr-2"></i>
-                        Đang tải dữ liệu văn bản từ Google Sheets...
+                        Đang kết nối và tải dữ liệu từ Google Sheets...
                     </td>
                 </tr>`;
         }
 
         try {
-            const response = await fetch(GATEWAY_URL);
-            const result = await response.json();
-            
-            // Lấy mảng dữ liệu thật từ Gateway
-            const rawData = Array.isArray(result) ? result : (result.data || []);
-            
-            // Lưu dữ liệu thật vào AppState
-            AppState.documents = rawData;
-            
-            // Cập nhật số lượng đếm trên giao diện (nếu có element)
-            const countEl = document.getElementById('totalDocCount');
-            if (countEl) countEl.textContent = `${rawData.length} văn bản`;
+            const response = await fetch(GATEWAY_URL, {
+                method: 'GET',
+                redirect: 'follow'
+            });
 
-            // Vẽ dữ liệu ra bảng
+            const result = await response.json();
+            const rawData = Array.isArray(result) ? result : (result.data || []);
+            AppState.documents = rawData;
+
             renderTable();
         } catch (error) {
-            console.error("Lỗi khi kết nối Gateway:", error);
+            console.error("Lỗi Gateway:", error);
             if (tbody) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="8" class="p-4 text-center text-red-500 text-xs bg-red-50">
-                            <i class="bi bi-exclamation-triangle-fill mr-1"></i>
-                            Không thể tải dữ liệu thật. Thầy kiểm tra lại đường link GATEWAY_URL nhé!
+                        <td colspan="8" class="p-6 text-center text-red-500 text-xs bg-red-50">
+                            <i class="bi bi-exclamation-triangle-fill mr-1 text-base block mb-1"></i>
+                            Không nạp được dữ liệu. Thầy kiểm tra lại đường truyền mạng hoặc link Gateway nhé!
                         </td>
                     </tr>`;
             }
         }
     }
 
-    // 4. HÀM VẼ BẢNG DỮ LIỆU TỰ ĐỘNG LỌC THEO MODULE VÀ TÌM KIẾM
+    // 5. HÀM VẼ BẢNG DỮ LIỆU THẬT & LỌC TỰ ĐỘNG
     function renderTable() {
         const tbody = document.getElementById('danhSachData');
         if (!tbody) return;
 
-        // Lọc dữ liệu theo Module đang chọn & Từ khóa tìm kiếm
+        // Tiến hành Lọc dữ liệu theo Từ khóa & Danh mục
         let filtered = AppState.documents.filter(doc => {
-            const luongVB = (doc.LuongVanBan || doc["LuongVanBan"] || '').toLowerCase();
+            const q = AppState.searchQuery.toLowerCase().trim();
             const soVB = (doc.SoVanBan || doc["SoVanBan"] || '').toLowerCase();
             const trichYeu = (doc.TrichYeu || doc["TrichYeu"] || '').toLowerCase();
-            const q = AppState.searchQuery.toLowerCase();
+            const luongVB = (doc.LuongVanBan || doc["LuongVanBan"] || '').toLowerCase();
 
-            // Match từ khóa tìm kiếm
+            // Lọc từ khóa
             const matchSearch = !q || soVB.includes(q) || trichYeu.includes(q);
 
-            // Match module danh mục (Nếu 'tat-ca' thì lấy hết)
+            // Lọc danh mục
             let matchModule = true;
             if (AppState.activeModule !== 'tat-ca') {
-                const targetCat = AppState.modulesMap[AppState.activeModule] || '';
-                matchModule = luongVB.includes(targetCat.toLowerCase()) || luongVB.includes(AppState.activeModule.toLowerCase());
+                const targetCat = (AppState.modulesMap[AppState.activeModule] || '').toLowerCase();
+                matchModule = luongVB.includes(targetCat) || luongVB.includes(AppState.activeModule.toLowerCase());
             }
 
             return matchSearch && matchModule;
+        });
+
+        // Cập nhật đếm số lượng văn bản
+        const countBadges = document.querySelectorAll('.rounded-full');
+        countBadges.forEach(badge => {
+            if (badge.textContent.includes('văn bản')) {
+                badge.textContent = `${filtered.length} văn bản`;
+            }
         });
 
         if (filtered.length === 0) {
@@ -941,16 +970,15 @@
                 <tr>
                     <td colspan="8" class="p-8 text-center text-slate-400 text-xs font-medium">
                         <i class="bi bi-inbox text-2xl block mb-1 opacity-50"></i>
-                        Không tìm thấy văn bản phù hợp.
+                        Không có văn bản nào phù hợp.
                     </td>
                 </tr>`;
             return;
         }
 
-        // Render từng dòng văn bản (Đã bỏ Cột A / ID, Lấy Cột K / FileID tạo Link)
+        // Đổ dòng <tr> vào Bảng (Bỏ Cột A, Lấy Cột K làm Link File)
         tbody.innerHTML = filtered.map((item, index) => {
-            // Lấy FileID từ Cột K để tạo Link Google Drive
-            const fileId = item.FileID || item["FileID"] || "";
+            const fileId = item.FileID || item["FileID"] || item.fileId || "";
             let fileUrl = "";
             if (fileId) {
                 fileUrl = fileId.startsWith("http") 
@@ -960,28 +988,15 @@
 
             return `
                 <tr class="border-b border-slate-100 hover:bg-blue-50/50 transition-colors text-xs text-slate-700">
-                    <!-- 1. STT -->
                     <td class="p-3 text-center font-medium text-slate-400">${index + 1}</td>
-
-                    <!-- 2. NGÀY BH -->
-                    <td class="p-3 whitespace-nowrap">${item.NgayBanHanh || item["NgayBanHanh"] || '---'}</td>
-
-                    <!-- 3. SỐ VĂN BẢN -->
-                    <td class="p-3 font-bold text-[#0F4C81] whitespace-nowrap">${item.SoVanBan || item["SoVanBan"] || '---'}</td>
-
-                    <!-- 4. LOẠI -->
+                    <td class="p-3 whitespace-nowrap">${item.NgayBanHanh || item["NgayBanHanh"] || item.Ngay || '---'}</td>
+                    <td class="p-3 font-bold text-[#0F4C81] whitespace-nowrap">${item.SoVanBan || item["SoVanBan"] || item.SoVB || '---'}</td>
                     <td class="p-3 whitespace-nowrap">${item.LoaiVanBan || item["LoaiVanBan"] || '---'}</td>
-
-                    <!-- 5. PHÂN LOẠI -->
                     <td class="p-3 whitespace-nowrap">${item.LuongVanBan || item["LuongVanBan"] || '---'}</td>
-
-                    <!-- 6. TRÍCH YẾU -->
                     <td class="p-3 font-medium max-w-md">${item.TrichYeu || item["TrichYeu"] || '---'}</td>
-
-                    <!-- 7. TỆP (Link mở file trực tiếp từ Cột K) -->
                     <td class="p-3 text-center whitespace-nowrap">
                         ${fileUrl ? `
-                            <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" title="Mở file đính kèm"
+                            <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" title="Mở file đính kèm trên Google Drive"
                                class="inline-flex items-center justify-center p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition">
                                 <i class="bi bi-file-earmark-pdf-fill text-base"></i>
                             </a>
@@ -989,8 +1004,6 @@
                             <span class="text-slate-300"><i class="bi bi-dash-lg"></i></span>
                         `}
                     </td>
-
-                    <!-- 8. TRẠNG THÁI -->
                     <td class="p-3 text-center whitespace-nowrap">
                         <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-700">
                             Đã phát hành
