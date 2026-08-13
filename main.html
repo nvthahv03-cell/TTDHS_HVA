@@ -608,33 +608,28 @@ updateCurrentDate();
         });
     }
 
-  window.loadModule = function(moduleName) {
+ window.loadModule = function(moduleName) {
     const container = document.getElementById('app-main-content') || document.getElementById('main-content');
-    
-    // Kiểm tra xem có phải nhóm văn bản cần hiển thị dữ liệu không
-    if (moduleName.startsWith('vb-den-')) {
-        const data = window.getPublishedDataByModule(moduleName); // Lấy dữ liệu qua Gateway
+    if (!container) { window.location.href = `${moduleName}.html`; return; }
+
+    // Xử lý các mục Văn bản đến/đi (Không dùng fetch file nữa để tránh 404)
+    if (moduleName.startsWith('vb-den-') || moduleName.startsWith('vb-di-')) {
+        // Dữ liệu giả lập (thầy sẽ thay bằng dữ liệu thực từ Google Sheets sau)
+        const data = [{ ThoiGian: '13/08/2026', PayloadJSON: { soVanBan: 'Văn bản mẫu' }, TrangThai: 'ĐÃ PHÁT HÀNH' }];
         
-        // Render bảng dữ liệu từ dữ liệu đã lấy được
         container.innerHTML = `
-            <div class="p-6 bg-white rounded-2xl shadow-sm">
-                <h2 class="text-lg font-bold mb-4 text-emerald-700">Danh sách: ${moduleName.toUpperCase()}</h2>
-                <table class="w-full text-sm text-left">
-                    <thead class="text-xs uppercase bg-emerald-50">
-                        <tr>
-                            <th class="p-3">Thời gian</th>
-                            <th class="p-3">Trích yếu văn bản</th>
-                            <th class="p-3">Trạng thái</th>
-                            <th class="p-3">Thao tác</th>
-                        </tr>
+            <div class="p-6 bg-white rounded-2xl shadow-sm border">
+                <h2 class="text-lg font-bold mb-4 text-emerald-700">DANH SÁCH: ${moduleName.toUpperCase()}</h2>
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 text-left">
+                        <tr><th class="p-3">Thời gian</th><th class="p-3">Trích yếu</th><th class="p-3">Trạng thái</th></tr>
                     </thead>
                     <tbody>
                         ${data.map(item => `
                             <tr class="border-b">
                                 <td class="p-3">${item.ThoiGian}</td>
-                                <td class="p-3">${item.PayloadJSON.soVanBan || 'Đang cập nhật...'}</td>
-                                <td class="p-3"><span class="text-emerald-600 font-semibold">${item.TrangThai}</span></td>
-                                <td class="p-3"><a href="#" class="text-blue-500">Xem tệp</a></td>
+                                <td class="p-3">${item.PayloadJSON.soVanBan}</td>
+                                <td class="p-3 text-emerald-600 font-bold">${item.TrangThai}</td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -643,26 +638,13 @@ updateCurrentDate();
         `;
         return;
     }
-    // 3. Các module khác vẫn giữ nguyên logic cũ
-    const container = document.getElementById('app-main-content') || document.getElementById('main-content');
-    if (container) {
-        fetch(`${moduleName}.html`)
-            .then(res => {
-                if (!res.ok) throw new Error('Không tìm thấy file');
-                return res.text();
-            })
-            .then(html => {
-                container.innerHTML = html;
-            })
-            .catch(err => {
-                console.error("Không thể tải module:", err);
-                alert("Đang cập nhật giao diện cho mô đun này!");
-            });
-    } else {
-        window.location.href = `${moduleName}.html`;
-    }
+
+    // Xử lý các module thông thường (vẫn giữ cơ chế cũ)
+    fetch(`${moduleName}.html`)
+        .then(res => res.text())
+        .then(html => container.innerHTML = html)
+        .catch(err => console.error("Lỗi:", err));
 };
 </script>
-    
 </body>
 </html>
