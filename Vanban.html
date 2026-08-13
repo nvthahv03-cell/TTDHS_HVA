@@ -107,7 +107,6 @@
             }
         }
 
-        /* Print styles */
         @media print {
             body * { visibility: hidden; }
             #printArea, #printArea * { visibility: visible; }
@@ -123,19 +122,15 @@
 
     <!-- HEADER TTĐHS_HVA CỐ ĐỊNH -->
     <header class="sticky top-0 z-40 w-full overflow-hidden shadow-md no-print">
-        <!-- Digital Blue Gradient Background -->
         <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
         
-        <!-- Glow Effects -->
         <div class="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-cyan-300/20 blur-3xl pointer-events-none"></div>
         <div class="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-sky-300/15 blur-3xl pointer-events-none"></div>
 
-        <!-- Grid Pattern Overlay -->
         <div class="absolute inset-0 opacity-[0.06] pointer-events-none"
             style="background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px); background-size:28px 28px;">
         </div>
 
-        <!-- Circuit Pattern SVG Overlay -->
         <svg class="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" preserveAspectRatio="none">
             <g stroke="white" stroke-width="1.2" fill="none">
                 <path d="M35 28 H120 V68 H200"/>
@@ -155,11 +150,10 @@
             </g>
         </svg>
 
-        <!-- Header Content Container -->
         <div class="relative max-w-4xl mx-auto px-4 pt-4 pb-5 page-header-wrap">
             <div class="flex items-center justify-between gap-3 min-w-0">
                 <div class="flex items-center gap-3 min-w-0 flex-1">
-                    <button type="button" onclick="history.back()"
+                    <button type="button" onclick="handleGoBack()"
                         class="page-header-back w-10 h-10 rounded-xl bg-white/10 border border-white/20 backdrop-blur hover:bg-white/20 transition flex items-center justify-center text-white active:scale-95 shrink-0"
                         aria-label="Quay lại">
                         <i class="bi bi-arrow-left text-lg"></i>
@@ -177,7 +171,7 @@
 
                 <div class="hidden sm:flex shrink-0 items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="text-white text-xs font-medium whitespace-nowrap">Trực tuyến</span>
+                    <span id="connectionStatus" class="text-white text-xs font-medium whitespace-nowrap">Trực tuyến</span>
                 </div>
             </div>
         </div>
@@ -187,69 +181,24 @@
     <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 pb-32 overflow-y-auto no-print">
         <div class="space-y-6">
             
-            <!-- PHẦN 1: KHO VĂN BẢN -->
+            <!-- PHẦN 1: KHO VĂN BẢN (THƯ MỤC) -->
             <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
-                <!-- KHỐI TIÊU ĐỀ HÀNG TRÊN -->
                 <div class="flex items-start justify-between gap-2 mb-3 border-b border-slate-100 pb-2.5">
                     <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
                         <i class="bi bi-folder-fill text-lg text-blue-600 shrink-0"></i>
                         <span>KHO VĂN BẢN</span>
                     </div>
 
-                    <!-- Bên phải: Ngày hiện tại & Trực tuyến -->
                     <div class="flex items-center gap-2 shrink-0">
                         <div id="displayNgayHienTai" class="flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
                             <i class="bi bi-calendar3 text-slate-400"></i>
-                            <span>--/--/----</span>
-                        </div>
-                        <div class="flex sm:hidden items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-50 border border-emerald-200">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span class="text-emerald-700 text-[10px] font-semibold">Online</span>
+                            <span id="txtCurrentDate">--/--/----</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Danh sách thư mục phân loại văn bản -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                    <button type="button" onclick="selectFolder('01')" class="folder-btn flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300 transition text-left group">
-                        <div class="flex items-center gap-2.5 truncate">
-                            <span class="text-base">📂</span>
-                            <span class="text-xs font-bold text-slate-700 group-hover:text-[#0F4C81] truncate">01. Văn bản Trung ương</span>
-                        </div>
-                        <i class="bi bi-chevron-right text-xs text-slate-400 group-hover:text-[#0F4C81]"></i>
-                    </button>
-
-                    <button type="button" onclick="selectFolder('02')" class="folder-btn flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300 transition text-left group">
-                        <div class="flex items-center gap-2.5 truncate">
-                            <span class="text-base">📂</span>
-                            <span class="text-xs font-bold text-slate-700 group-hover:text-[#0F4C81] truncate">02. Văn bản Thành phố Đà Nẵng</span>
-                        </div>
-                        <i class="bi bi-chevron-right text-xs text-slate-400 group-hover:text-[#0F4C81]"></i>
-                    </button>
-
-                    <button type="button" onclick="selectFolder('03')" class="folder-btn flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300 transition text-left group">
-                        <div class="flex items-center gap-2.5 truncate">
-                            <span class="text-base">📂</span>
-                            <span class="text-xs font-bold text-slate-700 group-hover:text-[#0F4C81] truncate">03. Sở GD&ĐT Đà Nẵng</span>
-                        </div>
-                        <i class="bi bi-chevron-right text-xs text-slate-400 group-hover:text-[#0F4C81]"></i>
-                    </button>
-
-                    <button type="button" onclick="selectFolder('04')" class="folder-btn flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300 transition text-left group">
-                        <div class="flex items-center gap-2.5 truncate">
-                            <span class="text-base">📂</span>
-                            <span class="text-xs font-bold text-slate-700 group-hover:text-[#0F4C81] truncate">04. Cơ quan khác</span>
-                        </div>
-                        <i class="bi bi-chevron-right text-xs text-slate-400 group-hover:text-[#0F4C81]"></i>
-                    </button>
-
-                    <button type="button" onclick="selectFolder('05')" class="folder-btn sm:col-span-2 flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300 transition text-left group">
-                        <div class="flex items-center gap-2.5 truncate">
-                            <span class="text-base">📂</span>
-                            <span class="text-xs font-bold text-slate-700 group-hover:text-[#0F4C81] truncate">05. Văn bản đi</span>
-                        </div>
-                        <i class="bi bi-chevron-right text-xs text-slate-400 group-hover:text-[#0F4C81]"></i>
-                    </button>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1" id="folderGrid">
+                    <!-- Dynamic rendering qua JS -->
                 </div>
             </section>
 
@@ -262,19 +211,19 @@
 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                     <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                        <input type="radio" name="locCapNhat" value="homNay" checked onchange="filterTime(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
+                        <input type="radio" name="timeFilter" value="homNay" checked onchange="handleTimeFilterChange(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
                         <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Văn bản hôm nay</span>
                     </label>
                     <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                        <input type="radio" name="locCapNhat" value="3ngay" onchange="filterTime(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
+                        <input type="radio" name="timeFilter" value="3ngay" onchange="handleTimeFilterChange(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
                         <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">03 ngày gần nhất</span>
                     </label>
                     <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                        <input type="radio" name="locCapNhat" value="tuanNay" onchange="filterTime(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
+                        <input type="radio" name="timeFilter" value="tuanNay" onchange="handleTimeFilterChange(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
                         <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Tuần này</span>
                     </label>
                     <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                        <input type="radio" name="locCapNhat" value="thangNay" onchange="filterTime(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
+                        <input type="radio" name="timeFilter" value="thangNay" onchange="handleTimeFilterChange(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
                         <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Tháng này</span>
                     </label>
                 </div>
@@ -289,25 +238,17 @@
 
                 <div class="space-y-3">
                     <div class="relative">
-                        <input type="text" id="inputSearchVB" oninput="debouncedSearchVanBan()" placeholder="Tìm theo số văn bản, trích yếu, người ký hoặc cơ quan ban hành..." 
+                        <input type="text" id="searchInput" oninput="handleSearchInput()" placeholder="Tìm theo số văn bản, trích yếu, người ký hoặc cơ quan ban hành..." 
                             class="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-10 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-[#0F4C81] focus:ring-2 focus:ring-blue-100 transition shadow-sm">
                         <i class="bi bi-search absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                        <button type="button" id="btnClearSearchVB" onclick="clearSearchVanBan()" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 p-0.5">
+                        <button type="button" id="btnClearSearch" onclick="clearSearch()" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 p-0.5">
                             <i class="bi bi-x-circle-fill"></i>
                         </button>
                     </div>
 
-                    <!-- CARD HIỂN THỊ THÔNG TIN VĂN BẢN TRA CỨU / ĐÃ CHỌN -->
-                    <div id="cardThongTinVanBan" class="p-3.5 bg-blue-50/80 rounded-xl border border-blue-200 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                        <div><span class="font-bold text-slate-500">Số văn bản:</span> <span id="lblSoVB" class="font-bold text-[#0F4C81]">245/SGDĐT-VP</span></div>
-                        <div><span class="font-bold text-slate-500">Ngày ban hành:</span> <span id="lblNgayBH" class="text-slate-700">12/08/2026</span></div>
-                        <div><span class="font-bold text-slate-500">Loại văn bản:</span> <span id="lblLoaiVB" class="text-slate-700">Công văn</span></div>
-                        <div><span class="font-bold text-slate-500">Cơ quan ban hành:</span> <span id="lblCoQuan" class="text-slate-700">Sở GD&ĐT Đà Nẵng</span></div>
-                        <div><span class="font-bold text-slate-500">Người ký:</span> <span id="lblNguoiKy" class="text-slate-700">Nguyễn Văn B - Giám đốc</span></div>
-                        <div><span class="font-bold text-slate-500">Lĩnh vực:</span> <span id="lblLinhVuc" class="text-slate-700">Giáo dục Trung học</span></div>
-                        <div class="sm:col-span-2 border-t border-blue-200/60 pt-1.5 mt-0.5">
-                            <span class="font-bold text-slate-500">Trích yếu:</span> <span id="lblTrichYeu" class="text-slate-800 font-semibold italic">Về việc hướng dẫn triển khai nhiệm vụ năm học mới và nâng cao chất lượng quản lý hồ sơ điện tử.</span>
-                        </div>
+                    <!-- CARD THÔNG TIN VĂN BẢN ĐANG CHỌN -->
+                    <div id="selectedDocCard" class="p-3.5 bg-blue-50/80 rounded-xl border border-blue-200 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <!-- Render dynamic từ JS -->
                     </div>
                 </div>
             </section>
@@ -319,8 +260,8 @@
                         <i class="bi bi-list-task text-lg text-blue-600"></i>
                         <span>DANH SÁCH VĂN BẢN</span>
                     </div>
-                    <span class="px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-100 text-[#0F4C81] text-xs font-bold">
-                        Tổng số: 5 văn bản
+                    <span id="docCountBadge" class="px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-100 text-[#0F4C81] text-xs font-bold">
+                        Tổng số: 0 văn bản
                     </span>
                 </div>
 
@@ -330,7 +271,7 @@
                         <thead>
                             <tr class="bg-slate-100/80 text-slate-700 font-bold uppercase tracking-wider border-b border-slate-200">
                                 <th class="p-3 text-center w-12">STT</th>
-                                <th class="p-3 w-24">Ngày</th>
+                                <th class="p-3 w-24">Ngày BH</th>
                                 <th class="p-3 w-32">Số văn bản</th>
                                 <th class="p-3 w-24">Loại</th>
                                 <th class="p-3 w-32">Lĩnh vực</th>
@@ -340,169 +281,109 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-800" id="desktopTableBody">
-                            <tr class="hover:bg-blue-50/40 transition">
-                                <td class="p-3 text-center font-bold text-slate-500">1</td>
-                                <td class="p-3">12/08/2026</td>
-                                <td class="p-3 font-bold text-[#0F4C81]">245/SGDĐT-VP</td>
-                                <td class="p-3">Công văn</td>
-                                <td class="p-3">Chuyên môn</td>
-                                <td class="p-3">Hướng dẫn thực hiện nhiệm vụ năm học 2026-2027</td>
-                                <td class="p-3 text-center">
-                                    <a href="#" class="text-red-500 hover:text-red-700 text-base" title="Tải tệp PDF"><i class="bi bi-file-earmark-pdf-fill"></i></a>
-                                </td>
-                                <td class="p-3 text-center">
-                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-blue-50/40 transition">
-                                <td class="p-3 text-center font-bold text-slate-500">2</td>
-                                <td class="p-3">11/08/2026</td>
-                                <td class="p-3 font-bold text-[#0F4C81]">102/UBND-VX</td>
-                                <td class="p-3">Quyết định</td>
-                                <td class="p-3">Hành chính</td>
-                                <td class="p-3">Phê duyệt kế hoạch chuyển đổi số ngành GD&ĐT</td>
-                                <td class="p-3 text-center">
-                                    <a href="#" class="text-red-500 hover:text-red-700 text-base" title="Tải tệp PDF"><i class="bi bi-file-earmark-pdf-fill"></i></a>
-                                </td>
-                                <td class="p-3 text-center">
-                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-blue-50/40 transition">
-                                <td class="p-3 text-center font-bold text-slate-500">3</td>
-                                <td class="p-3">10/08/2026</td>
-                                <td class="p-3 font-bold text-[#0F4C81]">89/TB-THPTHV</td>
-                                <td class="p-3">Thông báo</td>
-                                <td class="p-3">Khảo sát</td>
-                                <td class="p-3">Thông báo tập huấn ứng dụng AI trong quản lý giáo dục</td>
-                                <td class="p-3 text-center">
-                                    <a href="#" class="text-blue-500 hover:text-blue-700 text-base" title="Tải tệp Word"><i class="bi bi-file-earmark-word-fill"></i></a>
-                                </td>
-                                <td class="p-3 text-center">
-                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Đang xử lý</span>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-blue-50/40 transition">
-                                <td class="p-3 text-center font-bold text-slate-500">4</td>
-                                <td class="p-3">08/08/2026</td>
-                                <td class="p-3 font-bold text-[#0F4C81]">56/KH-SGDĐT</td>
-                                <td class="p-3">Kế hoạch</td>
-                                <td class="p-3">Thi đua</td>
-                                <td class="p-3">Kế hoạch tổ chức hội thi Giáo viên dạy giỏi cấp Thành phố</td>
-                                <td class="p-3 text-center">
-                                    <a href="#" class="text-red-500 hover:text-red-700 text-base" title="Tải tệp PDF"><i class="bi bi-file-earmark-pdf-fill"></i></a>
-                                </td>
-                                <td class="p-3 text-center">
-                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-blue-50/40 transition">
-                                <td class="p-3 text-center font-bold text-slate-500">5</td>
-                                <td class="p-3">05/08/2026</td>
-                                <td class="p-3 font-bold text-[#0F4C81]">12/HD-THPTHV</td>
-                                <td class="p-3">Hướng dẫn</td>
-                                <td class="p-3">Nội bộ</td>
-                                <td class="p-3">Hướng dẫn khai thác Ngân hàng đề thi phân tích Rasch</td>
-                                <td class="p-3 text-center">
-                                    <a href="#" class="text-red-500 hover:text-red-700 text-base" title="Tải tệp PDF"><i class="bi bi-file-earmark-pdf-fill"></i></a>
-                                </td>
-                                <td class="p-3 text-center">
-                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
-                                </td>
-                            </tr>
+                            <!-- Render bằng JS -->
                         </tbody>
                     </table>
                 </div>
 
-                <!-- MOBILE CARD RESPONSIVE DISPLAY -->
+                <!-- MOBILE CARD DISPLAY -->
                 <div class="block md:hidden space-y-3" id="mobileCardContainer">
-                    <!-- Item 1 -->
-                    <div class="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200 space-y-2">
-                        <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
-                            <span class="font-bold text-[#0F4C81] text-xs">245/SGDĐT-VP</span>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
-                        </div>
-                        <div class="text-xs font-semibold text-slate-800 line-clamp-2">
-                            Hướng dẫn thực hiện nhiệm vụ năm học 2026-2027
-                        </div>
-                        <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
-                            <div><strong>Ngày:</strong> 12/08/2026</div>
-                            <div><strong>Loại:</strong> Công văn</div>
-                            <div><strong>Lĩnh vực:</strong> Chuyên môn</div>
-                            <div class="flex items-center gap-1">
-                                <strong>Tệp:</strong> 
-                                <a href="#" class="text-red-500 font-bold"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Item 2 -->
-                    <div class="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200 space-y-2">
-                        <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
-                            <span class="font-bold text-[#0F4C81] text-xs">102/UBND-VX</span>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã phát hành</span>
-                        </div>
-                        <div class="text-xs font-semibold text-slate-800 line-clamp-2">
-                            Phê duyệt kế hoạch chuyển đổi số ngành GD&ĐT
-                        </div>
-                        <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
-                            <div><strong>Ngày:</strong> 11/08/2026</div>
-                            <div><strong>Loại:</strong> Quyết định</div>
-                            <div><strong>Lĩnh vực:</strong> Hành chính</div>
-                            <div class="flex items-center gap-1">
-                                <strong>Tệp:</strong> 
-                                <a href="#" class="text-red-500 font-bold"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Item 3 -->
-                    <div class="p-3.5 bg-slate-50/80 rounded-xl border border-slate-200 space-y-2">
-                        <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
-                            <span class="font-bold text-[#0F4C81] text-xs">89/TB-THPTHV</span>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Đang xử lý</span>
-                        </div>
-                        <div class="text-xs font-semibold text-slate-800 line-clamp-2">
-                            Thông báo tập huấn ứng dụng AI trong quản lý giáo dục
-                        </div>
-                        <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
-                            <div><strong>Ngày:</strong> 10/08/2026</div>
-                            <div><strong>Loại:</strong> Thông báo</div>
-                            <div><strong>Lĩnh vực:</strong> Khảo sát</div>
-                            <div class="flex items-center gap-1">
-                                <strong>Tệp:</strong> 
-                                <a href="#" class="text-blue-500 font-bold"><i class="bi bi-file-earmark-word-fill"></i> DOCX</a>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Render bằng JS -->
                 </div>
             </section>
 
         </div>
     </main>
 
-    <!-- BOTTOM ACTION BAR CỐ ĐỊNH -->
+    <!-- MODAL TIẾP NHẬN / TẠO VĂN BẢN MỚI (GIỮ NGUYÊN KHUNG MODAL GIAONHIEMVU_V6) -->
+    <div id="actionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300 no-print">
+        <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform scale-95 transition-transform duration-300" id="modalContent">
+            <div class="bg-gradient-to-r from-[#062B5B] to-[#0F4C81] px-5 py-4 flex items-center justify-between text-white">
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-file-earmark-plus text-lg"></i>
+                    <h3 class="font-bold text-sm uppercase tracking-wide" id="modalTitle">TIẾP NHẬN VĂN BẢN MỚI</h3>
+                </div>
+                <button type="button" onclick="closeModal()" class="text-white/80 hover:text-white text-lg">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            
+            <form id="docForm" onsubmit="handleFormSubmit(event)" class="p-5 space-y-4 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Số văn bản <span class="text-rose-500">*</span></label>
+                        <input type="text" id="formSoVB" required placeholder="Ví dụ: 245/SGDĐT-VP" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Ngày ban hành <span class="text-rose-500">*</span></label>
+                        <input type="date" id="formNgayBH" required class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Loại văn bản</label>
+                        <select id="formLoaiVB" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
+                            <option value="Công văn">Công văn</option>
+                            <option value="Quyết định">Quyết định</option>
+                            <option value="Thông báo">Thông báo</option>
+                            <option value="Kế hoạch">Kế hoạch</option>
+                            <option value="Hướng dẫn">Hướng dẫn</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Kho thư mục</label>
+                        <select id="formFolder" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
+                            <option value="01">01. Văn bản Trung ương</option>
+                            <option value="02">02. Văn bản Thành phố Đà Nẵng</option>
+                            <option value="03" selected>03. Sở GD&ĐT Đà Nẵng</option>
+                            <option value="04">04. Cơ quan khác</option>
+                            <option value="05">05. Văn bản đi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Cơ quan ban hành</label>
+                    <input type="text" id="formCoQuan" placeholder="Sở Giáo dục và Đào tạo TP Đà Nẵng" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Trích yếu nội dung <span class="text-rose-500">*</span></label>
+                    <textarea id="formTrichYeu" rows="3" required placeholder="Nhập tóm tắt nội dung văn bản..." class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200">
+                        Hủy bỏ
+                    </button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-[#0F4C81] text-white font-bold hover:bg-[#0b3e69] shadow-sm">
+                        Lưu văn bản
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- BOTTOM ACTION BAR CỐ ĐỊNH (GIỮ NGUYÊN KHUNG VÀ EVENT CỦA GIAONHIEMVU_V6) -->
     <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.08)] no-print">
         <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            <button type="button" onclick="history.back()" 
+            <button type="button" onclick="handleGoBack()" 
                 class="h-11 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition active:scale-95 flex items-center justify-center gap-1.5">
                 <i class="bi bi-house-door-fill"></i>
                 <span>Quay lại</span>
             </button>
 
-            <button type="button" onclick="refreshData()" 
+            <button type="button" onclick="handleRefreshData()" 
                 class="h-11 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-sm font-semibold transition active:scale-95 flex items-center justify-center gap-1.5">
                 <i class="bi bi-arrow-clockwise"></i>
                 <span>Làm mới</span>
             </button>
 
-            <button type="button" onclick="openAdvancedSearch()" 
+            <button type="button" onclick="handleAdvancedSearch()" 
                 class="h-11 rounded-xl border-2 border-[#0F4C81] bg-white text-[#0F4C81] hover:bg-blue-50 text-sm font-bold transition active:scale-95 flex items-center justify-center gap-1.5">
                 <i class="bi bi-search text-base"></i>
                 <span>Tra cứu nâng cao</span>
             </button>
 
-            <button type="button" onclick="receiveDocument()" 
+            <button type="button" onclick="openCreateModal()" 
                 class="h-11 rounded-xl bg-[#0F4C81] hover:bg-[#0b3e69] text-white text-sm font-bold shadow-md hover:shadow-lg transition active:scale-95 flex items-center justify-center gap-1.5">
                 <i class="bi bi-plus-lg"></i>
                 <span>Tiếp nhận văn bản</span>
@@ -511,65 +392,296 @@
     </div>
 
 <script>
+    /**
+     * STATE MANAGEMENT (GIỮ NGUYÊN CẤU TRÚC STATE CỦA GIAONHIEMVU_V6)
+     */
+    const AppState = {
+        activeFolder: '03',
+        timeFilter: 'homNay',
+        searchQuery: '',
+        selectedDocId: 1,
+        folders: [
+            { id: '01', name: '01. Văn bản Trung ương' },
+            { id: '02', name: '02. Văn bản Thành phố Đà Nẵng' },
+            { id: '03', name: '03. Sở GD&ĐT Đà Nẵng' },
+            { id: '04', name: '04. Cơ quan khác' },
+            { id: '05', name: '05. Văn bản đi' }
+        ],
+        documents: [
+            { id: 1, folderId: '03', ngayBH: '12/08/2026', soVB: '245/SGDĐT-VP', loaiVB: 'Công văn', linhVuc: 'Chuyên môn', coQuan: 'Sở GD&ĐT Đà Nẵng', nguoiKy: 'Nguyễn Văn B - Giám đốc', trichYeu: 'Hướng dẫn thực hiện nhiệm vụ năm học 2026-2027 và nâng cao chất lượng quản lý hồ sơ điện tử.', fileType: 'pdf', status: 'Đã phát hành' },
+            { id: 2, folderId: '02', ngayBH: '11/08/2026', soVB: '102/UBND-VX', loaiVB: 'Quyết định', linhVuc: 'Hành chính', coQuan: 'UBND TP Đà Nẵng', nguoiKy: 'Lê Văn C - Phó Chủ tịch', trichYeu: 'Phê duyệt kế hoạch chuyển đổi số ngành GD&ĐT giai đoạn 2026-2030.', fileType: 'pdf', status: 'Đã phát hành' },
+            { id: 3, folderId: '03', ngayBH: '10/08/2026', soVB: '89/TB-THPTHV', loaiVB: 'Thông báo', linhVuc: 'Khảo sát', coQuan: 'THPT Hòa Vang', nguoiKy: 'Hiệu trưởng', trichYeu: 'Thông báo tập huấn ứng dụng AI và Rasch Model trong quản lý giáo dục.', fileType: 'docx', status: 'Đang xử lý' },
+            { id: 4, folderId: '03', ngayBH: '08/08/2026', soVB: '56/KH-SGDĐT', loaiVB: 'Kế hoạch', linhVuc: 'Thi đua', coQuan: 'Sở GD&ĐT Đà Nẵng', nguoiKy: 'Trần Văn D - Phó Giám đốc', trichYeu: 'Kế hoạch tổ chức hội thi Giáo viên dạy giỏi cấp Thành phố năm học 2026-2027.', fileType: 'pdf', status: 'Đã phát hành' },
+            { id: 5, folderId: '05', ngayBH: '05/08/2026', soVB: '12/HD-THPTHV', loaiVB: 'Hướng dẫn', linhVuc: 'Nội bộ', coQuan: 'THPT Hòa Vang', nguoiKy: 'Ban BGH', trichYeu: 'Hướng dẫn khai thác Ngân hàng đề thi phân tích Rasch cho tổ chuyên môn.', fileType: 'pdf', status: 'Đã phát hành' }
+        ]
+    };
+
     let searchDebounceTimer = null;
 
+    /* ROUTER & EVENT INITIALIZATION */
     document.addEventListener('DOMContentLoaded', () => {
-        setCurrentDate();
+        initApp();
     });
 
-    function setCurrentDate() {
+    function initApp() {
+        renderDate();
+        renderFolders();
+        renderDocumentList();
+        renderSelectedDocCard();
+        setupEventListeners();
+    }
+
+    function setupEventListeners() {
+        // Lắng nghe sự kiện phím Esc đóng modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    }
+
+    function renderDate() {
         const now = new Date();
         const formatted = now.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        document.getElementById('displayNgayHienTai').innerText = formatted;
+        const el = document.getElementById('txtCurrentDate');
+        if (el) el.innerText = formatted;
     }
 
-    // Chọn thư mục ở Phần 1
-    function selectFolder(code) {
-        showToast(`Đã chọn Kho thư mục: ${code}`, "info");
+    /* RENDER FOLDERS */
+    function renderFolders() {
+        const container = document.getElementById('folderGrid');
+        if (!container) return;
+
+        container.innerHTML = AppState.folders.map(f => {
+            const isActive = f.id === AppState.activeFolder;
+            return `
+                <button type="button" onclick="handleFolderSelect('${f.id}')" 
+                    class="folder-btn flex items-center justify-between p-3 rounded-xl border ${isActive ? 'border-[#0F4C81] bg-blue-50/80 shadow-sm' : 'border-slate-200 bg-slate-50/50 hover:bg-blue-50/60 hover:border-blue-300'} transition text-left group">
+                    <div class="flex items-center gap-2.5 truncate">
+                        <span class="text-base">📂</span>
+                        <span class="text-xs font-bold ${isActive ? 'text-[#0F4C81]' : 'text-slate-700 group-hover:text-[#0F4C81]'} truncate">${f.name}</span>
+                    </div>
+                    <i class="bi bi-chevron-right text-xs ${isActive ? 'text-[#0F4C81]' : 'text-slate-400 group-hover:text-[#0F4C81]'}"></i>
+                </button>
+            `;
+        }).join('');
     }
 
-    // Lọc theo thời gian ở Phần 2
-    function filterTime(val) {
-        showToast(`Đã lọc danh sách theo: ${val}`, "success");
+    function handleFolderSelect(id) {
+        AppState.activeFolder = id;
+        renderFolders();
+        renderDocumentList();
+        showToast(`Đã chọn kho: ${AppState.folders.find(f => f.id === id)?.name}`, 'info');
     }
 
-    // Tìm kiếm realtime ở Phần 3
-    function debouncedSearchVanBan() {
+    /* FILTER & SEARCH HANDLERS */
+    function handleTimeFilterChange(val) {
+        AppState.timeFilter = val;
+        renderDocumentList();
+        showToast(`Lọc theo mốc thời gian: ${val}`, 'success');
+    }
+
+    function handleSearchInput() {
         clearTimeout(searchDebounceTimer);
         searchDebounceTimer = setTimeout(() => {
-            const q = document.getElementById('inputSearchVB').value.trim();
-            const btnClear = document.getElementById('btnClearSearchVB');
-            if (q !== '') {
+            const input = document.getElementById('searchInput');
+            const btnClear = document.getElementById('btnClearSearch');
+            AppState.searchQuery = input.value.trim().toLowerCase();
+
+            if (AppState.searchQuery !== '') {
                 btnClear.classList.remove('hidden');
-                showToast(`Đang lọc văn bản theo từ khóa: "${q}"`, "info");
             } else {
                 btnClear.classList.add('hidden');
             }
-        }, 350);
+            renderDocumentList();
+        }, 300);
     }
 
-    function clearSearchVanBan() {
-        document.getElementById('inputSearchVB').value = '';
-        document.getElementById('btnClearSearchVB').classList.add('hidden');
-        showToast("Đã xóa từ khóa tìm kiếm", "info");
+    function clearSearch() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('btnClearSearch').classList.add('hidden');
+        AppState.searchQuery = '';
+        renderDocumentList();
+        showToast('Đã xóa bộ lọc tìm kiếm', 'info');
     }
 
-    // Nút ở Bottom Action Bar
-    function refreshData() {
-        showToast("Đã làm mới dữ liệu Kho Văn bản!", "success");
+    /* RENDER LIST (DESKTOP & MOBILE) */
+    function getFilteredDocs() {
+        return AppState.documents.filter(doc => {
+            const matchFolder = !AppState.activeFolder || doc.folderId === AppState.activeFolder;
+            const q = AppState.searchQuery;
+            const matchQuery = !q || doc.soVB.toLowerCase().includes(q) || doc.trichYeu.toLowerCase().includes(q) || doc.coQuan.toLowerCase().includes(q);
+            return matchFolder && matchQuery;
+        });
     }
 
-    function openAdvancedSearch() {
-        showToast("Mở giao diện Tra cứu nâng cao", "info");
+    function renderDocumentList() {
+        const filtered = getFilteredDocs();
+        const badge = document.getElementById('docCountBadge');
+        if (badge) badge.innerText = `Tổng số: ${filtered.length} văn bản`;
+
+        // Render Desktop Table
+        const desktopBody = document.getElementById('desktopTableBody');
+        if (desktopBody) {
+            if (filtered.length === 0) {
+                desktopBody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-slate-400 italic">Không tìm thấy văn bản phù hợp</td></tr>`;
+            } else {
+                desktopBody.innerHTML = filtered.map((doc, idx) => `
+                    <tr onclick="handleSelectDoc(${doc.id})" class="hover:bg-blue-50/40 cursor-pointer transition ${doc.id === AppState.selectedDocId ? 'bg-blue-50/70 font-semibold' : ''}">
+                        <td class="p-3 text-center font-bold text-slate-500">${idx + 1}</td>
+                        <td class="p-3">${doc.ngayBH}</td>
+                        <td class="p-3 font-bold text-[#0F4C81]">${doc.soVB}</td>
+                        <td class="p-3">${doc.loaiVB}</td>
+                        <td class="p-3">${doc.linhVuc}</td>
+                        <td class="p-3 truncate max-w-xs">${doc.trichYeu}</td>
+                        <td class="p-3 text-center">
+                            <i class="bi bi-file-earmark-${doc.fileType === 'pdf' ? 'pdf-fill text-red-500' : 'word-fill text-blue-500'} text-base"></i>
+                        </td>
+                        <td class="p-3 text-center">
+                            <span class="px-2 py-1 rounded-full text-[10px] font-bold ${doc.status === 'Đã phát hành' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${doc.status}</span>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Render Mobile Cards
+        const mobileContainer = document.getElementById('mobileCardContainer');
+        if (mobileContainer) {
+            if (filtered.length === 0) {
+                mobileContainer.innerHTML = `<div class="p-6 text-center text-slate-400 italic bg-white rounded-xl border border-slate-200">Không có văn bản nào</div>`;
+            } else {
+                mobileContainer.innerHTML = filtered.map(doc => `
+                    <div onclick="handleSelectDoc(${doc.id})" class="p-3.5 bg-slate-50/80 rounded-xl border ${doc.id === AppState.selectedDocId ? 'border-[#0F4C81] bg-blue-50/50' : 'border-slate-200'} space-y-2 cursor-pointer">
+                        <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
+                            <span class="font-bold text-[#0F4C81] text-xs">${doc.soVB}</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${doc.status === 'Đã phát hành' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${doc.status}</span>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-800 line-clamp-2">${doc.trichYeu}</div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
+                            <div><strong>Ngày:</strong> ${doc.ngayBH}</div>
+                            <div><strong>Loại:</strong> ${doc.loaiVB}</div>
+                            <div><strong>Lĩnh vực:</strong> ${doc.linhVuc}</div>
+                            <div class="flex items-center gap-1">
+                                <strong>Tệp:</strong> <span class="uppercase font-bold text-slate-700">${doc.fileType}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
     }
 
-    function receiveDocument() {
-        showToast("Mở màn hình Tiếp nhận văn bản mới", "info");
+    /* DETAIL CARD RENDER */
+    function handleSelectDoc(id) {
+        AppState.selectedDocId = id;
+        renderDocumentList();
+        renderSelectedDocCard();
     }
 
-    // Hệ thống Toast Notification
+    function renderSelectedDocCard() {
+        const card = document.getElementById('selectedDocCard');
+        if (!card) return;
+
+        const doc = AppState.documents.find(d => d.id === AppState.selectedDocId) || AppState.documents[0];
+        if (!doc) return;
+
+        card.innerHTML = `
+            <div><span class="font-bold text-slate-500">Số văn bản:</span> <span class="font-bold text-[#0F4C81]">${doc.soVB}</span></div>
+            <div><span class="font-bold text-slate-500">Ngày ban hành:</span> <span class="text-slate-700">${doc.ngayBH}</span></div>
+            <div><span class="font-bold text-slate-500">Loại văn bản:</span> <span class="text-slate-700">${doc.loaiVB}</span></div>
+            <div><span class="font-bold text-slate-500">Cơ quan ban hành:</span> <span class="text-slate-700">${doc.coQuan}</span></div>
+            <div><span class="font-bold text-slate-500">Người ký:</span> <span class="text-slate-700">${doc.nguoiKy}</span></div>
+            <div><span class="font-bold text-slate-500">Lĩnh vực:</span> <span class="text-slate-700">${doc.linhVuc}</span></div>
+            <div class="sm:col-span-2 border-t border-blue-200/60 pt-1.5 mt-0.5">
+                <span class="font-bold text-slate-500">Trích yếu:</span> <span class="text-slate-800 font-semibold italic">${doc.trichYeu}</span>
+            </div>
+        `;
+    }
+
+    /* MODAL SYSTEM (GIỮ NGUYÊN HOÀN TOÀN CẤU TRÚC MODAL) */
+    function openCreateModal() {
+        const modal = document.getElementById('actionModal');
+        const content = document.getElementById('modalContent');
+        if (!modal || !content) return;
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }, 10);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('actionModal');
+        const content = document.getElementById('modalContent');
+        if (!modal || !content) return;
+
+        content.classList.remove('scale-100');
+        content.classList.add('scale-95');
+        modal.classList.add('opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 200);
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        const soVB = document.getElementById('formSoVB').value.trim();
+        const ngayBH = document.getElementById('formNgayBH').value;
+        const loaiVB = document.getElementById('formLoaiVB').value;
+        const folderId = document.getElementById('formFolder').value;
+        const coQuan = document.getElementById('formCoQuan').value.trim() || 'THPT Hòa Vang';
+        const trichYeu = document.getElementById('formTrichYeu').value.trim();
+
+        const newDoc = {
+            id: Date.now(),
+            folderId: folderId,
+            ngayBH: ngayBH.split('-').reverse().join('/'),
+            soVB: soVB,
+            loaiVB: loaiVB,
+            linhVuc: 'Hành chính',
+            coQuan: coQuan,
+            nguoiKy: 'Ban BGH',
+            trichYeu: trichYeu,
+            fileType: 'pdf',
+            status: 'Đã phát hành'
+        };
+
+        AppState.documents.unshift(newDoc);
+        AppState.selectedDocId = newDoc.id;
+        
+        closeModal();
+        renderDocumentList();
+        renderSelectedDocCard();
+        showToast('Đã tiếp nhận và lưu văn bản thành công!', 'success');
+
+        document.getElementById('docForm').reset();
+    }
+
+    /* BOTTOM ACTION BUTTON HANDLERS */
+    function handleGoBack() {
+        showToast('Quay lại trang trước', 'info');
+        if (window.history.length > 1) {
+            window.history.back();
+        }
+    }
+
+    function handleRefreshData() {
+        renderFolders();
+        renderDocumentList();
+        renderSelectedDocCard();
+        showToast('Đã làm mới dữ liệu hệ thống!', 'success');
+    }
+
+    function handleAdvancedSearch() {
+        showToast('Mở bộ lọc tra cứu nâng cao', 'info');
+    }
+
+    /* TOAST NOTIFICATION SYSTEM */
     function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
+        if (!container) return;
+
         const toast = document.createElement('div');
         toast.className = `toast-enter pointer-events-auto p-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-xs font-bold text-white transition`;
 
