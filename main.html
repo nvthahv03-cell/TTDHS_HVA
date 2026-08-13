@@ -663,89 +663,100 @@ window.loadModule = function(moduleName) {
         const todayVB = data.filter(item => (item.NgayBanHanh || '').includes(todayStr)).length;
 
         container.innerHTML = `
-            <div class="w-full max-w-7xl mx-auto space-y-5 p-3 md:p-6 bg-slate-50/50 min-h-screen">
-                <!-- Header & Thống kê -->
-                <div class="bg-white border border-slate-200/80 rounded-2xl p-5 md:p-6 shadow-sm">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <div class="w-full max-w-7xl mx-auto space-y-4 p-3 md:p-6 bg-slate-50 min-h-screen">
+                <!-- Header Card -->
+                <div class="bg-white border border-slate-200 rounded-xl p-4 md:p-6 shadow-sm">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                         <div class="flex items-center gap-3 text-slate-900 font-bold text-base md:text-lg">
-                            <span class="text-amber-500 text-xl md:text-2xl">📁</span> 
-                            <span class="uppercase">${moduleName}</span>
+                            <span class="p-2 bg-amber-50 text-amber-600 rounded-lg text-xl">📁</span> 
+                            <span class="uppercase tracking-wide">${moduleName}</span>
                         </div>
-                        <div class="w-full md:w-72">
+                        <div class="w-full sm:w-80">
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-sm">🔍</span>
-                                <input type="text" id="search-vb" placeholder="Tìm kiếm văn bản..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
+                                <input type="text" id="search-vb" placeholder="Tìm kiếm số VB, trích yếu..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
                             </div>
                         </div>
                     </div>
-                    <hr class="border-slate-100 my-4">
-                    <div class="flex flex-wrap items-center gap-6 md:gap-10 text-xs md:text-sm text-slate-600 font-medium">
-                        <div>Tổng số: <strong class="text-slate-900 font-bold">${totalVB} VB</strong></div>
-                        <div>Chưa đọc: <strong class="text-rose-600 font-bold">${unreadVB < 10 ? '0' + unreadVB : unreadVB}</strong></div>
-                        <div>Mới hôm nay: <strong class="text-emerald-600 font-bold">${todayVB < 10 ? '0' + todayVB : todayVB}</strong></div>
+                    <div class="grid grid-cols-3 gap-3 pt-3 border-t border-slate-100 text-xs md:text-sm text-slate-600 font-medium">
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            Tổng số: <span class="text-slate-900 font-bold block text-base mt-0.5">${totalVB} VB</span>
+                        </div>
+                        <div class="bg-rose-50/50 p-3 rounded-lg border border-rose-100/60">
+                            Chưa đọc: <span class="text-rose-600 font-bold block text-base mt-0.5">${unreadVB < 10 ? '0' + unreadVB : unreadVB}</span>
+                        </div>
+                        <div class="bg-emerald-50/50 p-3 rounded-lg border border-emerald-100/60">
+                            Hôm nay: <span class="text-emerald-600 font-bold block text-base mt-0.5">${todayVB < 10 ? '0' + todayVB : todayVB}</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Danh sách Văn bản (Responsive: Table cho Desktop, Cards cho Mobile) -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-                    <div class="p-4 md:p-5 border-b border-slate-100 font-bold text-slate-900 text-sm md:text-base bg-white">
-                        Bảng danh sách
+                <!-- Main Content Container -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-slate-100 font-bold text-slate-800 text-sm flex items-center justify-between bg-slate-50/50">
+                        <span>Danh sách văn bản chi tiết</span>
+                        <span class="text-xs font-normal text-slate-500">Tối ưu trên cả máy tính và điện thoại</span>
                     </div>
 
-                    <!-- 1. GIAO DIỆN DESKTOP & TABLET (Dạng Bảng) -->
-                    <div class="hidden md:block overflow-x-auto">
+                    <!-- DESKTOP TABLE VIEW (>= 768px) -->
+                    <div class="hidden md:block w-full overflow-x-auto">
                         <table class="w-full text-sm text-left border-collapse">
-                            <thead class="text-[11px] uppercase bg-slate-50/75 text-slate-500 border-b border-slate-200">
-                                <tr>
-                                    <th class="p-4 w-14 text-center">STT</th>
-                                    <th class="p-4 w-28">Ngày BH</th>
-                                    <th class="p-4 w-48">Số văn bản</th>
-                                    <th class="p-4 w-28">Loại VB</th>
-                                    <th class="p-4">Trích yếu</th>
-                                    <th class="p-4 w-36 text-center">Tệp</th>
-                                    <th class="p-4 w-28 text-center">Trạng thái</th>
+                            <thead>
+                                <tr class="bg-slate-100/80 text-slate-600 font-semibold text-xs uppercase tracking-wider border-b border-slate-200">
+                                    <th class="py-3 px-4 text-center w-12">STT</th>
+                                    <th class="py-3 px-4 w-32">Ngày ban hành</th>
+                                    <th class="py-3 px-4 w-44">Số văn bản</th>
+                                    <th class="py-3 px-4 w-32">Loại VB</th>
+                                    <th class="py-3 px-4">Trích yếu nội dung</th>
+                                    <th class="py-3 px-4 text-center w-28">Tệp</th>
+                                    <th class="py-3 px-4 text-center w-28">Trạng thái</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100">
+                            <tbody class="divide-y divide-slate-100 text-slate-700">
                                 ${data.length > 0 ? data.map((item, index) => {
                                     const fileID = item.FileID || item.fileId || '';
                                     const fileUrl = fileID ? `https://drive.google.com/file/d/${fileID}/view` : '#';
                                     const downloadUrl = fileID ? `https://drive.google.com/uc?export=download&id=${fileID}` : '#';
                                     const isRead = item.DaDoc ? true : false;
                                     const itemID = item.ID || item.id || item.SoVanBan;
-                                    const loaiVB = item.LoaiVanBan || (item.SoVanBan?.toLowerCase().includes('qđ') ? 'Quyết định' : 'Công văn');
+                                    const loaiVB = item.LoaiVanBan || item.loaiVanBan || (item.SoVanBan?.toLowerCase().includes('qđ') ? 'Quyết định' : 'Công văn');
 
                                     return `
                                         <tr data-id="${itemID}" class="hover:bg-slate-50/80 transition-colors">
-                                            <td class="p-4 text-center text-slate-400 font-medium">${index + 1}</td>
-                                            <td class="p-4 text-slate-600 whitespace-nowrap text-xs">${item.NgayBanHanh || ''}</td>
-                                            <td class="p-4 font-semibold text-slate-800 text-xs">${item.SoVanBan || ''}</td>
-                                            <td class="p-4">
-                                                <span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[11px] font-medium uppercase tracking-wider">${loaiVB}</span>
+                                            <td class="py-3.5 px-4 text-center text-slate-400 font-medium text-xs">${index + 1}</td>
+                                            <td class="py-3.5 px-4 text-slate-600 whitespace-nowrap text-xs">${item.NgayBanHanh || ''}</td>
+                                            <td class="py-3.5 px-4 font-semibold text-slate-900 text-xs">${item.SoVanBan || ''}</td>
+                                            <td class="py-3.5 px-4">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700">
+                                                    ${loaiVB}
+                                                </span>
                                             </td>
-                                            <td class="p-4 text-slate-700 leading-relaxed text-xs line-clamp-2 max-w-md">${item.TrichYeu || ''}</td>
-                                            <td class="p-4 text-center whitespace-nowrap">
-                                                <div class="inline-flex items-center justify-center gap-2 text-xs font-medium">
-                                                    <a href="${fileUrl}" target="_blank" class="text-blue-600 hover:text-blue-700 hover:underline">📄 Mở</a>
-                                                    <span class="text-slate-300">|</span>
-                                                    <a href="${downloadUrl}" class="text-slate-600 hover:text-emerald-700 hover:underline">⬇ Tải</a>
-                                                </div>
+                                            <td class="py-3.5 px-4 text-slate-800 text-xs leading-relaxed">
+                                                ${item.TrichYeu || ''}
                                             </td>
-                                            <td class="p-4 text-center">
-                                                <button onclick="toggleReadStatus('${itemID}')" class="status-cell px-2.5 py-1 text-xs rounded-full ${isRead ? 'text-slate-500 bg-slate-100' : 'text-emerald-700 bg-emerald-50 font-bold'} focus:outline-none transition-all">
-                                                    ${isRead ? '✓ Đã đọc' : '○ Chưa đọc'}
+                                            <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                                                ${fileID ? `
+                                                    <div class="inline-flex items-center gap-1.5 text-xs font-medium">
+                                                        <a href="${fileUrl}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline px-1.5 py-1 bg-blue-50 rounded">Mở</a>
+                                                        <a href="${downloadUrl}" class="text-emerald-600 hover:text-emerald-800 hover:underline px-1.5 py-1 bg-emerald-50 rounded">Tải</a>
+                                                    </div>
+                                                ` : '<span class="text-slate-300 italic text-xs">Không có</span>'}
+                                            </td>
+                                            <td class="py-3.5 px-4 text-center">
+                                                <button onclick="toggleReadStatus('${itemID}')" class="status-cell px-3 py-1 text-xs rounded-full font-medium transition-all ${isRead ? 'bg-slate-100 text-slate-600' : 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200'}">
+                                                    ${isRead ? 'Đã đọc' : 'Chưa đọc'}
                                                 </button>
                                             </td>
                                         </tr>
                                     `;
                                 }).join('') : `
-                                    <tr><td colspan="7" class="p-8 text-center text-slate-400 italic">Không có văn bản nào trong mục này.</td></tr>
+                                    <tr><td colspan="7" class="py-8 text-center text-slate-400 italic">Không có văn bản nào trong mục này.</td></tr>
                                 `}
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- 2. GIAO DIỆN MOBILE (<768px) (Dạng Card View, không tràn ngang) -->
+                    <!-- MOBILE CARD VIEW (< 768px) -->
                     <div class="block md:hidden divide-y divide-slate-100">
                         ${data.length > 0 ? data.map((item, index) => {
                             const fileID = item.FileID || item.fileId || '';
@@ -753,33 +764,36 @@ window.loadModule = function(moduleName) {
                             const downloadUrl = fileID ? `https://drive.google.com/uc?export=download&id=${fileID}` : '#';
                             const isRead = item.DaDoc ? true : false;
                             const itemID = item.ID || item.id || item.SoVanBan;
-                            const loaiVB = item.LoaiVanBan || (item.SoVanBan?.toLowerCase().includes('qđ') ? 'Quyết định' : 'Công văn');
+                            const loaiVB = item.LoaiVanBan || item.loaiVanBan || (item.SoVanBan?.toLowerCase().includes('qđ') ? 'Quyết định' : 'Công văn');
 
                             return `
-                                <div data-id="${itemID}" class="p-4 space-y-2.5 bg-white hover:bg-slate-50/50 transition-colors">
+                                <div data-id="${itemID}" class="p-4 space-y-3 bg-white hover:bg-slate-50/50 transition-colors">
                                     <div class="flex items-start justify-between gap-2">
-                                        <div class="font-bold text-slate-800 text-sm leading-snug">
-                                            📄 ${item.SoVanBan || ''}
+                                        <div>
+                                            <span class="text-xs font-bold text-slate-400">#${index + 1}</span>
+                                            <h4 class="font-bold text-slate-900 text-sm mt-0.5">${item.SoVanBan || ''}</h4>
                                         </div>
-                                        <span class="text-slate-400 text-xs font-medium">#${index + 1}</span>
+                                        <button onclick="toggleReadStatus('${itemID}')" class="status-cell px-2.5 py-1 text-xs rounded-full font-medium transition-all ${isRead ? 'bg-slate-100 text-slate-600' : 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200'}">
+                                            ${isRead ? 'Đã đọc' : 'Chưa đọc'}
+                                        </button>
                                     </div>
                                     <div class="flex items-center gap-2 text-xs text-slate-500">
-                                        <span>${item.NgayBanHanh || ''}</span>
+                                        <span>📅 ${item.NgayBanHanh || ''}</span>
                                         <span>•</span>
-                                        <span class="px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] uppercase font-medium">${loaiVB}</span>
+                                        <span class="px-2 py-0.5 bg-slate-100 rounded text-slate-700 font-medium">${loaiVB}</span>
                                     </div>
-                                    <div class="text-slate-700 text-xs leading-relaxed line-clamp-2">
+                                    <p class="text-slate-700 text-xs leading-relaxed">
                                         ${item.TrichYeu || ''}
-                                    </div>
-                                    <div class="flex items-center justify-between pt-1">
-                                        <div class="flex items-center gap-3 text-xs font-medium">
-                                            <a href="${fileUrl}" target="_blank" class="text-blue-600 hover:underline flex items-center gap-1">📄 MỞ</a>
-                                            <span class="text-slate-300">|</span>
-                                            <a href="${downloadUrl}" class="text-slate-600 hover:underline flex items-center gap-1">⬇ TẢI</a>
-                                        </div>
-                                        <button onclick="toggleReadStatus('${itemID}')" class="status-cell px-2.5 py-1 text-xs rounded-full ${isRead ? 'text-slate-500 bg-slate-100' : 'text-emerald-700 bg-emerald-50 font-bold'} focus:outline-none transition-all">
-                                            ${isRead ? '✓ Đã đọc' : '○ Chưa đọc'}
-                                        </button>
+                                    </p>
+                                    <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
+                                        ${fileID ? `
+                                            <a href="${fileUrl}" target="_blank" class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg">
+                                                📄 Mở tệp
+                                            </a>
+                                            <a href="${downloadUrl}" class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg">
+                                                📥 Tải xuống
+                                            </a>
+                                        ` : '<span class="text-slate-400 text-xs italic">Không có tệp đính kèm</span>'}
                                     </div>
                                 </div>
                             `;
@@ -799,7 +813,6 @@ window.loadModule = function(moduleName) {
         .catch(err => console.error("Lỗi tải module:", err));
 };
 
-// Hàm cập nhật trạng thái đã đọc tối ưu theo ID (Cập nhật đúng dòng, không render lại)
 window.toggleReadStatus = function(id) {
     const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
     const allLogs = JSON.parse(rawLogs);
@@ -810,17 +823,17 @@ window.toggleReadStatus = function(id) {
     allLogs[idx].DaDoc = !allLogs[idx].DaDoc;
     localStorage.setItem('TTDHS_PUBLISHED_LOGS', JSON.stringify(allLogs));
 
-    // Cập nhật tất cả các element trùng data-id (vì có thể render cả dạng Table và Mobile Card trong DOM)
     const rows = document.querySelectorAll(`[data-id="${id}"]`);
     rows.forEach(row => {
         const statusCell = row.querySelector('.status-cell');
         if (statusCell) {
-            statusCell.textContent = allLogs[idx].DaDoc ? '✓ Đã đọc' : '○ Chưa đọc';
-            statusCell.className = `status-cell px-2.5 py-1 text-xs rounded-full ${
-                allLogs[idx].DaDoc
-                    ? 'text-slate-500 bg-slate-100'
-                    : 'text-emerald-700 bg-emerald-50 font-bold'
-            } focus:outline-none transition-all`;
+            const isRead = allLogs[idx].DaDoc;
+            statusCell.textContent = isRead ? 'Đã đọc' : 'Chưa đọc';
+            statusCell.className = `status-cell px-3 py-1 text-xs rounded-full font-medium transition-all ${
+                isRead 
+                    ? 'bg-slate-100 text-slate-600' 
+                    : 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-200'
+            }`;
         }
     });
 };
