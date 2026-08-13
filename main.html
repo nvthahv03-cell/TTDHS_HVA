@@ -607,26 +607,72 @@ updateCurrentDate();
             window.location.href = 'Lichcongtac.html';
         });
     }
-window.loadModule = function(moduleName, element) {
-    console.log("Đang mở module:", moduleName);
-    
-    const container = document.getElementById('app-container');
-    if (!container) return;
+// ----------------------------------------------------
+// 3. ĐIỀU KHIỂN MENU/SUBMENU & EVENT DELEGATION
+// ----------------------------------------------------
+window.toggleDashboardMenu = function(menuId, event) {
+    if (event) event.stopPropagation();
 
-    // Dùng fetch để tải nội dung file HTML tương ứng với tên module
-    fetch(`${moduleName}.html`)
-        .then(response => {
-            if (!response.ok) throw new Error("Không thể tải module");
-            return response.text();
-        })
-        .then(html => {
-            container.innerHTML = html;
-        })
-        .catch(error => {
-            console.error("Lỗi khi load module:", error);
-            container.innerHTML = `<div class="p-4 text-red-500">Không thể tải nội dung cho module: ${moduleName}</div>`;
-        });
+    const targetMenu = document.getElementById(menuId);
+    if (!targetMenu) return;
+
+    const isHidden = targetMenu.classList.contains('hidden');
+
+    document.querySelectorAll('.dashboard-dropdown').forEach(m => m.classList.add('hidden'));
+
+    if (isHidden) {
+        targetMenu.classList.remove('hidden');
+    }
 };
+
+document.addEventListener('click', function(e) {
+    // 1. Đóng Modal khi bấm nút data-close-modal
+    const closeBtn = e.target.closest('[data-close-modal]');
+    if (closeBtn) {
+        const targetModal = closeBtn.getAttribute('data-close-modal');
+        AppMain.closeModal(targetModal);
+        return;
+    }
+
+    // 2. Bắt sự kiện Click các nút chức năng (Giao việc, Văn bản...)
+    const targetElem = e.target.closest('button, div, a, span');
+    if (targetElem) {
+        const text = targetElem.innerText ? targetElem.innerText.trim() : '';
+        const onclickAttr = targetElem.getAttribute('onclick') || '';
+
+        // --- Nút Giao việc ---
+        if (text === 'Giao việc' || text === 'Giao nhiệm vụ mới') {
+            e.preventDefault();
+            moModalGiaoViec();
+            return;
+        }
+
+        // --- NÚT VĂN BẢN VÀ CÁC SUBMENU VĂN BẢN (THÊM MỚI Ở ĐÂY) ---
+        if (text.includes('Văn bản') || onclickAttr.includes('loadModule')) {
+            e.preventDefault();
+            
+            // Đóng menu thả xuống
+            document.querySelectorAll('.dashboard-dropdown').forEach(m => m.classList.add('hidden'));
+
+            // Nếu Thầy có hàm mở Modal Văn bản hoặc chuyển trang KhoVanBan.html
+            if (typeof moModalVanBan === 'function') {
+                moModalVanBan(); 
+            } else if (typeof loadModule === 'function') {
+                // Lấy mã module từ attribute nếu có, hoặc mặc định
+                loadModule('van-ban');
+            } else {
+                // Mặc định chuyển sang trang Kho Văn Bản
+                window.location.href = 'KhoVanBan.html'; 
+            }
+            return;
+        }
+    }
+
+    // 3. Click ra ngoài tự động đóng menu
+    if (!e.target.closest('.dashboard-dropdown') && !e.target.closest('[onclick*="toggleDashboardMenu"]')) {
+        document.querySelectorAll('.dashboard-dropdown').forEach(m => m.classList.add('hidden'));
+    }
+});
 </script>
 </body>
 </html>
