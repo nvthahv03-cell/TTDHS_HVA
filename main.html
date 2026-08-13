@@ -614,14 +614,10 @@ updateCurrentDate();
 
     // Xử lý các mục Văn bản đến/đi (Không dùng fetch file nữa để tránh 404)
    // Xử lý nhóm Văn bản đến/đi thông qua Gateway / LocalStorage đồng bộ
-    if (moduleName.startsWith('vb-den-') || moduleName.startsWith('vb-di-')) {
-        // Lấy dữ liệu thực tế từ kho lưu trữ do Gateway quản lý
+   if (moduleName.startsWith('vb-den-') || moduleName.startsWith('vb-di-')) {
         const rawLogs = localStorage.getItem('TTDHS_PUBLISHED_LOGS') || '[]';
-        const allLogs = JSON.parse(rawLogs);
+        const data = JSON.parse(rawLogs); // Lấy thẳng toàn bộ dữ liệu đã đồng bộ
         
-        // Lọc các bản ghi khớp với module hiện tại qua Gateway
-        const data = allLogs.filter(item => item.Module === 'VanBan' || item.module === moduleName);
-
         container.innerHTML = `
             <div class="p-6 bg-white rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex justify-between items-center mb-4">
@@ -632,27 +628,23 @@ updateCurrentDate();
                     <thead class="text-xs uppercase bg-slate-50 text-slate-600">
                         <tr>
                             <th class="p-3">Thời gian</th>
-                            <th class="p-3">Trích yếu / Số văn bản</th>
+                            <th class="p-3">Số / Trích yếu văn bản</th>
                             <th class="p-3">Trạng thái</th>
-                            <th class="p-3">Thao tác qua Gateway</th>
+                            <th class="p-3">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${data.length > 0 ? data.map(item => `
                             <tr class="border-b hover:bg-slate-50">
                                 <td class="p-3 text-slate-600">${item.ThoiGian}</td>
-                                <td class="p-3 font-medium text-slate-800">${item.PayloadJSON?.soVanBan || item.PayloadJSON?.trichYeu || 'Văn bản phát hành'}</td>
+                                <td class="p-3 font-medium text-slate-800">${item.PayloadJSON?.soVanBan || 'Văn bản phát hành'}</td>
                                 <td class="p-3"><span class="text-emerald-600 font-bold">${item.TrangThai}</span></td>
                                 <td class="p-3">
-                                    <a href="${item.PayloadJSON?.fileUrl || '#'}" target="_blank" class="text-blue-600 hover:underline font-medium">Mở tệp văn bản</a>
+                                    <button class="text-blue-600 hover:underline font-medium">Mở tệp</button>
                                 </td>
                             </tr>
                         `).join('') : `
-                            <tr>
-                                <td colspan="4" class="p-6 text-center text-slate-400 italic">
-                                    Chưa có văn bản nào được phát hành qua Gateway cho mô đun này.
-                                </td>
-                            </tr>
+                            <tr><td colspan="4" class="p-6 text-center text-slate-400 italic">Chưa có dữ liệu trong Gateway.</td></tr>
                         `}
                     </tbody>
                 </table>
