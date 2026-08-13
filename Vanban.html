@@ -791,16 +791,18 @@
             setTimeout(() => toast.remove(), 250);
         }, 3000);
     }
-   <!-- ================= SCRIPT HỢP NHẤT TOÀN BỘ CHO VANBAN.HTML ================= -->
-
-    // 1. LINK GATEWAY APPS SCRIPT ĐÃ CÓ CỦA THẦY
+  
+    /* ==========================================================================
+       1. CẤU HÌNH GATEWAY & TRẠNG THÁI HỆ THỐNG (APP STATE)
+       ========================================================================== */
     const GATEWAY_URL = "https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec";
+    let searchDebounceTimer = null;
 
-    // 2. KHAI BÁO APPSTATE DUY NHẤT (Đã hợp nhất toàn bộ trạng thái)
     const AppState = {
         activeModule: 'tat-ca',
-        timeFilter: 'tatCa', // Mặc định hiện tất cả văn bản
+        timeFilter: 'tatCa',
         searchQuery: '',
+        selectedDocId: null,
         modulesMap: {
             'tat-ca': 'TẤT CẢ VĂN BẢN',
             'vb-den-trung-uong': '01. Văn bản Trung ương',
@@ -815,57 +817,72 @@
             'vb-di-cong-van': 'Văn bản đi: Công văn',
             'vb-di-giao-nhiem-vu': 'Văn bản đi: Giao nhiệm vụ'
         },
-        documents: [] // Dữ liệu thật từ Google Sheets
+        documents: []
     };
 
-    // 3. CÁC HÀM XỬ LÝ GIAO DIỆN (Đã định nghĩa đầy đủ để sửa lỗi Not Defined)
-    
-    // Hàm ẩn/hiện menu con
-    function toggleSubmenu(id) {
-        const el = document.getElementById(id);
-        if (el) {
-            el.classList.toggle('hidden');
-        }
-    }
-
-    // Hàm chọn Danh mục (Module)
-    function loadModule(moduleKey) {
-        AppState.activeModule = moduleKey;
-        
-        // Cập nhật tiêu đề danh mục trên màn hình
-        const titleEl = document.getElementById('currentModuleTitle') || document.querySelector('h2');
-        if (titleEl && AppState.modulesMap[moduleKey]) {
-            titleEl.textContent = AppState.modulesMap[moduleKey].toUpperCase();
-        }
-        
-        renderTable();
-    }
-
-    // Hàm lọc theo thời gian (Hôm nay, 3 ngày, Tuần này...)
-    function handleTimeFilterChange(val) {
-        AppState.timeFilter = val;
-        renderTable();
-    }
-
-    // Hàm tìm kiếm theo ô nhập
-    function handleSearchInput(event) {
-        AppState.searchQuery = event.target.value || '';
-        renderTable();
-    }
-
-    // 4. KHỞI TẠO VÀ TẢI DỮ LIỆU TỪ GATEWAY
+    /* ==========================================================================
+       2. KHỞI TẠO NỀN TẢNG (INITIALIZATION)
+       ========================================================================== */
     document.addEventListener('DOMContentLoaded', () => {
-        // Lắng nghe sự kiện gõ ô tìm kiếm
-        const searchBox = document.querySelector('input[type="text"]') || document.querySelector('input[placeholder*="Tìm"]');
+        initApp();
+    });
+
+    function initApp() {
+        renderDate();
+        checkUrlCategory();
+        setupEventListeners();
+        fetchDataFromGateway();
+    }
+
+    function renderDate() {
+        const now = new Date();
+        const formatted = now.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const el = document.getElementById('txtCurrentDate');
+        if (el) el.innerText = formatted;
+    }
+
+    function checkUrlCategory() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const category = urlParams.get('category');
+
+        if (category && AppState.modulesMap[category]) {
+            AppState.activeModule = category;
+            
+            if (category.startsWith('vb-den-')) {
+                openSubmenu('vb-den-submenu', 'vb-den-chevron');
+            } else if (category.startsWith('vb-di-')) {
+                openSubmenu('vb-di-submenu', 'vb-di-chevron');
+            }
+
+            const moduleName = AppState.modulesMap[category];
+            updateTitle(`DANH SÁCH: ${moduleName.toUpperCase()}`);
+        } else {
+            AppState.activeModule = 'tat-ca';
+            updateTitle(`DANH SÁCH VĂN BẢN (TẤT CẢ)`);
+        }
+    }
+
+    function setupEventListeners() {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        const searchBox = document.getElementById('searchInput') || document.querySelector('input[type="text"]');
         if (searchBox) {
             searchBox.addEventListener('input', handleSearchInput);
         }
+    }
 
-        fetchDataFromGateway();
-    });
+    function updateTitle(titleText) {
+        const titleEl = document.getElementById('lblCategoryTitle') || document.getElementById('currentModuleTitle') || document.querySelector('h2');
+        if (titleEl) titleEl.innerText = titleText;
+    }
 
+    /* ==========================================================================
+       3. TẢI DỮ LIỆU TỪ GOOGLE SHEETS VIA GATEWAY
+       ========================================================================== */
     async function fetchDataFromGateway() {
-        const tbody = document.getElementById('danhSachData');
+        const tbody = document.getElementById('danhSachData') || document.getElementById('desktopTableBody');
         if (tbody) {
             tbody.innerHTML = `
                 <tr>
@@ -884,9 +901,27 @@
 
             const result = await response.json();
             const rawData = Array.isArray(result) ? result : (result.data || []);
-            AppState.documents = rawData;
+            
+            // Chuẩn hóa dữ liệu trả về
+            AppState.documents = rawData.map((doc, index) => ({
+                id: doc.id || (index + 1),
+                soVB: doc.SoVanBan || doc["SoVanBan"] || doc.soVB || '---',
+                ngayBH: doc.NgayBanHanh || doc["NgayBanHanh"] || doc.ngayBH || doc.Ngay || '---',
+                loaiVB: doc.LoaiVanBan || doc["LoaiVanBan"] || doc.loaiVB || '---',
+                moduleKey: doc.LuongVanBan || doc["LuongVanBan"] || doc.moduleKey || '---',
+                trichYeu: doc.TrichYeu || doc["TrichYeu"] || doc.trichYeu || '---',
+                coQuan: doc.CoQuan || doc["CoQuan"] || doc.coQuan || 'THPT Hòa Vang',
+                nguoiKy: doc.NguoiKy || doc["NguoiKy"] || doc.nguoiKy || 'Ban BGH',
+                fileID: doc.FileID || doc["FileID"] || doc.fileID || doc.fileId || '',
+                fileType: doc.fileType || 'pdf',
+                status: doc.Status || doc["Status"] || doc.status || 'Đã phát hành'
+            }));
 
-            renderTable();
+            if (AppState.documents.length > 0 && !AppState.selectedDocId) {
+                AppState.selectedDocId = AppState.documents[0].id;
+            }
+
+            renderAll();
         } catch (error) {
             console.error("Lỗi Gateway:", error);
             if (tbody) {
@@ -901,86 +936,333 @@
         }
     }
 
-    // 5. HÀM VẼ BẢNG DỮ LIỆU THẬT & LỌC TỰ ĐỘNG
-    function renderTable() {
-        const tbody = document.getElementById('danhSachData');
-        if (!tbody) return;
+    /* ==========================================================================
+       4. ĐIỀU HƯỚNG & LỌC DỮ LIỆU (ROUTER & FILTER)
+       ========================================================================== */
+    function toggleSubmenu(submenuId, iconId) {
+        const submenu = document.getElementById(submenuId);
+        const icon = document.getElementById(iconId);
 
-        // Tiến hành Lọc dữ liệu theo Từ khóa & Danh mục
-        let filtered = AppState.documents.filter(doc => {
-            const q = AppState.searchQuery.toLowerCase().trim();
-            const soVB = (doc.SoVanBan || doc["SoVanBan"] || '').toLowerCase();
-            const trichYeu = (doc.TrichYeu || doc["TrichYeu"] || '').toLowerCase();
-            const luongVB = (doc.LuongVanBan || doc["LuongVanBan"] || '').toLowerCase();
+        if (submenu) {
+            const isHidden = submenu.classList.contains('hidden');
+            if (isHidden) {
+                openSubmenu(submenuId, iconId);
+            } else {
+                submenu.classList.add('hidden');
+                if (icon) icon.classList.remove('rotate-90');
+            }
+        }
+    }
 
-            // Lọc từ khóa
-            const matchSearch = !q || soVB.includes(q) || trichYeu.includes(q);
+    function openSubmenu(submenuId, iconId) {
+        const submenu = document.getElementById(submenuId);
+        const icon = document.getElementById(iconId);
+        if (submenu) {
+            submenu.classList.remove('hidden');
+            if (icon) icon.classList.add('rotate-90');
+        }
+    }
 
-            // Lọc danh mục
+    function loadModule(moduleKey, event) {
+        if (event) event.stopPropagation();
+        
+        AppState.activeModule = moduleKey;
+        const moduleName = AppState.modulesMap[moduleKey] || moduleKey;
+
+        updateTitle(`DANH SÁCH: ${moduleName.toUpperCase()}`);
+        renderAll();
+        showToast(`Đã chọn phân hệ: ${moduleName}`, 'info');
+    }
+
+    function handleTimeFilterChange(val) {
+        AppState.timeFilter = val;
+        renderAll();
+        showToast(`Lọc theo mốc thời gian: ${val}`, 'success');
+    }
+
+    function handleSearchInput(event) {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+            const query = event ? event.target.value : (document.getElementById('searchInput')?.value || '');
+            const btnClear = document.getElementById('btnClearSearch');
+            
+            AppState.searchQuery = query.trim().toLowerCase();
+
+            if (btnClear) {
+                if (AppState.searchQuery !== '') btnClear.classList.remove('hidden');
+                else btnClear.classList.add('hidden');
+            }
+            renderAll();
+        }, 300);
+    }
+
+    function clearSearch() {
+        const input = document.getElementById('searchInput');
+        const btnClear = document.getElementById('btnClearSearch');
+        if (input) input.value = '';
+        if (btnClear) btnClear.classList.add('hidden');
+        AppState.searchQuery = '';
+        renderAll();
+        showToast('Đã xóa bộ lọc tìm kiếm', 'info');
+    }
+
+    function getFilteredDocs() {
+        return AppState.documents.filter(doc => {
+            const q = AppState.searchQuery;
+            const matchSearch = !q || doc.soVB.toLowerCase().includes(q) || doc.trichYeu.toLowerCase().includes(q) || doc.coQuan.toLowerCase().includes(q);
+
             let matchModule = true;
             if (AppState.activeModule !== 'tat-ca') {
                 const targetCat = (AppState.modulesMap[AppState.activeModule] || '').toLowerCase();
+                const luongVB = doc.moduleKey.toLowerCase();
                 matchModule = luongVB.includes(targetCat) || luongVB.includes(AppState.activeModule.toLowerCase());
             }
 
             return matchSearch && matchModule;
         });
+    }
 
-        // Cập nhật đếm số lượng văn bản
+    /* ==========================================================================
+       5. RENDER GIAO DIỆN (DESKTOP, MOBILE, CARD)
+       ========================================================================== */
+    function renderAll() {
+        renderDocumentList();
+        renderSelectedDocCard();
+    }
+
+    function renderDocumentList() {
+        const filtered = getFilteredDocs();
+        
+        // Cập nhật các Badge đếm số
+        const badge = document.getElementById('docCountBadge');
+        if (badge) badge.innerText = `${filtered.length} văn bản`;
+
         const countBadges = document.querySelectorAll('.rounded-full');
-        countBadges.forEach(badge => {
-            if (badge.textContent.includes('văn bản')) {
-                badge.textContent = `${filtered.length} văn bản`;
+        countBadges.forEach(b => {
+            if (b.textContent.includes('văn bản')) {
+                b.textContent = `${filtered.length} văn bản`;
             }
         });
 
-        if (filtered.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="8" class="p-8 text-center text-slate-400 text-xs font-medium">
-                        <i class="bi bi-inbox text-2xl block mb-1 opacity-50"></i>
-                        Không có văn bản nào phù hợp.
-                    </td>
-                </tr>`;
+        // 1. Render Bảng Desktop
+        const tbody = document.getElementById('danhSachData') || document.getElementById('desktopTableBody');
+        if (tbody) {
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="p-8 text-center text-slate-400 text-xs font-medium">
+                            <i class="bi bi-inbox text-2xl block mb-1 opacity-50"></i>
+                            Không tìm thấy văn bản phù hợp.
+                        </td>
+                    </tr>`;
+            } else {
+                tbody.innerHTML = filtered.map((doc, idx) => {
+                    let fileUrl = "";
+                    if (doc.fileID) {
+                        fileUrl = doc.fileID.startsWith("http") ? doc.fileID : `https://drive.google.com/file/d/${doc.fileID}/view?usp=sharing`;
+                    }
+
+                    return `
+                        <tr onclick="handleSelectDoc(${doc.id})" class="border-b border-slate-100 hover:bg-blue-50/50 cursor-pointer transition-colors text-xs text-slate-700 ${doc.id === AppState.selectedDocId ? 'bg-blue-50/70 font-semibold' : ''}">
+                            <td class="p-3 text-center font-medium text-slate-400">${idx + 1}</td>
+                            <td class="p-3 whitespace-nowrap">${doc.ngayBH}</td>
+                            <td class="p-3 font-bold text-[#0F4C81] whitespace-nowrap">${doc.soVB}</td>
+                            <td class="p-3 whitespace-nowrap">${doc.loaiVB}</td>
+                            <td class="p-3 whitespace-nowrap">${AppState.modulesMap[doc.moduleKey] || doc.moduleKey}</td>
+                            <td class="p-3 font-medium max-w-md truncate">${doc.trichYeu}</td>
+                            <td class="p-3 text-center whitespace-nowrap">
+                                ${fileUrl ? `
+                                    <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" title="Mở file đính kèm"
+                                       class="inline-flex items-center justify-center p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition" onclick="event.stopPropagation();">
+                                        <i class="bi bi-file-earmark-pdf-fill text-base"></i>
+                                    </a>
+                                ` : `
+                                    <span class="text-slate-300"><i class="bi bi-dash-lg"></i></span>
+                                `}
+                            </td>
+                            <td class="p-3 text-center whitespace-nowrap">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${doc.status === 'Đã phát hành' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'}">
+                                    ${doc.status}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // 2. Render Card Mobile
+        const mobileContainer = document.getElementById('mobileCardContainer');
+        if (mobileContainer) {
+            if (filtered.length === 0) {
+                mobileContainer.innerHTML = `<div class="p-6 text-center text-slate-400 italic bg-white rounded-xl border border-slate-200">Không có văn bản nào trong danh mục này</div>`;
+            } else {
+                mobileContainer.innerHTML = filtered.map(doc => `
+                    <div onclick="handleSelectDoc(${doc.id})" class="p-3.5 bg-slate-50/80 rounded-xl border ${doc.id === AppState.selectedDocId ? 'border-[#0F4C81] bg-blue-50/50' : 'border-slate-200'} space-y-2 cursor-pointer">
+                        <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
+                            <span class="font-bold text-[#0F4C81] text-xs">${doc.soVB}</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${doc.status === 'Đã phát hành' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${doc.status}</span>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-800 line-clamp-2">${doc.trichYeu}</div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
+                            <div><strong>Ngày:</strong> ${doc.ngayBH}</div>
+                            <div><strong>Loại:</strong> ${doc.loaiVB}</div>
+                            <div class="col-span-2"><strong>Danh mục:</strong> ${AppState.modulesMap[doc.moduleKey] || doc.moduleKey}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+    }
+
+    function handleSelectDoc(id) {
+        AppState.selectedDocId = id;
+        renderAll();
+    }
+
+    function renderSelectedDocCard() {
+        const card = document.getElementById('selectedDocCard');
+        if (!card) return;
+
+        const doc = AppState.documents.find(d => d.id === AppState.selectedDocId) || AppState.documents[0];
+        if (!doc) {
+            card.innerHTML = `<div class="text-slate-400 text-xs italic">Chưa chọn văn bản nào</div>`;
             return;
         }
 
-        // Đổ dòng <tr> vào Bảng (Bỏ Cột A, Lấy Cột K làm Link File)
-        tbody.innerHTML = filtered.map((item, index) => {
-            const fileId = item.FileID || item["FileID"] || item.fileId || "";
-            let fileUrl = "";
-            if (fileId) {
-                fileUrl = fileId.startsWith("http") 
-                    ? fileId 
-                    : `https://drive.google.com/file/d/${fileId}/view?usp=sharing`;
-            }
+        card.innerHTML = `
+            <div><span class="font-bold text-slate-500">Số văn bản:</span> <span class="font-bold text-[#0F4C81]">${doc.soVB}</span></div>
+            <div><span class="font-bold text-slate-500">Ngày ban hành:</span> <span class="text-slate-700">${doc.ngayBH}</span></div>
+            <div><span class="font-bold text-slate-500">Loại văn bản:</span> <span class="text-slate-700">${doc.loaiVB}</span></div>
+            <div><span class="font-bold text-slate-500">Phân loại:</span> <span class="text-slate-700">${AppState.modulesMap[doc.moduleKey] || doc.moduleKey}</span></div>
+            <div><span class="font-bold text-slate-500">Cơ quan ban hành:</span> <span class="text-slate-700">${doc.coQuan}</span></div>
+            <div><span class="font-bold text-slate-500">Người ký:</span> <span class="text-slate-700">${doc.nguoiKy}</span></div>
+            <div class="sm:col-span-2 border-t border-blue-200/60 pt-1.5 mt-0.5">
+                <span class="font-bold text-slate-500">Trích yếu:</span> <span class="text-slate-800 font-semibold italic">${doc.trichYeu}</span>
+            </div>
+        `;
+    }
 
-            return `
-                <tr class="border-b border-slate-100 hover:bg-blue-50/50 transition-colors text-xs text-slate-700">
-                    <td class="p-3 text-center font-medium text-slate-400">${index + 1}</td>
-                    <td class="p-3 whitespace-nowrap">${item.NgayBanHanh || item["NgayBanHanh"] || item.Ngay || '---'}</td>
-                    <td class="p-3 font-bold text-[#0F4C81] whitespace-nowrap">${item.SoVanBan || item["SoVanBan"] || item.SoVB || '---'}</td>
-                    <td class="p-3 whitespace-nowrap">${item.LoaiVanBan || item["LoaiVanBan"] || '---'}</td>
-                    <td class="p-3 whitespace-nowrap">${item.LuongVanBan || item["LuongVanBan"] || '---'}</td>
-                    <td class="p-3 font-medium max-w-md">${item.TrichYeu || item["TrichYeu"] || '---'}</td>
-                    <td class="p-3 text-center whitespace-nowrap">
-                        ${fileUrl ? `
-                            <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" title="Mở file đính kèm trên Google Drive"
-                               class="inline-flex items-center justify-center p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition">
-                                <i class="bi bi-file-earmark-pdf-fill text-base"></i>
-                            </a>
-                        ` : `
-                            <span class="text-slate-300"><i class="bi bi-dash-lg"></i></span>
-                        `}
-                    </td>
-                    <td class="p-3 text-center whitespace-nowrap">
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-700">
-                            Đã phát hành
-                        </span>
-                    </td>
-                </tr>
-            `;
-        }).join('');
+    /* ==========================================================================
+       6. HỆ THỐNG MODAL & NÚT THAO TÁC (MODAL SYSTEM & ACTIONS)
+       ========================================================================== */
+    function openCreateModal() {
+        const modal = document.getElementById('actionModal');
+        const content = document.getElementById('modalContent');
+        if (!modal || !content) return;
+
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }, 10);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('actionModal');
+        const content = document.getElementById('modalContent');
+        if (!modal || !content) return;
+
+        content.classList.remove('scale-100');
+        content.classList.add('scale-95');
+        modal.classList.add('opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 200);
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        const soVB = document.getElementById('formSoVB').value.trim();
+        const ngayBH = document.getElementById('formNgayBH').value;
+        const loaiVB = document.getElementById('formLoaiVB').value;
+        const moduleKey = document.getElementById('formModule').value;
+        const coQuan = document.getElementById('formCoQuan').value.trim() || 'THPT Hòa Vang';
+        const trichYeu = document.getElementById('formTrichYeu').value.trim();
+
+        const newDoc = {
+            id: Date.now(),
+            moduleKey: moduleKey,
+            ngayBH: ngayBH ? ngayBH.split('-').reverse().join('/') : '---',
+            soVB: soVB,
+            loaiVB: loaiVB,
+            coQuan: coQuan,
+            nguoiKy: 'Ban BGH',
+            trichYeu: trichYeu,
+            fileID: '',
+            fileType: 'pdf',
+            status: 'Đã phát hành'
+        };
+
+        AppState.documents.unshift(newDoc);
+        AppState.selectedDocId = newDoc.id;
+        AppState.activeModule = moduleKey;
+
+        closeModal();
+        renderAll();
+        showToast('Đã lưu văn bản mới vào hệ thống thành công!', 'success');
+
+        const form = document.getElementById('docForm');
+        if (form) form.reset();
+    }
+
+    function handleGoBack() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = 'main.html';
+        }
+    }
+
+    function handleRefreshData() {
+        fetchDataFromGateway();
+        showToast('Đã làm mới dữ liệu hệ thống!', 'success');
+    }
+
+    function handleAdvancedSearch() {
+        showToast('Mở bộ lọc tra cứu nâng cao', 'info');
+    }
+
+    /* ==========================================================================
+       7. HỆ THỐNG THÔNG BÁO TOAST (TOAST NOTIFICATIONS)
+       ========================================================================== */
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast-enter pointer-events-auto p-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-xs font-bold text-white transition`;
+
+        let icon = 'bi-info-circle-fill';
+        if (type === 'success') {
+            toast.classList.add('bg-emerald-600');
+            icon = 'bi-check-circle-fill';
+        } else if (type === 'warning') {
+            toast.classList.add('bg-amber-500');
+            icon = 'bi-exclamation-triangle-fill';
+        } else if (type === 'error') {
+            toast.classList.add('bg-rose-600');
+            icon = 'bi-x-circle-fill';
+        } else {
+            toast.classList.add('bg-[#0F4C81]');
+        }
+
+        toast.innerHTML = `
+            <i class="bi ${icon} text-lg"></i>
+            <span class="flex-1">${message}</span>
+            <button type="button" onclick="this.parentElement.remove()" class="text-white/80 hover:text-white">
+                <i class="bi bi-x"></i>
+            </button>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.remove('toast-enter');
+            toast.classList.add('toast-exit');
+            setTimeout(() => toast.remove(), 250);
+        }, 3000);
     }
 </script>
 </body>
