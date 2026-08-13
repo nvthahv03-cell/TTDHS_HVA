@@ -822,6 +822,113 @@
             setTimeout(() => toast.remove(), 250);
         }, 3000);
     }
+    <!-- ================= SCRIPT XỬ LÝ DỮ LIỆU TỪ GATEWAY ================= -->
+
+  // 1. Dán URL Web App (Gateway Apps Script) thực tế của Thầy vào đây
+  const GATEWAY_URL = "URL_GATEWAY_APPS_SCRIPT_CỦA_THẦY"; 
+  let globalData = [];
+
+  // 2. Tự động tải dữ liệu khi trang Vanban.html vừa mở xong
+  document.addEventListener("DOMContentLoaded", () => {
+    loadData();
+  });
+
+  // 3. Hàm gọi API Gateway lấy dữ liệu từ Google Sheets
+  async function loadData() {
+    const container = document.getElementById('danhSachData');
+    if (!container) return;
+
+    // Trạng thái hiển thị khi đang tải
+    container.innerHTML = `
+      <div class="p-8 text-center text-slate-500 text-xs animate-pulse">
+        <i class="bi bi-arrow-repeat text-2xl block mb-2 animate-spin text-blue-600"></i>
+        Đang tải dữ liệu từ Google Sheets qua Gateway...
+      </div>`;
+
+    try {
+      const res = await fetch(GATEWAY_URL);
+      const json = await res.json();
+      globalData = Array.isArray(json) ? json : (json.data || []);
+      renderUI(globalData);
+    } catch (err) {
+      console.error("Lỗi kết nối Gateway:", err);
+      container.innerHTML = `
+        <div class="p-6 text-center text-red-500 text-xs bg-red-50 border border-red-100 rounded-xl">
+          <i class="bi bi-exclamation-triangle-fill text-xl block mb-1"></i>
+          Không thể nạp dữ liệu. Thầy kiểm tra lại URL Gateway hoặc quyền truy cập nhé!
+        </div>`;
+    }
+  }
+
+  // 4. Hàm vẽ giao diện danh sách văn bản (Bỏ Cột A - Lấy Cột K tạo link file)
+  function renderUI(list) {
+    const container = document.getElementById('danhSachData');
+    if (!container) return;
+
+    if (!list || list.length === 0) {
+      container.innerHTML = `
+        <div class="p-8 text-center text-slate-400 text-xs font-medium">
+          <i class="bi bi-inbox text-3xl block mb-2 opacity-50"></i>
+          Chưa có dữ liệu văn bản nào.
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = list.map(item => {
+      // Lấy FileID từ Cột K (hoặc link đầy đủ)
+      const fileId = item.FileID || item["FileID"] || "";
+      let fileUrl = "";
+
+      if (fileId) {
+        fileUrl = fileId.startsWith("http") 
+          ? fileId 
+          : `https://drive.google.com/file/d/${fileId}/view?usp=sharing`;
+      }
+
+      return `
+        <div class="p-4 bg-white border border-slate-200/80 hover:border-blue-300 rounded-xl text-xs shadow-sm space-y-3 transition">
+           
+           <!-- Hàng 1: Luồng văn bản, Số văn bản & Nút mở file (Cột K) -->
+           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+             <div class="flex items-center gap-2">
+               <span class="px-2 py-0.5 rounded-md bg-blue-50 text-[#0F4C81] font-bold text-[11px]">
+                 ${item.LuongVanBan || item["LuongVanBan"] || 'Văn bản'}
+               </span>
+               <span class="font-bold text-[#0F4C81] text-sm">${item.SoVanBan || item["SoVanBan"] || '---'}</span>
+             </div>
+
+             <!-- NÚT MỞ VĂN BẢN (LINK TỪ CỘT K) -->
+             ${fileUrl ? `
+               <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" 
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition shadow-sm text-[11px]">
+                 <i class="bi bi-file-earmark-text-fill"></i> Mở văn bản
+               </a>
+             ` : `
+               <span class="text-slate-400 italic text-[11px]"><i class="bi bi-paperclip"></i> Chưa đính kèm file</span>
+             `}
+           </div>
+
+           <!-- Hàng 2: Chi tiết Loại VB, Đơn vị, Ngày ban hành -->
+           <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-slate-600">
+             <div><span class="font-medium text-slate-400">Loại VB:</span> <span class="font-semibold text-slate-700">${item.LoaiVanBan || item["LoaiVanBan"] || '---'}</span></div>
+             <div><span class="font-medium text-slate-400">Đơn vị ban hành:</span> <span class="font-semibold text-slate-700">${item.DonViBanHanh || item.CoQuanBanHanh || '---'}</span></div>
+             <div><span class="font-medium text-slate-400">Ngày ban hành:</span> <span class="font-semibold text-slate-700">${item.NgayBanHanh || item["NgayBanHanh"] || '---'}</span></div>
+           </div>
+
+           <!-- Hàng 3: Người ký & Trích yếu -->
+           <div class="space-y-1 pt-1 border-t border-slate-50">
+             <div><span class="font-medium text-slate-400">Người ký:</span> <span class="font-medium text-slate-700">${item.NguoiKy || item["NguoiKy"] || '---'}</span></div>
+             <div>
+               <span class="font-medium text-slate-400">Trích yếu:</span> 
+               <span class="font-medium text-slate-800 italic">${item.TrichYeu || item["TrichYeu"] || '---'}</span>
+             </div>
+           </div>
+
+        </div>
+      `;
+    }).join('');
+  }
+
 </script>
 </body>
 </html>
