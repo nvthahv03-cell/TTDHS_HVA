@@ -462,18 +462,38 @@
    
 
     /* INITIALIZATION */
-    document.addEventListener('DOMContentLoaded', () => {
-        initApp();
-    });
-
-    /* ==========================================================================
+/* ==========================================================================
        2. KHỞI TẠO NỀN TẢNG (INITIALIZATION)
        ========================================================================== */
-    document.addEventListener('DOMContentLoaded', () => {
-        initApp();
-    });
 
-    function initApp() {
+    const GATEWAY_URL = "https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec";
+
+    /* ============================================================
+       TTĐHS_HVA - APP STATE DUY NHẤT
+       ============================================================ */
+    const AppState = {
+        documents: [],
+        selectedDocId: null,
+        activeModule: "tat-ca",
+        searchQuery: "",
+        timeFilter: "today",
+        modulesMap: {
+            "tat-ca": "TẤT CẢ VĂN BẢN",
+            "van-ban-den": "VĂN BẢN ĐẾN",
+            "vb-den-so": "VĂN BẢN ĐẾN - SỞ GD&ĐT",
+            "vb-den-ubnd": "VĂN BẢN ĐẾN - UBND",
+            "vb-den-khac": "VĂN BẢN ĐẾN - CƠ QUAN KHÁC",
+            "van-ban-di": "VĂN BẢN ĐI (NỘI BỘ)",
+            "vb-di-quyet-dinh": "QUYẾT ĐỊNH",
+            "vb-di-ke-hoach": "KẾ HOẠCH",
+            "vb-di-thong-bao": "THÔNG BÁO",
+            "vb-di-cong-van": "CÔNG VĂN"
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", initApp, { once: true });
+
+function initApp() {
         renderDate();
         checkUrlCategory();
         setupEventListeners();
