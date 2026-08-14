@@ -346,63 +346,88 @@ export function renderHome() {
     <div class="relative">
 
         <button type="button"
-            id="btn-digital-connect"
-            onclick="toggleDigitalConnectPanel(event)"
-            class="w-full min-h-[82px] rounded-2xl
-                   bg-gradient-to-br from-indigo-700 via-indigo-600 to-violet-600
-                   text-white px-3 py-3 shadow-md
-                   hover:shadow-lg active:scale-[0.98]
-                   transition-all duration-200 text-left">
+    id="btn-digital-connect"
+    onclick="toggleDigitalConnectPanel(event)"
+    class="group relative w-full min-h-[82px] overflow-hidden rounded-2xl
+           bg-gradient-to-br from-[#075985] via-[#0284C7] to-[#06B6D4]
+           text-white px-3 py-3 shadow-md
+           hover:shadow-lg active:scale-[0.98]
+           transition-all duration-200 text-left">
 
-            <div class="flex items-center justify-between">
+    <!-- Hiệu ứng ánh sáng nền -->
+    <div class="absolute -right-5 -top-7
+                w-24 h-24 rounded-full
+                bg-cyan-200/20 blur-xl
+                pointer-events-none">
+    </div>
 
-                <div class="flex items-center gap-2.5">
+    <div class="absolute right-3 bottom-1
+                text-white/[0.10]
+                pointer-events-none">
+        <i class="bi bi-globe2 text-[54px]"></i>
+    </div>
 
-                    <div class="w-10 h-10 rounded-xl
-                                bg-white/20 border border-white/25
-                                flex items-center justify-center">
+    <!-- Các điểm kết nối trang trí -->
+    <div class="absolute right-[46px] top-[18px]
+                w-1.5 h-1.5 rounded-full bg-cyan-100/70">
+    </div>
 
-                        <i class="bi bi-chat-dots-fill text-xl"></i>
+    <div class="absolute right-[27px] top-[35px]
+                w-1 h-1 rounded-full bg-white/70">
+    </div>
 
-                    </div>
+    <!-- Nội dung -->
+    <div class="relative z-10 flex items-center justify-between">
 
-                    <div>
+        <div class="flex items-center gap-2.5">
 
-                        <div class="text-[12px] font-extrabold">
-                            KẾT NỐI SỐ
-                        </div>
+            <!-- Icon -->
+            <div class="w-10 h-10 rounded-xl
+                        bg-white/15 border border-white/30
+                        backdrop-blur-sm
+                        flex items-center justify-center
+                        shadow-inner">
 
-                        <div class="text-[10px] text-indigo-100 mt-0.5">
-                            Yêu cầu • Phản hồi
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="flex items-center gap-1.5">
-
-                    <span id="digitalConnectBadge"
-                        class="hidden min-w-[21px] h-[21px] px-1.5
-                               rounded-full bg-red-500 text-white
-                               text-[10px] font-bold
-                               items-center justify-center">
-                        0
-                    </span>
-
-                    <i id="digitalConnectChevron"
-                       class="bi bi-chevron-down text-sm
-                              transition-transform duration-200">
-                    </i>
-
-                </div>
+                <i class="bi bi-globe2 text-[21px] text-cyan-50"></i>
 
             </div>
 
-        </button>
+            <!-- Chữ -->
+            <div>
+                <div class="text-[12px] font-extrabold tracking-wide">
+                    KẾT NỐI SỐ
+                </div>
 
+                <div class="text-[9px] text-cyan-50/95 mt-0.5 font-medium">
+                    Yêu cầu • Phản hồi • Hỗ trợ
+                </div>
+            </div>
 
+        </div>
+
+        <!-- Badge + mũi tên -->
+        <div class="flex items-center gap-1.5">
+
+            <span id="digitalConnectBadge"
+                class="hidden min-w-[21px] h-[21px] px-1.5
+                       rounded-full bg-red-500
+                       border-2 border-white/80
+                       text-white text-[10px] font-bold
+                       items-center justify-center shadow">
+                0
+            </span>
+
+            <i id="digitalConnectChevron"
+               class="bi bi-chevron-down text-[13px]
+                      text-white/90
+                      transition-transform duration-200">
+            </i>
+
+        </div>
+
+    </div>
+
+</button>
         <!-- PANEL KẾT NỐI SỐ -->
         <div id="digitalConnectPanel"
              class="hidden absolute right-0 top-[calc(100%+8px)]
