@@ -133,84 +133,386 @@
             </span>
         </div>
 
-        <!-- ================= 1. GIAO DIỆN TẠO LỊCH CÔNG TÁC / HỌP (MENU 1) ================= -->
-        <section id="tab-tao-lich-cong-tac" class="form-tab-content space-y-3 sm:space-y-4">
-            <div class="bg-[#0F4C81] text-white p-3.5 sm:p-4 rounded-2xl shadow-sm flex items-center justify-between gap-2">
-                <div class="font-bold text-xs sm:text-sm uppercase truncate"><i class="bi bi-calendar-plus mr-1.5"></i>Tạo lịch công tác / họp</div>
-                <span class="text-[10px] sm:text-xs bg-white/20 px-2 py-0.5 sm:py-1 rounded-lg shrink-0">Sự kiện lẻ</span>
+       <!-- ================= 1. TẠO LỊCH CÔNG TÁC / HỌP ================= -->
+<section id="tab-tao-lich-cong-tac"
+         class="form-tab-content space-y-4">
+
+    <!-- HEADER HVA -->
+    <div class="relative overflow-hidden rounded-2xl
+                bg-gradient-to-r from-[#0F4C81] via-[#155F9B] to-[#1788B8]
+                text-white shadow-md">
+
+        <div class="absolute -right-8 -top-10 w-32 h-32
+                    rounded-full bg-white/10"></div>
+
+        <div class="relative px-4 py-4 flex items-center justify-between gap-3">
+
+            <div class="flex items-center gap-3 min-w-0">
+
+                <div class="w-10 h-10 rounded-xl bg-white/15
+                            border border-white/20
+                            flex items-center justify-center shrink-0">
+                    <i class="bi bi-calendar2-plus-fill text-lg"></i>
+                </div>
+
+                <div class="min-w-0">
+                    <div class="text-[14px] sm:text-[15px]
+                                font-extrabold tracking-tight">
+                        TẠO LỊCH CÔNG TÁC / HỌP
+                    </div>
+
+                    <div class="text-[10px] sm:text-[11px]
+                                text-blue-100 mt-0.5">
+                        Khởi tạo cuộc họp, công tác và hoạt động của nhà trường
+                    </div>
+                </div>
+
             </div>
 
-            <form onsubmit="handleSaveCongTacLe(event)" class="space-y-3 sm:space-y-4">
-                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
-                    <label class="block text-xs font-bold text-[#0F4C81]">Loại cuộc họp / Công tác (*)</label>
-                    <select id="loaiCuocHop" required class="w-full rounded-xl border border-slate-300 px-3 py-2 sm:py-2.5 text-xs font-bold text-slate-800 outline-none focus:border-[#0F4C81]">
-                        <option value="Chi bộ định kỳ">Chi bộ định kỳ</option>
-                        <option value="Ban Giám hiệu">Ban Giám hiệu</option>
-                        <option value="Liên tịch">Họp Liên tịch</option>
-                        <option value="Hội đồng sư phạm">Hội đồng sư phạm</option>
-                        <option value="Tổ CM">Họp Tổ Chuyên môn</option>
-                        <option value="Tổ VP">Họp Tổ Văn phòng</option>
-                        <option value="Thi đua">Họp Thi đua - Khen thưởng</option>
-                        <option value="Đột xuất">Chỉ đạo Đột xuất</option>
-                        <option value="Dự giờ">Dự giờ thăm lớp</option>
-                        <option value="Hội thảo">Hội thảo chuyên môn</option>
-                        <option value="Tập huấn">Tập huấn bồi dưỡng</option>
-                        <option value="SH chuyên môn">Sinh hoạt chuyên môn</option>
-                        <option value="Khác">Khác...</option>
+            <span class="hidden sm:inline-flex items-center gap-1.5
+                         text-[10px] font-semibold
+                         bg-white/15 border border-white/20
+                         px-2.5 py-1.5 rounded-lg shrink-0">
+                <i class="bi bi-calendar-event"></i>
+                Sự kiện lẻ
+            </span>
+
+        </div>
+    </div>
+
+
+    <form onsubmit="handleSaveCongTacLe(event)"
+          class="space-y-4">
+
+        <!-- 01. PHÂN LOẠI -->
+        <div class="bg-white rounded-2xl border border-slate-200
+                    shadow-sm overflow-hidden">
+
+            <div class="px-4 pt-3.5 pb-2 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-lg bg-blue-50
+                             text-[#0F4C81] flex items-center justify-center">
+                    <i class="bi bi-ui-checks-grid text-xs"></i>
+                </span>
+
+                <span class="text-[11px] font-extrabold
+                             text-slate-700 uppercase tracking-wide">
+                    Phân loại hoạt động
+                </span>
+            </div>
+
+            <div class="px-4 pb-4">
+
+                <label class="block text-[11px] font-bold
+                              text-[#0F4C81] mb-1.5">
+                    Loại cuộc họp / Công tác
+                    <span class="text-red-500">*</span>
+                </label>
+
+                <select id="loaiCuocHop"
+                        required
+                        class="w-full h-11 rounded-xl
+                               border border-slate-300 bg-slate-50
+                               px-3 text-xs font-semibold text-slate-800
+                               outline-none
+                               focus:bg-white focus:border-[#0F4C81]
+                               focus:ring-2 focus:ring-blue-100
+                               transition">
+
+                    <option value="Chi bộ định kỳ">Chi bộ định kỳ</option>
+                    <option value="Ban Giám hiệu">Ban Giám hiệu</option>
+                    <option value="Liên tịch">Họp Liên tịch</option>
+                    <option value="Hội đồng sư phạm">Hội đồng sư phạm</option>
+                    <option value="Tổ CM">Họp Tổ Chuyên môn</option>
+                    <option value="Tổ VP">Họp Tổ Văn phòng</option>
+                    <option value="Thi đua">Họp Thi đua - Khen thưởng</option>
+                    <option value="Đột xuất">Chỉ đạo Đột xuất</option>
+                    <option value="Dự giờ">Dự giờ thăm lớp</option>
+                    <option value="Hội thảo">Hội thảo chuyên môn</option>
+                    <option value="Tập huấn">Tập huấn bồi dưỡng</option>
+                    <option value="SH chuyên môn">Sinh hoạt chuyên môn</option>
+                    <option value="Khác">Khác...</option>
+
+                </select>
+
+            </div>
+        </div>
+
+
+        <!-- 02. NỘI DUNG -->
+        <div class="bg-white rounded-2xl border border-slate-200
+                    shadow-sm overflow-hidden">
+
+            <div class="px-4 pt-3.5 pb-2 flex items-center gap-2">
+
+                <span class="w-6 h-6 rounded-lg bg-blue-50
+                             text-[#0F4C81] flex items-center justify-center">
+                    <i class="bi bi-card-text text-xs"></i>
+                </span>
+
+                <span class="text-[11px] font-extrabold
+                             text-slate-700 uppercase tracking-wide">
+                    Nội dung
+                </span>
+
+            </div>
+
+            <div class="px-4 pb-4 space-y-3">
+
+                <div>
+                    <label class="block text-[11px] font-bold
+                                  text-[#0F4C81] mb-1.5">
+                        Tiêu đề / Nội dung công việc
+                        <span class="text-red-500">*</span>
+                    </label>
+
+                    <input type="text"
+                           id="tieuDeLe"
+                           required
+                           class="w-full h-11 rounded-xl
+                                  border border-slate-300
+                                  bg-slate-50 px-3
+                                  text-xs font-medium text-slate-800
+                                  outline-none
+                                  focus:bg-white
+                                  focus:border-[#0F4C81]
+                                  focus:ring-2 focus:ring-blue-100
+                                  transition"
+                           placeholder="Ví dụ: Họp Hội đồng sư phạm tháng 8/2026">
+                </div>
+
+
+                <div>
+                    <label class="block text-[11px] font-bold
+                                  text-[#0F4C81] mb-1.5">
+                        Nội dung triển khai
+                    </label>
+
+                    <textarea id="noiDungLe"
+                              rows="3"
+                              class="w-full rounded-xl
+                                     border border-slate-300
+                                     bg-slate-50 px-3 py-2.5
+                                     text-xs font-medium text-slate-800
+                                     outline-none resize-y
+                                     focus:bg-white
+                                     focus:border-[#0F4C81]
+                                     focus:ring-2 focus:ring-blue-100
+                                     transition"
+                              placeholder="Nhập nội dung, yêu cầu hoặc ghi chú cần thiết..."></textarea>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- 03. THỜI GIAN -->
+        <div class="bg-white rounded-2xl border border-slate-200
+                    shadow-sm overflow-hidden">
+
+            <div class="px-4 pt-3.5 pb-2 flex items-center gap-2">
+
+                <span class="w-6 h-6 rounded-lg bg-cyan-50
+                             text-cyan-700 flex items-center justify-center">
+                    <i class="bi bi-clock text-xs"></i>
+                </span>
+
+                <span class="text-[11px] font-extrabold
+                             text-slate-700 uppercase tracking-wide">
+                    Thời gian
+                </span>
+
+            </div>
+
+
+            <div class="grid grid-cols-1 sm:grid-cols-3
+                        gap-3 px-4 pb-4">
+
+                <div>
+                    <label class="block text-[11px] font-bold
+                                  text-[#0F4C81] mb-1.5">
+                        Ngày thực hiện
+                        <span class="text-red-500">*</span>
+                    </label>
+
+                    <input type="date"
+                           id="ngayLe"
+                           required
+                           class="w-full h-11 rounded-xl
+                                  border border-slate-300
+                                  bg-slate-50 px-3
+                                  text-xs font-medium
+                                  outline-none
+                                  focus:bg-white
+                                  focus:border-[#0F4C81]
+                                  focus:ring-2 focus:ring-blue-100">
+                </div>
+
+
+                <div>
+                    <label class="block text-[11px] font-bold
+                                  text-[#0F4C81] mb-1.5">
+                        Giờ bắt đầu
+                    </label>
+
+                    <input type="time"
+                           id="gioLe"
+                           class="w-full h-11 rounded-xl
+                                  border border-slate-300
+                                  bg-slate-50 px-3
+                                  text-xs font-medium
+                                  outline-none
+                                  focus:bg-white
+                                  focus:border-[#0F4C81]
+                                  focus:ring-2 focus:ring-blue-100">
+                </div>
+
+
+                <div>
+                    <label class="block text-[11px] font-bold
+                                  text-[#0F4C81] mb-1.5">
+                        Buổi
+                    </label>
+
+                    <select id="buoiLe"
+                            class="w-full h-11 rounded-xl
+                                   border border-slate-300
+                                   bg-slate-50 px-3
+                                   text-xs font-semibold
+                                   outline-none
+                                   focus:bg-white
+                                   focus:border-[#0F4C81]
+                                   focus:ring-2 focus:ring-blue-100">
+
+                        <option value="SÁNG">SÁNG</option>
+                        <option value="CHIỀU">CHIỀU</option>
+
                     </select>
                 </div>
 
-                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                    <div>
-                        <label class="block text-xs font-bold text-[#0F4C81] mb-1">Tiêu đề / Nội dung công việc (*)</label>
-                        <input type="text" id="tieuDeLe" required class="w-full rounded-xl border border-slate-300 px-3 py-2 sm:py-2.5 text-xs font-medium focus:outline-none focus:border-[#0F4C81]" placeholder="Nhập tên cuộc họp hoặc nội dung công tác...">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-[#0F4C81] mb-1">Mô tả chi tiết nội dung triển khai</label>
-                        <textarea id="noiDungLe" rows="3" class="w-full rounded-xl border border-slate-300 px-3 py-2 sm:py-2.5 text-xs font-medium focus:outline-none focus:border-[#0F4C81]" placeholder="Ghi chú chi tiết..."></textarea>
-                    </div>
+            </div>
+        </div>
+
+
+        <!-- 04. TỔ CHỨC -->
+        <div class="bg-white rounded-2xl border border-slate-200
+                    shadow-sm overflow-hidden">
+
+            <div class="px-4 pt-3.5 pb-2 flex items-center gap-2">
+
+                <span class="w-6 h-6 rounded-lg bg-emerald-50
+                             text-emerald-700 flex items-center justify-center">
+                    <i class="bi bi-people text-xs"></i>
+                </span>
+
+                <span class="text-[11px] font-extrabold
+                             text-slate-700 uppercase tracking-wide">
+                    Thông tin tổ chức
+                </span>
+
+            </div>
+
+
+            <div class="grid grid-cols-1 sm:grid-cols-3
+                        gap-3 px-4 pb-4">
+
+                <div>
+                    <label class="block text-[11px] font-bold
+                                  text-[#0F4C81] mb-1.5">
+                        Địa điểm
+                    </label>
+
+                    <input type="text"
+                           id="diaDiemLe"
+                           class="w-full h-11 rounded-xl
+                                  border border-slate-300
+                                  bg-slate-50 px-3
+                                  text-xs font-medium
+                                  outline-none
+                                  focus:bg-white
+                                  focus:border-[#0F4C81]
+                                  focus:ring-2 focus:ring-blue-100"
+                           placeholder="Phòng họp, Hội trường...">
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm">
-                    <div>
-                        <label class="block text-[11px] font-bold text-[#0F4C81] mb-1">Ngày thực hiện (*)</label>
-                        <input type="date" id="ngayLe" required class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-medium">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-[#0F4C81] mb-1">Thời gian (Giờ:Phút)</label>
-                        <input type="time" id="gioLe" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-medium">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-[#0F4C81] mb-1">Buổi</label>
-                        <select id="buoiLe" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-medium">
-                            <option value="SÁNG">SÁNG</option>
-                            <option value="CHIỀU">CHIỀU</option>
-                        </select>
-                    </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold
+                                  text-[#0F4C81] mb-1.5">
+                        Chủ trì
+                    </label>
+
+                    <input type="text"
+                           id="chuTriLe"
+                           class="w-full h-11 rounded-xl
+                                  border border-slate-300
+                                  bg-slate-50 px-3
+                                  text-xs font-medium
+                                  outline-none
+                                  focus:bg-white
+                                  focus:border-[#0F4C81]
+                                  focus:ring-2 focus:ring-blue-100"
+                           placeholder="Người chủ trì...">
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm">
-                    <div>
-                        <label class="block text-[11px] font-bold text-[#0F4C81] mb-1">Địa điểm</label>
-                        <input type="text" id="diaDiemLe" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-medium" placeholder="Phòng họp BGH, Hội trường...">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-[#0F4C81] mb-1">Chủ trì</label>
-                        <input type="text" id="chuTriLe" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-medium" placeholder="Cán bộ chủ trì...">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-[#0F4C81] mb-1">Thành phần tham dự</label>
-                        <input type="text" id="thanhPhanLe" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-medium" placeholder="Thành phần tham gia...">
-                    </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold
+                                  text-[#0F4C81] mb-1.5">
+                        Thành phần tham dự
+                    </label>
+
+                    <input type="text"
+                           id="thanhPhanLe"
+                           class="w-full h-11 rounded-xl
+                                  border border-slate-300
+                                  bg-slate-50 px-3
+                                  text-xs font-medium
+                                  outline-none
+                                  focus:bg-white
+                                  focus:border-[#0F4C81]
+                                  focus:ring-2 focus:ring-blue-100"
+                           placeholder="BGH, TTCM, giáo viên...">
                 </div>
 
-                <button type="submit" class="w-full h-11 bg-[#0F4C81] hover:bg-blue-900 text-white font-bold rounded-xl text-xs uppercase shadow-md active:scale-95 transition">
-                    Lưu Lịch Công Tác / Cuộc Họp
-                </button>
-            </form>
-        </section>
+            </div>
+        </div>
 
-        <!-- ================= 2. GIAO DIỆN TẠO LỊCH TUẦN TRUYỀN THỐNG (MENU 2) ================= -->
+
+        <!-- ACTION -->
+        <div class="pt-1">
+
+            <button type="submit"
+                    class="group w-full h-12 rounded-xl
+                           bg-gradient-to-r
+                           from-[#0F4C81] to-[#1679B8]
+                           hover:from-[#0B3E69]
+                           hover:to-[#12679E]
+                           text-white
+                           font-extrabold text-xs
+                           shadow-md hover:shadow-lg
+                           active:scale-[0.99]
+                           transition-all duration-200
+                           flex items-center justify-center gap-2">
+
+                <i class="bi bi-floppy-fill text-sm"></i>
+
+                <span>
+                    LƯU LỊCH CÔNG TÁC / CUỘC HỌP
+                </span>
+
+            </button>
+
+            <p class="text-center text-[9px] text-slate-400 mt-2">
+                Thông tin sau khi lưu sẽ được sử dụng cho lịch công tác và quy trình cuộc họp
+            </p>
+
+        </div>
+
+    </form>
+
+</section>
+
+<!-- ================= 2. GIAO DIỆN TẠO LỊCH TUẦN TRUYỀN THỐNG (MENU 2) ================= -->
         <section id="tab-tao-lich-tuan" class="form-tab-content hidden space-y-4">
             <div class="bg-emerald-800 text-white p-4 rounded-2xl shadow-sm flex items-center justify-between">
                 <div class="font-bold text-sm uppercase"><i class="bi bi-layout-three-columns mr-2"></i>Giao diện 2: Tạo Lịch Công Tác Tuần </div>
