@@ -1,1084 +1,434 @@
 <!DOCTYPE html>
 <html lang="vi" class="h-full bg-slate-50">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TTĐHS_HVA - Kho Văn Bản Điện Tử</title>
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts & Bootstrap Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            200: '#bae0fd',
-                            500: '#1687D9',
-                            600: '#0F4C81',
-                            700: '#0b3e69',
-                            800: '#062B5B',
-                            900: '#041f43',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-            -webkit-tap-highlight-color: transparent; 
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        /* Accordion Transitions */
-        .dashboard-submenu {
-            transition: all 0.25s ease-in-out;
-        }
-        
-        /* Toast Animations */
-        @keyframes toastIn {
-            from { transform: translateY(-100%) scale(0.9); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
-        }
-        @keyframes toastOut {
-            from { transform: translateY(0) scale(1); opacity: 1; }
-            to { transform: translateY(-100%) scale(0.9); opacity: 0; }
-        }
-        .toast-enter { animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .toast-exit { animation: toastOut 0.25s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
-
-        /* Mobile Responsiveness Rules */
-        .mobile-safe-text {
-            min-width: 0;
-            max-width: 100%;
-            overflow-wrap: break-word;
-            word-break: normal;
-        }
-
-        @media (max-width: 640px) {
-            .page-header-wrap {
-                padding-left: 12px !important;
-                padding-right: 12px !important;
-            }
-
-            .page-header-title {
-                font-size: 15px !important;
-                line-height: 1.2 !important;
-                letter-spacing: -0.01em !important;
-                white-space: normal;
-                overflow-wrap: break-word;
-            }
-
-            .page-header-subtitle {
-                font-size: 9px !important;
-                line-height: 1.25 !important;
-                letter-spacing: 0.04em !important;
-                white-space: normal;
-            }
-
-            .page-header-back {
-                width: 36px !important;
-                height: 36px !important;
-                min-width: 36px !important;
-                flex-shrink: 0;
-            }
-        }
-
-        @media print {
-            body * { visibility: hidden; }
-            #printArea, #printArea * { visibility: visible; }
-            #printArea { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 20px; }
-            .no-print { display: none !important; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>TTĐHS_HVA - Kho Văn Bản Điện Tử</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{brand:{500:"#1687D9",600:"#0F4C81",700:"#0b3e69",800:"#062B5B"}},fontFamily:{sans:["Inter","sans-serif"]}}}}
+</script>
+<style>
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:9999px}
+.category-btn.active{background:#eff6ff;border-color:#93c5fd;color:#0F4C81}
+.category-btn.active .cat-icon{transform:scale(1.08)}
+.doc-row.selected{background:#eff6ff}
+.toast-in{animation:toastIn .25s ease-out}@keyframes toastIn{from{transform:translateY(-10px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:640px){.page-title{font-size:16px}.welcome-text{font-size:12px}}
+</style>
 </head>
-<body class="h-full text-slate-800 antialiased flex flex-col bg-slate-50 selection:bg-blue-100 selection:text-[#0F4C81]">
+<body class="min-h-full text-slate-800 bg-slate-50">
 
-    <!-- TOAST CONTAINER -->
-    <div id="toastContainer" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+<div id="toastContainer" class="fixed top-4 right-4 z-[100] w-[calc(100%-2rem)] sm:w-96 space-y-2 pointer-events-none"></div>
 
-    <!-- HEADER TTĐHS_HVA CỐ ĐỊNH -->
-    <header class="sticky top-0 z-40 w-full overflow-hidden shadow-md no-print">
-        <div class="absolute inset-0 bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]"></div>
-        
-        <div class="absolute -left-20 -top-20 w-72 h-72 rounded-full bg-cyan-300/20 blur-3xl pointer-events-none"></div>
-        <div class="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-sky-300/15 blur-3xl pointer-events-none"></div>
-
-        <div class="absolute inset-0 opacity-[0.06] pointer-events-none"
-            style="background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px); background-size:28px 28px;">
+<header class="sticky top-0 z-40 shadow-md">
+  <div class="bg-gradient-to-r from-[#062B5B] via-[#0F4C81] to-[#1687D9]">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <button onclick="goBack()" class="w-10 h-10 shrink-0 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/20">
+          <i class="bi bi-arrow-left text-lg"></i>
+        </button>
+        <div class="min-w-0">
+          <div class="text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold text-white/75">THPT HÒA VANG - TTĐHS_HVA</div>
+          <h1 class="page-title text-xl font-extrabold text-white uppercase truncate">Kho văn bản điện tử</h1>
         </div>
+      </div>
+      <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white text-xs">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span> Trực tuyến
+      </div>
+    </div>
+  </div>
+</header>
 
-        <svg class="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" preserveAspectRatio="none">
-            <g stroke="white" stroke-width="1.2" fill="none">
-                <path d="M35 28 H120 V68 H200"/>
-                <path d="M300 20 V55 H390 V95"/>
-                <path d="M560 28 H650 V60 H760"/>
-            </g>
-            <g fill="white">
-                <circle cx="35" cy="28" r="2.6"/>
-                <circle cx="120" cy="68" r="2.6"/>
-                <circle cx="200" cy="68" r="2.6"/>
-                <circle cx="300" cy="20" r="2.6"/>
-                <circle cx="390" cy="55" r="2.6"/>
-                <circle cx="390" cy="95" r="2.6"/>
-                <circle cx="560" cy="28" r="2.6"/>
-                <circle cx="650" cy="60" r="2.6"/>
-                <circle cx="760" cy="60" r="2.6"/>
-            </g>
-        </svg>
+<main class="max-w-6xl mx-auto p-4 sm:p-6 pb-28 space-y-5">
 
-        <div class="relative max-w-4xl mx-auto px-4 pt-4 pb-5 page-header-wrap">
-            <div class="flex items-center justify-between gap-3 min-w-0">
-                <div class="flex items-center gap-3 min-w-0 flex-1">
-                    <button type="button" onclick="handleGoBack()"
-                        class="page-header-back w-10 h-10 rounded-xl bg-white/10 border border-white/20 backdrop-blur hover:bg-white/20 transition flex items-center justify-center text-white active:scale-95 shrink-0"
-                        aria-label="Quay lại">
-                        <i class="bi bi-arrow-left text-lg"></i>
-                    </button>
-
-                    <div class="min-w-0 flex-1 mobile-safe-text">
-                        <div class="page-header-subtitle text-white/80 font-semibold uppercase tracking-wider text-[11px]">
-                            THPT HÒA VANG - TTĐHS_HVA
-                        </div>
-                        <h1 class="page-header-title text-white text-xl font-extrabold uppercase tracking-tight">
-                            KHO VĂN BẢN ĐIỆN TỬ
-                        </h1>
-                    </div>
-                </div>
-
-                <div class="hidden sm:flex shrink-0 items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 backdrop-blur">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="text-white text-xs font-medium whitespace-nowrap">Trực tuyến</span>
-                </div>
-            </div>
+  <section class="rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 to-white shadow-sm p-4 sm:p-5">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+          <i class="bi bi-journal-bookmark-fill"></i>
         </div>
-    </header>
-
-    <!-- MAIN CONTENT CONTAINER -->
-    <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 pb-32 overflow-y-auto no-print">
-        <div class="space-y-6">
-            
-            <!-- PHẦN 1: CẤU TRÚC KHO VĂN BẢN (GỒM VĂN BẢN ĐẾN VÀ VĂN BẢN ĐI) -->
-            <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-3">
-                    <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
-                        <i class="bi bi-folder-fill text-lg text-blue-600 shrink-0"></i>
-                        <span>DANH MỤC PHÂN LOẠI VĂN BẢN</span>
-                    </div>
-                    <div id="displayNgayHienTai" class="flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
-                        <i class="bi bi-calendar3 text-slate-400"></i>
-                        <span id="txtCurrentDate">--/--/----</span>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <!-- Nút Xem tất cả -->
-                    <div onclick="loadModule('tat-ca', event)" class="p-2.5 bg-slate-100/80 hover:bg-blue-50 border border-slate-200 rounded-xl cursor-pointer transition flex items-center justify-between">
-                        <span class="flex items-center gap-2 text-xs font-bold text-[#0F4C81]">
-                            <i class="bi bi-collection-fill text-blue-600"></i> TẤT CẢ VĂN BẢN
-                        </span>
-                        <i class="bi bi-chevron-right text-xs opacity-50"></i>
-                    </div>
-
-                    <!-- 1. Menu "Văn bản đến" -->
-                    <div id="group-vb-den" class="dashboard-item p-2.5 bg-slate-50/70 border border-slate-200/80 hover:bg-emerald-50/80 rounded-xl cursor-pointer transition-all" onclick="toggleSubmenu('vb-den-submenu', 'vb-den-chevron')">
-                        <div class="flex items-center justify-between">
-                            <span class="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-                                <i class="bi bi-inbox-fill text-emerald-600 text-base"></i> VĂN BẢN ĐẾN
-                            </span>
-                            <i id="vb-den-chevron" class="bi bi-chevron-right text-xs opacity-60 transition-transform duration-200 chevron-icon"></i>
-                        </div>
-                        <div id="vb-den-submenu" class="dashboard-submenu hidden pl-4 pt-2.5 space-y-1.5 border-t border-slate-200/60 mt-2">
-                            <div class="p-2 text-xs text-slate-700 hover:text-emerald-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-den-trung-uong', event)">
-                                <i class="bi bi-folder-fill text-amber-500"></i> 01. Văn bản Trung ương
-                            </div>
-                            <div class="p-2 text-xs text-slate-700 hover:text-emerald-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-den-da-nang', event)">
-                                <i class="bi bi-folder-fill text-blue-500"></i> 02. Văn bản Thành phố Đà Nẵng
-                            </div>
-                            <div class="p-2 text-xs text-slate-700 hover:text-emerald-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-den-so-gddt', event)">
-                                <i class="bi bi-folder-fill text-emerald-500"></i> 03. Sở GD&ĐT Đà Nẵng
-                            </div>
-                            <div class="p-2 text-xs text-slate-700 hover:text-emerald-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-den-co-quan-khac', event)">
-                                <i class="bi bi-folder-fill text-slate-500"></i> 04. Cơ quan khác
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. Menu "Văn bản đi" -->
-                    <div id="group-vb-di" class="dashboard-item p-2.5 bg-slate-50/70 border border-slate-200/80 hover:bg-teal-50/80 rounded-xl cursor-pointer transition-all" onclick="toggleSubmenu('vb-di-submenu', 'vb-di-chevron')">
-                        <div class="flex items-center justify-between">
-                            <span class="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-                                <i class="bi bi-send-fill text-teal-600 text-base"></i> VĂN BẢN ĐI (NỘI BỘ)
-                            </span>
-                            <i id="vb-di-chevron" class="bi bi-chevron-right text-xs opacity-60 transition-transform duration-200 chevron-icon"></i>
-                        </div>
-                        <div id="vb-di-submenu" class="dashboard-submenu hidden pl-4 pt-2.5 space-y-1.5 border-t border-slate-200/60 mt-2">
-                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-quyet-dinh', event)">
-                                <i class="bi bi-file-earmark-text-fill text-red-500"></i> Quyết định
-                            </div>
-                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-ke-hoach', event)">
-                                <i class="bi bi-calendar-check-fill text-blue-500"></i> Kế hoạch
-                            </div>
-                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-bao-cao', event)">
-                                <i class="bi bi-file-earmark-bar-graph-fill text-amber-500"></i> Báo cáo
-                            </div>
-                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-to-trinh', event)">
-                                <i class="bi bi-file-earmark-richtext-fill text-purple-500"></i> Tờ trình
-                            </div>
-                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-thong-bao', event)">
-                                <i class="bi bi-bell-fill text-orange-500"></i> Thông báo
-                            </div>
-                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-cong-van', event)">
-                                <i class="bi bi-envelope-paper-fill text-teal-500"></i> Công văn
-                            </div>
-                            <div class="p-2 text-xs text-slate-700 hover:text-teal-700 font-semibold rounded-lg hover:bg-white flex items-center gap-2 transition" onclick="loadModule('vb-di-giao-nhiem-vu', event)">
-                                <i class="bi bi-check2-square text-emerald-500"></i> Giao nhiệm vụ
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- PHẦN 2: CẬP NHẬT VĂN BẢN -->
-            <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md">
-                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81] mb-3 border-b border-slate-100 pb-2.5">
-                    <i class="bi bi-clock-history text-lg text-blue-600"></i>
-                    <span>CẬP NHẬT VĂN BẢN</span>
-                </div>
-
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                    <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                        <input type="radio" name="timeFilter" value="homNay" checked onchange="handleTimeFilterChange(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
-                        <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Văn bản hôm nay</span>
-                    </label>
-                    <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                        <input type="radio" name="timeFilter" value="3ngay" onchange="handleTimeFilterChange(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
-                        <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">03 ngày gần nhất</span>
-                    </label>
-                    <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                        <input type="radio" name="timeFilter" value="tuanNay" onchange="handleTimeFilterChange(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
-                        <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Tuần này</span>
-                    </label>
-                    <label class="group relative flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-blue-50/50 hover:border-blue-300 cursor-pointer transition select-none">
-                        <input type="radio" name="timeFilter" value="thangNay" onchange="handleTimeFilterChange(this.value)" class="w-4 h-4 text-[#0F4C81] focus:ring-[#0F4C81]">
-                        <span class="text-xs font-semibold text-slate-700 group-hover:text-[#0F4C81]">Tháng này</span>
-                    </label>
-                </div>
-            </section>
-
-            <!-- PHẦN 3: TRA CỨU VĂN BẢN -->
-            <section class="bg-white rounded-2xl border border-blue-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md bg-gradient-to-b from-blue-50/30 to-transparent">
-                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81] mb-3 border-b border-blue-100 pb-2.5">
-                    <i class="bi bi-search text-lg text-blue-600"></i>
-                    <span>TRA CỨU VĂN BẢN</span>
-                </div>
-
-                <div class="space-y-3">
-                    <div class="relative">
-                        <input type="text" id="searchInput" oninput="handleSearchInput()" placeholder="Tìm theo số văn bản, trích yếu, người ký hoặc cơ quan ban hành..." 
-                            class="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-10 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-[#0F4C81] focus:ring-2 focus:ring-blue-100 transition shadow-sm">
-                        <i class="bi bi-search absolute left-3.5 top-3 text-slate-400 text-sm"></i>
-                        <button type="button" id="btnClearSearch" onclick="clearSearch()" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 p-0.5">
-                            <i class="bi bi-x-circle-fill"></i>
-                        </button>
-                    </div>
-
-                    <!-- CARD THÔNG TIN VĂN BẢN ĐANG CHỌN -->
-                    <div id="selectedDocCard" class="p-3.5 bg-blue-50/80 rounded-xl border border-blue-200 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                        <!-- Render dynamic từ JS -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- PHẦN 4: DANH SÁCH VĂN BẢN -->
-            <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 transition hover:shadow-md space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                    <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0F4C81]">
-                        <i class="bi bi-list-task text-lg text-blue-600"></i>
-                        <span id="lblCategoryTitle">DANH SÁCH VĂN BẢN (TẤT CẢ)</span>
-                    </div>
-                    <span id="docCountBadge" class="px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-100 text-[#0F4C81] text-xs font-bold">
-                        0 văn bản
-                    </span>
-                </div>
-
-                <!-- DESKTOP TABLE DISPLAY -->
-                <div class="hidden md:block overflow-x-auto rounded-xl border border-slate-200">
-                    <table class="w-full text-left border-collapse text-xs">
-                        <thead>
-                            <tr class="bg-slate-100/80 text-slate-700 font-bold uppercase tracking-wider border-b border-slate-200">
-                                <th class="p-3 text-center w-12">STT</th>
-                                <th class="p-3 w-24">Ngày BH</th>
-                                <th class="p-3 w-32">Số văn bản</th>
-                                <th class="p-3 w-24">Loại</th>
-                                <th class="p-3 w-32">Phân loại</th>
-                                <th class="p-3">Trích yếu</th>
-                                <th class="p-3 text-center w-16">Tệp</th>
-                                <th class="p-3 text-center w-28">Trạng thái</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 font-medium text-slate-800" id="desktopTableBody">
-                            <!-- Render bằng JS -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- MOBILE CARD DISPLAY -->
-                <div class="block md:hidden space-y-3" id="mobileCardContainer">
-                    <!-- Render bằng JS -->
-                </div>
-            </section>
-
+        <div>
+          <div class="font-extrabold text-[#0F4C81]">Chào mừng Thầy/Cô đến với Kho văn bản số</div>
+          <div class="welcome-text text-sm text-slate-600 mt-1 leading-relaxed">
+            Chúc Thầy/Cô tra cứu nhanh và tìm được văn bản cần thiết. Nếu chưa tìm thấy, vui lòng gửi yêu cầu để nhà trường hỗ trợ.
+          </div>
         </div>
-    </main>
+      </div>
+      <button onclick="openRequestModal()" class="shrink-0 h-10 px-4 rounded-xl bg-[#0F4C81] hover:bg-[#0b3e69] text-white text-sm font-bold flex items-center justify-center gap-2">
+        <i class="bi bi-send-plus-fill"></i> Gửi yêu cầu
+      </button>
+    </div>
+  </section>
 
-    <!-- MODAL TIẾP NHẬN / TẠO VĂN BẢN MỚI -->
-    <div id="actionModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300 no-print">
-        <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform scale-95 transition-transform duration-300" id="modalContent">
-            <div class="bg-gradient-to-r from-[#062B5B] to-[#0F4C81] px-5 py-4 flex items-center justify-between text-white">
-                <div class="flex items-center gap-2">
-                    <i class="bi bi-file-earmark-plus text-lg"></i>
-                    <h3 class="font-bold text-sm uppercase tracking-wide" id="modalTitle">TIẾP NHẬN / TẠO VĂN BẢN MỚI</h3>
-                </div>
-                <button type="button" onclick="closeModal()" class="text-white/80 hover:text-white text-lg">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-            
-            <form id="docForm" onsubmit="handleFormSubmit(event)" class="p-5 space-y-4 text-xs">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Số văn bản <span class="text-rose-500">*</span></label>
-                        <input type="text" id="formSoVB" required placeholder="Ví dụ: 245/SGDĐT-VP" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Ngày ban hành <span class="text-rose-500">*</span></label>
-                        <input type="date" id="formNgayBH" required class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Phân loại danh mục</label>
-                        <select id="formModule" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
-                            <optgroup label="Văn bản đến">
-                                <option value="vb-den-trung-uong">01. Văn bản Trung ương</option>
-                                <option value="vb-den-da-nang">02. Văn bản Thành phố Đà Nẵng</option>
-                                <option value="vb-den-so-gddt" selected>03. Sở GD&ĐT Đà Nẵng</option>
-                                <option value="vb-den-co-quan-khac">04. Cơ quan khác</option>
-                            </optgroup>
-                            <optgroup label="Văn bản đi (Nội bộ)">
-                                <option value="vb-di-quyet-dinh">Quyết định</option>
-                                <option value="vb-di-ke-hoach">Kế hoạch</option>
-                                <option value="vb-di-bao-cao">Báo cáo</option>
-                                <option value="vb-di-to-trinh">Tờ trình</option>
-                                <option value="vb-di-thong-bao">Thông báo</option>
-                                <option value="vb-di-cong-van">Công văn</option>
-                                <option value="vb-di-giao-nhiem-vu">Giao nhiệm vụ</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Loại văn bản</label>
-                        <select id="formLoaiVB" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
-                            <option value="Công văn">Công văn</option>
-                            <option value="Quyết định">Quyết định</option>
-                            <option value="Thông báo">Thông báo</option>
-                            <option value="Kế hoạch">Kế hoạch</option>
-                            <option value="Báo cáo">Báo cáo</option>
-                            <option value="Tờ trình">Tờ trình</option>
-                            <option value="Hướng dẫn">Hướng dẫn</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Cơ quan ban hành / Đơn vị ban hành</label>
-                    <input type="text" id="formCoQuan" placeholder="Sở Giáo dục và Đào tạo TP Đà Nẵng / THPT Hòa Vang" class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Trích yếu nội dung <span class="text-rose-500">*</span></label>
-                    <textarea id="formTrichYeu" rows="3" required placeholder="Nhập tóm tắt nội dung văn bản..." class="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-[#0F4C81]"></textarea>
-                </div>
-
-                <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200">
-                        Hủy bỏ
-                    </button>
-                    <button type="submit" class="px-5 py-2 rounded-xl bg-[#0F4C81] text-white font-bold hover:bg-[#0b3e69] shadow-sm">
-                        Lưu văn bản
-                    </button>
-                </div>
-            </form>
-        </div>
+  <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
+    <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+      <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">
+        <i class="bi bi-folder-fill text-blue-600 text-lg"></i> Danh mục phân loại văn bản
+      </div>
+      <div class="text-xs text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg"><i class="bi bi-calendar3 mr-1"></i><span id="currentDate">--/--/----</span></div>
     </div>
 
-    <!-- BOTTOM ACTION BAR CỐ ĐỊNH -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.08)] no-print">
-        <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            <button type="button" onclick="handleGoBack()" 
-                class="h-11 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition active:scale-95 flex items-center justify-center gap-1.5">
-                <i class="bi bi-house-door-fill"></i>
-                <span>Quay lại</span>
-            </button>
+    <button data-category="all" onclick="selectCategory('all')" class="category-btn active w-full mb-3 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50 transition flex items-center justify-between text-sm font-bold">
+      <span class="flex items-center gap-2"><i class="cat-icon bi bi-collection-fill text-blue-600"></i> TẤT CẢ VĂN BẢN</span>
+      <span id="count-all" class="text-[11px] px-2 py-0.5 rounded-full bg-white border border-slate-200">0</span>
+    </button>
 
-            <button type="button" onclick="handleRefreshData()" 
-                class="h-11 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-sm font-semibold transition active:scale-95 flex items-center justify-center gap-1.5">
-                <i class="bi bi-arrow-clockwise"></i>
-                <span>Làm mới</span>
-            </button>
-
-            <button type="button" onclick="handleAdvancedSearch()" 
-                class="h-11 rounded-xl border-2 border-[#0F4C81] bg-white text-[#0F4C81] hover:bg-blue-50 text-sm font-bold transition active:scale-95 flex items-center justify-center gap-1.5">
-                <i class="bi bi-search text-base"></i>
-                <span>Tra cứu nâng cao</span>
-            </button>
-
-            <button type="button" id="btnPublishSelected" onclick="handlePublishSelected()"
-                class="h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-md hover:shadow-lg transition active:scale-95 flex items-center justify-center gap-1.5">
-                <i class="bi bi-send-check-fill"></i>
-                <span>Phát hành</span>
-            </button>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div class="rounded-xl border border-emerald-200 overflow-hidden">
+        <div class="px-3 py-2.5 bg-emerald-50 text-emerald-800 text-xs font-extrabold uppercase tracking-wide flex items-center gap-2">
+          <i class="bi bi-inbox-fill"></i> Văn bản đến
         </div>
+        <div class="divide-y divide-slate-100">
+          <button data-category="den-trung-uong" onclick="selectCategory('den-trung-uong')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-emerald-50 flex justify-between"><span>01. Văn bản Trung ương</span><span id="count-den-trung-uong">0</span></button>
+          <button data-category="den-da-nang" onclick="selectCategory('den-da-nang')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-emerald-50 flex justify-between"><span>02. Văn bản Thành phố Đà Nẵng</span><span id="count-den-da-nang">0</span></button>
+          <button data-category="den-so" onclick="selectCategory('den-so')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-emerald-50 flex justify-between"><span>03. Sở GD&amp;ĐT Đà Nẵng</span><span id="count-den-so">0</span></button>
+          <button data-category="den-khac" onclick="selectCategory('den-khac')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-emerald-50 flex justify-between"><span>04. Cơ quan khác</span><span id="count-den-khac">0</span></button>
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-teal-200 overflow-hidden">
+        <div class="px-3 py-2.5 bg-teal-50 text-teal-800 text-xs font-extrabold uppercase tracking-wide flex items-center gap-2">
+          <i class="bi bi-send-fill"></i> Văn bản đi
+        </div>
+        <div class="divide-y divide-slate-100">
+          <button data-category="di-cap-tren" onclick="selectCategory('di-cap-tren')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-teal-50 flex justify-between"><span>01. Gửi cấp trên</span><span id="count-di-cap-tren">0</span></button>
+          <button data-category="di-ben-ngoai" onclick="selectCategory('di-ben-ngoai')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-teal-50 flex justify-between"><span>02. Gửi cơ quan bên ngoài</span><span id="count-di-ben-ngoai">0</span></button>
+          <button data-category="di-noi-bo" onclick="selectCategory('di-noi-bo')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-teal-50 flex justify-between"><span>03. Phát hành nội bộ</span><span id="count-di-noi-bo">0</span></button>
+          <button data-category="di-khac" onclick="selectCategory('di-khac')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-teal-50 flex justify-between"><span>04. Văn bản khác</span><span id="count-di-khac">0</span></button>
+        </div>
+      </div>
     </div>
+  </section>
+
+  <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
+    <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] pb-3 mb-3 border-b border-slate-100">
+      <i class="bi bi-clock-history text-blue-600 text-lg"></i> Cập nhật văn bản
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <label class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold cursor-pointer"><input class="mr-2" type="radio" name="timeFilter" value="today">Văn bản hôm nay</label>
+      <label class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold cursor-pointer"><input class="mr-2" type="radio" name="timeFilter" value="3days">03 ngày gần nhất</label>
+      <label class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold cursor-pointer"><input class="mr-2" type="radio" name="timeFilter" value="week">Tuần này</label>
+      <label class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold cursor-pointer"><input class="mr-2" type="radio" name="timeFilter" value="month">Tháng này</label>
+    </div>
+    <div class="mt-2 text-[11px] text-slate-400">Mặc định hiển thị toàn bộ văn bản đã phát hành. Chọn mốc thời gian khi cần lọc nhanh.</div>
+  </section>
+
+  <section class="bg-white rounded-2xl border border-blue-200 shadow-sm p-4 sm:p-5">
+    <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0F4C81] pb-3 mb-3 border-b border-blue-100">
+      <i class="bi bi-search text-blue-600 text-lg"></i> Tra cứu văn bản
+    </div>
+    <div class="relative">
+      <i class="bi bi-search absolute left-3.5 top-3 text-slate-400"></i>
+      <input id="searchInput" type="text" placeholder="Tìm theo số văn bản, trích yếu, người ký hoặc cơ quan ban hành..." class="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-10 py-2.5 text-sm outline-none focus:border-[#0F4C81] focus:ring-2 focus:ring-blue-100">
+      <button id="clearSearch" onclick="clearSearch()" class="hidden absolute right-3 top-2.5 text-slate-400"><i class="bi bi-x-circle-fill"></i></button>
+    </div>
+    <div id="selectedDocCard" class="hidden mt-3 p-3 rounded-xl border border-blue-200 bg-blue-50 text-xs"></div>
+  </section>
+
+  <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
+    <div class="flex items-center justify-between gap-3 pb-3 mb-3 border-b border-slate-100">
+      <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0F4C81]">
+        <i class="bi bi-list-task text-blue-600 text-lg"></i><span id="listTitle">Danh sách văn bản - Tất cả</span>
+      </div>
+      <span id="docCount" class="shrink-0 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#0F4C81] text-xs font-bold">0 văn bản</span>
+    </div>
+
+    <div class="hidden md:block overflow-x-auto rounded-xl border border-slate-200">
+      <table class="w-full text-xs">
+        <thead class="bg-slate-100 text-slate-700 uppercase">
+          <tr>
+            <th class="p-3 text-center w-10"><input id="checkAll" type="checkbox" onchange="toggleCheckAll(this.checked)"></th>
+            <th class="p-3 text-center w-12">STT</th>
+            <th class="p-3 text-left w-24">Ngày BH</th>
+            <th class="p-3 text-left w-40">Số văn bản</th>
+            <th class="p-3 text-left">Trích yếu</th>
+            <th class="p-3 text-center w-20">Tệp</th>
+          </tr>
+        </thead>
+        <tbody id="desktopTableBody" class="divide-y divide-slate-100"></tbody>
+      </table>
+    </div>
+    <div id="mobileCards" class="md:hidden space-y-3"></div>
+  </section>
+</main>
+
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur border-t border-slate-200 shadow-[0_-6px_20px_rgba(0,0,0,.08)] p-3">
+  <div class="max-w-6xl mx-auto grid grid-cols-3 gap-2">
+    <button onclick="goBack()" class="h-11 rounded-xl bg-slate-100 text-slate-700 text-sm font-semibold"><i class="bi bi-house-door-fill mr-1"></i>Quay lại</button>
+    <button onclick="refreshData()" class="h-11 rounded-xl bg-slate-200 text-slate-800 text-sm font-semibold"><i class="bi bi-arrow-clockwise mr-1"></i>Làm mới</button>
+    <button id="downloadBtn" onclick="downloadSelected()" class="h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold"><i class="bi bi-download mr-1"></i><span id="downloadText">Tải file</span></button>
+  </div>
+</div>
+
+<div id="requestModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm p-4 items-center justify-center">
+  <div class="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
+    <div class="px-5 py-4 bg-gradient-to-r from-[#062B5B] to-[#0F4C81] text-white flex justify-between items-center">
+      <div class="font-bold"><i class="bi bi-send-plus-fill mr-2"></i>GỬI YÊU CẦU VĂN BẢN</div>
+      <button onclick="closeRequestModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <form id="requestForm" class="p-5 space-y-3" onsubmit="submitRequest(event)">
+      <div><label class="block text-xs font-bold mb-1">Văn bản cần tìm</label><input id="reqDoc" required class="w-full p-2.5 rounded-xl border border-slate-300 text-sm" placeholder="Số, tên hoặc nội dung văn bản..."></div>
+      <div><label class="block text-xs font-bold mb-1">Ghi chú thêm</label><textarea id="reqNote" rows="3" class="w-full p-2.5 rounded-xl border border-slate-300 text-sm" placeholder="Thông tin giúp xác định văn bản..."></textarea></div>
+      <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="closeRequestModal()" class="px-4 py-2 rounded-xl bg-slate-100 text-sm font-semibold">Hủy</button><button type="submit" class="px-4 py-2 rounded-xl bg-[#0F4C81] text-white text-sm font-bold">Gửi yêu cầu</button></div>
+    </form>
+  </div>
+</div>
 
 <script>
-   
+const GATEWAY_URL="https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec";
 
-    /* INITIALIZATION */
-/* ==========================================================================
-       2. KHỞI TẠO NỀN TẢNG (INITIALIZATION)
-       ========================================================================== */
+const State={documents:[],category:"all",timeFilter:"all",search:"",selected:new Set(),selectedDocId:null};
 
-    const GATEWAY_URL = "https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec";
+const CATEGORY_TITLES={
+  all:"Tất cả văn bản",
+  "den-trung-uong":"Văn bản đến - Trung ương",
+  "den-da-nang":"Văn bản đến - Thành phố Đà Nẵng",
+  "den-so":"Văn bản đến - Sở GD&ĐT Đà Nẵng",
+  "den-khac":"Văn bản đến - Cơ quan khác",
+  "di-cap-tren":"Văn bản đi - Gửi cấp trên",
+  "di-ben-ngoai":"Văn bản đi - Gửi cơ quan bên ngoài",
+  "di-noi-bo":"Văn bản đi - Phát hành nội bộ",
+  "di-khac":"Văn bản đi - Văn bản khác"
+};
 
-    /* ============================================================
-       TTĐHS_HVA - APP STATE DUY NHẤT
-       ============================================================ */
-    const AppState = {
-        documents: [],
-        selectedDocId: null,
-        activeModule: "tat-ca",
-        searchQuery: "",
-        timeFilter: "today",
-        modulesMap: {
-            "tat-ca": "TẤT CẢ VĂN BẢN",
-            "van-ban-den": "VĂN BẢN ĐẾN",
-            "vb-den-so": "VĂN BẢN ĐẾN - SỞ GD&ĐT",
-            "vb-den-ubnd": "VĂN BẢN ĐẾN - UBND",
-            "vb-den-khac": "VĂN BẢN ĐẾN - CƠ QUAN KHÁC",
-            "van-ban-di": "VĂN BẢN ĐI (NỘI BỘ)",
-            "vb-di-quyet-dinh": "QUYẾT ĐỊNH",
-            "vb-di-ke-hoach": "KẾ HOẠCH",
-            "vb-di-thong-bao": "THÔNG BÁO",
-            "vb-di-cong-van": "CÔNG VĂN"
-        }
-    };
+document.addEventListener("DOMContentLoaded",init);
 
-    document.addEventListener("DOMContentLoaded", initApp, { once: true });
-
-function initApp() {
-        renderDate();
-        checkUrlCategory();
-        setupEventListeners();
-        fetchDataFromGateway();
-    }
-
-    function renderDate() {
-        const now = new Date();
-        const formatted = now.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        const el = document.getElementById('txtCurrentDate');
-        if (el) el.innerText = formatted;
-    }
-
-    function checkUrlCategory() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const category = urlParams.get('category');
-
-        if (category && AppState.modulesMap[category]) {
-            AppState.activeModule = category;
-            
-            if (category.startsWith('vb-den-')) {
-                openSubmenu('vb-den-submenu', 'vb-den-chevron');
-            } else if (category.startsWith('vb-di-')) {
-                openSubmenu('vb-di-submenu', 'vb-di-chevron');
-            }
-
-            const moduleName = AppState.modulesMap[category];
-            updateTitle(`DANH SÁCH: ${moduleName.toUpperCase()}`);
-        } else {
-            AppState.activeModule = 'tat-ca';
-            updateTitle(`DANH SÁCH VĂN BẢN (TẤT CẢ)`);
-        }
-    }
-
-    function setupEventListeners() {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
-
-        const searchBox = document.getElementById('searchInput') || document.querySelector('input[type="text"]');
-        if (searchBox) {
-            searchBox.addEventListener('input', handleSearchInput);
-        }
-    }
-
-    function updateTitle(titleText) {
-        const titleEl = document.getElementById('lblCategoryTitle') || document.getElementById('currentModuleTitle') || document.querySelector('h2');
-        if (titleEl) titleEl.innerText = titleText;
-    }
-
-    /* ==========================================================================
-       3. TẢI DỮ LIỆU TỪ GOOGLE SHEETS VIA GATEWAY
-       ========================================================================== */
-  async function fetchDataFromGateway() {
-    const tbody = document.getElementById('danhSachData') || document.getElementById('desktopTableBody');
-    if (tbody) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="8" class="p-8 text-center text-slate-500 text-xs">
-                    <i class="bi bi-arrow-repeat text-2xl inline-block animate-spin text-blue-600 mr-2"></i>
-                    Đang kết nối và tải dữ liệu từ Google Sheets...
-                </td>
-            </tr>`;
-    }
-
-    try {
-        const apiUrl = `${GATEWAY_URL}?action=searchVanBan`;
-        const response = await fetch(apiUrl);
-        const result = await response.json();
-        
-        console.log("Dữ liệu từ GAS trả về:", result);
-
-        let rawData = Array.isArray(result) ? result : (result.data || result.result || []);
-        
-        // Bắt linh hoạt tất cả các tên thuộc tính có thể có
-        AppState.documents = rawData.map((doc, index) => {
-            const idVal = doc.id || doc.ID || `doc_${index + 1}`;
-            
-            return {
-                id: String(idVal), // Ép về dạng String chuẩn
-                soVB: doc.soVanBan || doc.SoVanBan || doc.soVB || doc.SoVB || '---',
-                ngayBH: doc.ngayBanHanh || doc.NgayBanHanh || doc.ngayBH || doc.NgayBH || '---',
-                loaiVB: doc.loaiVanBan || doc.LoaiVanBan || doc.loaiVB || doc.LoaiVB || 'Công văn',
-                moduleKey: doc.luongVanBan || doc.LuongVanBan || doc.moduleKey || doc.ModuleKey || 'tat-ca',
-                trichYeu: doc.trichYeu || doc.TrichYeu || doc.tenVanBan || doc.TenVanBan || '---',
-                coQuan: doc.coQuan || doc.CoQuan || 'THPT Hòa Vang',
-                nguoiKy: doc.nguoiKy || doc.NguoiKy || 'Ban BGH',
-                fileID: doc.fileID || doc.FileID || doc.fileId || doc.FILEID || doc.fileUrl || doc.FileUrl || doc.url || doc.Url || doc.link || doc.Link || doc.tep || doc.Tep || '',
-                fileType: 'pdf',
-                status: doc.trangThai || doc.TrangThai || doc.status || doc.Status || 'CHỜ PHÁT HÀNH'
-            };
-        });
-
-        if (AppState.documents.length > 0) {
-            AppState.selectedDocId = AppState.documents[0].id;
-        }
-
-        renderAll();
-    } catch (error) {
-        console.error("Lỗi Gateway:", error);
-        if (tbody) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="8" class="p-6 text-center text-red-500 text-xs bg-red-50">
-                        <i class="bi bi-exclamation-triangle-fill mr-1 text-base block mb-1"></i>
-                        Không nạp được dữ liệu. Thầy kiểm tra lại đường truyền mạng nhé!
-                    </td>
-                </tr>`;
-        }
-    }
-}
-    /* ==========================================================================
-       4. ĐIỀU HƯỚNG & LỌC DỮ LIỆU (ROUTER & FILTER)
-       ========================================================================== */
-    function toggleSubmenu(submenuId, iconId) {
-        const submenu = document.getElementById(submenuId);
-        const icon = document.getElementById(iconId);
-
-        if (submenu) {
-            const isHidden = submenu.classList.contains('hidden');
-            if (isHidden) {
-                openSubmenu(submenuId, iconId);
-            } else {
-                submenu.classList.add('hidden');
-                if (icon) icon.classList.remove('rotate-90');
-            }
-        }
-    }
-
-    function openSubmenu(submenuId, iconId) {
-        const submenu = document.getElementById(submenuId);
-        const icon = document.getElementById(iconId);
-        if (submenu) {
-            submenu.classList.remove('hidden');
-            if (icon) icon.classList.add('rotate-90');
-        }
-    }
-
-    function loadModule(moduleKey, event) {
-        if (event) event.stopPropagation();
-        
-        AppState.activeModule = moduleKey;
-        const moduleName = AppState.modulesMap[moduleKey] || moduleKey;
-
-        updateTitle(`DANH SÁCH: ${moduleName.toUpperCase()}`);
-        renderAll();
-        showToast(`Đã chọn phân hệ: ${moduleName}`, 'info');
-    }
-
-    function handleTimeFilterChange(val) {
-        AppState.timeFilter = val;
-        renderAll();
-        showToast(`Lọc theo mốc thời gian: ${val}`, 'success');
-    }
-
-    function handleSearchInput(event) {
-        clearTimeout(searchDebounceTimer);
-        searchDebounceTimer = setTimeout(() => {
-            const query = event ? event.target.value : (document.getElementById('searchInput')?.value || '');
-            const btnClear = document.getElementById('btnClearSearch');
-            
-            AppState.searchQuery = query.trim().toLowerCase();
-
-            if (btnClear) {
-                if (AppState.searchQuery !== '') btnClear.classList.remove('hidden');
-                else btnClear.classList.add('hidden');
-            }
-            renderAll();
-        }, 300);
-    }
-
-    function clearSearch() {
-        const input = document.getElementById('searchInput');
-        const btnClear = document.getElementById('btnClearSearch');
-        if (input) input.value = '';
-        if (btnClear) btnClear.classList.add('hidden');
-        AppState.searchQuery = '';
-        renderAll();
-        showToast('Đã xóa bộ lọc tìm kiếm', 'info');
-    }
-
-    function getFilteredDocs() {
-        return AppState.documents.filter(doc => {
-            const q = AppState.searchQuery;
-            const matchSearch = !q || doc.soVB.toLowerCase().includes(q) || doc.trichYeu.toLowerCase().includes(q) || doc.coQuan.toLowerCase().includes(q);
-
-            let matchModule = true;
-            if (AppState.activeModule !== 'tat-ca') {
-                const targetCat = (AppState.modulesMap[AppState.activeModule] || '').toLowerCase();
-                const luongVB = doc.moduleKey.toLowerCase();
-                matchModule = luongVB.includes(targetCat) || luongVB.includes(AppState.activeModule.toLowerCase());
-            }
-
-            return matchSearch && matchModule;
-        });
-    }
-
-    /* ==========================================================================
-       5. RENDER GIAO DIỆN (DESKTOP, MOBILE, CARD)
-       ========================================================================== */
-    function renderAll() {
-        renderDocumentList();
-        renderSelectedDocCard();
-    }
-
-   // 1. Hàm xử lý click trung gian: Đảm bảo KHÔNG BAO GIỜ bị lỗi cú pháp onclick
-function handleRowClick(el) {
-    if (!el) return;
-    const rawId = el.getAttribute('data-id');
-    if (rawId) {
-        const id = decodeURIComponent(rawId);
-        if (typeof handleSelectDoc === 'function') {
-            handleSelectDoc(id);
-        }
-    }
+function init(){
+  document.getElementById("currentDate").textContent=new Date().toLocaleDateString("vi-VN");
+  document.getElementById("searchInput").addEventListener("input",e=>{State.search=norm(e.target.value);document.getElementById("clearSearch").classList.toggle("hidden",!e.target.value);render();});
+  document.querySelectorAll('input[name="timeFilter"]').forEach(r=>r.addEventListener("change",e=>{State.timeFilter=e.target.value;render();}));
+  fetchData();
 }
 
-// 2. Hàm Render bảng chính thức
-function renderDocumentList() {
-    const filtered = typeof getFilteredDocs === 'function' ? getFilteredDocs() : (AppState.documents || []);
-    
-    // Cập nhật số lượng văn bản
-    const badge = document.getElementById('docCountBadge');
-    if (badge) badge.innerText = `${filtered.length} văn bản`;
-    
-    const countBadges = document.querySelectorAll('.rounded-full');
-    countBadges.forEach(b => {
-        if (b.textContent && b.textContent.includes('văn bản')) {
-            b.textContent = `${filtered.length} văn bản`;
-        }
-    });
+function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/Đ/g,"D").toLowerCase().trim();}
+function val(o,...keys){for(const k of keys){if(o&&o[k]!==undefined&&o[k]!==null&&String(o[k]).trim()!=="")return o[k]}return""}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
 
-    // RENDER BẢNG DESKTOP
-    const tbody = document.getElementById('danhSachData') || document.getElementById('desktopTableBody');
-    if (tbody) {
-        if (filtered.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="8" class="p-8 text-center text-slate-400 text-xs font-medium">
-                        <i class="bi bi-inbox text-2xl block mb-1 opacity-50"></i>
-                        Không tìm thấy văn bản phù hợp.
-                    </td>
-                </tr>`;
-        } else {
-            tbody.innerHTML = filtered.map((doc, idx) => {
-                // Ép kiểu ID và mã hóa an toàn
-                const docId = String(doc.id || doc.ID || (idx + 1));
-                const safeDataId = encodeURIComponent(docId);
-                
-                // Trích xuất thuộc tính đa tầng (ngăn triệt để lỗi hiển thị '---')
-                const soVB = doc.soVB || doc.soVanBan || doc.SoVanBan || doc.so_van_ban || '---';
-                const ngayBH = doc.ngayBH || doc.ngayBanHanh || doc.NgayBanHanh || doc.ngay_ban_hanh || '---';
-                const loaiVB = doc.loaiVB || doc.loaiVanBan || doc.LoaiVanBan || 'Công văn';
-                const moduleKey = doc.moduleKey || doc.luongVanBan || doc.LuongVanBan || 'tat-ca';
-                const trichYeu = doc.trichYeu || doc.TrichYeu || doc.tenVanBan || doc.TenVanBan || '---';
-                const status = doc.status || doc.Status || 'Đã phát hành';
-                
-                let fileUrl = "";
-                const rawFile = doc.fileID || doc.FileID || doc.fileId || doc.FILEID || doc.fileUrl || doc.FileUrl || doc.url || doc.Url || doc.link || doc.Link || doc.tep || doc.Tep || "";
-                if (rawFile) {
-                    fileUrl = String(rawFile).startsWith("http") ? rawFile : `https://drive.google.com/file/d/${rawFile}/view?usp=sharing`;
-                }
-
-                const moduleText = (AppState.modulesMap && AppState.modulesMap[moduleKey]) ? AppState.modulesMap[moduleKey] : moduleKey;
-                const isSelected = docId === String(AppState.selectedDocId);
-
-                return `
-                    <tr data-id="${safeDataId}" onclick="handleRowClick(this)" class="border-b border-slate-100 hover:bg-blue-50/50 cursor-pointer transition-colors text-xs text-slate-700 ${isSelected ? 'bg-blue-50/70 font-semibold' : ''}">
-                        <td class="p-3 text-center font-medium text-slate-400">${idx + 1}</td>
-                        <td class="p-3 whitespace-nowrap">${ngayBH}</td>
-                        <td class="p-3 font-bold text-[#0F4C81] whitespace-nowrap">${soVB}</td>
-                        <td class="p-3 whitespace-nowrap">${loaiVB}</td>
-                        <td class="p-3 whitespace-nowrap">${moduleText}</td>
-                        <td class="p-3 font-medium max-w-md truncate" title="${trichYeu}">${trichYeu}</td>
-                        <td class="p-3 text-center whitespace-nowrap">
-                            ${fileUrl ? `
-                                <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" title="Mở file đính kèm"
-                                   class="inline-flex items-center justify-center p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition" onclick="event.stopPropagation();">
-                                    <i class="bi bi-file-earmark-pdf-fill text-base"></i>
-                                </a>
-                            ` : `
-                                <span class="text-slate-300"><i class="bi bi-dash-lg"></i></span>
-                            `}
-                        </td>
-                        <td class="p-3 text-center whitespace-nowrap">
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${isPublishedStatus(status) ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'}">
-                                ${status}
-                            </span>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-    }
-
-    // RENDER CARD MOBILE
-    const mobileContainer = document.getElementById('mobileCardContainer');
-    if (mobileContainer) {
-        if (filtered.length === 0) {
-            mobileContainer.innerHTML = `<div class="p-6 text-center text-slate-400 italic bg-white rounded-xl border border-slate-200">Không có văn bản nào trong danh mục này</div>`;
-        } else {
-            mobileContainer.innerHTML = filtered.map((doc, idx) => {
-                const docId = String(doc.id || doc.ID || (idx + 1));
-                const safeDataId = encodeURIComponent(docId);
-                const soVB = doc.soVB || doc.soVanBan || doc.SoVanBan || '---';
-                const ngayBH = doc.ngayBH || doc.ngayBanHanh || doc.NgayBanHanh || '---';
-                const loaiVB = doc.loaiVB || doc.loaiVanBan || doc.LoaiVanBan || 'Công văn';
-                const trichYeu = doc.trichYeu || doc.TrichYeu || doc.tenVanBan || '---';
-                const status = doc.status || doc.Status || 'Đã phát hành';
-                const isSelected = docId === String(AppState.selectedDocId);
-
-                return `
-                    <div data-id="${safeDataId}" onclick="handleRowClick(this)" class="p-3.5 bg-slate-50/80 rounded-xl border ${isSelected ? 'border-[#0F4C81] bg-blue-50/50' : 'border-slate-200'} space-y-2 cursor-pointer">
-                        <div class="flex items-center justify-between border-b border-slate-200/60 pb-1.5">
-                            <span class="font-bold text-[#0F4C81] text-xs">${soVB}</span>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isPublishedStatus(status) ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${status}</span>
-                        </div>
-                        <div class="text-xs font-semibold text-slate-800 line-clamp-2">${trichYeu}</div>
-                        <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
-                            <div><strong>Ngày:</strong> ${ngayBH}</div>
-                            <div><strong>Loại:</strong> ${loaiVB}</div>
-                        </div>
-                        ${(() => {
-                            const rawFile = doc.fileID || doc.FileID || doc.fileId || doc.FILEID || doc.fileUrl || doc.FileUrl || doc.url || doc.Url || doc.link || doc.Link || doc.tep || doc.Tep || "";
-                            if (!rawFile) return "";
-                            const mobileFileUrl = String(rawFile).startsWith("http")
-                                ? String(rawFile)
-                                : `https://drive.google.com/file/d/${rawFile}/view?usp=sharing`;
-                            return `
-                                <a href="${mobileFileUrl}" target="_blank" rel="noopener noreferrer"
-                                   onclick="event.stopPropagation();"
-                                   class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 font-bold text-[11px] border border-red-100">
-                                    <i class="bi bi-file-earmark-pdf-fill"></i> Mở PDF
-                                </a>`;
-                        })()}
-                    </div>
-                `;
-            }).join('');
-        }
-    }
+function isPublished(v){const s=norm(v);return s==="phat hanh"||s==="da phat hanh"||s==="published";}
+function fileUrl(raw){
+  if(!raw)return"";
+  const s=String(raw).trim();
+  if(/^https?:\/\//i.test(s))return s;
+  return `https://drive.google.com/file/d/${encodeURIComponent(s)}/view?usp=sharing`;
 }
-    function handleSelectDoc(id) {
-        AppState.selectedDocId = id;
-        renderAll();
+
+function mapDoc(d,i){
+  const direction=val(d,"luongVanBan","LuongVanBan","phanLoai","PhanLoai","nhomVanBan","NhomVanBan","moduleKey","ModuleKey");
+  const scope=val(d,"phamVi","PhamVi","doiTuongNhan","DoiTuongNhan","nhomPhatHanh","NhomPhatHanh","noiNhan","NoiNhan");
+  return{
+    id:String(val(d,"id","ID","maVanBan","MaVanBan")||`doc_${i+1}`),
+    soVB:String(val(d,"soVanBan","SoVanBan","soVB","SoVB")||"---"),
+    ngayBH:String(val(d,"ngayBanHanh","NgayBanHanh","ngayBH","NgayBH")||"---"),
+    loaiVB:String(val(d,"loaiVanBan","LoaiVanBan","loaiVB","LoaiVB")||""),
+    trichYeu:String(val(d,"trichYeu","TrichYeu","tenVanBan","TenVanBan")||"---"),
+    coQuan:String(val(d,"coQuan","CoQuan","coQuanBanHanh","CoQuanBanHanh","donViBanHanh","DonViBanHanh")||""),
+    nguoiKy:String(val(d,"nguoiKy","NguoiKy")||""),
+    direction:String(direction||""),
+    scope:String(scope||""),
+    noiNhan:String(val(d,"noiNhan","NoiNhan","donViNhan","DonViNhan")||""),
+    file:String(val(d,"fileID","FileID","fileId","FILEID","fileUrl","FileUrl","url","Url","link","Link","tep","Tep")||""),
+    status:String(val(d,"trangThai","TrangThai","status","Status")||"")
+  };
+}
+
+async function fetchData(){
+  setLoading();
+  try{
+    const res=await fetch(`${GATEWAY_URL}?action=searchVanBan&_=${Date.now()}`,{cache:"no-store"});
+    if(!res.ok)throw new Error(`HTTP ${res.status}`);
+    const result=await res.json();
+    const raw=Array.isArray(result)?result:(result.data||result.result||[]);
+    State.documents=raw.map(mapDoc).filter(d=>isPublished(d.status));
+    State.selected.clear();
+    render();
+  }catch(err){
+    console.error(err);
+    document.getElementById("desktopTableBody").innerHTML=`<tr><td colspan="6" class="p-8 text-center text-rose-600 bg-rose-50">Không nạp được dữ liệu từ Kho văn bản.</td></tr>`;
+    document.getElementById("mobileCards").innerHTML=`<div class="p-5 text-center text-rose-600 bg-rose-50 rounded-xl">Không nạp được dữ liệu từ Kho văn bản.</div>`;
+    showToast("Không kết nối được Kho văn bản.","error");
+  }
+}
+
+function setLoading(){
+  document.getElementById("desktopTableBody").innerHTML=`<tr><td colspan="6" class="p-8 text-center text-slate-500"><i class="bi bi-arrow-repeat animate-spin text-blue-600 text-xl mr-2"></i>Đang tải văn bản đã phát hành...</td></tr>`;
+  document.getElementById("mobileCards").innerHTML=`<div class="p-5 text-center text-slate-500">Đang tải dữ liệu...</div>`;
+}
+
+function classify(doc){
+  const dir=norm(doc.direction);
+  const cq=norm(doc.coQuan);
+  const scope=norm(`${doc.scope} ${doc.noiNhan}`);
+  const combined=norm(`${doc.direction} ${doc.scope} ${doc.noiNhan}`);
+
+  const incoming=dir.includes("van ban den")||dir.includes("vb den")||dir==="den"||dir.includes("incoming");
+  const outgoing=dir.includes("van ban di")||dir.includes("vb di")||dir==="di"||dir.includes("outgoing")||
+                 combined.includes("gui cap tren")||combined.includes("phat hanh noi bo")||combined.includes("gui co quan");
+
+  if(incoming){
+    if(cq.includes("so giao duc")||cq.includes("sgddt")||cq.includes("so gd&dt"))return"den-so";
+    if(cq.includes("ubnd thanh pho da nang")||cq.includes("thanh pho da nang")||cq.includes("tp da nang"))return"den-da-nang";
+    if(cq.includes("bo giao duc")||cq.includes("bo gd")||cq.includes("chinh phu")||cq.includes("thu tuong")||cq.includes("quoc hoi")||cq.includes("trung uong"))return"den-trung-uong";
+    return"den-khac";
+  }
+
+  if(outgoing){
+    if(combined.includes("noi bo")||scope.includes("can bo")||scope.includes("giao vien")||scope.includes("nhan vien")||scope.includes("to chuyen mon"))return"di-noi-bo";
+    if(combined.includes("cap tren")||scope.includes("so gd")||scope.includes("sgddt")||scope.includes("ubnd")||scope.includes("bo giao duc"))return"di-cap-tren";
+    if(combined.includes("ben ngoai")||combined.includes("co quan ngoai")||scope)return"di-ben-ngoai";
+    return"di-khac";
+  }
+
+  return"den-khac";
+}
+
+function matchesTime(doc){
+  if(State.timeFilter==="all")return true;
+  const d=parseVNDate(doc.ngayBH); if(!d)return false;
+  const now=new Date(); now.setHours(23,59,59,999);
+  const start=new Date(now);
+  if(State.timeFilter==="today"){start.setHours(0,0,0,0);return d>=start&&d<=now}
+  if(State.timeFilter==="3days"){start.setDate(now.getDate()-2);start.setHours(0,0,0,0);return d>=start&&d<=now}
+  if(State.timeFilter==="week"){const day=(now.getDay()+6)%7;start.setDate(now.getDate()-day);start.setHours(0,0,0,0);return d>=start&&d<=now}
+  if(State.timeFilter==="month"){start.setDate(1);start.setHours(0,0,0,0);return d>=start&&d<=now}
+  return true;
+}
+function parseVNDate(v){
+  const s=String(v||"").trim();
+  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/); if(m)return new Date(+m[3],+m[2]-1,+m[1]);
+  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if(m)return new Date(+m[1],+m[2]-1,+m[3]);
+  const d=new Date(s); return isNaN(d)?null:d;
+}
+
+function filteredDocs(){
+  return State.documents.filter(d=>{
+    if(State.category!=="all"&&classify(d)!==State.category)return false;
+    if(!matchesTime(d))return false;
+    if(State.search){
+      const hay=norm(`${d.soVB} ${d.trichYeu} ${d.coQuan} ${d.nguoiKy} ${d.loaiVB}`);
+      if(!hay.includes(State.search))return false;
     }
+    return true;
+  });
+}
 
-    function renderSelectedDocCard() {
-        const card = document.getElementById('selectedDocCard');
-        if (!card) return;
+function selectCategory(cat){
+  State.category=cat;
+  document.querySelectorAll(".category-btn").forEach(b=>b.classList.toggle("active",b.dataset.category===cat));
+  render();
+  document.getElementById("listTitle").scrollIntoView({behavior:"smooth",block:"center"});
+}
 
-        const doc = AppState.documents.find(d => d.id === AppState.selectedDocId) || AppState.documents[0];
-        if (!doc) {
-            card.innerHTML = `<div class="text-slate-400 text-xs italic">Chưa chọn văn bản nào</div>`;
-            return;
-        }
+function render(){
+  updateCounts();
+  const docs=filteredDocs();
+  document.getElementById("listTitle").textContent=`Danh sách văn bản - ${CATEGORY_TITLES[State.category]||"Tất cả"}`;
+  document.getElementById("docCount").textContent=`${docs.length} văn bản`;
+  renderDesktop(docs); renderMobile(docs); updateDownloadButton(); renderSelectedCard();
+}
 
-        card.innerHTML = `
-            <div><span class="font-bold text-slate-500">Số văn bản:</span> <span class="font-bold text-[#0F4C81]">${doc.soVB}</span></div>
-            <div><span class="font-bold text-slate-500">Ngày ban hành:</span> <span class="text-slate-700">${doc.ngayBH}</span></div>
-            <div><span class="font-bold text-slate-500">Loại văn bản:</span> <span class="text-slate-700">${doc.loaiVB}</span></div>
-            <div><span class="font-bold text-slate-500">Phân loại:</span> <span class="text-slate-700">${AppState.modulesMap[doc.moduleKey] || doc.moduleKey}</span></div>
-            <div><span class="font-bold text-slate-500">Cơ quan ban hành:</span> <span class="text-slate-700">${doc.coQuan}</span></div>
-            <div><span class="font-bold text-slate-500">Người ký:</span> <span class="text-slate-700">${doc.nguoiKy}</span></div>
-            <div class="sm:col-span-2 border-t border-blue-200/60 pt-1.5 mt-0.5">
-                <span class="font-bold text-slate-500">Trích yếu:</span> <span class="text-slate-800 font-semibold italic">${doc.trichYeu}</span>
-            </div>
-        `;
-    }
+function updateCounts(){
+  document.getElementById("count-all").textContent=State.documents.length;
+  ["den-trung-uong","den-da-nang","den-so","den-khac","di-cap-tren","di-ben-ngoai","di-noi-bo","di-khac"].forEach(k=>{
+    const el=document.getElementById(`count-${k}`); if(el)el.textContent=State.documents.filter(d=>classify(d)===k).length;
+  });
+}
 
-    /* ==========================================================================
-       6. HỆ THỐNG MODAL & NÚT THAO TÁC (MODAL SYSTEM & ACTIONS)
-       ========================================================================== */
-    function openCreateModal() {
-        const modal = document.getElementById('actionModal');
-        const content = document.getElementById('modalContent');
-        if (!modal || !content) return;
+function renderDesktop(docs){
+  const body=document.getElementById("desktopTableBody");
+  if(!docs.length){body.innerHTML=`<tr><td colspan="6" class="p-8 text-center text-slate-400"><i class="bi bi-inbox text-2xl block mb-2"></i>Không có văn bản phù hợp.</td></tr>`;return}
+  body.innerHTML=docs.map((d,i)=>{
+    const checked=State.selected.has(d.id)?"checked":"";
+    const selected=State.selectedDocId===d.id?"selected":"";
+    const url=fileUrl(d.file);
+    return `<tr class="doc-row ${selected} hover:bg-blue-50/60">
+      <td class="p-3 text-center"><input type="checkbox" ${checked} onchange="toggleSelected('${encodeURIComponent(d.id)}',this.checked)"></td>
+      <td class="p-3 text-center text-slate-400">${i+1}</td>
+      <td class="p-3 whitespace-nowrap">${esc(d.ngayBH)}</td>
+      <td class="p-3 font-bold text-[#0F4C81] whitespace-nowrap cursor-pointer" onclick="selectDoc('${encodeURIComponent(d.id)}')">${esc(d.soVB)}</td>
+      <td class="p-3 max-w-xl cursor-pointer" onclick="selectDoc('${encodeURIComponent(d.id)}')" title="${esc(d.trichYeu)}">${esc(d.trichYeu)}</td>
+      <td class="p-3 text-center">${url?`<a href="${esc(url)}" target="_blank" rel="noopener" class="inline-flex w-8 h-8 items-center justify-center rounded-lg bg-red-50 text-red-600 hover:bg-red-100" title="Xem văn bản"><i class="bi bi-file-earmark-pdf-fill"></i></a>`:`<span class="text-slate-300">—</span>`}</td>
+    </tr>`;
+  }).join("");
+}
 
-        modal.classList.remove('hidden');
-        setTimeout(() => {
-            modal.classList.remove('opacity-0');
-            content.classList.remove('scale-95');
-            content.classList.add('scale-100');
-        }, 10);
-    }
+function renderMobile(docs){
+  const box=document.getElementById("mobileCards");
+  if(!docs.length){box.innerHTML=`<div class="p-6 text-center text-slate-400 border rounded-xl">Không có văn bản phù hợp.</div>`;return}
+  box.innerHTML=docs.map((d,i)=>{
+    const url=fileUrl(d.file),checked=State.selected.has(d.id)?"checked":"";
+    return `<div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+      <div class="flex gap-3">
+        <input type="checkbox" ${checked} onchange="toggleSelected('${encodeURIComponent(d.id)}',this.checked)" class="mt-1">
+        <div class="min-w-0 flex-1" onclick="selectDoc('${encodeURIComponent(d.id)}')">
+          <div class="flex justify-between gap-2"><span class="font-bold text-[#0F4C81] text-xs">${esc(d.soVB)}</span><span class="text-[11px] text-slate-500">${esc(d.ngayBH)}</span></div>
+          <div class="mt-1.5 text-xs font-semibold leading-relaxed">${esc(d.trichYeu)}</div>
+        </div>
+        ${url?`<a href="${esc(url)}" target="_blank" rel="noopener" class="w-9 h-9 shrink-0 rounded-lg bg-red-50 text-red-600 flex items-center justify-center"><i class="bi bi-file-earmark-pdf-fill"></i></a>`:""}
+      </div>
+    </div>`;
+  }).join("");
+}
 
-    function closeModal() {
-        const modal = document.getElementById('actionModal');
-        const content = document.getElementById('modalContent');
-        if (!modal || !content) return;
+function selectDoc(encoded){
+  const id=decodeURIComponent(encoded);State.selectedDocId=id;renderSelectedCard();
+}
+function renderSelectedCard(){
+  const card=document.getElementById("selectedDocCard");
+  const d=State.documents.find(x=>x.id===State.selectedDocId);
+  if(!d){card.classList.add("hidden");return}
+  card.classList.remove("hidden");
+  card.innerHTML=`<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+    <div><b class="text-slate-500">Số văn bản:</b> <span class="font-bold text-[#0F4C81]">${esc(d.soVB)}</span></div>
+    <div><b class="text-slate-500">Ngày ban hành:</b> ${esc(d.ngayBH)}</div>
+    <div><b class="text-slate-500">Cơ quan ban hành:</b> ${esc(d.coQuan||"—")}</div>
+    <div><b class="text-slate-500">Người ký:</b> ${esc(d.nguoiKy||"—")}</div>
+    <div class="sm:col-span-2 border-t border-blue-200 pt-2"><b class="text-slate-500">Trích yếu:</b> ${esc(d.trichYeu)}</div>
+  </div>`;
+}
 
-        content.classList.remove('scale-100');
-        content.classList.add('scale-95');
-        modal.classList.add('opacity-0');
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 200);
-    }
+function toggleSelected(encoded,checked){
+  const id=decodeURIComponent(encoded); if(checked)State.selected.add(id);else State.selected.delete(id);updateDownloadButton();
+}
+function toggleCheckAll(checked){
+  filteredDocs().forEach(d=>{if(checked)State.selected.add(d.id);else State.selected.delete(d.id)});render();
+}
+function updateDownloadButton(){
+  const n=State.selected.size;
+  document.getElementById("downloadText").textContent=n?`Tải file (${n})`:"Tải file";
+}
+function downloadSelected(){
+  const docs=State.documents.filter(d=>State.selected.has(d.id)&&d.file);
+  if(!docs.length){showToast("Thầy/Cô hãy chọn văn bản có tệp cần tải.","warning");return}
+  if(docs.length===1){window.open(fileUrl(docs[0].file),"_blank","noopener");return}
+  showToast(`Đã chọn ${docs.length} văn bản. Chức năng đóng gói ZIP cần API tải nhiều tệp ở Gateway.`,"info");
+}
 
-    function handleFormSubmit(e) {
-        e.preventDefault();
-        const soVB = document.getElementById('formSoVB').value.trim();
-        const ngayBH = document.getElementById('formNgayBH').value;
-        const loaiVB = document.getElementById('formLoaiVB').value;
-        const moduleKey = document.getElementById('formModule').value;
-        const coQuan = document.getElementById('formCoQuan').value.trim() || 'THPT Hòa Vang';
-        const trichYeu = document.getElementById('formTrichYeu').value.trim();
+function clearSearch(){document.getElementById("searchInput").value="";document.getElementById("clearSearch").classList.add("hidden");State.search="";render()}
+function refreshData(){fetchData();showToast("Đang làm mới Kho văn bản...","info")}
+function goBack(){if(history.length>1)history.back();else location.href="main.html"}
 
-        const newDoc = {
-            id: Date.now(),
-            moduleKey: moduleKey,
-            ngayBH: ngayBH ? ngayBH.split('-').reverse().join('/') : '---',
-            soVB: soVB,
-            loaiVB: loaiVB,
-            coQuan: coQuan,
-            nguoiKy: 'Ban BGH',
-            trichYeu: trichYeu,
-            fileID: '',
-            fileType: 'pdf',
-            status: 'Đã phát hành'
-        };
+function openRequestModal(){const m=document.getElementById("requestModal");m.classList.remove("hidden");m.classList.add("flex")}
+function closeRequestModal(){const m=document.getElementById("requestModal");m.classList.add("hidden");m.classList.remove("flex")}
+function submitRequest(e){
+  e.preventDefault();
+  const doc=document.getElementById("reqDoc").value.trim();
+  const note=document.getElementById("reqNote").value.trim();
+  closeRequestModal();
+  showToast(`Đã ghi nhận yêu cầu: ${doc}${note?"":""}`,"success");
+  e.target.reset();
+}
 
-        AppState.documents.unshift(newDoc);
-        AppState.selectedDocId = newDoc.id;
-        AppState.activeModule = moduleKey;
-
-        closeModal();
-        renderAll();
-        showToast('Đã lưu văn bản mới vào hệ thống thành công!', 'success');
-
-        const form = document.getElementById('docForm');
-        if (form) form.reset();
-    }
-
-    function handleGoBack() {
-        if (window.history.length > 1) {
-            window.history.back();
-        } else {
-            window.location.href = 'main.html';
-        }
-    }
-
-    function handleRefreshData() {
-        fetchDataFromGateway();
-        showToast('Đã làm mới dữ liệu hệ thống!', 'success');
-    }
-
-    function handleAdvancedSearch() {
-        showToast('Mở bộ lọc tra cứu nâng cao', 'info');
-    }
-
-    
-    /* ==========================================================================
-       7. PHÁT HÀNH VĂN BẢN QUA TTĐHS_HVA BACKEND API GATEWAY
-       ========================================================================== */
-    function normalizePublishStatus(value) {
-        return String(value || '')
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/đ/g, 'd')
-            .replace(/Đ/g, 'D')
-            .trim()
-            .toUpperCase();
-    }
-
-    function isPublishedStatus(value) {
-        const s = normalizePublishStatus(value);
-        return s === 'PHAT HANH' || s === 'DA PHAT HANH' || s === 'PUBLISHED';
-    }
-
-    function getSelectedDocument() {
-        if (!AppState.selectedDocId) return null;
-        return AppState.documents.find(d => String(d.id) === String(AppState.selectedDocId)) || null;
-    }
-
-    async function handlePublishSelected() {
-        const doc = getSelectedDocument();
-
-        if (!doc) {
-            showToast('Thầy chọn một văn bản cần phát hành trước.', 'warning');
-            return;
-        }
-
-        if (isPublishedStatus(doc.status)) {
-            showToast(`Văn bản ${doc.soVB || doc.id} đã được phát hành trước đó.`, 'info');
-            return;
-        }
-
-        if (!window.confirm(
-            `PHÁT HÀNH VĂN BẢN\n\n` +
-            `Số văn bản: ${doc.soVB || '---'}\n` +
-            `Trích yếu: ${doc.trichYeu || '---'}\n\n` +
-            `Xác nhận phát hành văn bản này trên TTĐHS_HVA?`
-        )) return;
-
-        const btn = document.getElementById('btnPublishSelected');
-        const oldHtml = btn ? btn.innerHTML : '';
-
-        try {
-            if (btn) {
-                btn.disabled = true;
-                btn.classList.add('opacity-60', 'cursor-not-allowed');
-                btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i><span>Đang phát hành...</span>';
-            }
-
-            const response = await fetch(GATEWAY_URL, {
-                method: 'POST',
-                headers: {'Content-Type': 'text/plain;charset=utf-8'},
-                body: JSON.stringify({
-                    action: 'publishVanBan',
-                    id: String(doc.id),
-                    documentId: String(doc.id),
-                    vanBanId: String(doc.id),
-                    nguoiPhatHanh: 'Nguyễn Văn Thà'
-                }),
-                redirect: 'follow'
-            });
-
-            if (!response.ok) throw new Error(`Gateway HTTP ${response.status}`);
-
-            const result = await response.json();
-            if (!result || result.success !== true) {
-                throw new Error(result?.message || 'Gateway không xác nhận phát hành.');
-            }
-
-            doc.status = result.status || 'PHÁT HÀNH';
-            showToast(result.message || `Đã phát hành văn bản ${doc.soVB || doc.id}.`,
-                      result.alreadyPublished ? 'info' : 'success');
-
-            await fetchDataFromGateway();
-            const refreshed = AppState.documents.find(d => String(d.id) === String(doc.id));
-            if (refreshed) AppState.selectedDocId = refreshed.id;
-            renderAll();
-
-        } catch (error) {
-            console.error('Lỗi phát hành văn bản:', error);
-            showToast(`Không phát hành được: ${error.message || error}`, 'error');
-        } finally {
-            if (btn) {
-                btn.disabled = false;
-                btn.classList.remove('opacity-60', 'cursor-not-allowed');
-                btn.innerHTML = oldHtml;
-            }
-        }
-    }
-
-    /* ==========================================================================
-       8. HỆ THỐNG THÔNG BÁO TOAST (TOAST NOTIFICATIONS)
-       ========================================================================== */
-    function showToast(message, type = 'info') {
-        const container = document.getElementById('toastContainer');
-        if (!container) return;
-
-        const toast = document.createElement('div');
-        toast.className = `toast-enter pointer-events-auto p-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-xs font-bold text-white transition`;
-
-        let icon = 'bi-info-circle-fill';
-        if (type === 'success') {
-            toast.classList.add('bg-emerald-600');
-            icon = 'bi-check-circle-fill';
-        } else if (type === 'warning') {
-            toast.classList.add('bg-amber-500');
-            icon = 'bi-exclamation-triangle-fill';
-        } else if (type === 'error') {
-            toast.classList.add('bg-rose-600');
-            icon = 'bi-x-circle-fill';
-        } else {
-            toast.classList.add('bg-[#0F4C81]');
-        }
-
-        toast.innerHTML = `
-            <i class="bi ${icon} text-lg"></i>
-            <span class="flex-1">${message}</span>
-            <button type="button" onclick="this.parentElement.remove()" class="text-white/80 hover:text-white">
-                <i class="bi bi-x"></i>
-            </button>
-        `;
-
-        container.appendChild(toast);
-
-        setTimeout(() => {
-            toast.classList.remove('toast-enter');
-            toast.classList.add('toast-exit');
-            setTimeout(() => toast.remove(), 250);
-        }, 3000);
-    }
+function showToast(message,type="info"){
+  const c=document.getElementById("toastContainer"),t=document.createElement("div");
+  const cls=type==="error"?"bg-rose-600":type==="warning"?"bg-amber-500":type==="success"?"bg-emerald-600":"bg-[#0F4C81]";
+  t.className=`toast-in pointer-events-auto ${cls} text-white rounded-xl shadow-xl px-4 py-3 text-xs font-bold flex items-center gap-2`;
+  t.innerHTML=`<i class="bi bi-info-circle-fill"></i><span class="flex-1">${esc(message)}</span>`;
+  c.appendChild(t);setTimeout(()=>t.remove(),3200);
+}
 </script>
 </body>
 </html>
