@@ -1512,7 +1512,7 @@ async function loadMeetingPersonnel() {
     try {
 
         const res = await fetch(
-            `${SCRIPT_URL}?action=getDanhSachTo`
+            `${WEB_APP_URL}?action=getDanhSachTo`
         );
 
         if (!res.ok) {
@@ -1531,7 +1531,7 @@ async function loadMeetingPersonnel() {
                 try {
 
                     const resNS = await fetch(
-                        `${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`
+                       `${WEB_APP_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`
                     );
 
                     if (!resNS.ok) {
