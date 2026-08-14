@@ -2120,6 +2120,217 @@ function removeAllMeetingSelections() {
 // KHỞI TẠO DANH SÁCH NHÂN SỰ CUỘC HỌP
 // ========================================
 loadMeetingPersonnel();
+
+// =========================================================
+// XEM TRƯỚC CUỘC HỌP
+// Dùng bộ HVA Administrative Preview
+// =========================================================
+function previewMeeting() {
+
+    try {
+
+        // -------------------------------------------------
+        // 1. LẤY DANH SÁCH NHÂN SỰ ĐÃ CHỌN
+        // -------------------------------------------------
+        const recipients = [];
+
+        if (
+            Array.isArray(meetingAllToData) &&
+            meetingSelectedUsernames instanceof Set
+        ) {
+
+            meetingAllToData.forEach(toObj => {
+
+                const members =
+                    Array.isArray(toObj.members)
+                        ? toObj.members
+                        : [];
+
+                members.forEach(person => {
+
+                    if (
+                        meetingSelectedUsernames.has(
+                            person.username
+                        )
+                    ) {
+
+                        recipients.push({
+
+                            username:
+                                person.username || '',
+
+                            hoTen:
+                                person.hoTen || '',
+
+                            chucVu:
+                                person.chucVu || '',
+
+                            tenTo:
+                                person.tenTo ||
+                                toObj.tenTo ||
+                                ''
+
+                        });
+
+                    }
+
+                });
+
+            });
+
+        }
+
+
+        // -------------------------------------------------
+        // 2. HÀM LẤY GIÁ TRỊ AN TOÀN TỪ FORM
+        // -------------------------------------------------
+        const getValue = (id) => {
+
+            const el =
+                document.getElementById(id);
+
+            return el
+                ? String(el.value || '').trim()
+                : '';
+
+        };
+
+
+        // -------------------------------------------------
+        // 3. LẤY TOÀN BỘ DỮ LIỆU CUỘC HỌP
+        // -------------------------------------------------
+        const meetingData = {
+
+            meetingType:
+                getValue('loaiCuocHop'),
+
+            title:
+                getValue('tieuDeLe'),
+
+            content:
+                getValue('noiDungLe'),
+
+            date:
+                getValue('ngayLe'),
+
+            time:
+                getValue('gioLe'),
+
+            session:
+                getValue('buoiLe'),
+
+            location:
+                getValue('diaDiemLe'),
+
+            chairperson:
+                getValue('chuTriLe'),
+
+            participants:
+                getValue('thanhPhanLe'),
+
+            recipients:
+                recipients
+
+        };
+
+
+        // -------------------------------------------------
+        // 4. KIỂM TRA CÁC THÔNG TIN BẮT BUỘC
+        // -------------------------------------------------
+
+        if (!meetingData.title) {
+
+            alert(
+                'Thầy/Cô chưa nhập Tiêu đề / Nội dung công việc.'
+            );
+
+            document
+                .getElementById('tieuDeLe')
+                ?.focus();
+
+            return;
+        }
+
+
+        if (!meetingData.date) {
+
+            alert(
+                'Thầy/Cô chưa chọn Ngày thực hiện.'
+            );
+
+            document
+                .getElementById('ngayLe')
+                ?.focus();
+
+            return;
+        }
+
+
+        if (recipients.length === 0) {
+
+            alert(
+                'Thầy/Cô chưa chọn thành phần nhận thông báo cuộc họp.'
+            );
+
+            return;
+        }
+
+
+        // -------------------------------------------------
+        // 5. KIỂM TRA BỘ PREVIEW ĐÃ NẠP CHƯA
+        // -------------------------------------------------
+        if (
+            !window.HVAPreview ||
+            typeof window.HVAPreview.open !== 'function'
+        ) {
+
+            console.error(
+                'Không tìm thấy window.HVAPreview'
+            );
+
+            alert(
+                'Bộ xem trước chưa được tải. ' +
+                'Vui lòng kiểm tra file ' +
+                'hva-administrative-preview.js.'
+            );
+
+            return;
+        }
+
+
+        // -------------------------------------------------
+        // 6. MỞ BẢN XEM TRƯỚC
+        // -------------------------------------------------
+        window.HVAPreview.open({
+
+            type: 'MEETING',
+
+            data: meetingData
+
+        });
+
+
+        console.log(
+            'HVA Preview - Meeting:',
+            meetingData
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            'Lỗi previewMeeting:',
+            error
+        );
+
+        alert(
+            'Không thể mở bản xem trước: ' +
+            error.message
+        );
+
+    }
+
+}
     
 function handleSaveLichThangTruong(e) {
     e.preventDefault();
