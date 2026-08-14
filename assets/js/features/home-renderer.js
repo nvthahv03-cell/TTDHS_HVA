@@ -242,7 +242,6 @@ export function renderHome() {
   </div>
 
 </div>
-
 <!-- CONTAINER 3 TÁC VỤ VNeID STYLE -->
 <div class="flex justify-center items-start gap-2 sm:gap-8 md:gap-12 mb-8 relative z-30 max-w-lg mx-auto px-4">
 
@@ -1054,6 +1053,131 @@ export function renderHome() {
 
 </section>
 `;
+
+    // =====================================================
+    // VIỆC CỦA TÔI | QUẢN TRỊ NHANH
+    // =====================================================
+
+    window.toggleMyWorkPanel = function () {
+        const panel = document.getElementById('myWorkPanel');
+        const adminPanel = document.getElementById('quickAdminPanel');
+        const chevron = document.getElementById('myWorkChevron');
+
+        if (!panel) return;
+
+        const isOpening = panel.classList.contains('hidden');
+
+        adminPanel?.classList.add('hidden');
+        document.getElementById('quickAdminChevron')
+            ?.classList.remove('rotate-180');
+
+        panel.classList.toggle('hidden');
+
+        if (chevron) {
+            chevron.classList.toggle('rotate-180', isOpening);
+        }
+    };
+
+
+    window.toggleQuickAdminPanel = function () {
+
+        const btn = document.getElementById('btn-quick-admin');
+
+        if (btn?.dataset.locked === 'true') {
+            return;
+        }
+
+        const panel = document.getElementById('quickAdminPanel');
+        const myPanel = document.getElementById('myWorkPanel');
+        const chevron = document.getElementById('quickAdminChevron');
+
+        if (!panel) return;
+
+        const isOpening = panel.classList.contains('hidden');
+
+        myPanel?.classList.add('hidden');
+        document.getElementById('myWorkChevron')
+            ?.classList.remove('rotate-180');
+
+        panel.classList.toggle('hidden');
+
+        if (chevron) {
+            chevron.classList.toggle('rotate-180', isOpening);
+        }
+    };
+
+
+    // =====================================================
+    // PHÂN QUYỀN QUẢN TRỊ NHANH
+    // =====================================================
+
+    function setupQuickAdminPermission() {
+
+        let user = {};
+
+        try {
+            user = JSON.parse(
+                sessionStorage.getItem('user') || '{}'
+            );
+        } catch (error) {
+            user = {};
+        }
+
+        const role = String(
+            user.role ||
+            user.vaiTro ||
+            user.VAITRO ||
+            ''
+        ).toUpperCase();
+
+        const permission = String(
+            user.permission ||
+            user.quyen ||
+            user.QUYEN ||
+            ''
+        ).toUpperCase();
+
+        const allowed =
+            role.includes('ADMIN') ||
+            role.includes('HT') ||
+            role.includes('PHT') ||
+            permission.includes('ADMIN') ||
+            permission.includes('QUAN_TRI') ||
+            permission.includes('QUẢN TRỊ');
+
+        const btn = document.getElementById('btn-quick-admin');
+        const lock = document.getElementById('quickAdminLock');
+        const chevron = document.getElementById('quickAdminChevron');
+        const summary = document.getElementById('quickAdminSummary');
+
+        if (!btn) return;
+
+        if (allowed) {
+
+            btn.dataset.locked = 'false';
+
+            lock?.classList.add('hidden');
+            chevron?.classList.remove('hidden');
+
+            if (summary) {
+                summary.textContent = 'Không có yêu cầu mới';
+            }
+
+        } else {
+
+            btn.dataset.locked = 'true';
+
+            lock?.classList.remove('hidden');
+            chevron?.classList.add('hidden');
+
+            if (summary) {
+                summary.textContent = 'Theo phân quyền';
+            }
+        }
+    }
+
+    setupQuickAdminPermission();
+    
 // 2. Khởi tạo các sự kiện giao diện và PWA App
     initMenuLogic();
     renderPWAPopups();
