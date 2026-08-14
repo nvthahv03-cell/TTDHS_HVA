@@ -127,119 +127,499 @@ export function renderHome() {
     </div>
 
 </div>
-<!-- ========================================== -->
-<!-- KHU VỰC 3 PHÍM TÁC VỤ NHANH (PHONG CÁCH VNeID) -->
-<!-- ========================================== -->
+<!-- ====================================================== -->
+<!-- TRUNG TÂM CÁ NHÂN: VIỆC CỦA TÔI | KẾT NỐI SỐ          -->
+<!-- ====================================================== -->
 
-<!-- ==================== VIỆC CỦA TÔI ==================== -->
-<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 px-4 mb-6">
+<div class="grid grid-cols-2 gap-3 px-3 mb-4">
 
-  <!-- ========== VIỆC ĐƯỢC GIAO ========== -->
-  <div class="relative flex flex-col items-center">
-    <button type="button"
-      id="btn-my-assigned"
-      onclick="openMyTasks('ASSIGNED', event)"
-      class="group relative flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer">
+    <!-- ================= VIỆC CỦA TÔI ================= -->
+    <div class="relative">
 
-      <span id="countAssigned"
-        class="absolute -top-1 right-0 min-w-[22px] h-[22px] px-1.5 rounded-full bg-blue-600 text-white text-[11px] font-bold flex items-center justify-center">
-        0
-      </span>
+        <button type="button"
+            id="btn-my-work"
+            onclick="toggleMyWorkPanel(event)"
+            class="w-full min-h-[82px] rounded-2xl
+                   bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500
+                   text-white px-3 py-3 shadow-md
+                   hover:shadow-lg active:scale-[0.98]
+                   transition-all duration-200 text-left">
 
-      <div class="text-[#2563EB] text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 group-hover:scale-110">
-        <i class="bi bi-inbox-fill"></i>
-      </div>
+            <div class="flex items-center justify-between">
 
-      <span class="font-bold text-[13px] sm:text-[15px] text-[#1E3A8A] text-center">
-        Việc được giao
-      </span>
+                <div class="flex items-center gap-2.5">
 
-      <span class="text-[10px] sm:text-xs text-slate-500 mt-1">
-        Chưa tiếp nhận
-      </span>
-    </button>
-  </div>
+                    <div class="w-10 h-10 rounded-xl
+                                bg-white/20 border border-white/25
+                                flex items-center justify-center">
+                        <i class="bi bi-person-check-fill text-xl"></i>
+                    </div>
 
+                    <div>
+                        <div class="text-[12px] font-extrabold">
+                            VIỆC CỦA TÔI
+                        </div>
 
-  <!-- ========== ĐANG THỰC HIỆN ========== -->
-  <div class="relative flex flex-col items-center">
-    <button type="button"
-      id="btn-my-doing"
-      onclick="openMyTasks('DOING', event)"
-      class="group relative flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer">
+                        <div class="text-[10px] text-blue-50 mt-0.5">
+                            Nhiệm vụ • Tiến độ
+                        </div>
+                    </div>
 
-      <span id="countDoing"
-        class="absolute -top-1 right-0 min-w-[22px] h-[22px] px-1.5 rounded-full bg-amber-500 text-white text-[11px] font-bold flex items-center justify-center">
-        0
-      </span>
+                </div>
 
-      <div class="text-amber-500 text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 group-hover:scale-110">
-        <i class="bi bi-hourglass-split"></i>
-      </div>
+                <div class="flex items-center gap-1.5">
 
-      <span class="font-bold text-[13px] sm:text-[15px] text-slate-800 text-center">
-        Đang thực hiện
-      </span>
+                    <span id="myWorkTotalBadge"
+                        class="hidden min-w-[21px] h-[21px] px-1.5
+                               rounded-full bg-red-500 text-white
+                               text-[10px] font-bold
+                               items-center justify-center">
+                        0
+                    </span>
 
-      <span class="text-[10px] sm:text-xs text-slate-500 mt-1">
-        Đã tiếp nhận
-      </span>
-    </button>
-  </div>
+                    <i id="myWorkChevron"
+                       class="bi bi-chevron-down text-sm transition-transform duration-200">
+                    </i>
 
+                </div>
 
-  <!-- ========== QUÁ HẠN ========== -->
-  <div class="relative flex flex-col items-center">
-    <button type="button"
-      id="btn-my-overdue"
-      onclick="openMyTasks('OVERDUE', event)"
-      class="group relative flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer">
+            </div>
 
-      <span id="countOverdue"
-        class="absolute -top-1 right-0 min-w-[22px] h-[22px] px-1.5 rounded-full bg-red-600 text-white text-[11px] font-bold flex items-center justify-center">
-        0
-      </span>
-
-      <div class="text-red-600 text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 group-hover:scale-110">
-        <i class="bi bi-exclamation-triangle-fill"></i>
-      </div>
-
-      <span class="font-bold text-[13px] sm:text-[15px] text-red-700 text-center">
-        Quá hạn
-      </span>
-
-      <span class="text-[10px] sm:text-xs text-red-500 mt-1">
-        Chưa hoàn thành
-      </span>
-    </button>
-  </div>
+        </button>
 
 
-  <!-- ========== ĐÃ HOÀN THÀNH ========== -->
-  <div class="relative flex flex-col items-center">
-    <button type="button"
-      id="btn-my-completed"
-      onclick="openMyTasks('COMPLETED', event)"
-      class="group relative flex flex-col items-center justify-center p-2 bg-transparent border-none cursor-pointer">
+        <!-- PANEL VIỆC CỦA TÔI -->
+        <div id="myWorkPanel"
+             class="hidden absolute left-0 top-[calc(100%+8px)]
+                    z-[1000] w-[310px] max-w-[92vw]
+                    bg-white rounded-2xl shadow-2xl
+                    border border-slate-200 p-3">
 
-      <span id="countCompleted"
-        class="absolute -top-1 right-0 min-w-[22px] h-[22px] px-1.5 rounded-full bg-emerald-600 text-white text-[11px] font-bold flex items-center justify-center">
-        0
-      </span>
+            <div class="flex items-center justify-between
+                        pb-2 mb-2 border-b border-slate-100">
 
-      <div class="text-emerald-600 text-[40px] sm:text-[50px] leading-none mb-2 transition-transform duration-200 group-hover:scale-110">
-        <i class="bi bi-check-circle-fill"></i>
-      </div>
+                <div class="text-xs font-extrabold text-[#0F4C81]">
+                    <i class="bi bi-person-check-fill mr-1.5"></i>
+                    VIỆC CỦA TÔI
+                </div>
 
-      <span class="font-bold text-[13px] sm:text-[15px] text-emerald-700 text-center">
-        Đã hoàn thành
-      </span>
+                <span class="text-[9px] text-slate-400">
+                    Theo dõi công việc
+                </span>
 
-      <span class="text-[10px] sm:text-xs text-slate-500 mt-1">
-        Đã xác nhận
-      </span>
-    </button>
-  </div>
+            </div>
+
+
+            <div class="grid grid-cols-2 gap-2">
+
+                <!-- VIỆC ĐƯỢC GIAO -->
+                <button type="button"
+                    onclick="openMyTasks('ASSIGNED', event)"
+                    class="relative p-3 rounded-xl
+                           bg-blue-50 hover:bg-blue-100
+                           transition text-left">
+
+                    <span id="countAssigned"
+                        class="absolute top-2 right-2
+                               min-w-[19px] h-[19px] px-1
+                               rounded-full bg-blue-600 text-white
+                               text-[9px] font-bold
+                               flex items-center justify-center">
+                        0
+                    </span>
+
+                    <i class="bi bi-inbox-fill
+                              text-blue-600 text-2xl"></i>
+
+                    <div class="text-[11px] font-bold
+                                text-blue-900 mt-2">
+                        Việc được giao
+                    </div>
+
+                    <div class="text-[9px] text-slate-500">
+                        Chưa tiếp nhận
+                    </div>
+
+                </button>
+
+
+                <!-- ĐANG THỰC HIỆN -->
+                <button type="button"
+                    onclick="openMyTasks('DOING', event)"
+                    class="relative p-3 rounded-xl
+                           bg-amber-50 hover:bg-amber-100
+                           transition text-left">
+
+                    <span id="countDoing"
+                        class="absolute top-2 right-2
+                               min-w-[19px] h-[19px] px-1
+                               rounded-full bg-amber-500 text-white
+                               text-[9px] font-bold
+                               flex items-center justify-center">
+                        0
+                    </span>
+
+                    <i class="bi bi-hourglass-split
+                              text-amber-500 text-2xl"></i>
+
+                    <div class="text-[11px] font-bold
+                                text-slate-800 mt-2">
+                        Đang thực hiện
+                    </div>
+
+                    <div class="text-[9px] text-slate-500">
+                        Đã tiếp nhận
+                    </div>
+
+                </button>
+
+
+                <!-- QUÁ HẠN -->
+                <button type="button"
+                    onclick="openMyTasks('OVERDUE', event)"
+                    class="relative p-3 rounded-xl
+                           bg-red-50 hover:bg-red-100
+                           transition text-left">
+
+                    <span id="countOverdue"
+                        class="absolute top-2 right-2
+                               min-w-[19px] h-[19px] px-1
+                               rounded-full bg-red-600 text-white
+                               text-[9px] font-bold
+                               flex items-center justify-center">
+                        0
+                    </span>
+
+                    <i class="bi bi-exclamation-triangle-fill
+                              text-red-600 text-2xl"></i>
+
+                    <div class="text-[11px] font-bold
+                                text-red-700 mt-2">
+                        Quá hạn
+                    </div>
+
+                    <div class="text-[9px] text-red-500">
+                        Chưa hoàn thành
+                    </div>
+
+                </button>
+
+
+                <!-- ĐÃ HOÀN THÀNH -->
+                <button type="button"
+                    onclick="openMyTasks('COMPLETED', event)"
+                    class="relative p-3 rounded-xl
+                           bg-emerald-50 hover:bg-emerald-100
+                           transition text-left">
+
+                    <span id="countCompleted"
+                        class="absolute top-2 right-2
+                               min-w-[19px] h-[19px] px-1
+                               rounded-full bg-emerald-600 text-white
+                               text-[9px] font-bold
+                               flex items-center justify-center">
+                        0
+                    </span>
+
+                    <i class="bi bi-check-circle-fill
+                              text-emerald-600 text-2xl"></i>
+
+                    <div class="text-[11px] font-bold
+                                text-emerald-700 mt-2">
+                        Đã hoàn thành
+                    </div>
+
+                    <div class="text-[9px] text-slate-500">
+                        Đã xác nhận
+                    </div>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= KẾT NỐI SỐ ================= -->
+    <div class="relative">
+
+        <button type="button"
+            id="btn-digital-connect"
+            onclick="toggleDigitalConnectPanel(event)"
+            class="w-full min-h-[82px] rounded-2xl
+                   bg-gradient-to-br from-indigo-700 via-indigo-600 to-violet-600
+                   text-white px-3 py-3 shadow-md
+                   hover:shadow-lg active:scale-[0.98]
+                   transition-all duration-200 text-left">
+
+            <div class="flex items-center justify-between">
+
+                <div class="flex items-center gap-2.5">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-white/20 border border-white/25
+                                flex items-center justify-center">
+
+                        <i class="bi bi-chat-dots-fill text-xl"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="text-[12px] font-extrabold">
+                            KẾT NỐI SỐ
+                        </div>
+
+                        <div class="text-[10px] text-indigo-100 mt-0.5">
+                            Yêu cầu • Phản hồi
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="flex items-center gap-1.5">
+
+                    <span id="digitalConnectBadge"
+                        class="hidden min-w-[21px] h-[21px] px-1.5
+                               rounded-full bg-red-500 text-white
+                               text-[10px] font-bold
+                               items-center justify-center">
+                        0
+                    </span>
+
+                    <i id="digitalConnectChevron"
+                       class="bi bi-chevron-down text-sm
+                              transition-transform duration-200">
+                    </i>
+
+                </div>
+
+            </div>
+
+        </button>
+
+
+        <!-- PANEL KẾT NỐI SỐ -->
+        <div id="digitalConnectPanel"
+             class="hidden absolute right-0 top-[calc(100%+8px)]
+                    z-[1000] w-[330px] max-w-[92vw]
+                    bg-white rounded-2xl shadow-2xl
+                    border border-slate-200 p-3">
+
+            <!-- HEADER -->
+            <div class="flex items-center justify-between
+                        pb-2 mb-2 border-b border-slate-100">
+
+                <div class="text-xs font-extrabold text-indigo-700">
+
+                    <i class="bi bi-chat-dots-fill mr-1.5"></i>
+                    KẾT NỐI SỐ
+
+                </div>
+
+                <span class="text-[9px] text-slate-400">
+                    Trung tâm yêu cầu & phản hồi
+                </span>
+
+            </div>
+
+
+            <!-- ================= DÀNH CHO GV ================= -->
+            <div class="mb-3">
+
+                <div class="flex items-center gap-1.5
+                            text-[10px] font-extrabold
+                            text-slate-600 mb-2">
+
+                    <i class="bi bi-person-fill text-blue-600"></i>
+                    DÀNH CHO THẦY/CÔ
+
+                </div>
+
+
+                <div class="grid grid-cols-2 gap-2">
+
+                    <button type="button"
+                        onclick="openDigitalConnect('SEND_REQUEST', event)"
+                        class="p-2.5 rounded-xl bg-blue-50
+                               hover:bg-blue-100 transition text-left">
+
+                        <i class="bi bi-send-fill text-blue-600"></i>
+
+                        <div class="text-[10px] font-bold
+                                    text-slate-800 mt-1">
+                            Gửi yêu cầu
+                        </div>
+
+                    </button>
+
+
+                    <button type="button"
+                        onclick="openDigitalConnect('FEEDBACK', event)"
+                        class="p-2.5 rounded-xl bg-cyan-50
+                               hover:bg-cyan-100 transition text-left">
+
+                        <i class="bi bi-chat-left-text-fill
+                                  text-cyan-600"></i>
+
+                        <div class="text-[10px] font-bold
+                                    text-slate-800 mt-1">
+                            Phản hồi
+                        </div>
+
+                    </button>
+
+
+                    <button type="button"
+                        onclick="openDigitalConnect('MY_REQUESTS', event)"
+                        class="p-2.5 rounded-xl bg-indigo-50
+                               hover:bg-indigo-100 transition text-left">
+
+                        <i class="bi bi-clock-history
+                                  text-indigo-600"></i>
+
+                        <div class="text-[10px] font-bold
+                                    text-slate-800 mt-1">
+                            Yêu cầu của tôi
+                        </div>
+
+                    </button>
+
+
+                    <button type="button"
+                        onclick="openDigitalConnect('SUPPORT', event)"
+                        class="p-2.5 rounded-xl bg-emerald-50
+                               hover:bg-emerald-100 transition text-left">
+
+                        <i class="bi bi-life-preserver
+                                  text-emerald-600"></i>
+
+                        <div class="text-[10px] font-bold
+                                    text-slate-800 mt-1">
+                            Hỗ trợ
+                        </div>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= QUẢN TRỊ ================= -->
+            <div class="pt-2 border-t border-slate-100">
+
+                <div class="flex items-center justify-between mb-2">
+
+                    <div class="flex items-center gap-1.5
+                                text-[10px] font-extrabold
+                                text-slate-600">
+
+                        <i class="bi bi-shield-lock-fill
+                                  text-slate-600"></i>
+
+                        DÀNH CHO QUẢN TRỊ
+
+                    </div>
+
+                    <span id="digitalAdminLock"
+                          class="hidden text-[9px]
+                                 text-slate-400 font-semibold">
+
+                        <i class="bi bi-lock-fill mr-1"></i>
+                        Theo phân quyền
+
+                    </span>
+
+                </div>
+
+
+                <div id="digitalAdminArea"
+                     class="grid grid-cols-2 gap-2">
+
+                    <button type="button"
+                        onclick="openDigitalAdmin('NEW', event)"
+                        class="relative p-2.5 rounded-xl
+                               bg-red-50 hover:bg-red-100
+                               transition text-left">
+
+                        <span id="countRequestNew"
+                            class="absolute top-1.5 right-1.5
+                                   min-w-[18px] h-[18px] px-1
+                                   rounded-full bg-red-500 text-white
+                                   text-[8px] font-bold
+                                   flex items-center justify-center">
+                            0
+                        </span>
+
+                        <i class="bi bi-inbox-fill text-red-500"></i>
+
+                        <div class="text-[10px] font-bold
+                                    text-slate-800 mt-1">
+                            Yêu cầu mới
+                        </div>
+
+                    </button>
+
+
+                    <button type="button"
+                        onclick="openDigitalAdmin('PROCESSING', event)"
+                        class="p-2.5 rounded-xl bg-amber-50
+                               hover:bg-amber-100 transition text-left">
+
+                        <i class="bi bi-hourglass-split
+                                  text-amber-500"></i>
+
+                        <div class="text-[10px] font-bold
+                                    text-slate-800 mt-1">
+                            Đang xử lý
+                        </div>
+
+                    </button>
+
+
+                    <button type="button"
+                        onclick="openDigitalAdmin('WAITING', event)"
+                        class="p-2.5 rounded-xl bg-violet-50
+                               hover:bg-violet-100 transition text-left">
+
+                        <i class="bi bi-chat-square-dots-fill
+                                  text-violet-600"></i>
+
+                        <div class="text-[10px] font-bold
+                                    text-slate-800 mt-1">
+                            Chờ phản hồi
+                        </div>
+
+                    </button>
+
+
+                    <button type="button"
+                        onclick="openDigitalAdmin('DONE', event)"
+                        class="p-2.5 rounded-xl bg-emerald-50
+                               hover:bg-emerald-100 transition text-left">
+
+                        <i class="bi bi-check-circle-fill
+                                  text-emerald-600"></i>
+
+                        <div class="text-[10px] font-bold
+                                    text-slate-800 mt-1">
+                            Đã xử lý
+                        </div>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 <!-- CONTAINER 3 TÁC VỤ VNeID STYLE -->
