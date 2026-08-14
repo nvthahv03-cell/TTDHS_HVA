@@ -1434,42 +1434,37 @@ export function renderHome() {
 </section>
 `;
 
-    // =====================================================
-    // VIỆC CỦA TÔI | QUẢN TRỊ NHANH
+      // =====================================================
+    // VIỆC CỦA TÔI | KẾT NỐI SỐ
     // =====================================================
 
-    window.toggleMyWorkPanel = function () {
+    window.toggleMyWorkPanel = function(event) {
+        if (event) event.stopPropagation();
+
         const panel = document.getElementById('myWorkPanel');
-        const adminPanel = document.getElementById('quickAdminPanel');
+        const connectPanel = document.getElementById('digitalConnectPanel');
         const chevron = document.getElementById('myWorkChevron');
 
         if (!panel) return;
 
         const isOpening = panel.classList.contains('hidden');
 
-        adminPanel?.classList.add('hidden');
-        document.getElementById('quickAdminChevron')
+        connectPanel?.classList.add('hidden');
+        document.getElementById('digitalConnectChevron')
             ?.classList.remove('rotate-180');
 
         panel.classList.toggle('hidden');
 
-        if (chevron) {
-            chevron.classList.toggle('rotate-180', isOpening);
-        }
+        chevron?.classList.toggle('rotate-180', isOpening);
     };
 
 
-    window.toggleQuickAdminPanel = function () {
+    window.toggleDigitalConnectPanel = function(event) {
+        if (event) event.stopPropagation();
 
-        const btn = document.getElementById('btn-quick-admin');
-
-        if (btn?.dataset.locked === 'true') {
-            return;
-        }
-
-        const panel = document.getElementById('quickAdminPanel');
+        const panel = document.getElementById('digitalConnectPanel');
         const myPanel = document.getElementById('myWorkPanel');
-        const chevron = document.getElementById('quickAdminChevron');
+        const chevron = document.getElementById('digitalConnectChevron');
 
         if (!panel) return;
 
@@ -1481,17 +1476,15 @@ export function renderHome() {
 
         panel.classList.toggle('hidden');
 
-        if (chevron) {
-            chevron.classList.toggle('rotate-180', isOpening);
-        }
+        chevron?.classList.toggle('rotate-180', isOpening);
     };
 
 
     // =====================================================
-    // PHÂN QUYỀN QUẢN TRỊ NHANH
+    // PHÂN QUYỀN KHU VỰC QUẢN TRỊ TRONG KẾT NỐI SỐ
     // =====================================================
 
-    function setupQuickAdminPermission() {
+    function setupDigitalConnectPermission() {
 
         let user = {};
 
@@ -1525,38 +1518,96 @@ export function renderHome() {
             permission.includes('QUAN_TRI') ||
             permission.includes('QUẢN TRỊ');
 
-        const btn = document.getElementById('btn-quick-admin');
-        const lock = document.getElementById('quickAdminLock');
-        const chevron = document.getElementById('quickAdminChevron');
-        const summary = document.getElementById('quickAdminSummary');
+        const adminArea =
+            document.getElementById('digitalAdminArea');
 
-        if (!btn) return;
+        const lock =
+            document.getElementById('digitalAdminLock');
+
+        if (!adminArea) return;
 
         if (allowed) {
 
-            btn.dataset.locked = 'false';
+            adminArea.classList.remove(
+                'opacity-40',
+                'pointer-events-none',
+                'grayscale'
+            );
 
             lock?.classList.add('hidden');
-            chevron?.classList.remove('hidden');
-
-            if (summary) {
-                summary.textContent = 'Không có yêu cầu mới';
-            }
 
         } else {
 
-            btn.dataset.locked = 'true';
+            adminArea.classList.add(
+                'opacity-40',
+                'pointer-events-none',
+                'grayscale'
+            );
 
             lock?.classList.remove('hidden');
-            chevron?.classList.add('hidden');
-
-            if (summary) {
-                summary.textContent = 'Theo phân quyền';
-            }
         }
     }
 
-    setupQuickAdminPermission();
+
+    // =====================================================
+    // ĐIỀU HƯỚNG KẾT NỐI SỐ
+    // =====================================================
+
+    window.openDigitalConnect = function(type, event) {
+        if (event) event.stopPropagation();
+
+        switch (type) {
+
+            case 'SEND_REQUEST':
+                loadModule('ket-noi-gui-yeu-cau');
+                break;
+
+            case 'FEEDBACK':
+                loadModule('ket-noi-phan-hoi');
+                break;
+
+            case 'MY_REQUESTS':
+                loadModule('ket-noi-yeu-cau-cua-toi');
+                break;
+
+            case 'SUPPORT':
+                loadModule('ket-noi-ho-tro');
+                break;
+        }
+    };
+
+
+    window.openDigitalAdmin = function(type, event) {
+        if (event) event.stopPropagation();
+
+        switch (type) {
+
+            case 'NEW':
+                loadModule('ket-noi-admin-moi');
+                break;
+
+            case 'PROCESSING':
+                loadModule('ket-noi-admin-dang-xu-ly');
+                break;
+
+            case 'WAITING':
+                loadModule('ket-noi-admin-cho-phan-hoi');
+                break;
+
+            case 'DONE':
+                loadModule('ket-noi-admin-da-xu-ly');
+                break;
+        }
+    };
+
+
+    setupDigitalConnectPermission();
+
+    // 2. Khởi tạo các sự kiện giao diện và PWA App
+    initMenuLogic();
+    renderPWAPopups();
+    bindHomeEvents();
+} 
     
 // 2. Khởi tạo các sự kiện giao diện và PWA App
     initMenuLogic();
