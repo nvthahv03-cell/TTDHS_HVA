@@ -1104,16 +1104,25 @@
             ]
             .filter(Boolean)
             .join(' • ');
+       const meetingDateTime =
+    [
+        data.time,
+        data.date
+            ? `${getVietnameseWeekday(data.date)}, ngày ${formatDateVN(data.date)}`
+            : ''
+    ]
+    .filter(Boolean)
+    .join(' • ');
 
 
         return `
 
             <div class="hva-preview-info">
 
-                ${infoRow(
-                    'Loại hoạt động',
-                    data.meetingType
-                )}
+               ${infoRow(
+             'Loại cuộc họp / Công tác',
+             data.meetingType
+               )}
 
                 ${infoRow(
                     'Thời gian',
@@ -1320,15 +1329,11 @@
 
                     </div>
 
-                    <div class="hva-preview-document-name">
+                   <div class="hva-preview-document-name">
 
-                        ${esc(
-                            valueOrDash(
-                                data.title
-                            )
-                        )}
+                   ${esc(meetingDateTime)}
 
-                    </div>
+               </div>
 
                 </div>
 
