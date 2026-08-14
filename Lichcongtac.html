@@ -478,36 +478,121 @@
         </div>
 
 
-        <!-- ACTION -->
-        <div class="pt-1">
+        <!-- =====================================================
+     THANH TÁC VỤ CUỐI FORM
+     HỦY • XEM • LƯU • PHÁT HÀNH
+====================================================== -->
+<div class="bg-white rounded-2xl border border-slate-200
+            shadow-sm p-3 sm:p-4">
 
-            <button type="submit"
-                    class="group w-full h-12 rounded-xl
-                           bg-gradient-to-r
-                           from-[#0F4C81] to-[#1679B8]
-                           hover:from-[#0B3E69]
-                           hover:to-[#12679E]
-                           text-white
-                           font-extrabold text-xs
-                           shadow-md hover:shadow-lg
-                           active:scale-[0.99]
-                           transition-all duration-200
-                           flex items-center justify-center gap-2">
+    <div class="flex items-center justify-between mb-3">
 
-                <i class="bi bi-floppy-fill text-sm"></i>
+        <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-blue-50
+                         text-[#0F4C81]
+                         flex items-center justify-center">
+                <i class="bi bi-lightning-charge-fill text-xs"></i>
+            </span>
 
-                <span>
-                    LƯU LỊCH CÔNG TÁC / CUỘC HỌP
-                </span>
-
-            </button>
-
-            <p class="text-center text-[9px] text-slate-400 mt-2">
-                Thông tin sau khi lưu sẽ được sử dụng cho lịch công tác và quy trình cuộc họp
-            </p>
-
+            <span class="text-[11px] font-extrabold
+                         text-slate-700 uppercase tracking-wide">
+                Tác vụ
+            </span>
         </div>
 
+        <span class="text-[9px] text-slate-400">
+            Lịch công tác / Cuộc họp
+        </span>
+
+    </div>
+
+
+    <!-- 4 NÚT -->
+    <div class="grid grid-cols-4 gap-2 sm:gap-3">
+
+        <!-- HỦY -->
+        <button type="button"
+                onclick="resetCongTacLeForm()"
+                class="h-12 rounded-xl
+                       bg-slate-100 hover:bg-slate-200
+                       border border-slate-200
+                       text-slate-600
+                       font-bold text-[10px] sm:text-xs
+                       flex items-center justify-center gap-1.5
+                       active:scale-[0.98]
+                       transition">
+
+            <i class="bi bi-x-circle text-sm"></i>
+
+            <span>HỦY</span>
+        </button>
+
+
+        <!-- XEM TRƯỚC -->
+        <button type="button"
+                onclick="previewCongTacLe()"
+                class="h-12 rounded-xl
+                       bg-white hover:bg-blue-50
+                       border border-[#0F4C81]
+                       text-[#0F4C81]
+                       font-bold text-[10px] sm:text-xs
+                       flex items-center justify-center gap-1.5
+                       active:scale-[0.98]
+                       transition">
+
+            <i class="bi bi-eye-fill text-sm"></i>
+
+            <span>XEM</span>
+        </button>
+
+
+        <!-- LƯU NHÁP -->
+        <button type="submit"
+                class="h-12 rounded-xl
+                       bg-[#0F4C81] hover:bg-[#0B3E69]
+                       text-white
+                       font-bold text-[10px] sm:text-xs
+                       shadow-sm
+                       flex items-center justify-center gap-1.5
+                       active:scale-[0.98]
+                       transition">
+
+            <i class="bi bi-floppy-fill text-sm"></i>
+
+            <span>LƯU</span>
+        </button>
+
+
+        <!-- PHÁT HÀNH -->
+        <button type="button"
+                onclick="publishCongTacLe()"
+                class="h-12 rounded-xl
+                       bg-emerald-600 hover:bg-emerald-700
+                       text-white
+                       font-extrabold text-[10px] sm:text-xs
+                       shadow-sm
+                       flex items-center justify-center gap-1.5
+                       active:scale-[0.98]
+                       transition">
+
+            <i class="bi bi-send-fill text-sm"></i>
+
+            <span>PHÁT HÀNH</span>
+        </button>
+
+    </div>
+
+
+    <!-- CHÚ THÍCH -->
+    <div class="mt-2.5 text-center
+                text-[9px] sm:text-[10px]
+                text-slate-400">
+
+        Lưu để tiếp tục chỉnh sửa • Phát hành khi thông tin đã hoàn chỉnh
+
+    </div>
+
+</div>
     </form>
 
 </section>
