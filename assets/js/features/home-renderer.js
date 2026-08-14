@@ -1603,11 +1603,7 @@ export function renderHome() {
 
     setupDigitalConnectPermission();
 
-    // 2. Khởi tạo các sự kiện giao diện và PWA App
-    initMenuLogic();
-    renderPWAPopups();
-    bindHomeEvents();
-} 
+  
     
 // 2. Khởi tạo các sự kiện giao diện và PWA App
     initMenuLogic();
