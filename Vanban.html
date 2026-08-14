@@ -581,7 +581,7 @@ function initApp() {
                 trichYeu: doc.trichYeu || doc.TrichYeu || doc.tenVanBan || doc.TenVanBan || '---',
                 coQuan: doc.coQuan || doc.CoQuan || 'THPT Hòa Vang',
                 nguoiKy: doc.nguoiKy || doc.NguoiKy || 'Ban BGH',
-                fileID: doc.fileID || doc.FileID || doc.fileUrl || doc.FileUrl || doc.link || doc.Link || '',
+                fileID: doc.fileID || doc.FileID || doc.fileId || doc.FILEID || doc.fileUrl || doc.FileUrl || doc.url || doc.Url || doc.link || doc.Link || doc.tep || doc.Tep || '',
                 fileType: 'pdf',
                 status: doc.trangThai || doc.TrangThai || doc.status || doc.Status || 'CHỜ PHÁT HÀNH'
             };
@@ -752,7 +752,7 @@ function renderDocumentList() {
                 const status = doc.status || doc.Status || 'Đã phát hành';
                 
                 let fileUrl = "";
-                const rawFile = doc.fileID || doc.FileID || doc.fileUrl || doc.link || "";
+                const rawFile = doc.fileID || doc.FileID || doc.fileId || doc.FILEID || doc.fileUrl || doc.FileUrl || doc.url || doc.Url || doc.link || doc.Link || doc.tep || doc.Tep || "";
                 if (rawFile) {
                     fileUrl = String(rawFile).startsWith("http") ? rawFile : `https://drive.google.com/file/d/${rawFile}/view?usp=sharing`;
                 }
@@ -816,6 +816,19 @@ function renderDocumentList() {
                             <div><strong>Ngày:</strong> ${ngayBH}</div>
                             <div><strong>Loại:</strong> ${loaiVB}</div>
                         </div>
+                        ${(() => {
+                            const rawFile = doc.fileID || doc.FileID || doc.fileId || doc.FILEID || doc.fileUrl || doc.FileUrl || doc.url || doc.Url || doc.link || doc.Link || doc.tep || doc.Tep || "";
+                            if (!rawFile) return "";
+                            const mobileFileUrl = String(rawFile).startsWith("http")
+                                ? String(rawFile)
+                                : `https://drive.google.com/file/d/${rawFile}/view?usp=sharing`;
+                            return `
+                                <a href="${mobileFileUrl}" target="_blank" rel="noopener noreferrer"
+                                   onclick="event.stopPropagation();"
+                                   class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 font-bold text-[11px] border border-red-100">
+                                    <i class="bi bi-file-earmark-pdf-fill"></i> Mở PDF
+                                </a>`;
+                        })()}
                     </div>
                 `;
             }).join('');
