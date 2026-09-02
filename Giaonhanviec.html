@@ -440,64 +440,70 @@
             </button>
         </div>
 
-        <!-- MODAL BODY PRINTABLE -->
-        <div class="p-6 overflow-y-auto flex-1 font-serif leading-relaxed text-slate-900 bg-white" id="printArea">
-            <div class="text-center border-b-2 border-slate-800 pb-4 mb-4">
-                <div class="flex justify-between items-start text-xs font-bold uppercase tracking-wider mb-2">
-                    <div class="text-left">
-                        TRƯỜNG THPT HÒA VANG<br>
-                        <span class="font-normal text-[10px]">TRUNG TÂM ĐIỀU HÀNH SỐ TTĐHS_HVA</span>
+        <!-- MODAL BODY PRINTABLE: CHỈ THAY GIAO DIỆN XEM TRƯỚC, GIỮ NGUYÊN ID/LOGIC -->
+        <div class="p-6 sm:p-8 overflow-y-auto flex-1 leading-relaxed text-slate-900 bg-white" id="printArea"
+             style="font-family:'Times New Roman', Times, serif;">
+            <div class="pb-4 mb-5 border-b border-slate-300">
+                <div class="grid grid-cols-2 gap-5 items-start text-[11px] sm:text-xs font-bold uppercase leading-snug">
+                    <div class="text-center">
+                        <div>TRƯỜNG THPT HÒA VANG</div>
+                        <div class="mx-auto mt-1 w-24 border-t border-slate-900"></div>
                     </div>
-                    <div class="text-right">
-                        CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
-                        <span class="font-normal text-[10px] underline">Độc lập - Tự do - Hạnh phúc</span>
+                    <div class="text-center">
+                        <div>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
+                        <div class="normal-case font-bold mt-0.5">Độc lập - Tự do - Hạnh phúc</div>
+                        <div class="mx-auto mt-1 w-32 border-t border-slate-900"></div>
                     </div>
                 </div>
-                <div class="text-lg font-bold uppercase tracking-wide mt-3 text-slate-900">
-                    PHIẾU GIAO NHIỆM VỤ ĐIỀU HÀNH
+
+                <div class="text-center mt-5">
+                    <div class="text-xl sm:text-2xl font-bold uppercase tracking-wide text-slate-950">
+                        PHIẾU GIAO NHIỆM VỤ
+                    </div>
+                    <div class="text-xs sm:text-sm italic text-slate-600 mt-1" id="pvNgayGiao">Đà Nẵng, ngày ... tháng ... năm ...</div>
                 </div>
-                <div class="text-xs italic text-slate-600" id="pvNgayGiao">Ngày ... tháng ... năm ...</div>
             </div>
 
-            <div class="space-y-3 text-xs sm:text-sm">
-                <div class="grid grid-cols-2 gap-2 border-b border-slate-100 pb-2">
+            <div class="space-y-4 text-[13px] sm:text-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 pb-3 border-b border-slate-200">
                     <div><strong>Người giao nhiệm vụ:</strong> <span id="pvNguoiGiao">--</span></div>
                     <div><strong>Chức vụ / Đơn vị:</strong> <span id="pvChucVuNguoiGiao">--</span></div>
                     <div><strong>Nguồn giao:</strong> <span id="pvNguonGiao">--</span></div>
                     <div><strong>Mức độ ưu tiên:</strong> <span id="pvMucDo">--</span></div>
                 </div>
 
-                <div id="pvBoxVanBan" class="p-2.5 bg-slate-50 border border-slate-200 rounded-lg hidden">
+                <div id="pvBoxVanBan" class="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-md hidden">
                     <strong>Văn bản căn cứ / đính kèm:</strong>
-                    <div id="pvVanBanInfo" class="text-xs mt-1 text-slate-700">--</div>
+                    <div id="pvVanBanInfo" class="mt-1 text-[12px] sm:text-[13px] text-slate-700">--</div>
                 </div>
 
                 <div>
-                    <strong class="text-slate-900">Tiêu đề nhiệm vụ:</strong>
-                    <div id="pvTieuDe" class="font-bold text-base text-[#0F4C81] mt-0.5">--</div>
+                    <strong>Tiêu đề nhiệm vụ:</strong>
+                    <div id="pvTieuDe" class="font-bold text-[15px] sm:text-base text-slate-950 mt-1">--</div>
                 </div>
 
                 <div>
-                    <strong class="text-slate-900">Nội dung chỉ đạo & Yêu cầu:</strong>
-                    <div id="pvNoiDung" class="p-3 bg-slate-50 border border-slate-200 rounded-lg whitespace-pre-wrap mt-1 text-slate-800 font-sans text-xs sm:text-sm">--</div>
+                    <strong>Nội dung chỉ đạo và yêu cầu:</strong>
+                    <div id="pvNoiDung" class="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-md whitespace-pre-wrap mt-1.5 text-slate-900 text-[13px] sm:text-sm leading-relaxed">--</div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2 border-t border-slate-100 pt-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5 pt-3 border-t border-slate-200">
                     <div><strong>Yêu cầu minh chứng:</strong> <span id="pvYeuCauMinhChung">--</span></div>
-                    <div><strong>Hạn hoàn thành:</strong> <span id="pvHanHoanThanh" class="font-bold text-red-600">--</span></div>
+                    <div><strong>Hạn hoàn thành:</strong> <span id="pvHanHoanThanh" class="font-bold text-red-700">--</span></div>
                 </div>
 
-                <div class="border-t border-slate-200 pt-3">
-                    <strong class="text-slate-900">Danh sách đối tượng nhận nhiệm vụ:</strong>
-                    <div id="pvDanhSachNhan" class="mt-1.5 font-sans text-xs flex flex-wrap gap-1.5">--</div>
+                <div class="pt-3 border-t border-slate-200">
+                    <strong>Đối tượng nhận nhiệm vụ:</strong>
+                    <div id="pvDanhSachNhan" class="mt-2 text-xs flex flex-wrap gap-1.5" style="font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;">--</div>
                 </div>
 
-                <div class="pt-8 grid grid-cols-2 text-center text-xs font-sans">
+                <!-- Chừa kiến trúc cho ký số về sau; hiện tại không giả lập chữ ký số -->
+                <div class="pt-7 grid grid-cols-2 text-center text-xs">
                     <div></div>
                     <div>
-                        <div class="font-bold uppercase">NGƯỜI GIAO NHIỆM VỤ</div>
-                        <div class="italic text-slate-500 text-[10px]">(Ký & ghi rõ họ tên trên hệ thống)</div>
-                        <div class="h-16"></div>
+                        <div class="font-bold uppercase text-sm">NGƯỜI GIAO NHIỆM VỤ</div>
+                        <div class="italic text-slate-500 text-[11px] mt-1">Phiếu được phát hành trên Hệ thống TTĐHS_HVA</div>
+                        <div class="h-12"></div>
                         <div id="pvKyTen" class="font-bold text-sm">--</div>
                     </div>
                 </div>
