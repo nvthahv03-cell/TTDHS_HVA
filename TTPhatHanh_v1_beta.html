@@ -182,18 +182,7 @@
                     </div>
 
                     <div class="space-y-2" id="recipient-selector-container">
-                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-                            <input type="checkbox" value="ALL" checked onchange="Controller.toggleRecipient('ALL')" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                            <span>Toàn thể Giáo viên & Nhân viên ( Toàn trường )</span>
-                        </label>
-                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-                            <input type="checkbox" value="BGH" checked onchange="Controller.toggleRecipient('BGH')" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                            <span>Ban Ban Giám Hiệu</span>
-                        </label>
-                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
-                            <input type="checkbox" value="TO_TRUONG" onchange="Controller.toggleRecipient('TO_TRUONG')" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                            <span>Tổ trưởng chuyên môn</span>
-                        </label>
+                        <p class="text-xs text-slate-400 italic">Đang nhận danh sách đối tượng từ module nguồn...</p>
                     </div>
                 </div>
 
@@ -234,18 +223,20 @@
     // =================================================================
     const CONFIG = Object.freeze({
         APP_NAME: "TRUNG TÂM ĐIỀU PHỐI PHÁT HÀNH SỐ",
-        VERSION: "v2.2 Enterprise Engine",
+        VERSION: "v3.0 HVA Publishing Gateway",
+        SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec",
         PROJECT_CODE: "TTĐHS_HVA",
         STORAGE_KEYS: {
             CURRENT_DOC: "TTDHS_CURRENT_DOC",
-            LAST_PUBLISHED: "TTDHS_LAST_PUBLISHED"
+            LAST_PUBLISHED: "TTDHS_LAST_PUBLISHED",
+            LAST_RESULT: "TTDHS_LAST_PUBLISH_RESULT"
         },
 
         
         DEFAULT_DESTINATIONS: [
-            { id: "LichCongTac", name: "Lịch công tác", icon: "bi-calendar-week-fill", selected: true },
+            { id: "LichCongTac", name: "Lịch công tác", icon: "bi-calendar-week-fill", selected: false },
             { id: "TaiNguyenSo", name: "Tài nguyên số", icon: "bi-folder-symlink-fill", selected: false },
-            { id: "ThongBao", name: "Thông báo", icon: "bi-megaphone-fill", selected: true },
+            { id: "ThongBao", name: "Thông báo", icon: "bi-megaphone-fill", selected: false },
             { id: "ViecCuaToi", name: "Việc của tôi", icon: "bi-clipboard-check-fill", selected: false },
             { id: "TienIchSo", name: "Tiện ích số", icon: "bi-cpu-fill", selected: false },
             { id: "Website", name: "Website Trường", icon: "bi-globe", selected: false },
@@ -344,46 +335,44 @@ const StorageEngine = {
     // =================================================================
     const ModuleAdapter = {
         toStandardDocument: (rawSource) => {
-            if (!rawSource || typeof rawSource !== 'object') {
-                return {
-                    docId: "LCT-2026-0806-001",
-                    moduleSource: "LichCongTac",
-                    title: "Lịch Công Tác Tuần 24 - Trường THPT Hòa Vang",
-                    type: "LỊCH CÔNG TÁC",
-                    version: "v1.0.0",
-                    author: "Ban BGH",
-                    createdAt: "2026-08-06",
-                    data: {}
-                };
-            }
+            const raw = (rawSource && typeof rawSource === 'object') ? rawSource : {};
+            const data = raw.data || raw.payload || {};
+            const moduleSource = raw.moduleSource || raw.source || data.moduleSource || 'UnknownModule';
+            const docId = raw.docId || raw.id || data.idTask || data.taskId || `DOC-${Date.now()}`;
             return {
-                docId: rawSource.docId || rawSource.id || "DOC-DEFAULT",
-                moduleSource: rawSource.moduleSource || rawSource.source || "UnknownModule",
-                title: rawSource.title || rawSource.name || "Tài liệu chưa đặt tên",
-                type: (rawSource.type || rawSource.moduleSource || "VĂN BẢN").toUpperCase(),
-                version: rawSource.version || "v1.0.0",
-                author: rawSource.author || rawSource.creator || "Ban BGH",
-                createdAt: rawSource.createdAt || rawSource.date || new Date().toISOString().split('T')[0],
-                data: rawSource.data || {}
+                docId,
+                moduleSource,
+                title: raw.title || raw.name || data.tieuDe || 'Tài liệu chưa đặt tên',
+                type: String(raw.type || data.loaiNhiemVu || moduleSource || 'VĂN BẢN').toUpperCase(),
+                version: raw.version || 'v1.0.0',
+                author: raw.author || raw.creator || data.nguoiGiao || 'HVA',
+                createdAt: raw.createdAt || raw.date || new Date().toISOString(),
+                data
             };
+        },
+        getRecipients: (rawSource) => {
+            if (!rawSource || typeof rawSource !== 'object') return [];
+            const list = rawSource.recipients || rawSource.danhSachNguoiNhan ||
+                         (rawSource.data && rawSource.data.danhSachNguoiNhan) || [];
+            return Array.isArray(list) ? list : [];
+        },
+        getLinkedDocs: (rawSource) => {
+            if (!rawSource || typeof rawSource !== 'object') return [];
+            const list = rawSource.linkedDocs || rawSource.attachments || [];
+            return Array.isArray(list) ? list : [];
         }
     };
 
-    // =================================================================
-    // 5. CENTRAL STATE STORE (SINGLE SOURCE OF TRUTH)
-    // =================================================================
     const TTDHS_State = {
+        rawSource: null,
         document: ModuleAdapter.toStandardDocument(null),
         destinations: JSON.parse(JSON.stringify(CONFIG.DEFAULT_DESTINATIONS)),
         workflowSteps: JSON.parse(JSON.stringify(CONFIG.DEFAULT_WORKFLOW_STEPS)),
-        linkedDocs: [
-            { id: "DOC-01", title: "Thông báo tập trung chuẩn bị năm học mới", type: "Thông báo" },
-            { id: "DOC-02", title: "Kế hoạch phân công giảng dạy Học kỳ 1", type: "Kế hoạch" }
-        ],
-        recipients: ["ALL", "BGH"],
-        userPermissions: { canPublish: true, role: CONFIG.ROLES.ADMIN }
+        linkedDocs: [],
+        recipients: [],
+        userPermissions: { canPublish: true, role: CONFIG.ROLES.ADMIN },
+        isPublishing: false
     };
-
     // =================================================================
     // 6. SPECIALIZED PURE BUSINESS ENGINES
     // =================================================================
@@ -412,8 +401,14 @@ const StorageEngine = {
     };
 
     const RecipientEngine = {
-        getResolvedRecipients: (recipientList) => {
-            return Array.isArray(recipientList) ? [...recipientList] : [];
+        getResolvedRecipients: (recipientList) => Array.isArray(recipientList) ? [...recipientList] : [],
+        displayName: (r) => {
+            if (typeof r === 'string') return r;
+            return r.hoTen || r.fullName || r.name || r.username || 'Người nhận';
+        },
+        displayMeta: (r) => {
+            if (typeof r === 'string') return '';
+            return [r.chucVu || r.vaiTro || '', r.toBoPhan || r.to || ''].filter(Boolean).join(' · ');
         }
     };
 
@@ -461,10 +456,12 @@ const StorageEngine = {
         runChecks: (state) => {
             const isPermitted = PermissionEngine.checkPermission(state.userPermissions, CONFIG.ACTIONS.PUBLISH);
             const versionStatus = VersionEngine.checkConflict(state.document.version);
+            const hasSource = state.document.moduleSource !== 'UnknownModule';
             const hasRecipients = state.recipients.length > 0;
             const hasDestinations = state.destinations.some(d => d.selected);
 
             const checks = [
+                { label: "Kiểm tra module nguồn", pass: hasSource, msg: hasSource ? state.document.moduleSource : "Chưa có dữ liệu nguồn" },
                 { label: "Kiểm tra quyền phát hành", pass: isPermitted, msg: isPermitted ? "Đủ thẩm quyền" : "Thiếu thẩm quyền" },
                 { label: "Kiểm tra phiên bản mới hơn", pass: !versionStatus.conflict, msg: "Phiên bản mới nhất" },
                 { label: "Kiểm tra đối tượng nhận", pass: hasRecipients, msg: hasRecipients ? `${state.recipients.length} nhóm nhận` : "Chưa chọn người nhận" },
@@ -496,18 +493,49 @@ const StorageEngine = {
     };
 
     const PublishEngine = {
+        createPublishId: () => {
+            const d = new Date();
+            const p = n => String(n).padStart(2, '0');
+            return `PH-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}-${Math.floor(1000 + Math.random()*9000)}`;
+        },
         preparePayload: (state) => {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
             return {
+                action: 'publishDocument',
+                publishId: PublishEngine.createPublishId(),
+                projectCode: CONFIG.PROJECT_CODE,
+                moduleSource: state.document.moduleSource,
+                documentType: state.document.type,
                 document: state.document,
+                sender: {
+                    username: user.username || '',
+                    fullName: user.fullName || state.document.author || '',
+                    workPosition: user.workPosition || '',
+                    department: user.department || ''
+                },
+                recipients: RecipientEngine.getResolvedRecipients(state.recipients),
                 destinations: state.destinations.filter(d => d.selected),
                 workflow: state.workflowSteps.filter(s => s.selected),
-                recipients: RecipientEngine.getResolvedRecipients(state.recipients),
-                linkedDocs: state.linkedDocs,
-                publishedAt: new Date().toISOString()
+                attachments: state.linkedDocs,
+                issuedAt: new Date().toISOString(),
+                status: 'PUBLISHING',
+                signature: { mode: 'ACCOUNT', signer: user.fullName || state.document.author || '' }
             };
+        },
+        postToBackend: async (payload) => {
+            const response = await fetch(CONFIG.SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const result = await response.json();
+            if (!result || result.success !== true) {
+                throw new Error((result && result.message) || 'Backend không xác nhận phát hành.');
+            }
+            return result;
         }
     };
-
     // =================================================================
     // 7. RENDER ENGINE (PURE UI PRESENTATION LAYER)
     // =================================================================
@@ -519,6 +547,24 @@ const StorageEngine = {
             document.getElementById('doc-version-badge').innerText = documentState.version;
             document.getElementById('doc-title-display').innerText = documentState.title;
             document.getElementById('doc-summary-display').innerText = `Người soạn: ${documentState.author} | Ngày tạo: ${documentState.createdAt}`;
+        },
+
+        renderRecipients: (recipients) => {
+            const container = document.getElementById('recipient-selector-container');
+            if (!container) return;
+            if (!recipients || recipients.length === 0) {
+                container.innerHTML = '<p class="text-xs text-rose-600 font-semibold">Chưa có đối tượng nhận từ module nguồn.</p>';
+                return;
+            }
+            container.innerHTML = recipients.map((r, i) => `
+                <div class="flex items-start gap-2 p-2.5 rounded-xl border border-blue-100 bg-blue-50/60">
+                    <i class="bi bi-person-check-fill text-blue-600 mt-0.5"></i>
+                    <div class="min-w-0">
+                        <div class="text-xs font-bold text-slate-800">${RecipientEngine.displayName(r)}</div>
+                        <div class="text-[10px] text-slate-500">${RecipientEngine.displayMeta(r)}</div>
+                    </div>
+                </div>
+            `).join('');
         },
 
         renderDestinations: (destinations) => {
@@ -603,6 +649,7 @@ const StorageEngine = {
 
         renderAll: (state, checkResult, pipeline) => {
             RenderEngine.renderHeaderInfo(state.document);
+            RenderEngine.renderRecipients(state.recipients);
             RenderEngine.renderDestinations(state.destinations);
             RenderEngine.toggleWorkflowCard(state.destinations);
             RenderEngine.renderWorkflowSteps(state.workflowSteps);
@@ -618,227 +665,115 @@ const StorageEngine = {
 const Controller = {
     init: () => {
         Controller.setupEventBusListeners();
-
-        // Storage Engine Integration
         const storedDoc = StorageEngine.load(CONFIG.STORAGE_KEYS.CURRENT_DOC);
         if (storedDoc) {
+            TTDHS_State.rawSource = storedDoc;
             TTDHS_State.document = ModuleAdapter.toStandardDocument(storedDoc);
+            TTDHS_State.recipients = ModuleAdapter.getRecipients(storedDoc);
+            TTDHS_State.linkedDocs = ModuleAdapter.getLinkedDocs(storedDoc);
+            Controller.applySourceDefaults(TTDHS_State.document.moduleSource);
         }
-
         Controller.refreshUI();
     },
 
-    setupEventBusListeners: () => {
-        eventBus.on("NOTIFICATION_DISPATCHED", (data) => {
-            // Controller handles side-effects/logging
-        });
+    applySourceDefaults: (moduleSource) => {
+        const srcName = String(moduleSource || '').toLowerCase();
+        TTDHS_State.destinations.forEach(d => d.selected = false);
+        TTDHS_State.workflowSteps.forEach(s => s.selected = false);
+
+        if (srcName.includes('giao') || srcName.includes('nhiemvu') || srcName.includes('nhiệm vụ')) {
+            const v = TTDHS_State.destinations.find(d => d.id === 'ViecCuaToi');
+            const t = TTDHS_State.destinations.find(d => d.id === 'ThongBao');
+            if (v) v.selected = true;
+            if (t) t.selected = true;
+            ['CONFIRM_READ','ACCEPT_TASK','IN_PROGRESS','REPORT_RESULT','COMPLETE','ATTACH_PROOF']
+                .forEach(id => { const s = TTDHS_State.workflowSteps.find(x => x.id === id); if (s) s.selected = true; });
+        } else if (srcName.includes('lichcongtac')) {
+            const d = TTDHS_State.destinations.find(x => x.id === 'LichCongTac');
+            if (d) d.selected = true;
+            const s = TTDHS_State.workflowSteps.find(x => x.id === 'SHOW_ONLY');
+            if (s) s.selected = true;
+        } else {
+            const d = TTDHS_State.destinations.find(x => x.id === 'ThongBao');
+            if (d) d.selected = true;
+            const s = TTDHS_State.workflowSteps.find(x => x.id === 'CONFIRM_READ');
+            if (s) s.selected = true;
+        }
     },
 
+    setupEventBusListeners: () => {},
     refreshUI: () => {
         const preCheckResult = PreCheckEngine.runChecks(TTDHS_State);
-        const pipeline = WorkflowEngine.generatePipeline(
-            TTDHS_State.document,
-            TTDHS_State.destinations,
-            TTDHS_State.workflowSteps
-        );
-
+        const pipeline = WorkflowEngine.generatePipeline(TTDHS_State.document, TTDHS_State.destinations, TTDHS_State.workflowSteps);
         RenderEngine.renderAll(TTDHS_State, preCheckResult, pipeline);
     },
-
     toggleDestination: (destId) => {
         TTDHS_State.destinations = DispatchEngine.toggleDestination(TTDHS_State.destinations, destId);
         Controller.refreshUI();
     },
-
     toggleWorkflowStep: (stepId) => {
         TTDHS_State.workflowSteps = WorkflowEngine.toggleStep(TTDHS_State.workflowSteps, stepId);
         Controller.refreshUI();
     },
-
-    toggleRecipient: (recipientVal) => {
-        if (TTDHS_State.recipients.includes(recipientVal)) {
-            TTDHS_State.recipients = TTDHS_State.recipients.filter(r => r !== recipientVal);
-        } else {
-            TTDHS_State.recipients.push(recipientVal);
-        }
-        Controller.refreshUI();
-    },
-
+    toggleRecipient: () => {},
     addLinkedDocument: () => {
-        const title = prompt("Nhập tên tài liệu liên quan:");
-        if (title && title.trim() !== "") {
-            TTDHS_State.linkedDocs.push({
-                id: `DOC-${Date.now()}`,
-                title: title.trim(),
-                type: "Đính kèm"
-            });
+        const title = prompt('Nhập tên tài liệu liên quan:');
+        if (title && title.trim()) {
+            TTDHS_State.linkedDocs.push({ id: `DOC-${Date.now()}`, title: title.trim(), type: 'Đính kèm' });
             RenderEngine.renderLinkedDocs(TTDHS_State.linkedDocs);
         }
     },
-
     removeLinkedDoc: (docId) => {
         TTDHS_State.linkedDocs = TTDHS_State.linkedDocs.filter(d => d.id !== docId);
         RenderEngine.renderLinkedDocs(TTDHS_State.linkedDocs);
     },
 
-    // -------------------------------------------------------------
-    // HÀM XỬ LÝ PHÁT HÀNH MỚI (ĐÃ BỔ SUNG TRUYỀN TÍN HIỆU REALTIME)
-    // -------------------------------------------------------------
-    executePublishing: () => {
-        const preCheckResult = PreCheckEngine.runChecks(TTDHS_State);
-        if (!preCheckResult.allPassed) {
-            alert("Không thể phát hành! Vui lòng kiểm tra lại các điều kiện chưa đạt.");
+    executePublishing: async () => {
+        if (TTDHS_State.isPublishing) return;
+        const check = PreCheckEngine.runChecks(TTDHS_State);
+        if (!check.allPassed) {
+            alert('Không thể phát hành. Vui lòng kiểm tra các điều kiện chưa đạt.');
             return;
         }
-
-        const payload = PublishEngine.preparePayload(TTDHS_State);
-        NotificationEngine.dispatch(payload);
-
-        // 1. Lưu vào Storage dùng chung
-        StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_PUBLISHED, payload);
-
-        // 2. Phát tín hiệu Realtime cho các giao diện khác trên cùng Tab hoặc khác Tab
-        const publishEvent = new CustomEvent('DOCUMENT_PUBLISHED', { detail: payload });
-        window.dispatchEvent(publishEvent);
-        if (typeof publishChannel !== 'undefined') {
-            publishChannel.postMessage(payload);
+        const btn = document.getElementById('btn-execute-publish');
+        const old = btn ? btn.innerHTML : '';
+        try {
+            TTDHS_State.isPublishing = true;
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i><span>Đang ghi CSDL & phát hành...</span>';
+            }
+            const payload = PublishEngine.preparePayload(TTDHS_State);
+            const result = await PublishEngine.postToBackend(payload);
+            payload.status = 'PUBLISHED';
+            payload.backendResult = result;
+            StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_PUBLISHED, payload);
+            StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_RESULT, result);
+            window.dispatchEvent(new CustomEvent('DOCUMENT_PUBLISHED', { detail: payload }));
+            if (typeof publishChannel !== 'undefined') publishChannel.postMessage(payload);
+            StorageEngine.remove(CONFIG.STORAGE_KEYS.CURRENT_DOC);
+            alert(`PHÁT HÀNH THÀNH CÔNG\nMã phát hành: ${result.publishId || payload.publishId}\nĐã ghi CSDL và tạo thông báo cho ${result.recipientCount || payload.recipients.length} người nhận.`);
+            window.location.href = 'main.html';
+        } catch (err) {
+            console.error(err);
+            alert('PHÁT HÀNH CHƯA THÀNH CÔNG\n' + (err.message || err));
+        } finally {
+            TTDHS_State.isPublishing = false;
+            if (btn) { btn.disabled = false; btn.innerHTML = old; }
         }
-
-        // 3. Tương thích Google Apps Script (nếu có)
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-            google.script.run.executePublishingBackend(payload);
-        }
-
-        // 4. Thông báo thành công
-        alert(`🚀 PHÁT HÀNH THÀNH CÔNG!\nVăn bản đã được đẩy trực tiếp về module [Lịch công tác tuần].`);
     },
 
     openPreviewModal: () => {
-        alert(`XEM TRƯỚC NỘI DUNG TÀI LIỆU:\n---------------------------\nTiêu đề: ${TTDHS_State.document.title}\nNguồn: ${TTDHS_State.document.moduleSource}`);
+        const d = TTDHS_State.document;
+        alert(`XEM TRƯỚC NỘI DUNG\n---------------------------\nTiêu đề: ${d.title}\nNguồn: ${d.moduleSource}\nNgười nhận: ${TTDHS_State.recipients.length}\nĐiểm đến: ${TTDHS_State.destinations.filter(x => x.selected).map(x => x.name).join(', ')}`);
     },
-
     resetDraft: () => {
         StorageEngine.remove(CONFIG.STORAGE_KEYS.CURRENT_DOC);
-        window.location.reload();
+        window.location.href = 'main.html';
     }
 };
     // Tự động khởi chạy duy nhất Controller khi DOM sẵn sàng
     document.addEventListener('DOMContentLoaded', Controller.init);
     </script>
-    <script>
-  // 1. Tự động kiểm tra và tải dữ liệu Lịch công tác khi mở trang
-  document.addEventListener('DOMContentLoaded', () => {
-    loadPublishedLich();
-  });
-
-  // 2. Lắng nghe tín hiệu phát hành Realtime nếu trang này đang mở sẵn
-  const channel = new BroadcastChannel('TTDHS_PUBLISH_CHANNEL');
-  channel.onmessage = (event) => {
-    console.log("📌 Nhận lịch mới phát hành thời gian thực:", event.data);
-    loadPublishedLich();
-  };
-
-  // Hàm đọc dữ liệu từ Storage và hiển thị lên giao diện
-  function loadPublishedLich() {
-    const rawData = localStorage.getItem('TTDHS_LAST_PUBLISHED') || sessionStorage.getItem('TTDHS_LAST_PUBLISHED');
-    if (!rawData) return;
-
-    try {
-      const payload = JSON.parse(rawData);
-      const doc = payload.document;
-
-      // Kiểm tra nếu đúng là tài liệu Lịch công tác
-      const isLich = payload.destinations && payload.destinations.some(d => d.id === 'LichCongTac' || d.name === 'Lịch công tác');
-      if (!isLich) return;
-
-      // Tìm container hiển thị nội dung lịch (hoặc tự tạo khối hiển thị)
-      let displayContainer = document.getElementById('lich-content-display');
-      if (!displayContainer) {
-        displayContainer = document.createElement('div');
-        displayContainer.id = 'lich-content-display';
-        displayContainer.className = 'max-w-7xl mx-auto mt-6 px-4';
-        document.body.appendChild(displayContainer);
-      }
-
-      // Đổ dữ liệu lịch ra màn hình
-      displayContainer.innerHTML = `
-        <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 space-y-4">
-          <div class="flex items-center justify-between border-b pb-3">
-            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-xs">
-              Lịch đã phát hành chính thức
-            </span>
-            <span class="text-xs text-slate-400">Mã: ${doc.docId || 'LCT-2026'}</span>
-          </div>
-          <h3 class="text-xl font-bold text-slate-800">${doc.title}</h3>
-          <p class="text-sm text-slate-600"><strong>Người soạn:</strong> ${doc.author || 'Ban BGH'} | <strong>Ngày tạo:</strong> ${doc.createdAt}</p>
-          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm text-slate-700">
-            📌 Nội dung chi tiết lịch tuần đã được cập nhật đồng bộ từ Trung tâm Điều phối Phát hành Số (TTĐHS_HVA).
-          </div>
-        </div>
-      `;
-    } catch (e) {
-      console.error("Lỗi đọc dữ liệu lịch:", e);
-    }
-  }
-</script>
-    <script>
-  // Hàm hiển thị Lịch lên màn hình
-  function renderPublishedSchedule() {
-    const rawData = localStorage.getItem('TTDHS_LAST_PUBLISHED');
-    if (!rawData) return;
-
-    try {
-      const payload = JSON.parse(rawData);
-      const doc = payload.document;
-
-      // Kiểm tra nếu đúng là tài liệu Lịch công tác
-      const isLich = payload.destinations && payload.destinations.some(d => d.id === 'LichCongTac' || d.name === 'Lịch công tác');
-      if (!isLich) return;
-
-      console.log("📌 Đã tìm thấy dữ liệu Lịch công tác:", doc);
-
-      // Tạo hoặc lấy khung hiển thị lịch
-      let container = document.getElementById('lich-render-box');
-      if (!container) {
-        container = document.createElement('div');
-        container.id = 'lich-render-box';
-        container.className = 'max-w-6xl mx-auto my-6 px-4';
-        
-        // Chèn vào bên dưới khối thông tin cán bộ
-        const parentCard = document.querySelector('.bg-white') || document.body;
-        parentCard.after(container);
-      }
-
-      container.innerHTML = `
-        <div class="bg-white rounded-2xl p-6 shadow-md border border-blue-100 space-y-4">
-          <div class="flex items-center justify-between border-b pb-3">
-            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-xs flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Lịch công tác mới phát hành
-            </span>
-            <span class="text-xs text-slate-400 font-mono">Mã: ${doc.docId || 'LCT-2026'}</span>
-          </div>
-          <h3 class="text-xl font-bold text-slate-900">${doc.title}</h3>
-          <p class="text-xs text-slate-500"><strong>Người soạn:</strong> ${doc.author || 'Ban BGH'} | <strong>Ngày tạo:</strong> ${doc.createdAt}</p>
-          <div class="p-4 bg-blue-50/60 rounded-xl border border-blue-100 text-sm text-slate-700">
-            <i class="bi bi-info-circle-fill text-blue-600 mr-1"></i>
-            Nội dung lịch công tác đã được đồng bộ trực tiếp từ <strong>Trung tâm Điều phối Phát hành Số (TTĐHS_HVA)</strong>.
-          </div>
-        </div>
-      `;
-    } catch (e) {
-      console.error("Lỗi đọc dữ liệu Lịch công tác:", e);
-    }
-  }
-
-  // 1. Chạy ngay khi mở trang
-  document.addEventListener('DOMContentLoaded', renderPublishedSchedule);
-
-  // 2. Tải thời gian thực nếu trang đang mở sẵn
-  const channel = new BroadcastChannel('TTDHS_PUBLISH_CHANNEL');
-  channel.onmessage = (event) => {
-    console.log("📌 Tín hiệu phát hành Realtime:", event.data);
-    renderPublishedSchedule();
-  };
-</script>
 </body>
 </html>
