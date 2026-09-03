@@ -1019,25 +1019,37 @@ export function renderHome() {
     }
   });
 </script>
-<span id="hva-school-date">--/--/----</span>
+<!-- ================= TRẠNG THÁI NĂM HỌC ================= -->
+<div class="flex items-center justify-center
+            -mt-1 mb-2
+            px-2
+            whitespace-nowrap
+            text-[10.5px]
+            font-semibold
+            text-slate-500">
 
-        <span class="mx-2 text-blue-300">•</span>
+    <i class="bi bi-calendar3-week-fill
+              text-[#2563EB]
+              text-[11px]
+              mr-1.5"></i>
 
-        <span class="text-[#0F4C81] font-bold">
-            Tuần 01
-        </span>
+    <span id="hva-school-date">--/--/----</span>
 
-        <span class="mx-2 text-blue-300">•</span>
+    <span class="mx-1.5 text-blue-300">•</span>
 
-        <span>Học kỳ I</span>
+    <span class="font-extrabold text-[#0F4C81]">
+        Tuần 01
+    </span>
 
-        <span class="mx-2 text-blue-300">•</span>
+    <span class="mx-1.5 text-blue-300">•</span>
 
-        <span class="font-bold text-slate-700">
-            Năm học 2026–2027
-        </span>
+    <span>Học kỳ I</span>
 
-    </div>
+    <span class="mx-1.5 text-blue-300">•</span>
+
+    <span>Năm học 2026–2027</span>
+
+</div>
 
 
 <!-- ================= NHẮC VIỆC ================= -->
