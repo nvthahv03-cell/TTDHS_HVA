@@ -347,7 +347,65 @@
 
 </nav>
     </div>
+<!-- ================= NOTIFICATION PANEL ================= -->
+<div id="notification-panel"
+     class="hidden fixed inset-0 z-[65] bg-black/30 backdrop-blur-sm">
 
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2
+                w-full max-w-[460px]
+                bg-white rounded-t-[24px]
+                shadow-2xl overflow-hidden">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between
+                    px-5 py-4 border-b border-slate-100">
+
+            <div>
+                <div class="flex items-center gap-2">
+                    <i class="bi bi-bell-fill text-[#0F4C81]"></i>
+
+                    <h3 class="text-[15px] font-extrabold text-slate-800">
+                        THÔNG BÁO
+                    </h3>
+
+                    <span id="notification-panel-count"
+                          class="hidden min-w-[20px] h-5 px-1.5
+                                 rounded-full bg-red-500 text-white
+                                 text-[10px] font-bold
+                                 items-center justify-center">
+                        0
+                    </span>
+                </div>
+
+                <div class="text-[10px] text-slate-400 mt-0.5">
+                    Trung tâm Điều hành số HVA
+                </div>
+            </div>
+
+            <button type="button"
+                    onclick="closeNotificationPanel()"
+                    class="w-9 h-9 rounded-full
+                           bg-slate-100 hover:bg-slate-200
+                           flex items-center justify-center">
+                <i class="bi bi-x-lg text-slate-600"></i>
+            </button>
+
+        </div>
+
+        <!-- Danh sách -->
+        <div id="notification-list"
+             class="overflow-y-auto"
+             style="max-height:65vh">
+
+            <div class="py-12 text-center text-sm text-slate-400">
+                Đang tải thông báo...
+            </div>
+
+        </div>
+
+    </div>
+</div>
+    
     <!-- ================= OVERLAYS & MODALS KHÁC ================= -->
     <div id="global-overlay" class="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm hidden" aria-hidden="true"></div>
     
@@ -686,5 +744,534 @@ document.addEventListener('click', function(e) {
     }
 });
 </script>
+
+   <script>
+// ============================================================
+// HVA NOTIFICATION CENTER
+// Backend Phát hành chung
+// ============================================================
+
+const HVA_NOTIFICATION_API =
+    'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+
+let HVA_NOTIFICATIONS = [];
+
+
+// ------------------------------------------------------------
+// USER HIỆN TẠI
+// ------------------------------------------------------------
+function getNotificationUser() {
+
+    try {
+
+        const user = JSON.parse(
+            sessionStorage.getItem('user') ||
+            localStorage.getItem('user') ||
+            '{}'
+        );
+
+        return {
+            username:
+                user.username ||
+                user.userName ||
+                user.maGV ||
+                '',
+
+            fullName:
+                user.fullName ||
+                user.hoTen ||
+                user.name ||
+                ''
+        };
+
+    } catch (e) {
+
+        console.error('[HVA] Không đọc được user:', e);
+
+        return {
+            username: '',
+            fullName: ''
+        };
+    }
+}
+
+
+// ------------------------------------------------------------
+// TẢI THÔNG BÁO
+// ------------------------------------------------------------
+async function loadHVANotifications() {
+
+    const user = getNotificationUser();
+
+    if (!user.username) {
+        console.warn('[HVA] Không xác định username để tải thông báo.');
+        return [];
+    }
+
+    try {
+
+        const url =
+            HVA_NOTIFICATION_API +
+            '?action=getNotificationsByUser' +
+            '&username=' + encodeURIComponent(user.username) +
+            '&_=' + Date.now();
+
+        const response = await fetch(url, {
+            method: 'GET',
+            cache: 'no-store'
+        });
+
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
+
+        const data = await response.json();
+
+        HVA_NOTIFICATIONS =
+            Array.isArray(data) ? data : [];
+
+        updateNotificationBadges();
+
+        return HVA_NOTIFICATIONS;
+
+    } catch (error) {
+
+        console.error('[HVA] Lỗi tải thông báo:', error);
+
+        return [];
+    }
+}
+
+
+// ------------------------------------------------------------
+// BADGE
+// ------------------------------------------------------------
+function updateNotificationBadges() {
+
+    const unread =
+        HVA_NOTIFICATIONS.filter(item => !item.daDoc).length;
+
+    const ids = [
+        'header-notification-badge',
+        'bottom-notification-badge',
+        'notification-panel-count'
+    ];
+
+    ids.forEach(id => {
+
+        const badge = document.getElementById(id);
+
+        if (!badge) return;
+
+        if (unread > 0) {
+
+            badge.textContent =
+                unread > 99 ? '99+' : unread;
+
+            badge.classList.remove('hidden');
+            badge.classList.add('flex');
+
+        } else {
+
+            badge.classList.add('hidden');
+            badge.classList.remove('flex');
+        }
+
+    });
+}
+
+
+// ------------------------------------------------------------
+// ESCAPE HTML
+// ------------------------------------------------------------
+function escapeNotificationHTML(value) {
+
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+
+// ------------------------------------------------------------
+// FORMAT THỜI GIAN
+// ------------------------------------------------------------
+function formatNotificationTime(value) {
+
+    if (!value) return '';
+
+    const d = new Date(value);
+
+    if (isNaN(d.getTime())) return '';
+
+    return (
+        String(d.getDate()).padStart(2, '0') + '/' +
+        String(d.getMonth() + 1).padStart(2, '0') + '/' +
+        d.getFullYear() +
+        ' · ' +
+        String(d.getHours()).padStart(2, '0') + ':' +
+        String(d.getMinutes()).padStart(2, '0')
+    );
+}
+
+
+// ------------------------------------------------------------
+// RENDER DANH SÁCH
+// ------------------------------------------------------------
+function renderHVANotifications() {
+
+    const container =
+        document.getElementById('notification-list');
+
+    if (!container) return;
+
+    if (!HVA_NOTIFICATIONS.length) {
+
+        container.innerHTML = `
+            <div class="py-14 px-6 text-center">
+
+                <div class="w-14 h-14 mx-auto mb-3
+                            rounded-full bg-slate-100
+                            flex items-center justify-center">
+
+                    <i class="bi bi-bell-slash
+                              text-2xl text-slate-400"></i>
+
+                </div>
+
+                <div class="text-sm font-bold text-slate-600">
+                    Chưa có thông báo
+                </div>
+
+                <div class="text-[11px] text-slate-400 mt-1">
+                    Thông tin mới dành cho Thầy/Cô sẽ xuất hiện tại đây.
+                </div>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    const sorted = [...HVA_NOTIFICATIONS].sort((a, b) => {
+
+        const ta = new Date(a.thoiGian || 0).getTime();
+        const tb = new Date(b.thoiGian || 0).getTime();
+
+        return tb - ta;
+    });
+
+
+    container.innerHTML = sorted.map(item => {
+
+        const unread = !item.daDoc;
+
+        const title =
+            escapeNotificationHTML(item.tieuDe || 'Thông báo');
+
+        const content =
+            escapeNotificationHTML(item.noiDung || '');
+
+        const sender =
+            escapeNotificationHTML(
+                item.senderName || 'Trung tâm Điều hành số HVA'
+            );
+
+        const type =
+            escapeNotificationHTML(item.loai || '');
+
+        const time =
+            formatNotificationTime(item.thoiGian);
+
+        const id =
+            encodeURIComponent(item.id || '');
+
+        return `
+            <button type="button"
+                    onclick="openHVANotification('${id}')"
+                    class="w-full text-left px-5 py-4
+                           border-b border-slate-100
+                           ${unread ? 'bg-blue-50/60' : 'bg-white'}
+                           hover:bg-slate-50 transition">
+
+                <div class="flex gap-3">
+
+                    <div class="relative shrink-0
+                                w-10 h-10 rounded-xl
+                                ${unread
+                                    ? 'bg-blue-100 text-[#0F4C81]'
+                                    : 'bg-slate-100 text-slate-500'}
+                                flex items-center justify-center">
+
+                        <i class="bi bi-bell-fill"></i>
+
+                        ${unread ? `
+                            <span class="absolute -top-1 -right-1
+                                         w-2.5 h-2.5 rounded-full
+                                         bg-red-500 border-2 border-white">
+                            </span>
+                        ` : ''}
+
+                    </div>
+
+
+                    <div class="flex-1 min-w-0">
+
+                        <div class="flex items-start justify-between gap-2">
+
+                            <div class="text-[12px]
+                                        ${unread
+                                            ? 'font-extrabold text-slate-900'
+                                            : 'font-semibold text-slate-700'}
+                                        leading-snug">
+
+                                ${title}
+
+                            </div>
+
+                            ${unread ? `
+                                <span class="shrink-0 text-[8px]
+                                             font-extrabold text-red-500
+                                             uppercase">
+                                    Mới
+                                </span>
+                            ` : ''}
+
+                        </div>
+
+
+                        <div class="text-[10px] text-slate-500
+                                    mt-1 leading-relaxed
+                                    line-clamp-2">
+
+                            ${content}
+
+                        </div>
+
+
+                        <div class="flex items-center
+                                    flex-wrap gap-x-2 gap-y-1 mt-2
+                                    text-[9px] text-slate-400">
+
+                            <span>
+                                <i class="bi bi-person mr-1"></i>
+                                ${sender}
+                            </span>
+
+                            ${type ? `
+                                <span>·</span>
+                                <span>${type}</span>
+                            ` : ''}
+
+                            ${time ? `
+                                <span>·</span>
+                                <span>${time}</span>
+                            ` : ''}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </button>
+        `;
+
+    }).join('');
+}
+
+
+// ------------------------------------------------------------
+// MỞ PANEL
+// ------------------------------------------------------------
+async function openNotificationPanel(event) {
+
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const panel =
+        document.getElementById('notification-panel');
+
+    if (!panel) return;
+
+    panel.classList.remove('hidden');
+
+    await loadHVANotifications();
+
+    renderHVANotifications();
+}
+
+window.openNotificationPanel =
+    openNotificationPanel;
+
+
+// ------------------------------------------------------------
+// ĐÓNG PANEL
+// ------------------------------------------------------------
+function closeNotificationPanel() {
+
+    document
+        .getElementById('notification-panel')
+        ?.classList.add('hidden');
+}
+
+window.closeNotificationPanel =
+    closeNotificationPanel;
+
+
+// ------------------------------------------------------------
+// ĐÁNH DẤU ĐÃ ĐỌC
+// ------------------------------------------------------------
+async function markHVANotificationRead(item) {
+
+    if (!item || item.daDoc) return true;
+
+    const user = getNotificationUser();
+
+    try {
+
+        const response =
+            await fetch(HVA_NOTIFICATION_API, {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                },
+
+                body: JSON.stringify({
+                    action: 'markNotificationRead',
+                    id: item.id,
+                    username: user.username
+                })
+            });
+
+        const result = await response.json();
+
+        if (result && result.success === true) {
+
+            item.daDoc = true;
+
+            updateNotificationBadges();
+
+            return true;
+        }
+
+    } catch (error) {
+
+        console.error(
+            '[HVA] Không đánh dấu được thông báo:',
+            error
+        );
+    }
+
+    return false;
+}
+
+
+// ------------------------------------------------------------
+// CLICK MỘT THÔNG BÁO
+// ------------------------------------------------------------
+async function openHVANotification(encodedId) {
+
+    const id = decodeURIComponent(encodedId);
+
+    const item =
+        HVA_NOTIFICATIONS.find(x =>
+            String(x.id) === String(id)
+        );
+
+    if (!item) return;
+
+    await markHVANotificationRead(item);
+
+    renderHVANotifications();
+
+
+    const destination =
+        String(item.dich || '').toLowerCase();
+
+    const type =
+        String(item.loai || '').toLowerCase();
+
+
+    // NHIỆM VỤ → VIỆC CỦA TÔI
+    if (
+        destination.includes('vieccuatoi') ||
+        type.includes('nhiệm vụ') ||
+        type.includes('nhiem vu')
+    ) {
+
+        closeNotificationPanel();
+
+        if (typeof window.openMyTasks === 'function') {
+
+            window.openMyTasks('ASSIGNED');
+
+        } else {
+
+            AppMain.showToast(
+                'Đã đọc thông báo nhiệm vụ.'
+            );
+        }
+
+        return;
+    }
+
+
+    // Các module khác sẽ nối dần qua Router phát hành.
+    AppMain.showToast('Đã đánh dấu thông báo là đã đọc.');
+}
+
+window.openHVANotification =
+    openHVANotification;
+
+
+// ------------------------------------------------------------
+// GẮN 2 NÚT CHUÔNG
+// ------------------------------------------------------------
+document
+    .getElementById('btn-notification')
+    ?.addEventListener(
+        'click',
+        openNotificationPanel
+    );
+
+
+document
+    .getElementById('bottom-notification')
+    ?.addEventListener(
+        'click',
+        openNotificationPanel
+    );
+
+
+// Bấm nền tối → đóng
+document
+    .getElementById('notification-panel')
+    ?.addEventListener('click', function(e) {
+
+        if (e.target === this) {
+            closeNotificationPanel();
+        }
+
+    });
+
+
+// ------------------------------------------------------------
+// KHỞI ĐỘNG
+// ------------------------------------------------------------
+setTimeout(() => {
+
+    loadHVANotifications();
+
+}, 700);
+
+</script> 
 </body>
 </html>
