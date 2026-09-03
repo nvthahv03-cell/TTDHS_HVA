@@ -1020,18 +1020,17 @@ export function renderHome() {
   });
 </script>
 <!-- ================= TRẠNG THÁI NĂM HỌC ================= -->
-<div class="flex items-center justify-center
-            -mt-1 mb-2
+<div class="relative clear-both
+            w-full
+            flex items-center justify-center
+            mt-2 mb-2
             px-2
+            min-h-[24px]
             whitespace-nowrap
             text-[10.5px]
             font-semibold
-            text-slate-500">
-
-    <i class="bi bi-calendar3-week-fill
-              text-[#2563EB]
-              text-[11px]
-              mr-1.5"></i>
+            text-slate-500
+            z-0">
 
     <span id="hva-school-date">--/--/----</span>
 
