@@ -31,26 +31,7 @@ export function renderHome() {
                   text-[11px]
                   mr-1.5"></i>
 
-        <span id="hva-school-date">--/--/----</span>
-
-        <span class="mx-2 text-blue-300">•</span>
-
-        <span class="text-[#0F4C81] font-bold">
-            Tuần 01
-        </span>
-
-        <span class="mx-2 text-blue-300">•</span>
-
-        <span>Học kỳ I</span>
-
-        <span class="mx-2 text-blue-300">•</span>
-
-        <span class="font-bold text-slate-700">
-            Năm học 2026–2027
-        </span>
-
-    </div>
-
+        
 </div>
 
 <!-- HVA Assistant -->
@@ -1038,6 +1019,27 @@ export function renderHome() {
     }
   });
 </script>
+<span id="hva-school-date">--/--/----</span>
+
+        <span class="mx-2 text-blue-300">•</span>
+
+        <span class="text-[#0F4C81] font-bold">
+            Tuần 01
+        </span>
+
+        <span class="mx-2 text-blue-300">•</span>
+
+        <span>Học kỳ I</span>
+
+        <span class="mx-2 text-blue-300">•</span>
+
+        <span class="font-bold text-slate-700">
+            Năm học 2026–2027
+        </span>
+
+    </div>
+
+
 <!-- ================= NHẮC VIỆC ================= -->
 <div class="relative overflow-hidden
             rounded-xl
