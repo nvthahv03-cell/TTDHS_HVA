@@ -277,7 +277,8 @@ export function renderHome() {
                         text-violet-700">
 
                 Quét QR
-                <i class="bi bi-chevron-right text-[9px]"></i>
+                Điểm danh
+            <i class="bi bi-chevron-right text-[9px]"></i>
 
             </div>
 
