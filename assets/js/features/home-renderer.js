@@ -212,132 +212,211 @@ export function renderHome() {
             </div>
 
 
-            <div class="grid grid-cols-2 gap-2">
+            <!-- ================================================= -->
+<!-- TÁC VỤ ĐỘNG: ĐIỂM DANH HỌP - GIAO DIỆN THỬ       -->
+<!-- ================================================= -->
+<div class="mb-2">
 
-                <!-- VIỆC ĐƯỢC GIAO -->
-                <button type="button"
-                    onclick="openMyTasks('ASSIGNED', event)"
-                    class="relative p-3 rounded-xl
-                           bg-blue-50 hover:bg-blue-100
-                           transition text-left">
+    <button type="button"
+        class="w-full rounded-xl
+               border border-violet-200
+               bg-gradient-to-r from-violet-50 to-indigo-50
+               px-2.5 py-2
+               transition text-left">
 
-                    <span id="countAssigned"
-                        class="absolute top-2 right-2
-                               min-w-[19px] h-[19px] px-1
-                               rounded-full bg-blue-600 text-white
-                               text-[9px] font-bold
-                               flex items-center justify-center">
-                        0
-                    </span>
+        <div class="flex items-center gap-2">
 
-                    <i class="bi bi-inbox-fill
-                              text-blue-600 text-2xl"></i>
+            <!-- ICON -->
+            <div class="w-8 h-8 rounded-lg
+                        bg-violet-600 text-white
+                        flex items-center justify-center
+                        shrink-0 shadow-sm">
 
-                    <div class="text-[11px] font-bold
-                                text-blue-900 mt-2">
-                        Việc được giao
-                    </div>
-
-                    <div class="text-[9px] text-slate-500">
-                        Chưa tiếp nhận
-                    </div>
-
-                </button>
-
-
-                <!-- ĐANG THỰC HIỆN -->
-                <button type="button"
-                    onclick="openMyTasks('DOING', event)"
-                    class="relative p-3 rounded-xl
-                           bg-amber-50 hover:bg-amber-100
-                           transition text-left">
-
-                    <span id="countDoing"
-                        class="absolute top-2 right-2
-                               min-w-[19px] h-[19px] px-1
-                               rounded-full bg-amber-500 text-white
-                               text-[9px] font-bold
-                               flex items-center justify-center">
-                        0
-                    </span>
-
-                    <i class="bi bi-hourglass-split
-                              text-amber-500 text-2xl"></i>
-
-                    <div class="text-[11px] font-bold
-                                text-slate-800 mt-2">
-                        Đang thực hiện
-                    </div>
-
-                    <div class="text-[9px] text-slate-500">
-                        Đã tiếp nhận
-                    </div>
-
-                </button>
-
-
-                <!-- QUÁ HẠN -->
-                <button type="button"
-                    onclick="openMyTasks('OVERDUE', event)"
-                    class="relative p-3 rounded-xl
-                           bg-red-50 hover:bg-red-100
-                           transition text-left">
-
-                    <span id="countOverdue"
-                        class="absolute top-2 right-2
-                               min-w-[19px] h-[19px] px-1
-                               rounded-full bg-red-600 text-white
-                               text-[9px] font-bold
-                               flex items-center justify-center">
-                        0
-                    </span>
-
-                    <i class="bi bi-exclamation-triangle-fill
-                              text-red-600 text-2xl"></i>
-
-                    <div class="text-[11px] font-bold
-                                text-red-700 mt-2">
-                        Quá hạn
-                    </div>
-
-                    <div class="text-[9px] text-red-500">
-                        Chưa hoàn thành
-                    </div>
-
-                </button>
-
-
-                <!-- ĐÃ HOÀN THÀNH -->
-                <button type="button"
-                    onclick="openMyTasks('COMPLETED', event)"
-                    class="relative p-3 rounded-xl
-                           bg-emerald-50 hover:bg-emerald-100
-                           transition text-left">
-
-                    <span id="countCompleted"
-                        class="absolute top-2 right-2
-                               min-w-[19px] h-[19px] px-1
-                               rounded-full bg-emerald-600 text-white
-                               text-[9px] font-bold
-                               flex items-center justify-center">
-                        0
-                    </span>
-
-                    <i class="bi bi-check-circle-fill
-                              text-emerald-600 text-2xl"></i>
-
-                    <div class="text-[11px] font-bold
-                                text-emerald-700 mt-2">
-                        Đã hoàn thành
-                    </div>
-
-                    <div class="text-[9px] text-slate-500">
-                        Đã xác nhận
-                    </div>
-
-                </button>
+                <i class="bi bi-qr-code-scan text-base"></i>
 
             </div>
+
+            <!-- NỘI DUNG -->
+            <div class="flex-1 min-w-0">
+
+                <div class="flex items-center gap-1.5">
+
+                    <span class="text-[9px]
+                                 font-extrabold
+                                 text-violet-800">
+                        ĐIỂM DANH HỌP
+                    </span>
+
+                    <span class="px-1.5 py-0.5
+                                 rounded-full
+                                 bg-red-500 text-white
+                                 text-[7px] font-bold">
+                        ● ĐANG MỞ
+                    </span>
+
+                </div>
+
+                <div class="text-[10px]
+                            font-bold text-slate-800
+                            truncate mt-0.5">
+                    Họp Hội đồng sư phạm
+                </div>
+
+                <div class="text-[8px]
+                            text-slate-500 mt-0.5">
+                    Điểm danh đến 16:30
+                </div>
+
+            </div>
+
+            <!-- ACTION -->
+            <div class="flex items-center gap-1
+                        shrink-0
+                        text-[9px]
+                        font-extrabold
+                        text-violet-700">
+
+                Quét QR
+                <i class="bi bi-chevron-right text-[9px]"></i>
+
+            </div>
+
+        </div>
+
+    </button>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- 4 TRẠNG THÁI CÔNG VIỆC - THU GỌN 1 HÀNG          -->
+<!-- ================================================= -->
+<div class="grid grid-cols-4 gap-1.5">
+
+    <!-- VIỆC ĐƯỢC GIAO -->
+    <button type="button"
+        onclick="openMyTasks('ASSIGNED', event)"
+        class="relative min-h-[64px]
+               rounded-xl bg-blue-50
+               hover:bg-blue-100
+               px-1 py-2
+               transition text-center">
+
+        <span id="countAssigned"
+            class="absolute top-1 right-1
+                   min-w-[16px] h-[16px] px-1
+                   rounded-full bg-blue-600 text-white
+                   text-[8px] font-bold
+                   flex items-center justify-center">
+            0
+        </span>
+
+        <i class="bi bi-inbox-fill
+                  text-blue-600 text-lg"></i>
+
+        <div class="text-[8.5px]
+                    leading-[10px]
+                    font-bold text-blue-900
+                    mt-1">
+            Việc được<br>giao
+        </div>
+
+    </button>
+
+
+    <!-- ĐANG THỰC HIỆN -->
+    <button type="button"
+        onclick="openMyTasks('DOING', event)"
+        class="relative min-h-[64px]
+               rounded-xl bg-amber-50
+               hover:bg-amber-100
+               px-1 py-2
+               transition text-center">
+
+        <span id="countDoing"
+            class="absolute top-1 right-1
+                   min-w-[16px] h-[16px] px-1
+                   rounded-full bg-amber-500 text-white
+                   text-[8px] font-bold
+                   flex items-center justify-center">
+            0
+        </span>
+
+        <i class="bi bi-hourglass-split
+                  text-amber-500 text-lg"></i>
+
+        <div class="text-[8.5px]
+                    leading-[10px]
+                    font-bold text-slate-800
+                    mt-1">
+            Đang<br>thực hiện
+        </div>
+
+    </button>
+
+
+    <!-- QUÁ HẠN -->
+    <button type="button"
+        onclick="openMyTasks('OVERDUE', event)"
+        class="relative min-h-[64px]
+               rounded-xl bg-red-50
+               hover:bg-red-100
+               px-1 py-2
+               transition text-center">
+
+        <span id="countOverdue"
+            class="absolute top-1 right-1
+                   min-w-[16px] h-[16px] px-1
+                   rounded-full bg-red-600 text-white
+                   text-[8px] font-bold
+                   flex items-center justify-center">
+            0
+        </span>
+
+        <i class="bi bi-exclamation-triangle-fill
+                  text-red-600 text-lg"></i>
+
+        <div class="text-[8.5px]
+                    leading-[10px]
+                    font-bold text-red-700
+                    mt-1">
+            Quá<br>hạn
+        </div>
+
+    </button>
+
+
+    <!-- HOÀN THÀNH -->
+    <button type="button"
+        onclick="openMyTasks('COMPLETED', event)"
+        class="relative min-h-[64px]
+               rounded-xl bg-emerald-50
+               hover:bg-emerald-100
+               px-1 py-2
+               transition text-center">
+
+        <span id="countCompleted"
+            class="absolute top-1 right-1
+                   min-w-[16px] h-[16px] px-1
+                   rounded-full bg-emerald-600 text-white
+                   text-[8px] font-bold
+                   flex items-center justify-center">
+            0
+        </span>
+
+        <i class="bi bi-check-circle-fill
+                  text-emerald-600 text-lg"></i>
+
+        <div class="text-[8.5px]
+                    leading-[10px]
+                    font-bold text-emerald-700
+                    mt-1">
+            Hoàn<br>thành
+        </div>
+
+    </button>
+
+</div>
 
         </div>
 
