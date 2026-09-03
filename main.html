@@ -51,6 +51,27 @@
             border: 1px solid rgba(255, 255, 255, 0.8);
         }
     </style>
+<style>
+    .hva-quick-link {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.65rem 0.75rem;
+        border-radius: 0.75rem;
+        text-decoration: none;
+        transition: all 0.18s ease;
+    }
+
+    .hva-quick-link:hover {
+        background: #f8fafc;
+    }
+
+    .hva-quick-link:active {
+        transform: scale(0.985);
+    }
+</style>
+    
 </head>
 <body class="h-full bg-brand-deep text-slate-900 overflow-x-hidden antialiased select-none">
 
@@ -715,6 +736,249 @@
     </div>
 
 </div>
+</div>
+
+<!-- ====================================================== -->
+<!-- LIÊN KẾT NHANH                                         -->
+<!-- ====================================================== -->
+<div id="links-panel"
+     class="hidden fixed inset-0 z-[1000]
+            bg-slate-900/40 backdrop-blur-[2px]
+            flex items-end sm:items-center justify-center
+            p-0 sm:p-4">
+
+    <div id="links-panel-box"
+         class="w-full sm:max-w-[430px]
+                bg-white
+                rounded-t-[26px] sm:rounded-[26px]
+                shadow-2xl
+                overflow-hidden
+                border border-slate-200">
+
+        <!-- HEADER -->
+        <div class="px-5 pt-4 pb-3
+                    bg-gradient-to-r from-blue-50 via-white to-cyan-50
+                    border-b border-blue-100">
+
+            <div class="flex items-center justify-between gap-3">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-gradient-to-br from-[#2563EB] to-[#06B6D4]
+                                text-white
+                                flex items-center justify-center
+                                shadow-md">
+
+                        <i class="bi bi-globe2 text-lg"></i>
+
+                    </div>
+
+                    <div>
+                        <div class="text-[15px]
+                                    font-extrabold
+                                    text-[#0F4C81]
+                                    tracking-wide">
+                            LIÊN KẾT NHANH
+                        </div>
+
+                        <div class="text-[10px]
+                                    text-slate-400
+                                    font-medium mt-0.5">
+                            TTĐHS_HVA • Cổng thông tin hữu ích
+                        </div>
+                    </div>
+
+                </div>
+
+                <button type="button"
+                        id="close-links-panel"
+                        aria-label="Đóng"
+                        class="w-8 h-8 rounded-full
+                               bg-slate-100
+                               hover:bg-slate-200
+                               text-slate-500
+                               flex items-center justify-center
+                               transition">
+
+                    <i class="bi bi-x-lg text-sm"></i>
+
+                </button>
+
+            </div>
+        </div>
+
+
+        <!-- NỘI DUNG -->
+        <div class="p-4 max-h-[70vh] overflow-y-auto">
+
+            <!-- CƠ QUAN QUẢN LÝ -->
+            <div class="text-[10px]
+                        font-extrabold
+                        tracking-[0.08em]
+                        text-slate-400
+                        uppercase
+                        mb-2">
+                Cơ quan quản lý
+            </div>
+
+            <div class="space-y-1">
+
+                <a href="https://chinhphu.vn/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="hva-quick-link">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-red-50 text-red-600
+                                flex items-center justify-center shrink-0">
+                        <i class="bi bi-bank2 text-lg"></i>
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="text-[13px] font-bold text-[#123B67]">
+                            Cổng TTĐT Chính phủ
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">
+                            Chỉ đạo • Điều hành • Văn bản
+                        </div>
+                    </div>
+
+                    <i class="bi bi-box-arrow-up-right text-xs text-slate-400"></i>
+                </a>
+
+
+                <a href="https://moet.gov.vn/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="hva-quick-link">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-indigo-50 text-indigo-600
+                                flex items-center justify-center shrink-0">
+                        <i class="bi bi-mortarboard-fill text-lg"></i>
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="text-[13px] font-bold text-[#123B67]">
+                            Bộ Giáo dục và Đào tạo
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">
+                            Chính sách • Văn bản • Giáo dục
+                        </div>
+                    </div>
+
+                    <i class="bi bi-box-arrow-up-right text-xs text-slate-400"></i>
+                </a>
+
+
+                <a href="https://www.danang.gov.vn/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="hva-quick-link">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-cyan-50 text-cyan-600
+                                flex items-center justify-center shrink-0">
+                        <i class="bi bi-buildings-fill text-lg"></i>
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="text-[13px] font-bold text-[#123B67]">
+                            Cổng TTĐT TP Đà Nẵng
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">
+                            Chính quyền • Công dân • Thông tin thành phố
+                        </div>
+                    </div>
+
+                    <i class="bi bi-box-arrow-up-right text-xs text-slate-400"></i>
+                </a>
+
+
+                <a href="https://www.danang.edu.vn/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="hva-quick-link">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-blue-50 text-blue-600
+                                flex items-center justify-center shrink-0">
+                        <i class="bi bi-building-fill text-lg"></i>
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="text-[13px] font-bold text-[#123B67]">
+                            Sở GD&ĐT TP Đà Nẵng
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">
+                            Văn bản • Chuyên môn • Chuyển đổi số
+                        </div>
+                    </div>
+
+                    <i class="bi bi-box-arrow-up-right text-xs text-slate-400"></i>
+                </a>
+
+            </div>
+
+
+            <!-- HÒA VANG -->
+            <div class="text-[10px]
+                        font-extrabold
+                        tracking-[0.08em]
+                        text-slate-400
+                        uppercase
+                        mt-5 mb-2">
+                Hòa Vang
+            </div>
+
+            <div class="space-y-1">
+
+                <a href="https://thpthoavang.edu.vn/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="hva-quick-link">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-emerald-50 text-emerald-600
+                                flex items-center justify-center shrink-0">
+                        <i class="bi bi-house-door-fill text-lg"></i>
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="text-[13px] font-bold text-[#123B67]">
+                            Trường THPT Hòa Vang
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">
+                            Website chính thức của nhà trường
+                        </div>
+                    </div>
+
+                    <i class="bi bi-box-arrow-up-right text-xs text-slate-400"></i>
+                </a>
+
+            </div>
+
+
+            <div class="mt-4 px-3 py-2.5
+                        rounded-xl bg-slate-50
+                        border border-slate-100
+                        flex items-start gap-2">
+
+                <i class="bi bi-shield-check
+                          text-emerald-500 text-xs mt-0.5"></i>
+
+                <div class="text-[9.5px]
+                            leading-relaxed
+                            text-slate-400">
+                    Các liên kết được mở trực tiếp đến cổng thông tin chính thức.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 </div>
     
 <!-- ================= NOTIFICATION PANEL ================= -->
@@ -2723,5 +2987,60 @@ setTimeout(() => {
 
 })();
 </script>
+<script>
+/* =========================================================
+   HVA - LIÊN KẾT NHANH
+========================================================= */
+
+(function () {
+
+    const btn = document.getElementById('bottom-links');
+    const panel = document.getElementById('links-panel');
+    const box = document.getElementById('links-panel-box');
+    const closeBtn = document.getElementById('close-links-panel');
+
+    function openLinksPanel(event) {
+
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        panel?.classList.remove('hidden');
+    }
+
+    function closeLinksPanel() {
+        panel?.classList.add('hidden');
+    }
+
+    btn?.addEventListener('click', openLinksPanel);
+
+    closeBtn?.addEventListener('click', closeLinksPanel);
+
+    panel?.addEventListener('click', function (event) {
+
+        if (event.target === this) {
+            closeLinksPanel();
+        }
+    });
+
+    box?.addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+
+    document.addEventListener('keydown', function (event) {
+
+        if (
+            event.key === 'Escape' &&
+            panel &&
+            !panel.classList.contains('hidden')
+        ) {
+            closeLinksPanel();
+        }
+    });
+
+})();
+</script>
+    
 </body>
 </html>
