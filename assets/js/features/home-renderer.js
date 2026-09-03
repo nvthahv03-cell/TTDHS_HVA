@@ -2203,15 +2203,15 @@ export function renderHome() {
          data-dropdown-menu
          class="hidden fixed sm:absolute
        left-3 right-3
-       sm:left-0 sm:right-auto
+       sm:left-1/2 sm:right-auto sm:-translate-x-1/2
        bottom-20 sm:bottom-[calc(100%+0.6rem)]
-                z-[999]
-               w-auto sm:w-[370px]
-                max-h-[76vh]
-                overflow-y-auto overscroll-contain
-                bg-white dark:bg-slate-900
-                rounded-2xl shadow-2xl
-                border border-slate-200 dark:border-slate-800">
+       z-[999]
+       w-auto sm:w-[370px]
+       max-h-[76vh]
+       overflow-y-auto overscroll-contain
+       bg-white dark:bg-slate-900
+       rounded-2xl shadow-2xl
+       border border-slate-200 dark:border-slate-800"
 
         <!-- HEADER -->
         <div class="sticky top-0 z-20
