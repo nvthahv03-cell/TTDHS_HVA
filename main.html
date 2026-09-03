@@ -1645,32 +1645,994 @@ setTimeout(() => {
 </script> 
     <script>
 /* =========================================================
-   TRA CỨU HỆ THỐNG - BOTTOM NAV
+   HVA TRA CỨU HỆ THỐNG - REAL DATA
+   Văn bản + Nhiệm vụ + Thông báo
 ========================================================= */
 
 (function () {
 
-    function getSearchPanel() {
-        return document.getElementById('search-panel');
+    const SEARCH_API =
+        'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+
+    let ACTIVE_SEARCH_TYPE = 'ALL';
+    let SEARCH_TIMER = null;
+
+    const panel = document.getElementById('search-panel');
+    const panelBox = document.getElementById('search-panel-box');
+    const input = document.getElementById('global-search-input');
+    const submitBtn = document.getElementById('global-search-submit');
+
+    const typeButtons = Array.from(
+        document.querySelectorAll('[data-search-type]')
+    );
+
+    const groupBox = typeButtons.length
+        ? typeButtons[0].parentElement
+        : null;
+
+
+    /* =====================================================
+       TẠO KHU VỰC KẾT QUẢ
+    ===================================================== */
+
+    const resultBox = document.createElement('div');
+
+    resultBox.id = 'global-search-results';
+    resultBox.className = 'hidden mt-3';
+
+    if (groupBox) {
+        groupBox.insertAdjacentElement('afterend', resultBox);
     }
 
+
+    /* =====================================================
+       USER HIỆN TẠI
+    ===================================================== */
+
+    function getSearchUser() {
+
+        try {
+
+            const user = JSON.parse(
+                sessionStorage.getItem('user') ||
+                localStorage.getItem('user') ||
+                '{}'
+            );
+
+            return {
+                username:
+                    user.username ||
+                    user.userName ||
+                    user.maGV ||
+                    '',
+
+                fullName:
+                    user.fullName ||
+                    user.hoTen ||
+                    user.name ||
+                    ''
+            };
+
+        } catch (e) {
+
+            console.error('[HVA SEARCH] Không đọc được user:', e);
+
+            return {
+                username: '',
+                fullName: ''
+            };
+        }
+    }
+
+
+    /* =====================================================
+       TIỆN ÍCH
+    ===================================================== */
+
+    function escapeHTML(value) {
+
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+
+    function normalizeText(value) {
+
+        return String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim();
+    }
+
+
+    function containsKeyword(values, keyword) {
+
+        const q = normalizeText(keyword);
+
+        if (!q) return true;
+
+        return normalizeText(
+            values.filter(Boolean).join(' ')
+        ).includes(q);
+    }
+
+
+    function unwrapArray(data) {
+
+        if (Array.isArray(data)) return data;
+
+        if (Array.isArray(data?.data)) return data.data;
+
+        if (Array.isArray(data?.result)) return data.result;
+
+        if (Array.isArray(data?.items)) return data.items;
+
+        return [];
+    }
+
+
+    function formatDate(value) {
+
+        if (!value) return '';
+
+        const d = new Date(value);
+
+        if (isNaN(d.getTime())) {
+            return escapeHTML(value);
+        }
+
+        return (
+            String(d.getDate()).padStart(2, '0') + '/' +
+            String(d.getMonth() + 1).padStart(2, '0') + '/' +
+            d.getFullYear()
+        );
+    }
+
+
+    /* =====================================================
+       MỞ / ĐÓNG PANEL
+    ===================================================== */
+
     function openSearchPanel() {
-        const panel = getSearchPanel();
+
         if (!panel) return;
 
         panel.classList.remove('hidden');
 
+        resetSearchView();
+
         setTimeout(() => {
-            document.getElementById('global-search-input')?.focus();
+            input?.focus();
         }, 100);
     }
 
+
     function closeSearchPanel() {
-        getSearchPanel()?.classList.add('hidden');
+
+        panel?.classList.add('hidden');
+
+        if (input) input.value = '';
+
+        ACTIVE_SEARCH_TYPE = 'ALL';
+
+        resetSearchView();
     }
 
 
-    /* Nút Tra cứu ở Bottom Nav */
+    function resetSearchView() {
+
+        if (groupBox) {
+            groupBox.classList.remove('hidden');
+        }
+
+        resultBox.classList.add('hidden');
+        resultBox.innerHTML = '';
+
+        typeButtons.forEach(btn => {
+            btn.classList.remove(
+                'ring-2',
+                'ring-blue-200',
+                'bg-blue-50'
+            );
+        });
+    }
+
+
+    /* =====================================================
+       TRẠNG THÁI KẾT QUẢ
+    ===================================================== */
+
+    function showLoading() {
+
+        if (groupBox) {
+            groupBox.classList.add('hidden');
+        }
+
+        resultBox.classList.remove('hidden');
+
+        resultBox.innerHTML = `
+            <div class="py-10 text-center">
+
+                <div class="w-9 h-9 mx-auto
+                            border-[3px]
+                            border-blue-100
+                            border-t-blue-600
+                            rounded-full animate-spin">
+                </div>
+
+                <div class="text-[11px]
+                            text-slate-400
+                            font-medium mt-3">
+                    Đang tra cứu dữ liệu...
+                </div>
+
+            </div>
+        `;
+    }
+
+
+    function showEmpty(keyword) {
+
+        resultBox.innerHTML = `
+            <div class="py-9 px-5 text-center">
+
+                <div class="w-12 h-12 mx-auto
+                            rounded-full bg-slate-100
+                            flex items-center justify-center">
+
+                    <i class="bi bi-search
+                              text-xl text-slate-400"></i>
+
+                </div>
+
+                <div class="text-[12px]
+                            font-bold text-slate-600 mt-3">
+                    Không tìm thấy kết quả
+                </div>
+
+                <div class="text-[10px]
+                            text-slate-400 mt-1">
+                    Từ khóa:
+                    <span class="font-semibold">
+                        “${escapeHTML(keyword)}”
+                    </span>
+                </div>
+
+                <button type="button"
+                        id="search-back-groups"
+                        class="mt-4 px-4 py-2
+                               rounded-lg
+                               bg-blue-50
+                               text-[#0F4C81]
+                               text-[10px]
+                               font-bold">
+
+                    ← Chọn nhóm tra cứu
+
+                </button>
+
+            </div>
+        `;
+
+        document.getElementById('search-back-groups')
+            ?.addEventListener('click', function () {
+
+                ACTIVE_SEARCH_TYPE = 'ALL';
+
+                if (input) input.value = '';
+
+                resetSearchView();
+
+                input?.focus();
+            });
+    }
+
+
+    function showError() {
+
+        resultBox.innerHTML = `
+            <div class="py-9 px-5 text-center">
+
+                <i class="bi bi-exclamation-triangle-fill
+                          text-2xl text-amber-500"></i>
+
+                <div class="text-[12px]
+                            font-bold text-slate-600 mt-2">
+                    Chưa thể tra cứu dữ liệu
+                </div>
+
+                <div class="text-[10px]
+                            text-slate-400 mt-1">
+                    Vui lòng kiểm tra kết nối và thử lại.
+                </div>
+
+            </div>
+        `;
+    }
+
+
+    /* =====================================================
+       API: VĂN BẢN
+    ===================================================== */
+
+    async function searchDocuments(keyword) {
+
+        const url =
+            SEARCH_API +
+            '?action=searchVanBan' +
+            '&q=' + encodeURIComponent(keyword) +
+            '&_=' + Date.now();
+
+        const response = await fetch(url, {
+            cache: 'no-store'
+        });
+
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
+
+        const data = await response.json();
+
+        return unwrapArray(data).map((doc, index) => {
+
+            const rawFile =
+                doc.fileID ||
+                doc.FileID ||
+                doc.fileId ||
+                doc.fileUrl ||
+                doc.FileUrl ||
+                doc.url ||
+                doc.link ||
+                '';
+
+            let fileUrl = '';
+
+            if (rawFile) {
+
+                fileUrl = String(rawFile).startsWith('http')
+                    ? String(rawFile)
+                    : 'https://drive.google.com/file/d/' +
+                      encodeURIComponent(rawFile) +
+                      '/view';
+            }
+
+            return {
+                kind: 'VANBAN',
+
+                id:
+                    doc.id ||
+                    doc.ID ||
+                    ('VB_' + index),
+
+                title:
+                    doc.trichYeu ||
+                    doc.TrichYeu ||
+                    doc.tenVanBan ||
+                    doc.TenVanBan ||
+                    'Văn bản',
+
+                meta:
+                    doc.soVanBan ||
+                    doc.SoVanBan ||
+                    doc.soVB ||
+                    'Văn bản',
+
+                extra:
+                    doc.coQuan ||
+                    doc.CoQuan ||
+                    '',
+
+                date:
+                    doc.ngayBanHanh ||
+                    doc.NgayBanHanh ||
+                    '',
+
+                url: fileUrl
+            };
+        });
+    }
+
+
+    /* =====================================================
+       API: NHIỆM VỤ
+    ===================================================== */
+
+    async function searchTasks(keyword) {
+
+        const user = getSearchUser();
+
+        if (!user.username) return [];
+
+        const url =
+            SEARCH_API +
+            '?action=getTaskByUser' +
+            '&username=' +
+            encodeURIComponent(user.username) +
+            '&_=' + Date.now();
+
+        const response = await fetch(url, {
+            cache: 'no-store'
+        });
+
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
+
+        const data = await response.json();
+
+        return unwrapArray(data)
+            .filter(item => {
+
+                return containsKeyword([
+                    item.idTask,
+                    item.tieuDe,
+                    item.noiDung,
+                    item.nguoiGiao,
+                    item.trangThai,
+                    item.status
+                ], keyword);
+            })
+            .map(item => ({
+
+                kind: 'NHIEMVU',
+
+                id:
+                    item.idTask ||
+                    item.id ||
+                    '',
+
+                title:
+                    item.tieuDe ||
+                    'Nhiệm vụ',
+
+                meta:
+                    item.trangThai ||
+                    item.status ||
+                    'Nhiệm vụ',
+
+                extra:
+                    item.nguoiGiao
+                        ? 'Người giao: ' + item.nguoiGiao
+                        : '',
+
+                date:
+                    item.hanHoanThanh ||
+                    item.deadline ||
+                    '',
+
+                raw: item
+            }));
+    }
+
+
+    /* =====================================================
+       API: THÔNG BÁO
+    ===================================================== */
+
+    async function searchNotifications(keyword) {
+
+        const user = getSearchUser();
+
+        if (!user.username) return [];
+
+        const url =
+            SEARCH_API +
+            '?action=getNotificationsByUser' +
+            '&username=' +
+            encodeURIComponent(user.username) +
+            '&_=' + Date.now();
+
+        const response = await fetch(url, {
+            cache: 'no-store'
+        });
+
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
+
+        const data = await response.json();
+
+        return unwrapArray(data)
+            .filter(item => {
+
+                return containsKeyword([
+                    item.tieuDe,
+                    item.noiDung,
+                    item.senderName,
+                    item.loai,
+                    item.dich
+                ], keyword);
+            })
+            .map(item => ({
+
+                kind: 'THONGBAO',
+
+                id:
+                    item.id ||
+                    '',
+
+                title:
+                    item.tieuDe ||
+                    'Thông báo',
+
+                meta:
+                    item.daDoc
+                        ? 'Đã đọc'
+                        : 'Chưa đọc',
+
+                extra:
+                    item.senderName ||
+                    'Trung tâm Điều hành số HVA',
+
+                date:
+                    item.thoiGian ||
+                    '',
+
+                raw: item
+            }));
+    }
+
+
+    /* =====================================================
+       RENDER KẾT QUẢ
+    ===================================================== */
+
+    function getResultStyle(kind) {
+
+        switch (kind) {
+
+            case 'VANBAN':
+                return {
+                    icon: 'bi-file-earmark-text-fill',
+                    iconBox: 'bg-blue-50 text-blue-600',
+                    label: 'Văn bản'
+                };
+
+            case 'NHIEMVU':
+                return {
+                    icon: 'bi-list-check',
+                    iconBox: 'bg-indigo-50 text-indigo-600',
+                    label: 'Nhiệm vụ'
+                };
+
+            case 'THONGBAO':
+                return {
+                    icon: 'bi-bell-fill',
+                    iconBox: 'bg-amber-50 text-amber-600',
+                    label: 'Thông báo'
+                };
+
+            default:
+                return {
+                    icon: 'bi-search',
+                    iconBox: 'bg-slate-100 text-slate-500',
+                    label: ''
+                };
+        }
+    }
+
+
+    function renderResults(items, keyword) {
+
+        if (!items.length) {
+            showEmpty(keyword);
+            return;
+        }
+
+        resultBox.innerHTML = `
+
+            <div class="flex items-center
+                        justify-between mb-2 px-1">
+
+                <div class="text-[10px]
+                            font-extrabold
+                            uppercase
+                            tracking-[0.08em]
+                            text-slate-400">
+
+                    ${items.length} kết quả
+
+                </div>
+
+                <button type="button"
+                        id="search-change-group"
+                        class="text-[10px]
+                               font-bold text-blue-600">
+
+                    Nhóm tra cứu
+
+                </button>
+
+            </div>
+
+            <div class="space-y-1
+                        max-h-[45vh]
+                        overflow-y-auto pr-1">
+
+                ${items.map((item, index) => {
+
+                    const style =
+                        getResultStyle(item.kind);
+
+                    return `
+
+                        <button type="button"
+                                data-result-index="${index}"
+                                class="hva-search-result
+                                       w-full text-left
+                                       flex items-center gap-3
+                                       px-3 py-3
+                                       rounded-xl
+                                       border border-transparent
+                                       hover:bg-slate-50
+                                       hover:border-slate-100
+                                       transition">
+
+                            <div class="w-10 h-10
+                                        shrink-0 rounded-xl
+                                        ${style.iconBox}
+                                        flex items-center
+                                        justify-center">
+
+                                <i class="bi ${style.icon}
+                                          text-lg"></i>
+
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+
+                                <div class="flex items-center gap-2">
+
+                                    <span class="text-[8px]
+                                                 uppercase
+                                                 tracking-wide
+                                                 font-extrabold
+                                                 text-slate-400">
+
+                                        ${style.label}
+
+                                    </span>
+
+                                    ${item.date ? `
+                                        <span class="text-[8px]
+                                                     text-slate-300">
+                                            •
+                                        </span>
+
+                                        <span class="text-[8px]
+                                                     text-slate-400">
+                                            ${formatDate(item.date)}
+                                        </span>
+                                    ` : ''}
+
+                                </div>
+
+                                <div class="text-[12px]
+                                            font-bold
+                                            text-[#123B67]
+                                            mt-0.5
+                                            leading-snug
+                                            line-clamp-2">
+
+                                    ${escapeHTML(item.title)}
+
+                                </div>
+
+                                <div class="text-[9.5px]
+                                            text-slate-400
+                                            mt-1
+                                            truncate">
+
+                                    ${escapeHTML(item.meta)}
+
+                                    ${item.extra
+                                        ? ' • ' +
+                                          escapeHTML(item.extra)
+                                        : ''}
+
+                                </div>
+
+                            </div>
+
+                            <i class="bi bi-chevron-right
+                                      text-xs text-slate-300">
+                            </i>
+
+                        </button>
+                    `;
+
+                }).join('')}
+
+            </div>
+        `;
+
+
+        document.getElementById('search-change-group')
+            ?.addEventListener('click', function () {
+
+                ACTIVE_SEARCH_TYPE = 'ALL';
+
+                if (input) input.value = '';
+
+                resetSearchView();
+
+                input?.focus();
+            });
+
+
+        resultBox.querySelectorAll('.hva-search-result')
+            .forEach(button => {
+
+                button.addEventListener('click', function () {
+
+                    const index =
+                        Number(this.dataset.resultIndex);
+
+                    const item =
+                        items[index];
+
+                    openSearchResult(item);
+                });
+            });
+    }
+
+
+    /* =====================================================
+       MỞ KẾT QUẢ
+    ===================================================== */
+
+    async function openSearchResult(item) {
+
+        if (!item) return;
+
+
+        /* ---------- VĂN BẢN ---------- */
+
+        if (item.kind === 'VANBAN') {
+
+            if (item.url) {
+
+                window.open(
+                    item.url,
+                    '_blank',
+                    'noopener,noreferrer'
+                );
+
+            } else {
+
+                AppMain?.showToast?.(
+                    'Văn bản này chưa có tệp đính kèm.'
+                );
+            }
+
+            return;
+        }
+
+
+        /* ---------- NHIỆM VỤ ---------- */
+
+        if (item.kind === 'NHIEMVU') {
+
+            closeSearchPanel();
+
+            if (typeof window.openMyTasks === 'function') {
+
+                window.openMyTasks('ASSIGNED');
+
+            } else {
+
+                AppMain?.showToast?.(
+                    'Đã tìm thấy nhiệm vụ.'
+                );
+            }
+
+            return;
+        }
+
+
+        /* ---------- THÔNG BÁO ---------- */
+
+        if (item.kind === 'THONGBAO') {
+
+            closeSearchPanel();
+
+            if (
+                item.id &&
+                typeof window.openHVANotification === 'function'
+            ) {
+
+                window.openNotificationPanel?.();
+
+                setTimeout(() => {
+
+                    window.openHVANotification(
+                        encodeURIComponent(item.id)
+                    );
+
+                }, 150);
+
+            } else {
+
+                window.openNotificationPanel?.();
+            }
+        }
+    }
+
+
+    /* =====================================================
+       THỰC HIỆN TRA CỨU
+    ===================================================== */
+
+    async function performSearch() {
+
+        const keyword =
+            input?.value.trim() || '';
+
+        if (!keyword) {
+
+            resetSearchView();
+
+            input?.focus();
+
+            return;
+        }
+
+
+        showLoading();
+
+
+        try {
+
+            let results = [];
+
+
+            if (
+                ACTIVE_SEARCH_TYPE === 'ALL' ||
+                ACTIVE_SEARCH_TYPE === 'VANBAN'
+            ) {
+
+                const docs =
+                    await searchDocuments(keyword);
+
+                results.push(...docs);
+            }
+
+
+            if (
+                ACTIVE_SEARCH_TYPE === 'ALL' ||
+                ACTIVE_SEARCH_TYPE === 'NHIEMVU'
+            ) {
+
+                const tasks =
+                    await searchTasks(keyword);
+
+                results.push(...tasks);
+            }
+
+
+            if (
+                ACTIVE_SEARCH_TYPE === 'ALL' ||
+                ACTIVE_SEARCH_TYPE === 'THONGBAO'
+            ) {
+
+                const notifications =
+                    await searchNotifications(keyword);
+
+                results.push(...notifications);
+            }
+
+
+            renderResults(results, keyword);
+
+
+        } catch (error) {
+
+            console.error(
+                '[HVA TRA CỨU] Lỗi:',
+                error
+            );
+
+            showError();
+        }
+    }
+
+
+    /* =====================================================
+       CLICK NHÓM TRA CỨU
+    ===================================================== */
+
+    typeButtons.forEach(button => {
+
+        button.addEventListener('click', function () {
+
+            const type =
+                this.dataset.searchType;
+
+
+            /* LỊCH CÔNG TÁC */
+
+            if (type === 'LICH') {
+
+                closeSearchPanel();
+
+                window.location.href =
+                    'Lichcongtac.html';
+
+                return;
+            }
+
+
+            /* TÀI LIỆU - BIỂU MẪU */
+
+            if (type === 'TAILIEU') {
+
+                closeSearchPanel();
+
+                if (
+                    typeof window.openDigitalResources ===
+                    'function'
+                ) {
+
+                    window.openDigitalResources();
+
+                } else {
+
+                    AppMain?.showToast?.(
+                        'Mở Tài nguyên số từ Trang chủ.'
+                    );
+                }
+
+                return;
+            }
+
+
+            ACTIVE_SEARCH_TYPE = type;
+
+            typeButtons.forEach(btn => {
+
+                btn.classList.remove(
+                    'ring-2',
+                    'ring-blue-200',
+                    'bg-blue-50'
+                );
+            });
+
+            this.classList.add(
+                'ring-2',
+                'ring-blue-200',
+                'bg-blue-50'
+            );
+
+
+            const keyword =
+                input?.value.trim() || '';
+
+
+            if (keyword) {
+
+                performSearch();
+
+            } else {
+
+                input?.focus();
+
+                AppMain?.showToast?.(
+                    'Nhập từ khóa để tra cứu.'
+                );
+            }
+        });
+    });
+
+
+    /* =====================================================
+       EVENTS
+    ===================================================== */
+
     document.getElementById('bottom-search')
         ?.addEventListener('click', function (event) {
 
@@ -1681,97 +2643,83 @@ setTimeout(() => {
         });
 
 
-    /* Nút X */
     document.getElementById('close-search-panel')
         ?.addEventListener('click', function (event) {
 
             event.preventDefault();
+
             closeSearchPanel();
         });
 
 
-    /* Bấm vùng tối bên ngoài */
-    getSearchPanel()?.addEventListener('click', function (event) {
+    panel?.addEventListener('click', function (event) {
 
         if (event.target === this) {
             closeSearchPanel();
         }
-
     });
 
 
-    /* Không đóng khi bấm bên trong hộp */
-    document.getElementById('search-panel-box')
-        ?.addEventListener('click', function (event) {
+    panelBox?.addEventListener('click', function (event) {
 
-            event.stopPropagation();
-
-        });
+        event.stopPropagation();
+    });
 
 
-    /* =====================================================
-       TẠM THỜI: ghi nhận nhóm tra cứu được chọn
-       Bước sau mới nối API thực tế.
-    ===================================================== */
+    submitBtn?.addEventListener('click', function () {
 
-    document.querySelectorAll('[data-search-type]')
-        .forEach(function (button) {
-
-            button.addEventListener('click', function () {
-
-                const type = this.dataset.searchType;
-
-                console.log('[HVA TRA CỨU] Nhóm:', type);
-
-                const input =
-                    document.getElementById('global-search-input');
-
-                input?.focus();
-
-            });
-
-        });
+        performSearch();
+    });
 
 
-    /* Nút mũi tên tìm */
-    document.getElementById('global-search-submit')
-        ?.addEventListener('click', function () {
+    input?.addEventListener('keydown', function (event) {
 
-            const keyword =
-                document.getElementById('global-search-input')
-                    ?.value.trim() || '';
+        if (event.key !== 'Enter') return;
 
-            if (!keyword) {
-                document.getElementById('global-search-input')?.focus();
-                return;
-            }
+        event.preventDefault();
 
-            console.log('[HVA TRA CỨU] Từ khóa:', keyword);
-
-        });
+        performSearch();
+    });
 
 
-    /* Enter để tìm */
-    document.getElementById('global-search-input')
-        ?.addEventListener('keydown', function (event) {
+    /* Tìm tự động sau khi ngừng gõ */
 
-            if (event.key !== 'Enter') return;
+    input?.addEventListener('input', function () {
 
-            event.preventDefault();
+        clearTimeout(SEARCH_TIMER);
 
-            document.getElementById('global-search-submit')?.click();
-
-        });
+        const keyword =
+            this.value.trim();
 
 
-    /* ESC để đóng trên máy tính */
-    document.addEventListener('keydown', function (event) {
+        if (!keyword) {
 
-        if (event.key === 'Escape') {
-            closeSearchPanel();
+            resetSearchView();
+
+            return;
         }
 
+
+        SEARCH_TIMER = setTimeout(() => {
+
+            performSearch();
+
+        }, 450);
     });
+
+
+    document.addEventListener('keydown', function (event) {
+
+        if (
+            event.key === 'Escape' &&
+            panel &&
+            !panel.classList.contains('hidden')
+        ) {
+
+            closeSearchPanel();
+        }
+    });
+
 
 })();
 </script>
