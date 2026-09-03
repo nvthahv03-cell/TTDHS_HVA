@@ -2824,3 +2824,30 @@ function updateHVASchoolDate() {
 }
 
 setTimeout(updateHVASchoolDate, 100);
+
+// ======================================================
+// THI ĐUA - KHEN THƯỞNG
+// ======================================================
+window.openThiDuaModule = function(type, event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const menu = document.getElementById('thidua-dropdown');
+    if (menu) menu.classList.add('hidden');
+
+    const moduleNames = {
+        VANBAN: 'Văn bản - Quy định',
+        KEKHAI_THANG: 'Kê khai công việc tháng',
+        XEPLOAI_THANG: 'Đánh giá - Xếp loại tháng',
+        THEODOI: 'Theo dõi thi đua',
+        XEPLOAI_NAM: 'Đánh giá - Xếp loại cuối năm',
+        KHENTHUONG: 'Khen thưởng - Thành tích'
+    };
+
+    console.log(
+        '[THI ĐUA - KHEN THƯỞNG]',
+        moduleNames[type] || type
+    );
+};
