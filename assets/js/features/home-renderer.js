@@ -2139,40 +2139,666 @@ export function renderHome() {
             </div>
         </div>
         </div>
-    <!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ -->
-    <div class="relative">
-        <div data-dropdown-toggle="dieuhanhso-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-teal-700 via-emerald-700 to-cyan-700 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-visible border border-teal-400/40 active:scale-[0.98]">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
-                <i class="bi bi-cpu text-white text-lg"></i>
-            </div>
-            <div class="flex items-center justify-between">
-                <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">ĐIỀU HÀNH SỐ</h3>
-                <i class="bi bi-chevron-up text-xs text-teal-100 transition-transform duration-300" data-dropdown-arrow></i>
-            </div>
-            <p class="text-[10px] text-teal-50 font-medium">Giao việc • Lịch • ...</p>
+    <!-- ====================================================== -->
+<!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ                               -->
+<!-- ====================================================== -->
+<div class="relative">
+
+    <!-- CARD ĐIỀU HÀNH SỐ -->
+    <div data-dropdown-toggle="dieuhanhso-dropdown"
+         class="group relative rounded-2xl
+                bg-gradient-to-br from-teal-700 via-emerald-700 to-cyan-700
+                text-white p-3.5
+                shadow-md hover:shadow-xl
+                transition-all duration-300
+                cursor-pointer overflow-visible
+                border border-teal-400/40
+                active:scale-[0.98]">
+
+        <div class="absolute top-0 right-0
+                    w-20 h-20 bg-white/20 rounded-full blur-xl
+                    group-hover:scale-150
+                    transition-all duration-500
+                    pointer-events-none">
         </div>
 
-        <!-- Dropup Menu Điều hành số -->
-        <div id="dieuhanhso-dropdown" data-dropdown-menu class="hidden absolute right-0 w-[240px] bottom-[calc(100%+0.5rem)] z-50 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 p-2 space-y-1 transition-all duration-200 max-h-[280px] overflow-y-auto">
-            <a href="Giaonhanviec.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors">
-                <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
-                    <i class="bi bi-clipboard-check text-sm"></i>
+        <div class="w-10 h-10 rounded-xl
+                    bg-white/20 backdrop-blur-md
+                    flex items-center justify-center
+                    shadow-inner mb-3
+                    group-hover:scale-110
+                    transition-transform duration-300
+                    border border-white/30">
+
+            <i class="bi bi-cpu-fill text-white text-lg"></i>
+        </div>
+
+        <div class="flex items-center justify-between gap-2">
+
+            <h3 class="text-xs font-extrabold
+                       tracking-tight text-white mb-0.5
+                       whitespace-nowrap">
+                ĐIỀU HÀNH SỐ
+            </h3>
+
+            <i class="bi bi-chevron-up
+                      text-xs text-teal-100
+                      transition-transform duration-300"
+               data-dropdown-arrow>
+            </i>
+
+        </div>
+
+        <p class="text-[10px] text-teal-50 font-medium">
+            Quản lý • Điều phối • Theo dõi
+        </p>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- DROP-UP: TRUNG TÂM ĐIỀU HÀNH SỐ                   -->
+    <!-- ================================================== -->
+    <div id="dieuhanhso-dropdown"
+         data-dropdown-menu
+         class="hidden fixed sm:absolute
+                left-1/2 -translate-x-1/2
+                sm:translate-x-0 sm:left-auto sm:right-0
+                bottom-4 sm:bottom-[calc(100%+0.6rem)]
+                z-[999]
+                w-[92vw] sm:w-[370px]
+                max-h-[76vh]
+                overflow-y-auto overscroll-contain
+                bg-white dark:bg-slate-900
+                rounded-2xl shadow-2xl
+                border border-slate-200 dark:border-slate-800">
+
+        <!-- HEADER -->
+        <div class="sticky top-0 z-20
+                    bg-white/95 dark:bg-slate-900/95
+                    backdrop-blur-md
+                    border-b border-slate-200 dark:border-slate-800
+                    px-4 py-3">
+
+            <div class="flex items-center gap-2.5">
+
+                <div class="w-8 h-8 rounded-lg
+                            bg-gradient-to-br from-teal-600 to-cyan-500
+                            text-white
+                            flex items-center justify-center
+                            shadow-sm">
+
+                    <i class="bi bi-command text-sm"></i>
                 </div>
-                <span>📋 Giao việc</span>
-            </a>
-            <a href="Lichcongtac.html"
-   class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 transition-colors">
 
-    <div class="w-7 h-7 rounded-lg bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-600 shrink-0">
-        <i class="bi bi-calendar3 text-sm"></i>
-    </div>
+                <div>
+                    <div class="text-[13px]
+                                font-extrabold tracking-wide
+                                text-[#0F4C81]
+                                dark:text-cyan-300">
+                        TRUNG TÂM ĐIỀU HÀNH SỐ
+                    </div>
 
-    <span>📅 Lịch công tác</span>
+                    <div class="text-[9px]
+                                text-slate-400 font-medium">
+                        Quản lý • Điều phối • Phát hành • Theo dõi
+                    </div>
+                </div>
 
-</a>
+            </div>
+
         </div>
+
+
+        <!-- NỘI DUNG -->
+        <div class="p-3 space-y-1">
+
+
+            <!-- ========================================== -->
+            <!-- 01. ĐIỀU HÀNH CHUNG                       -->
+            <!-- ========================================== -->
+            <div class="rounded-xl border border-teal-100
+                        dark:border-slate-700 overflow-hidden">
+
+                <button type="button"
+                        onclick="event.stopPropagation();
+                                 document.getElementById('dh-chung-items').classList.toggle('hidden');
+                                 document.getElementById('dh-chung-arrow').classList.toggle('rotate-90');"
+                        class="w-full flex items-center justify-between
+                               px-3 py-2.5
+                               bg-teal-50/70 dark:bg-slate-800
+                               hover:bg-teal-100
+                               transition text-left">
+
+                    <div class="flex items-center gap-2.5">
+
+                        <div class="w-8 h-8 rounded-lg
+                                    bg-teal-100
+                                    text-teal-700
+                                    flex items-center justify-center">
+                            <i class="bi bi-grid-1x2-fill"></i>
+                        </div>
+
+                        <div>
+                            <div class="text-[11px] font-extrabold
+                                        text-[#123B67]
+                                        dark:text-slate-100">
+                                ĐIỀU HÀNH CHUNG
+                            </div>
+
+                            <div class="text-[8.5px] text-slate-400 mt-0.5">
+                                Nhiệm vụ • Lịch • Họp • Phát hành
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i id="dh-chung-arrow"
+                       class="bi bi-chevron-right
+                              text-[10px] text-slate-400
+                              transition-transform">
+                    </i>
+
+                </button>
+
+
+                <div id="dh-chung-items"
+                     class="hidden p-1.5 bg-white dark:bg-slate-900 space-y-0.5">
+
+                    <!-- GIỮ NGUYÊN MODULE ĐÃ CHẠY -->
+                    <a href="Giaonhanviec.html"
+                       class="flex items-center gap-2.5
+                              px-3 py-2 rounded-lg
+                              hover:bg-teal-50
+                              dark:hover:bg-slate-800 transition">
+
+                        <i class="bi bi-clipboard-check-fill
+                                  text-teal-600 w-5 text-center"></i>
+
+                        <span class="text-[11px] font-semibold
+                                     text-slate-700 dark:text-slate-200">
+                            Giao nhiệm vụ
+                        </span>
+
+                    </a>
+
+
+                    <!-- GIỮ NGUYÊN MODULE ĐÃ CHẠY -->
+                    <a href="Lichcongtac.html"
+                       class="flex items-center gap-2.5
+                              px-3 py-2 rounded-lg
+                              hover:bg-teal-50
+                              dark:hover:bg-slate-800 transition">
+
+                        <i class="bi bi-calendar3
+                                  text-blue-600 w-5 text-center"></i>
+
+                        <span class="text-[11px] font-semibold
+                                     text-slate-700 dark:text-slate-200">
+                            Lịch công tác
+                        </span>
+
+                    </a>
+
+
+                    <button type="button"
+                            class="w-full flex items-center gap-2.5
+                                   px-3 py-2 rounded-lg
+                                   hover:bg-violet-50
+                                   dark:hover:bg-slate-800 transition text-left">
+
+                        <i class="bi bi-people-fill
+                                  text-violet-600 w-5 text-center"></i>
+
+                        <span class="text-[11px] font-semibold
+                                     text-slate-700 dark:text-slate-200">
+                            Cuộc họp
+                        </span>
+
+                    </button>
+
+
+                    <button type="button"
+                            class="w-full flex items-center gap-2.5
+                                   px-3 py-2 rounded-lg
+                                   hover:bg-amber-50
+                                   dark:hover:bg-slate-800 transition text-left">
+
+                        <i class="bi bi-megaphone-fill
+                                  text-amber-500 w-5 text-center"></i>
+
+                        <span class="text-[11px] font-semibold
+                                     text-slate-700 dark:text-slate-200">
+                            Thông báo
+                        </span>
+
+                    </button>
+
+
+                    <button type="button"
+                            class="w-full flex items-center gap-2.5
+                                   px-3 py-2 rounded-lg
+                                   hover:bg-indigo-50
+                                   dark:hover:bg-slate-800 transition text-left">
+
+                        <i class="bi bi-ui-checks-grid
+                                  text-indigo-600 w-5 text-center"></i>
+
+                        <span class="text-[11px] font-semibold
+                                     text-slate-700 dark:text-slate-200">
+                            Khảo sát - Bình chọn
+                        </span>
+
+                    </button>
+
+
+                    <button type="button"
+                            class="w-full flex items-center gap-2.5
+                                   px-3 py-2 rounded-lg
+                                   hover:bg-cyan-50
+                                   dark:hover:bg-slate-800 transition text-left">
+
+                        <i class="bi bi-send-check-fill
+                                  text-cyan-600 w-5 text-center"></i>
+
+                        <span class="text-[11px] font-semibold
+                                     text-slate-700 dark:text-slate-200">
+                            TT Phát hành
+                        </span>
+
+                    </button>
+
+
+                    <button type="button"
+                            class="w-full flex items-center gap-2.5
+                                   px-3 py-2 rounded-lg
+                                   hover:bg-emerald-50
+                                   dark:hover:bg-slate-800 transition text-left">
+
+                        <i class="bi bi-graph-up-arrow
+                                  text-emerald-600 w-5 text-center"></i>
+
+                        <span class="text-[11px] font-semibold
+                                     text-slate-700 dark:text-slate-200">
+                            Theo dõi điều hành
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================== -->
+            <!-- 02. CHUYÊN MÔN - GIÁO DỤC                  -->
+            <!-- ========================================== -->
+            <div class="rounded-xl border border-blue-100
+                        dark:border-slate-700 overflow-hidden">
+
+                <button type="button"
+                        onclick="event.stopPropagation();
+                                 document.getElementById('dh-chuyenmon-items').classList.toggle('hidden');
+                                 document.getElementById('dh-chuyenmon-arrow').classList.toggle('rotate-90');"
+                        class="w-full flex items-center justify-between
+                               px-3 py-2.5
+                               hover:bg-blue-50
+                               dark:hover:bg-slate-800
+                               transition text-left">
+
+                    <div class="flex items-center gap-2.5">
+
+                        <div class="w-8 h-8 rounded-lg
+                                    bg-blue-100 text-blue-700
+                                    flex items-center justify-center">
+                            <i class="bi bi-mortarboard-fill"></i>
+                        </div>
+
+                        <div>
+                            <div class="text-[11px] font-extrabold
+                                        text-[#123B67]
+                                        dark:text-slate-100">
+                                CHUYÊN MÔN - GIÁO DỤC
+                            </div>
+
+                            <div class="text-[8.5px] text-slate-400 mt-0.5">
+                                Phân công • TKB • Kiểm tra • HSG
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i id="dh-chuyenmon-arrow"
+                       class="bi bi-chevron-right text-[10px]
+                              text-slate-400 transition-transform">
+                    </i>
+
+                </button>
+
+
+                <div id="dh-chuyenmon-items"
+                     class="hidden p-1.5 bg-white dark:bg-slate-900
+                            grid grid-cols-1 gap-0.5">
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-person-workspace"></i>
+                        <span>Phân công chuyên môn</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-table"></i>
+                        <span>Thời khóa biểu</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-file-earmark-check"></i>
+                        <span>Kiểm tra - Đánh giá</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-pencil-square"></i>
+                        <span>Thi thử tốt nghiệp THPT</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-award-fill"></i>
+                        <span>Bồi dưỡng HSG</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                        <span>Kế hoạch giáo dục</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-person-video3"></i>
+                        <span>Bồi dưỡng chuyên môn</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-activity"></i>
+                        <span>Hoạt động giáo dục</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-person-vcard-fill"></i>
+                        <span>Công tác học sinh - Chủ nhiệm</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-trophy-fill"></i>
+                        <span>Các cuộc thi</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================== -->
+            <!-- 03. TỔ CHỨC - PHONG TRÀO                  -->
+            <!-- ========================================== -->
+            <div class="rounded-xl border border-rose-100
+                        dark:border-slate-700 overflow-hidden">
+
+                <button type="button"
+                        onclick="event.stopPropagation();
+                                 document.getElementById('dh-phongtrao-items').classList.toggle('hidden');
+                                 document.getElementById('dh-phongtrao-arrow').classList.toggle('rotate-90');"
+                        class="w-full flex items-center justify-between
+                               px-3 py-2.5
+                               hover:bg-rose-50
+                               dark:hover:bg-slate-800 transition text-left">
+
+                    <div class="flex items-center gap-2.5">
+
+                        <div class="w-8 h-8 rounded-lg
+                                    bg-rose-100 text-rose-600
+                                    flex items-center justify-center">
+                            <i class="bi bi-stars"></i>
+                        </div>
+
+                        <div>
+                            <div class="text-[11px] font-extrabold
+                                        text-[#123B67] dark:text-slate-100">
+                                TỔ CHỨC - PHONG TRÀO
+                            </div>
+
+                            <div class="text-[8.5px] text-slate-400 mt-0.5">
+                                Đoàn • Thi đua • Sự kiện
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i id="dh-phongtrao-arrow"
+                       class="bi bi-chevron-right text-[10px]
+                              text-slate-400 transition-transform">
+                    </i>
+
+                </button>
+
+                <div id="dh-phongtrao-items"
+                     class="hidden p-1.5 bg-white dark:bg-slate-900">
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-people"></i>
+                        <span>Đoàn Thanh niên</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-trophy"></i>
+                        <span>Thi đua - Khen thưởng</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-calendar-event"></i>
+                        <span>Sự kiện - Lễ hội</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================== -->
+            <!-- 04. KIỂM TRA - CHẤT LƯỢNG                  -->
+            <!-- ========================================== -->
+            <div class="rounded-xl border border-amber-100
+                        dark:border-slate-700 overflow-hidden">
+
+                <button type="button"
+                        onclick="event.stopPropagation();
+                                 document.getElementById('dh-chatluong-items').classList.toggle('hidden');
+                                 document.getElementById('dh-chatluong-arrow').classList.toggle('rotate-90');"
+                        class="w-full flex items-center justify-between
+                               px-3 py-2.5
+                               hover:bg-amber-50
+                               dark:hover:bg-slate-800 transition text-left">
+
+                    <div class="flex items-center gap-2.5">
+
+                        <div class="w-8 h-8 rounded-lg
+                                    bg-amber-100 text-amber-600
+                                    flex items-center justify-center">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+
+                        <div>
+                            <div class="text-[11px] font-extrabold
+                                        text-[#123B67] dark:text-slate-100">
+                                KIỂM TRA - CHẤT LƯỢNG
+                            </div>
+
+                            <div class="text-[8.5px] text-slate-400 mt-0.5">
+                                Kiểm tra • Thanh tra • Kiểm định
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i id="dh-chatluong-arrow"
+                       class="bi bi-chevron-right text-[10px]
+                              text-slate-400 transition-transform">
+                    </i>
+
+                </button>
+
+                <div id="dh-chatluong-items"
+                     class="hidden p-1.5 bg-white dark:bg-slate-900">
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-search"></i>
+                        <span>Kiểm tra nội bộ</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Thanh tra nhân dân</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-patch-check-fill"></i>
+                        <span>Kiểm định chất lượng - Tự đánh giá</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================== -->
+            <!-- 05. PHỐI HỢP - CỘNG ĐỒNG                  -->
+            <!-- ========================================== -->
+            <div class="rounded-xl border border-violet-100
+                        dark:border-slate-700 overflow-hidden">
+
+                <button type="button"
+                        onclick="event.stopPropagation();
+                                 document.getElementById('dh-congdong-items').classList.toggle('hidden');
+                                 document.getElementById('dh-congdong-arrow').classList.toggle('rotate-90');"
+                        class="w-full flex items-center justify-between
+                               px-3 py-2.5
+                               hover:bg-violet-50
+                               dark:hover:bg-slate-800 transition text-left">
+
+                    <div class="flex items-center gap-2.5">
+
+                        <div class="w-8 h-8 rounded-lg
+                                    bg-violet-100 text-violet-600
+                                    flex items-center justify-center">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+
+                        <div>
+                            <div class="text-[11px] font-extrabold
+                                        text-[#123B67] dark:text-slate-100">
+                                PHỐI HỢP - CỘNG ĐỒNG
+                            </div>
+
+                            <div class="text-[8.5px] text-slate-400 mt-0.5">
+                                Hợp tác • Cha mẹ học sinh
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i id="dh-congdong-arrow"
+                       class="bi bi-chevron-right text-[10px]
+                              text-slate-400 transition-transform">
+                    </i>
+
+                </button>
+
+                <div id="dh-congdong-items"
+                     class="hidden p-1.5 bg-white dark:bg-slate-900">
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-globe2"></i>
+                        <span>Quan hệ - Hợp tác</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-house-heart-fill"></i>
+                        <span>Ban đại diện CMHS</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================== -->
+            <!-- 06. QUẢN LÝ - HỖ TRỢ                      -->
+            <!-- ========================================== -->
+            <div class="rounded-xl border border-slate-200
+                        dark:border-slate-700 overflow-hidden">
+
+                <button type="button"
+                        onclick="event.stopPropagation();
+                                 document.getElementById('dh-hotro-items').classList.toggle('hidden');
+                                 document.getElementById('dh-hotro-arrow').classList.toggle('rotate-90');"
+                        class="w-full flex items-center justify-between
+                               px-3 py-2.5
+                               hover:bg-slate-50
+                               dark:hover:bg-slate-800 transition text-left">
+
+                    <div class="flex items-center gap-2.5">
+
+                        <div class="w-8 h-8 rounded-lg
+                                    bg-slate-100 text-slate-600
+                                    flex items-center justify-center">
+                            <i class="bi bi-sliders"></i>
+                        </div>
+
+                        <div>
+                            <div class="text-[11px] font-extrabold
+                                        text-[#123B67] dark:text-slate-100">
+                                QUẢN LÝ - HỖ TRỢ
+                            </div>
+
+                            <div class="text-[8.5px] text-slate-400 mt-0.5">
+                                Chuyển đổi số • Hành chính • Báo cáo
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i id="dh-hotro-arrow"
+                       class="bi bi-chevron-right text-[10px]
+                              text-slate-400 transition-transform">
+                    </i>
+
+                </button>
+
+                <div id="dh-hotro-items"
+                     class="hidden p-1.5 bg-white dark:bg-slate-900">
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-laptop"></i>
+                        <span>Chuyển đổi số</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-building"></i>
+                        <span>Hành chính</span>
+                    </button>
+
+                    <button type="button" class="dh-menu-item">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        <span>Báo cáo - Thống kê</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
+</div>
+<!-- ================= HẾT ĐIỀU HÀNH SỐ ================= -->
 
     <!-- TRỤ CỘT 4: QUẢN TRỊ -->
     <div class="relative">
