@@ -183,16 +183,24 @@ function validateMeeting() {
     return false;
   }
 
-  // 6. Thời gian điểm danh QR
-  if (
-    $('enableQr').checked &&
-    (!$('qrOpen').value || !$('qrClose').value)
-  ) {
+ // 6. Thời gian điểm danh QR
+if ($('enableQr').checked) {
+  const qrOpen = $('qrOpen').value;
+  const qrClose = $('qrClose').value;
+
+  if (!qrOpen || !qrClose) {
     alert('Vui lòng chọn thời gian mở và đóng điểm danh QR.');
     return false;
   }
 
-  return true;
+  if (qrClose <= qrOpen) {
+    alert('Giờ đóng điểm danh QR phải sau giờ mở điểm danh.');
+    $('qrClose').focus();
+    return false;
+  }
+}
+
+return true;
 }
 function saveDraft(e){e.preventDefault();localStorage.setItem('HVA_MEETING_DRAFT',JSON.stringify(collectMeeting()));alert('Đã lưu nháp cuộc họp trên thiết bị.');}
 function goToPublishing(){if(!validateMeeting())return;const d=collectMeeting();const current={source:'CuocHop',sourceModule:'CuocHop',type:'MEETING',title:d.title,summary:d.content,recipients:d.recipients.map(x=>x.username),recipientDetails:d.recipients,data:d,destinations:['ThongBao'],workflow:d.workflow};localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify(current));location.href='TTPhatHanh_v1_beta.html';}
