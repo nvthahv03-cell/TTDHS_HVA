@@ -212,201 +212,137 @@ export function renderHome() {
             </div>
 
 
-            <!-- ================================================= -->
-<!-- NỘI DUNG VIỆC CỦA TÔI                            -->
-<!-- ================================================= -->
-<div class="space-y-2">
+            <div class="grid grid-cols-2 gap-2">
 
-    <!-- ============================================= -->
-    <!-- TÁC VỤ ĐỘNG: CUỘC HỌP / ĐIỂM DANH            -->
-    <!-- Bình thường ẨN. Chỉ hiện khi có cuộc họp.     -->
-    <!-- ============================================= -->
-    <button type="button"
-        id="myMeetingTask"
-        onclick="openMyMeetingTask(event)"
-        class="hidden w-full px-3 py-2.5 rounded-xl
-               bg-violet-50 hover:bg-violet-100
-               border border-violet-200
-               transition text-left">
+                <!-- VIỆC ĐƯỢC GIAO -->
+                <button type="button"
+                    onclick="openMyTasks('ASSIGNED', event)"
+                    class="relative p-3 rounded-xl
+                           bg-blue-50 hover:bg-blue-100
+                           transition text-left">
 
-        <div class="flex items-center gap-2.5">
-
-            <!-- ICON -->
-            <div class="w-9 h-9 rounded-xl
-                        bg-violet-600 text-white
-                        flex items-center justify-center shrink-0">
-
-                <i id="myMeetingIcon"
-                   class="bi bi-qr-code-scan text-lg"></i>
-            </div>
-
-            <!-- NỘI DUNG -->
-            <div class="flex-1 min-w-0">
-
-                <div class="flex items-center gap-1.5">
-
-                    <span class="text-[10px] font-extrabold
-                                 text-violet-800">
-                        ĐIỂM DANH
+                    <span id="countAssigned"
+                        class="absolute top-2 right-2
+                               min-w-[19px] h-[19px] px-1
+                               rounded-full bg-blue-600 text-white
+                               text-[9px] font-bold
+                               flex items-center justify-center">
+                        0
                     </span>
 
-                    <span id="myMeetingStatus"
-                          class="px-1.5 py-0.5 rounded-full
-                                 bg-red-500 text-white
-                                 text-[8px] font-bold">
-                        ĐANG MỞ
+                    <i class="bi bi-inbox-fill
+                              text-blue-600 text-2xl"></i>
+
+                    <div class="text-[11px] font-bold
+                                text-blue-900 mt-2">
+                        Việc được giao
+                    </div>
+
+                    <div class="text-[9px] text-slate-500">
+                        Chưa tiếp nhận
+                    </div>
+
+                </button>
+
+
+                <!-- ĐANG THỰC HIỆN -->
+                <button type="button"
+                    onclick="openMyTasks('DOING', event)"
+                    class="relative p-3 rounded-xl
+                           bg-amber-50 hover:bg-amber-100
+                           transition text-left">
+
+                    <span id="countDoing"
+                        class="absolute top-2 right-2
+                               min-w-[19px] h-[19px] px-1
+                               rounded-full bg-amber-500 text-white
+                               text-[9px] font-bold
+                               flex items-center justify-center">
+                        0
                     </span>
 
-                </div>
+                    <i class="bi bi-hourglass-split
+                              text-amber-500 text-2xl"></i>
 
-                <div id="myMeetingTitle"
-                     class="text-[10px] font-bold
-                            text-slate-800 truncate mt-0.5">
-                    Họp Hội đồng sư phạm
-                </div>
+                    <div class="text-[11px] font-bold
+                                text-slate-800 mt-2">
+                        Đang thực hiện
+                    </div>
 
-                <div id="myMeetingTime"
-                     class="text-[9px] text-slate-500 mt-0.5">
-                    Điểm danh đến 14:10
-                </div>
+                    <div class="text-[9px] text-slate-500">
+                        Đã tiếp nhận
+                    </div>
 
-            </div>
+                </button>
 
-            <!-- ACTION -->
-            <div class="shrink-0 flex items-center gap-1
-                        text-[10px] font-extrabold
-                        text-violet-700">
 
-                Quét QR
+                <!-- QUÁ HẠN -->
+                <button type="button"
+                    onclick="openMyTasks('OVERDUE', event)"
+                    class="relative p-3 rounded-xl
+                           bg-red-50 hover:bg-red-100
+                           transition text-left">
 
-                <i class="bi bi-chevron-right text-[10px]"></i>
+                    <span id="countOverdue"
+                        class="absolute top-2 right-2
+                               min-w-[19px] h-[19px] px-1
+                               rounded-full bg-red-600 text-white
+                               text-[9px] font-bold
+                               flex items-center justify-center">
+                        0
+                    </span>
+
+                    <i class="bi bi-exclamation-triangle-fill
+                              text-red-600 text-2xl"></i>
+
+                    <div class="text-[11px] font-bold
+                                text-red-700 mt-2">
+                        Quá hạn
+                    </div>
+
+                    <div class="text-[9px] text-red-500">
+                        Chưa hoàn thành
+                    </div>
+
+                </button>
+
+
+                <!-- ĐÃ HOÀN THÀNH -->
+                <button type="button"
+                    onclick="openMyTasks('COMPLETED', event)"
+                    class="relative p-3 rounded-xl
+                           bg-emerald-50 hover:bg-emerald-100
+                           transition text-left">
+
+                    <span id="countCompleted"
+                        class="absolute top-2 right-2
+                               min-w-[19px] h-[19px] px-1
+                               rounded-full bg-emerald-600 text-white
+                               text-[9px] font-bold
+                               flex items-center justify-center">
+                        0
+                    </span>
+
+                    <i class="bi bi-check-circle-fill
+                              text-emerald-600 text-2xl"></i>
+
+                    <div class="text-[11px] font-bold
+                                text-emerald-700 mt-2">
+                        Đã hoàn thành
+                    </div>
+
+                    <div class="text-[9px] text-slate-500">
+                        Đã xác nhận
+                    </div>
+
+                </button>
 
             </div>
 
         </div>
 
-    </button>
-
-
-    <!-- ============================================= -->
-    <!-- 4 NHÓM CÔNG VIỆC - THU GỌN 1 HÀNG            -->
-    <!-- ============================================= -->
-    <div class="grid grid-cols-4 gap-1.5">
-
-        <!-- VIỆC ĐƯỢC GIAO -->
-        <button type="button"
-            onclick="openMyTasks('ASSIGNED', event)"
-            class="relative min-h-[68px]
-                   rounded-xl bg-blue-50
-                   hover:bg-blue-100
-                   px-1 py-2 transition text-center">
-
-            <span id="countAssigned"
-                class="absolute top-1.5 right-1.5
-                       min-w-[17px] h-[17px] px-1
-                       rounded-full bg-blue-600 text-white
-                       text-[8px] font-bold
-                       flex items-center justify-center">
-                0
-            </span>
-
-            <i class="bi bi-inbox-fill
-                      text-blue-600 text-lg"></i>
-
-            <div class="text-[9px] leading-[11px]
-                        font-bold text-blue-900 mt-1">
-                Việc được<br>giao
-            </div>
-
-        </button>
-
-
-        <!-- ĐANG THỰC HIỆN -->
-        <button type="button"
-            onclick="openMyTasks('DOING', event)"
-            class="relative min-h-[68px]
-                   rounded-xl bg-amber-50
-                   hover:bg-amber-100
-                   px-1 py-2 transition text-center">
-
-            <span id="countDoing"
-                class="absolute top-1.5 right-1.5
-                       min-w-[17px] h-[17px] px-1
-                       rounded-full bg-amber-500 text-white
-                       text-[8px] font-bold
-                       flex items-center justify-center">
-                0
-            </span>
-
-            <i class="bi bi-hourglass-split
-                      text-amber-500 text-lg"></i>
-
-            <div class="text-[9px] leading-[11px]
-                        font-bold text-slate-800 mt-1">
-                Đang<br>thực hiện
-            </div>
-
-        </button>
-
-
-        <!-- QUÁ HẠN -->
-        <button type="button"
-            onclick="openMyTasks('OVERDUE', event)"
-            class="relative min-h-[68px]
-                   rounded-xl bg-red-50
-                   hover:bg-red-100
-                   px-1 py-2 transition text-center">
-
-            <span id="countOverdue"
-                class="absolute top-1.5 right-1.5
-                       min-w-[17px] h-[17px] px-1
-                       rounded-full bg-red-600 text-white
-                       text-[8px] font-bold
-                       flex items-center justify-center">
-                0
-            </span>
-
-            <i class="bi bi-exclamation-triangle-fill
-                      text-red-600 text-lg"></i>
-
-            <div class="text-[9px] leading-[11px]
-                        font-bold text-red-700 mt-1">
-                Quá<br>hạn
-            </div>
-
-        </button>
-
-
-        <!-- HOÀN THÀNH -->
-        <button type="button"
-            onclick="openMyTasks('COMPLETED', event)"
-            class="relative min-h-[68px]
-                   rounded-xl bg-emerald-50
-                   hover:bg-emerald-100
-                   px-1 py-2 transition text-center">
-
-            <span id="countCompleted"
-                class="absolute top-1.5 right-1.5
-                       min-w-[17px] h-[17px] px-1
-                       rounded-full bg-emerald-600 text-white
-                       text-[8px] font-bold
-                       flex items-center justify-center">
-                0
-            </span>
-
-            <i class="bi bi-check-circle-fill
-                      text-emerald-600 text-lg"></i>
-
-            <div class="text-[9px] leading-[11px]
-                        font-bold text-emerald-700 mt-1">
-                Hoàn<br>thành
-            </div>
-
-        </button>
-
     </div>
 
-</div>
 
     <!-- ================= KẾT NỐI SỐ ================= -->
     <div class="relative">
@@ -2743,81 +2679,7 @@ function openKhoVanBan() {
 // =====================================================
 // VIỆC CỦA TÔI - KẾT NỐI BACKEND
 // =====================================================
-// =====================================================
-// VIỆC CỦA TÔI - KẾT NỐI BACKEND
-// =====================================================
 
-
-// =====================================================
-// TÁC VỤ ĐỘNG: CUỘC HỌP / ĐIỂM DANH
-// =====================================================
-
-let HVA_ACTIVE_MEETING = null;
-
-function updateMyMeetingTask(meeting = null) {
-
-    HVA_ACTIVE_MEETING = meeting;
-
-    const box = document.getElementById('myMeetingTask');
-    if (!box) return;
-
-    if (!meeting) {
-        box.classList.add('hidden');
-        return;
-    }
-
-    const title = document.getElementById('myMeetingTitle');
-    const time = document.getElementById('myMeetingTime');
-
-    if (title) {
-        title.textContent = meeting.title || 'Cuộc họp';
-    }
-
-    if (time) {
-        time.textContent =
-            meeting.timeLabel || 'Đang mở điểm danh';
-    }
-
-    box.classList.remove('hidden');
-}
-
-
-window.openMyMeetingTask = function(event) {
-
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-
-    if (!HVA_ACTIVE_MEETING) return;
-
-    alert(
-        'Điểm danh\n\n' +
-        HVA_ACTIVE_MEETING.title +
-        '\n' +
-        HVA_ACTIVE_MEETING.timeLabel
-    );
-};
-
-setTimeout(() => {
-
-    updateMyMeetingTask({
-        meetingId: 'TEST-HOP-001',
-        title: 'Họp Hội đồng sư phạm',
-        timeLabel: 'Đang mở điểm danh • đến 16:30'
-    });
-
-}, 800);
-
-
-// =====================================================
-// BACKEND VIỆC CỦA TÔI
-// =====================================================
-
-const MY_TASK_API_URL =
-    'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
-
-let HVA_MY_TASKS = [];
 const MY_TASK_API_URL =
     'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 
