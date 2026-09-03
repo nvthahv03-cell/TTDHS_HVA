@@ -1261,6 +1261,9 @@
     </div>
 
     <!-- ================= SCRIPTS HỆ THỐNG ================= -->
+    <!-- FIREBASE CLOUD MESSAGING -->
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
     <script src="services/api.js"></script>
     <script type="module" src="assets/js/core/app.js"></script>
 
@@ -1553,6 +1556,274 @@ const HVA_NOTIFICATION_API =
 
 let HVA_NOTIFICATIONS = [];
 
+
+// ============================================================
+// HVA PUSH NOTIFICATION - FIREBASE CLOUD MESSAGING
+// ============================================================
+
+const HVA_FIREBASE_CONFIG = {
+    apiKey: "AIzaSyBDl-ZYwKJ7f0pvLNr7RUfbM0AS5VD3p60",
+    authDomain: "ttdhs-hva.firebaseapp.com",
+    projectId: "ttdhs-hva",
+    storageBucket: "ttdhs-hva.firebasestorage.app",
+    messagingSenderId: "1057528079472",
+    appId: "1:1057528079472:web:1e1b5e080f50e7ac3780b5"
+};
+
+const HVA_VAPID_KEY =
+    "BO5WOCxgmIqWF7lN5qeJU2XLWD-VH83YhUzBbjzJEmhrtkXb9C2n7eSO2RBI03KrVDO56Rdf7N1eVa9U1ZHgQJM";
+
+let HVA_MESSAGING = null;
+
+
+// ------------------------------------------------------------
+// KHỞI TẠO FIREBASE
+// ------------------------------------------------------------
+function initHVAFirebase() {
+
+    try {
+
+        if (!window.firebase) {
+            console.warn('[HVA PUSH] Firebase SDK chưa tải.');
+            return false;
+        }
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(HVA_FIREBASE_CONFIG);
+        }
+
+        HVA_MESSAGING = firebase.messaging();
+
+        console.log('[HVA PUSH] Firebase Messaging đã khởi tạo.');
+
+        return true;
+
+    } catch (error) {
+
+        console.error('[HVA PUSH] Lỗi khởi tạo Firebase:', error);
+        return false;
+    }
+}
+
+
+// ------------------------------------------------------------
+// ĐĂNG KÝ SERVICE WORKER
+// ------------------------------------------------------------
+async function registerHVAServiceWorker() {
+
+    if (!('serviceWorker' in navigator)) {
+        throw new Error('Trình duyệt không hỗ trợ Service Worker.');
+    }
+
+    const registration =
+        await navigator.serviceWorker.register('./sw.js');
+
+    await navigator.serviceWorker.ready;
+
+    console.log(
+        '[HVA PUSH] Service Worker sẵn sàng:',
+        registration.scope
+    );
+
+    return registration;
+}
+
+
+// ------------------------------------------------------------
+// XIN QUYỀN + LẤY FCM TOKEN
+// Chỉ gọi sau thao tác trực tiếp của người dùng.
+// ------------------------------------------------------------
+async function enableHVAPushNotification() {
+
+    try {
+
+        if (!('Notification' in window)) {
+            AppMain?.showToast?.(
+                'Thiết bị này chưa hỗ trợ thông báo.'
+            );
+            return null;
+        }
+
+        if (!initHVAFirebase()) {
+            return null;
+        }
+
+        const registration =
+            await registerHVAServiceWorker();
+
+        let permission = Notification.permission;
+
+        if (permission !== 'granted') {
+            permission = await Notification.requestPermission();
+        }
+
+        if (permission !== 'granted') {
+
+            AppMain?.showToast?.(
+                'Thầy/Cô chưa cho phép nhận thông báo.'
+            );
+
+            return null;
+        }
+
+        const token =
+            await HVA_MESSAGING.getToken({
+                vapidKey: HVA_VAPID_KEY,
+                serviceWorkerRegistration: registration
+            });
+
+        if (!token) {
+
+            console.warn(
+                '[HVA PUSH] Firebase chưa cấp token.'
+            );
+
+            return null;
+        }
+
+        console.log(
+            '[HVA PUSH] Đã lấy FCM token:',
+            token
+        );
+
+        localStorage.setItem(
+            'HVA_FCM_TOKEN',
+            token
+        );
+
+        return token;
+
+    } catch (error) {
+
+        console.error(
+            '[HVA PUSH] Không thể bật Push:',
+            error
+        );
+
+        AppMain?.showToast?.(
+            'Chưa thể kích hoạt thông báo trên thiết bị này.'
+        );
+
+        return null;
+    }
+}
+
+window.enableHVAPushNotification =
+    enableHVAPushNotification;
+
+
+// ------------------------------------------------------------
+// KIỂM TRA PUSH KHI VÀO APP
+// KHÔNG tự bật hộp xin quyền.
+// ------------------------------------------------------------
+async function initHVAPush() {
+
+    try {
+
+        if (
+            !('serviceWorker' in navigator) ||
+            !('Notification' in window)
+        ) {
+            return;
+        }
+
+        await registerHVAServiceWorker();
+
+        if (Notification.permission !== 'granted') {
+            console.log(
+                '[HVA PUSH] Đang chờ người dùng cấp quyền.'
+            );
+            return;
+        }
+
+        if (!initHVAFirebase()) {
+            return;
+        }
+
+        const registration =
+            await navigator.serviceWorker.ready;
+
+        const token =
+            await HVA_MESSAGING.getToken({
+                vapidKey: HVA_VAPID_KEY,
+                serviceWorkerRegistration: registration
+            });
+
+        if (token) {
+
+            localStorage.setItem(
+                'HVA_FCM_TOKEN',
+                token
+            );
+
+            console.log(
+                '[HVA PUSH] Thiết bị đã đăng ký.'
+            );
+        }
+
+    } catch (error) {
+
+        console.warn(
+            '[HVA PUSH] Khởi tạo nền chưa hoàn tất:',
+            error
+        );
+    }
+}
+
+
+// ------------------------------------------------------------
+// FIREBASE MESSAGE KHI APP ĐANG MỞ
+// Không tạo notification thứ hai.
+// Notification Center hiện tại vẫn là nguồn hiển thị trong app.
+// ------------------------------------------------------------
+function listenHVAForegroundMessages() {
+
+    if (!HVA_MESSAGING) return;
+
+    HVA_MESSAGING.onMessage(async (payload) => {
+
+        console.log(
+            '[HVA PUSH] Foreground message:',
+            payload
+        );
+
+        try {
+
+            if (typeof loadHVANotifications === 'function') {
+                await loadHVANotifications();
+            }
+
+            AppMain?.showToast?.(
+                payload?.notification?.title ||
+                payload?.data?.title ||
+                'Thầy/Cô có thông báo mới.'
+            );
+
+        } catch (error) {
+
+            console.warn(
+                '[HVA PUSH] Không cập nhật được Notification Center:',
+                error
+            );
+        }
+    });
+}
+
+
+// ------------------------------------------------------------
+// KHỞI ĐỘNG
+// ------------------------------------------------------------
+setTimeout(async () => {
+
+    await initHVAPush();
+
+    if (Notification.permission === 'granted') {
+
+        initHVAFirebase();
+        listenHVAForegroundMessages();
+    }
+
+}, 1200);
 
 // ------------------------------------------------------------
 // USER HIỆN TẠI
