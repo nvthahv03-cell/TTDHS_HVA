@@ -301,14 +301,29 @@
 
         </a>
 
-        <!-- Việc của tôi -->
-        <a href="#" data-nav="mytask"
-           class="nav-item flex flex-col items-center justify-center flex-1 text-slate-500 hover:text-slate-900 py-1 transition">
+        <!-- Thông báo -->
+<a href="#"
+   id="bottom-notification"
+   data-nav="notification"
+   class="nav-item relative flex flex-col items-center justify-center flex-1 text-slate-500 hover:text-slate-900 py-1 transition">
 
-            <i class="bi bi-list-task text-lg"></i>
-            <span class="text-[10px] font-semibold mt-1">Việc của tôi</span>
+    <div class="relative">
+        <i class="bi bi-bell-fill text-lg"></i>
 
-        </a>
+        <span id="bottom-notification-badge"
+              class="hidden absolute -top-2 -right-3
+                     min-w-[17px] h-[17px] px-1
+                     rounded-full bg-red-500
+                     text-white text-[9px] font-extrabold
+                     items-center justify-center
+                     shadow-sm">
+            0
+        </span>
+    </div>
+
+    <span class="text-[10px] font-semibold mt-1">Thông báo</span>
+
+</a>
 
         <!-- Tin tức -->
         <!-- Tin tức -->
