@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi" class="bg-slate-50">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TTĐHS HVA - Cuộc họp</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+body{font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+</style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800">
+<header class="sticky top-0 z-40 bg-[#0F4C81] shadow-lg">
+  <div class="max-w-4xl mx-auto px-3 sm:px-4 py-3 flex items-center gap-3">
+    <button onclick="location.href='main.html'" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 text-white"><i class="bi bi-arrow-left"></i></button>
+    <div class="min-w-0 flex-1">
+      <div class="text-white/75 text-[9px] font-bold uppercase tracking-wider">SỞ GD&amp;ĐT TP ĐÀ NẴNG - THPT HÒA VANG</div>
+      <div class="text-white text-base sm:text-lg font-black">QUẢN LÝ CUỘC HỌP</div>
+    </div>
+    <span class="hidden sm:inline-flex text-[10px] font-bold text-white/90 bg-white/10 border border-white/20 rounded-full px-3 py-1.5">HVA Meeting</span>
+  </div>
+</header>
+
+<main class="max-w-4xl mx-auto p-3 sm:p-4 space-y-4 pb-28">
+  <section class="rounded-2xl bg-gradient-to-r from-[#0F4C81] via-[#155F9B] to-[#1788B8] text-white shadow-md overflow-hidden">
+    <div class="px-4 py-4 flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center"><i class="bi bi-people-fill text-xl"></i></div>
+      <div><div class="text-[15px] font-extrabold">TẠO CUỘC HỌP</div><div class="text-[10px] text-blue-100 mt-0.5">Thông tin • Thành phần • Xác nhận • Điểm danh QR</div></div>
+    </div>
+  </section>
+
+  <form id="meetingForm" class="space-y-4" onsubmit="saveDraft(event)">
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-3">
+      <div class="section-title"><i class="bi bi-ui-checks-grid"></i><span>Thông tin cuộc họp</span></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">Loại cuộc họp <b>*</b></label>
+          <select id="meetingType" required class="field" onchange="handleMeetingType()">
+            <option value="Chi bộ định kỳ">1. Họp Chi bộ định kỳ</option>
+            <option value="Chi bộ khác">2. Họp Chi bộ khác</option>
+            <option value="Ban Giám hiệu">3. Họp Ban Giám hiệu</option>
+            <option value="Liên tịch">4. Họp Liên tịch</option>
+            <option value="Hội đồng">5. Họp Hội đồng</option>
+            <option value="Tổ chuyên môn">6. Họp Tổ Chuyên môn</option>
+            <option value="Xét thi đua">7. Họp xét thi đua</option>
+            <option value="Khác">8. Họp khác</option>
+          </select>
+        </div>
+        <div id="periodWrap" class="hidden">
+          <label class="lbl">Kỳ xét thi đua</label>
+          <select id="meetingPeriod" class="field"><option>Tháng</option><option>Quý</option><option>Năm</option></select>
+        </div>
+      </div>
+      <div id="customTypeWrap" class="hidden"><label class="lbl">Tên loại cuộc họp <b>*</b></label><input id="customMeetingType" class="field" placeholder="Nhập tên cuộc họp..."></div>
+      <div><label class="lbl">Tiêu đề cuộc họp <b>*</b></label><input id="meetingTitle" required class="field" placeholder="Ví dụ: Họp Hội đồng tháng 9/2026"></div>
+      <div><label class="lbl">Nội dung / Chương trình</label><textarea id="meetingContent" rows="4" class="field h-auto py-3 resize-y" placeholder="Nội dung, chương trình, các vấn đề cần triển khai..."></textarea></div>
+      <div><label class="lbl">Yêu cầu chuẩn bị / Ghi chú</label><textarea id="meetingNote" rows="2" class="field h-auto py-3 resize-y" placeholder="Ví dụ: Mang laptop; chuẩn bị báo cáo..."></textarea></div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-3">
+      <div class="section-title"><i class="bi bi-clock"></i><span>Thời gian - Địa điểm</span></div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div><label class="lbl">Ngày họp <b>*</b></label><input type="date" id="meetingDate" required class="field"></div>
+        <div><label class="lbl">Bắt đầu <b>*</b></label><input type="time" id="meetingStart" required class="field"></div>
+        <div><label class="lbl">Kết thúc</label><input type="time" id="meetingEnd" class="field"></div>
+      </div>
+      <div><label class="lbl">Địa điểm <b>*</b></label>
+        <select id="meetingPlace" required class="field" onchange="toggleOtherPlace()">
+          <option value="">— Chọn địa điểm —</option><option>Văn phòng</option><option>Phòng Hiệu trưởng</option><option>Phòng Hội đồng</option><option>Phòng Truyền thống</option><option value="Khác">Phòng khác...</option>
+        </select>
+      </div>
+      <div id="otherPlaceWrap" class="hidden"><label class="lbl">Địa điểm khác <b>*</b></label><input id="otherPlace" class="field" placeholder="Nhập địa điểm..."></div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-3">
+      <div class="section-title"><i class="bi bi-person-badge"></i><span>Điều hành cuộc họp</span></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div><label class="lbl">Chủ trì</label><input id="chairperson" class="field" placeholder="Người chủ trì..."></div>
+        <div><label class="lbl">Thư ký</label><input id="secretary" class="field" placeholder="Thư ký cuộc họp..."></div>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between gap-3">
+        <div class="section-title !mb-0"><i class="bi bi-people-fill"></i><span>Thành phần tham dự</span></div>
+        <div class="flex gap-1.5"><span id="meetingStatTo" class="badge bg-indigo-50 text-indigo-700">0 tổ</span><span id="meetingStatNguoi" class="badge bg-blue-50 text-[#0F4C81]">0 người</span></div>
+      </div>
+      <div class="p-3 sm:p-4 space-y-3">
+        <div class="relative"><i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i><input id="meetingSearchNhanSu" oninput="filterMeetingNhanSu(this.value)" class="field pl-9" placeholder="Tìm tổ hoặc giáo viên..."></div>
+        <div id="meetingPersonnelContainer" class="space-y-2 max-h-[330px] overflow-y-auto pr-1"><div class="py-6 text-center text-xs text-slate-400">Đang tải danh sách nhân sự...</div></div>
+        <div class="border-t pt-3"><div class="flex justify-between mb-2"><span class="text-[10px] font-extrabold text-[#0F4C81] uppercase">Đã chọn</span><button type="button" onclick="removeAllMeetingSelections()" class="text-[9px] font-bold text-red-500">Xóa toàn bộ</button></div><div id="meetingSelectedChips" class="flex flex-wrap gap-1.5"><span class="text-[10px] text-slate-400 italic">Chưa chọn người tham dự...</span></div></div>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-3">
+      <div class="section-title"><i class="bi bi-paperclip"></i><span>Tài liệu cuộc họp</span></div>
+      <input id="meetingDocumentUrl" type="url" class="field" placeholder="Dán liên kết tài liệu (nếu có)...">
+      <div class="text-[9px] text-slate-400">Giai đoạn sau có thể nối trực tiếp với Tài nguyên số.</div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-3">
+      <div class="section-title"><i class="bi bi-check2-square"></i><span>Xác nhận - Điểm danh</span></div>
+      <label class="toggle-row"><span><b>Yêu cầu xác nhận tham dự</b><small>GV phản hồi Tham dự / Xin vắng và lý do</small></span><input id="requireConfirm" type="checkbox" class="w-5 h-5 accent-[#0F4C81]"></label>
+      <label class="toggle-row"><span><b>Điểm danh bằng QR</b><small>Chỉ người thuộc thành phần cuộc họp được ghi nhận</small></span><input id="enableQr" type="checkbox" onchange="toggleQrTimes()" class="w-5 h-5 accent-[#0F4C81]"></label>
+      <div id="qrTimes" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 bg-violet-50 border border-violet-100 rounded-xl p-3">
+        <div><label class="lbl">Mở điểm danh</label><input type="time" id="qrOpen" class="field"></div><div><label class="lbl">Đóng điểm danh</label><input type="time" id="qrClose" class="field"></div>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3 sm:p-4">
+      <div class="grid grid-cols-3 gap-2 sm:gap-3">
+        <button type="button" onclick="resetMeetingForm()" class="action bg-slate-100 text-slate-600"><i class="bi bi-x-circle"></i> HỦY</button>
+        <button type="button" onclick="previewMeeting()" class="action bg-white border border-[#0F4C81] text-[#0F4C81]"><i class="bi bi-eye-fill"></i> XEM</button>
+        <button type="button" onclick="goToPublishing()" class="action bg-emerald-600 text-white"><i class="bi bi-send-fill"></i> TT PHÁT HÀNH</button>
+      </div>
+      <button type="submit" class="mt-2 w-full text-[10px] font-bold text-slate-500 hover:text-[#0F4C81] py-2"><i class="bi bi-floppy mr-1"></i>Lưu nháp trên thiết bị</button>
+    </section>
+  </form>
+</main>
+
+<div id="previewModal" class="hidden fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm p-3 items-center justify-center">
+ <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+  <div class="sticky top-0 bg-white border-b px-4 py-3 flex justify-between items-center"><b class="text-[#0F4C81] text-sm">XEM TRƯỚC CUỘC HỌP</b><button onclick="closePreview()" class="w-8 h-8 rounded-lg bg-slate-100"><i class="bi bi-x-lg"></i></button></div>
+  <div id="previewBody" class="p-5 text-sm"></div>
+ </div>
+</div>
+
+<script>
+const WEB_APP_URL='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+let meetingAllToData=[]; const meetingSelectedUsernames=new Set();
+const $=id=>document.getElementById(id);
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function handleMeetingType(){const t=$('meetingType').value;$('customTypeWrap').classList.toggle('hidden',!['Chi bộ khác','Khác'].includes(t));$('periodWrap').classList.toggle('hidden',t!=='Xét thi đua'); if(!$('meetingTitle').value.trim()) $('meetingTitle').value=t==='Xét thi đua'?'Họp xét thi đua '+$('meetingPeriod').value:'Họp '+t;}
+function toggleOtherPlace(){$('otherPlaceWrap').classList.toggle('hidden',$('meetingPlace').value!=='Khác');}
+function toggleQrTimes(){$('qrTimes').classList.toggle('hidden',!$('enableQr').checked);}
+function selectedPeople(){const out=[];meetingAllToData.forEach(g=>g.members.forEach(m=>{if(meetingSelectedUsernames.has(m.username))out.push(m)}));return out;}
+function collectMeeting(){const type=$('meetingType').value;return {sourceModule:'CuocHop',objectType:'MEETING',meetingType:type,customMeetingType:$('customMeetingType').value.trim(),period:$('meetingPeriod').value,title:$('meetingTitle').value.trim(),content:$('meetingContent').value.trim(),note:$('meetingNote').value.trim(),date:$('meetingDate').value,startTime:$('meetingStart').value,endTime:$('meetingEnd').value,place:$('meetingPlace').value==='Khác'?$('otherPlace').value.trim():$('meetingPlace').value,chairperson:$('chairperson').value.trim(),secretary:$('secretary').value.trim(),recipients:selectedPeople(),documentUrl:$('meetingDocumentUrl').value.trim(),requireConfirmation:$('requireConfirm').checked,attendance:{enabled:$('enableQr').checked,method:'QR',openTime:$('qrOpen').value,closeTime:$('qrClose').value},workflow:['CONFIRM_READ',...($('requireConfirm').checked?['CONFIRM_ATTENDANCE']:[]),...($('enableQr').checked?['QR_ATTENDANCE']:[])],createdAt:new Date().toISOString()};}
+function validateMeeting(){if(!$('meetingForm').reportValidity())return false;if(meetingSelectedUsernames.size===0){alert('Vui lòng chọn thành phần tham dự.');return false;}if($('meetingPlace').value==='Khác'&&!$('otherPlace').value.trim()){alert('Vui lòng nhập địa điểm khác.');return false;}if(['Chi bộ khác','Khác'].includes($('meetingType').value)&&!$('customMeetingType').value.trim()){alert('Vui lòng nhập tên loại cuộc họp.');return false;}if($('enableQr').checked&&(!$('qrOpen').value||!$('qrClose').value)){alert('Vui lòng chọn thời gian mở và đóng điểm danh QR.');return false;}return true;}
+function saveDraft(e){e.preventDefault();localStorage.setItem('HVA_MEETING_DRAFT',JSON.stringify(collectMeeting()));alert('Đã lưu nháp cuộc họp trên thiết bị.');}
+function goToPublishing(){if(!validateMeeting())return;const d=collectMeeting();const current={source:'CuocHop',sourceModule:'CuocHop',type:'MEETING',title:d.title,summary:d.content,recipients:d.recipients.map(x=>x.username),recipientDetails:d.recipients,data:d,destinations:['ThongBao'],workflow:d.workflow};localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify(current));location.href='TTPhatHanh_v1_beta.html';}
+function previewMeeting(){if(!validateMeeting())return;const d=collectMeeting();$('previewBody').innerHTML=`<div class="text-center mb-5"><div class="font-extrabold text-[#0F4C81] text-lg">${esc(d.title)}</div><div class="text-xs text-slate-500 mt-1">${esc(d.meetingType)}</div></div><div class="space-y-2 text-xs"><p><b>Thời gian:</b> ${esc(d.date)} • ${esc(d.startTime)}${d.endTime?' - '+esc(d.endTime):''}</p><p><b>Địa điểm:</b> ${esc(d.place)}</p><p><b>Chủ trì:</b> ${esc(d.chairperson||'—')}</p><p><b>Thư ký:</b> ${esc(d.secretary||'—')}</p><p><b>Thành phần:</b> ${d.recipients.length} người</p><p><b>Nội dung:</b><br>${esc(d.content||'—')}</p><p><b>Xác nhận tham dự:</b> ${d.requireConfirmation?'Có':'Không'}</p><p><b>Điểm danh QR:</b> ${d.attendance.enabled?'Có • '+esc(d.attendance.openTime)+' - '+esc(d.attendance.closeTime):'Không'}</p></div>`;$('previewModal').classList.remove('hidden');$('previewModal').classList.add('flex');}
+function closePreview(){$('previewModal').classList.add('hidden');$('previewModal').classList.remove('flex');}
+function resetMeetingForm(){if(!confirm('Xóa dữ liệu đang nhập?'))return;$('meetingForm').reset();meetingSelectedUsernames.clear();handleMeetingType();toggleOtherPlace();toggleQrTimes();renderMeetingPersonnel();}
+async function loadMeetingPersonnel(){const c=$('meetingPersonnelContainer');try{const r=await fetch(`${WEB_APP_URL}?action=getDanhSachTo`);if(!r.ok)throw Error('Không tải được danh sách tổ');const list=await r.json();meetingAllToData=await Promise.all(list.map(async x=>{const tenTo=x.tenTo||x;try{const rr=await fetch(`${WEB_APP_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`);const ms=await rr.json();return{tenTo,members:ms.map(m=>({username:m.username||m.maGV||m.hoTen,hoTen:m.hoTen||m.fullName||'',chucVu:m.chucVu||m.vaiTro||'Giáo viên',tenTo}))}}catch(e){return{tenTo,members:[]}}}));renderMeetingPersonnel();}catch(e){c.innerHTML=`<div class="p-5 text-center text-xs text-red-500 font-bold">Không tải được danh sách nhân sự<br><button onclick="loadMeetingPersonnel()" class="mt-2 text-[#0F4C81]">Thử lại</button></div>`;}}
+function renderMeetingPersonnel(keyword=''){const c=$('meetingPersonnelContainer');c.innerHTML='';const kw=String(keyword).trim().toLowerCase();meetingAllToData.forEach((g,i)=>{const matchG=g.tenTo.toLowerCase().includes(kw);const mm=g.members.filter(m=>[m.hoTen,m.username,m.chucVu].some(v=>String(v).toLowerCase().includes(kw)));if(kw&&!matchG&&!mm.length)return;const show=kw&&!matchG?mm:g.members;const all=g.members.length&&g.members.every(m=>meetingSelectedUsernames.has(m.username));const el=document.createElement('div');el.className='border border-slate-200 rounded-xl overflow-hidden';el.innerHTML=`<div class="px-3 py-2.5 bg-slate-50 flex items-center justify-between gap-2"><button type="button" onclick="$('acc_${i}').classList.toggle('hidden')" class="flex-1 text-left text-[11px] font-bold text-[#0F4C81]"><i class="bi bi-folder2-open text-blue-600 mr-2"></i>${esc(g.tenTo)} <span class="text-slate-400">(${g.members.length})</span></button><label class="text-[9px] font-semibold bg-white border rounded-lg px-2 py-1"><input type="checkbox" ${all?'checked':''} onchange="toggleMeetingWholeGroup('${esc(g.tenTo)}',this.checked)"> Chọn cả tổ</label></div><div id="acc_${i}" class="${kw?'':'hidden'} p-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 border-t bg-blue-50/20">${show.map(m=>`<label class="flex items-center gap-2 p-2 rounded-lg border ${meetingSelectedUsernames.has(m.username)?'border-blue-300 bg-blue-50':'border-slate-200 bg-white'}"><input type="checkbox" ${meetingSelectedUsernames.has(m.username)?'checked':''} onchange="toggleMeetingUser('${esc(m.username)}',this.checked)"><div class="min-w-0"><div class="text-[10px] font-bold truncate">${esc(m.hoTen)}</div><div class="text-[9px] text-slate-400 truncate">${esc(m.chucVu)}</div></div></label>`).join('')}</div>`;c.appendChild(el);});if(!c.children.length)c.innerHTML='<div class="p-5 text-center text-xs text-slate-400">Không tìm thấy nhân sự phù hợp.</div>';updateMeetingSelectionUI();}
+function toggleMeetingWholeGroup(name,on){const g=meetingAllToData.find(x=>x.tenTo===name);if(!g)return;g.members.forEach(m=>on?meetingSelectedUsernames.add(m.username):meetingSelectedUsernames.delete(m.username));renderMeetingPersonnel($('meetingSearchNhanSu').value);}
+function toggleMeetingUser(u,on){on?meetingSelectedUsernames.add(u):meetingSelectedUsernames.delete(u);renderMeetingPersonnel($('meetingSearchNhanSu').value);}
+function filterMeetingNhanSu(v){renderMeetingPersonnel(v)}
+function removeAllMeetingSelections(){meetingSelectedUsernames.clear();renderMeetingPersonnel($('meetingSearchNhanSu').value);}
+function updateMeetingSelectionUI(){const c=$('meetingSelectedChips');c.innerHTML='';let groups=0;if(!meetingSelectedUsernames.size)c.innerHTML='<span class="text-[10px] text-slate-400 italic">Chưa chọn người tham dự...</span>';meetingAllToData.forEach(g=>{const full=g.members.length&&g.members.every(m=>meetingSelectedUsernames.has(m.username));if(full){groups++;const s=document.createElement('span');s.className='chip bg-indigo-50 text-indigo-700';s.textContent=`${g.tenTo} (${g.members.length})`;c.appendChild(s)}else g.members.forEach(m=>{if(meetingSelectedUsernames.has(m.username)){const s=document.createElement('span');s.className='chip bg-blue-50 text-[#0F4C81]';s.textContent=m.hoTen;c.appendChild(s)}})});$('meetingStatTo').textContent=`${groups} tổ`;$('meetingStatNguoi').textContent=`${meetingSelectedUsernames.size} người`;}
+window.addEventListener('DOMContentLoaded',()=>{const d=new Date();$('meetingDate').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;handleMeetingType();loadMeetingPersonnel();});
+</script>
+<style>
+.lbl{display:block;font-size:11px;font-weight:700;color:#0F4C81;margin-bottom:6px}.lbl b{color:#ef4444}.field{width:100%;height:44px;border-radius:12px;border:1px solid #cbd5e1;background:#f8fafc;padding:0 12px;font-size:12px;font-weight:500;outline:none}.field:focus{background:white;border-color:#0F4C81;box-shadow:0 0 0 2px #dbeafe}.section-title{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#334155}.section-title i{width:26px;height:26px;border-radius:8px;background:#eff6ff;color:#0F4C81;display:flex;align-items:center;justify-content:center}.badge{font-size:9px;font-weight:700;padding:4px 8px;border-radius:8px;border:1px solid #e2e8f0}.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid #e2e8f0;border-radius:12px;cursor:pointer}.toggle-row b{display:block;font-size:11px;color:#334155}.toggle-row small{display:block;font-size:9px;color:#94a3b8;margin-top:2px}.action{height:48px;border-radius:12px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px}.chip{display:inline-flex;align-items:center;padding:6px 8px;border-radius:8px;border:1px solid #dbeafe;font-size:9px;font-weight:700}
+</style>
+</body></html>
