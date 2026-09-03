@@ -2202,11 +2202,11 @@ export function renderHome() {
     <div id="dieuhanhso-dropdown"
          data-dropdown-menu
          class="hidden fixed sm:absolute
-                left-1/2 -translate-x-1/2
-                sm:translate-x-0 sm:left-auto sm:right-0
-                bottom-4 sm:bottom-[calc(100%+0.6rem)]
+       left-3 right-3
+       sm:left-0 sm:right-auto
+       bottom-20 sm:bottom-[calc(100%+0.6rem)]
                 z-[999]
-                w-[92vw] sm:w-[370px]
+               w-auto sm:w-[370px]
                 max-h-[76vh]
                 overflow-y-auto overscroll-contain
                 bg-white dark:bg-slate-900
