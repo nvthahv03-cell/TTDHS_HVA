@@ -650,7 +650,7 @@ export function renderHome() {
 
 </div>
 <!-- CONTAINER 3 TÁC VỤ VNeID STYLE -->
-<div class="flex justify-center items-start gap-2 sm:gap-8 md:gap-12 mb-8 relative z-30 max-w-lg mx-auto px-4">
+<div class="flex justify-center items-start gap-2 sm:gap-8 md:gap-12 mb-2 relative z-30 max-w-lg mx-auto px-4">
 
   <!-- ================= SHORTCUT 1: LỊCH CÔNG TÁC ================= -->
   <!-- ================= SHORTCUT 1: LỊCH CÔNG TÁC ================= -->
@@ -996,19 +996,24 @@ export function renderHome() {
   });
 </script>
 <!-- ================= TRẠNG THÁI NĂM HỌC ================= -->
-<div class="relative clear-both
-            w-full
+<div class="w-full
             flex items-center justify-center
-            mt-2 mb-2
-            px-2
-            min-h-[24px]
+            mb-2 px-2
+            min-h-[22px]
             whitespace-nowrap
             text-[10.5px]
-            font-semibold
-            text-slate-500
-            z-0">
+            font-medium
+            tracking-[0.01em]">
 
-    <span id="hva-school-date">--/--/----</span>
+    <i class="bi bi-calendar3
+              text-[#2563EB]
+              text-[11px]
+              mr-1.5"></i>
+
+    <span id="hva-school-date"
+          class="font-semibold text-slate-600">
+        --/--/----
+    </span>
 
     <span class="mx-1.5 text-blue-300">•</span>
 
@@ -1018,11 +1023,15 @@ export function renderHome() {
 
     <span class="mx-1.5 text-blue-300">•</span>
 
-    <span>Học kỳ I</span>
+    <span class="text-slate-500">
+        Học kỳ I
+    </span>
 
     <span class="mx-1.5 text-blue-300">•</span>
 
-    <span>Năm học 2026–2027</span>
+    <span class="font-semibold text-slate-600">
+        Năm học 2026–2027
+    </span>
 
 </div>
 
