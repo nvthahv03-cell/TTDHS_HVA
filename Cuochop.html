@@ -64,7 +64,10 @@ body{font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}::-web
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div><label class="lbl">Ngày họp <b>*</b></label><input type="date" id="meetingDate" required class="field"></div>
         <div><label class="lbl">Bắt đầu <b>*</b></label><input type="time" id="meetingStart" required class="field"></div>
-        <div><label class="lbl">Kết thúc</label><input type="time" id="meetingEnd" class="field"></div>
+        <div>
+  <label class="lbl">Kết thúc dự kiến <b>*</b></label>
+  <input type="time" id="meetingEnd" required class="field">
+</div>
       </div>
       <div><label class="lbl">Địa điểm <b>*</b></label>
         <select id="meetingPlace" required class="field" onchange="toggleOtherPlace()">
@@ -137,7 +140,60 @@ function toggleOtherPlace(){$('otherPlaceWrap').classList.toggle('hidden',$('mee
 function toggleQrTimes(){$('qrTimes').classList.toggle('hidden',!$('enableQr').checked);}
 function selectedPeople(){const out=[];meetingAllToData.forEach(g=>g.members.forEach(m=>{if(meetingSelectedUsernames.has(m.username))out.push(m)}));return out;}
 function collectMeeting(){const type=$('meetingType').value;return {sourceModule:'CuocHop',objectType:'MEETING',meetingType:type,customMeetingType:$('customMeetingType').value.trim(),period:$('meetingPeriod').value,title:$('meetingTitle').value.trim(),content:$('meetingContent').value.trim(),note:$('meetingNote').value.trim(),date:$('meetingDate').value,startTime:$('meetingStart').value,endTime:$('meetingEnd').value,place:$('meetingPlace').value==='Khác'?$('otherPlace').value.trim():$('meetingPlace').value,chairperson:$('chairperson').value.trim(),secretary:$('secretary').value.trim(),recipients:selectedPeople(),documentUrl:$('meetingDocumentUrl').value.trim(),requireConfirmation:$('requireConfirm').checked,attendance:{enabled:$('enableQr').checked,method:'QR',openTime:$('qrOpen').value,closeTime:$('qrClose').value},workflow:['CONFIRM_READ',...($('requireConfirm').checked?['CONFIRM_ATTENDANCE']:[]),...($('enableQr').checked?['QR_ATTENDANCE']:[])],createdAt:new Date().toISOString()};}
-function validateMeeting(){if(!$('meetingForm').reportValidity())return false;if(meetingSelectedUsernames.size===0){alert('Vui lòng chọn thành phần tham dự.');return false;}if($('meetingPlace').value==='Khác'&&!$('otherPlace').value.trim()){alert('Vui lòng nhập địa điểm khác.');return false;}if(['Chi bộ khác','Khác'].includes($('meetingType').value)&&!$('customMeetingType').value.trim()){alert('Vui lòng nhập tên loại cuộc họp.');return false;}if($('enableQr').checked&&(!$('qrOpen').value||!$('qrClose').value)){alert('Vui lòng chọn thời gian mở và đóng điểm danh QR.');return false;}return true;}
+function validateMeeting() {
+  // 1. Kiểm tra các trường HTML bắt buộc
+  if (!$('meetingForm').reportValidity()) return false;
+
+  // 2. Giờ kết thúc phải sau giờ bắt đầu
+  const startTime = $('meetingStart').value;
+  const endTime = $('meetingEnd').value;
+
+  if (!startTime || !endTime) {
+    alert('Vui lòng nhập đầy đủ giờ bắt đầu và giờ kết thúc dự kiến.');
+    return false;
+  }
+
+  if (endTime <= startTime) {
+    alert('Giờ kết thúc dự kiến phải sau giờ bắt đầu.');
+    $('meetingEnd').focus();
+    return false;
+  }
+
+  // 3. Phải có thành phần tham dự
+  if (meetingSelectedUsernames.size === 0) {
+    alert('Vui lòng chọn thành phần tham dự.');
+    return false;
+  }
+
+  // 4. Địa điểm khác
+  if (
+    $('meetingPlace').value === 'Khác' &&
+    !$('otherPlace').value.trim()
+  ) {
+    alert('Vui lòng nhập địa điểm khác.');
+    return false;
+  }
+
+  // 5. Loại cuộc họp khác
+  if (
+    ['Chi bộ khác', 'Khác'].includes($('meetingType').value) &&
+    !$('customMeetingType').value.trim()
+  ) {
+    alert('Vui lòng nhập tên loại cuộc họp.');
+    return false;
+  }
+
+  // 6. Thời gian điểm danh QR
+  if (
+    $('enableQr').checked &&
+    (!$('qrOpen').value || !$('qrClose').value)
+  ) {
+    alert('Vui lòng chọn thời gian mở và đóng điểm danh QR.');
+    return false;
+  }
+
+  return true;
+}
 function saveDraft(e){e.preventDefault();localStorage.setItem('HVA_MEETING_DRAFT',JSON.stringify(collectMeeting()));alert('Đã lưu nháp cuộc họp trên thiết bị.');}
 function goToPublishing(){if(!validateMeeting())return;const d=collectMeeting();const current={source:'CuocHop',sourceModule:'CuocHop',type:'MEETING',title:d.title,summary:d.content,recipients:d.recipients.map(x=>x.username),recipientDetails:d.recipients,data:d,destinations:['ThongBao'],workflow:d.workflow};localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify(current));location.href='TTPhatHanh_v1_beta.html';}
 function previewMeeting(){if(!validateMeeting())return;const d=collectMeeting();$('previewBody').innerHTML=`<div class="text-center mb-5"><div class="font-extrabold text-[#0F4C81] text-lg">${esc(d.title)}</div><div class="text-xs text-slate-500 mt-1">${esc(d.meetingType)}</div></div><div class="space-y-2 text-xs"><p><b>Thời gian:</b> ${esc(d.date)} • ${esc(d.startTime)}${d.endTime?' - '+esc(d.endTime):''}</p><p><b>Địa điểm:</b> ${esc(d.place)}</p><p><b>Chủ trì:</b> ${esc(d.chairperson||'—')}</p><p><b>Thư ký:</b> ${esc(d.secretary||'—')}</p><p><b>Thành phần:</b> ${d.recipients.length} người</p><p><b>Nội dung:</b><br>${esc(d.content||'—')}</p><p><b>Xác nhận tham dự:</b> ${d.requireConfirmation?'Có':'Không'}</p><p><b>Điểm danh QR:</b> ${d.attendance.enabled?'Có • '+esc(d.attendance.openTime)+' - '+esc(d.attendance.closeTime):'Không'}</p></div>`;$('previewModal').classList.remove('hidden');$('previewModal').classList.add('flex');}
