@@ -8,6 +8,51 @@ export function renderHome() {
     if (!container) return;
 
     container.innerHTML = `
+
+<!-- ================= TRẠNG THÁI NĂM HỌC ================= -->
+<div class="mb-2 h-[28px]
+            flex items-center
+            overflow-hidden
+            rounded-lg
+            bg-blue-50/80
+            border border-blue-100
+            px-2.5
+            shadow-sm">
+
+    <div class="flex items-center
+                whitespace-nowrap
+                text-[10.5px]
+                font-semibold
+                text-slate-600
+                tracking-[0.01em]">
+
+        <i class="bi bi-calendar3-week-fill
+                  text-[#2563EB]
+                  text-[11px]
+                  mr-1.5"></i>
+
+        <span id="hva-school-date">--/--/----</span>
+
+        <span class="mx-2 text-blue-300">•</span>
+
+        <span class="text-[#0F4C81] font-bold">
+            Tuần 01
+        </span>
+
+        <span class="mx-2 text-blue-300">•</span>
+
+        <span>Học kỳ I</span>
+
+        <span class="mx-2 text-blue-300">•</span>
+
+        <span class="font-bold text-slate-700">
+            Năm học 2026–2027
+        </span>
+
+    </div>
+
+</div>
+
 <!-- HVA Assistant -->
 <div class="relative mb-2 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-indigo-950 via-blue-900 to-slate-900 shadow-xl p-3.5 text-white">
 
@@ -2459,3 +2504,33 @@ window.openMyTasks = async function(type, event) {
 setTimeout(() => {
     loadMyTasks();
 }, 500);
+
+
+// ======================================================
+// TRẠNG THÁI NĂM HỌC - NGÀY HIỆN TẠI
+// ======================================================
+function updateHVASchoolDate() {
+    const el = document.getElementById('hva-school-date');
+    if (!el) return;
+
+    const now = new Date();
+
+    const thu = [
+        'Chủ Nhật',
+        'Thứ Hai',
+        'Thứ Ba',
+        'Thứ Tư',
+        'Thứ Năm',
+        'Thứ Sáu',
+        'Thứ Bảy'
+    ];
+
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+
+    el.textContent =
+        `${thu[now.getDay()]}, ${day}/${month}/${year}`;
+}
+
+setTimeout(updateHVASchoolDate, 100);
