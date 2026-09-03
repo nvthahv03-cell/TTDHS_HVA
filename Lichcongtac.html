@@ -67,27 +67,92 @@
                             <div class="text-[10px] text-slate-500">Sự kiện lẻ: Chi bộ, BGH, Dự giờ...</div>
                         </div>
                     </button>
-                    <button type="button" onclick="selectTaoLichTab('tao-lich-tuan')" class="w-full text-left px-4 py-3 hover:bg-emerald-50 transition flex items-start gap-3 active:bg-emerald-100">
-                        <i class="bi bi-layout-three-columns text-emerald-600 text-lg mt-0.5"></i>
-                        <div>
-                            <div class="font-bold text-xs text-slate-900">2. Tạo lịch tuần (Bảng)</div>
-                            <div class="text-[10px] text-slate-500">Bảng truyền thống Sáng/Chiều</div>
-                        </div>
-                    </button>
-                    <button type="button" onclick="selectTaoLichTab('tao-lich-thang-truong')" class="w-full text-left px-4 py-3 hover:bg-purple-50 transition flex items-start gap-3 active:bg-purple-100">
-                        <i class="bi bi-calendar-month text-purple-600 text-lg mt-0.5"></i>
-                        <div>
-                            <div class="font-bold text-xs text-slate-900">3. Lịch tháng (Trường)</div>
-                            <div class="text-[10px] text-slate-500">Kế hoạch công tác trọng tâm</div>
-                        </div>
-                    </button>
-                    <button type="button" onclick="selectTaoLichTab('tai-lich-so')" class="w-full text-left px-4 py-3 hover:bg-rose-50 transition flex items-start gap-3 active:bg-rose-100">
-                        <i class="bi bi-file-earmark-arrow-up text-rose-600 text-lg mt-0.5"></i>
-                        <div>
-                            <div class="font-bold text-xs text-slate-900">4. Lịch tháng (Sở GD&ĐT)</div>
-                            <div class="text-[10px] text-slate-500">Tải lên văn bản Lịch của Sở</div>
-                        </div>
-                    </button>
+                   <!-- 1. TẠO LỊCH TUẦN -->
+<button type="button"
+        onclick="selectTaoLichTab('tao-lich-tuan')"
+        class="w-full text-left px-4 py-3
+               hover:bg-emerald-50 transition
+               flex items-start gap-3 active:bg-emerald-100">
+
+    <i class="bi bi-calendar-week
+              text-emerald-600 text-lg mt-0.5"></i>
+
+    <div>
+        <div class="font-bold text-xs text-slate-900">
+            1. Tạo Lịch tuần
+        </div>
+
+        <div class="text-[10px] text-slate-500">
+            Lập lịch công tác tuần của nhà trường
+        </div>
+    </div>
+</button>
+
+
+<!-- 2. TẠO LỊCH THÁNG CỦA TRƯỜNG -->
+<button type="button"
+        onclick="selectTaoLichTab('tao-lich-thang-truong')"
+        class="w-full text-left px-4 py-3
+               hover:bg-purple-50 transition
+               flex items-start gap-3 active:bg-purple-100">
+
+    <i class="bi bi-calendar-month
+              text-purple-600 text-lg mt-0.5"></i>
+
+    <div>
+        <div class="font-bold text-xs text-slate-900">
+            2. Tạo Lịch tháng (Trường)
+        </div>
+
+        <div class="text-[10px] text-slate-500">
+            Lập lịch công tác trọng tâm theo tháng
+        </div>
+    </div>
+</button>
+
+
+<!-- 3. TIẾP NHẬN LỊCH THÁNG CỦA SỞ -->
+<button type="button"
+        onclick="selectTaoLichTab('tai-lich-so')"
+        class="w-full text-left px-4 py-3
+               hover:bg-rose-50 transition
+               flex items-start gap-3 active:bg-rose-100">
+
+    <i class="bi bi-cloud-arrow-up-fill
+              text-rose-600 text-lg mt-0.5"></i>
+
+    <div>
+        <div class="font-bold text-xs text-slate-900">
+            3. Lịch tháng (Sở GD&amp;ĐT)
+        </div>
+
+        <div class="text-[10px] text-slate-500">
+            Tải lên lịch công tác tháng do Sở ban hành
+        </div>
+    </div>
+</button>
+
+
+<!-- 4. LỊCH ĐỘT XUẤT -->
+<button type="button"
+        onclick="selectTaoLichTab('tao-lich-dot-xuat')"
+        class="w-full text-left px-4 py-3
+               hover:bg-amber-50 transition
+               flex items-start gap-3 active:bg-amber-100">
+
+    <i class="bi bi-lightning-charge-fill
+              text-amber-500 text-lg mt-0.5"></i>
+
+    <div>
+        <div class="font-bold text-xs text-slate-900">
+            4. Tạo Lịch đột xuất
+        </div>
+
+        <div class="text-[10px] text-slate-500">
+            Bổ sung hoặc điều chỉnh công tác phát sinh
+        </div>
+    </div>
+</button>
                 </div>
             </div>
 
