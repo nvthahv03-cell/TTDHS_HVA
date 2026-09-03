@@ -355,7 +355,368 @@
     </div>
 
 </nav>
+
+        <!-- ====================================================== -->
+<!-- TRA CỨU HỆ THỐNG                                      -->
+<!-- ====================================================== -->
+<div id="search-panel"
+     class="hidden fixed inset-0 z-[1000]
+            bg-slate-900/40 backdrop-blur-[2px]
+            flex items-end sm:items-center justify-center
+            p-0 sm:p-4">
+
+    <!-- PANEL -->
+    <div id="search-panel-box"
+         class="w-full sm:max-w-[430px]
+                max-h-[82vh]
+                bg-white
+                rounded-t-[26px] sm:rounded-[26px]
+                shadow-2xl
+                overflow-hidden
+                border border-slate-200">
+
+        <!-- ================= HEADER ================= -->
+        <div class="px-5 pt-4 pb-3
+                    bg-gradient-to-r from-blue-50 via-white to-cyan-50
+                    border-b border-blue-100">
+
+            <div class="flex items-center justify-between gap-3">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-10 h-10 rounded-xl
+                                bg-gradient-to-br from-[#2563EB] to-[#06B6D4]
+                                text-white
+                                flex items-center justify-center
+                                shadow-md">
+
+                        <i class="bi bi-search text-lg"></i>
+
+                    </div>
+
+                    <div>
+                        <div class="text-[15px]
+                                    font-extrabold
+                                    text-[#0F4C81]
+                                    tracking-wide">
+                            TRA CỨU HỆ THỐNG
+                        </div>
+
+                        <div class="text-[10px]
+                                    text-slate-400
+                                    font-medium mt-0.5">
+                            TTĐHS_HVA • Tìm nhanh dữ liệu số
+                        </div>
+                    </div>
+
+                </div>
+
+                <button type="button"
+                        id="close-search-panel"
+                        aria-label="Đóng tra cứu"
+                        class="w-8 h-8 rounded-full
+                               bg-slate-100
+                               hover:bg-slate-200
+                               text-slate-500
+                               flex items-center justify-center
+                               transition">
+
+                    <i class="bi bi-x-lg text-sm"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- ================= Ô TÌM KIẾM ================= -->
+            <div class="relative mt-4">
+
+                <i class="bi bi-search
+                          absolute left-3.5 top-1/2
+                          -translate-y-1/2
+                          text-blue-500 text-sm">
+                </i>
+
+                <input id="global-search-input"
+                       type="search"
+                       autocomplete="off"
+                       placeholder="Nhập nội dung cần tra cứu..."
+                       class="w-full h-11
+                              pl-10 pr-11
+                              rounded-xl
+                              bg-white
+                              border border-blue-200
+                              text-[13px]
+                              font-medium
+                              text-slate-700
+                              placeholder:text-slate-400
+                              outline-none
+                              focus:border-blue-500
+                              focus:ring-2 focus:ring-blue-100
+                              shadow-sm
+                              transition">
+
+                <button type="button"
+                        id="global-search-submit"
+                        aria-label="Tìm kiếm"
+                        class="absolute right-1.5 top-1/2
+                               -translate-y-1/2
+                               w-8 h-8 rounded-lg
+                               bg-[#2563EB]
+                               hover:bg-[#0F4C81]
+                               text-white
+                               flex items-center justify-center
+                               shadow-sm transition">
+
+                    <i class="bi bi-arrow-right text-sm"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= PHẠM VI TRA CỨU ================= -->
+        <div class="p-4">
+
+            <div class="text-[10px]
+                        font-extrabold
+                        tracking-[0.08em]
+                        text-slate-400
+                        uppercase
+                        mb-2.5">
+                Tra cứu theo nhóm
+            </div>
+
+
+            <div class="space-y-1">
+
+
+                <!-- VĂN BẢN -->
+                <button type="button"
+                        data-search-type="VANBAN"
+                        class="search-type-item
+                               w-full flex items-center justify-between
+                               px-3 py-2.5 rounded-xl
+                               hover:bg-blue-50
+                               transition text-left">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-10 h-10 rounded-xl
+                                    bg-blue-50
+                                    text-blue-600
+                                    flex items-center justify-center">
+
+                            <i class="bi bi-file-earmark-text-fill text-lg"></i>
+
+                        </div>
+
+                        <div>
+                            <div class="text-[13px]
+                                        font-bold text-[#123B67]">
+                                Văn bản
+                            </div>
+
+                            <div class="text-[10px] text-slate-400 mt-0.5">
+                                Số văn bản • Trích yếu • Cơ quan ban hành
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right
+                              text-xs text-slate-400"></i>
+
+                </button>
+
+
+                <!-- NHIỆM VỤ -->
+                <button type="button"
+                        data-search-type="NHIEMVU"
+                        class="search-type-item
+                               w-full flex items-center justify-between
+                               px-3 py-2.5 rounded-xl
+                               hover:bg-indigo-50
+                               transition text-left">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-10 h-10 rounded-xl
+                                    bg-indigo-50
+                                    text-indigo-600
+                                    flex items-center justify-center">
+
+                            <i class="bi bi-list-check text-lg"></i>
+
+                        </div>
+
+                        <div>
+                            <div class="text-[13px]
+                                        font-bold text-[#123B67]">
+                                Nhiệm vụ
+                            </div>
+
+                            <div class="text-[10px] text-slate-400 mt-0.5">
+                                Việc được giao • Tiến độ • Kết quả
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right
+                              text-xs text-slate-400"></i>
+
+                </button>
+
+
+                <!-- LỊCH CÔNG TÁC -->
+                <button type="button"
+                        data-search-type="LICH"
+                        class="search-type-item
+                               w-full flex items-center justify-between
+                               px-3 py-2.5 rounded-xl
+                               hover:bg-cyan-50
+                               transition text-left">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-10 h-10 rounded-xl
+                                    bg-cyan-50
+                                    text-cyan-600
+                                    flex items-center justify-center">
+
+                            <i class="bi bi-calendar3 text-lg"></i>
+
+                        </div>
+
+                        <div>
+                            <div class="text-[13px]
+                                        font-bold text-[#123B67]">
+                                Lịch công tác
+                            </div>
+
+                            <div class="text-[10px] text-slate-400 mt-0.5">
+                                Thời gian • Nội dung • Thành phần
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right
+                              text-xs text-slate-400"></i>
+
+                </button>
+
+
+                <!-- THÔNG BÁO -->
+                <button type="button"
+                        data-search-type="THONGBAO"
+                        class="search-type-item
+                               w-full flex items-center justify-between
+                               px-3 py-2.5 rounded-xl
+                               hover:bg-amber-50
+                               transition text-left">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-10 h-10 rounded-xl
+                                    bg-amber-50
+                                    text-amber-600
+                                    flex items-center justify-center">
+
+                            <i class="bi bi-bell-fill text-lg"></i>
+
+                        </div>
+
+                        <div>
+                            <div class="text-[13px]
+                                        font-bold text-[#123B67]">
+                                Thông báo
+                            </div>
+
+                            <div class="text-[10px] text-slate-400 mt-0.5">
+                                Nội dung • Thời gian • Trạng thái
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right
+                              text-xs text-slate-400"></i>
+
+                </button>
+
+
+                <!-- TÀI LIỆU - BIỂU MẪU -->
+                <button type="button"
+                        data-search-type="TAILIEU"
+                        class="search-type-item
+                               w-full flex items-center justify-between
+                               px-3 py-2.5 rounded-xl
+                               hover:bg-emerald-50
+                               transition text-left">
+
+                    <div class="flex items-center gap-3">
+
+                        <div class="w-10 h-10 rounded-xl
+                                    bg-emerald-50
+                                    text-emerald-600
+                                    flex items-center justify-center">
+
+                            <i class="bi bi-folder-fill text-lg"></i>
+
+                        </div>
+
+                        <div>
+                            <div class="text-[13px]
+                                        font-bold text-[#123B67]">
+                                Tài liệu - Biểu mẫu
+                            </div>
+
+                            <div class="text-[10px] text-slate-400 mt-0.5">
+                                Học liệu • Biểu mẫu • Tài nguyên dùng chung
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right
+                              text-xs text-slate-400"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- GỢI Ý -->
+            <div class="mt-3
+                        px-3 py-2.5
+                        rounded-xl
+                        bg-slate-50
+                        border border-slate-100
+                        flex items-start gap-2">
+
+                <i class="bi bi-lightbulb-fill
+                          text-amber-400 text-xs mt-0.5"></i>
+
+                <div class="text-[9.5px]
+                            leading-relaxed
+                            text-slate-400">
+                    Có thể tìm theo từ khóa, số văn bản, tên nhiệm vụ,
+                    nội dung hoặc thời gian.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
+</div>
+    
 <!-- ================= NOTIFICATION PANEL ================= -->
 <div id="notification-panel"
      class="hidden fixed inset-0 z-[65] bg-black/30 backdrop-blur-sm">
@@ -1282,5 +1643,137 @@ setTimeout(() => {
 }, 700);
 
 </script> 
+    <script>
+/* =========================================================
+   TRA CỨU HỆ THỐNG - BOTTOM NAV
+========================================================= */
+
+(function () {
+
+    function getSearchPanel() {
+        return document.getElementById('search-panel');
+    }
+
+    function openSearchPanel() {
+        const panel = getSearchPanel();
+        if (!panel) return;
+
+        panel.classList.remove('hidden');
+
+        setTimeout(() => {
+            document.getElementById('global-search-input')?.focus();
+        }, 100);
+    }
+
+    function closeSearchPanel() {
+        getSearchPanel()?.classList.add('hidden');
+    }
+
+
+    /* Nút Tra cứu ở Bottom Nav */
+    document.getElementById('bottom-search')
+        ?.addEventListener('click', function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            openSearchPanel();
+        });
+
+
+    /* Nút X */
+    document.getElementById('close-search-panel')
+        ?.addEventListener('click', function (event) {
+
+            event.preventDefault();
+            closeSearchPanel();
+        });
+
+
+    /* Bấm vùng tối bên ngoài */
+    getSearchPanel()?.addEventListener('click', function (event) {
+
+        if (event.target === this) {
+            closeSearchPanel();
+        }
+
+    });
+
+
+    /* Không đóng khi bấm bên trong hộp */
+    document.getElementById('search-panel-box')
+        ?.addEventListener('click', function (event) {
+
+            event.stopPropagation();
+
+        });
+
+
+    /* =====================================================
+       TẠM THỜI: ghi nhận nhóm tra cứu được chọn
+       Bước sau mới nối API thực tế.
+    ===================================================== */
+
+    document.querySelectorAll('[data-search-type]')
+        .forEach(function (button) {
+
+            button.addEventListener('click', function () {
+
+                const type = this.dataset.searchType;
+
+                console.log('[HVA TRA CỨU] Nhóm:', type);
+
+                const input =
+                    document.getElementById('global-search-input');
+
+                input?.focus();
+
+            });
+
+        });
+
+
+    /* Nút mũi tên tìm */
+    document.getElementById('global-search-submit')
+        ?.addEventListener('click', function () {
+
+            const keyword =
+                document.getElementById('global-search-input')
+                    ?.value.trim() || '';
+
+            if (!keyword) {
+                document.getElementById('global-search-input')?.focus();
+                return;
+            }
+
+            console.log('[HVA TRA CỨU] Từ khóa:', keyword);
+
+        });
+
+
+    /* Enter để tìm */
+    document.getElementById('global-search-input')
+        ?.addEventListener('keydown', function (event) {
+
+            if (event.key !== 'Enter') return;
+
+            event.preventDefault();
+
+            document.getElementById('global-search-submit')?.click();
+
+        });
+
+
+    /* ESC để đóng trên máy tính */
+    document.addEventListener('keydown', function (event) {
+
+        if (event.key === 'Escape') {
+            closeSearchPanel();
+        }
+
+    });
+
+})();
+</script>
 </body>
 </html>
