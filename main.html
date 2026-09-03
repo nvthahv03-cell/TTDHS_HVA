@@ -1687,11 +1687,51 @@ async function enableHVAPushNotification() {
         );
 
         localStorage.setItem(
-            'HVA_FCM_TOKEN',
-            token
-        );
+    'HVA_FCM_TOKEN',
+    token
+);
 
-        return token;
+// Đăng ký thiết bị này với Backend Phát hành chung
+const user = getNotificationUser();
+
+if (!user.username) {
+    throw new Error(
+        'Không xác định được username của người đang đăng nhập.'
+    );
+}
+
+const registerResponse = await fetch(HVA_NOTIFICATION_API, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: JSON.stringify({
+        action: 'registerPushToken',
+        username: user.username,
+        token: token,
+        deviceInfo: navigator.userAgent
+    })
+});
+
+const registerResult = await registerResponse.json();
+
+if (!registerResult || registerResult.success !== true) {
+    throw new Error(
+        registerResult?.message ||
+        'Backend không đăng ký được thiết bị.'
+    );
+}
+
+console.log(
+    '[HVA PUSH] Đăng ký thiết bị thành công:',
+    registerResult
+);
+
+AppMain?.showToast?.(
+    'Đã bật thông báo trên thiết bị này.'
+);
+
+return token;
 
     } catch (error) {
 
