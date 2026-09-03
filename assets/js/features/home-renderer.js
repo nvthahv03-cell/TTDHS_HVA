@@ -2341,21 +2341,21 @@ export function renderHome() {
                     </a>
 
 
-                    <button type="button"
-                            class="w-full flex items-center gap-2.5
-                                   px-3 py-2 rounded-lg
-                                   hover:bg-violet-50
-                                   dark:hover:bg-slate-800 transition text-left">
+                    <a href="Cuochop.html"
+   class="w-full flex items-center gap-2.5
+          px-3 py-2 rounded-lg
+          hover:bg-violet-50
+          dark:hover:bg-slate-800 transition">
 
-                        <i class="bi bi-people-fill
-                                  text-violet-600 w-5 text-center"></i>
+    <i class="bi bi-people-fill
+              text-violet-600 w-5 text-center"></i>
 
-                        <span class="text-[11px] font-semibold
-                                     text-slate-700 dark:text-slate-200">
-                            Cuộc họp
-                        </span>
+    <span class="text-[11px] font-semibold
+                 text-slate-700 dark:text-slate-200">
+        Cuộc họp
+    </span>
 
-                    </button>
+</a>
 
 
                     <button type="button"
