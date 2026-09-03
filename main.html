@@ -277,68 +277,78 @@
 <div id="module-container" class="fixed inset-0 z-50 hidden" aria-hidden="true"></div>
 
 <!-- ================= BOTTOM NAV ================= -->
-<nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-300/80 pb-safe px-6 shadow-[0_-4px_25px_rgba(0,0,0,0.1)]">
+<nav class="fixed bottom-0 left-0 right-0 z-40
+            bg-white/95 backdrop-blur-xl
+            border-t border-slate-300/80
+            pb-safe px-6
+            shadow-[0_-4px_25px_rgba(0,0,0,0.1)]">
 
     <div class="flex items-center justify-between h-16 max-w-[460px] mx-auto">
 
-        <!-- Trang chủ -->
-        <a href="#" data-nav="home"
-           class="nav-item flex flex-col items-center justify-center flex-1 text-brand-teal py-1 font-bold">
+        <!-- ================= TRANG CHỦ ================= -->
+        <a href="#"
+           data-nav="home"
+           class="nav-item flex flex-col items-center justify-center flex-1
+                  text-brand-teal py-1 font-bold">
 
             <i class="bi bi-house-door-fill text-xl"></i>
-            <span class="text-[10px] font-extrabold mt-1">Trang chủ</span>
+            <span class="text-[10px] font-extrabold mt-1">
+                Trang chủ
+            </span>
 
         </a>
 
-        <!-- Thông báo -->
-<a href="#"
-   id="bottom-notification"
-   data-nav="notification"
-   class="nav-item relative flex flex-col items-center justify-center flex-1 text-slate-500 hover:text-slate-900 py-1 transition">
 
-    <div class="relative">
-        <i class="bi bi-bell-fill text-lg"></i>
+        <!-- ================= TRA CỨU ================= -->
+        <a href="#"
+           id="bottom-search"
+           data-nav="search"
+           class="nav-item flex flex-col items-center justify-center flex-1
+                  text-slate-500 hover:text-slate-900
+                  py-1 transition">
 
-        <span id="bottom-notification-badge"
-              class="hidden absolute -top-2 -right-3
-                     min-w-[17px] h-[17px] px-1
-                     rounded-full bg-red-500
-                     text-white text-[9px] font-extrabold
-                     items-center justify-center
-                     shadow-sm">
-            0
-        </span>
-    </div>
+            <i class="bi bi-search text-lg"></i>
+            <span class="text-[10px] font-semibold mt-1">
+                Tra cứu
+            </span>
 
-    <span class="text-[10px] font-semibold mt-1">Thông báo</span>
+        </a>
 
-</a>
 
-        <!-- Tin tức -->
-        <!-- Tin tức -->
-<a href="https://giaoducthoidai.vn/"
-   target="_blank"
-   rel="noopener noreferrer"
-   class="nav-item flex flex-col items-center justify-center flex-1 text-slate-500 hover:text-slate-900 py-1 transition">
+        <!-- ================= KẾT NỐI ================= -->
+        <a href="#"
+           id="bottom-links"
+           data-nav="links"
+           class="nav-item flex flex-col items-center justify-center flex-1
+                  text-slate-500 hover:text-slate-900
+                  py-1 transition">
 
-    <i class="bi bi-newspaper text-lg"></i>
-    <span class="text-[10px] font-semibold mt-1">Tin tức</span>
+            <i class="bi bi-globe2 text-lg"></i>
+            <span class="text-[10px] font-semibold mt-1">
+                Kết nối
+            </span>
 
-</a>
+        </a>
 
-        <!-- Cá nhân -->
-        <a href="#" data-nav="profile"
-           class="nav-item flex flex-col items-center justify-center flex-1 text-slate-500 hover:text-slate-900 py-1 transition">
+
+        <!-- ================= CÁ NHÂN ================= -->
+        <a href="#"
+           data-nav="profile"
+           class="nav-item flex flex-col items-center justify-center flex-1
+                  text-slate-500 hover:text-slate-900
+                  py-1 transition">
 
             <i class="bi bi-person-circle text-lg"></i>
-            <span class="text-[10px] font-semibold mt-1">Cá nhân</span>
+            <span class="text-[10px] font-semibold mt-1">
+                Cá nhân
+            </span>
 
         </a>
 
     </div>
 
 </nav>
-    </div>
+</div>
 <!-- ================= NOTIFICATION PANEL ================= -->
 <div id="notification-panel"
      class="hidden fixed inset-0 z-[65] bg-black/30 backdrop-blur-sm">
