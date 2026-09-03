@@ -1101,334 +1101,401 @@ export function renderHome() {
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
 
-    <!-- TRỤ CỘT 1: THI ĐUA - KHEN THƯỞNG -->
-<div onclick="toggleDashboardMenu('thidua-dropdown', event)"
-     class="group relative rounded-2xl
-            bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500
-            text-white p-3.5
-            shadow-md hover:shadow-xl
-            transition-all duration-300
-            cursor-pointer overflow-visible
-            border border-blue-400/40
-            active:scale-[0.98]">
+    <!-- ====================================================== -->
+<!-- TRỤ CỘT 1: THI ĐUA - KHEN THƯỞNG                       -->
+<!-- ====================================================== -->
+<div class="relative">
 
-    <div class="absolute top-0 right-0
-                w-20 h-20 bg-white/20 rounded-full blur-xl
-                group-hover:scale-150 transition-all duration-500">
-    </div>
+    <!-- CARD THI ĐUA -->
+    <div data-dropdown-toggle="thidua-dropdown"
+         class="group relative rounded-2xl
+                bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500
+                text-white p-3.5
+                shadow-md hover:shadow-xl
+                transition-all duration-300
+                cursor-pointer overflow-hidden
+                border border-blue-400/40
+                active:scale-[0.98]">
 
-    <div class="w-10 h-10 rounded-xl
-                bg-white/20 backdrop-blur-md
-                flex items-center justify-center
-                shadow-inner mb-3
-                group-hover:scale-110
-                transition-transform duration-300
-                border border-white/30">
+        <!-- Ánh sáng nền -->
+        <div class="absolute top-0 right-0
+                    w-20 h-20
+                    bg-white/20 rounded-full blur-xl
+                    group-hover:scale-150
+                    transition-all duration-500
+                    pointer-events-none">
+        </div>
 
-        <i class="bi bi-trophy-fill text-white text-lg"></i>
+        <!-- Icon -->
+        <div class="w-10 h-10 rounded-xl
+                    bg-white/20 backdrop-blur-md
+                    flex items-center justify-center
+                    shadow-inner mb-3
+                    group-hover:scale-110
+                    transition-transform duration-300
+                    border border-white/30">
 
-    </div>
+            <i class="bi bi-trophy-fill text-white text-lg"></i>
 
-    <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">
-        THI ĐUA - KHEN THƯỞNG
-    </h3>
+        </div>
+
+        <!-- Tiêu đề + mũi tên -->
+        <div class="flex items-center justify-between gap-2">
+
+            <h3 class="text-xs
+                       font-extrabold
+                       tracking-tight
+                       text-white
+                       mb-0.5
+                       whitespace-nowrap">
+                THI ĐUA - KHEN THƯỞNG
+            </h3>
+
+            <i class="bi bi-chevron-up
+                      text-xs text-blue-100
+                      transition-transform duration-300
+                      shrink-0"
+               data-dropdown-arrow>
+            </i>
+
+        </div>
 
         <p class="text-[10px] text-blue-50 font-medium">
-        Đánh giá • Xếp loại • Thành tích
-    </p>
+            Đánh giá • Xếp loại • Thành tích
+        </p>
 
-</div>
+    </div>
 
 
-<!-- ================= MENU THI ĐUA - KHEN THƯỞNG ================= -->
-<div id="thidua-dropdown"
-     class="dashboard-dropdown hidden absolute
-            left-0
-            bottom-[calc(100%+0.6rem)]
-            z-[999]
-            w-[340px] max-w-[92vw]
-            bg-white
-            rounded-2xl
-            shadow-2xl
-            border border-slate-200
-            overflow-hidden
-            text-left"
-     onclick="event.stopPropagation()">
+    <!-- ================================================== -->
+    <!-- MENU THI ĐUA - KHEN THƯỞNG                         -->
+    <!-- ================================================== -->
+    <div id="thidua-dropdown"
+         data-dropdown-menu
+         class="hidden fixed sm:absolute
+                left-1/2 -translate-x-1/2
+                sm:translate-x-0 sm:left-0
+                bottom-4 sm:bottom-[calc(100%+0.6rem)]
+                z-[999]
+                w-[92vw] sm:w-[350px]
+                max-h-[72vh]
+                overflow-y-auto overscroll-contain
+                bg-white dark:bg-slate-900
+                rounded-2xl shadow-2xl
+                border border-slate-200 dark:border-slate-800">
 
-    <!-- HEADER -->
-    <div class="px-3.5 py-3
-                bg-gradient-to-r from-blue-50 to-cyan-50
-                border-b border-blue-100">
+        <!-- HEADER -->
+        <div class="sticky top-0 z-20
+                    bg-white/95 dark:bg-slate-900/95
+                    backdrop-blur-md
+                    border-b border-slate-200 dark:border-slate-800
+                    px-4 py-3">
 
-        <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-2.5">
 
-            <div class="w-9 h-9 rounded-xl
-                        bg-gradient-to-br from-blue-600 to-cyan-500
-                        text-white
-                        flex items-center justify-center
-                        shadow-sm">
+                <div class="w-8 h-8 rounded-lg
+                            bg-gradient-to-br from-blue-600 to-cyan-500
+                            text-white
+                            flex items-center justify-center
+                            shadow-sm">
 
-                <i class="bi bi-trophy-fill text-base"></i>
+                    <i class="bi bi-trophy-fill text-sm"></i>
+
+                </div>
+
+                <div>
+
+                    <div class="text-[13px]
+                                font-extrabold
+                                tracking-wide
+                                text-[#0F4C81]
+                                dark:text-blue-300">
+                        THI ĐUA - KHEN THƯỞNG
+                    </div>
+
+                    <div class="text-[9px]
+                                text-slate-400
+                                font-medium">
+                        TTĐHS_HVA • Đánh giá và ghi nhận thành tích
+                    </div>
+
+                </div>
 
             </div>
 
-            <div>
-                <div class="text-[12px]
-                            font-extrabold
-                            text-[#0F4C81]
-                            tracking-wide">
-                    THI ĐUA - KHEN THƯỞNG
+        </div>
+
+
+        <!-- NỘI DUNG MENU -->
+        <div class="p-3 space-y-1">
+
+
+            <!-- 1. VĂN BẢN - QUY ĐỊNH -->
+            <button type="button"
+                    data-thidua-action="VANBAN"
+                    class="w-full flex items-center justify-between
+                           px-3 py-2.5 rounded-xl
+                           hover:bg-blue-50
+                           dark:hover:bg-slate-800
+                           transition text-left">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-9 h-9 rounded-xl
+                                bg-blue-50
+                                text-blue-600
+                                flex items-center justify-center
+                                shrink-0">
+
+                        <i class="bi bi-file-earmark-text-fill"></i>
+
+                    </div>
+
+                    <div>
+                        <div class="text-[12px]
+                                    font-bold
+                                    text-[#123B67]
+                                    dark:text-slate-100">
+                            Văn bản - Quy định
+                        </div>
+
+                        <div class="text-[9px]
+                                    text-slate-400 mt-0.5">
+                            Văn bản liên quan từ Kho văn bản
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="text-[9px]
-                            text-slate-500
-                            font-medium mt-0.5">
-                    Đánh giá • Xếp loại • Thành tích
+                <i class="bi bi-chevron-right
+                          text-[10px] text-slate-400"></i>
+
+            </button>
+
+
+            <!-- 2. KÊ KHAI CÔNG VIỆC THÁNG -->
+            <button type="button"
+                    data-thidua-action="KEKHAI_THANG"
+                    class="w-full flex items-center justify-between
+                           px-3 py-2.5 rounded-xl
+                           hover:bg-cyan-50
+                           dark:hover:bg-slate-800
+                           transition text-left">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-9 h-9 rounded-xl
+                                bg-cyan-50
+                                text-cyan-600
+                                flex items-center justify-center
+                                shrink-0">
+
+                        <i class="bi bi-pencil-square"></i>
+
+                    </div>
+
+                    <div>
+                        <div class="text-[12px]
+                                    font-bold
+                                    text-[#123B67]
+                                    dark:text-slate-100">
+                            Kê khai công việc tháng
+                        </div>
+
+                        <div class="text-[9px]
+                                    text-slate-400 mt-0.5">
+                            Công việc • Kết quả • Minh chứng
+                        </div>
+                    </div>
+
                 </div>
-            </div>
+
+                <i class="bi bi-chevron-right
+                          text-[10px] text-slate-400"></i>
+
+            </button>
+
+
+            <!-- 3. ĐÁNH GIÁ - XẾP LOẠI THÁNG -->
+            <button type="button"
+                    data-thidua-action="XEPLOAI_THANG"
+                    class="w-full flex items-center justify-between
+                           px-3 py-2.5 rounded-xl
+                           hover:bg-indigo-50
+                           dark:hover:bg-slate-800
+                           transition text-left">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-9 h-9 rounded-xl
+                                bg-indigo-50
+                                text-indigo-600
+                                flex items-center justify-center
+                                shrink-0">
+
+                        <i class="bi bi-clipboard-check-fill"></i>
+
+                    </div>
+
+                    <div>
+                        <div class="text-[12px]
+                                    font-bold
+                                    text-[#123B67]
+                                    dark:text-slate-100">
+                            Đánh giá - Xếp loại tháng
+                        </div>
+
+                        <div class="text-[9px]
+                                    text-slate-400 mt-0.5">
+                            Tự đánh giá • Tổ • BGH
+                        </div>
+                    </div>
+
+                </div>
+
+                <i class="bi bi-chevron-right
+                          text-[10px] text-slate-400"></i>
+
+            </button>
+
+
+            <!-- 4. THEO DÕI THI ĐUA -->
+            <button type="button"
+                    data-thidua-action="THEODOI"
+                    class="w-full flex items-center justify-between
+                           px-3 py-2.5 rounded-xl
+                           hover:bg-emerald-50
+                           dark:hover:bg-slate-800
+                           transition text-left">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-9 h-9 rounded-xl
+                                bg-emerald-50
+                                text-emerald-600
+                                flex items-center justify-center
+                                shrink-0">
+
+                        <i class="bi bi-bar-chart-line-fill"></i>
+
+                    </div>
+
+                    <div>
+                        <div class="text-[12px]
+                                    font-bold
+                                    text-[#123B67]
+                                    dark:text-slate-100">
+                            Theo dõi thi đua
+                        </div>
+
+                        <div class="text-[9px]
+                                    text-slate-400 mt-0.5">
+                            Theo tháng • Học kỳ • Năm học
+                        </div>
+                    </div>
+
+                </div>
+
+                <i class="bi bi-chevron-right
+                          text-[10px] text-slate-400"></i>
+
+            </button>
+
+
+            <!-- 5. ĐÁNH GIÁ - XẾP LOẠI CUỐI NĂM -->
+            <button type="button"
+                    data-thidua-action="XEPLOAI_NAM"
+                    class="w-full flex items-center justify-between
+                           px-3 py-2.5 rounded-xl
+                           hover:bg-violet-50
+                           dark:hover:bg-slate-800
+                           transition text-left">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-9 h-9 rounded-xl
+                                bg-violet-50
+                                text-violet-600
+                                flex items-center justify-center
+                                shrink-0">
+
+                        <i class="bi bi-award-fill"></i>
+
+                    </div>
+
+                    <div>
+                        <div class="text-[12px]
+                                    font-bold
+                                    text-[#123B67]
+                                    dark:text-slate-100">
+                            Đánh giá - Xếp loại cuối năm
+                        </div>
+
+                        <div class="text-[9px]
+                                    text-slate-400 mt-0.5">
+                            Hồ sơ • Nhận xét • Kết quả
+                        </div>
+                    </div>
+
+                </div>
+
+                <i class="bi bi-chevron-right
+                          text-[10px] text-slate-400"></i>
+
+            </button>
+
+
+            <!-- 6. KHEN THƯỞNG - THÀNH TÍCH -->
+            <button type="button"
+                    data-thidua-action="KHENTHUONG"
+                    class="w-full flex items-center justify-between
+                           px-3 py-2.5 rounded-xl
+                           hover:bg-amber-50
+                           dark:hover:bg-slate-800
+                           transition text-left">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-9 h-9 rounded-xl
+                                bg-amber-50
+                                text-amber-600
+                                flex items-center justify-center
+                                shrink-0">
+
+                        <i class="bi bi-star-fill"></i>
+
+                    </div>
+
+                    <div>
+                        <div class="text-[12px]
+                                    font-bold
+                                    text-[#123B67]
+                                    dark:text-slate-100">
+                            Khen thưởng - Thành tích
+                        </div>
+
+                        <div class="text-[9px]
+                                    text-slate-400 mt-0.5">
+                            Thành tích • Đề xuất • Kết quả
+                        </div>
+                    </div>
+
+                </div>
+
+                <i class="bi bi-chevron-right
+                          text-[10px] text-slate-400"></i>
+
+            </button>
 
         </div>
 
     </div>
 
-
-    <!-- NỘI DUNG -->
-    <div class="p-2.5 space-y-1">
-
-
-        <!-- 1. VĂN BẢN - QUY ĐỊNH -->
-        <button type="button"
-                onclick="openThiDuaModule('VANBAN', event)"
-                class="w-full flex items-center justify-between
-                       px-3 py-2.5 rounded-xl
-                       hover:bg-blue-50
-                       transition text-left">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-8 h-8 rounded-lg
-                            bg-blue-50
-                            text-blue-600
-                            flex items-center justify-center">
-
-                    <i class="bi bi-file-earmark-text-fill"></i>
-
-                </div>
-
-                <div>
-                    <div class="text-[11px]
-                                font-bold text-slate-800">
-                        Văn bản - Quy định
-                    </div>
-
-                    <div class="text-[9px] text-slate-400">
-                        Văn bản liên quan từ Kho văn bản
-                    </div>
-                </div>
-
-            </div>
-
-            <i class="bi bi-chevron-right
-                      text-[10px] text-slate-400"></i>
-
-        </button>
-
-
-        <!-- 2. KÊ KHAI CÔNG VIỆC THÁNG -->
-        <button type="button"
-                onclick="openThiDuaModule('KEKHAI_THANG', event)"
-                class="w-full flex items-center justify-between
-                       px-3 py-2.5 rounded-xl
-                       hover:bg-cyan-50
-                       transition text-left">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-8 h-8 rounded-lg
-                            bg-cyan-50
-                            text-cyan-600
-                            flex items-center justify-center">
-
-                    <i class="bi bi-pencil-square"></i>
-
-                </div>
-
-                <div>
-                    <div class="text-[11px]
-                                font-bold text-slate-800">
-                        Kê khai công việc tháng
-                    </div>
-
-                    <div class="text-[9px] text-slate-400">
-                        Công việc • Kết quả • Minh chứng
-                    </div>
-                </div>
-
-            </div>
-
-            <i class="bi bi-chevron-right
-                      text-[10px] text-slate-400"></i>
-
-        </button>
-
-
-        <!-- 3. ĐÁNH GIÁ - XẾP LOẠI THÁNG -->
-        <button type="button"
-                onclick="openThiDuaModule('XEPLOAI_THANG', event)"
-                class="w-full flex items-center justify-between
-                       px-3 py-2.5 rounded-xl
-                       hover:bg-indigo-50
-                       transition text-left">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-8 h-8 rounded-lg
-                            bg-indigo-50
-                            text-indigo-600
-                            flex items-center justify-center">
-
-                    <i class="bi bi-clipboard-check-fill"></i>
-
-                </div>
-
-                <div>
-                    <div class="text-[11px]
-                                font-bold text-slate-800">
-                        Đánh giá - Xếp loại tháng
-                    </div>
-
-                    <div class="text-[9px] text-slate-400">
-                        Tự đánh giá • Tổ • BGH
-                    </div>
-                </div>
-
-            </div>
-
-            <i class="bi bi-chevron-right
-                      text-[10px] text-slate-400"></i>
-
-        </button>
-
-
-        <!-- 4. THEO DÕI THI ĐUA -->
-        <button type="button"
-                onclick="openThiDuaModule('THEODOI', event)"
-                class="w-full flex items-center justify-between
-                       px-3 py-2.5 rounded-xl
-                       hover:bg-emerald-50
-                       transition text-left">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-8 h-8 rounded-lg
-                            bg-emerald-50
-                            text-emerald-600
-                            flex items-center justify-center">
-
-                    <i class="bi bi-bar-chart-line-fill"></i>
-
-                </div>
-
-                <div>
-                    <div class="text-[11px]
-                                font-bold text-slate-800">
-                        Theo dõi thi đua
-                    </div>
-
-                    <div class="text-[9px] text-slate-400">
-                        Theo tháng • Học kỳ • Năm học
-                    </div>
-                </div>
-
-            </div>
-
-            <i class="bi bi-chevron-right
-                      text-[10px] text-slate-400"></i>
-
-        </button>
-
-
-        <!-- 5. ĐÁNH GIÁ - XẾP LOẠI CUỐI NĂM -->
-        <button type="button"
-                onclick="openThiDuaModule('XEPLOAI_NAM', event)"
-                class="w-full flex items-center justify-between
-                       px-3 py-2.5 rounded-xl
-                       hover:bg-violet-50
-                       transition text-left">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-8 h-8 rounded-lg
-                            bg-violet-50
-                            text-violet-600
-                            flex items-center justify-center">
-
-                    <i class="bi bi-award-fill"></i>
-
-                </div>
-
-                <div>
-                    <div class="text-[11px]
-                                font-bold text-slate-800">
-                        Đánh giá - Xếp loại cuối năm
-                    </div>
-
-                    <div class="text-[9px] text-slate-400">
-                        Hồ sơ • Nhận xét • Kết quả
-                    </div>
-                </div>
-
-            </div>
-
-            <i class="bi bi-chevron-right
-                      text-[10px] text-slate-400"></i>
-
-        </button>
-
-
-        <!-- 6. KHEN THƯỞNG - THÀNH TÍCH -->
-        <button type="button"
-                onclick="openThiDuaModule('KHENTHUONG', event)"
-                class="w-full flex items-center justify-between
-                       px-3 py-2.5 rounded-xl
-                       hover:bg-amber-50
-                       transition text-left">
-
-            <div class="flex items-center gap-3">
-
-                <div class="w-8 h-8 rounded-lg
-                            bg-amber-50
-                            text-amber-600
-                            flex items-center justify-center">
-
-                    <i class="bi bi-star-fill"></i>
-
-                </div>
-
-                <div>
-                    <div class="text-[11px]
-                                font-bold text-slate-800">
-                        Khen thưởng - Thành tích
-                    </div>
-
-                    <div class="text-[9px] text-slate-400">
-                        Thành tích • Đề xuất • Kết quả
-                    </div>
-                </div>
-
-            </div>
-
-            <i class="bi bi-chevron-right
-                      text-[10px] text-slate-400"></i>
-
-        </button>
-
-    </div>
-
 </div>
+<!-- ================= HẾT THI ĐUA ================= -->
 
-</div>
-<!-- KẾT THÚC KHỐI THI ĐUA - KHEN THƯỞNG -->
+
+<!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
 
 <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
    
