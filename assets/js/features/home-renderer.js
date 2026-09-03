@@ -1391,7 +1391,7 @@ export function renderHome() {
                 </div>
 
                 <i class="bi bi-chevron-right
-                          text-[10px] text-slate-400"></i>
+                          text-[10px] text-slate-400"></i> 
 
             </button>
 
