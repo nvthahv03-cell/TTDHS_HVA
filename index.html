@@ -207,9 +207,41 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    localStorage.setItem("user", JSON.stringify(result.user));
-                    window.location.href = "main.html";
-                } else {
+
+    // Lưu người dùng đăng nhập
+    localStorage.setItem(
+        "user",
+        JSON.stringify(result.user)
+    );
+
+    // Dọn cache giao diện/PWA cũ trước khi vào hệ thống
+    try {
+        if ("caches" in window) {
+            const cacheNames = await caches.keys();
+
+            await Promise.all(
+                cacheNames.map(cacheName =>
+                    caches.delete(cacheName)
+                )
+            );
+
+            console.log(
+                "[HVA] Đã dọn cache phiên bản cũ."
+            );
+        }
+    } catch (cacheError) {
+        console.warn(
+            "[HVA] Không thể dọn cache:",
+            cacheError
+        );
+    }
+
+    // Vào Dashboard và tránh lấy main.html cũ từ cache
+    window.location.replace(
+        "main.html?v=" + Date.now()
+    );
+
+} else {
                     showError(result.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
                 }
             } catch (error) {
