@@ -993,42 +993,108 @@ export function renderHome() {
     }
   });
 </script>
-<!-- KHUNG BAO CHỮ CHẠY (Dùng marquee chuẩn HTML) -->
-<div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-cyan-50/80 border border-blue-100 shadow-sm p-2 mb-3 backdrop-blur-md flex items-center gap-2.5">
-    
-    <!-- Badge Cố định bên trái -->
-    <!-- Badge đổi thành NHẮC VIỆC với icon chuông báo hiệu -->
-    <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-bold shadow-xs shrink-0 z-10">
-        <i class="bi bi-bell-fill text-amber-300 text-xs animate-bounce"></i>
-        <span class="uppercase tracking-wider">NHẮC VIỆC</span>
+<!-- ================= NHẮC VIỆC ================= -->
+<div class="relative overflow-hidden
+            rounded-xl
+            bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-cyan-50/80
+            border border-blue-100
+            shadow-sm
+            px-2 py-1.5
+            -mt-1 mb-3
+            backdrop-blur-md
+            flex items-center gap-2">
+
+    <!-- Nhãn cố định -->
+    <div class="flex items-center gap-1.5
+                px-2.5 py-1
+                rounded-lg
+                bg-[#2563EB]
+                text-white
+                text-[10px]
+                font-extrabold
+                shadow-sm
+                shrink-0 z-10">
+
+        <i class="bi bi-bell-fill text-amber-300 text-[11px]"></i>
+
+        <span class="uppercase tracking-[0.08em]">
+            NHẮC VIỆC
+        </span>
     </div>
 
-    <!-- Dải chữ chạy dùng thẻ marquee -->
-    <marquee onmouseover="this.stop();" onmouseout="this.start();" scrollamount="5" class="text-xs font-semibold text-slate-700 flex items-center">
-        <span class="inline-flex items-center gap-1.5 mr-8">
-            <span class="text-blue-600 font-bold">•</span> Hoàn thành báo cáo chuyên môn năm học trước ngày 15 hàng tháng.
+    <!-- Nội dung chạy -->
+    <marquee
+        behavior="scroll"
+        direction="left"
+        scrollamount="2"
+        scrolldelay="35"
+        truespeed
+        onmouseover="this.stop();"
+        onmouseout="this.start();"
+        class="text-[11px]
+               font-semibold
+               tracking-[0.01em]
+               text-slate-600
+               leading-none">
+
+        <span class="whitespace-nowrap">
+
+            Hoàn thành báo cáo chuyên môn năm học trước ngày 15 hàng tháng.
+
+            <span class="mx-5 text-blue-400">✦</span>
+
+            Lịch họp Chuyên môn định kỳ tuần này chuyển sang sáng Thứ 5.
+
+            <span class="mx-5 text-blue-400">✦</span>
+
+            Đã cập nhật danh sách phê duyệt kế hoạch bài dạy mới trên hệ thống.
+
         </span>
-        <span class="inline-flex items-center gap-1.5 mr-8">
-            <span class="text-purple-600 font-bold">•</span> Lịch họp Chuyên môn định kỳ tuần này chuyển sang sáng Thứ 5.
-        </span>
-        <span class="inline-flex items-center gap-1.5 mr-8">
-            <span class="text-emerald-600 font-bold">•</span> Đã cập nhật danh sách Phê duyệt kế hoạch bài dạy mới trên hệ thống.
-        </span>
+
     </marquee>
+
 </div>
 
 <!-- 04 TRỤ CỘT CHÍNH -->
 <section class="grid grid-cols-2 gap-3 mb-2">
 
-    <!-- TRỤ CỘT 1: CỔNG THÔNG TIN -->
-    <div onclick="window.open('https://thpthoavang.edu.vn/', '_blank')" class="group relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-blue-400/40 active:scale-[0.98]">
-        <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
-        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
-            <i class="bi bi-globe text-white text-lg"></i>
-        </div>
-        <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">CỔNG THÔNG TIN</h3>
-        <p class="text-[10px] text-blue-50 font-medium">Website • Thông báo • Tin tức</p>
+    <!-- TRỤ CỘT 1: THI ĐUA - KHEN THƯỞNG -->
+<div onclick="toggleDashboardMenu('thidua-dropdown', event)"
+     class="group relative rounded-2xl
+            bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500
+            text-white p-3.5
+            shadow-md hover:shadow-xl
+            transition-all duration-300
+            cursor-pointer overflow-visible
+            border border-blue-400/40
+            active:scale-[0.98]">
+
+    <div class="absolute top-0 right-0
+                w-20 h-20 bg-white/20 rounded-full blur-xl
+                group-hover:scale-150 transition-all duration-500">
     </div>
+
+    <div class="w-10 h-10 rounded-xl
+                bg-white/20 backdrop-blur-md
+                flex items-center justify-center
+                shadow-inner mb-3
+                group-hover:scale-110
+                transition-transform duration-300
+                border border-white/30">
+
+        <i class="bi bi-trophy-fill text-white text-lg"></i>
+
+    </div>
+
+    <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">
+        THI ĐUA - KHEN THƯỞNG
+    </h3>
+
+    <p class="text-[10px] text-blue-50 font-medium">
+        Đánh giá • Xếp loại • Thành tích
+    </p>
+
+</div>
 
    <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
         <div class="relative">
