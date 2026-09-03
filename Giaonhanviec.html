@@ -418,7 +418,7 @@
                 <button type="submit" id="btnSubmitForm" 
                     class="h-11 rounded-xl bg-[#0F4C81] hover:bg-[#0b3e69] text-white text-sm font-bold shadow-md hover:shadow-lg transition active:scale-95 flex items-center justify-center gap-1.5">
                     <i class="bi bi-send-fill"></i>
-                    <span>Giao việc</span>
+                    <span>Chuyển TT Phát hành</span>
                 </button>
             </div>
         </div>
@@ -1043,48 +1043,128 @@
 
         const nguonGiaoVal = document.querySelector('input[name="nguonGiao"]:checked').value;
 
-        const payload = {
-            action: 'createTask',
+                // ============================================================
+        // CHUẨN HÓA DỮ LIỆU ĐỂ CHUYỂN SANG TT PHÁT HÀNH
+        // GiaoNhanViec KHÔNG ghi DB trực tiếp tại đây.
+        // ============================================================
+
+        const taskData = {
             nguoiGiao: currentUser.fullName,
             chucVuNguoiGiao: currentUser.workPosition,
             toNguoiGiao: currentUser.department,
+
             loaiNhiemVu: document.getElementById('loaiNhiemVu').value,
             nguonGiao: nguonGiaoVal,
+
             soVanBan: vanBanChon ? vanBanChon.soVanBan : '',
             tenVanBan: vanBanChon ? vanBanChon.tenVanBan : '',
+
             mucDo: document.getElementById('mucDo').value,
+
             tieuDe: tieuDe,
             noiDung: noiDung,
-            yeuCauMinhChung: document.getElementById('yeuCauMinhChung').value,
+
+            yeuCauMinhChung:
+                document.getElementById('yeuCauMinhChung').value,
+
             hanHoanThanh: hanHoanThanh,
+
             danhSachNguoiNhan: targetList
         };
 
-        const btnSubmit = document.getElementById('btnSubmitForm');
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = `<i class="bi bi-arrow-repeat animate-spin text-lg"></i><span>Đang xử lý...</span>`;
+
+        // ============================================================
+        // HỒ SƠ CHUẨN ĐƯA VÀO CỔNG TT PHÁT HÀNH
+        // ============================================================
+
+        const publishSource = {
+
+            // Mã hồ sơ tạm trước khi phát hành
+            docId: 'NV-' + Date.now(),
+
+            // Module nguồn để Backend Phát hành nhận diện
+            moduleSource: 'GiaoNhanViec',
+
+            type: 'NHIỆM VỤ',
+
+            title: tieuDe,
+
+            author: currentUser.fullName,
+
+            createdAt: new Date().toISOString(),
+
+            // Toàn bộ dữ liệu nghiệp vụ
+            data: taskData,
+
+            // Người nhận được chuyển nguyên trạng sang TT Phát hành
+            recipients: targetList,
+
+            // Văn bản liên quan nếu nhiệm vụ được giao theo văn bản
+            linkedDocs:
+                vanBanChon && vanBanChon.soVanBan
+                    ? [{
+                        id: vanBanChon.soVanBan,
+                        title:
+                            vanBanChon.tenVanBan ||
+                            vanBanChon.soVanBan,
+                        type: 'Văn bản liên quan'
+                    }]
+                    : []
+        };
+
 
         try {
-            await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload)
-            });
 
-            showToast("Giao nhiệm vụ thành công! Hệ thống đã ghi nhận.", "success");
+            // ========================================================
+            // LƯU HỒ SƠ TRUNG CHUYỂN
+            // TTPhatHanh sẽ đọc đúng STORAGE KEY này
+            // ========================================================
+
+            localStorage.setItem(
+                'TTDHS_CURRENT_DOC',
+                JSON.stringify(publishSource)
+            );
+
+
+            // Kiểm tra lại trước khi chuyển trang
+            const checkData =
+                localStorage.getItem('TTDHS_CURRENT_DOC');
+
+            if (!checkData) {
+                throw new Error(
+                    'Không thể tạo hồ sơ chuyển TT Phát hành.'
+                );
+            }
+
+
+            showToast(
+                'Đã tạo Phiếu giao nhiệm vụ. Đang chuyển TT Phát hành...',
+                'success'
+            );
+
+
+            // ========================================================
+            // CHUYỂN SANG CỔNG PHÁT HÀNH
+            // CHƯA GHI DB_03_GiaoViec TẠI THỜI ĐIỂM NÀY
+            // ========================================================
 
             setTimeout(() => {
-                resetForm();
-                btnSubmit.disabled = false;
-                btnSubmit.innerHTML = `<i class="bi bi-send-fill"></i><span>Giao việc</span>`;
-            }, 1200);
+                window.location.href =
+                    'TTPhatHanh_v1_beta.html';
+            }, 500);
+
 
         } catch (error) {
-            console.error("Lỗi khi tạo nhiệm vụ:", error);
-            showToast("Có lỗi xảy ra trong quá trình kết nối Backend!", "error");
-            btnSubmit.disabled = false;
-            btnSubmit.innerHTML = `<i class="bi bi-send-fill"></i><span>Giao việc</span>`;
+
+            console.error(
+                'Lỗi chuyển TT Phát hành:',
+                error
+            );
+
+            showToast(
+                'Không thể chuyển dữ liệu sang TT Phát hành!',
+                'error'
+            );
         }
     }
 
