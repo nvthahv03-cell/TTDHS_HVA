@@ -2207,3 +2207,189 @@ function openKhoVanBan() {
     // Chuyển trực tiếp sang giao diện trang Kho Văn Bản
     window.location.href = 'VanBan.html';
 }
+
+// =====================================================
+// VIỆC CỦA TÔI - KẾT NỐI BACKEND
+// =====================================================
+
+const MY_TASK_API_URL =
+    'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+
+let HVA_MY_TASKS = [];
+
+function getCurrentHVAUser() {
+    try {
+        return JSON.parse(
+            sessionStorage.getItem('user') ||
+            localStorage.getItem('user') ||
+            '{}'
+        );
+    } catch (e) {
+        return {};
+    }
+}
+
+async function loadMyTasks() {
+    const user = getCurrentHVAUser();
+
+    const username =
+        user.username ||
+        user.userName ||
+        user.maGV ||
+        '';
+
+    if (!username) {
+        console.warn('[HVA] Không xác định được username.');
+        return [];
+    }
+
+    try {
+        const url =
+            MY_TASK_API_URL +
+            '?action=getTaskByUser&username=' +
+            encodeURIComponent(username) +
+            '&_=' + Date.now();
+
+        const response = await fetch(url, {
+            method: 'GET',
+            cache: 'no-store'
+        });
+
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
+
+        const data = await response.json();
+
+        HVA_MY_TASKS = Array.isArray(data) ? data : [];
+
+        updateMyTaskCounters();
+
+        return HVA_MY_TASKS;
+
+    } catch (error) {
+        console.error('[HVA] Lỗi tải Việc của tôi:', error);
+        return [];
+    }
+}
+
+
+// =====================================================
+// PHÂN LOẠI TRẠNG THÁI
+// =====================================================
+
+function getMyTaskGroups() {
+
+    const now = new Date();
+
+    const assigned = [];
+    const doing = [];
+    const overdue = [];
+    const completed = [];
+
+    HVA_MY_TASKS.forEach(task => {
+
+        const status = String(task.trangThai || '').trim();
+
+        let deadline = null;
+
+        if (task.hanHoanThanh) {
+            deadline = new Date(task.hanHoanThanh);
+
+            if (isNaN(deadline.getTime())) {
+                deadline = null;
+            }
+        }
+
+        if (status === 'Hoàn thành') {
+            completed.push(task);
+            return;
+        }
+
+        if (
+            deadline &&
+            deadline.getTime() < now.getTime()
+        ) {
+            overdue.push(task);
+            return;
+        }
+
+        if (
+            status === 'Đã tiếp nhận' ||
+            status === 'Đang thực hiện'
+        ) {
+            doing.push(task);
+            return;
+        }
+
+        // Mới khởi tạo và các trạng thái chưa tiếp nhận
+        assigned.push(task);
+    });
+
+    return {
+        ASSIGNED: assigned,
+        DOING: doing,
+        OVERDUE: overdue,
+        COMPLETED: completed
+    };
+}
+
+
+// =====================================================
+// CẬP NHẬT 4 BỘ ĐẾM
+// =====================================================
+
+function updateMyTaskCounters() {
+
+    const groups = getMyTaskGroups();
+
+    const setCount = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
+
+    setCount('countAssigned', groups.ASSIGNED.length);
+    setCount('countDoing', groups.DOING.length);
+    setCount('countOverdue', groups.OVERDUE.length);
+    setCount('countCompleted', groups.COMPLETED.length);
+}
+
+
+// =====================================================
+// MỞ DANH SÁCH VIỆC
+// =====================================================
+
+window.openMyTasks = async function(type, event) {
+
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    if (!HVA_MY_TASKS.length) {
+        await loadMyTasks();
+    }
+
+    const groups = getMyTaskGroups();
+    const tasks = groups[type] || [];
+
+    // Tạm thời kiểm tra dữ liệu.
+    // Bước sau ta thay bằng giao diện danh sách đẹp.
+    console.log('[HVA] Việc của tôi:', type, tasks);
+
+    if (!tasks.length) {
+        alert('Hiện không có nhiệm vụ trong nhóm này.');
+        return;
+    }
+
+    console.table(tasks);
+};
+
+
+// =====================================================
+// TỰ ĐỘNG NẠP SỐ LIỆU SAU KHI HOME RENDER XONG
+// =====================================================
+
+setTimeout(() => {
+    loadMyTasks();
+}, 500);
