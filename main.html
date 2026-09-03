@@ -148,54 +148,46 @@
         </div>
 
         <!-- ================= RIGHT ================= -->
-        <div class="flex items-center gap-1 shrink-0">
+        <!-- ================= RIGHT: THÔNG BÁO ================= -->
+<div class="flex items-center shrink-0 -translate-y-[2px]">
 
-            <!-- Notification -->
-            <button id="btn-notification"
-                    class="relative
-                           w-8 h-8
-                           rounded-lg
-                           bg-white
-                           border border-slate-200
-                           shadow-sm
-                           hover:bg-blue-50
-                           transition">
+    <button id="btn-notification"
+            type="button"
+            aria-label="Thông báo"
+            class="relative
+                   w-10 h-10
+                   rounded-xl
+                   bg-white
+                   border border-slate-200
+                   shadow-sm
+                   flex items-center justify-center
+                   hover:bg-blue-50
+                   active:scale-95
+                   transition">
 
-                <i class="bi bi-bell-fill text-slate-700 text-sm"></i>
+        <i class="bi bi-bell-fill
+                  text-[#0F4C81]
+                  text-[19px]"></i>
 
-                <span id="header-notification-badge"
-      class="hidden absolute
-             -top-1 -right-1
-             min-w-4 h-4 px-1
-             rounded-full
-             bg-red-500
-             text-[9px]
-             font-bold
-             text-white
-             items-center
-             justify-center">
-    0
-</span>
+        <span id="header-notification-badge"
+              class="hidden absolute
+                     -top-1 -right-1
+                     min-w-[17px] h-[17px] px-1
+                     rounded-full
+                     bg-red-500
+                     text-[9px]
+                     font-extrabold
+                     text-white
+                     items-center
+                     justify-center
+                     border-2 border-white
+                     shadow-sm">
+            0
+        </span>
 
-            </button>
+    </button>
 
-            <!-- Search -->
-            <button id="btn-search"
-                    class="w-8 h-8
-                           rounded-lg
-                           bg-white
-                           border border-slate-200
-                           shadow-sm
-                           hover:bg-blue-50
-                           transition">
-
-                <i class="bi bi-search text-slate-700 text-sm"></i>
-
-            </button>
-
-           
-
-        </div>
+</div>
 
     </div>
 
