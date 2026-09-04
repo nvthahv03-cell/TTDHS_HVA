@@ -4,7 +4,7 @@ import { ModuleManager } from '../modules/module-manager.js';
 import { PWA } from '../services/pwa.js';
 
 export function renderHome() {
-    const container = $('#home-view');
+    const container = $('#home-view'); 
     if (!container) return;
 
     container.innerHTML = `
