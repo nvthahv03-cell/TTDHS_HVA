@@ -4,7 +4,7 @@ import { ModuleManager } from '../modules/module-manager.js';
 import { PWA } from '../services/pwa.js';
 
 export function renderHome() {
-    const container = $('#home-view'); 
+    const container = $('#home-view');
     if (!container) return;
 
     container.innerHTML = `
@@ -3614,7 +3614,10 @@ window.openMyMeetingDetail = function(meetingId, event) {
 
                 ${meeting.attendanceEnabled === true ? `
                     <div class="pt-2 border-t border-slate-100">
-                        ${meeting.checkIn === true ? `
+                        ${meeting.checkIn !== true && (/KẾT THÚC|CHỜ KẾT LUẬN|HOÀN TẤT/.test(String(meeting.meetingStatus || '').toUpperCase())) ? `
+                            <div class="rounded-xl bg-amber-50 border border-amber-200 px-3 py-2.5 text-amber-700 font-extrabold text-[11px]">
+                                <i class="bi bi-exclamation-circle mr-1"></i>KHÔNG CÓ QR VÀO • CẦN XÁC MINH THỰC TẾ
+                            </div>` : meeting.checkIn === true ? `
                             <div class="rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2.5 text-emerald-700 font-extrabold text-[11px]">
                                 <i class="bi bi-check2-circle mr-1"></i>ĐÃ ĐIỂM DANH VÀO${meeting.checkInAt ? ' • ' + esc(meeting.checkInAt) : ''}
                             </div>
