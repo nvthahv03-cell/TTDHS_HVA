@@ -3605,20 +3605,13 @@ window.openMyMeetingDetail = function(meetingId, event) {
                         <i class="bi bi-file-earmark-text"></i>Xem tài liệu cuộc họp
                     </a>` : ''}
 
-                ${meeting.conclusion ? `
-                    <div class="pt-2 border-t border-slate-100">
-                        <div class="font-extrabold text-emerald-700 mb-1">KẾT LUẬN CUỘC HỌP</div>
-                        <div class="whitespace-pre-line leading-5">${esc(meeting.conclusion)}</div>
-                        ${meeting.conclusionRead === true ? `<div class="mt-2 text-[10px] font-bold text-emerald-600"><i class="bi bi-check2-all mr-1"></i>ĐÃ XÁC NHẬN ĐỌC${meeting.conclusionReadAt ? ' • '+esc(meeting.conclusionReadAt) : ''}</div>` : `<button type="button" onclick="markMeetingConclusionRead9H5('${esc(meeting.meetingId || '')}')" class="mt-2 w-full rounded-xl bg-emerald-600 text-white font-extrabold text-[11px] py-2.5"><i class="bi bi-check2-all mr-1"></i>XÁC NHẬN ĐÃ ĐỌC KẾT LUẬN</button>`}
-                    </div>` : ''}
-
                 ${meeting.attendanceEnabled === true ? `
                     <div class="pt-2 border-t border-slate-100">
                         ${meeting.checkIn === true ? `
                             <div class="rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2.5 text-emerald-700 font-extrabold text-[11px]">
                                 <i class="bi bi-check2-circle mr-1"></i>ĐÃ ĐIỂM DANH VÀO${meeting.checkInAt ? ' • ' + esc(meeting.checkInAt) : ''}
                             </div>
-                            ${(/KẾT THÚC|CHỜ KẾT LUẬN|HOÀN TẤT/.test(String(meeting.meetingStatus || '').toUpperCase())) ? (meeting.checkOut === true ? `
+                            ${String(meeting.meetingStatus || '').toUpperCase().includes('KẾT THÚC') ? (meeting.checkOut === true ? `
                                 <div class="mt-2 rounded-xl bg-amber-50 border border-amber-200 px-3 py-2.5 text-amber-700 font-extrabold text-[11px]">
                                     <i class="bi bi-box-arrow-right mr-1"></i>ĐÃ GHI NHẬN QR RA${meeting.checkOutAt ? ' • ' + esc(meeting.checkOutAt) : ''}
                                 </div>` : `
@@ -3672,18 +3665,6 @@ window.openMyMeetingDetail = function(meetingId, event) {
         if (e.target === modal) closeMyMeetingDetail();
     });
     document.body.appendChild(modal);
-};
-
-window.markMeetingConclusionRead9H5 = async function(meetingId) {
-    const user = getCurrentHVAUser();
-    const username = String(user?.username || user?.userName || user?.maGV || '').trim();
-    if (!username) return alert('Không xác định được tài khoản.');
-    try {
-        const r = await fetch(MY_MEETING_API_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify({action:'markMeetingConclusionRead', meetingId, username})});
-        const d = await r.json();
-        alert((d && d.message) || 'Đã xác nhận đọc kết luận.');
-        if (d && d.success) { closeMyMeetingDetail(); await loadMyMeetings(); }
-    } catch(e) { alert('Không xác nhận được: ' + e.message); }
 };
 
 window.registerMeetingSpeak = async function(meetingId) {
