@@ -246,6 +246,8 @@
         DEFAULT_WORKFLOW_STEPS: [
             { id: "SHOW_ONLY", label: "Chỉ hiển thị", selected: true },
             { id: "CONFIRM_READ", label: "Xác nhận đã đọc", selected: true },
+            { id: "CONFIRM_ATTENDANCE", label: "Xác nhận tham dự / Xin vắng", selected: false },
+            { id: "QR_ATTENDANCE", label: "Điểm danh QR", selected: false },
             { id: "ACCEPT_TASK", label: "Tiếp nhận nhiệm vụ", selected: false },
             { id: "IN_PROGRESS", label: "Đang thực hiện", selected: false },
             { id: "REPORT_RESULT", label: "Báo cáo kết quả", selected: false },
@@ -678,26 +680,48 @@ const Controller = {
 
     applySourceDefaults: (moduleSource) => {
         const srcName = String(moduleSource || '').toLowerCase();
+        const raw = TTDHS_State.rawSource || {};
+        const sourceWorkflow = Array.isArray(raw.workflow)
+            ? raw.workflow
+            : (raw.data && Array.isArray(raw.data.workflow) ? raw.data.workflow : []);
+        const sourceDestinations = Array.isArray(raw.destinations) ? raw.destinations : [];
+
         TTDHS_State.destinations.forEach(d => d.selected = false);
         TTDHS_State.workflowSteps.forEach(s => s.selected = false);
 
-        if (srcName.includes('giao') || srcName.includes('nhiemvu') || srcName.includes('nhiệm vụ')) {
-            const v = TTDHS_State.destinations.find(d => d.id === 'ViecCuaToi');
-            const t = TTDHS_State.destinations.find(d => d.id === 'ThongBao');
-            if (v) v.selected = true;
-            if (t) t.selected = true;
+        const selectDestination = (id) => {
+            const d = TTDHS_State.destinations.find(x => x.id === id);
+            if (d) d.selected = true;
+        };
+        const selectWorkflow = (id) => {
+            const s = TTDHS_State.workflowSteps.find(x => x.id === id);
+            if (s) s.selected = true;
+        };
+
+        // Ưu tiên cấu hình điểm đến do module nguồn gửi sang nếu có.
+        sourceDestinations.forEach(id => selectDestination(typeof id === 'string' ? id : id.id));
+
+        if (srcName.includes('cuochop') || srcName.includes('cuoc hop') || srcName.includes('cuộc họp')) {
+            // Cuộc họp luôn đi qua Thông báo + Việc của tôi để theo dõi xác nhận/điểm danh.
+            selectDestination('ThongBao');
+            selectDestination('ViecCuaToi');
+
+            // Workflow của Cuộc họp phải lấy đúng yêu cầu từ module nguồn.
+            // Cuochop gửi CONFIRM_READ và chỉ bổ sung CONFIRM_ATTENDANCE / QR_ATTENDANCE khi được bật.
+            const meetingWorkflow = sourceWorkflow.length ? sourceWorkflow : ['CONFIRM_READ'];
+            meetingWorkflow.forEach(selectWorkflow);
+        } else if (srcName.includes('giao') || srcName.includes('nhiemvu') || srcName.includes('nhiệm vụ')) {
+            selectDestination('ViecCuaToi');
+            selectDestination('ThongBao');
             ['CONFIRM_READ','ACCEPT_TASK','IN_PROGRESS','REPORT_RESULT','COMPLETE','ATTACH_PROOF']
-                .forEach(id => { const s = TTDHS_State.workflowSteps.find(x => x.id === id); if (s) s.selected = true; });
+                .forEach(selectWorkflow);
         } else if (srcName.includes('lichcongtac')) {
-            const d = TTDHS_State.destinations.find(x => x.id === 'LichCongTac');
-            if (d) d.selected = true;
-            const s = TTDHS_State.workflowSteps.find(x => x.id === 'SHOW_ONLY');
-            if (s) s.selected = true;
+            selectDestination('LichCongTac');
+            selectWorkflow('SHOW_ONLY');
         } else {
-            const d = TTDHS_State.destinations.find(x => x.id === 'ThongBao');
-            if (d) d.selected = true;
-            const s = TTDHS_State.workflowSteps.find(x => x.id === 'CONFIRM_READ');
-            if (s) s.selected = true;
+            if (!TTDHS_State.destinations.some(d => d.selected)) selectDestination('ThongBao');
+            if (sourceWorkflow.length) sourceWorkflow.forEach(selectWorkflow);
+            else selectWorkflow('CONFIRM_READ');
         }
     },
 
