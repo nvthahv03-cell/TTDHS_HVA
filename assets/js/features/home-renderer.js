@@ -4113,6 +4113,55 @@ window.openMyTasks = async function(type, event) {
 };
 
 
+
+// =====================================================
+// 9H.4.1 - XÁC NHẬN THỰC TẾ THEO CẤP
+// Chỉ bổ sung luồng xác nhận; không sửa QR/TƯƠNG TÁC 9H.4
+// =====================================================
+let HVA_MEETING_APPROVALS = [];
+
+function getApprovalUser_(){
+    try { return JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}'); }
+    catch(e){ return {}; }
+}
+function getApprovalUsername_(){ const u=getApprovalUser_(); return String(u.username||u.userName||u.maGV||'').trim(); }
+function getApprovalName_(){ const u=getApprovalUser_(); return String(u.hoTen||u.fullName||u.name||u.username||'').trim(); }
+
+function ensureMeetingApprovalPanel_(){
+    const root=document.getElementById('home-view'); if(!root||document.getElementById('hvaMeetingApprovalPanel'))return;
+    const box=document.createElement('div');
+    box.id='hvaMeetingApprovalPanel'; box.className='mt-3 rounded-2xl border border-emerald-200 bg-white overflow-hidden shadow-sm';
+    box.innerHTML=`<div class="px-3 py-2.5 bg-emerald-50 flex items-center justify-between"><div><div class="text-[12px] font-extrabold text-emerald-800">👥 XÁC NHẬN THỰC TẾ CUỘC HỌP</div><div class="text-[9px] text-emerald-600">Theo lượt được giao: Tổ/Bộ phận → Thư ký → Chủ trì</div></div><button type="button" onclick="loadMeetingAttendanceApprovals()" class="w-8 h-8 rounded-lg border border-emerald-200 bg-white">↻</button></div><div id="hvaMeetingApprovalList" class="p-3 text-[10px] text-slate-400 text-center">Đang kiểm tra lượt xác nhận...</div>`;
+    root.appendChild(box);
+}
+
+window.loadMeetingAttendanceApprovals = async function(){
+    ensureMeetingApprovalPanel_(); const box=document.getElementById('hvaMeetingApprovalList'), username=getApprovalUsername_();
+    if(!box||!username)return; try{
+        const r=await fetch(`${MY_TASK_API_URL}?action=getPendingMeetingAttendanceApprovals&username=${encodeURIComponent(username)}`); const d=await r.json();
+        HVA_MEETING_APPROVALS=d&&d.success?d.approvals||[]:[]; renderMeetingAttendanceApprovals_();
+    }catch(e){box.innerHTML=`<div class="text-red-500">Không tải được lượt xác nhận: ${escapeMyWorkHtml(e.message)}</div>`;}
+};
+
+function approvalStageLabel_(s){return s==='TO_BO_PHAN'?'TTCM/Trưởng bộ phận':s==='THU_KY'?'THƯ KÝ':s==='CHU_TRI'?'CHỦ TRÌ':s;}
+function renderMeetingAttendanceApprovals_(){
+    const box=document.getElementById('hvaMeetingApprovalList'); if(!box)return;
+    if(!HVA_MEETING_APPROVALS.length){box.innerHTML='<div class="py-3 text-slate-400">Không có lượt xác nhận đang chờ.</div>';return;}
+    box.innerHTML=HVA_MEETING_APPROVALS.map(a=>`<div class="mb-2 last:mb-0 rounded-xl border border-emerald-200 bg-emerald-50/40 p-2.5 text-left"><div class="flex justify-between gap-2"><div><div class="text-[11px] font-extrabold text-slate-800">${escapeMyWorkHtml(a.title||'Cuộc họp')}</div><div class="text-[9px] text-slate-500">${approvalStageLabel_(a.stage)}${a.group?' • '+escapeMyWorkHtml(a.group):''}</div></div><button type="button" onclick="openMeetingAttendanceApproval('${escapeMyWorkHtml(a.id)}')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[9px] font-bold">MỞ DANH SÁCH</button></div></div>`).join('');
+}
+
+window.openMeetingAttendanceApproval=function(id){
+    const a=HVA_MEETING_APPROVALS.find(x=>String(x.id)===String(id)); if(!a)return alert('Không tìm thấy lượt xác nhận.');
+    const parts=a.participants||[]; const rows=parts.map(p=>`<label class="flex items-center gap-2 p-2 border-b last:border-0"><input type="checkbox" class="hva-att-present" value="${escapeMyWorkHtml(p.username)}" ${p.checkIn===true||String(p.actual)==='CÓ MẶT'?'checked':''}><div class="flex-1 min-w-0"><div class="font-bold text-[10px] text-slate-800">${escapeMyWorkHtml(p.hoTen||p.username)}</div><div class="text-[9px] text-slate-500">${escapeMyWorkHtml(p.toBoPhan||'')} • ${p.checkIn?'QR vào'+(p.checkInAt?' '+escapeMyWorkHtml(p.checkInAt):''):'Chưa QR vào'} • ${escapeMyWorkHtml(p.actual||'CHƯA XÁC NHẬN')}</div></div></label>`).join('');
+    const html=`<div class="fixed inset-0 z-[9999] bg-slate-900/50 flex items-center justify-center p-3" id="hvaApprovalModal"><div class="w-full max-w-lg max-h-[88vh] bg-white rounded-2xl overflow-hidden shadow-2xl"><div class="p-3 bg-emerald-700 text-white"><div class="text-[12px] font-extrabold">${approvalStageLabel_(a.stage)} XÁC NHẬN</div><div class="text-[10px]">${escapeMyWorkHtml(a.title||'')}${a.group?' • '+escapeMyWorkHtml(a.group):''}</div></div><div class="p-3"><div class="text-[9px] text-slate-500 mb-2">✓ = xác nhận CÓ MẶT. Hệ thống mặc định đánh dấu người đã QR vào; người xác nhận có thể chỉnh lại trước khi gửi.</div><div class="border rounded-xl max-h-[52vh] overflow-auto">${rows||'<div class="p-4 text-center">Không có thành viên.</div>'}</div><div class="mt-3 flex gap-2"><button onclick="document.getElementById('hvaApprovalModal').remove()" class="flex-1 border rounded-xl py-2 text-[10px] font-bold">ĐÓNG</button><button onclick="submitMeetingAttendanceApproval('${escapeMyWorkHtml(a.id)}')" class="flex-1 bg-emerald-600 text-white rounded-xl py-2 text-[10px] font-bold">XÁC NHẬN & CHUYỂN</button></div></div></div></div>`;
+    document.body.insertAdjacentHTML('beforeend',html);
+};
+
+window.submitMeetingAttendanceApproval=async function(id){
+    const present=[...document.querySelectorAll('#hvaApprovalModal .hva-att-present:checked')].map(x=>x.value); if(!confirm(`Xác nhận ${present.length} thành viên có mặt và chuyển bước tiếp theo?`))return;
+    try{const r=await fetch(MY_TASK_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'confirmMeetingAttendanceApproval',approvalId:id,username:getApprovalUsername_(),confirmerName:getApprovalName_(),presentUsernames:present})});const d=await r.json();if(!d||d.success!==true)return alert((d&&d.message)||'Không xác nhận được.');document.getElementById('hvaApprovalModal')?.remove();alert(d.message||'Đã xác nhận.');await loadMeetingAttendanceApprovals();}catch(e){alert('Lỗi xác nhận: '+e.message);}
+};
+
 // =====================================================
 // TỰ ĐỘNG NẠP SỐ LIỆU SAU KHI HOME RENDER XONG
 // =====================================================
@@ -4120,6 +4169,8 @@ window.openMyTasks = async function(type, event) {
 setTimeout(() => {
     loadMyTasks();
     loadMyMeetings();
+    ensureMeetingApprovalPanel_();
+    loadMeetingAttendanceApprovals();
 }, 500);
 
 
