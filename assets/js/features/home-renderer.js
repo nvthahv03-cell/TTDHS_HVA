@@ -3346,6 +3346,13 @@ function getCurrentHVAUser() {
 }
 
 async function loadMyTasks() {
+    expectedMode = String(expectedMode || 'IN').toUpperCase();
+    if (String(parsed.mode || 'IN').toUpperCase() !== expectedMode) {
+        if (status) status.textContent = expectedMode === 'OUT' ? 'Đây không phải mã QR ra.' : 'Đây không phải mã QR vào.';
+        setTimeout(() => openMeetingQrScanner(expectedMeetingId, expectedMode), 900);
+        return;
+    }
+
     const user = getCurrentHVAUser();
 
     const username =
@@ -3602,11 +3609,19 @@ window.openMyMeetingDetail = function(meetingId, event) {
                     <div class="pt-2 border-t border-slate-100">
                         ${meeting.checkIn === true ? `
                             <div class="rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2.5 text-emerald-700 font-extrabold text-[11px]">
-                                <i class="bi bi-check2-circle mr-1"></i>ĐÃ ĐIỂM DANH${meeting.checkInAt ? ' • ' + esc(meeting.checkInAt) : ''}
-                            </div>` : `
-                            <button type="button" onclick="openMeetingQrScanner('${esc(meeting.meetingId || '')}')"
+                                <i class="bi bi-check2-circle mr-1"></i>ĐÃ ĐIỂM DANH VÀO${meeting.checkInAt ? ' • ' + esc(meeting.checkInAt) : ''}
+                            </div>
+                            ${String(meeting.meetingStatus || '').toUpperCase().includes('KẾT THÚC') ? (meeting.checkOut === true ? `
+                                <div class="mt-2 rounded-xl bg-amber-50 border border-amber-200 px-3 py-2.5 text-amber-700 font-extrabold text-[11px]">
+                                    <i class="bi bi-box-arrow-right mr-1"></i>ĐÃ GHI NHẬN QR RA${meeting.checkOutAt ? ' • ' + esc(meeting.checkOutAt) : ''}
+                                </div>` : `
+                                <button type="button" onclick="openMeetingQrScanner('${esc(meeting.meetingId || '')}', 'OUT')"
+                                    class="mt-2 w-full rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-[11px] py-2.5 transition">
+                                    <i class="bi bi-camera-fill mr-1"></i>Quét mã QR ra
+                                </button>`) : ''}` : `
+                            <button type="button" onclick="openMeetingQrScanner('${esc(meeting.meetingId || '')}', 'IN')"
                                 class="w-full rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-extrabold text-[11px] py-2.5 transition">
-                                <i class="bi bi-camera-fill mr-1"></i>Quét mã QR điểm danh
+                                <i class="bi bi-camera-fill mr-1"></i>Quét mã QR điểm danh vào
                             </button>
                             <div class="text-[9px] text-slate-500 mt-1.5">Camera sẽ mở để quét mã QR của đúng cuộc họp này.</div>`}
                     </div>` : ''}
@@ -3743,15 +3758,21 @@ function parseMeetingQrPayload(raw) {
         const obj = JSON.parse(text);
         const meetingId = String(obj.meetingId || obj.id || '').trim();
         const token = String(obj.token || obj.checkInToken || obj.qrToken || '').trim();
-        if (meetingId && token) return { meetingId, token };
+        if (meetingId && token) return { meetingId, token, mode: String(obj.mode || 'IN').toUpperCase() };
     } catch (ignore) {}
 
     try {
         const url = new URL(text);
         const meetingId = String(url.searchParams.get('meetingId') || url.searchParams.get('mid') || '').trim();
         const token = String(url.searchParams.get('token') || url.searchParams.get('qrToken') || '').trim();
-        if (meetingId && token) return { meetingId, token };
+        if (meetingId && token) return { meetingId, token, mode: String(url.searchParams.get('mode') || 'IN').toUpperCase() };
     } catch (ignore) {}
+
+    const outPrefix = 'HVA:MEETING_CHECKOUT:';
+    if (text.toUpperCase().startsWith(outPrefix)) {
+        const body = text.slice(outPrefix.length), cut = body.indexOf(':');
+        if (cut > 0) return { meetingId: body.slice(0,cut).trim(), token: body.slice(cut+1).trim(), mode:'OUT' };
+    }
 
     const prefix = 'HVA:MEETING_CHECKIN:';
     if (text.toUpperCase().startsWith(prefix)) {
@@ -3760,7 +3781,7 @@ function parseMeetingQrPayload(raw) {
         if (cut > 0) {
             const meetingId = body.slice(0, cut).trim();
             const token = body.slice(cut + 1).trim();
-            if (meetingId && token) return { meetingId, token };
+            if (meetingId && token) return { meetingId, token, mode:'IN' };
         }
     }
     return null;
@@ -3781,11 +3802,13 @@ function loadJsQrLibrary() {
     return window.HVA_JSQR_PROMISE;
 }
 
-window.openMeetingQrScanner = async function(meetingId) {
+window.openMeetingQrScanner = async function(meetingId, scanMode = 'IN') {
     const meeting = HVA_MY_MEETINGS.find(item => String(item.meetingId || '') === String(meetingId || ''));
     if (!meeting) return alert('Không tìm thấy cuộc họp.');
     if (meeting.attendanceEnabled !== true) return alert('Cuộc họp này không bật điểm danh QR.');
-    if (meeting.checkIn === true) return alert('Thầy/Cô đã điểm danh cuộc họp này.');
+    scanMode = String(scanMode || 'IN').toUpperCase();
+    if (scanMode === 'IN' && meeting.checkIn === true) return alert('Thầy/Cô đã điểm danh vào cuộc họp này.');
+    if (scanMode === 'OUT' && meeting.checkOut === true) return alert('Thầy/Cô đã ghi nhận QR ra cuộc họp này.');
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         return alert('Thiết bị/trình duyệt này không hỗ trợ mở camera trong ứng dụng.');
     }
@@ -3850,7 +3873,7 @@ window.openMeetingQrScanner = async function(meetingId) {
 
                 if (code && code.data) {
                     HVA_QR_SCANNING = false;
-                    await handleMeetingQrResult(meetingId, code.data);
+                    await handleMeetingQrResult(meetingId, code.data, scanMode);
                     return;
                 }
             }
@@ -3881,21 +3904,21 @@ window.closeMeetingQrScanner = function() {
     if (modal) modal.remove();
 };
 
-async function handleMeetingQrResult(expectedMeetingId, rawQr) {
+async function handleMeetingQrResult(expectedMeetingId, rawQr, expectedMode = 'IN') {
     const status = document.getElementById('hvaMeetingQrStatus');
     const parsed = parseMeetingQrPayload(rawQr);
 
     if (!parsed) {
         if (status) status.textContent = 'Mã QR không đúng định dạng điểm danh HVA.';
         HVA_QR_SCANNING = true;
-        setTimeout(() => openMeetingQrScanner(expectedMeetingId), 900);
+        setTimeout(() => openMeetingQrScanner(expectedMeetingId, expectedMode), 900);
         return;
     }
 
     if (String(parsed.meetingId) !== String(expectedMeetingId)) {
         if (status) status.textContent = 'Mã QR này thuộc cuộc họp khác.';
         HVA_QR_SCANNING = true;
-        setTimeout(() => openMeetingQrScanner(expectedMeetingId), 900);
+        setTimeout(() => openMeetingQrScanner(expectedMeetingId, expectedMode), 900);
         return;
     }
 
@@ -3911,7 +3934,7 @@ async function handleMeetingQrResult(expectedMeetingId, rawQr) {
 
     try {
         const result = await postMyMeetingAction({
-            action: 'checkInMeeting',
+            action: expectedMode === 'OUT' ? 'checkOutMeeting' : 'checkInMeeting',
             meetingId: parsed.meetingId,
             token: parsed.token,
             username: username
