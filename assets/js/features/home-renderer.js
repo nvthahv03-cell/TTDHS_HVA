@@ -3640,6 +3640,12 @@ window.openMyMeetingDetail = function(meetingId, event) {
                 </div>
             </div>
 
+            <div class="px-4 pb-2">
+                <button type="button" onclick="registerMeetingSpeak('${esc(meeting.meetingId || '')}')"
+                    class="w-full rounded-xl bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-700 font-extrabold text-[11px] py-2.5 transition">
+                    <i class="bi bi-mic-fill mr-1"></i>Đăng ký phát biểu
+                </button>
+            </div>
             <div class="px-4 pb-4 flex gap-2">
                 ${requireConfirmation && !confirmed && !absent ? `
                     <button type="button" onclick="confirmMyMeetingAttendance('${esc(meeting.meetingId || '')}')"
@@ -3659,6 +3665,23 @@ window.openMyMeetingDetail = function(meetingId, event) {
         if (e.target === modal) closeMyMeetingDetail();
     });
     document.body.appendChild(modal);
+};
+
+window.registerMeetingSpeak = async function(meetingId) {
+    const username = getCurrentHVAUser();
+    if (!username) return alert('Không xác định được tài khoản đang đăng nhập.');
+    try {
+        const response = await fetch(MY_TASK_API_URL, {
+            method: 'POST',
+            headers: {'Content-Type':'text/plain;charset=utf-8'},
+            body: JSON.stringify({action:'registerMeetingSpeak', meetingId, username})
+        });
+        const result = await response.json();
+        if (!result || result.success !== true) return alert((result && result.message) || 'Không đăng ký được phát biểu.');
+        alert(result.message || 'Đã đăng ký phát biểu.');
+    } catch (e) {
+        alert('Có lỗi khi đăng ký phát biểu: ' + e.message);
+    }
 };
 
 window.closeMyMeetingDetail = function() {
