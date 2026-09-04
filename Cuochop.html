@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TTĐHS HVA - Cuộc họp</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <style>
@@ -31,7 +32,15 @@ body{font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}::-web
     </div>
   </section>
 
-  <form id="meetingForm" class="space-y-4" onsubmit="saveDraft(event)">
+  
+  <section class="bg-white rounded-2xl border border-violet-200 shadow-sm overflow-hidden">
+    <div class="px-4 py-3 flex items-center justify-between gap-3 bg-violet-50">
+      <div><div class="text-[11px] font-extrabold text-violet-800 uppercase"><i class="bi bi-qr-code mr-1"></i>Điều hành QR cuộc họp</div><div class="text-[9px] text-violet-600 mt-0.5">Sinh QR vào • Kết thúc cuộc họp • Sinh QR ra</div></div>
+      <button type="button" onclick="loadManagedMeetings()" class="px-3 h-9 rounded-lg bg-white border border-violet-200 text-violet-700 text-[10px] font-bold"><i class="bi bi-arrow-clockwise mr-1"></i>Làm mới</button>
+    </div>
+    <div id="managedMeetings" class="p-3 text-[10px] text-slate-400">Đang tải cuộc họp đã phát hành...</div>
+  </section>
+<form id="meetingForm" class="space-y-4" onsubmit="saveDraft(event)">
     <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-3">
       <div class="section-title"><i class="bi bi-ui-checks-grid"></i><span>Thông tin cuộc họp</span></div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -64,10 +73,7 @@ body{font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}::-web
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div><label class="lbl">Ngày họp <b>*</b></label><input type="date" id="meetingDate" required class="field"></div>
         <div><label class="lbl">Bắt đầu <b>*</b></label><input type="time" id="meetingStart" required class="field"></div>
-        <div>
-  <label class="lbl">Kết thúc dự kiến <b>*</b></label>
-  <input type="time" id="meetingEnd" required class="field">
-</div>
+        <div><label class="lbl">Kết thúc</label><input type="time" id="meetingEnd" class="field"></div>
       </div>
       <div><label class="lbl">Địa điểm <b>*</b></label>
         <select id="meetingPlace" required class="field" onchange="toggleOtherPlace()">
@@ -123,6 +129,32 @@ body{font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}::-web
   </form>
 </main>
 
+<div id="qrDisplayModal" class="hidden fixed inset-0 z-[120] bg-slate-950/75 backdrop-blur-sm p-3 items-center justify-center">
+ <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+  <div class="px-4 py-3 border-b flex justify-between items-center"><div><b id="qrDisplayHeading" class="text-violet-700 text-sm">MÃ QR ĐIỂM DANH</b><div id="qrDisplayTitle" class="text-[10px] text-slate-500 mt-0.5"></div></div><button onclick="closeQrDisplay()" class="w-8 h-8 rounded-lg bg-slate-100"><i class="bi bi-x-lg"></i></button></div>
+  <div class="p-5 text-center"><div id="qrCanvas" class="inline-flex p-3 bg-white border rounded-xl"></div><div id="qrDisplayMeta" class="text-[10px] text-slate-500 mt-3"></div>
+   <div class="grid grid-cols-2 gap-2 mt-4"><button onclick="copyQrImage()" class="action bg-violet-600 text-white"><i class="bi bi-copy"></i> SAO CHÉP QR</button><button onclick="downloadQrImage()" class="action bg-slate-100 text-slate-700"><i class="bi bi-download"></i> TẢI ẢNH QR</button></div>
+  </div>
+ </div>
+</div>
+
+
+<div id="interactionModal" class="hidden fixed inset-0 z-[125] bg-slate-950/70 backdrop-blur-sm p-3 items-center justify-center">
+ <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[92vh] overflow-y-auto">
+  <div class="sticky top-0 bg-white z-10 px-4 py-3 border-b flex items-center justify-between"><div><b class="text-violet-700 text-sm">TƯƠNG TÁC CUỘC HỌP</b><div id="interactionMeetingTitle" class="text-[10px] text-slate-500"></div></div><button onclick="closeInteractionModal()" class="w-8 h-8 rounded-lg bg-slate-100"><i class="bi bi-x-lg"></i></button></div>
+  <div class="p-4 space-y-3">
+   <div class="grid grid-cols-3 gap-2"><button onclick="pickRandomParticipant()" class="action bg-violet-50 text-violet-700 border border-violet-200"><i class="bi bi-dice-5"></i> NGẪU NHIÊN</button><button onclick="sendBreakMessage()" class="action bg-cyan-50 text-cyan-700 border border-cyan-200"><i class="bi bi-megaphone"></i> HẾT GIẢI LAO</button><button onclick="speakCurrentMessage()" class="action bg-amber-50 text-amber-700 border border-amber-200"><i class="bi bi-volume-up"></i> PHÁT LOA</button></div>
+   <div><label class="lbl">Tìm/chọn thành viên</label><input id="interactionSearch" oninput="renderInteractionParticipants()" class="field" placeholder="Nhập tên giáo viên..."><div id="interactionParticipants" class="mt-2 max-h-40 overflow-y-auto border rounded-xl"></div></div>
+   <div><label class="lbl">Nội dung tương tác</label><select id="interactionPreset" onchange="applyInteractionPreset()" class="field"><option value="PREPARE_SPEAK">Mời chuẩn bị phát biểu</option><option value="SPEAK_NOW">Mời phát biểu ngay</option><option value="PREPARE_REPORT">Mời chuẩn bị tham luận</option><option value="FOCUS">Đề nghị tập trung nội dung cuộc họp</option><option value="DEVICE">Đề nghị hạn chế sử dụng thiết bị điện tử không liên quan</option><option value="ATTIRE">Đề nghị lưu ý trang phục phù hợp</option><option value="BADGE">Đề nghị đeo thẻ viên chức</option><option value="CONDUCT">Đề nghị bảo đảm tác phong dự họp</option><option value="RETURN">Đề nghị trở lại cuộc họp</option><option value="ABSENT_CHECK">Ghi nhận tạm thời vắng tại thời điểm kiểm tra</option><option value="EARLY_LEAVE_CHECK">Rời cuộc họp trước khi kết thúc - chưa ghi nhận xin phép</option><option value="MEET_CHAIR">Mời gặp chủ trì sau cuộc họp</option><option value="OTHER">Đề nghị khác...</option></select></div>
+   <textarea id="interactionContent" rows="3" class="w-full rounded-xl border border-slate-200 p-3 text-xs" placeholder="Nội dung gửi..."></textarea>
+   <label class="toggle-row"><span><b>Gửi TTCM/Trưởng bộ phận để phối hợp</b><small>Chỉ bật khi thực sự cần phối hợp; mặc định gửi riêng thành viên.</small></span><input id="interactionCoordinate" type="checkbox"></label>
+   <label class="toggle-row"><span><b>Phát lời mời qua loa</b><small>Chỉ dùng với lời mời/thông báo công khai; không dùng cho nhắc tác phong cá nhân.</small></span><input id="interactionVoice" type="checkbox"></label>
+   <div class="grid grid-cols-2 gap-2"><button onclick="closeInteractionModal()" class="action bg-slate-100 text-slate-600">ĐÓNG</button><button onclick="sendMeetingInteraction()" class="action bg-violet-600 text-white"><i class="bi bi-send-fill"></i> GỬI</button></div>
+   <div class="pt-2 border-t"><div class="text-[10px] font-extrabold text-slate-500 mb-2">ĐĂNG KÝ PHÁT BIỂU / TƯƠNG TÁC GẦN ĐÂY</div><div id="interactionLog" class="space-y-1.5 text-[10px]"></div></div>
+  </div>
+ </div>
+</div>
+
 <div id="previewModal" class="hidden fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm p-3 items-center justify-center">
  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
   <div class="sticky top-0 bg-white border-b px-4 py-3 flex justify-between items-center"><b class="text-[#0F4C81] text-sm">XEM TRƯỚC CUỘC HỌP</b><button onclick="closePreview()" class="w-8 h-8 rounded-lg bg-slate-100"><i class="bi bi-x-lg"></i></button></div>
@@ -140,68 +172,7 @@ function toggleOtherPlace(){$('otherPlaceWrap').classList.toggle('hidden',$('mee
 function toggleQrTimes(){$('qrTimes').classList.toggle('hidden',!$('enableQr').checked);}
 function selectedPeople(){const out=[];meetingAllToData.forEach(g=>g.members.forEach(m=>{if(meetingSelectedUsernames.has(m.username))out.push(m)}));return out;}
 function collectMeeting(){const type=$('meetingType').value;return {sourceModule:'CuocHop',objectType:'MEETING',meetingType:type,customMeetingType:$('customMeetingType').value.trim(),period:$('meetingPeriod').value,title:$('meetingTitle').value.trim(),content:$('meetingContent').value.trim(),note:$('meetingNote').value.trim(),date:$('meetingDate').value,startTime:$('meetingStart').value,endTime:$('meetingEnd').value,place:$('meetingPlace').value==='Khác'?$('otherPlace').value.trim():$('meetingPlace').value,chairperson:$('chairperson').value.trim(),secretary:$('secretary').value.trim(),recipients:selectedPeople(),documentUrl:$('meetingDocumentUrl').value.trim(),requireConfirmation:$('requireConfirm').checked,attendance:{enabled:$('enableQr').checked,method:'QR',openTime:$('qrOpen').value,closeTime:$('qrClose').value},workflow:['CONFIRM_READ',...($('requireConfirm').checked?['CONFIRM_ATTENDANCE']:[]),...($('enableQr').checked?['QR_ATTENDANCE']:[])],createdAt:new Date().toISOString()};}
-function validateMeeting() {
-  // 1. Kiểm tra các trường HTML bắt buộc
-  if (!$('meetingForm').reportValidity()) return false;
-
-  // 2. Giờ kết thúc phải sau giờ bắt đầu
-  const startTime = $('meetingStart').value;
-  const endTime = $('meetingEnd').value;
-
-  if (!startTime || !endTime) {
-    alert('Vui lòng nhập đầy đủ giờ bắt đầu và giờ kết thúc dự kiến.');
-    return false;
-  }
-
-  if (endTime <= startTime) {
-    alert('Giờ kết thúc dự kiến phải sau giờ bắt đầu.');
-    $('meetingEnd').focus();
-    return false;
-  }
-
-  // 3. Phải có thành phần tham dự
-  if (meetingSelectedUsernames.size === 0) {
-    alert('Vui lòng chọn thành phần tham dự.');
-    return false;
-  }
-
-  // 4. Địa điểm khác
-  if (
-    $('meetingPlace').value === 'Khác' &&
-    !$('otherPlace').value.trim()
-  ) {
-    alert('Vui lòng nhập địa điểm khác.');
-    return false;
-  }
-
-  // 5. Loại cuộc họp khác
-  if (
-    ['Chi bộ khác', 'Khác'].includes($('meetingType').value) &&
-    !$('customMeetingType').value.trim()
-  ) {
-    alert('Vui lòng nhập tên loại cuộc họp.');
-    return false;
-  }
-
- // 6. Thời gian điểm danh QR
-if ($('enableQr').checked) {
-  const qrOpen = $('qrOpen').value;
-  const qrClose = $('qrClose').value;
-
-  if (!qrOpen || !qrClose) {
-    alert('Vui lòng chọn thời gian mở và đóng điểm danh QR.');
-    return false;
-  }
-
-  if (qrClose <= qrOpen) {
-    alert('Giờ đóng điểm danh QR phải sau giờ mở điểm danh.');
-    $('qrClose').focus();
-    return false;
-  }
-}
-
-return true;
-}
+function validateMeeting(){if(!$('meetingForm').reportValidity())return false;if(meetingSelectedUsernames.size===0){alert('Vui lòng chọn thành phần tham dự.');return false;}if($('meetingPlace').value==='Khác'&&!$('otherPlace').value.trim()){alert('Vui lòng nhập địa điểm khác.');return false;}if(['Chi bộ khác','Khác'].includes($('meetingType').value)&&!$('customMeetingType').value.trim()){alert('Vui lòng nhập tên loại cuộc họp.');return false;}if($('enableQr').checked&&(!$('qrOpen').value||!$('qrClose').value)){alert('Vui lòng chọn thời gian mở và đóng điểm danh QR.');return false;}return true;}
 function saveDraft(e){e.preventDefault();localStorage.setItem('HVA_MEETING_DRAFT',JSON.stringify(collectMeeting()));alert('Đã lưu nháp cuộc họp trên thiết bị.');}
 function goToPublishing(){if(!validateMeeting())return;const d=collectMeeting();const current={source:'CuocHop',sourceModule:'CuocHop',type:'MEETING',title:d.title,summary:d.content,recipients:d.recipients.map(x=>x.username),recipientDetails:d.recipients,data:d,destinations:['ThongBao'],workflow:d.workflow};localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify(current));location.href='TTPhatHanh_v1_beta.html';}
 function previewMeeting(){if(!validateMeeting())return;const d=collectMeeting();$('previewBody').innerHTML=`<div class="text-center mb-5"><div class="font-extrabold text-[#0F4C81] text-lg">${esc(d.title)}</div><div class="text-xs text-slate-500 mt-1">${esc(d.meetingType)}</div></div><div class="space-y-2 text-xs"><p><b>Thời gian:</b> ${esc(d.date)} • ${esc(d.startTime)}${d.endTime?' - '+esc(d.endTime):''}</p><p><b>Địa điểm:</b> ${esc(d.place)}</p><p><b>Chủ trì:</b> ${esc(d.chairperson||'—')}</p><p><b>Thư ký:</b> ${esc(d.secretary||'—')}</p><p><b>Thành phần:</b> ${d.recipients.length} người</p><p><b>Nội dung:</b><br>${esc(d.content||'—')}</p><p><b>Xác nhận tham dự:</b> ${d.requireConfirmation?'Có':'Không'}</p><p><b>Điểm danh QR:</b> ${d.attendance.enabled?'Có • '+esc(d.attendance.openTime)+' - '+esc(d.attendance.closeTime):'Không'}</p></div>`;$('previewModal').classList.remove('hidden');$('previewModal').classList.add('flex');}
@@ -214,7 +185,43 @@ function toggleMeetingUser(u,on){on?meetingSelectedUsernames.add(u):meetingSelec
 function filterMeetingNhanSu(v){renderMeetingPersonnel(v)}
 function removeAllMeetingSelections(){meetingSelectedUsernames.clear();renderMeetingPersonnel($('meetingSearchNhanSu').value);}
 function updateMeetingSelectionUI(){const c=$('meetingSelectedChips');c.innerHTML='';let groups=0;if(!meetingSelectedUsernames.size)c.innerHTML='<span class="text-[10px] text-slate-400 italic">Chưa chọn người tham dự...</span>';meetingAllToData.forEach(g=>{const full=g.members.length&&g.members.every(m=>meetingSelectedUsernames.has(m.username));if(full){groups++;const s=document.createElement('span');s.className='chip bg-indigo-50 text-indigo-700';s.textContent=`${g.tenTo} (${g.members.length})`;c.appendChild(s)}else g.members.forEach(m=>{if(meetingSelectedUsernames.has(m.username)){const s=document.createElement('span');s.className='chip bg-blue-50 text-[#0F4C81]';s.textContent=m.hoTen;c.appendChild(s)}})});$('meetingStatTo').textContent=`${groups} tổ`;$('meetingStatNguoi').textContent=`${meetingSelectedUsernames.size} người`;}
-window.addEventListener('DOMContentLoaded',()=>{const d=new Date();$('meetingDate').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;handleMeetingType();loadMeetingPersonnel();});
+
+function getMeetingOperatorUser(){try{return JSON.parse(sessionStorage.getItem('user')||localStorage.getItem('user')||'{}')}catch(e){return{}}}
+function getMeetingOperatorUsername(){const u=getMeetingOperatorUser();return String(u.username||u.userName||u.maGV||'').trim()}
+let managedMeetingData=[]; let currentQrInfo=null;
+async function loadManagedMeetings(){const box=$('managedMeetings'),username=getMeetingOperatorUsername();if(!box)return;if(!username){box.innerHTML='<div class="text-red-500 font-bold">Không xác định được tài khoản đang đăng nhập.</div>';return}box.innerHTML='Đang tải cuộc họp đã phát hành...';try{const r=await fetch(`${WEB_APP_URL}?action=getManagedMeetings&username=${encodeURIComponent(username)}`);const d=await r.json();if(!d||d.success!==true)throw Error((d&&d.message)||'Không tải được cuộc họp');managedMeetingData=Array.isArray(d.meetings)?d.meetings:[];renderManagedMeetings()}catch(e){box.innerHTML=`<div class="text-red-500 font-bold">${esc(e.message)}</div>`}}
+function renderManagedMeetings(){const box=$('managedMeetings');if(!managedMeetingData.length){box.innerHTML='<div class="py-3 text-center text-slate-400">Chưa có cuộc họp do tài khoản này phát hành.</div>';return}box.innerHTML=managedMeetingData.slice(0,10).map(m=>{const ended=String(m.meetingStatus||'').toUpperCase().includes('KẾT THÚC');const canQr=m.attendanceEnabled===true;return `<div class="border-b last:border-0 py-3"><div class="flex items-center gap-3"><div class="min-w-0 flex-1"><div class="font-extrabold text-slate-800 text-[11px] truncate">${esc(m.title||'Cuộc họp')}</div><div class="text-[9px] text-slate-500 mt-1">${esc(m.date||'')} • ${esc(m.startTime||'')} ${m.place?'• '+esc(m.place):''}</div><div class="mt-1"><span class="badge ${ended?'bg-slate-100 text-slate-600':'bg-emerald-50 text-emerald-700'}">${esc(m.meetingStatus||'ĐÃ PHÁT HÀNH')}</span></div></div><div class="flex flex-col gap-1.5">${canQr&&!ended?`<button onclick="showMeetingQr('${esc(m.meetingId)}','IN')" class="px-2.5 h-8 rounded-lg bg-violet-600 text-white text-[9px] font-bold"><i class="bi bi-qr-code mr-1"></i>QR VÀO</button>`:''}${canQr&&ended&&m.checkOutToken?`<button onclick="showMeetingQr('${esc(m.meetingId)}','OUT')" class="px-2.5 h-8 rounded-lg bg-amber-500 text-white text-[9px] font-bold"><i class="bi bi-qr-code mr-1"></i>QR RA</button>`:''}</div></div><div class="grid grid-cols-2 gap-2 mt-2">${!ended?`<button onclick="openInteractionModal('${esc(m.meetingId)}')" class="h-9 rounded-lg bg-cyan-50 text-cyan-700 border border-cyan-200 text-[9px] font-extrabold"><i class="bi bi-chat-dots-fill mr-1"></i>TƯƠNG TÁC</button><button onclick="endManagedMeeting('${esc(m.meetingId)}')" class="h-9 rounded-lg bg-red-50 text-red-600 border border-red-200 text-[9px] font-extrabold"><i class="bi bi-stop-circle mr-1"></i>KẾT THÚC</button>`:`<button onclick="openInteractionModal('${esc(m.meetingId)}')" class="col-span-2 h-9 rounded-lg bg-slate-50 text-slate-600 border text-[9px] font-extrabold"><i class="bi bi-clock-history mr-1"></i>XEM TƯƠNG TÁC</button>`}</div></div>`}).join('')}
+function showMeetingQr(meetingId,mode){const m=managedMeetingData.find(x=>String(x.meetingId)===String(meetingId));if(!m)return alert('Không tìm thấy cuộc họp.');const token=mode==='OUT'?m.checkOutToken:m.checkInToken;if(!token)return alert(mode==='OUT'?'Chưa có mã QR ra. Hãy bấm KẾT THÚC cuộc họp trước.':'Cuộc họp chưa có token QR vào.');const payload=JSON.stringify({meetingId:m.meetingId,token:token,mode:mode});currentQrInfo={payload,meeting:m,mode};$('qrCanvas').innerHTML='';new QRCode($('qrCanvas'),{text:payload,width:260,height:260,correctLevel:QRCode.CorrectLevel.M});$('qrDisplayHeading').textContent=mode==='OUT'?'MÃ QR RA CUỘC HỌP':'MÃ QR VÀO CUỘC HỌP';$('qrDisplayTitle').textContent=m.title||'Cuộc họp';$('qrDisplayMeta').textContent=mode==='OUT'?`Kết thúc thực tế: ${m.endedAt||'vừa kết thúc'} • Quét để ghi nhận QR ra`:`Mở QR: ${m.qrOpenTime||'—'} • Đóng QR: ${m.qrCloseTime||'—'}`;$('qrDisplayModal').classList.remove('hidden');$('qrDisplayModal').classList.add('flex')}
+function closeQrDisplay(){$('qrDisplayModal').classList.add('hidden');$('qrDisplayModal').classList.remove('flex')}
+async function copyQrImage(){const img=$('qrCanvas').querySelector('img'),canvas=$('qrCanvas').querySelector('canvas');try{let blob;if(canvas)blob=await new Promise(res=>canvas.toBlob(res,'image/png'));else if(img){const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);blob=await new Promise(res=>c.toBlob(res,'image/png'))}if(!blob||!navigator.clipboard||!window.ClipboardItem)throw Error();await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);alert('Đã sao chép ảnh QR. Thầy có thể dán sang nơi cần trình chiếu.')}catch(e){alert('Thiết bị này chưa cho phép sao chép ảnh trực tiếp. Thầy dùng nút TẢI ẢNH QR.') }}
+function downloadQrImage(){const canvas=$('qrCanvas').querySelector('canvas'),img=$('qrCanvas').querySelector('img');const url=canvas?canvas.toDataURL('image/png'):(img?img.src:'');if(!url)return alert('Chưa tạo được ảnh QR.');const a=document.createElement('a');a.href=url;a.download=`HVA_QR_${currentQrInfo&&currentQrInfo.mode==='OUT'?'RA':'VAO'}_${currentQrInfo&&currentQrInfo.meeting?currentQrInfo.meeting.meetingId:'CUOCHOP'}.png`;a.click()}
+async function endManagedMeeting(meetingId){const m=managedMeetingData.find(x=>String(x.meetingId)===String(meetingId));if(!m)return;if(!confirm(`Kết thúc cuộc họp "${m.title||'Cuộc họp'}"?\n\nSau khi kết thúc, hệ thống sẽ sinh MÃ QR RA.`))return;try{const r=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'endMeeting',meetingId:meetingId,username:getMeetingOperatorUsername()})});const d=await r.json();if(!d||d.success!==true)return alert((d&&d.message)||'Không kết thúc được cuộc họp.');await loadManagedMeetings();showMeetingQr(meetingId,'OUT')}catch(e){alert('Có lỗi khi kết thúc cuộc họp: '+e.message)}}
+
+
+let interactionMeetingId='',interactionParticipants=[],interactionSelectedUsername='';
+const INTERACTION_PRESETS={
+ PREPARE_SPEAK:['PREPARE_SPEAK','Kính mời Thầy/Cô chuẩn bị ý kiến để trao đổi trong ít phút tới.'],
+ SPEAK_NOW:['SPEAK_NOW','Trân trọng kính mời Thầy/Cô phát biểu ý kiến.'],PREPARE_REPORT:['PREPARE_REPORT','Kính mời Thầy/Cô chuẩn bị nội dung tham luận theo chương trình cuộc họp.'],
+ FOCUS:['FOCUS','Đề nghị Thầy/Cô tập trung theo dõi nội dung cuộc họp.'],DEVICE:['DEVICE','Đề nghị Thầy/Cô hạn chế sử dụng thiết bị điện tử cho nội dung không liên quan đến cuộc họp.'],
+ ATTIRE:['ATTIRE','Đề nghị Thầy/Cô lưu ý trang phục phù hợp với môi trường công sở và tính chất cuộc họp.'],BADGE:['BADGE','Đề nghị Thầy/Cô vui lòng đeo thẻ viên chức theo quy định.'],
+ CONDUCT:['CONDUCT','Đề nghị Thầy/Cô bảo đảm tác phong dự họp.'],RETURN:['RETURN','Kính mời Thầy/Cô trở lại vị trí để tiếp tục chương trình cuộc họp.'],
+ ABSENT_CHECK:['ABSENT_CHECK','Ghi nhận tại thời điểm kiểm tra: Thầy/Cô tạm thời chưa có mặt tại cuộc họp. Hiện hệ thống chưa ghi nhận xin phép.'],
+ EARLY_LEAVE_CHECK:['EARLY_LEAVE_CHECK','Ghi nhận Thầy/Cô rời cuộc họp trước khi kết thúc; hiện hệ thống chưa ghi nhận xin phép.'],MEET_CHAIR:['MEET_CHAIR','Kính mời Thầy/Cô gặp chủ trì sau cuộc họp để trao đổi.'],OTHER:['OTHER','']};
+async function openInteractionModal(mid){interactionMeetingId=mid;interactionSelectedUsername='';const m=managedMeetingData.find(x=>String(x.meetingId)===String(mid));$('interactionMeetingTitle').textContent=m?m.title:'';$('interactionModal').classList.remove('hidden');$('interactionModal').classList.add('flex');applyInteractionPreset();await Promise.all([loadInteractionParticipants(),loadInteractionLog()])}
+function closeInteractionModal(){$('interactionModal').classList.add('hidden');$('interactionModal').classList.remove('flex')}
+async function loadInteractionParticipants(){const u=getMeetingOperatorUsername();const r=await fetch(`${WEB_APP_URL}?action=getMeetingParticipantsForManager&meetingId=${encodeURIComponent(interactionMeetingId)}&username=${encodeURIComponent(u)}`);const d=await r.json();interactionParticipants=d&&d.success?d.participants||[]:[];renderInteractionParticipants()}
+function renderInteractionParticipants(){const box=$('interactionParticipants'),q=String($('interactionSearch').value||'').toLowerCase();const arr=interactionParticipants.filter(p=>!q||String(p.hoTen).toLowerCase().includes(q)||String(p.toBoPhan).toLowerCase().includes(q));box.innerHTML=arr.map(p=>`<button type="button" onclick="selectInteractionParticipant('${esc(p.username)}')" class="w-full text-left px-3 py-2 border-b last:border-0 ${interactionSelectedUsername===p.username?'bg-violet-50':'bg-white'}"><b class="text-[10px]">${esc(p.hoTen)}</b><div class="text-[9px] text-slate-400">${esc(p.toBoPhan||'')} • ${p.checkIn?'Đã QR vào':'Chưa QR vào'}${p.checkOut?' • Đã QR ra':''}</div></button>`).join('')||'<div class="p-3 text-center text-slate-400 text-[10px]">Không tìm thấy thành viên.</div>'}
+function selectInteractionParticipant(u){interactionSelectedUsername=u;renderInteractionParticipants()}
+function applyInteractionPreset(){const key=$('interactionPreset').value,p=INTERACTION_PRESETS[key]||['OTHER',''];$('interactionContent').value=p[1];const privateTypes=['FOCUS','DEVICE','ATTIRE','BADGE','CONDUCT','ABSENT_CHECK','EARLY_LEAVE_CHECK','MEET_CHAIR'];if(privateTypes.includes(key))$('interactionVoice').checked=false}
+function pickRandomParticipant(){const eligible=interactionParticipants.filter(p=>p.checkIn===true&&p.checkOut!==true&&!String(p.absenceStatus||'').trim());if(!eligible.length)return alert('Không có thành viên đang hiện diện đủ điều kiện để chọn ngẫu nhiên.');const p=eligible[Math.floor(Math.random()*eligible.length)];interactionSelectedUsername=p.username;$('interactionPreset').value='PREPARE_SPEAK';applyInteractionPreset();renderInteractionParticipants();alert('Hệ thống chọn: '+p.hoTen)}
+function buildVoiceText(content){const p=interactionParticipants.find(x=>x.username===interactionSelectedUsername);if(!p)return content;return content.replace(/Thầy\/Cô/g,String(p.hoTen||'Thầy/Cô'))}
+function speakVietnamese(text){if(!('speechSynthesis'in window))return alert('Thiết bị này chưa hỗ trợ phát lời mời.');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='vi-VN';u.rate=.92;u.pitch=1;speechSynthesis.speak(u)}
+function speakCurrentMessage(){const key=$('interactionPreset').value;if(['FOCUS','DEVICE','ATTIRE','BADGE','CONDUCT','ABSENT_CHECK','EARLY_LEAVE_CHECK','MEET_CHAIR'].includes(key))return alert('Nội dung này là tương tác riêng tư, hệ thống không phát qua loa.');if(!interactionSelectedUsername)return alert('Vui lòng chọn thành viên.');speakVietnamese(buildVoiceText($('interactionContent').value.trim()))}
+async function sendMeetingInteraction(){if(!interactionSelectedUsername)return alert('Vui lòng chọn thành viên nhận tương tác.');const content=$('interactionContent').value.trim();if(!content)return alert('Vui lòng nhập nội dung.');const key=$('interactionPreset').value;const privateTypes=['FOCUS','DEVICE','ATTIRE','BADGE','CONDUCT','ABSENT_CHECK','EARLY_LEAVE_CHECK','MEET_CHAIR'];if(privateTypes.includes(key)&&$('interactionVoice').checked){$('interactionVoice').checked=false;alert('Tương tác riêng tư sẽ chỉ gửi kín, không phát qua loa.')}const voiceText=buildVoiceText(content);const r=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'sendMeetingInteraction',meetingId:interactionMeetingId,username:getMeetingOperatorUsername(),targetUsername:interactionSelectedUsername,type:key,content,voiceText,coordinate:$('interactionCoordinate').checked})});const d=await r.json();if(!d||d.success!==true)return alert((d&&d.message)||'Không gửi được tương tác.');if($('interactionVoice').checked)speakVietnamese(voiceText);alert(d.message||'Đã gửi.');await loadInteractionLog()}
+async function loadInteractionLog(){const u=getMeetingOperatorUsername();const r=await fetch(`${WEB_APP_URL}?action=getMeetingInteractionsForManager&meetingId=${encodeURIComponent(interactionMeetingId)}&username=${encodeURIComponent(u)}`);const d=await r.json();const a=d&&d.success?d.interactions||[]:[];$('interactionLog').innerHTML=a.slice(0,20).map(x=>`<div class="rounded-lg border p-2 ${x.type==='SPEAK_REQUEST'?'bg-amber-50':'bg-slate-50'}"><b>${esc(x.recipientName||'')}</b> • ${esc(x.time||'')}<div>${esc(x.content||'')}</div>${x.coordinate?`<div class="text-violet-600">Phối hợp: ${esc(x.coordinateName||'TTCM/Trưởng bộ phận')}</div>`:''}</div>`).join('')||'<div class="text-slate-400">Chưa có tương tác.</div>'}
+async function sendBreakMessage(){const eligible=interactionParticipants.filter(p=>p.checkIn===true&&p.checkOut!==true);if(!eligible.length)return alert('Không có thành viên đã điểm danh vào.');if(!confirm(`Gửi thông báo tiếp tục họp đến ${eligible.length} thành viên?`))return;let ok=0;for(const p of eligible){try{const r=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'sendMeetingInteraction',meetingId:interactionMeetingId,username:getMeetingOperatorUsername(),targetUsername:p.username,type:'RETURN_ALL',content:'Kính mời Thầy/Cô trở lại vị trí. Cuộc họp sẽ tiếp tục.',voiceText:'Kính mời quý thầy cô trở lại vị trí. Cuộc họp sẽ tiếp tục.',coordinate:false})});const d=await r.json();if(d&&d.success)ok++}catch(e){}}speakVietnamese('Kính mời quý thầy cô trở lại vị trí. Cuộc họp sẽ tiếp tục.');alert(`Đã gửi ${ok}/${eligible.length} thành viên.`);await loadInteractionLog()}
+
+window.addEventListener('DOMContentLoaded',()=>{const d=new Date();$('meetingDate').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;handleMeetingType();loadMeetingPersonnel();loadManagedMeetings();});
 </script>
 <style>
 .lbl{display:block;font-size:11px;font-weight:700;color:#0F4C81;margin-bottom:6px}.lbl b{color:#ef4444}.field{width:100%;height:44px;border-radius:12px;border:1px solid #cbd5e1;background:#f8fafc;padding:0 12px;font-size:12px;font-weight:500;outline:none}.field:focus{background:white;border-color:#0F4C81;box-shadow:0 0 0 2px #dbeafe}.section-title{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#334155}.section-title i{width:26px;height:26px;border-radius:8px;background:#eff6ff;color:#0F4C81;display:flex;align-items:center;justify-content:center}.badge{font-size:9px;font-weight:700;padding:4px 8px;border-radius:8px;border:1px solid #e2e8f0}.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid #e2e8f0;border-radius:12px;cursor:pointer}.toggle-row b{display:block;font-size:11px;color:#334155}.toggle-row small{display:block;font-size:9px;color:#94a3b8;margin-top:2px}.action{height:48px;border-radius:12px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px}.chip{display:inline-flex;align-items:center;padding:6px 8px;border-radius:8px;border:1px solid #dbeafe;font-size:9px;font-weight:700}
