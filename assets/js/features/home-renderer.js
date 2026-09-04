@@ -3489,7 +3489,8 @@ function renderMyMeetings() {
 
         return `
             <button type="button"
-                class="w-full rounded-xl border border-violet-200 bg-violet-50 px-2.5 py-2 text-left"
+                onclick="openMyMeetingDetail(this.dataset.meetingId, event)"
+                class="w-full rounded-xl border border-violet-200 bg-violet-50 hover:bg-violet-100 px-2.5 py-2 text-left transition"
                 data-meeting-id="${escapeMyWorkHtml(meeting.meetingId || '')}">
                 <div class="flex items-start gap-2">
                     <div class="w-8 h-8 rounded-lg bg-violet-600 text-white flex items-center justify-center shrink-0">
@@ -3508,6 +3509,185 @@ function renderMyMeetings() {
             </button>`;
     }).join('');
 }
+
+// =====================================================
+// CHI TIẾT CUỘC HỌP - CHỈ DÙNG DỮ LIỆU ĐÃ NẠP
+// =====================================================
+window.openMyMeetingDetail = function(meetingId, event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const meeting = HVA_MY_MEETINGS.find(item =>
+        String(item.meetingId || '') === String(meetingId || '')
+    );
+    if (!meeting) {
+        alert('Không tìm thấy dữ liệu cuộc họp.');
+        return;
+    }
+
+    const old = document.getElementById('hvaMeetingDetailModal');
+    if (old) old.remove();
+
+    const esc = escapeMyWorkHtml;
+    const response = String(meeting.attendanceResponse || 'CHƯA XÁC NHẬN').trim();
+    const confirmed = response === 'ĐÃ XÁC NHẬN THAM GIA';
+    const absent = response === 'XIN VẮNG' || String(meeting.absenceStatus || '').trim() !== '';
+    const requireConfirmation = meeting.requireConfirmation === true;
+
+    const modal = document.createElement('div');
+    modal.id = 'hvaMeetingDetailModal';
+    modal.className = 'fixed inset-0 z-[5000] bg-slate-900/45 flex items-center justify-center p-4';
+    modal.innerHTML = `
+        <div class="w-full max-w-[430px] max-h-[88vh] overflow-y-auto rounded-2xl bg-white shadow-2xl border border-slate-200">
+            <div class="sticky top-0 bg-white flex items-center justify-between px-4 py-3 border-b border-slate-100 rounded-t-2xl">
+                <div>
+                    <div class="text-[10px] font-extrabold text-violet-700 uppercase">Chi tiết cuộc họp</div>
+                    <div class="text-[14px] font-extrabold text-slate-800 mt-0.5">${esc(meeting.title || 'Cuộc họp')}</div>
+                </div>
+                <button type="button" onclick="closeMyMeetingDetail()"
+                    class="w-8 h-8 rounded-lg hover:bg-slate-100 text-slate-500 flex items-center justify-center">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-4 space-y-3 text-[12px] text-slate-700">
+                <div class="grid grid-cols-[92px_1fr] gap-x-2 gap-y-2">
+                    <div class="font-bold text-slate-500">Thời gian</div>
+                    <div>${esc(meeting.date || '')}${meeting.startTime ? ' • ' + esc(meeting.startTime) : ''}${meeting.endTime ? '–' + esc(meeting.endTime) : ''}</div>
+                    <div class="font-bold text-slate-500">Địa điểm</div>
+                    <div>${esc(meeting.place || '—')}</div>
+                    ${meeting.chairperson ? `<div class="font-bold text-slate-500">Chủ trì</div><div>${esc(meeting.chairperson)}</div>` : ''}
+                    ${meeting.secretary ? `<div class="font-bold text-slate-500">Thư ký</div><div>${esc(meeting.secretary)}</div>` : ''}
+                    <div class="font-bold text-slate-500">Trạng thái</div>
+                    <div class="font-extrabold ${confirmed ? 'text-emerald-600' : absent ? 'text-amber-600' : 'text-violet-700'}">${esc(response)}</div>
+                </div>
+
+                ${meeting.content ? `
+                    <div class="pt-2 border-t border-slate-100">
+                        <div class="font-bold text-slate-500 mb-1">Nội dung</div>
+                        <div class="whitespace-pre-line leading-5">${esc(meeting.content)}</div>
+                    </div>` : ''}
+
+                ${meeting.documentUrl ? `
+                    <a href="${esc(meeting.documentUrl)}" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1.5 text-blue-600 font-bold hover:underline">
+                        <i class="bi bi-file-earmark-text"></i>Xem tài liệu cuộc họp
+                    </a>` : ''}
+
+                <div id="myMeetingAbsenceBox" class="hidden pt-2 border-t border-slate-100">
+                    <label class="block font-bold text-slate-600 mb-1.5">Lý do xin vắng</label>
+                    <textarea id="myMeetingAbsenceReason" rows="3"
+                        class="w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:border-violet-400"
+                        placeholder="Nhập lý do xin vắng..."></textarea>
+                    <div class="flex justify-end gap-2 mt-2">
+                        <button type="button" onclick="toggleMyMeetingAbsenceBox(false)"
+                            class="px-3 py-2 rounded-lg bg-slate-100 font-bold text-slate-600">Hủy</button>
+                        <button type="button" onclick="submitMyMeetingAbsence('${esc(meeting.meetingId || '')}')"
+                            class="px-3 py-2 rounded-lg bg-amber-500 text-white font-bold">Gửi xin vắng</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-4 pb-4 flex gap-2">
+                ${requireConfirmation && !confirmed && !absent ? `
+                    <button type="button" onclick="confirmMyMeetingAttendance('${esc(meeting.meetingId || '')}')"
+                        class="flex-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] py-2.5 transition">
+                        <i class="bi bi-check2-circle mr-1"></i>Xác nhận tham dự
+                    </button>
+                    <button type="button" onclick="toggleMyMeetingAbsenceBox(true)"
+                        class="flex-1 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 font-extrabold text-[11px] py-2.5 transition">
+                        <i class="bi bi-person-x mr-1"></i>Xin vắng
+                    </button>` : `
+                    <button type="button" onclick="closeMyMeetingDetail()"
+                        class="w-full rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] py-2.5 transition">Đóng</button>`}
+            </div>
+        </div>`;
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeMyMeetingDetail();
+    });
+    document.body.appendChild(modal);
+};
+
+window.closeMyMeetingDetail = function() {
+    const modal = document.getElementById('hvaMeetingDetailModal');
+    if (modal) modal.remove();
+};
+
+window.toggleMyMeetingAbsenceBox = function(show) {
+    const box = document.getElementById('myMeetingAbsenceBox');
+    if (!box) return;
+    box.classList.toggle('hidden', !show);
+    if (show) {
+        const input = document.getElementById('myMeetingAbsenceReason');
+        if (input) setTimeout(() => input.focus(), 50);
+    }
+};
+
+async function postMyMeetingAction(payload) {
+    const response = await fetch(MY_TASK_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    return response.json();
+}
+
+window.confirmMyMeetingAttendance = async function(meetingId) {
+    const user = getCurrentHVAUser();
+    const username = user.username || user.userName || user.maGV || '';
+    if (!username) return alert('Không xác định được tài khoản người dùng.');
+    if (!window.confirm('Xác nhận tham dự cuộc họp này?')) return;
+
+    try {
+        const result = await postMyMeetingAction({
+            action: 'confirmMeetingAttendance',
+            meetingId: meetingId,
+            username: username
+        });
+        if (!result || result.success !== true) {
+            alert((result && result.message) || 'Không thể xác nhận tham dự.');
+            return;
+        }
+        alert(result.message || 'Đã xác nhận tham dự cuộc họp.');
+        closeMyMeetingDetail();
+        await loadMyMeetings();
+    } catch (error) {
+        console.error('[HVA] Lỗi xác nhận tham dự:', error);
+        alert('Có lỗi khi xác nhận tham dự.');
+    }
+};
+
+window.submitMyMeetingAbsence = async function(meetingId) {
+    const user = getCurrentHVAUser();
+    const username = user.username || user.userName || user.maGV || '';
+    const input = document.getElementById('myMeetingAbsenceReason');
+    const reason = input ? input.value.trim() : '';
+    if (!username) return alert('Không xác định được tài khoản người dùng.');
+    if (!reason) return alert('Vui lòng nhập lý do xin vắng.');
+
+    try {
+        const result = await postMyMeetingAction({
+            action: 'requestMeetingAbsence',
+            meetingId: meetingId,
+            username: username,
+            reason: reason
+        });
+        if (!result || result.success !== true) {
+            alert((result && result.message) || 'Không thể gửi yêu cầu xin vắng.');
+            return;
+        }
+        alert(result.message || 'Đã gửi yêu cầu xin vắng.');
+        closeMyMeetingDetail();
+        await loadMyMeetings();
+    } catch (error) {
+        console.error('[HVA] Lỗi gửi xin vắng:', error);
+        alert('Có lỗi khi gửi yêu cầu xin vắng.');
+    }
+};
 
 function updateMyWorkTotalBadge() {
     const badge = document.getElementById('myWorkTotalBadge');
