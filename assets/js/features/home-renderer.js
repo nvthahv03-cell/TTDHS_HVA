@@ -3482,6 +3482,11 @@ function renderMyMeetings() {
         const place = escapeMyWorkHtml(meeting.place || '');
         const response = String(meeting.attendanceResponse || 'CHƯA XÁC NHẬN').trim();
         const responseText = escapeMyWorkHtml(response);
+        const qrEnabled = meeting.attendanceEnabled === true;
+        const checkedIn = meeting.checkIn === true;
+        const checkInText = checkedIn
+            ? ('ĐÃ ĐIỂM DANH' + (meeting.checkInAt ? ' • ' + meeting.checkInAt : ''))
+            : 'QUÉT QR ĐIỂM DANH';
 
         const timeText = [date, startTime && endTime ? startTime + '–' + endTime : (startTime || endTime)]
             .filter(Boolean)
@@ -3503,6 +3508,12 @@ function renderMyMeetings() {
                         <div class="text-[10px] font-bold text-slate-800 mt-0.5">${title}</div>
                         ${timeText ? `<div class="text-[8px] text-slate-500 mt-0.5"><i class="bi bi-clock mr-1"></i>${timeText}</div>` : ''}
                         ${place ? `<div class="text-[8px] text-slate-500 mt-0.5"><i class="bi bi-geo-alt mr-1"></i>${place}</div>` : ''}
+                        ${qrEnabled ? `
+                            <div class="mt-2">
+                                <span class="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[8px] font-extrabold ${checkedIn ? 'bg-emerald-100 text-emerald-700' : 'bg-violet-600 text-white'}">
+                                    <i class="bi ${checkedIn ? 'bi-check2-circle' : 'bi-qr-code-scan'}"></i>${escapeMyWorkHtml(checkInText)}
+                                </span>
+                            </div>` : ''}
                     </div>
                 </div>
             </button>`;
@@ -3586,6 +3597,19 @@ window.openMyMeetingDetail = function(meetingId, event) {
                        class="inline-flex items-center gap-1.5 text-blue-600 font-bold hover:underline">
                         <i class="bi bi-file-earmark-text"></i>Xem tài liệu cuộc họp
                     </a>` : ''}
+
+                ${meeting.attendanceEnabled === true ? `
+                    <div class="pt-2 border-t border-slate-100">
+                        ${meeting.checkIn === true ? `
+                            <div class="rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2.5 text-emerald-700 font-extrabold text-[11px]">
+                                <i class="bi bi-check2-circle mr-1"></i>ĐÃ ĐIỂM DANH${meeting.checkInAt ? ' • ' + esc(meeting.checkInAt) : ''}
+                            </div>` : `
+                            <button type="button" onclick="openMeetingQrScanner('${esc(meeting.meetingId || '')}')"
+                                class="w-full rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-extrabold text-[11px] py-2.5 transition">
+                                <i class="bi bi-camera-fill mr-1"></i>Quét mã QR điểm danh
+                            </button>
+                            <div class="text-[9px] text-slate-500 mt-1.5">Camera sẽ mở để quét mã QR của đúng cuộc họp này.</div>`}
+                    </div>` : ''}
 
                 <div id="myMeetingAbsenceBox" class="hidden pt-2 border-t border-slate-100">
                     <label class="block font-bold text-slate-600 mb-1.5">Lý do xin vắng</label>
@@ -3699,6 +3723,219 @@ window.submitMyMeetingAbsence = async function(meetingId) {
         alert('Có lỗi khi gửi yêu cầu xin vắng.');
     }
 };
+
+// =====================================================
+// 9H.2 - CAMERA QUÉT QR ĐIỂM DANH CUỘC HỌP
+// QR chấp nhận 3 dạng:
+// 1) JSON: {"meetingId":"...","token":"..."}
+// 2) URL:  ...?meetingId=...&token=...
+// 3) HVA:MEETING_CHECKIN:<meetingId>:<token>
+// =====================================================
+let HVA_QR_STREAM = null;
+let HVA_QR_SCAN_RAF = 0;
+let HVA_QR_SCANNING = false;
+
+function parseMeetingQrPayload(raw) {
+    const text = String(raw || '').trim();
+    if (!text) return null;
+
+    try {
+        const obj = JSON.parse(text);
+        const meetingId = String(obj.meetingId || obj.id || '').trim();
+        const token = String(obj.token || obj.checkInToken || obj.qrToken || '').trim();
+        if (meetingId && token) return { meetingId, token };
+    } catch (ignore) {}
+
+    try {
+        const url = new URL(text);
+        const meetingId = String(url.searchParams.get('meetingId') || url.searchParams.get('mid') || '').trim();
+        const token = String(url.searchParams.get('token') || url.searchParams.get('qrToken') || '').trim();
+        if (meetingId && token) return { meetingId, token };
+    } catch (ignore) {}
+
+    const prefix = 'HVA:MEETING_CHECKIN:';
+    if (text.toUpperCase().startsWith(prefix)) {
+        const body = text.slice(prefix.length);
+        const cut = body.indexOf(':');
+        if (cut > 0) {
+            const meetingId = body.slice(0, cut).trim();
+            const token = body.slice(cut + 1).trim();
+            if (meetingId && token) return { meetingId, token };
+        }
+    }
+    return null;
+}
+
+function loadJsQrLibrary() {
+    if (window.jsQR) return Promise.resolve();
+    if (window.HVA_JSQR_PROMISE) return window.HVA_JSQR_PROMISE;
+
+    window.HVA_JSQR_PROMISE = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';
+        script.async = true;
+        script.onload = () => window.jsQR ? resolve() : reject(new Error('Không khởi tạo được thư viện QR.'));
+        script.onerror = () => reject(new Error('Không tải được thư viện quét QR.'));
+        document.head.appendChild(script);
+    });
+    return window.HVA_JSQR_PROMISE;
+}
+
+window.openMeetingQrScanner = async function(meetingId) {
+    const meeting = HVA_MY_MEETINGS.find(item => String(item.meetingId || '') === String(meetingId || ''));
+    if (!meeting) return alert('Không tìm thấy cuộc họp.');
+    if (meeting.attendanceEnabled !== true) return alert('Cuộc họp này không bật điểm danh QR.');
+    if (meeting.checkIn === true) return alert('Thầy/Cô đã điểm danh cuộc họp này.');
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        return alert('Thiết bị/trình duyệt này không hỗ trợ mở camera trong ứng dụng.');
+    }
+
+    closeMeetingQrScanner();
+
+    const modal = document.createElement('div');
+    modal.id = 'hvaMeetingQrScannerModal';
+    modal.className = 'fixed inset-0 z-[6000] bg-slate-950/90 flex items-center justify-center p-3';
+    modal.innerHTML = `
+        <div class="w-full max-w-[430px] rounded-2xl bg-white overflow-hidden shadow-2xl">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+                <div>
+                    <div class="text-[10px] font-extrabold text-violet-700 uppercase">Điểm danh cuộc họp</div>
+                    <div class="text-[13px] font-extrabold text-slate-800 mt-0.5">${escapeMyWorkHtml(meeting.title || 'Cuộc họp')}</div>
+                </div>
+                <button type="button" onclick="closeMeetingQrScanner()" class="w-9 h-9 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="bg-black relative aspect-square overflow-hidden">
+                <video id="hvaMeetingQrVideo" playsinline muted autoplay class="w-full h-full object-cover"></video>
+                <div class="absolute inset-[14%] border-2 border-white/90 rounded-2xl pointer-events-none"></div>
+                <div class="absolute left-0 right-0 bottom-3 text-center">
+                    <span class="inline-block rounded-full bg-black/60 text-white text-[10px] font-bold px-3 py-1.5">Đưa mã QR vào giữa khung</span>
+                </div>
+            </div>
+            <div class="p-3">
+                <div id="hvaMeetingQrStatus" class="text-center text-[11px] font-bold text-slate-600">Đang mở camera…</div>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+
+    try {
+        await loadJsQrLibrary();
+        HVA_QR_STREAM = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: 'environment' } },
+            audio: false
+        });
+
+        const video = document.getElementById('hvaMeetingQrVideo');
+        if (!video) throw new Error('Không tìm thấy khung camera.');
+        video.srcObject = HVA_QR_STREAM;
+        await video.play();
+
+        const status = document.getElementById('hvaMeetingQrStatus');
+        if (status) status.textContent = 'Camera đã sẵn sàng • Đưa mã QR vào giữa khung';
+
+        HVA_QR_SCANNING = true;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        const scanFrame = async () => {
+            if (!HVA_QR_SCANNING || !document.getElementById('hvaMeetingQrScannerModal')) return;
+
+            if (video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const code = window.jsQR(image.data, image.width, image.height, { inversionAttempts: 'dontInvert' });
+
+                if (code && code.data) {
+                    HVA_QR_SCANNING = false;
+                    await handleMeetingQrResult(meetingId, code.data);
+                    return;
+                }
+            }
+            HVA_QR_SCAN_RAF = requestAnimationFrame(scanFrame);
+        };
+        HVA_QR_SCAN_RAF = requestAnimationFrame(scanFrame);
+    } catch (error) {
+        console.error('[HVA] Không mở được camera QR:', error);
+        const status = document.getElementById('hvaMeetingQrStatus');
+        if (status) status.textContent = 'Không mở được camera. Hãy kiểm tra quyền Camera của trình duyệt.';
+        stopMeetingQrCamera();
+    }
+};
+
+function stopMeetingQrCamera() {
+    HVA_QR_SCANNING = false;
+    if (HVA_QR_SCAN_RAF) cancelAnimationFrame(HVA_QR_SCAN_RAF);
+    HVA_QR_SCAN_RAF = 0;
+    if (HVA_QR_STREAM) {
+        HVA_QR_STREAM.getTracks().forEach(track => track.stop());
+        HVA_QR_STREAM = null;
+    }
+}
+
+window.closeMeetingQrScanner = function() {
+    stopMeetingQrCamera();
+    const modal = document.getElementById('hvaMeetingQrScannerModal');
+    if (modal) modal.remove();
+};
+
+async function handleMeetingQrResult(expectedMeetingId, rawQr) {
+    const status = document.getElementById('hvaMeetingQrStatus');
+    const parsed = parseMeetingQrPayload(rawQr);
+
+    if (!parsed) {
+        if (status) status.textContent = 'Mã QR không đúng định dạng điểm danh HVA.';
+        HVA_QR_SCANNING = true;
+        setTimeout(() => openMeetingQrScanner(expectedMeetingId), 900);
+        return;
+    }
+
+    if (String(parsed.meetingId) !== String(expectedMeetingId)) {
+        if (status) status.textContent = 'Mã QR này thuộc cuộc họp khác.';
+        HVA_QR_SCANNING = true;
+        setTimeout(() => openMeetingQrScanner(expectedMeetingId), 900);
+        return;
+    }
+
+    const user = getCurrentHVAUser();
+    const username = user.username || user.userName || user.maGV || '';
+    if (!username) {
+        closeMeetingQrScanner();
+        return alert('Không xác định được tài khoản đang đăng nhập.');
+    }
+
+    stopMeetingQrCamera();
+    if (status) status.textContent = 'Đã nhận mã QR • Đang xác nhận điểm danh…';
+
+    try {
+        const result = await postMyMeetingAction({
+            action: 'checkInMeeting',
+            meetingId: parsed.meetingId,
+            token: parsed.token,
+            username: username
+        });
+
+        if (!result || result.success !== true) {
+            if (status) status.textContent = (result && result.message) || 'Điểm danh không thành công.';
+            setTimeout(() => closeMeetingQrScanner(), 1800);
+            return;
+        }
+
+        if (status) status.textContent = result.message || 'Điểm danh thành công.';
+        setTimeout(async () => {
+            closeMeetingQrScanner();
+            closeMyMeetingDetail();
+            await loadMyMeetings();
+            alert(result.message || 'Điểm danh thành công.');
+        }, 700);
+    } catch (error) {
+        console.error('[HVA] Lỗi điểm danh QR:', error);
+        if (status) status.textContent = 'Có lỗi khi gửi dữ liệu điểm danh.';
+        setTimeout(() => closeMeetingQrScanner(), 1800);
+    }
+}
 
 function updateMyWorkTotalBadge() {
     const badge = document.getElementById('myWorkTotalBadge');
