@@ -246,13 +246,13 @@
         DEFAULT_WORKFLOW_STEPS: [
             { id: "SHOW_ONLY", label: "Chỉ hiển thị", selected: true },
             { id: "CONFIRM_READ", label: "Xác nhận đã đọc", selected: true },
-            { id: "CONFIRM_ATTENDANCE", label: "Xác nhận tham dự / Xin vắng", selected: false },
-            { id: "QR_ATTENDANCE", label: "Điểm danh QR", selected: false },
             { id: "ACCEPT_TASK", label: "Tiếp nhận nhiệm vụ", selected: false },
             { id: "IN_PROGRESS", label: "Đang thực hiện", selected: false },
             { id: "REPORT_RESULT", label: "Báo cáo kết quả", selected: false },
             { id: "COMPLETE", label: "Hoàn thành", selected: false },
-            { id: "ATTACH_PROOF", label: "Đính kèm minh chứng", selected: false }
+            { id: "ATTACH_PROOF", label: "Đính kèm minh chứng", selected: false },
+            { id: "CONFIRM_ATTENDANCE", label: "Xác nhận tham dự / Xin vắng", selected: false, meetingOnly: true },
+            { id: "QR_ATTENDANCE", label: "Điểm danh QR", selected: false, meetingOnly: true }
         ],
         ROLES: {
             ADMIN: "ADMIN",
@@ -590,9 +590,16 @@ const StorageEngine = {
             }
         },
 
-        renderWorkflowSteps: (workflowSteps) => {
+        renderWorkflowSteps: (workflowSteps, documentState) => {
             const container = document.getElementById('workflow-steps-container');
-            container.innerHTML = workflowSteps.map(s => `
+            const srcName = String(documentState?.moduleSource || '').toLowerCase();
+            const isMeeting = srcName.includes('cuochop') || documentState?.type === 'MEETING';
+
+            const visibleSteps = isMeeting
+                ? workflowSteps.filter(s => ['CONFIRM_READ', 'CONFIRM_ATTENDANCE', 'QR_ATTENDANCE'].includes(s.id))
+                : workflowSteps.filter(s => !s.meetingOnly);
+
+            container.innerHTML = visibleSteps.map(s => `
                 <label class="flex items-center gap-2 text-xs font-semibold text-indigo-900 bg-white p-2 rounded-lg border border-indigo-100 cursor-pointer">
                     <input type="checkbox" ${s.selected ? 'checked' : ''} onchange="Controller.toggleWorkflowStep('${s.id}')" class="rounded border-indigo-300 text-indigo-600 focus:ring-indigo-500">
                     <span>${s.label}</span>
@@ -654,7 +661,7 @@ const StorageEngine = {
             RenderEngine.renderRecipients(state.recipients);
             RenderEngine.renderDestinations(state.destinations);
             RenderEngine.toggleWorkflowCard(state.destinations);
-            RenderEngine.renderWorkflowSteps(state.workflowSteps);
+            RenderEngine.renderWorkflowSteps(state.workflowSteps, state.document);
             RenderEngine.renderSimulationFlow(pipeline);
             RenderEngine.renderLinkedDocs(state.linkedDocs);
             RenderEngine.renderPreCheck(checkResult);
@@ -681,10 +688,10 @@ const Controller = {
     applySourceDefaults: (moduleSource) => {
         const srcName = String(moduleSource || '').toLowerCase();
         const raw = TTDHS_State.rawSource || {};
+        const rawData = raw.data || raw.payload || {};
         const sourceWorkflow = Array.isArray(raw.workflow)
             ? raw.workflow
-            : (raw.data && Array.isArray(raw.data.workflow) ? raw.data.workflow : []);
-        const sourceDestinations = Array.isArray(raw.destinations) ? raw.destinations : [];
+            : (Array.isArray(rawData.workflow) ? rawData.workflow : []);
 
         TTDHS_State.destinations.forEach(d => d.selected = false);
         TTDHS_State.workflowSteps.forEach(s => s.selected = false);
@@ -693,35 +700,50 @@ const Controller = {
             const d = TTDHS_State.destinations.find(x => x.id === id);
             if (d) d.selected = true;
         };
+
         const selectWorkflow = (id) => {
             const s = TTDHS_State.workflowSteps.find(x => x.id === id);
             if (s) s.selected = true;
         };
 
-        // Ưu tiên cấu hình điểm đến do module nguồn gửi sang nếu có.
-        sourceDestinations.forEach(id => selectDestination(typeof id === 'string' ? id : id.id));
+        const isMeeting = srcName.includes('cuochop') ||
+                          String(TTDHS_State.document?.type || '').toUpperCase() === 'MEETING';
 
-        if (srcName.includes('cuochop') || srcName.includes('cuoc hop') || srcName.includes('cuộc họp')) {
-            // Cuộc họp luôn đi qua Thông báo + Việc của tôi để theo dõi xác nhận/điểm danh.
+        if (isMeeting) {
+            // CuocHop is authoritative for its own workflow.
+            // Keep CONFIRM_READ as the baseline; then honor interactive steps sent by CuocHop.
+            const requested = new Set(sourceWorkflow.map(x =>
+                typeof x === 'string' ? x : (x && x.id)
+            ).filter(Boolean));
+
+            requested.add('CONFIRM_READ');
+
+            // Notification is always the announcement surface for a meeting.
             selectDestination('ThongBao');
-            selectDestination('ViecCuaToi');
 
-            // Workflow của Cuộc họp phải lấy đúng yêu cầu từ module nguồn.
-            // Cuochop gửi CONFIRM_READ và chỉ bổ sung CONFIRM_ATTENDANCE / QR_ATTENDANCE khi được bật.
-            const meetingWorkflow = sourceWorkflow.length ? sourceWorkflow : ['CONFIRM_READ'];
-            meetingWorkflow.forEach(selectWorkflow);
+            // Any interactive meeting workflow needs "ViecCuaToi" so recipients can act.
+            const interactiveIds = ['CONFIRM_READ', 'CONFIRM_ATTENDANCE', 'QR_ATTENDANCE'];
+            const hasInteractiveWorkflow = interactiveIds.some(id => requested.has(id));
+
+            if (hasInteractiveWorkflow) selectDestination('ViecCuaToi');
+
+            interactiveIds.forEach(id => {
+                if (requested.has(id)) selectWorkflow(id);
+            });
+
         } else if (srcName.includes('giao') || srcName.includes('nhiemvu') || srcName.includes('nhiệm vụ')) {
             selectDestination('ViecCuaToi');
             selectDestination('ThongBao');
             ['CONFIRM_READ','ACCEPT_TASK','IN_PROGRESS','REPORT_RESULT','COMPLETE','ATTACH_PROOF']
                 .forEach(selectWorkflow);
+
         } else if (srcName.includes('lichcongtac')) {
             selectDestination('LichCongTac');
             selectWorkflow('SHOW_ONLY');
+
         } else {
-            if (!TTDHS_State.destinations.some(d => d.selected)) selectDestination('ThongBao');
-            if (sourceWorkflow.length) sourceWorkflow.forEach(selectWorkflow);
-            else selectWorkflow('CONFIRM_READ');
+            selectDestination('ThongBao');
+            selectWorkflow('CONFIRM_READ');
         }
     },
 
