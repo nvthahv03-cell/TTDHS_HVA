@@ -213,79 +213,16 @@ export function renderHome() {
 
 
             <!-- ================================================= -->
-<!-- TÁC VỤ ĐỘNG: ĐIỂM DANH HỌP - GIAO DIỆN THỬ       -->
+<!-- CUỘC HỌP CỦA TÔI - DỮ LIỆU THẬT TỪ BACKEND      -->
 <!-- ================================================= -->
-<div class="mb-2">
-
-    <button type="button"
-        class="w-full rounded-xl
-               border border-violet-200
-               bg-gradient-to-r from-violet-50 to-indigo-50
-               px-2.5 py-2
-               transition text-left">
-
-        <div class="flex items-center gap-2">
-
-            <!-- ICON -->
-            <div class="w-8 h-8 rounded-lg
-                        bg-violet-600 text-white
-                        flex items-center justify-center
-                        shrink-0 shadow-sm">
-
-                <i class="bi bi-qr-code-scan text-base"></i>
-
-            </div>
-
-            <!-- NỘI DUNG -->
-            <div class="flex-1 min-w-0">
-
-                <div class="flex items-center gap-1.5">
-
-                    <span class="text-[9px]
-                                 font-extrabold
-                                 text-violet-800">
-                        ĐIỂM DANH HỌP
-                    </span>
-
-                    <span class="px-1.5 py-0.5
-                                 rounded-full
-                                 bg-red-500 text-white
-                                 text-[7px] font-bold">
-                        ● ĐANG MỞ
-                    </span>
-
-                </div>
-
-                <div class="text-[10px]
-                            font-bold text-slate-800
-                            truncate mt-0.5">
-                    Họp Hội đồng sư phạm
-                </div>
-
-                <div class="text-[8px]
-                            text-slate-500 mt-0.5">
-                    Điểm danh đến 16:30
-                </div>
-
-            </div>
-
-            <!-- ACTION -->
-            <div class="flex items-center gap-1
-                        shrink-0
-                        text-[9px]
-                        font-extrabold
-                        text-violet-700">
-
-                Quét QR
-                Điểm danh
-            <i class="bi bi-chevron-right text-[9px]"></i>
-
-            </div>
-
+<div id="myMeetingSection" class="hidden mb-2">
+    <div class="flex items-center justify-between px-0.5 mb-1.5">
+        <div class="text-[9px] font-extrabold text-violet-700 uppercase tracking-wide">
+            <i class="bi bi-people-fill mr-1"></i>Cuộc họp của tôi
         </div>
-
-    </button>
-
+        <span id="myMeetingCount" class="text-[8px] font-bold text-slate-400"></span>
+    </div>
+    <div id="myMeetingList" class="space-y-1.5"></div>
 </div>
 
 
@@ -3032,6 +2969,10 @@ export function renderHome() {
 
         const isOpening = panel.classList.contains('hidden');
 
+        if (isOpening && typeof loadMyMeetings === 'function') {
+            loadMyMeetings();
+        }
+
         connectPanel?.classList.add('hidden');
         document.getElementById('digitalConnectChevron')
             ?.classList.remove('rotate-180');
@@ -3390,6 +3331,7 @@ const MY_TASK_API_URL =
     'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 
 let HVA_MY_TASKS = [];
+let HVA_MY_MEETINGS = [];
 
 function getCurrentHVAUser() {
     try {
@@ -3445,6 +3387,142 @@ async function loadMyTasks() {
         console.error('[HVA] Lỗi tải Việc của tôi:', error);
         return [];
     }
+}
+
+
+// =====================================================
+// CUỘC HỌP CỦA TÔI - NGUỒN ĐỘC LẬP, KHÔNG TRỘN TASK
+// =====================================================
+
+async function loadMyMeetings() {
+    const user = getCurrentHVAUser();
+
+    const username =
+        user.username ||
+        user.userName ||
+        user.maGV ||
+        '';
+
+    if (!username) {
+        console.warn('[HVA] Không xác định được username để tải cuộc họp.');
+        HVA_MY_MEETINGS = [];
+        renderMyMeetings();
+        return [];
+    }
+
+    try {
+        const url =
+            MY_TASK_API_URL +
+            '?action=getMeetingsByUser&username=' +
+            encodeURIComponent(username) +
+            '&_=' + Date.now();
+
+        const response = await fetch(url, {
+            method: 'GET',
+            cache: 'no-store'
+        });
+
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
+
+        const data = await response.json();
+
+        HVA_MY_MEETINGS =
+            data && data.success === true && Array.isArray(data.meetings)
+                ? data.meetings
+                : [];
+
+        renderMyMeetings();
+        updateMyWorkTotalBadge();
+
+        console.log('[HVA] Cuộc họp của tôi:', HVA_MY_MEETINGS);
+        return HVA_MY_MEETINGS;
+
+    } catch (error) {
+        console.error('[HVA] Lỗi tải Cuộc họp của tôi:', error);
+        HVA_MY_MEETINGS = [];
+        renderMyMeetings();
+        updateMyWorkTotalBadge();
+        return [];
+    }
+}
+
+function escapeMyWorkHtml(value) {
+    return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function renderMyMeetings() {
+    const section = document.getElementById('myMeetingSection');
+    const list = document.getElementById('myMeetingList');
+    const count = document.getElementById('myMeetingCount');
+
+    if (!section || !list) return;
+
+    if (!HVA_MY_MEETINGS.length) {
+        section.classList.add('hidden');
+        list.innerHTML = '';
+        if (count) count.textContent = '';
+        return;
+    }
+
+    section.classList.remove('hidden');
+    if (count) count.textContent = HVA_MY_MEETINGS.length + ' cuộc họp';
+
+    list.innerHTML = HVA_MY_MEETINGS.map(meeting => {
+        const title = escapeMyWorkHtml(meeting.title || 'Cuộc họp');
+        const date = escapeMyWorkHtml(meeting.date || '');
+        const startTime = escapeMyWorkHtml(meeting.startTime || '');
+        const endTime = escapeMyWorkHtml(meeting.endTime || '');
+        const place = escapeMyWorkHtml(meeting.place || '');
+        const response = String(meeting.attendanceResponse || 'CHƯA XÁC NHẬN').trim();
+        const responseText = escapeMyWorkHtml(response);
+
+        const timeText = [date, startTime && endTime ? startTime + '–' + endTime : (startTime || endTime)]
+            .filter(Boolean)
+            .join(' • ');
+
+        return `
+            <button type="button"
+                class="w-full rounded-xl border border-violet-200 bg-violet-50 px-2.5 py-2 text-left"
+                data-meeting-id="${escapeMyWorkHtml(meeting.meetingId || '')}">
+                <div class="flex items-start gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-violet-600 text-white flex items-center justify-center shrink-0">
+                        <i class="bi bi-people-fill text-sm"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[8px] font-extrabold text-violet-700">CUỘC HỌP</span>
+                            <span class="text-[7px] font-bold text-slate-500">${responseText}</span>
+                        </div>
+                        <div class="text-[10px] font-bold text-slate-800 mt-0.5">${title}</div>
+                        ${timeText ? `<div class="text-[8px] text-slate-500 mt-0.5"><i class="bi bi-clock mr-1"></i>${timeText}</div>` : ''}
+                        ${place ? `<div class="text-[8px] text-slate-500 mt-0.5"><i class="bi bi-geo-alt mr-1"></i>${place}</div>` : ''}
+                    </div>
+                </div>
+            </button>`;
+    }).join('');
+}
+
+function updateMyWorkTotalBadge() {
+    const badge = document.getElementById('myWorkTotalBadge');
+    if (!badge) return;
+
+    const groups = getMyTaskGroups();
+    const activeTasks =
+        groups.ASSIGNED.length +
+        groups.DOING.length +
+        groups.OVERDUE.length;
+
+    const total = activeTasks + HVA_MY_MEETINGS.length;
+    badge.textContent = total;
+    badge.classList.toggle('hidden', total <= 0);
+    badge.classList.toggle('flex', total > 0);
 }
 
 
@@ -3526,6 +3604,7 @@ function updateMyTaskCounters() {
     setCount('countDoing', groups.DOING.length);
     setCount('countOverdue', groups.OVERDUE.length);
     setCount('countCompleted', groups.COMPLETED.length);
+    updateMyWorkTotalBadge();
 }
 
 
@@ -3566,6 +3645,7 @@ window.openMyTasks = async function(type, event) {
 
 setTimeout(() => {
     loadMyTasks();
+    loadMyMeetings();
 }, 500);
 
 
