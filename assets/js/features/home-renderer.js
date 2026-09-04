@@ -3489,8 +3489,7 @@ function renderMyMeetings() {
 
         return `
             <button type="button"
-                onclick="openMyMeetingDetail(this.dataset.meetingId, event)"
-                class="w-full rounded-xl border border-violet-200 bg-violet-50 hover:bg-violet-100 px-2.5 py-2 text-left transition"
+                class="hva-my-meeting-card w-full rounded-xl border border-violet-200 bg-violet-50 hover:bg-violet-100 px-2.5 py-2 text-left transition cursor-pointer"
                 data-meeting-id="${escapeMyWorkHtml(meeting.meetingId || '')}">
                 <div class="flex items-start gap-2">
                     <div class="w-8 h-8 rounded-lg bg-violet-600 text-white flex items-center justify-center shrink-0">
@@ -3508,6 +3507,18 @@ function renderMyMeetings() {
                 </div>
             </button>`;
     }).join('');
+
+    // Gắn click bằng event delegation thay cho inline onclick.
+    // Cách này ổn định trong ES module và trên trình duyệt di động.
+    list.onclick = function(e) {
+        const card = e.target.closest('.hva-my-meeting-card');
+        if (!card || !list.contains(card)) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        window.openMyMeetingDetail(card.dataset.meetingId || '', e);
+    };
 }
 
 // =====================================================
