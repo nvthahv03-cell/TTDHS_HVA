@@ -2295,21 +2295,21 @@ export function renderHome() {
 </a>
 
 
-                    <button type="button"
-                            class="w-full flex items-center gap-2.5
-                                   px-3 py-2 rounded-lg
-                                   hover:bg-amber-50
-                                   dark:hover:bg-slate-800 transition text-left">
+                   <a href="Thongbao.html"
+        class="w-full flex items-center gap-2.5
+               px-3 py-2 rounded-lg
+               hover:bg-amber-50
+               dark:hover:bg-slate-800 transition text-left">
 
-                        <i class="bi bi-megaphone-fill
-                                  text-amber-500 w-5 text-center"></i>
+    <i class="bi bi-megaphone-fill
+              text-amber-500 w-5 text-center"></i>
 
-                        <span class="text-[11px] font-semibold
-                                     text-slate-700 dark:text-slate-200">
-                            Thông báo
-                        </span>
+    <span class="text-[11px] font-semibold
+                 text-slate-700 dark:text-slate-200">
+        Thông báo
+    </span>
 
-                    </button>
+</a>
 
 
                     <button type="button"
