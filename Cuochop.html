@@ -216,59 +216,28 @@ function getMeetingEndedAt(m) {
     if (raw) {
         const direct = new Date(raw);
         if (!Number.isNaN(direct.getTime())) return direct;
+
+        // Backend đôi khi chỉ trả giờ kết thúc thực tế dạng HH:mm.
         const byDate = parseMeetingLocalDateTime(m.date, raw);
         if (byDate) return byDate;
     }
-    return null;
-}
-
-function getMeetingScheduledEnd(m) {
-    return parseMeetingLocalDateTime(
-        m.date,
-        m.endTime || m.qrCloseTime || m.startTime
-    );
-}
-
-function isMeetingPostEndStatus(m) {
-    const status = String(m.meetingStatus || '').trim().toUpperCase();
-    return status.includes('KẾT THÚC') ||
-           status.includes('CHỜ KẾT LUẬN') ||
-           status.includes('HOÀN TẤT');
+    return parseMeetingLocalDateTime(m.date, m.endTime);
 }
 
 function shouldKeepManagedMeeting(m) {
-    const status = String(m.meetingStatus || '').trim().toUpperCase();
+    const status = String(m.meetingStatus || '').toUpperCase();
+    const ended = status.includes('KẾT THÚC');
+    if (!ended) return true;
 
-    // HOÀN TẤT: luôn rời khỏi khu Điều hành QR.
-    if (status.includes('HOÀN TẤT')) return false;
+    const endedAt = getMeetingEndedAt(m);
+    if (!endedAt) return true; // thiếu mốc thời gian: giữ lại để tránh làm mất dữ liệu.
 
-    const actualEnd = getMeetingEndedAt(m);
-    const scheduledEnd = getMeetingScheduledEnd(m);
-    const postEnd = isMeetingPostEndStatus(m);
     const FIFTEEN_MINUTES = 15 * 60 * 1000;
-    const now = Date.now();
-
-    // Sau khi bấm KẾT THÚC / CHỜ KẾT LUẬN:
-    // chỉ giữ tối đa 15 phút để QR RA còn dùng được.
-    if (postEnd) {
-        const endPoint = actualEnd || scheduledEnd;
-        if (!endPoint) return false;
-        return now <= endPoint.getTime() + FIFTEEN_MINUTES;
-    }
-
-    // Trạng thái chưa được backend chốt nhưng lịch họp đã qua:
-    // không để cuộc họp cũ nằm mãi trong Điều hành QR.
-    if (scheduledEnd && now > scheduledEnd.getTime()) {
-        return false;
-    }
-
-    return true;
+    return Date.now() <= endedAt.getTime() + FIFTEEN_MINUTES;
 }
 
 function renderManagedMeetings() {
     const box = $('managedMeetings');
-    if (!box) return;
-
     const visibleMeetings = managedMeetingData
         .filter(shouldKeepManagedMeeting)
         .slice(0, 10);
@@ -279,7 +248,7 @@ function renderManagedMeetings() {
     }
 
     box.innerHTML = visibleMeetings.map(m => {
-        const postEnd = isMeetingPostEndStatus(m);
+        const ended = String(m.meetingStatus || '').toUpperCase().includes('KẾT THÚC');
         const canQr = m.attendanceEnabled === true;
 
         return `<div class="border-b last:border-0 py-3">
@@ -288,20 +257,21 @@ function renderManagedMeetings() {
                     <div class="font-extrabold text-slate-800 text-[11px] truncate">${esc(m.title || 'Cuộc họp')}</div>
                     <div class="text-[9px] text-slate-500 mt-1">${esc(m.date || '')} • ${esc(m.startTime || '')} ${m.place ? '• ' + esc(m.place) : ''}</div>
                     <div class="mt-1">
-                        <span class="badge ${postEnd ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}">
-                            ${postEnd ? 'CHỜ QR RA' : esc(m.meetingStatus || 'ĐÃ PHÁT HÀNH')}
-                        </span>
+                        <span class="badge ${
+        ended ? 'bg-slate-100 text-slate-600' : 'bg-emerald-50 text-emerald-700'
+    }">${esc(m.meetingStatus || 'ĐÃ PHÁT HÀNH')}</span>
                     </div>
                 </div>
                 <div class="flex flex-col gap-1.5">
-                    ${canQr && !postEnd ? `<button onclick="showMeetingQr('${esc(m.meetingId)}','IN')" class="px-2.5 h-8 rounded-lg bg-violet-600 text-white text-[9px] font-bold"><i class="bi bi-qr-code mr-1"></i>QR VÀO</button>` : ''}
-                    ${canQr && postEnd && m.checkOutToken ? `<button onclick="showMeetingQr('${esc(m.meetingId)}','OUT')" class="px-2.5 h-8 rounded-lg bg-amber-500 text-white text-[9px] font-bold"><i class="bi bi-qr-code mr-1"></i>QR RA</button>` : ''}
+                    ${canQr && !ended ? `<button onclick="showMeetingQr('${esc(m.meetingId)}','IN')" class="px-2.5 h-8 rounded-lg bg-violet-600 text-white text-[9px] font-bold"><i class="bi bi-qr-code mr-1"></i>QR VÀO</button>` : ''}
+                    ${canQr && ended && m.checkOutToken ? `<button onclick="showMeetingQr('${esc(m.meetingId)}','OUT')" class="px-2.5 h-8 rounded-lg bg-amber-500 text-white text-[9px] font-bold"><i class="bi bi-qr-code mr-1"></i>QR RA</button>` : ''}
                 </div>
             </div>
-            ${!postEnd ? `<div class="grid grid-cols-2 gap-2 mt-2">
-                <button onclick="openInteractionModal('${esc(m.meetingId)}')" class="h-9 rounded-lg bg-cyan-50 text-cyan-700 border border-cyan-200 text-[9px] font-extrabold"><i class="bi bi-chat-dots-fill mr-1"></i>TƯƠNG TÁC</button>
-                <button onclick="endManagedMeeting('${esc(m.meetingId)}')" class="h-9 rounded-lg bg-red-50 text-red-600 border border-red-200 text-[9px] font-extrabold"><i class="bi bi-stop-circle mr-1"></i>KẾT THÚC</button>
-            </div>` : ''}
+            <div class="grid grid-cols-2 gap-2 mt-2">
+                ${!ended
+                    ? `<button onclick="openInteractionModal('${esc(m.meetingId)}')" class="h-9 rounded-lg bg-cyan-50 text-cyan-700 border border-cyan-200 text-[9px] font-extrabold"><i class="bi bi-chat-dots-fill mr-1"></i>TƯƠNG TÁC</button><button onclick="endManagedMeeting('${esc(m.meetingId)}')" class="h-9 rounded-lg bg-red-50 text-red-600 border border-red-200 text-[9px] font-extrabold"><i class="bi bi-stop-circle mr-1"></i>KẾT THÚC</button>`
+                    : `<button onclick="openInteractionModal('${esc(m.meetingId)}')" class="col-span-2 h-9 rounded-lg bg-slate-50 text-slate-600 border text-[9px] font-extrabold"><i class="bi bi-clock-history mr-1"></i>XEM TƯƠNG TÁC</button>`}
+            </div>
         </div>`;
     }).join('');
 }
