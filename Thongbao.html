@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Siêu Thông báo HVA</title>
+<title>Thông báo HVA</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
@@ -11,19 +11,28 @@ body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",san
 .tb-scroll::-webkit-scrollbar{width:6px}.tb-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
 .tool-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.48rem .65rem;border:1px solid #e2e8f0;border-radius:.7rem;background:white;font-size:11px;font-weight:800;color:#475569}
 .tool-btn:hover{background:#f8fafc}.chip{display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .55rem;border-radius:999px;font-size:10px;font-weight:800}
+.assistant-btn{display:inline-flex;align-items:center;gap:.45rem;padding:.62rem .85rem;border-radius:.85rem;border:1px solid #bfdbfe;background:linear-gradient(135deg,#eff6ff,#eef2ff);color:#1d4ed8;font-size:11px;font-weight:900;box-shadow:0 4px 14px rgba(37,99,235,.08);transition:.18s}.assistant-btn:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(37,99,235,.14)}
 </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen">
 <div class="max-w-5xl mx-auto p-3 md:p-5">
-  <header class="flex items-center justify-between mb-3">
-    <div class="flex items-center gap-3">
-      <button onclick="location.href='main.html'" class="w-9 h-9 rounded-xl bg-white border border-slate-200 shadow-sm"><i class="bi bi-arrow-left"></i></button>
-      <div>
-        <div class="text-[11px] font-extrabold text-[#0F4C81] tracking-wider">TTĐHS_HVA</div>
-        <h1 class="text-lg md:text-xl font-black text-slate-900">SIÊU THÔNG BÁO</h1>
+  <header class="mb-3 rounded-2xl border border-slate-200 bg-white shadow-sm px-3.5 py-3 md:px-4">
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <button onclick="location.href='main.html'" title="Về Trung tâm điều hành số" class="w-10 h-10 shrink-0 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 text-[#0F4C81] shadow-sm transition"><i class="bi bi-arrow-left text-lg"></i></button>
+        <div class="w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center shadow-sm">
+          <i class="bi bi-megaphone-fill text-lg"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="text-[10px] font-extrabold text-[#0F4C81] tracking-[.12em] uppercase">HỆ THỐNG CHUYÊN MÔN SỐ HVA</div>
+          <h1 class="text-lg md:text-xl font-black text-slate-900 leading-tight">THÔNG BÁO</h1>
+          <div class="text-[10px] text-slate-400 font-semibold mt-0.5">Soạn thảo • Phát hành • Theo dõi</div>
+        </div>
       </div>
+      <button type="button" onclick="openHVAAssistant()" class="assistant-btn shrink-0" title="Mở ChatGPT để hỗ trợ soạn thông báo">
+        <i class="bi bi-stars text-sm"></i><span class="hidden sm:inline">SOẠN VỚI HVA ASSISTANT</span><span class="sm:hidden">AI</span>
+      </button>
     </div>
-    <span class="chip bg-emerald-50 text-emerald-700 border border-emerald-200"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Soạn nhanh</span>
   </header>
 
   <main class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
@@ -98,7 +107,7 @@ Thực hiện Công văn số 1268 của Sở GD&ĐT Đà Nẵng...
               <div class="text-[10px] font-extrabold text-slate-800">ĐỐI TƯỢNG NHẬN</div>
               <div class="text-[9px] text-slate-500">Chọn nhanh ở đây để TT Phát hành nhận đúng danh sách.</div>
             </div>
-            <button onclick="selectAllPeople(true)" class="text-[10px] font-bold text-blue-700">Chọn tất cả</button>
+            <button id="btnSelectAll" onclick="toggleAllPeople()" class="text-[10px] font-bold text-blue-700">Chọn tất cả</button>
           </div>
           <input id="peopleSearch" oninput="renderPersonnel()" class="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white text-xs mb-2" placeholder="Tìm giáo viên / tổ...">
           <div id="personnelBox" class="max-h-72 overflow-auto tb-scroll space-y-2"><div class="text-xs text-slate-400">Đang tải danh sách...</div></div>
@@ -174,7 +183,7 @@ function renderPersonnel(){
     <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
       <div class="px-3 py-2 bg-slate-50 flex justify-between items-center">
         <b class="text-[10px]">${esc(g)}</b>
-        <button onclick='selectGroup(${JSON.stringify(g)})' class="text-[9px] font-bold text-blue-700">Chọn tổ</button>
+        <button onclick='selectGroup(${JSON.stringify(g)})' class="text-[9px] font-bold text-blue-700">${ms.length > 0 && ms.every(p => selected.has(p.username)) ? 'Bỏ chọn' : 'Chọn tổ'}</button>
       </div>
       <div class="p-2 grid md:grid-cols-2 gap-1">
         ${ms.map(p=>`<label class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 text-[10px] cursor-pointer">
@@ -184,10 +193,18 @@ function renderPersonnel(){
       </div>
     </div>`).join('')||'<div class="text-xs text-slate-400">Không có kết quả.</div>';
   $('recipientCount').textContent=selected.size;
+  const allBtn=$('btnSelectAll');
+  if(allBtn) allBtn.textContent=(personnel.length>0 && personnel.every(p=>selected.has(p.username)))?'Bỏ chọn tất cả':'Chọn tất cả';
 }
 function togglePerson(u,on){on?selected.add(u):selected.delete(u);$('recipientCount').textContent=selected.size}
-function selectGroup(g){personnel.filter(p=>p.tenTo===g).forEach(p=>selected.add(p.username));renderPersonnel()}
+function selectGroup(g){
+  const members=personnel.filter(p=>p.tenTo===g);
+  const allSelected=members.length>0&&members.every(p=>selected.has(p.username));
+  members.forEach(p=>allSelected?selected.delete(p.username):selected.add(p.username));
+  renderPersonnel();
+}
 function selectAllPeople(on){if(on)personnel.forEach(p=>selected.add(p.username));else selected.clear();renderPersonnel()}
+function toggleAllPeople(){const all=personnel.length>0&&personnel.every(p=>selected.has(p.username));selectAllPeople(!all)}
 function selectedPeople(){return personnel.filter(p=>selected.has(p.username))}
 function resetComposer(){
   if(($('tbTitle').value||$('tbContent').value)&&!confirm('Xóa nội dung đang soạn?'))return;
@@ -202,6 +219,12 @@ function buildWorkflow(){
   if($('reqProof').checked)a.push('ATTACH_PROOF');
   return a;
 }
+function openHVAAssistant(){
+  // Bản 1: mở ChatGPT ở tab mới để thầy trao đổi trực tiếp với HVA Assistant.
+  // Nội dung chỉ được chép vào form sau khi thầy duyệt; hệ thống không tự phát hành.
+  window.open('https://chatgpt.com/','_blank','noopener,noreferrer');
+}
+
 function goPublishing(){
   const title=$('tbTitle').value.trim(), content=$('tbContent').value.trim(), people=selectedPeople();
   if(!title)return alert('Vui lòng nhập tiêu đề thông báo.');
