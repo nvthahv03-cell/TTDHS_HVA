@@ -2140,7 +2140,7 @@ export function renderHome() {
          data-dropdown-menu
          class="hidden fixed sm:absolute
        left-3 right-3
-       sm:left-1/2 sm:right-auto sm:-translate-x-1/2
+       sm:left-0 sm:right-auto sm:translate-x-0
        bottom-20 sm:bottom-[calc(100%+0.6rem)]
        z-[999]
        w-auto sm:w-[370px]
