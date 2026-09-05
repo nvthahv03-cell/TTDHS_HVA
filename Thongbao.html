@@ -1,40 +1,45 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Thông báo HVA</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<style>
-body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.tb-scroll::-webkit-scrollbar{width:6px}.tb-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
-.tool-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.48rem .65rem;border:1px solid #e2e8f0;border-radius:.7rem;background:white;font-size:11px;font-weight:800;color:#475569}
-.tool-btn:hover{background:#f8fafc}.chip{display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .55rem;border-radius:999px;font-size:10px;font-weight:800}
-.assistant-btn{display:inline-flex;align-items:center;gap:.45rem;padding:.62rem .85rem;border-radius:.85rem;border:1px solid #bfdbfe;background:linear-gradient(135deg,#eff6ff,#eef2ff);color:#1d4ed8;font-size:11px;font-weight:900;box-shadow:0 4px 14px rgba(37,99,235,.08);transition:.18s}.assistant-btn:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(37,99,235,.14)}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TTĐHS_HVA - Thông Báo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <script>
+      tailwind.config={theme:{extend:{colors:{brand:{50:'#f0f7ff',100:'#e0effe',200:'#bae0fd',500:'#1687D9',600:'#0F4C81',700:'#0b3e69',800:'#062B5B',900:'#041f43'}},fontFamily:{sans:['Inter','-apple-system','BlinkMacSystemFont','sans-serif']}}}}
+    </script>
+    <style>
+      body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-highlight-color:transparent}
+      ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:#f1f5f9}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:9999px}::-webkit-scrollbar-thumb:hover{background:#94a3b8}
+      .tb-scroll::-webkit-scrollbar{width:6px}.tb-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
+      .tool-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.48rem .65rem;border:1px solid #e2e8f0;border-radius:.7rem;background:white;font-size:11px;font-weight:800;color:#475569}
+      .tool-btn:hover{background:#f8fafc}.chip{display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .55rem;border-radius:999px;font-size:10px;font-weight:800}
+      .hva-header{background:linear-gradient(105deg,#0b3e69 0%,#0F4C81 52%,#1687D9 100%);position:relative;overflow:hidden}
+      .hva-header:after{content:'';position:absolute;inset:0;opacity:.13;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.15) 1px,transparent 1px);background-size:64px 64px}
+      .assistant-btn{position:relative;z-index:1;display:inline-flex;align-items:center;gap:.45rem;padding:.68rem .9rem;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:white;font-size:11px;font-weight:800;backdrop-filter:blur(8px);transition:.18s}.assistant-btn:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}
+      @media(max-width:640px){.page-header-wrap{padding-left:12px!important;padding-right:12px!important}.page-header-title{font-size:20px!important;line-height:1.15!important}.page-header-subtitle{font-size:9px!important}.page-header-back{width:40px!important;height:40px!important;min-width:40px!important}}
+    </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen">
-<div class="max-w-5xl mx-auto p-3 md:p-5">
-  <header class="mb-3 rounded-2xl border border-slate-200 bg-white shadow-sm px-3.5 py-3 md:px-4">
-    <div class="flex items-center justify-between gap-3">
-      <div class="flex items-center gap-3 min-w-0">
-        <button onclick="location.href='main.html'" title="Về Trung tâm điều hành số" class="w-10 h-10 shrink-0 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 text-[#0F4C81] shadow-sm transition"><i class="bi bi-arrow-left text-lg"></i></button>
-        <div class="w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center shadow-sm">
-          <i class="bi bi-megaphone-fill text-lg"></i>
-        </div>
-        <div class="min-w-0">
-          <div class="text-[10px] font-extrabold text-[#0F4C81] tracking-[.12em] uppercase">HỆ THỐNG CHUYÊN MÔN SỐ HVA</div>
-          <h1 class="text-lg md:text-xl font-black text-slate-900 leading-tight">THÔNG BÁO</h1>
-          <div class="text-[10px] text-slate-400 font-semibold mt-0.5">Soạn thảo • Phát hành • Theo dõi</div>
-        </div>
-      </div>
-      <button type="button" onclick="openHVAAssistant()" class="assistant-btn shrink-0" title="Mở ChatGPT để hỗ trợ soạn thông báo">
-        <i class="bi bi-stars text-sm"></i><span class="hidden sm:inline">SOẠN VỚI HVA ASSISTANT</span><span class="sm:hidden">AI</span>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+<header class="hva-header shadow-md">
+  <div class="page-header-wrap max-w-[1500px] mx-auto px-5 md:px-8 h-[126px] flex items-center justify-between gap-4 relative z-[1]">
+    <div class="flex items-center gap-5 min-w-0">
+      <button onclick="location.href='main.html'" title="Về Trang chủ" class="page-header-back w-16 h-16 shrink-0 rounded-2xl border border-white/25 bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+        <i class="bi bi-arrow-left text-2xl"></i>
       </button>
+      <div class="min-w-0 text-white">
+        <div class="page-header-subtitle text-[13px] md:text-[15px] font-bold tracking-[.06em] text-blue-100 uppercase">THPT HÒA VANG - TTĐHS_HVA</div>
+        <h1 class="page-header-title text-[30px] md:text-[34px] font-extrabold leading-tight tracking-[-.025em]">THÔNG BÁO</h1>
+      </div>
     </div>
-  </header>
-
+    <button type="button" onclick="openHVAAssistant()" class="assistant-btn shrink-0" title="Mở HVA Assistant hỗ trợ soạn thông báo">
+      <i class="bi bi-stars text-base"></i><span class="hidden sm:inline">SOẠN VỚI HVA ASSISTANT</span><span class="sm:hidden">AI</span>
+    </button>
+  </div>
+</header>
+<div class="max-w-5xl mx-auto p-3 md:p-5">
   <main class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
     <div class="px-4 md:px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
       <div>
