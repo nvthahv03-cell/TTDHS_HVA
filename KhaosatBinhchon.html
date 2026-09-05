@@ -8,6 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <script>
     tailwind.config = {
@@ -204,6 +205,21 @@
   </section>
 
   <section class="card p-4">
+    <div class="flex items-center justify-between gap-3 mb-3">
+      <div>
+        <div class="text-[11px] font-extrabold uppercase text-slate-700"><i class="bi bi-people-fill mr-1.5 text-brand-600"></i>Người nhận</div>
+        <div class="text-[9px] text-slate-400 mt-0.5">Danh sách này được chuyển nguyên sang TT Phát hành</div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="recipientCount" class="pill bg-blue-50 text-brand-600">0 người</span>
+        <button id="btnSelectAll" type="button" onclick="toggleAllPeople()" class="text-[9px] font-extrabold text-brand-600">Chọn tất cả</button>
+      </div>
+    </div>
+    <input id="peopleSearch" oninput="renderPersonnel()" class="field mb-2" placeholder="Tìm giáo viên / tổ / bộ phận...">
+    <div id="personnelBox" class="max-h-72 overflow-auto space-y-2"><div class="text-[10px] text-slate-400">Đang tải danh sách nhân sự...</div></div>
+  </section>
+
+  <section class="card p-4">
     <div class="flex items-center justify-between mb-3">
       <div>
         <div class="text-[11px] font-extrabold uppercase text-slate-700"><i class="bi bi-eye-fill mr-1.5 text-brand-600"></i>Xem nhanh</div>
@@ -219,12 +235,17 @@
   </section>
 
   <section class="card p-3">
-    <div class="grid grid-cols-3 gap-2">
-      <button type="button" onclick="resetForm()" class="action bg-slate-100 text-slate-600"><i class="bi bi-x-circle"></i>HỦY</button>
-      <button type="button" onclick="previewFull()" class="action bg-white border border-brand-600 text-brand-600"><i class="bi bi-eye"></i>XEM</button>
+    <div class="text-[10px] font-extrabold text-slate-700 mb-2"><i class="bi bi-send-check-fill mr-1.5 text-emerald-600"></i>PHÁT HÀNH & CHIA SẺ</div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
       <button type="button" onclick="goPublishing()" class="action bg-emerald-600 text-white"><i class="bi bi-send-fill"></i>TT PHÁT HÀNH</button>
+      <button type="button" onclick="copySurveyLink()" class="action bg-white border border-brand-600 text-brand-600"><i class="bi bi-link-45deg"></i>SAO CHÉP LINK</button>
+      <button type="button" onclick="showQR()" class="action bg-slate-900 text-white"><i class="bi bi-qr-code"></i>TẠO QR</button>
     </div>
-    <div class="text-center text-[9px] text-slate-400 mt-2">Bản giao diện thử nghiệm • Chưa nối Backend</div>
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      <button type="button" onclick="previewFull()" class="action bg-white border border-slate-300 text-slate-600"><i class="bi bi-eye"></i>XEM TRƯỚC</button>
+      <button type="button" onclick="resetForm()" class="action bg-slate-100 text-slate-600"><i class="bi bi-x-circle"></i>HỦY</button>
+    </div>
+    <div id="shareHint" class="text-center text-[9px] text-slate-400 mt-2">Khảo sát nội bộ: Link/QR chính thức cần ID đã lưu trên HVA.</div>
   </section>
 </main>
 
@@ -239,7 +260,8 @@
 </div>
 
 <script>
-let mode='internal', questions=[], qSeq=0;
+const WEB_APP_URL='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+let mode='internal', questions=[], qSeq=0, personnel=[], selected=new Set(), currentSurveyId='';
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -304,6 +326,102 @@ function renderQuestions(){
     </div>`).join('');
 }
 
+
+function currentUser(){
+  try{return JSON.parse(sessionStorage.getItem('user')||localStorage.getItem('user')||'{}')}catch(e){return{}}
+}
+async function loadPersonnel(){
+  try{
+    const r=await fetch(`${WEB_APP_URL}?action=getDanhSachTo`);
+    const groups=await r.json(), all=[];
+    for(const x of (Array.isArray(groups)?groups:[])){
+      const tenTo=x.tenTo||x;
+      try{
+        const rr=await fetch(`${WEB_APP_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`);
+        const ms=await rr.json();
+        (Array.isArray(ms)?ms:[]).forEach(m=>all.push({
+          username:String(m.username||m.maGV||m.hoTen||'').trim(),
+          hoTen:m.hoTen||m.fullName||'',
+          chucVu:m.chucVu||m.vaiTro||'Giáo viên',
+          tenTo
+        }));
+      }catch(e){}
+    }
+    const seen=new Set();
+    personnel=all.filter(p=>p.username&&!seen.has(p.username)&&(seen.add(p.username),true));
+    renderPersonnel();
+  }catch(e){
+    $('personnelBox').innerHTML='<div class="text-[10px] font-bold text-red-600">Không tải được nhân sự. <button onclick="loadPersonnel()" class="underline">Thử lại</button></div>';
+  }
+}
+function renderPersonnel(){
+  const q=($('peopleSearch')?.value||'').trim().toLowerCase(), groups={};
+  personnel.filter(p=>!q||(`${p.hoTen} ${p.tenTo} ${p.chucVu}`).toLowerCase().includes(q))
+    .forEach(p=>(groups[p.tenTo]??=[]).push(p));
+  $('personnelBox').innerHTML=Object.entries(groups).map(([g,ms])=>`
+    <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
+      <div class="px-3 py-2 bg-slate-50 flex justify-between items-center">
+        <b class="text-[10px]">${esc(g)}</b>
+        <button type="button" onclick='selectGroup(${JSON.stringify(g)})' class="text-[9px] font-bold text-brand-600">${ms.length&&ms.every(p=>selected.has(p.username))?'Bỏ chọn':'Chọn tổ'}</button>
+      </div>
+      <div class="p-2 grid md:grid-cols-2 gap-1">
+        ${ms.map(p=>`<label class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 text-[10px] cursor-pointer">
+          <input type="checkbox" ${selected.has(p.username)?'checked':''} onchange='togglePerson(${JSON.stringify(p.username)},this.checked)'>
+          <span><b>${esc(p.hoTen)}</b><span class="text-slate-500"> · ${esc(p.chucVu)}</span></span>
+        </label>`).join('')}
+      </div>
+    </div>`).join('')||'<div class="text-[10px] text-slate-400">Không có kết quả.</div>';
+  $('recipientCount').textContent=`${selected.size} người`;
+  $('btnSelectAll').textContent=personnel.length&&personnel.every(p=>selected.has(p.username))?'Bỏ chọn tất cả':'Chọn tất cả';
+}
+function togglePerson(u,on){on?selected.add(u):selected.delete(u);renderPersonnel()}
+function selectGroup(g){
+  const ms=personnel.filter(p=>p.tenTo===g), all=ms.length&&ms.every(p=>selected.has(p.username));
+  ms.forEach(p=>all?selected.delete(p.username):selected.add(p.username)); renderPersonnel();
+}
+function toggleAllPeople(){
+  const all=personnel.length&&personnel.every(p=>selected.has(p.username));
+  if(all)selected.clear();else personnel.forEach(p=>selected.add(p.username)); renderPersonnel();
+}
+function selectedPeople(){return personnel.filter(p=>selected.has(p.username))}
+function ensureSurveyId(){
+  if(!currentSurveyId){
+    const d=new Date(), stamp=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+    currentSurveyId=`${mode==='poll'?'BC':'KS'}-${stamp}-${String(Date.now()).slice(-6)}`;
+  }
+  return currentSurveyId;
+}
+function getShareLink(){
+  const d=collect();
+  if(mode==='external') return d.externalUrl;
+  const id=ensureSurveyId();
+  const base=new URL('KhaosatBinhchon.html',location.href);
+  base.searchParams.set('id',id);
+  base.searchParams.set('view','respond');
+  return base.href;
+}
+async function copySurveyLink(){
+  if(!validate())return;
+  if(mode!=='external' && !$('shareHint').dataset.saved){
+    return alert('Khảo sát/Bình chọn của HVA cần được lưu/phát hành trước để Link hoạt động trên thiết bị khác. Thầy chuyển TT Phát hành trước; sau khi backend lưu ID, Link/QR sẽ là link chính thức.');
+  }
+  const link=getShareLink();
+  try{await navigator.clipboard.writeText(link);alert('Đã sao chép link.');}
+  catch(e){prompt('Sao chép link:',link)}
+}
+function showQR(){
+  if(!validate())return;
+  if(mode!=='external' && !$('shareHint').dataset.saved){
+    return alert('QR nội bộ chỉ tạo chính thức sau khi khảo sát đã được lưu trên HVA. QR của Khảo sát từ Link có thể tạo ngay.');
+  }
+  const link=getShareLink();
+  $('qrTitle').textContent=$('title').value.trim();
+  $('qrLink').textContent=link; $('qrCode').innerHTML='';
+  if(typeof QRCode==='undefined')return alert('Không tải được thư viện QR. Vui lòng kiểm tra kết nối mạng.');
+  new QRCode($('qrCode'),{text:link,width:220,height:220});
+  $('qrModal').classList.remove('hidden');$('qrModal').classList.add('flex');
+}
+function closeQR(){$('qrModal').classList.add('hidden');$('qrModal').classList.remove('flex')}
 function focusQuick(){
   $('quickText').focus();
 }
@@ -349,6 +467,7 @@ function updatePreview(){
 function collect(){
   return {
     sourceModule:'KhaoSatBinhChon',
+    surveyId: mode==='external'?'':ensureSurveyId(),
     objectType:mode==='poll'?'POLL':'SURVEY',
     surveyType:mode,
     title:$('title').value.trim(),
@@ -386,15 +505,50 @@ function closePreview(){$('previewModal').classList.add('hidden');$('previewModa
 function resetForm(){if(!confirm('Xóa nội dung đang nhập?'))return;location.reload()}
 function goPublishing(){
   if(!validate())return;
-  const d=collect();
-  localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify({source:'KhaoSatBinhChon',sourceModule:'KhaoSatBinhChon',type:d.objectType,title:d.title,summary:d.description,data:d,destinations:['ThongBao'],workflow:['CONFIRM_READ']}));
-  alert('Bản giao diện hiện chưa nối Backend/TT Phát hành. Dữ liệu mẫu đã được chuẩn bị trên thiết bị để bước sau tích hợp.');
+  const people=selectedPeople();
+  if(!people.length){$('peopleSearch').scrollIntoView({behavior:'smooth',block:'center'});return alert('Vui lòng chọn ít nhất một người nhận trước khi chuyển TT Phát hành.');}
+  const d=collect(), user=currentUser();
+  const linkedDocs=[];
+  if(d.reference) linkedDocs.push({id:'REF-'+Date.now(),title:d.reference,type:'REFERENCE'});
+  if(mode==='external'&&d.externalUrl) linkedDocs.push({id:'SURVEY-LINK-'+Date.now(),title:'Link thực hiện khảo sát',type:'LINK',url:d.externalUrl});
+  const current={
+    source:'KhaoSatBinhChon',sourceModule:'KhaoSatBinhChon',moduleSource:'KhaoSatBinhChon',
+    docId:d.surveyId||('KS-LINK-'+Date.now()),
+    type:d.objectType,title:d.title,summary:d.description||d.title,
+    author:user.fullName||user.hoTen||user.name||user.username||'HVA',
+    recipients:people.map(x=>x.username),
+    recipientDetails:people,
+    linkedDocs,attachments:linkedDocs,
+    data:{...d,shareLink:mode==='external'?d.externalUrl:getShareLink(),recipients:people,createdAt:new Date().toISOString()},
+    destinations:['ThongBao','ViecCuaToi'],
+    workflow:['CONFIRM_READ'],
+    createdAt:new Date().toISOString()
+  };
+  localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify(current));
+  location.href='TTPhatHanh_v1_beta.html';
 }
 window.addEventListener('DOMContentLoaded',()=>{
   const d=new Date(); d.setDate(d.getDate()+1);
   $('deadlineDate').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  addQuestion('single'); setMode('internal');
+  addQuestion('single'); setMode('internal'); loadPersonnel();
 });
 </script>
+
+
+<div id="qrModal" class="hidden fixed inset-0 z-[110] bg-slate-950/70 backdrop-blur-sm p-3 items-center justify-center">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+    <div class="px-4 py-3 border-b flex items-center justify-between">
+      <div><b class="text-brand-600 text-sm">QR KHẢO SÁT / BÌNH CHỌN</b><div class="text-[9px] text-slate-400">Quét để mở nội dung</div></div>
+      <button onclick="closeQR()" class="w-8 h-8 rounded-lg bg-slate-100"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="p-5 text-center">
+      <div id="qrTitle" class="font-extrabold text-sm mb-4"></div>
+      <div id="qrCode" class="inline-flex p-3 bg-white border rounded-2xl"></div>
+      <div id="qrLink" class="mt-4 text-[9px] text-slate-500 break-all"></div>
+      <button onclick="copySurveyLink()" class="mt-4 w-full action bg-brand-600 text-white"><i class="bi bi-copy"></i>SAO CHÉP LINK</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
