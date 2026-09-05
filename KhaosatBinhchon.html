@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TTĐHS_HVA - Khảo sát & Bình chọn</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {50:'#f0f7ff',100:'#e0effe',200:'#bae0fd',500:'#1687D9',600:'#0F4C81',700:'#0b3e69',800:'#062B5B'}
+          },
+          fontFamily:{sans:['Inter','-apple-system','BlinkMacSystemFont','sans-serif']}
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-highlight-color:transparent}
+    ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:9999px}
+    .field{width:100%;min-height:44px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;padding:10px 12px;font-size:12px;outline:none;transition:.18s}
+    .field:focus{background:#fff;border-color:#0F4C81;box-shadow:0 0 0 3px #dbeafe}
+    .lbl{display:block;font-size:10px;font-weight:800;color:#475569;margin-bottom:6px}
+    .card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+    .type-card{transition:.18s;border:1px solid #e2e8f0}
+    .type-card:hover{transform:translateY(-1px);border-color:#93c5fd;box-shadow:0 8px 24px rgba(15,76,129,.08)}
+    .type-card.active{border-color:#0F4C81;background:#f0f7ff;box-shadow:0 0 0 2px #dbeafe}
+    .pill{font-size:9px;font-weight:800;border-radius:9999px;padding:5px 9px}
+    .action{height:46px;border-radius:12px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px}
+    .option-row{display:flex;gap:8px;align-items:center}
+    @media(max-width:640px){.page-head{padding-left:12px!important;padding-right:12px!important}.head-title{font-size:15px!important}.head-sub{font-size:9px!important}}
+  </style>
+</head>
+
+<body class="min-h-full bg-slate-50 text-slate-800">
+<header class="sticky top-0 z-40 bg-gradient-to-r from-brand-800 via-brand-600 to-[#1687D9] shadow-lg">
+  <div class="page-head max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
+    <button onclick="location.href='main.html'" class="w-10 h-10 min-w-10 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <div class="min-w-0 flex-1">
+      <div class="head-sub text-white/70 text-[9px] font-bold uppercase tracking-wider">THPT HÒA VANG - TTĐHS_HVA</div>
+      <div class="head-title text-white text-lg font-black tracking-tight">KHẢO SÁT - BÌNH CHỌN</div>
+    </div>
+    <span class="hidden sm:inline-flex items-center gap-1.5 text-[9px] font-bold text-white/90 bg-white/10 border border-white/20 rounded-full px-3 py-1.5">
+      <i class="bi bi-bar-chart-fill"></i> HVA Survey
+    </span>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto p-3 sm:p-4 pb-24 space-y-4">
+
+  <section class="card overflow-hidden">
+    <div class="px-4 py-3 border-b bg-slate-50/70 flex items-center justify-between">
+      <div>
+        <div class="text-[11px] font-extrabold text-brand-700 uppercase"><i class="bi bi-grid-1x2-fill mr-1.5"></i>Chọn loại cần tạo</div>
+        <div class="text-[9px] text-slate-400 mt-0.5">Một trung tâm • Ba nghiệp vụ</div>
+      </div>
+      <span id="modeBadge" class="pill bg-blue-50 text-brand-700">KHẢO SÁT CỦA TRƯỜNG</span>
+    </div>
+
+    <div class="p-3 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+      <button type="button" class="type-card active text-left rounded-2xl p-3.5" data-mode="internal" onclick="setMode('internal')">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center mb-3"><i class="bi bi-ui-checks-grid text-lg"></i></div>
+        <div class="font-extrabold text-[12px] text-slate-800">Khảo sát của Trường</div>
+        <div class="text-[9px] leading-4 text-slate-500 mt-1">HVA tự tạo phiếu, sinh mã và link khảo sát.</div>
+      </button>
+
+      <button type="button" class="type-card text-left rounded-2xl p-3.5" data-mode="external" onclick="setMode('external')">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3"><i class="bi bi-link-45deg text-xl"></i></div>
+        <div class="font-extrabold text-[12px] text-slate-800">Khảo sát từ Link</div>
+        <div class="text-[9px] leading-4 text-slate-500 mt-1">Triển khai khảo sát của Sở/cơ quan khác và theo dõi tiến độ.</div>
+      </button>
+
+      <button type="button" class="type-card text-left rounded-2xl p-3.5" data-mode="poll" onclick="setMode('poll')">
+        <div class="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center mb-3"><i class="bi bi-check2-square text-lg"></i></div>
+        <div class="font-extrabold text-[12px] text-slate-800">Bình chọn nhanh</div>
+        <div class="text-[9px] leading-4 text-slate-500 mt-1">Tạo bình chọn nhanh kiểu Zalo, xem kết quả tức thời.</div>
+      </button>
+    </div>
+  </section>
+
+  <section class="card p-4 space-y-3">
+    <div class="flex items-center gap-2 text-[11px] font-extrabold uppercase text-slate-700">
+      <span class="w-7 h-7 rounded-lg bg-blue-50 text-brand-600 flex items-center justify-center"><i class="bi bi-pencil-square"></i></span>
+      Nội dung
+    </div>
+
+    <div>
+      <label class="lbl" id="titleLabel">Tiêu đề khảo sát *</label>
+      <input id="title" class="field" placeholder="Ví dụ: Khảo sát nhu cầu bồi dưỡng AI năm học 2026-2027" oninput="updatePreview()">
+    </div>
+
+    <div id="externalFields" class="hidden space-y-3">
+      <div>
+        <label class="lbl">Căn cứ / Văn bản triển khai</label>
+        <input id="reference" class="field" placeholder="Ví dụ: Công văn số 123/QLCL ngày ...">
+      </div>
+      <div>
+        <label class="lbl">Link khảo sát bên ngoài *</label>
+        <input id="externalUrl" type="url" class="field" placeholder="https://forms.gle/...">
+      </div>
+    </div>
+
+    <div>
+      <label class="lbl">Mô tả / Yêu cầu</label>
+      <textarea id="description" rows="3" class="field resize-y" placeholder="Nêu ngắn gọn mục đích, yêu cầu thực hiện..." oninput="updatePreview()"></textarea>
+    </div>
+  </section>
+
+  <section id="builderSection" class="card overflow-hidden">
+    <div class="px-4 py-3 border-b flex items-center justify-between gap-2">
+      <div>
+        <div id="builderTitle" class="text-[11px] font-extrabold text-slate-700 uppercase"><i class="bi bi-list-check mr-1.5 text-brand-600"></i>Câu hỏi khảo sát</div>
+        <div id="builderSub" class="text-[9px] text-slate-400 mt-0.5">Tạo nhanh các câu hỏi cho phiếu của Trường</div>
+      </div>
+      <button type="button" onclick="addQuestion()" class="h-9 px-3 rounded-xl bg-brand-600 text-white text-[9px] font-extrabold"><i class="bi bi-plus-lg mr-1"></i>THÊM CÂU HỎI</button>
+    </div>
+    <div id="questionList" class="p-3 space-y-3"></div>
+  </section>
+
+  <section id="externalProgress" class="card p-4 hidden">
+    <div class="flex items-start gap-3">
+      <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center"><i class="bi bi-clipboard-check text-lg"></i></div>
+      <div class="flex-1">
+        <div class="text-[11px] font-extrabold">Theo dõi tình trạng thực hiện</div>
+        <div class="text-[9px] text-slate-500 mt-1">Sau khi mở link khảo sát, người nhận tự cập nhật trạng thái để nhà trường theo dõi tiến độ.</div>
+        <div class="flex flex-wrap gap-1.5 mt-3">
+          <span class="pill bg-emerald-50 text-emerald-700">✓ Đã hoàn thành</span>
+          <span class="pill bg-amber-50 text-amber-700">⏳ Đang thực hiện</span>
+          <span class="pill bg-slate-100 text-slate-600">○ Chưa thực hiện</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card p-4 space-y-3">
+    <div class="flex items-center gap-2 text-[11px] font-extrabold uppercase text-slate-700">
+      <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><i class="bi bi-clock"></i></span>
+      Thời hạn - Thiết lập
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div><label class="lbl">Hạn thực hiện</label><input id="deadlineDate" type="date" class="field"></div>
+      <div><label class="lbl">Giờ</label><input id="deadlineTime" type="time" class="field"></div>
+    </div>
+
+    <div id="internalOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <label class="flex items-center justify-between gap-3 p-3 rounded-xl border bg-slate-50 cursor-pointer">
+        <span><b class="block text-[10px]">Cho phép ẩn danh</b><small class="text-[9px] text-slate-400">Tách danh tính khỏi nội dung trả lời</small></span>
+        <input id="anonymous" type="checkbox" class="w-5 h-5 accent-[#0F4C81]">
+      </label>
+      <label class="flex items-center justify-between gap-3 p-3 rounded-xl border bg-slate-50 cursor-pointer">
+        <span><b class="block text-[10px]">Cho phép sửa câu trả lời</b><small class="text-[9px] text-slate-400">Có thể cập nhật trước thời hạn</small></span>
+        <input id="allowEdit" type="checkbox" class="w-5 h-5 accent-[#0F4C81]">
+      </label>
+    </div>
+
+    <div id="pollOptions" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <label class="flex items-center justify-between gap-3 p-3 rounded-xl border bg-violet-50/40 cursor-pointer">
+        <span><b class="block text-[10px]">Cho phép chọn nhiều</b><small class="text-[9px] text-slate-400">Người nhận có thể chọn nhiều phương án</small></span>
+        <input id="multiPoll" type="checkbox" class="w-5 h-5 accent-violet-600">
+      </label>
+      <label class="flex items-center justify-between gap-3 p-3 rounded-xl border bg-violet-50/40 cursor-pointer">
+        <span><b class="block text-[10px]">Cho phép đổi lựa chọn</b><small class="text-[9px] text-slate-400">Được thay đổi trước khi đóng bình chọn</small></span>
+        <input id="changeVote" type="checkbox" checked class="w-5 h-5 accent-violet-600">
+      </label>
+    </div>
+  </section>
+
+  <section class="card p-4">
+    <div class="flex items-center justify-between mb-3">
+      <div>
+        <div class="text-[11px] font-extrabold uppercase text-slate-700"><i class="bi bi-eye-fill mr-1.5 text-brand-600"></i>Xem nhanh</div>
+        <div class="text-[9px] text-slate-400 mt-0.5">Mô phỏng nội dung người nhận sẽ thấy</div>
+      </div>
+    </div>
+    <div class="rounded-2xl border bg-slate-50 p-4">
+      <div id="previewKind" class="text-[9px] font-extrabold text-brand-600 uppercase">Khảo sát của Trường</div>
+      <div id="previewTitle" class="font-extrabold text-[13px] mt-1">Chưa có tiêu đề</div>
+      <div id="previewDesc" class="text-[10px] text-slate-500 mt-2 whitespace-pre-line">Nội dung sẽ hiển thị tại đây.</div>
+      <div id="previewCount" class="text-[9px] text-slate-400 mt-3">0 câu hỏi</div>
+    </div>
+  </section>
+
+  <section class="card p-3">
+    <div class="grid grid-cols-3 gap-2">
+      <button type="button" onclick="resetForm()" class="action bg-slate-100 text-slate-600"><i class="bi bi-x-circle"></i>HỦY</button>
+      <button type="button" onclick="previewFull()" class="action bg-white border border-brand-600 text-brand-600"><i class="bi bi-eye"></i>XEM</button>
+      <button type="button" onclick="goPublishing()" class="action bg-emerald-600 text-white"><i class="bi bi-send-fill"></i>TT PHÁT HÀNH</button>
+    </div>
+    <div class="text-center text-[9px] text-slate-400 mt-2">Bản giao diện thử nghiệm • Chưa nối Backend</div>
+  </section>
+</main>
+
+<div id="previewModal" class="hidden fixed inset-0 z-[100] bg-slate-950/65 backdrop-blur-sm p-3 items-center justify-center">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
+    <div class="sticky top-0 bg-white border-b px-4 py-3 flex items-center justify-between">
+      <b class="text-brand-600 text-sm">XEM TRƯỚC</b>
+      <button onclick="closePreview()" class="w-8 h-8 rounded-lg bg-slate-100"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div id="previewBody" class="p-4"></div>
+  </div>
+</div>
+
+<script>
+let mode='internal', questions=[], qSeq=0;
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.type-card').forEach(x=>x.classList.toggle('active',x.dataset.mode===m));
+  const names={internal:'KHẢO SÁT CỦA TRƯỜNG',external:'KHẢO SÁT TỪ LINK',poll:'BÌNH CHỌN NHANH'};
+  $('modeBadge').textContent=names[m];
+  $('externalFields').classList.toggle('hidden',m!=='external');
+  $('externalProgress').classList.toggle('hidden',m!=='external');
+  $('builderSection').classList.toggle('hidden',m==='external');
+  $('internalOptions').classList.toggle('hidden',m!=='internal');
+  $('pollOptions').classList.toggle('hidden',m!=='poll');
+  $('titleLabel').textContent=m==='poll'?'Câu hỏi bình chọn *':'Tiêu đề khảo sát *';
+  $('title').placeholder=m==='poll'?'Ví dụ: Thầy/Cô đã thực hiện khảo sát theo CV 123/QLCL chưa?':m==='external'?'Ví dụ: Khảo sát theo Công văn số 123/QLCL':'Ví dụ: Khảo sát nhu cầu bồi dưỡng AI năm học 2026-2027';
+  $('builderTitle').innerHTML=m==='poll'?'<i class="bi bi-check2-square mr-1.5 text-violet-600"></i>Phương án bình chọn':'<i class="bi bi-list-check mr-1.5 text-brand-600"></i>Câu hỏi khảo sát';
+  $('builderSub').textContent=m==='poll'?'Thêm các phương án giống bình chọn nhanh trên Zalo':'Tạo nhanh các câu hỏi cho phiếu của Trường';
+  if(m==='poll' && (!questions.length || questions[0]?.kind!=='poll')){questions=[];addQuestion('poll')}
+  if(m==='internal' && (!questions.length || questions[0]?.kind==='poll')){questions=[];addQuestion('single')}
+  renderQuestions(); updatePreview();
+}
+
+function addQuestion(kind){
+  if(mode==='poll'){
+    if(questions.length) return alert('Bình chọn nhanh chỉ cần một câu hỏi. Thầy/Cô thêm các phương án bên dưới.');
+    kind='poll';
+  }
+  questions.push({id:++qSeq,kind:kind||'single',text:'',options:['','']});
+  renderQuestions(); updatePreview();
+}
+function removeQuestion(id){questions=questions.filter(q=>q.id!==id);renderQuestions();updatePreview()}
+function setQ(id,key,val){const q=questions.find(x=>x.id===id);if(q){q[key]=val;updatePreview()}}
+function setOption(id,i,val){const q=questions.find(x=>x.id===id);if(q){q.options[i]=val}}
+function addOption(id){const q=questions.find(x=>x.id===id);if(q){q.options.push('');renderQuestions()}}
+function removeOption(id,i){const q=questions.find(x=>x.id===id);if(q&&q.options.length>2){q.options.splice(i,1);renderQuestions()}}
+
+function renderQuestions(){
+  const box=$('questionList'); if(!box)return;
+  if(!questions.length){box.innerHTML='<div class="py-5 text-center text-[10px] text-slate-400">Chưa có câu hỏi.</div>';return}
+  box.innerHTML=questions.map((q,idx)=>`
+    <div class="rounded-2xl border border-slate-200 p-3 bg-slate-50/60">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="w-6 h-6 rounded-lg bg-white border flex items-center justify-center text-[9px] font-extrabold">${idx+1}</span>
+        <input class="field !bg-white flex-1" value="${esc(q.text)}" oninput="setQ(${q.id},'text',this.value)" placeholder="${mode==='poll'?'Câu hỏi bình chọn...':'Nhập câu hỏi...'}">
+        ${mode!=='poll'?`<button onclick="removeQuestion(${q.id})" class="w-9 h-9 rounded-lg text-red-500 hover:bg-red-50"><i class="bi bi-trash"></i></button>`:''}
+      </div>
+      ${mode!=='poll'?`
+      <div class="mb-2">
+        <select class="field !min-h-[40px] !py-1 !bg-white" onchange="setQ(${q.id},'kind',this.value);renderQuestions()">
+          <option value="single" ${q.kind==='single'?'selected':''}>Một lựa chọn</option>
+          <option value="multi" ${q.kind==='multi'?'selected':''}>Nhiều lựa chọn</option>
+          <option value="text" ${q.kind==='text'?'selected':''}>Ý kiến / trả lời ngắn</option>
+          <option value="scale" ${q.kind==='scale'?'selected':''}>Thang điểm 1-5</option>
+        </select>
+      </div>`:''}
+      ${(q.kind==='single'||q.kind==='multi'||q.kind==='poll')?`
+      <div class="space-y-1.5">
+        ${q.options.map((o,i)=>`<div class="option-row"><span class="text-slate-400">${q.kind==='multi'?'□':'○'}</span><input class="field !min-h-[38px] !py-1 !bg-white" value="${esc(o)}" oninput="setOption(${q.id},${i},this.value)" placeholder="Phương án ${i+1}">${q.options.length>2?`<button onclick="removeOption(${q.id},${i})" class="w-8 h-8 text-slate-400 hover:text-red-500"><i class="bi bi-x-lg"></i></button>`:''}</div>`).join('')}
+        <button onclick="addOption(${q.id})" class="text-[9px] font-extrabold text-brand-600 mt-1"><i class="bi bi-plus-circle mr-1"></i>Thêm phương án</button>
+      </div>`:''}
+    </div>`).join('');
+}
+
+function updatePreview(){
+  const names={internal:'Khảo sát của Trường',external:'Khảo sát từ Link',poll:'Bình chọn nhanh'};
+  $('previewKind').textContent=names[mode];
+  $('previewTitle').textContent=$('title').value.trim()||'Chưa có tiêu đề';
+  $('previewDesc').textContent=$('description').value.trim()||'Nội dung sẽ hiển thị tại đây.';
+  $('previewCount').textContent=mode==='external'?'Mở link khảo sát và cập nhật tiến độ':`${questions.length} ${mode==='poll'?'bình chọn':'câu hỏi'}`;
+}
+
+function collect(){
+  return {
+    sourceModule:'KhaoSatBinhChon',
+    objectType:mode==='poll'?'POLL':'SURVEY',
+    surveyType:mode,
+    title:$('title').value.trim(),
+    description:$('description').value.trim(),
+    reference:$('reference').value.trim(),
+    externalUrl:$('externalUrl').value.trim(),
+    questions,
+    deadlineDate:$('deadlineDate').value,
+    deadlineTime:$('deadlineTime').value,
+    anonymous:$('anonymous').checked,
+    allowEdit:$('allowEdit').checked,
+    multiPoll:$('multiPoll').checked,
+    changeVote:$('changeVote').checked
+  }
+}
+function validate(){
+  if(!$('title').value.trim()){alert(mode==='poll'?'Vui lòng nhập câu hỏi bình chọn.':'Vui lòng nhập tiêu đề khảo sát.');return false}
+  if(mode==='external'&&!$('externalUrl').value.trim()){alert('Vui lòng nhập link khảo sát bên ngoài.');return false}
+  if(mode!=='external'){
+    if(!questions.length){alert('Vui lòng tạo nội dung khảo sát/bình chọn.');return false}
+    for(const q of questions){
+      if(!q.text.trim()){alert('Còn câu hỏi chưa nhập nội dung.');return false}
+      if(['single','multi','poll'].includes(q.kind)&&q.options.filter(x=>x.trim()).length<2){alert('Mỗi câu lựa chọn cần ít nhất 2 phương án.');return false}
+    }
+  }
+  return true
+}
+function previewFull(){
+  if(!validate())return; const d=collect();
+  const name=mode==='internal'?'KHẢO SÁT CỦA TRƯỜNG':mode==='external'?'KHẢO SÁT TỪ LINK':'BÌNH CHỌN NHANH';
+  $('previewBody').innerHTML=`<div class="text-[9px] font-extrabold text-brand-600">${name}</div><div class="text-lg font-black mt-1">${esc(d.title)}</div><div class="text-xs text-slate-500 mt-2 whitespace-pre-line">${esc(d.description||'')}</div>${d.reference?`<div class="text-[10px] mt-3"><b>Căn cứ:</b> ${esc(d.reference)}</div>`:''}${mode==='external'?`<div class="mt-4 rounded-xl bg-emerald-50 border border-emerald-100 p-3 text-[10px]"><i class="bi bi-link-45deg mr-1"></i>${esc(d.externalUrl)}</div>`:`<div class="mt-4 space-y-3">${d.questions.map((q,i)=>`<div class="border rounded-xl p-3"><b class="text-[11px]">${i+1}. ${esc(q.text)}</b>${['single','multi','poll'].includes(q.kind)?`<div class="mt-2 space-y-1">${q.options.filter(x=>x.trim()).map(x=>`<div class="text-[10px]">${q.kind==='multi'?'□':'○'} ${esc(x)}</div>`).join('')}</div>`:`<div class="mt-2 h-9 border-b text-[9px] text-slate-400">Nội dung trả lời...</div>`}</div>`).join('')}</div>`}<div class="mt-4 text-[10px] text-slate-500"><b>Hạn:</b> ${esc(d.deadlineDate||'—')} ${esc(d.deadlineTime||'')}</div>`;
+  $('previewModal').classList.remove('hidden');$('previewModal').classList.add('flex');
+}
+function closePreview(){$('previewModal').classList.add('hidden');$('previewModal').classList.remove('flex')}
+function resetForm(){if(!confirm('Xóa nội dung đang nhập?'))return;location.reload()}
+function goPublishing(){
+  if(!validate())return;
+  const d=collect();
+  localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify({source:'KhaoSatBinhChon',sourceModule:'KhaoSatBinhChon',type:d.objectType,title:d.title,summary:d.description,data:d,destinations:['ThongBao'],workflow:['CONFIRM_READ']}));
+  alert('Bản giao diện hiện chưa nối Backend/TT Phát hành. Dữ liệu mẫu đã được chuẩn bị trên thiết bị để bước sau tích hợp.');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  const d=new Date(); d.setDate(d.getDate()+1);
+  $('deadlineDate').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  addQuestion('single'); setMode('internal');
+});
+</script>
+</body>
+</html>
