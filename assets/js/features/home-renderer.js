@@ -3445,9 +3445,43 @@ HVA_MY_MEETINGS = allMeetings.filter(meeting => {
         .trim()
         .toUpperCase();
 
-    // Cuộc họp đã kết thúc không còn là "Việc của tôi"
-    return status !== 'ĐÃ KẾT THÚC' &&
-           status !== 'HOÀN TẤT';
+    // 1. Backend đã chốt kết thúc
+    if (status === 'ĐÃ KẾT THÚC' || status === 'HOÀN TẤT') {
+        return false;
+    }
+
+    // 2. Kiểm tra thời gian thực tế
+    const dateText = String(meeting.date || '').trim();
+    const endText = String(
+        meeting.endTime ||
+        meeting.qrCloseTime ||
+        meeting.startTime ||
+        ''
+    ).trim();
+
+    if (!dateText || !endText) {
+        return true;
+    }
+
+    const dm = dateText.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    const tm = endText.match(/^(\d{1,2}):(\d{2})/);
+
+    if (!dm || !tm) {
+        return true;
+    }
+
+    const meetingEnd = new Date(
+        Number(dm[3]),
+        Number(dm[2]) - 1,
+        Number(dm[1]),
+        Number(tm[1]),
+        Number(tm[2]),
+        0,
+        0
+    );
+
+    // Chỉ giữ cuộc họp chưa hết giờ
+    return meetingEnd.getTime() >= Date.now();
 });
         renderMyMeetings();
         updateMyWorkTotalBadge();
