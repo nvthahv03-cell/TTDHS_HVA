@@ -4119,6 +4119,7 @@ window.openMyTasks = async function(type, event) {
 // Chỉ bổ sung luồng xác nhận; không sửa QR/TƯƠNG TÁC 9H.4
 // =====================================================
 let HVA_MEETING_APPROVALS = [];
+let HVA_MEETING_EXPLANATIONS = {};
 
 function getApprovalUser_(){
     try { return JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}'); }
@@ -4130,36 +4131,191 @@ function getApprovalName_(){ const u=getApprovalUser_(); return String(u.hoTen||
 function ensureMeetingApprovalPanel_(){
     const root=document.getElementById('home-view'); if(!root||document.getElementById('hvaMeetingApprovalPanel'))return;
     const box=document.createElement('div');
-    box.id='hvaMeetingApprovalPanel'; box.className='mt-3 rounded-2xl border border-emerald-200 bg-white overflow-hidden shadow-sm';
-    box.innerHTML=`<div class="px-3 py-2.5 bg-emerald-50 flex items-center justify-between"><div><div class="text-[12px] font-extrabold text-emerald-800">👥 XÁC NHẬN THỰC TẾ CUỘC HỌP</div><div class="text-[9px] text-emerald-600">Theo lượt được giao: Tổ/Bộ phận → Thư ký → Chủ trì</div></div><button type="button" onclick="loadMeetingAttendanceApprovals()" class="w-8 h-8 rounded-lg border border-emerald-200 bg-white">↻</button></div><div id="hvaMeetingApprovalList" class="p-3 text-[10px] text-slate-400 text-center">Đang kiểm tra lượt xác nhận...</div>`;
+    box.id='hvaMeetingApprovalPanel';
+    box.className='mt-3 rounded-2xl border border-red-200 bg-white overflow-hidden shadow-sm';
+    box.innerHTML=`<div class="px-3 py-2.5 bg-red-50 flex items-center justify-between">
+      <div>
+        <div class="text-[12px] font-extrabold text-slate-900"><span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-1.5"></span>PHIẾU XÁC NHẬN THAM DỰ</div>
+        <div class="text-[9px] text-slate-600">Dữ liệu QR do HVA ghi nhận • Người có trách nhiệm xác nhận và giải trình khi cần</div>
+      </div>
+      <button type="button" onclick="loadMeetingAttendanceApprovals()" class="w-8 h-8 rounded-lg border border-red-200 bg-white font-bold">↻</button>
+    </div>
+    <div id="hvaMeetingApprovalList" class="p-3 text-[10px] text-slate-400 text-center">Đang kiểm tra lượt xác nhận...</div>`;
     root.appendChild(box);
 }
 
 window.loadMeetingAttendanceApprovals = async function(){
-    ensureMeetingApprovalPanel_(); const box=document.getElementById('hvaMeetingApprovalList'), username=getApprovalUsername_();
-    if(!box||!username)return; try{
-        const r=await fetch(`${MY_TASK_API_URL}?action=getPendingMeetingAttendanceApprovals&username=${encodeURIComponent(username)}`); const d=await r.json();
-        HVA_MEETING_APPROVALS=d&&d.success?d.approvals||[]:[]; renderMeetingAttendanceApprovals_();
-    }catch(e){box.innerHTML=`<div class="text-red-500">Không tải được lượt xác nhận: ${escapeMyWorkHtml(e.message)}</div>`;}
+    ensureMeetingApprovalPanel_();
+    const box=document.getElementById('hvaMeetingApprovalList'), username=getApprovalUsername_();
+    if(!box||!username)return;
+    try{
+        const r=await fetch(`${MY_TASK_API_URL}?action=getPendingMeetingAttendanceApprovals&username=${encodeURIComponent(username)}`);
+        const d=await r.json();
+        HVA_MEETING_APPROVALS=d&&d.success?d.approvals||[]:[];
+        renderMeetingAttendanceApprovals_();
+    }catch(e){
+        box.innerHTML=`<div class="text-red-600 font-semibold">Không tải được lượt xác nhận: ${escapeMyWorkHtml(e.message)}</div>`;
+    }
 };
 
 function approvalStageLabel_(s){return s==='TO_BO_PHAN'?'TTCM/Trưởng bộ phận':s==='THU_KY'?'THƯ KÝ':s==='CHU_TRI'?'CHỦ TRÌ':s;}
+
 function renderMeetingAttendanceApprovals_(){
     const box=document.getElementById('hvaMeetingApprovalList'); if(!box)return;
-    if(!HVA_MEETING_APPROVALS.length){box.innerHTML='<div class="py-3 text-slate-400">Không có lượt xác nhận đang chờ.</div>';return;}
-    box.innerHTML=HVA_MEETING_APPROVALS.map(a=>`<div class="mb-2 last:mb-0 rounded-xl border border-emerald-200 bg-emerald-50/40 p-2.5 text-left"><div class="flex justify-between gap-2"><div><div class="text-[11px] font-extrabold text-slate-800">${escapeMyWorkHtml(a.title||'Cuộc họp')}</div><div class="text-[9px] text-slate-500">${approvalStageLabel_(a.stage)}${a.group?' • '+escapeMyWorkHtml(a.group):''}</div></div><button type="button" onclick="openMeetingAttendanceApproval('${escapeMyWorkHtml(a.id)}')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[9px] font-bold">MỞ DANH SÁCH</button></div></div>`).join('');
+    if(!HVA_MEETING_APPROVALS.length){
+        box.innerHTML='<div class="py-3 text-slate-400">Không có lượt xác nhận đang chờ.</div>';
+        return;
+    }
+    box.innerHTML=HVA_MEETING_APPROVALS.map(a=>{
+        const s=a.summary||{};
+        return `<div class="mb-2 last:mb-0 rounded-xl border border-red-200 bg-white p-3 text-left shadow-sm">
+          <div class="flex justify-between gap-3 items-center">
+            <div class="min-w-0">
+              <div class="text-[11px] font-extrabold text-slate-900">${escapeMyWorkHtml(a.title||'Cuộc họp')}</div>
+              <div class="text-[9px] font-bold text-red-600">${approvalStageLabel_(a.stage)}${a.group?' • '+escapeMyWorkHtml(a.group):''}</div>
+              <div class="mt-1 text-[9px] text-slate-700">
+                HVA ghi nhận: <b>${s.present||0}/${s.total||0}</b> có QR vào
+                ${s.late?` • <span class="text-amber-700"><b>${s.late}</b> đến sau giờ bắt đầu</span>`:''}
+                ${s.missing?` • <span class="text-red-700"><b>${s.missing}</b> chưa ghi nhận</span>`:''}
+              </div>
+            </div>
+            <button type="button" onclick="openMeetingAttendanceApproval('${escapeMyWorkHtml(a.id)}')" class="shrink-0 px-3 py-2 rounded-xl bg-slate-900 text-white text-[9px] font-extrabold shadow-md active:scale-95 transition">XEM & XÁC NHẬN</button>
+          </div>
+        </div>`;
+    }).join('');
+}
+
+function hvaApprovalStatusHtml_(p){
+    if(!p.checkIn){
+        return `<span class="font-extrabold text-red-700">● CHƯA GHI NHẬN QR VÀO</span>`;
+    }
+    if(Number(p.lateMinutes||0)>0){
+        return `<span class="font-extrabold text-amber-700">● QR ${escapeMyWorkHtml(p.checkInAt||'')} • ĐẾN SAU ${Number(p.lateMinutes)} PHÚT</span>`;
+    }
+    return `<span class="font-extrabold text-emerald-700">● QR ${escapeMyWorkHtml(p.checkInAt||'')} • ĐÃ GHI NHẬN</span>`;
 }
 
 window.openMeetingAttendanceApproval=function(id){
-    const a=HVA_MEETING_APPROVALS.find(x=>String(x.id)===String(id)); if(!a)return alert('Không tìm thấy lượt xác nhận.');
-    const parts=a.participants||[]; const rows=parts.map(p=>`<label class="flex items-center gap-2 p-2 border-b last:border-0"><input type="checkbox" class="hva-att-present" value="${escapeMyWorkHtml(p.username)}" ${p.checkIn===true||String(p.actual)==='CÓ MẶT'?'checked':''}><div class="flex-1 min-w-0"><div class="font-bold text-[10px] text-slate-800">${escapeMyWorkHtml(p.hoTen||p.username)}</div><div class="text-[9px] text-slate-500">${escapeMyWorkHtml(p.toBoPhan||'')} • ${p.checkIn?'QR vào'+(p.checkInAt?' '+escapeMyWorkHtml(p.checkInAt):''):'Chưa QR vào'} • ${escapeMyWorkHtml(p.actual||'CHƯA XÁC NHẬN')}</div></div></label>`).join('');
-    const html=`<div class="fixed inset-0 z-[9999] bg-slate-900/50 flex items-center justify-center p-3" id="hvaApprovalModal"><div class="w-full max-w-lg max-h-[88vh] bg-white rounded-2xl overflow-hidden shadow-2xl"><div class="p-3 bg-emerald-700 text-white"><div class="text-[12px] font-extrabold">${approvalStageLabel_(a.stage)} XÁC NHẬN</div><div class="text-[10px]">${escapeMyWorkHtml(a.title||'')}${a.group?' • '+escapeMyWorkHtml(a.group):''}</div></div><div class="p-3"><div class="text-[9px] text-slate-500 mb-2">✓ = xác nhận CÓ MẶT. Hệ thống mặc định đánh dấu người đã QR vào; người xác nhận có thể chỉnh lại trước khi gửi.</div><div class="border rounded-xl max-h-[52vh] overflow-auto">${rows||'<div class="p-4 text-center">Không có thành viên.</div>'}</div><div class="mt-3 flex gap-2"><button onclick="document.getElementById('hvaApprovalModal').remove()" class="flex-1 border rounded-xl py-2 text-[10px] font-bold">ĐÓNG</button><button onclick="submitMeetingAttendanceApproval('${escapeMyWorkHtml(a.id)}')" class="flex-1 bg-emerald-600 text-white rounded-xl py-2 text-[10px] font-bold">XÁC NHẬN & CHUYỂN</button></div></div></div></div>`;
+    const a=HVA_MEETING_APPROVALS.find(x=>String(x.id)===String(id));
+    if(!a)return alert('Không tìm thấy lượt xác nhận.');
+
+    HVA_MEETING_EXPLANATIONS={};
+    const parts=a.participants||[], s=a.summary||{};
+    const rows=parts.map(p=>`
+      <div class="p-3 border-b last:border-0" data-approval-user="${escapeMyWorkHtml(p.username)}">
+        <div class="flex gap-2 items-start">
+          <div class="flex-1 min-w-0">
+            <div class="font-extrabold text-[11px] text-slate-900">${escapeMyWorkHtml(p.hoTen||p.username)}</div>
+            <div class="text-[9px] text-slate-500">${escapeMyWorkHtml(p.chucVu||'')} ${p.toBoPhan?'• '+escapeMyWorkHtml(p.toBoPhan):''}</div>
+            <div class="mt-1 text-[9px]">${hvaApprovalStatusHtml_(p)}</div>
+          </div>
+          <button type="button"
+            onclick="openMeetingExplanation('${escapeMyWorkHtml(a.id)}','${escapeMyWorkHtml(p.username)}')"
+            class="px-2.5 py-1.5 rounded-lg border border-amber-300 bg-amber-50 text-amber-800 text-[9px] font-extrabold active:scale-95 transition">
+            GIẢI TRÌNH
+          </button>
+        </div>
+        <div id="hva-exp-${escapeMyWorkHtml(p.username)}" class="hidden mt-2 rounded-lg bg-amber-50 border border-amber-200 p-2 text-[9px] text-amber-900"></div>
+      </div>`).join('');
+
+    const html=`<div class="fixed inset-0 z-[9999] bg-slate-900/55 flex items-center justify-center p-3" id="hvaApprovalModal">
+      <div class="w-full max-w-xl max-h-[90vh] bg-white rounded-2xl overflow-hidden shadow-2xl">
+        <div class="p-4 bg-slate-900 text-white">
+          <div class="text-[12px] font-extrabold">${approvalStageLabel_(a.stage)} · XÁC NHẬN THAM DỰ</div>
+          <div class="text-[11px] font-bold mt-0.5">${escapeMyWorkHtml(a.title||'')}</div>
+          <div class="text-[9px] text-slate-300">${a.group?escapeMyWorkHtml(a.group)+' • ':''}${escapeMyWorkHtml(a.startTime||'')}</div>
+        </div>
+        <div class="p-3 overflow-auto max-h-[76vh]">
+          <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 mb-3">
+            <div class="text-[10px] font-extrabold text-slate-900">HVA GHI NHẬN</div>
+            <div class="mt-1 text-[10px] text-slate-700">
+              <b>${s.present||0}/${s.total||0}</b> thành viên có QR vào
+              ${s.late?` • <b class="text-amber-700">${s.late} đến sau giờ bắt đầu</b>`:''}
+              ${s.missing?` • <b class="text-red-700">${s.missing} chưa ghi nhận QR vào</b>`:''}
+            </div>
+            <div class="mt-1 text-[9px] text-slate-500">Dữ liệu QR là dữ liệu hệ thống, không chỉnh sửa. Nếu cần làm rõ trường hợp cụ thể, dùng nút <b>GIẢI TRÌNH</b>.</div>
+          </div>
+
+          <div class="border border-slate-200 rounded-xl overflow-hidden">${rows||'<div class="p-4 text-center">Không có thành viên.</div>'}</div>
+
+          <div class="mt-3 flex gap-2">
+            <button onclick="document.getElementById('hvaApprovalModal').remove()" class="flex-1 border border-slate-300 rounded-xl py-2.5 text-[10px] font-bold">ĐÓNG</button>
+            <button id="hvaConfirmApprovalBtn" onclick="submitMeetingAttendanceApproval('${escapeMyWorkHtml(a.id)}')" class="flex-[1.5] bg-slate-900 text-white rounded-xl py-2.5 text-[10px] font-extrabold shadow-md active:scale-[.98] transition">✓ XÁC NHẬN DỮ LIỆU HỆ THỐNG</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
     document.body.insertAdjacentHTML('beforeend',html);
 };
 
+window.openMeetingExplanation=function(approvalId,username){
+    const a=HVA_MEETING_APPROVALS.find(x=>String(x.id)===String(approvalId));
+    const p=a&&(a.participants||[]).find(x=>String(x.username)===String(username));
+    if(!p)return;
+
+    const old=(HVA_MEETING_EXPLANATIONS[username]&&HVA_MEETING_EXPLANATIONS[username].content)||'';
+    const content=prompt(
+      `${p.hoTen||username}\nHVA: ${p.systemStatus||''}\n\nNhập nội dung giải trình (không thay đổi dữ liệu QR):`,
+      old
+    );
+    if(content===null)return;
+
+    const clean=String(content||'').trim();
+    const box=document.getElementById(`hva-exp-${username}`);
+    if(!clean){
+      delete HVA_MEETING_EXPLANATIONS[username];
+      if(box){box.classList.add('hidden');box.innerHTML='';}
+      return;
+    }
+
+    HVA_MEETING_EXPLANATIONS[username]={
+      username:p.username,
+      hoTen:p.hoTen||p.username,
+      systemStatus:p.systemStatus||'',
+      content:clean
+    };
+    if(box){
+      box.classList.remove('hidden');
+      box.innerHTML=`<b>Giải trình:</b> ${escapeMyWorkHtml(clean)}`;
+    }
+};
+
 window.submitMeetingAttendanceApproval=async function(id){
-    const present=[...document.querySelectorAll('#hvaApprovalModal .hva-att-present:checked')].map(x=>x.value); if(!confirm(`Xác nhận ${present.length} thành viên có mặt và chuyển bước tiếp theo?`))return;
-    try{const r=await fetch(MY_TASK_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'confirmMeetingAttendanceApproval',approvalId:id,username:getApprovalUsername_(),confirmerName:getApprovalName_(),presentUsernames:present})});const d=await r.json();if(!d||d.success!==true)return alert((d&&d.message)||'Không xác nhận được.');document.getElementById('hvaApprovalModal')?.remove();alert(d.message||'Đã xác nhận.');await loadMeetingAttendanceApprovals();}catch(e){alert('Lỗi xác nhận: '+e.message);}
+    const a=HVA_MEETING_APPROVALS.find(x=>String(x.id)===String(id));
+    if(!a)return alert('Không tìm thấy lượt xác nhận.');
+
+    const exps=Object.values(HVA_MEETING_EXPLANATIONS);
+    const s=a.summary||{};
+    const msg=`Xác nhận dữ liệu HVA ghi nhận cho ${s.total||0} thành viên?`+
+      (exps.length?`\nCó ${exps.length} giải trình kèm theo.`:'');
+
+    if(!confirm(msg))return;
+
+    const btn=document.getElementById('hvaConfirmApprovalBtn');
+    if(btn){btn.disabled=true;btn.innerHTML='ĐANG XÁC NHẬN...';btn.classList.add('opacity-70');}
+
+    try{
+      const r=await fetch(MY_TASK_API_URL,{
+        method:'POST',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body:JSON.stringify({
+          action:'confirmMeetingAttendanceApproval',
+          approvalId:id,
+          username:getApprovalUsername_(),
+          confirmerName:getApprovalName_(),
+          explanations:exps
+        })
+      });
+      const d=await r.json();
+      if(!d||d.success!==true)throw new Error((d&&d.message)||'Không xác nhận được.');
+
+      document.getElementById('hvaApprovalModal')?.remove();
+      alert((d.message||'Đã xác nhận.')+(d.explanations?` Có ${d.explanations} giải trình.`:''));
+      await loadMeetingAttendanceApprovals();
+    }catch(e){
+      alert('Lỗi xác nhận: '+e.message);
+      if(btn){btn.disabled=false;btn.innerHTML='✓ XÁC NHẬN DỮ LIỆU HỆ THỐNG';btn.classList.remove('opacity-70');}
+    }
 };
 
 // =====================================================
