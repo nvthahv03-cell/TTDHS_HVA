@@ -3435,46 +3435,19 @@ async function loadMyMeetings() {
 
         const data = await response.json();
 
-        const allMeetings =
+       const allMeetings =
     data && data.success === true && Array.isArray(data.meetings)
         ? data.meetings
         : [];
 
-const now = new Date();
-
 HVA_MY_MEETINGS = allMeetings.filter(meeting => {
-    const dateText = String(meeting.date || '').trim();
-    const endText = String(meeting.endTime || '').trim();
+    const status = String(meeting.meetingStatus || '')
+        .trim()
+        .toUpperCase();
 
-    // Thiếu dữ liệu thời gian thì tạm giữ, không tự ý làm mất cuộc họp
-    if (!dateText || !endText) return true;
-
-    // date hiện đang hiển thị dạng dd/mm/yyyy
-    const dateParts = dateText.split('/');
-    if (dateParts.length !== 3) return true;
-
-    const day = Number(dateParts[0]);
-    const month = Number(dateParts[1]) - 1;
-    const year = Number(dateParts[2]);
-
-    const timeParts = endText.split(':');
-    const hour = Number(timeParts[0]);
-    const minute = Number(timeParts[1] || 0);
-
-    const meetingEnd = new Date(
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        0,
-        0
-    );
-
-    if (isNaN(meetingEnd.getTime())) return true;
-
-    // Chỉ giữ cuộc họp chưa kết thúc
-    return meetingEnd.getTime() >= now.getTime();
+    // Cuộc họp đã kết thúc không còn là "Việc của tôi"
+    return status !== 'ĐÃ KẾT THÚC' &&
+           status !== 'HOÀN TẤT';
 });
         renderMyMeetings();
         updateMyWorkTotalBadge();
