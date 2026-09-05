@@ -190,7 +190,91 @@ function getMeetingOperatorUser(){try{return JSON.parse(sessionStorage.getItem('
 function getMeetingOperatorUsername(){const u=getMeetingOperatorUser();return String(u.username||u.userName||u.maGV||'').trim()}
 let managedMeetingData=[]; let currentQrInfo=null;
 async function loadManagedMeetings(){const box=$('managedMeetings'),username=getMeetingOperatorUsername();if(!box)return;if(!username){box.innerHTML='<div class="text-red-500 font-bold">Không xác định được tài khoản đang đăng nhập.</div>';return}box.innerHTML='Đang tải cuộc họp đã phát hành...';try{const r=await fetch(`${WEB_APP_URL}?action=getManagedMeetings&username=${encodeURIComponent(username)}`);const d=await r.json();if(!d||d.success!==true)throw Error((d&&d.message)||'Không tải được cuộc họp');managedMeetingData=Array.isArray(d.meetings)?d.meetings:[];renderManagedMeetings()}catch(e){box.innerHTML=`<div class="text-red-500 font-bold">${esc(e.message)}</div>`}}
-function renderManagedMeetings(){const box=$('managedMeetings');if(!managedMeetingData.length){box.innerHTML='<div class="py-3 text-center text-slate-400">Chưa có cuộc họp do tài khoản này phát hành.</div>';return}box.innerHTML=managedMeetingData.slice(0,10).map(m=>{const ended=String(m.meetingStatus||'').toUpperCase().includes('KẾT THÚC');const canQr=m.attendanceEnabled===true;return `<div class="border-b last:border-0 py-3"><div class="flex items-center gap-3"><div class="min-w-0 flex-1"><div class="font-extrabold text-slate-800 text-[11px] truncate">${esc(m.title||'Cuộc họp')}</div><div class="text-[9px] text-slate-500 mt-1">${esc(m.date||'')} • ${esc(m.startTime||'')} ${m.place?'• '+esc(m.place):''}</div><div class="mt-1"><span class="badge ${ended?'bg-slate-100 text-slate-600':'bg-emerald-50 text-emerald-700'}">${esc(m.meetingStatus||'ĐÃ PHÁT HÀNH')}</span></div></div><div class="flex flex-col gap-1.5">${canQr&&!ended?`<button onclick="showMeetingQr('${esc(m.meetingId)}','IN')" class="px-2.5 h-8 rounded-lg bg-violet-600 text-white text-[9px] font-bold"><i class="bi bi-qr-code mr-1"></i>QR VÀO</button>`:''}${canQr&&ended&&m.checkOutToken?`<button onclick="showMeetingQr('${esc(m.meetingId)}','OUT')" class="px-2.5 h-8 rounded-lg bg-amber-500 text-white text-[9px] font-bold"><i class="bi bi-qr-code mr-1"></i>QR RA</button>`:''}</div></div><div class="grid grid-cols-2 gap-2 mt-2">${!ended?`<button onclick="openInteractionModal('${esc(m.meetingId)}')" class="h-9 rounded-lg bg-cyan-50 text-cyan-700 border border-cyan-200 text-[9px] font-extrabold"><i class="bi bi-chat-dots-fill mr-1"></i>TƯƠNG TÁC</button><button onclick="endManagedMeeting('${esc(m.meetingId)}')" class="h-9 rounded-lg bg-red-50 text-red-600 border border-red-200 text-[9px] font-extrabold"><i class="bi bi-stop-circle mr-1"></i>KẾT THÚC</button>`:`<button onclick="openInteractionModal('${esc(m.meetingId)}')" class="col-span-2 h-9 rounded-lg bg-slate-50 text-slate-600 border text-[9px] font-extrabold"><i class="bi bi-clock-history mr-1"></i>XEM TƯƠNG TÁC</button>`}</div></div>`}).join('')}
+function parseMeetingLocalDateTime(dateText, timeText) {
+    const d = String(dateText || '').trim();
+    const t = String(timeText || '').trim();
+    if (!d || !t) return null;
+
+    let year, month, day;
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(d)) {
+        const p = d.split('/').map(Number);
+        day = p[0]; month = p[1] - 1; year = p[2];
+    } else if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
+        const p = d.split('-').map(Number);
+        year = p[0]; month = p[1] - 1; day = p[2];
+    } else {
+        return null;
+    }
+
+    const tp = t.split(':').map(Number);
+    if (!Number.isFinite(tp[0])) return null;
+    return new Date(year, month, day, tp[0], tp[1] || 0, tp[2] || 0, 0);
+}
+
+function getMeetingEndedAt(m) {
+    const raw = String(m.endedAt || m.actualEndTime || '').trim();
+    if (raw) {
+        const direct = new Date(raw);
+        if (!Number.isNaN(direct.getTime())) return direct;
+
+        // Backend đôi khi chỉ trả giờ kết thúc thực tế dạng HH:mm.
+        const byDate = parseMeetingLocalDateTime(m.date, raw);
+        if (byDate) return byDate;
+    }
+    return parseMeetingLocalDateTime(m.date, m.endTime);
+}
+
+function shouldKeepManagedMeeting(m) {
+    const status = String(m.meetingStatus || '').toUpperCase();
+    const ended = status.includes('KẾT THÚC');
+    if (!ended) return true;
+
+    const endedAt = getMeetingEndedAt(m);
+    if (!endedAt) return true; // thiếu mốc thời gian: giữ lại để tránh làm mất dữ liệu.
+
+    const FIFTEEN_MINUTES = 15 * 60 * 1000;
+    return Date.now() <= endedAt.getTime() + FIFTEEN_MINUTES;
+}
+
+function renderManagedMeetings() {
+    const box = $('managedMeetings');
+    const visibleMeetings = managedMeetingData
+        .filter(shouldKeepManagedMeeting)
+        .slice(0, 10);
+
+    if (!visibleMeetings.length) {
+        box.innerHTML = '<div class="py-3 text-center text-slate-400">Không còn cuộc họp đang điều hành.</div>';
+        return;
+    }
+
+    box.innerHTML = visibleMeetings.map(m => {
+        const ended = String(m.meetingStatus || '').toUpperCase().includes('KẾT THÚC');
+        const canQr = m.attendanceEnabled === true;
+
+        return `<div class="border-b last:border-0 py-3">
+            <div class="flex items-center gap-3">
+                <div class="min-w-0 flex-1">
+                    <div class="font-extrabold text-slate-800 text-[11px] truncate">${esc(m.title || 'Cuộc họp')}</div>
+                    <div class="text-[9px] text-slate-500 mt-1">${esc(m.date || '')} • ${esc(m.startTime || '')} ${m.place ? '• ' + esc(m.place) : ''}</div>
+                    <div class="mt-1">
+                        <span class="badge ${
+        ended ? 'bg-slate-100 text-slate-600' : 'bg-emerald-50 text-emerald-700'
+    }">${esc(m.meetingStatus || 'ĐÃ PHÁT HÀNH')}</span>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    ${canQr && !ended ? `<button onclick="showMeetingQr('${esc(m.meetingId)}','IN')" class="px-2.5 h-8 rounded-lg bg-violet-600 text-white text-[9px] font-bold"><i class="bi bi-qr-code mr-1"></i>QR VÀO</button>` : ''}
+                    ${canQr && ended && m.checkOutToken ? `<button onclick="showMeetingQr('${esc(m.meetingId)}','OUT')" class="px-2.5 h-8 rounded-lg bg-amber-500 text-white text-[9px] font-bold"><i class="bi bi-qr-code mr-1"></i>QR RA</button>` : ''}
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+                ${!ended
+                    ? `<button onclick="openInteractionModal('${esc(m.meetingId)}')" class="h-9 rounded-lg bg-cyan-50 text-cyan-700 border border-cyan-200 text-[9px] font-extrabold"><i class="bi bi-chat-dots-fill mr-1"></i>TƯƠNG TÁC</button><button onclick="endManagedMeeting('${esc(m.meetingId)}')" class="h-9 rounded-lg bg-red-50 text-red-600 border border-red-200 text-[9px] font-extrabold"><i class="bi bi-stop-circle mr-1"></i>KẾT THÚC</button>`
+                    : `<button onclick="openInteractionModal('${esc(m.meetingId)}')" class="col-span-2 h-9 rounded-lg bg-slate-50 text-slate-600 border text-[9px] font-extrabold"><i class="bi bi-clock-history mr-1"></i>XEM TƯƠNG TÁC</button>`}
+            </div>
+        </div>`;
+    }).join('');
+}
 function showMeetingQr(meetingId,mode){const m=managedMeetingData.find(x=>String(x.meetingId)===String(meetingId));if(!m)return alert('Không tìm thấy cuộc họp.');const token=mode==='OUT'?m.checkOutToken:m.checkInToken;if(!token)return alert(mode==='OUT'?'Chưa có mã QR ra. Hãy bấm KẾT THÚC cuộc họp trước.':'Cuộc họp chưa có token QR vào.');const payload=JSON.stringify({meetingId:m.meetingId,token:token,mode:mode});currentQrInfo={payload,meeting:m,mode};$('qrCanvas').innerHTML='';new QRCode($('qrCanvas'),{text:payload,width:260,height:260,correctLevel:QRCode.CorrectLevel.M});$('qrDisplayHeading').textContent=mode==='OUT'?'MÃ QR RA CUỘC HỌP':'MÃ QR VÀO CUỘC HỌP';$('qrDisplayTitle').textContent=m.title||'Cuộc họp';$('qrDisplayMeta').textContent=mode==='OUT'?`Kết thúc thực tế: ${m.endedAt||'vừa kết thúc'} • Quét để ghi nhận QR ra`:`Mở QR: ${m.qrOpenTime||'—'} • Đóng QR: ${m.qrCloseTime||'—'}`;$('qrDisplayModal').classList.remove('hidden');$('qrDisplayModal').classList.add('flex')}
 function closeQrDisplay(){$('qrDisplayModal').classList.add('hidden');$('qrDisplayModal').classList.remove('flex')}
 async function copyQrImage(){const img=$('qrCanvas').querySelector('img'),canvas=$('qrCanvas').querySelector('canvas');try{let blob;if(canvas)blob=await new Promise(res=>canvas.toBlob(res,'image/png'));else if(img){const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);blob=await new Promise(res=>c.toBlob(res,'image/png'))}if(!blob||!navigator.clipboard||!window.ClipboardItem)throw Error();await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);alert('Đã sao chép ảnh QR. Thầy có thể dán sang nơi cần trình chiếu.')}catch(e){alert('Thiết bị này chưa cho phép sao chép ảnh trực tiếp. Thầy dùng nút TẢI ẢNH QR.') }}
