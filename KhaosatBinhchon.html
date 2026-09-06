@@ -85,6 +85,7 @@
         <div class="font-extrabold text-[12px] text-slate-800">Bình chọn nhanh</div>
         <div class="text-[9px] leading-4 text-slate-500 mt-1">Tạo bình chọn nhanh kiểu Zalo, xem kết quả tức thời.</div>
       </button>
+
       <button type="button" class="type-card rounded-2xl p-4 text-left bg-white" data-mode="report" onclick="setMode('report')">
         <div class="w-10 h-10 rounded-xl border border-emerald-200 text-emerald-700 flex items-center justify-center mb-3"><i class="bi bi-table text-lg"></i></div>
         <div class="font-extrabold text-[12px] text-slate-900">Báo cáo / Thu thập dữ liệu</div>
@@ -209,7 +210,6 @@
     </div>
   </section>
 
-  
   <section id="reportPanel" class="card p-4 hidden">
     <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
       <div>
@@ -234,7 +234,7 @@
     </div>
   </section>
 
-<section class="card p-4">
+  <section class="card p-4">
     <div class="flex items-center justify-between gap-3 mb-3">
       <div>
         <div class="text-[11px] font-extrabold uppercase text-slate-700"><i class="bi bi-people-fill mr-1.5 text-brand-600"></i>Người nhận</div>
@@ -289,6 +289,21 @@
   </div>
 </div>
 
+<div id="qrModal" class="hidden fixed inset-0 z-[110] bg-slate-950/70 backdrop-blur-sm p-3 items-center justify-center">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+    <div class="px-4 py-3 border-b flex items-center justify-between">
+      <div><b class="text-brand-600 text-sm">QR KHẢO SÁT / BÌNH CHỌN</b><div class="text-[9px] text-slate-500">Quét để mở nội dung</div></div>
+      <button onclick="closeQR()" class="w-8 h-8 rounded-lg bg-slate-100"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="p-5 text-center">
+      <div id="qrTitle" class="font-extrabold text-sm mb-4"></div>
+      <div id="qrCode" class="inline-flex p-3 bg-white border rounded-2xl"></div>
+      <div id="qrLink" class="mt-4 text-[9px] text-slate-500 break-all"></div>
+      <button onclick="copySurveyLink()" class="mt-4 w-full action bg-brand-600 text-white"><i class="bi bi-copy"></i>SAO CHÉP LINK</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const WEB_APP_URL='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 let mode='internal', questions=[], qSeq=0, personnel=[], selected=new Set(), currentSurveyId='', reportColumns=[];
@@ -321,7 +336,6 @@ function setMode(m){
     addReportColumn('Ghi chú','text',false);
   }
 }
-
 
 function addQuestion(kind){
   if(mode==='poll'){
@@ -363,8 +377,6 @@ function renderQuestions(){
       </div>`:''}
     </div>`).join('');
 }
-
-
 
 function addReportColumn(name='',type='text',required=false){
   reportColumns.push({id:'RC'+Date.now()+Math.random().toString(36).slice(2,5),name,type,required}); renderReportColumns();
@@ -599,22 +611,5 @@ window.addEventListener('DOMContentLoaded',()=>{
   addQuestion('single'); setMode('internal'); loadPersonnel();
 });
 </script>
-
-
-<div id="qrModal" class="hidden fixed inset-0 z-[110] bg-slate-950/70 backdrop-blur-sm p-3 items-center justify-center">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-    <div class="px-4 py-3 border-b flex items-center justify-between">
-      <div><b class="text-brand-600 text-sm">QR KHẢO SÁT / BÌNH CHỌN</b><div class="text-[9px] text-slate-500">Quét để mở nội dung</div></div>
-      <button onclick="closeQR()" class="w-8 h-8 rounded-lg bg-slate-100"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <div class="p-5 text-center">
-      <div id="qrTitle" class="font-extrabold text-sm mb-4"></div>
-      <div id="qrCode" class="inline-flex p-3 bg-white border rounded-2xl"></div>
-      <div id="qrLink" class="mt-4 text-[9px] text-slate-500 break-all"></div>
-      <button onclick="copySurveyLink()" class="mt-4 w-full action bg-brand-600 text-white"><i class="bi bi-copy"></i>SAO CHÉP LINK</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
