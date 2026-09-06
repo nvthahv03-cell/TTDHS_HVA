@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" class="h-full bg-slate-50">
+<html lang="vi" class="h-full bg-white">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -24,12 +24,12 @@
   </script>
 
   <style>
-    body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-highlight-color:transparent}
+    body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-highlight-color:transparent;background:#fff;color:#0f172a;-webkit-font-smoothing:antialiased}
     ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:9999px}
-    .field{width:100%;min-height:44px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;padding:10px 12px;font-size:12px;outline:none;transition:.18s}
+    .field{width:100%;min-height:44px;border:1px solid #94a3b8;border-radius:12px;background:#fff;color:#0f172a;padding:10px 12px;font-size:12px;font-weight:500;outline:none;transition:.18s}
     .field:focus{background:#fff;border-color:#0F4C81;box-shadow:0 0 0 3px #dbeafe}
-    .lbl{display:block;font-size:10px;font-weight:800;color:#475569;margin-bottom:6px}
-    .card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+    .lbl{display:block;font-size:11px;font-weight:800;color:#334155;margin-bottom:6px}
+    .card{background:#fff;border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 3px 12px rgba(15,23,42,.06)}
     .type-card{transition:.18s;border:1px solid #e2e8f0}
     .type-card:hover{transform:translateY(-1px);border-color:#93c5fd;box-shadow:0 8px 24px rgba(15,76,129,.08)}
     .type-card.active{border-color:#0F4C81;background:#f0f7ff;box-shadow:0 0 0 2px #dbeafe}
@@ -40,7 +40,7 @@
   </style>
 </head>
 
-<body class="min-h-full bg-slate-50 text-slate-800">
+<body class="min-h-full bg-white text-slate-800">
 <header class="sticky top-0 z-40 bg-gradient-to-r from-brand-800 via-brand-600 to-[#1687D9] shadow-lg">
   <div class="page-head max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
     <button onclick="location.href='main.html'" class="w-10 h-10 min-w-10 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white">
@@ -59,10 +59,10 @@
 <main class="max-w-5xl mx-auto p-3 sm:p-4 pb-24 space-y-4">
 
   <section class="card overflow-hidden">
-    <div class="px-4 py-3 border-b bg-slate-50/70 flex items-center justify-between">
+    <div class="px-4 py-3 border-b bg-white/70 flex items-center justify-between">
       <div>
         <div class="text-[11px] font-extrabold text-brand-700 uppercase"><i class="bi bi-grid-1x2-fill mr-1.5"></i>Chọn loại cần tạo</div>
-        <div class="text-[9px] text-slate-400 mt-0.5">Một trung tâm • Ba nghiệp vụ</div>
+        <div class="text-[9px] text-slate-500 mt-0.5">Một trung tâm • Ba nghiệp vụ</div>
       </div>
       <span id="modeBadge" class="pill bg-blue-50 text-brand-700">KHẢO SÁT CỦA TRƯỜNG</span>
     </div>
@@ -85,6 +85,11 @@
         <div class="font-extrabold text-[12px] text-slate-800">Bình chọn nhanh</div>
         <div class="text-[9px] leading-4 text-slate-500 mt-1">Tạo bình chọn nhanh kiểu Zalo, xem kết quả tức thời.</div>
       </button>
+      <button type="button" class="type-card rounded-2xl p-4 text-left bg-white" data-mode="report" onclick="setMode('report')">
+        <div class="w-10 h-10 rounded-xl border border-emerald-200 text-emerald-700 flex items-center justify-center mb-3"><i class="bi bi-table text-lg"></i></div>
+        <div class="font-extrabold text-[12px] text-slate-900">Báo cáo / Thu thập dữ liệu</div>
+        <div class="text-[10px] leading-4 text-slate-600 mt-1">Thu danh sách, số liệu; nhập trực tiếp hoặc bằng Excel.</div>
+      </button>
     </div>
   </section>
 
@@ -92,7 +97,7 @@
     <div class="flex items-center justify-between gap-2">
       <div>
         <div class="text-[11px] font-extrabold uppercase text-slate-700"><i class="bi bi-lightning-charge-fill mr-1.5 text-amber-500"></i>Soạn nhanh</div>
-        <div class="text-[9px] text-slate-400 mt-0.5">Ưu tiên thao tác nhanh; có thể chỉnh chi tiết phía dưới</div>
+        <div class="text-[9px] text-slate-500 mt-0.5">Ưu tiên thao tác nhanh; có thể chỉnh chi tiết phía dưới</div>
       </div>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -118,7 +123,7 @@
     </div>
 
     <div id="optionalReference" class="hidden">
-      <label class="lbl">Căn cứ / Văn bản liên quan <span class="font-normal text-slate-400">(tùy chọn)</span></label>
+      <label class="lbl">Căn cứ / Văn bản liên quan <span class="font-normal text-slate-500">(tùy chọn)</span></label>
       <div class="flex gap-2">
         <input id="optionalReferenceText" class="field flex-1" placeholder="Có thể nhập hoặc chọn từ Kho văn bản HVA">
         <button type="button" onclick="searchHvaDocument('optional')" title="Chọn văn bản từ Kho HVA" class="w-11 min-w-11 rounded-xl border border-brand-600 text-brand-600 bg-white hover:bg-blue-50"><i class="bi bi-search"></i></button>
@@ -149,7 +154,7 @@
     <div class="px-4 py-3 border-b flex items-center justify-between gap-2">
       <div>
         <div id="builderTitle" class="text-[11px] font-extrabold text-slate-700 uppercase"><i class="bi bi-list-check mr-1.5 text-brand-600"></i>Câu hỏi khảo sát</div>
-        <div id="builderSub" class="text-[9px] text-slate-400 mt-0.5">Tạo nhanh các câu hỏi cho phiếu của Trường</div>
+        <div id="builderSub" class="text-[9px] text-slate-500 mt-0.5">Tạo nhanh các câu hỏi cho phiếu của Trường</div>
       </div>
       <button type="button" onclick="addQuestion()" class="h-9 px-3 rounded-xl bg-brand-600 text-white text-[9px] font-extrabold"><i class="bi bi-plus-lg mr-1"></i>THÊM CÂU HỎI</button>
     </div>
@@ -182,33 +187,58 @@
     </div>
 
     <div id="internalOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-      <label class="flex items-center justify-between gap-3 p-3 rounded-xl border bg-slate-50 cursor-pointer">
-        <span><b class="block text-[10px]">Cho phép ẩn danh</b><small class="text-[9px] text-slate-400">Tách danh tính khỏi nội dung trả lời</small></span>
+      <label class="flex items-center justify-between gap-3 p-3 rounded-xl border bg-white cursor-pointer">
+        <span><b class="block text-[10px]">Cho phép ẩn danh</b><small class="text-[9px] text-slate-500">Tách danh tính khỏi nội dung trả lời</small></span>
         <input id="anonymous" type="checkbox" class="w-5 h-5 accent-[#0F4C81]">
       </label>
-      <label class="flex items-center justify-between gap-3 p-3 rounded-xl border bg-slate-50 cursor-pointer">
-        <span><b class="block text-[10px]">Cho phép sửa câu trả lời</b><small class="text-[9px] text-slate-400">Có thể cập nhật trước thời hạn</small></span>
+      <label class="flex items-center justify-between gap-3 p-3 rounded-xl border bg-white cursor-pointer">
+        <span><b class="block text-[10px]">Cho phép sửa câu trả lời</b><small class="text-[9px] text-slate-500">Có thể cập nhật trước thời hạn</small></span>
         <input id="allowEdit" type="checkbox" class="w-5 h-5 accent-[#0F4C81]">
       </label>
     </div>
 
     <div id="pollOptions" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2">
       <label class="flex items-center justify-between gap-3 p-3 rounded-xl border bg-violet-50/40 cursor-pointer">
-        <span><b class="block text-[10px]">Cho phép chọn nhiều</b><small class="text-[9px] text-slate-400">Người nhận có thể chọn nhiều phương án</small></span>
+        <span><b class="block text-[10px]">Cho phép chọn nhiều</b><small class="text-[9px] text-slate-500">Người nhận có thể chọn nhiều phương án</small></span>
         <input id="multiPoll" type="checkbox" class="w-5 h-5 accent-violet-600">
       </label>
       <label class="flex items-center justify-between gap-3 p-3 rounded-xl border bg-violet-50/40 cursor-pointer">
-        <span><b class="block text-[10px]">Cho phép đổi lựa chọn</b><small class="text-[9px] text-slate-400">Được thay đổi trước khi đóng bình chọn</small></span>
+        <span><b class="block text-[10px]">Cho phép đổi lựa chọn</b><small class="text-[9px] text-slate-500">Được thay đổi trước khi đóng bình chọn</small></span>
         <input id="changeVote" type="checkbox" checked class="w-5 h-5 accent-violet-600">
       </label>
     </div>
   </section>
 
-  <section class="card p-4">
+  
+  <section id="reportPanel" class="card p-4 hidden">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+      <div>
+        <div class="text-[12px] font-extrabold uppercase text-slate-900"><i class="bi bi-table mr-1.5 text-emerald-700"></i>Dữ liệu cần thu thập</div>
+        <div class="text-[10px] text-slate-600 mt-1">Tạo các cột cần TTCM/GV báo cáo. HVA dùng cùng cấu trúc cho nhập trực tiếp và file mẫu.</div>
+      </div>
+      <button type="button" onclick="addReportColumn()" class="action bg-white border border-emerald-700 text-emerald-700"><i class="bi bi-plus-lg"></i>THÊM CỘT</button>
+    </div>
+    <div id="reportColumns" class="space-y-2"></div>
+    <div class="mt-4 border border-slate-300 rounded-xl p-3">
+      <div class="text-[10px] font-extrabold text-slate-900 mb-2">CÁCH NGƯỜI NHẬN NHẬP DỮ LIỆU</div>
+      <div class="grid sm:grid-cols-2 gap-2">
+        <label class="p-3 border border-slate-300 rounded-xl flex gap-2"><input id="allowDirect" type="checkbox" checked><span class="text-[10px] font-bold">✍️ Nhập trực tiếp trên HVA</span></label>
+        <label class="p-3 border border-slate-300 rounded-xl flex gap-2"><input id="allowExcel" type="checkbox" checked><span class="text-[10px] font-bold">📊 Tải mẫu / nhập từ Excel</span></label>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-2 mt-3">
+        <button type="button" onclick="downloadExcelTemplate()" class="action bg-white border border-emerald-700 text-emerald-700"><i class="bi bi-file-earmark-arrow-down"></i>TẢI FILE MẪU</button>
+        <label class="action bg-white border border-slate-400 text-slate-700 cursor-pointer"><i class="bi bi-file-earmark-arrow-up"></i>NHẬP TỪ EXCEL<input type="file" accept=".xlsx,.xls,.csv" class="hidden" onchange="previewExcelName(this)"></label>
+        <button type="button" onclick="previewReportStructure()" class="action bg-slate-900 text-white"><i class="bi bi-eye"></i>XEM CẤU TRÚC</button>
+      </div>
+      <div id="excelState" class="text-[10px] text-slate-600 mt-2">Chưa chọn file.</div>
+    </div>
+  </section>
+
+<section class="card p-4">
     <div class="flex items-center justify-between gap-3 mb-3">
       <div>
         <div class="text-[11px] font-extrabold uppercase text-slate-700"><i class="bi bi-people-fill mr-1.5 text-brand-600"></i>Người nhận</div>
-        <div class="text-[9px] text-slate-400 mt-0.5">Danh sách này được chuyển nguyên sang TT Phát hành</div>
+        <div class="text-[9px] text-slate-500 mt-0.5">Danh sách này được chuyển nguyên sang TT Phát hành</div>
       </div>
       <div class="flex items-center gap-2">
         <span id="recipientCount" class="pill bg-blue-50 text-brand-600">0 người</span>
@@ -216,21 +246,21 @@
       </div>
     </div>
     <input id="peopleSearch" oninput="renderPersonnel()" class="field mb-2" placeholder="Tìm giáo viên / tổ / bộ phận...">
-    <div id="personnelBox" class="max-h-72 overflow-auto space-y-2"><div class="text-[10px] text-slate-400">Đang tải danh sách nhân sự...</div></div>
+    <div id="personnelBox" class="max-h-72 overflow-auto space-y-2"><div class="text-[10px] text-slate-500">Đang tải danh sách nhân sự...</div></div>
   </section>
 
   <section class="card p-4">
     <div class="flex items-center justify-between mb-3">
       <div>
         <div class="text-[11px] font-extrabold uppercase text-slate-700"><i class="bi bi-eye-fill mr-1.5 text-brand-600"></i>Xem nhanh</div>
-        <div class="text-[9px] text-slate-400 mt-0.5">Mô phỏng nội dung người nhận sẽ thấy</div>
+        <div class="text-[9px] text-slate-500 mt-0.5">Mô phỏng nội dung người nhận sẽ thấy</div>
       </div>
     </div>
-    <div class="rounded-2xl border bg-slate-50 p-4">
+    <div class="rounded-2xl border bg-white p-4">
       <div id="previewKind" class="text-[9px] font-extrabold text-brand-600 uppercase">Khảo sát của Trường</div>
       <div id="previewTitle" class="font-extrabold text-[13px] mt-1">Chưa có tiêu đề</div>
       <div id="previewDesc" class="text-[10px] text-slate-500 mt-2 whitespace-pre-line">Nội dung sẽ hiển thị tại đây.</div>
-      <div id="previewCount" class="text-[9px] text-slate-400 mt-3">0 câu hỏi</div>
+      <div id="previewCount" class="text-[9px] text-slate-500 mt-3">0 câu hỏi</div>
     </div>
   </section>
 
@@ -245,7 +275,7 @@
       <button type="button" onclick="previewFull()" class="action bg-white border border-slate-300 text-slate-600"><i class="bi bi-eye"></i>XEM TRƯỚC</button>
       <button type="button" onclick="resetForm()" class="action bg-slate-100 text-slate-600"><i class="bi bi-x-circle"></i>HỦY</button>
     </div>
-    <div id="shareHint" class="text-center text-[9px] text-slate-400 mt-2">Khảo sát nội bộ: Link/QR chính thức cần ID đã lưu trên HVA.</div>
+    <div id="shareHint" class="text-center text-[9px] text-slate-500 mt-2">Khảo sát nội bộ: Link/QR chính thức cần ID đã lưu trên HVA.</div>
   </section>
 </main>
 
@@ -261,29 +291,37 @@
 
 <script>
 const WEB_APP_URL='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
-let mode='internal', questions=[], qSeq=0, personnel=[], selected=new Set(), currentSurveyId='';
+let mode='internal', questions=[], qSeq=0, personnel=[], selected=new Set(), currentSurveyId='', reportColumns=[];
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function setMode(m){
   mode=m;
   document.querySelectorAll('.type-card').forEach(x=>x.classList.toggle('active',x.dataset.mode===m));
-  const names={internal:'KHẢO SÁT CỦA TRƯỜNG',external:'KHẢO SÁT TỪ LINK',poll:'BÌNH CHỌN NHANH'};
+  const names={internal:'KHẢO SÁT CỦA TRƯỜNG',external:'KHẢO SÁT TỪ LINK',poll:'BÌNH CHỌN NHANH',report:'BÁO CÁO / THU THẬP DỮ LIỆU'};
   $('modeBadge').textContent=names[m];
   $('externalFields').classList.toggle('hidden',m!=='external');
   $('optionalReference').classList.toggle('hidden',m==='external');
   $('externalProgress').classList.toggle('hidden',m!=='external');
-  $('builderSection').classList.toggle('hidden',m==='external');
+  $('builderSection').classList.toggle('hidden',m==='external'||m==='report');
   $('internalOptions').classList.toggle('hidden',m!=='internal');
   $('pollOptions').classList.toggle('hidden',m!=='poll');
-  $('titleLabel').textContent=m==='poll'?'Câu hỏi bình chọn *':'Tiêu đề khảo sát *';
+  $('reportPanel').classList.toggle('hidden',m!=='report');
+  $('titleLabel').textContent=m==='poll'?'Câu hỏi bình chọn *':m==='report'?'Tên báo cáo / nội dung thu thập *':'Tiêu đề khảo sát *';
   $('title').placeholder=m==='poll'?'Ví dụ: Thầy/Cô đã thực hiện khảo sát theo CV 123/QLCL chưa?':m==='external'?'Ví dụ: Khảo sát theo Công văn số 123/QLCL':'Ví dụ: Khảo sát nhu cầu bồi dưỡng AI năm học 2026-2027';
   $('builderTitle').innerHTML=m==='poll'?'<i class="bi bi-check2-square mr-1.5 text-violet-600"></i>Phương án bình chọn':'<i class="bi bi-list-check mr-1.5 text-brand-600"></i>Câu hỏi khảo sát';
   $('builderSub').textContent=m==='poll'?'Thêm các phương án giống bình chọn nhanh trên Zalo':'Tạo nhanh các câu hỏi cho phiếu của Trường';
   if(m==='poll' && (!questions.length || questions[0]?.kind!=='poll')){questions=[];addQuestion('poll')}
   if(m==='internal' && (!questions.length || questions[0]?.kind==='poll')){questions=[];addQuestion('single')}
   renderQuestions(); updatePreview();
+  if(m==='report'&&!reportColumns.length){
+    addReportColumn('Họ và tên học sinh','text',true);
+    addReportColumn('Lớp','text',true);
+    addReportColumn('Môn đăng ký','text',true);
+    addReportColumn('Ghi chú','text',false);
+  }
 }
+
 
 function addQuestion(kind){
   if(mode==='poll'){
@@ -301,9 +339,9 @@ function removeOption(id,i){const q=questions.find(x=>x.id===id);if(q&&q.options
 
 function renderQuestions(){
   const box=$('questionList'); if(!box)return;
-  if(!questions.length){box.innerHTML='<div class="py-5 text-center text-[10px] text-slate-400">Chưa có câu hỏi.</div>';return}
+  if(!questions.length){box.innerHTML='<div class="py-5 text-center text-[10px] text-slate-500">Chưa có câu hỏi.</div>';return}
   box.innerHTML=questions.map((q,idx)=>`
-    <div class="rounded-2xl border border-slate-200 p-3 bg-slate-50/60">
+    <div class="rounded-2xl border border-slate-200 p-3 bg-white/60">
       <div class="flex items-center gap-2 mb-2">
         <span class="w-6 h-6 rounded-lg bg-white border flex items-center justify-center text-[9px] font-extrabold">${idx+1}</span>
         <input class="field !bg-white flex-1" value="${esc(q.text)}" oninput="setQ(${q.id},'text',this.value)" placeholder="${mode==='poll'?'Câu hỏi bình chọn...':'Nhập câu hỏi...'}">
@@ -320,13 +358,39 @@ function renderQuestions(){
       </div>`:''}
       ${(q.kind==='single'||q.kind==='multi'||q.kind==='poll')?`
       <div class="space-y-1.5">
-        ${q.options.map((o,i)=>`<div class="option-row"><span class="text-slate-400">${q.kind==='multi'?'□':'○'}</span><input class="field !min-h-[38px] !py-1 !bg-white" value="${esc(o)}" oninput="setOption(${q.id},${i},this.value)" placeholder="Phương án ${i+1}">${q.options.length>2?`<button onclick="removeOption(${q.id},${i})" class="w-8 h-8 text-slate-400 hover:text-red-500"><i class="bi bi-x-lg"></i></button>`:''}</div>`).join('')}
+        ${q.options.map((o,i)=>`<div class="option-row"><span class="text-slate-500">${q.kind==='multi'?'□':'○'}</span><input class="field !min-h-[38px] !py-1 !bg-white" value="${esc(o)}" oninput="setOption(${q.id},${i},this.value)" placeholder="Phương án ${i+1}">${q.options.length>2?`<button onclick="removeOption(${q.id},${i})" class="w-8 h-8 text-slate-500 hover:text-red-500"><i class="bi bi-x-lg"></i></button>`:''}</div>`).join('')}
         <button onclick="addOption(${q.id})" class="text-[9px] font-extrabold text-brand-600 mt-1"><i class="bi bi-plus-circle mr-1"></i>Thêm phương án</button>
       </div>`:''}
     </div>`).join('');
 }
 
 
+
+function addReportColumn(name='',type='text',required=false){
+  reportColumns.push({id:'RC'+Date.now()+Math.random().toString(36).slice(2,5),name,type,required}); renderReportColumns();
+}
+function renderReportColumns(){
+  $('reportColumns').innerHTML=reportColumns.map((c,i)=>`
+    <div class="grid grid-cols-[30px_1fr_115px_78px_34px] gap-2 items-center">
+      <b class="text-[10px] text-slate-500 text-center">${i+1}</b>
+      <input class="field" value="${esc(c.name)}" placeholder="Tên cột" oninput="reportColumns[${i}].name=this.value">
+      <select class="field" onchange="reportColumns[${i}].type=this.value"><option value="text">Văn bản</option><option value="number" ${c.type==='number'?'selected':''}>Số</option><option value="date" ${c.type==='date'?'selected':''}>Ngày</option></select>
+      <label class="text-[9px] font-bold"><input type="checkbox" ${c.required?'checked':''} onchange="reportColumns[${i}].required=this.checked"> Bắt buộc</label>
+      <button type="button" onclick="reportColumns.splice(${i},1);renderReportColumns()" class="w-8 h-8 border border-slate-300 rounded-lg"><i class="bi bi-trash"></i></button>
+    </div>`).join('');
+}
+function downloadExcelTemplate(){
+  const cols=reportColumns.map(x=>x.name.trim()).filter(Boolean);
+  if(!cols.length)return alert('Vui lòng tạo ít nhất một cột.');
+  const csv='\uFEFF'+cols.map(x=>`"${x.replaceAll('"','""')}"`).join(',')+'\r\n';
+  const u=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');
+  a.href=u;a.download='Mau_bao_cao_HVA.csv';a.click();URL.revokeObjectURL(u);
+}
+function previewExcelName(x){$('excelState').textContent=x.files?.[0]?`Đã chọn: ${x.files[0].name}. Chức năng đọc/kiểm tra dữ liệu sẽ nối ở Backend.`:'Chưa chọn file.'}
+function previewReportStructure(){
+  const cols=reportColumns.map(x=>x.name.trim()).filter(Boolean);
+  alert(cols.length?'Cấu trúc báo cáo:\\n\\n'+cols.map((x,i)=>`${i+1}. ${x}`).join('\\n'):'Chưa có cột dữ liệu.');
+}
 function currentUser(){
   try{return JSON.parse(sessionStorage.getItem('user')||localStorage.getItem('user')||'{}')}catch(e){return{}}
 }
@@ -360,17 +424,17 @@ function renderPersonnel(){
     .forEach(p=>(groups[p.tenTo]??=[]).push(p));
   $('personnelBox').innerHTML=Object.entries(groups).map(([g,ms])=>`
     <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
-      <div class="px-3 py-2 bg-slate-50 flex justify-between items-center">
+      <div class="px-3 py-2 bg-white flex justify-between items-center">
         <b class="text-[10px]">${esc(g)}</b>
         <button type="button" onclick='selectGroup(${JSON.stringify(g)})' class="text-[9px] font-bold text-brand-600">${ms.length&&ms.every(p=>selected.has(p.username))?'Bỏ chọn':'Chọn tổ'}</button>
       </div>
       <div class="p-2 grid md:grid-cols-2 gap-1">
-        ${ms.map(p=>`<label class="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-50 text-[10px] cursor-pointer">
+        ${ms.map(p=>`<label class="flex items-center gap-2 p-2 rounded-lg hover:bg-white text-[10px] cursor-pointer">
           <input type="checkbox" ${selected.has(p.username)?'checked':''} onchange='togglePerson(${JSON.stringify(p.username)},this.checked)'>
           <span><b>${esc(p.hoTen)}</b><span class="text-slate-500"> · ${esc(p.chucVu)}</span></span>
         </label>`).join('')}
       </div>
-    </div>`).join('')||'<div class="text-[10px] text-slate-400">Không có kết quả.</div>';
+    </div>`).join('')||'<div class="text-[10px] text-slate-500">Không có kết quả.</div>';
   $('recipientCount').textContent=`${selected.size} người`;
   $('btnSelectAll').textContent=personnel.length&&personnel.every(p=>selected.has(p.username))?'Bỏ chọn tất cả':'Chọn tất cả';
 }
@@ -468,6 +532,8 @@ function collect(){
   return {
     sourceModule:'KhaoSatBinhChon',
     surveyId: mode==='external'?'':ensureSurveyId(),
+    reportColumns:mode==='report'?reportColumns.map(x=>({...x,name:x.name.trim()})).filter(x=>x.name):[],
+    reportInput:mode==='report'?{direct:!!$('allowDirect')?.checked,excel:!!$('allowExcel')?.checked}:null,
     objectType:mode==='poll'?'POLL':'SURVEY',
     surveyType:mode,
     title:$('title').value.trim(),
@@ -498,7 +564,7 @@ function validate(){
 function previewFull(){
   if(!validate())return; const d=collect();
   const name=mode==='internal'?'KHẢO SÁT CỦA TRƯỜNG':mode==='external'?'KHẢO SÁT TỪ LINK':'BÌNH CHỌN NHANH';
-  $('previewBody').innerHTML=`<div class="text-[9px] font-extrabold text-brand-600">${name}</div><div class="text-lg font-black mt-1">${esc(d.title)}</div><div class="text-xs text-slate-500 mt-2 whitespace-pre-line">${esc(d.description||'')}</div>${d.reference?`<div class="text-[10px] mt-3"><b>Căn cứ:</b> ${esc(d.reference)}</div>`:''}${mode==='external'?`<div class="mt-4 rounded-xl bg-emerald-50 border border-emerald-100 p-3 text-[10px]"><i class="bi bi-link-45deg mr-1"></i>${esc(d.externalUrl)}</div>`:`<div class="mt-4 space-y-3">${d.questions.map((q,i)=>`<div class="border rounded-xl p-3"><b class="text-[11px]">${i+1}. ${esc(q.text)}</b>${['single','multi','poll'].includes(q.kind)?`<div class="mt-2 space-y-1">${q.options.filter(x=>x.trim()).map(x=>`<div class="text-[10px]">${q.kind==='multi'?'□':'○'} ${esc(x)}</div>`).join('')}</div>`:`<div class="mt-2 h-9 border-b text-[9px] text-slate-400">Nội dung trả lời...</div>`}</div>`).join('')}</div>`}<div class="mt-4 text-[10px] text-slate-500"><b>Hạn:</b> ${esc(d.deadlineDate||'—')} ${esc(d.deadlineTime||'')}</div>`;
+  $('previewBody').innerHTML=`<div class="text-[9px] font-extrabold text-brand-600">${name}</div><div class="text-lg font-black mt-1">${esc(d.title)}</div><div class="text-xs text-slate-500 mt-2 whitespace-pre-line">${esc(d.description||'')}</div>${d.reference?`<div class="text-[10px] mt-3"><b>Căn cứ:</b> ${esc(d.reference)}</div>`:''}${mode==='external'?`<div class="mt-4 rounded-xl bg-emerald-50 border border-emerald-100 p-3 text-[10px]"><i class="bi bi-link-45deg mr-1"></i>${esc(d.externalUrl)}</div>`:`<div class="mt-4 space-y-3">${d.questions.map((q,i)=>`<div class="border rounded-xl p-3"><b class="text-[11px]">${i+1}. ${esc(q.text)}</b>${['single','multi','poll'].includes(q.kind)?`<div class="mt-2 space-y-1">${q.options.filter(x=>x.trim()).map(x=>`<div class="text-[10px]">${q.kind==='multi'?'□':'○'} ${esc(x)}</div>`).join('')}</div>`:`<div class="mt-2 h-9 border-b text-[9px] text-slate-500">Nội dung trả lời...</div>`}</div>`).join('')}</div>`}<div class="mt-4 text-[10px] text-slate-500"><b>Hạn:</b> ${esc(d.deadlineDate||'—')} ${esc(d.deadlineTime||'')}</div>`;
   $('previewModal').classList.remove('hidden');$('previewModal').classList.add('flex');
 }
 function closePreview(){$('previewModal').classList.add('hidden');$('previewModal').classList.remove('flex')}
@@ -538,7 +604,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 <div id="qrModal" class="hidden fixed inset-0 z-[110] bg-slate-950/70 backdrop-blur-sm p-3 items-center justify-center">
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
     <div class="px-4 py-3 border-b flex items-center justify-between">
-      <div><b class="text-brand-600 text-sm">QR KHẢO SÁT / BÌNH CHỌN</b><div class="text-[9px] text-slate-400">Quét để mở nội dung</div></div>
+      <div><b class="text-brand-600 text-sm">QR KHẢO SÁT / BÌNH CHỌN</b><div class="text-[9px] text-slate-500">Quét để mở nội dung</div></div>
       <button onclick="closeQR()" class="w-8 h-8 rounded-lg bg-slate-100"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="p-5 text-center">
