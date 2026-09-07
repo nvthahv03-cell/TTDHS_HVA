@@ -2082,6 +2082,22 @@ export function renderHome() {
     </span>
 
 </a>
+<!-- NHẮC VIỆC BGH -->
+<a href="NhacViecBGH.html"
+   class="w-full flex items-center gap-2.5
+          px-3 py-2 rounded-lg
+          hover:bg-rose-50
+          dark:hover:bg-slate-800 transition text-left">
+
+    <i class="bi bi-bell-fill
+              text-rose-600 w-5 text-center"></i>
+
+    <span class="text-[11px] font-semibold
+                 text-slate-700 dark:text-slate-200">
+        Nhắc việc BGH
+    </span>
+
+</a>
 
 
                     <button type="button"
