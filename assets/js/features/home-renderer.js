@@ -1552,17 +1552,18 @@ export function renderHome() {
     <!-- DROPDOWN NGHIỆP VỤ SỐ -->
     <div id="nghiepvuso-dropdown"
          data-dropdown-menu
-         class="hidden fixed sm:absolute
-                left-1/2 -translate-x-1/2
-                sm:translate-x-0 sm:left-auto sm:right-0
-                bottom-4 sm:bottom-[calc(100%+0.6rem)]
-                z-[999]
-                w-[92vw] sm:w-[350px]
-                max-h-[72vh]
-                overflow-y-auto overscroll-contain
-                bg-white dark:bg-slate-900
-                rounded-2xl shadow-2xl
-                border border-slate-200 dark:border-slate-800">
+        class="hidden fixed sm:absolute
+       left-3 right-3
+       sm:left-0 sm:right-auto sm:translate-x-0
+       top-16 sm:top-auto
+       bottom-auto sm:bottom-[calc(100%+0.6rem)]
+       z-[999]
+       w-auto sm:w-[370px]
+       max-h-[calc(100vh-5rem)] sm:max-h-[76vh]
+       overflow-y-auto overscroll-contain
+       bg-white dark:bg-slate-900
+       rounded-2xl shadow-2xl
+       border border-slate-200 dark:border-slate-800"
 
         <!-- HEADER -->
         <div class="sticky top-0 z-20
