@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhắc việc BGH • HVA</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .thin-scroll::-webkit-scrollbar { width: 7px; height: 7px; }
+    .thin-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+    .thin-scroll::-webkit-scrollbar-track { background: transparent; }
+    .modal-backdrop { background: rgba(15,23,42,.42); }
+    .status-dot { width:8px; height:8px; border-radius:999px; display:inline-block; }
+  </style>
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+    <div class="max-w-[1500px] mx-auto px-4 sm:px-6 py-3">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <a href="main.html"
+             class="w-10 h-10 rounded-xl border border-slate-200 bg-white
+                    flex items-center justify-center text-slate-600 hover:bg-slate-50"
+             title="Về trang chủ">
+            <i class="bi bi-arrow-left text-lg"></i>
+          </a>
+
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500
+                      text-white flex items-center justify-center shadow-sm">
+            <i class="bi bi-bell-fill text-xl"></i>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h1 class="text-lg sm:text-xl font-extrabold text-[#0F4C81]">NHẮC VIỆC BGH</h1>
+              <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-teal-50 text-teal-700 border border-teal-100">
+                ĐIỀU HÀNH SỐ
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Sổ nhắc việc riêng • Theo dõi thời hạn • Văn bản/Căn cứ • Việc phối hợp
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="hidden sm:block text-right mr-2">
+            <div id="currentUserName" class="text-sm font-bold text-slate-700">Đang xác định tài khoản...</div>
+            <div id="currentUserRole" class="text-[11px] text-slate-400">BGH</div>
+          </div>
+
+          <button id="btnAdd"
+                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
+                         bg-[#0F6B67] hover:bg-[#0B5A57] text-white text-sm font-bold shadow-sm">
+            <i class="bi bi-plus-lg"></i>
+            THÊM NHẮC VIỆC
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-[1500px] mx-auto px-4 sm:px-6 py-5">
+
+    <!-- PRIVATE NOTE -->
+    <section class="mb-4 rounded-2xl border border-blue-100 bg-blue-50/70 px-4 py-3">
+      <div class="flex items-start gap-3">
+        <i class="bi bi-shield-lock-fill text-blue-600 mt-0.5"></i>
+        <div>
+          <div class="text-sm font-bold text-blue-900">Sổ nhắc việc riêng của thành viên BGH</div>
+          <div class="text-xs text-blue-700 mt-0.5">
+            Mỗi tài khoản chỉ hiển thị việc của chính mình. Việc có phối hợp được đánh dấu riêng.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-4">
+      <button data-filter="today" class="summary-card text-left rounded-2xl bg-white border border-slate-200 p-4 hover:border-blue-300 shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-500">HÔM NAY</span>
+          <i class="bi bi-calendar-check text-blue-600"></i>
+        </div>
+        <div id="countToday" class="text-2xl font-extrabold text-slate-800 mt-2">0</div>
+      </button>
+
+      <button data-filter="soon" class="summary-card text-left rounded-2xl bg-white border border-slate-200 p-4 hover:border-amber-300 shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-500">SẮP ĐẾN HẠN</span>
+          <i class="bi bi-hourglass-split text-amber-500"></i>
+        </div>
+        <div id="countSoon" class="text-2xl font-extrabold text-slate-800 mt-2">0</div>
+      </button>
+
+      <button data-filter="overdue" class="summary-card text-left rounded-2xl bg-white border border-slate-200 p-4 hover:border-red-300 shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-500">QUÁ HẠN</span>
+          <i class="bi bi-exclamation-triangle-fill text-red-500"></i>
+        </div>
+        <div id="countOverdue" class="text-2xl font-extrabold text-red-600 mt-2">0</div>
+      </button>
+
+      <button data-filter="all" class="summary-card text-left rounded-2xl bg-white border border-slate-200 p-4 hover:border-teal-300 shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-500">TẤT CẢ</span>
+          <i class="bi bi-list-check text-teal-600"></i>
+        </div>
+        <div id="countAll" class="text-2xl font-extrabold text-slate-800 mt-2">0</div>
+      </button>
+
+      <button data-filter="done" class="summary-card text-left rounded-2xl bg-white border border-slate-200 p-4 hover:border-emerald-300 shadow-sm col-span-2 lg:col-span-1">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-500">ĐÃ HOÀN THÀNH</span>
+          <i class="bi bi-check-circle-fill text-emerald-600"></i>
+        </div>
+        <div id="countDone" class="text-2xl font-extrabold text-emerald-600 mt-2">0</div>
+      </button>
+    </section>
+
+    <!-- TOOLBAR -->
+    <section class="bg-white border border-slate-200 rounded-2xl shadow-sm mb-4 p-3">
+      <div class="flex flex-col xl:flex-row xl:items-center gap-3">
+        <div class="relative flex-1">
+          <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input id="searchInput" type="search"
+                 placeholder="Tìm nội dung công việc, văn bản/căn cứ..."
+                 class="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200
+                        focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-400 text-sm">
+        </div>
+
+        <select id="statusFilter"
+                class="px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600">
+          <option value="">Tất cả trạng thái</option>
+          <option value="CHUA_LAM">Chưa làm / Chưa soạn / Chưa ban hành</option>
+          <option value="DANG_LAM">Đang làm / Thực hiện / Hoàn thiện</option>
+          <option value="CHO">Chờ</option>
+          <option value="DA_XONG">Đã hoàn thành</option>
+        </select>
+
+        <select id="scopeFilter"
+                class="px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600">
+          <option value="all">Việc của tôi + phối hợp</option>
+          <option value="mine">Việc chính của tôi</option>
+          <option value="coord">Việc phối hợp</option>
+        </select>
+
+        <button id="btnReset"
+                class="px-3 py-2.5 rounded-xl border border-slate-200 bg-white
+                       text-sm font-semibold text-slate-600 hover:bg-slate-50">
+          <i class="bi bi-arrow-counterclockwise mr-1"></i> Đặt lại
+        </button>
+      </div>
+    </section>
+
+    <!-- TABLE -->
+    <section class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+      <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between gap-3">
+        <div>
+          <h2 id="listTitle" class="text-sm font-extrabold text-[#123B67]">TẤT CẢ NHẮC VIỆC</h2>
+          <p id="listMeta" class="text-[11px] text-slate-400 mt-0.5">0 công việc</p>
+        </div>
+        <div class="text-[11px] text-slate-400 hidden sm:block">
+          Bấm vào một dòng để xem/sửa chi tiết
+        </div>
+      </div>
+
+      <div class="overflow-x-auto thin-scroll">
+        <table class="w-full min-w-[980px]">
+          <thead class="bg-slate-50 border-b border-slate-200">
+            <tr class="text-[11px] uppercase tracking-wide text-slate-500">
+              <th class="w-14 px-3 py-3 text-center">STT</th>
+              <th class="px-3 py-3 text-left">Nội dung công việc</th>
+              <th class="w-[210px] px-3 py-3 text-left">Văn bản/Căn cứ</th>
+              <th class="w-[170px] px-3 py-3 text-left">Thời hạn</th>
+              <th class="w-[190px] px-3 py-3 text-left">Trạng thái</th>
+              <th class="w-20 px-3 py-3 text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="taskBody" class="divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
+
+      <div id="emptyState" class="hidden py-14 text-center">
+        <div class="w-14 h-14 rounded-2xl bg-slate-100 mx-auto flex items-center justify-center text-slate-400">
+          <i class="bi bi-inbox text-2xl"></i>
+        </div>
+        <div class="mt-3 text-sm font-bold text-slate-600">Không có công việc phù hợp</div>
+        <div class="mt-1 text-xs text-slate-400">Thử thay đổi bộ lọc hoặc thêm nhắc việc mới.</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL ADD/EDIT -->
+  <div id="taskModal" class="hidden fixed inset-0 z-[1000] modal-backdrop p-3 sm:p-5 overflow-y-auto">
+    <div class="min-h-full flex items-center justify-center">
+      <div class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+        <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+          <div>
+            <h3 id="modalTitle" class="text-base font-extrabold text-[#0F4C81]">THÊM NHẮC VIỆC</h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Sổ riêng của tài khoản đang đăng nhập</p>
+          </div>
+          <button id="btnCloseModal" class="w-9 h-9 rounded-lg hover:bg-slate-100 text-slate-500">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <form id="taskForm" class="p-5 space-y-4">
+          <input type="hidden" id="taskId">
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Nội dung công việc <span class="text-red-500">*</span></label>
+            <textarea id="taskContent" rows="3" required
+                      class="w-full px-3 py-2.5 rounded-xl border border-slate-200
+                             focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-400 text-sm"
+                      placeholder="Ví dụ: Ban hành QĐ phân công chuyên môn năm học 2026–2027"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Văn bản/Căn cứ</label>
+            <div class="flex gap-2">
+              <input id="taskReference" type="text"
+                     class="flex-1 px-3 py-2.5 rounded-xl border border-slate-200
+                            focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-400 text-sm"
+                     placeholder="CV 4158, KH 3654, Nội bộ, Dự án HVA...">
+              <button type="button" id="btnDocLookup"
+                      class="px-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600"
+                      title="Sau này nối Kho văn bản HVA">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1.5">Thời hạn</label>
+              <input id="taskDeadline" type="datetime-local"
+                     class="w-full px-3 py-2.5 rounded-xl border border-slate-200
+                            focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-400 text-sm">
+              <input id="taskDeadlineText" type="text"
+                     class="w-full mt-2 px-3 py-2.5 rounded-xl border border-slate-200
+                            focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-400 text-sm"
+                     placeholder="Hoặc ghi: Trong tháng 9, HKI/2026–2027...">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1.5">Trạng thái</label>
+              <select id="taskStatus"
+                      class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white
+                             focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-400 text-sm">
+                <option value="CHUA_LAM">🔴 Chưa làm</option>
+                <option value="DANG_LAM">🟡 Đang làm</option>
+                <option value="CHO">⏳ Chờ</option>
+                <option value="DA_XONG">🟢 Hoàn thành</option>
+              </select>
+
+              <input id="taskStatusText" type="text"
+                     class="w-full mt-2 px-3 py-2.5 rounded-xl border border-slate-200
+                            focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-400 text-sm"
+                     placeholder="Diễn giải: Chưa ban hành, Hoàn thiện, Gửi nhắc...">
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-violet-100 bg-violet-50/50 p-3">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input id="taskCoordinate" type="checkbox" class="w-4 h-4 accent-violet-600">
+              <span class="text-sm font-bold text-violet-800">Có phối hợp với thành viên BGH khác</span>
+            </label>
+
+            <div id="coordBox" class="hidden mt-3">
+              <label class="block text-xs font-bold text-slate-600 mb-1.5">Người phối hợp</label>
+              <select id="taskCoordinator"
+                      class="w-full px-3 py-2.5 rounded-xl border border-violet-200 bg-white text-sm">
+                <option value="">— Chọn thành viên BGH —</option>
+                <option value="HT_THANH">HT Hồ Thị Thu Thanh</option>
+                <option value="PHT_NGOC">PHT Trần Thị Ngọc</option>
+                <option value="PHT_THA">PHT Nguyễn Văn Thà</option>
+              </select>
+              <p class="text-[10px] text-violet-600 mt-1.5">
+                Việc vẫn thuộc sổ của người tạo; người phối hợp chỉ nhìn thấy trong mục “Việc phối hợp”.
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Ghi chú</label>
+            <textarea id="taskNote" rows="2"
+                      class="w-full px-3 py-2.5 rounded-xl border border-slate-200
+                             focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-400 text-sm"
+                      placeholder="Thông tin cần lưu ý..."></textarea>
+          </div>
+
+          <div class="pt-2 flex items-center justify-between gap-3">
+            <button type="button" id="btnDelete"
+                    class="hidden px-4 py-2.5 rounded-xl border border-red-200
+                           text-red-600 hover:bg-red-50 text-sm font-bold">
+              <i class="bi bi-trash3 mr-1"></i> XÓA
+            </button>
+
+            <div class="ml-auto flex gap-2">
+              <button type="button" id="btnCancel"
+                      class="px-4 py-2.5 rounded-xl border border-slate-200
+                             text-slate-600 hover:bg-slate-50 text-sm font-bold">
+                HỦY
+              </button>
+              <button type="submit" id="btnSave"
+                      class="px-5 py-2.5 rounded-xl bg-[#0F6B67] hover:bg-[#0B5A57]
+                             text-white text-sm font-bold shadow-sm">
+                <i class="bi bi-check2-circle mr-1"></i> LƯU NHẮC VIỆC
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  "use strict";
+
+  /*
+   * NHẮC VIỆC BGH - FRONTEND V1
+   * -------------------------------------------------------
+   * Bản này hoàn chỉnh phần giao diện + nghiệp vụ phía trình duyệt.
+   * Chưa giả lập backend. Khi backend được tạo, chỉ cần thay STORE adapter
+   * bên dưới bằng API Apps Script; UI và logic lọc có thể giữ nguyên.
+   */
+
+  const BGH = {
+    HT_THANH: { name: "Hồ Thị Thu Thanh", role: "Hiệu trưởng" },
+    PHT_NGOC: { name: "Trần Thị Ngọc", role: "Phó Hiệu trưởng" },
+    PHT_THA:  { name: "Nguyễn Văn Thà", role: "Phó Hiệu trưởng" }
+  };
+
+  const $ = id => document.getElementById(id);
+
+  function normalize(s) {
+    return String(s || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d").replace(/Đ/g, "D")
+      .toLowerCase().trim();
+  }
+
+  function getSessionUser() {
+    const keys = ["user", "currentUser", "TTDHS_USER", "loggedInUser"];
+    for (const key of keys) {
+      try {
+        const raw = sessionStorage.getItem(key) || localStorage.getItem(key);
+        if (!raw) continue;
+        const obj = JSON.parse(raw);
+        if (obj && typeof obj === "object") return obj;
+      } catch (_) {}
+    }
+    return {};
+  }
+
+  function resolveBGHUser() {
+    const u = getSessionUser();
+    const name = u.fullName || u.hoTen || u.name || u.hoten || "";
+    const username = u.username || u.userName || u.email || "";
+    const hay = normalize(name + " " + username);
+
+    if (hay.includes("ho thi thu thanh") || hay.includes("thuthanh")) return { key:"HT_THANH", ...BGH.HT_THANH, raw:u };
+    if (hay.includes("tran thi ngoc") || hay.includes("thingoc")) return { key:"PHT_NGOC", ...BGH.PHT_NGOC, raw:u };
+    if (hay.includes("nguyen van tha") || hay.includes("nvtha")) return { key:"PHT_THA", ...BGH.PHT_THA, raw:u };
+
+    // Không tự gán nhầm sổ cho người khác.
+    return { key:"UNKNOWN", name: name || username || "Tài khoản hiện tại", role:"Chưa xác định thành viên BGH", raw:u };
+  }
+
+  const CURRENT = resolveBGHUser();
+
+  /*
+   * STORE tạm thời chỉ lưu trên trình duyệt để trang có thể test đầy đủ UI.
+   * Đây KHÔNG phải dữ liệu dùng chung/chính thức.
+   * Backend Apps Script sẽ thay adapter này ở bước tiếp theo.
+   */
+  const STORE_KEY = "HVA_NHACVIEC_BGH_V1";
+
+  const STORE = {
+    load() {
+      try {
+        return JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
+      } catch (_) {
+        return [];
+      }
+    },
+    save(rows) {
+      localStorage.setItem(STORE_KEY, JSON.stringify(rows));
+    }
+  };
+
+  let tasks = STORE.load();
+  let activeFilter = "all";
+
+  function now() { return new Date(); }
+
+  function parseDeadline(t) {
+    if (!t.deadline) return null;
+    const d = new Date(t.deadline);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+
+  function isDone(t) { return t.status === "DA_XONG"; }
+
+  function isOverdue(t) {
+    const d = parseDeadline(t);
+    return !!d && !isDone(t) && d.getTime() < now().getTime();
+  }
+
+  function isToday(t) {
+    const d = parseDeadline(t);
+    if (!d || isDone(t)) return false;
+    const n = now();
+    return d.getFullYear() === n.getFullYear() &&
+           d.getMonth() === n.getMonth() &&
+           d.getDate() === n.getDate();
+  }
+
+  function isSoon(t) {
+    const d = parseDeadline(t);
+    if (!d || isDone(t) || isOverdue(t) || isToday(t)) return false;
+    const diff = d.getTime() - now().getTime();
+    return diff > 0 && diff <= 3 * 24 * 60 * 60 * 1000;
+  }
+
+  function mineOrCoord(t) {
+    if (CURRENT.key === "UNKNOWN") return false;
+    return t.ownerKey === CURRENT.key || t.coordinatorKey === CURRENT.key;
+  }
+
+  function visibleBase() {
+    return tasks.filter(mineOrCoord);
+  }
+
+  function statusLabel(t) {
+    const custom = (t.statusText || "").trim();
+    if (t.status === "DA_XONG") return { cls:"bg-emerald-50 text-emerald-700 border-emerald-200", icon:"🟢", text: custom || "Hoàn thành" };
+    if (t.status === "DANG_LAM") return { cls:"bg-amber-50 text-amber-700 border-amber-200", icon:"🟡", text: custom || "Đang làm" };
+    if (t.status === "CHO") return { cls:"bg-slate-50 text-slate-600 border-slate-200", icon:"⏳", text: custom || "Chờ" };
+    return { cls:"bg-red-50 text-red-700 border-red-200", icon:"🔴", text: custom || "Chưa làm" };
+  }
+
+  function formatDeadline(t) {
+    if (t.deadlineText) return t.deadlineText;
+    const d = parseDeadline(t);
+    if (!d) return "—";
+    const pad = n => String(n).padStart(2,"0");
+    return `${pad(d.getHours())}:${pad(d.getMinutes())} ngày ${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+  }
+
+  function escapeHtml(v) {
+    return String(v ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+    })[c]);
+  }
+
+  function titleForFilter(f) {
+    return ({
+      all:"TẤT CẢ NHẮC VIỆC",
+      today:"ĐẾN HẠN HÔM NAY",
+      soon:"SẮP ĐẾN HẠN",
+      overdue:"QUÁ HẠN",
+      done:"ĐÃ HOÀN THÀNH"
+    })[f] || "NHẮC VIỆC BGH";
+  }
+
+  function filteredTasks() {
+    const q = normalize($("searchInput").value);
+    const status = $("statusFilter").value;
+    const scope = $("scopeFilter").value;
+
+    let rows = visibleBase();
+
+    if (activeFilter === "today") rows = rows.filter(isToday);
+    if (activeFilter === "soon") rows = rows.filter(isSoon);
+    if (activeFilter === "overdue") rows = rows.filter(isOverdue);
+    if (activeFilter === "done") rows = rows.filter(isDone);
+
+    if (status) rows = rows.filter(t => t.status === status);
+    if (scope === "mine") rows = rows.filter(t => t.ownerKey === CURRENT.key);
+    if (scope === "coord") rows = rows.filter(t => t.coordinatorKey === CURRENT.key && t.ownerKey !== CURRENT.key);
+
+    if (q) {
+      rows = rows.filter(t =>
+        normalize(t.content).includes(q) ||
+        normalize(t.reference).includes(q) ||
+        normalize(t.statusText).includes(q)
+      );
+    }
+
+    rows.sort((a,b) => {
+      if (isOverdue(a) !== isOverdue(b)) return isOverdue(a) ? -1 : 1;
+      if (isDone(a) !== isDone(b)) return isDone(a) ? 1 : -1;
+      const da = parseDeadline(a)?.getTime() ?? Number.MAX_SAFE_INTEGER;
+      const db = parseDeadline(b)?.getTime() ?? Number.MAX_SAFE_INTEGER;
+      return da - db;
+    });
+
+    return rows;
+  }
+
+  function renderSummary() {
+    const rows = visibleBase();
+    $("countToday").textContent = rows.filter(isToday).length;
+    $("countSoon").textContent = rows.filter(isSoon).length;
+    $("countOverdue").textContent = rows.filter(isOverdue).length;
+    $("countAll").textContent = rows.length;
+    $("countDone").textContent = rows.filter(isDone).length;
+  }
+
+  function render() {
+    renderSummary();
+    const rows = filteredTasks();
+    $("listTitle").textContent = titleForFilter(activeFilter);
+    $("listMeta").textContent = `${rows.length} công việc`;
+
+    const tbody = $("taskBody");
+    tbody.innerHTML = "";
+
+    rows.forEach((t, idx) => {
+      const st = statusLabel(t);
+      const coord = t.ownerKey !== CURRENT.key;
+      const overdue = isOverdue(t);
+
+      const tr = document.createElement("tr");
+      tr.className = "hover:bg-slate-50 cursor-pointer transition";
+      tr.innerHTML = `
+        <td class="px-3 py-3 text-center text-xs font-bold text-slate-400">${idx + 1}</td>
+        <td class="px-3 py-3">
+          <div class="text-[13px] font-bold text-slate-800 leading-5">${escapeHtml(t.content)}</div>
+          <div class="flex items-center gap-2 mt-1.5 flex-wrap">
+            ${coord ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-50 text-violet-700 border border-violet-100">
+              <i class="bi bi-people-fill mr-1"></i>Việc phối hợp • ${escapeHtml(BGH[t.ownerKey]?.name || "")}
+            </span>` : ""}
+            ${t.note ? `<span class="text-[10px] text-slate-400"><i class="bi bi-sticky mr-1"></i>${escapeHtml(t.note)}</span>` : ""}
+          </div>
+        </td>
+        <td class="px-3 py-3 text-xs text-slate-600">${escapeHtml(t.reference || "—")}</td>
+        <td class="px-3 py-3">
+          <div class="text-xs font-bold ${overdue ? "text-red-600" : "text-slate-700"}">${escapeHtml(formatDeadline(t))}</div>
+          ${overdue ? `<div class="text-[10px] font-bold text-red-500 mt-1">QUÁ HẠN</div>` : ""}
+        </td>
+        <td class="px-3 py-3">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[11px] font-bold ${st.cls}">
+            <span>${st.icon}</span>${escapeHtml(st.text)}
+          </span>
+        </td>
+        <td class="px-3 py-3 text-center">
+          <button class="edit-btn w-8 h-8 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500" title="Xem/Sửa">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+        </td>
+      `;
+      tr.addEventListener("click", () => openEdit(t.id));
+      tr.querySelector(".edit-btn").addEventListener("click", e => {
+        e.stopPropagation();
+        openEdit(t.id);
+      });
+      tbody.appendChild(tr);
+    });
+
+    $("emptyState").classList.toggle("hidden", rows.length !== 0);
+
+    document.querySelectorAll(".summary-card").forEach(btn => {
+      const active = btn.dataset.filter === activeFilter;
+      btn.classList.toggle("ring-2", active);
+      btn.classList.toggle("ring-teal-200", active);
+      btn.classList.toggle("border-teal-400", active);
+    });
+  }
+
+  function openModal() {
+    $("taskModal").classList.remove("hidden");
+    document.body.classList.add("overflow-hidden");
+  }
+
+  function closeModal() {
+    $("taskModal").classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+    $("taskForm").reset();
+    $("taskId").value = "";
+    $("coordBox").classList.add("hidden");
+    $("btnDelete").classList.add("hidden");
+  }
+
+  function openNew() {
+    if (CURRENT.key === "UNKNOWN") {
+      alert("HVA chưa xác định tài khoản hiện tại là HT Thanh, PHT Ngọc hoặc PHT Thà. Chưa thể tạo nhắc việc để tránh ghi nhầm sổ.");
+      return;
+    }
+    $("modalTitle").textContent = "THÊM NHẮC VIỆC";
+    $("taskForm").reset();
+    $("taskId").value = "";
+    $("taskStatus").value = "CHUA_LAM";
+    $("coordBox").classList.add("hidden");
+    $("btnDelete").classList.add("hidden");
+    openModal();
+  }
+
+  function openEdit(id) {
+    const t = tasks.find(x => x.id === id);
+    if (!t) return;
+
+    $("modalTitle").textContent = t.ownerKey === CURRENT.key ? "CẬP NHẬT NHẮC VIỆC" : "CHI TIẾT VIỆC PHỐI HỢP";
+    $("taskId").value = t.id;
+    $("taskContent").value = t.content || "";
+    $("taskReference").value = t.reference || "";
+    $("taskDeadline").value = t.deadline || "";
+    $("taskDeadlineText").value = t.deadlineText || "";
+    $("taskStatus").value = t.status || "CHUA_LAM";
+    $("taskStatusText").value = t.statusText || "";
+    $("taskNote").value = t.note || "";
+    $("taskCoordinate").checked = !!t.coordinatorKey;
+    $("taskCoordinator").value = t.coordinatorKey || "";
+    $("coordBox").classList.toggle("hidden", !t.coordinatorKey);
+    $("btnDelete").classList.toggle("hidden", t.ownerKey !== CURRENT.key);
+
+    // Việc phối hợp: xem được nhưng không sửa sổ của người khác.
+    const readonly = t.ownerKey !== CURRENT.key;
+    [...$("taskForm").querySelectorAll("input, textarea, select")].forEach(el => {
+      if (el.id !== "taskId") el.disabled = readonly;
+    });
+    $("btnSave").classList.toggle("hidden", readonly);
+    openModal();
+  }
+
+  function restoreFormEnabled() {
+    [...$("taskForm").querySelectorAll("input, textarea, select")].forEach(el => el.disabled = false);
+    $("btnSave").classList.remove("hidden");
+  }
+
+  function saveTask(e) {
+    e.preventDefault();
+    if (CURRENT.key === "UNKNOWN") return;
+
+    const id = $("taskId").value;
+    const old = tasks.find(x => x.id === id);
+    if (old && old.ownerKey !== CURRENT.key) return;
+
+    const content = $("taskContent").value.trim();
+    if (!content) return alert("Vui lòng nhập nội dung công việc.");
+
+    const coordinatorKey = $("taskCoordinate").checked ? $("taskCoordinator").value : "";
+    if (coordinatorKey === CURRENT.key) {
+      return alert("Người phối hợp phải là thành viên BGH khác.");
+    }
+
+    const row = {
+      id: id || ("NVBGH-" + Date.now()),
+      ownerKey: CURRENT.key,
+      ownerName: CURRENT.name,
+      content,
+      reference: $("taskReference").value.trim(),
+      deadline: $("taskDeadline").value,
+      deadlineText: $("taskDeadlineText").value.trim(),
+      status: $("taskStatus").value,
+      statusText: $("taskStatusText").value.trim(),
+      coordinatorKey,
+      note: $("taskNote").value.trim(),
+      createdAt: old?.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    if (old) tasks = tasks.map(x => x.id === id ? row : x);
+    else tasks.push(row);
+
+    STORE.save(tasks);
+    closeModal();
+    restoreFormEnabled();
+    render();
+  }
+
+  function deleteTask() {
+    const id = $("taskId").value;
+    const t = tasks.find(x => x.id === id);
+    if (!t || t.ownerKey !== CURRENT.key) return;
+    if (!confirm("Xóa nhắc việc này?")) return;
+    tasks = tasks.filter(x => x.id !== id);
+    STORE.save(tasks);
+    closeModal();
+    restoreFormEnabled();
+    render();
+  }
+
+  function initUser() {
+    $("currentUserName").textContent = CURRENT.name;
+    $("currentUserRole").textContent = CURRENT.role;
+
+    if (CURRENT.key === "UNKNOWN") {
+      $("btnAdd").disabled = true;
+      $("btnAdd").classList.add("opacity-50", "cursor-not-allowed");
+    }
+  }
+
+  document.querySelectorAll(".summary-card").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeFilter = btn.dataset.filter;
+      render();
+    });
+  });
+
+  $("searchInput").addEventListener("input", render);
+  $("statusFilter").addEventListener("change", render);
+  $("scopeFilter").addEventListener("change", render);
+
+  $("btnReset").addEventListener("click", () => {
+    activeFilter = "all";
+    $("searchInput").value = "";
+    $("statusFilter").value = "";
+    $("scopeFilter").value = "all";
+    render();
+  });
+
+  $("btnAdd").addEventListener("click", () => {
+    restoreFormEnabled();
+    openNew();
+  });
+
+  $("btnCloseModal").addEventListener("click", () => { closeModal(); restoreFormEnabled(); });
+  $("btnCancel").addEventListener("click", () => { closeModal(); restoreFormEnabled(); });
+  $("taskModal").addEventListener("click", e => {
+    if (e.target === $("taskModal")) { closeModal(); restoreFormEnabled(); }
+  });
+
+  $("taskCoordinate").addEventListener("change", e => {
+    $("coordBox").classList.toggle("hidden", !e.target.checked);
+    if (!e.target.checked) $("taskCoordinator").value = "";
+  });
+
+  $("btnDocLookup").addEventListener("click", () => {
+    alert("Nút này đã chừa sẵn để nối Kho Văn bản HVA ở bước backend/tích hợp tiếp theo.");
+  });
+
+  $("taskForm").addEventListener("submit", saveTask);
+  $("btnDelete").addEventListener("click", deleteTask);
+
+  initUser();
+  render();
+})();
+</script>
+
+</body>
+</html>
