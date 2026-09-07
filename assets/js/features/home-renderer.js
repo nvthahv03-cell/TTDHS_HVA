@@ -1513,8 +1513,6 @@ export function renderHome() {
 
 
 <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
-
-<!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
    
         <div class="relative">
             <div data-dropdown-toggle="nghiepvuso-dropdown"
@@ -1535,7 +1533,7 @@ export function renderHome() {
                 </div>
 
                 <p class="text-[10px] text-blue-50 font-medium">
-                    Chuyên môn • Hoạt động • Hội thảo
+                    Thực hiện • Báo cáo • Minh chứng
                 </p>
             </div>
 
@@ -1578,7 +1576,7 @@ export function renderHome() {
                         </div>
 
                         <div class="text-[9px] text-slate-400 font-medium">
-                            TTĐHS_HVA • Không gian nghiệp vụ nhà trường
+                            TTĐHS_HVA • Không gian nghiệp vụ giáo viên
                         </div>
                     </div>
 
@@ -1591,332 +1589,8 @@ export function renderHome() {
 
 
                 <!-- =================================================
-                     1. HỘI NGHỊ - HỌP
+                     1. HỘI NGHỊ - HỘI THẢO
                 ================================================== -->
-                <div id="hoinghi-menu-group"
-                     class="rounded-xl border border-transparent">
-
-                    <button type="button"
-                        id="hoinghi-menu-button"
-                        onclick="
-                            event.stopPropagation();
-
-                            const items = document.getElementById('hoinghi-sub-items');
-                            const arrow = document.getElementById('hoinghi-sub-arrow');
-                            const menu = document.getElementById('nghiepvuso-dropdown');
-                            const button = document.getElementById('hoinghi-menu-button');
-
-                            const willOpen = items.classList.contains('hidden');
-
-                            items.classList.toggle('hidden');
-                            arrow.classList.toggle('rotate-90', willOpen);
-
-                            if (willOpen) {
-                                const bdcm = document.getElementById('bdcm-sub-items');
-                                const bdcmArrow = document.getElementById('bdcm-sub-arrow');
-
-                                if (bdcm) bdcm.classList.add('hidden');
-                                if (bdcmArrow) bdcmArrow.classList.remove('rotate-90');
-
-                                requestAnimationFrame(() => {
-                                    const menuRect = menu.getBoundingClientRect();
-                                    const buttonRect = button.getBoundingClientRect();
-
-                                    const desiredTop = menuRect.top + 62;
-                                    const delta = buttonRect.top - desiredTop;
-
-                                    menu.scrollTo({
-                                        top: Math.max(0, menu.scrollTop + delta),
-                                        behavior: 'smooth'
-                                    });
-                                });
-                            }
-                        "
-                        class="w-full flex items-center justify-between
-                               px-3 py-3 rounded-xl
-                               text-[14px] font-bold
-                               text-[#123B67] dark:text-slate-100
-                               hover:bg-blue-50 dark:hover:bg-slate-800
-                               transition-colors">
-
-                        <div class="flex items-center gap-3">
-
-                            <div class="w-10 h-10 rounded-xl
-                                        bg-blue-50 dark:bg-blue-950/50
-                                        border border-blue-100 dark:border-blue-900
-                                        flex items-center justify-center
-                                        text-[#2563EB] shrink-0">
-
-                                <i class="bi bi-people-fill text-lg"></i>
-
-                            </div>
-
-                            <div class="text-left">
-
-                                <div class="leading-tight">
-                                    Hội nghị - Họp
-                                </div>
-
-                                <div class="text-[10px] font-medium
-                                            text-slate-400 mt-1">
-                                    Thông báo • Tham dự • Điểm danh
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <i id="hoinghi-sub-arrow"
-                           class="bi bi-chevron-right
-                                  text-xs text-slate-400
-                                  transition-transform duration-200">
-                        </i>
-
-                    </button>
-
-
-                    <!-- MENU CON HỘI NGHỊ - HỌP -->
-                    <div id="hoinghi-sub-items"
-                         class="hidden ml-5 mr-1 mt-1 mb-2
-                                pl-4 py-1
-                                border-l-2 border-blue-200
-                                dark:border-blue-800
-                                space-y-0.5">
-
-                        <a href="thong-bao-hop.html"
-                           class="flex items-center gap-3
-                                  px-3 py-2.5 rounded-lg
-                                  text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-blue-50 hover:text-[#0F4C81]
-                                  dark:hover:bg-slate-800 transition">
-
-                            <i class="bi bi-megaphone-fill
-                                      w-4 text-center text-blue-500"></i>
-
-                            <span>Thông báo</span>
-                        </a>
-
-
-                        <a href="thanh-phan-hop.html"
-                           class="flex items-center gap-3
-                                  px-3 py-2.5 rounded-lg
-                                  text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-blue-50 hover:text-[#0F4C81]
-                                  dark:hover:bg-slate-800 transition">
-
-                            <i class="bi bi-person-lines-fill
-                                      w-4 text-center text-indigo-500"></i>
-
-                            <span>Thành phần</span>
-                        </a>
-
-
-                        <a href="tai-lieu-hop.html"
-                           class="flex items-center gap-3
-                                  px-3 py-2.5 rounded-lg
-                                  text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-blue-50 hover:text-[#0F4C81]
-                                  dark:hover:bg-slate-800 transition">
-
-                            <i class="bi bi-file-earmark-text-fill
-                                      w-4 text-center text-sky-500"></i>
-
-                            <span>Tài liệu</span>
-                        </a>
-
-
-                        <a href="xac-nhan-tham-du.html"
-                           class="flex items-center gap-3
-                                  px-3 py-2.5 rounded-lg
-                                  text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-blue-50 hover:text-[#0F4C81]
-                                  dark:hover:bg-slate-800 transition">
-
-                            <i class="bi bi-check2-square
-                                      w-4 text-center text-emerald-500"></i>
-
-                            <span>Xác nhận tham dự</span>
-                        </a>
-
-
-                        <a href="diem-danh-hop.html"
-                           class="flex items-center gap-3
-                                  px-3 py-2.5 rounded-lg
-                                  text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-blue-50 hover:text-[#0F4C81]
-                                  dark:hover:bg-slate-800 transition">
-
-                            <i class="bi bi-qr-code-scan
-                                      w-4 text-center text-violet-500"></i>
-
-                            <span>Điểm danh</span>
-                        </a>
-
-
-                        <a href="bien-ban-ket-luan.html"
-                           class="flex items-center gap-3
-                                  px-3 py-2.5 rounded-lg
-                                  text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-blue-50 hover:text-[#0F4C81]
-                                  dark:hover:bg-slate-800 transition">
-
-                            <i class="bi bi-journal-text
-                                      w-4 text-center text-amber-500"></i>
-
-                            <span>Biên bản - Kết luận</span>
-                        </a>
-
-
-                        <a href="nhiem-vu-sau-hop.html"
-                           class="flex items-center gap-3
-                                  px-3 py-2.5 rounded-lg
-                                  text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-blue-50 hover:text-[#0F4C81]
-                                  dark:hover:bg-slate-800 transition">
-
-                            <i class="bi bi-list-check
-                                      w-4 text-center text-cyan-600"></i>
-
-                            <span>Nhiệm vụ sau họp</span>
-                        </a>
-
-
-                        <a href="xuat-du-lieu-hop.html"
-                           class="flex items-center gap-3
-                                  px-3 py-2.5 rounded-lg
-                                  text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-blue-50 hover:text-[#0F4C81]
-                                  dark:hover:bg-slate-800 transition">
-
-                            <i class="bi bi-file-earmark-spreadsheet-fill
-                                      w-4 text-center text-emerald-600"></i>
-
-                            <span>Xuất dữ liệu</span>
-                        </a>
-
-                    </div>
-                </div>
-
-
-                <!-- =================================================
-                     2. BỒI DƯỠNG CHUYÊN MÔN
-                ================================================== -->
-                <div class="relative
-                            border-t border-slate-100
-                            dark:border-slate-800 pt-1">
-
-                    <button type="button"
-                        id="bdcm-menu-button"
-                        onclick="
-                            event.stopPropagation();
-
-                            const items = document.getElementById('bdcm-sub-items');
-                            const arrow = document.getElementById('bdcm-sub-arrow');
-                            const menu = document.getElementById('nghiepvuso-dropdown');
-                            const button = document.getElementById('bdcm-menu-button');
-
-                            const willOpen = items.classList.contains('hidden');
-
-                            items.classList.toggle('hidden');
-                            arrow.classList.toggle('rotate-90', willOpen);
-
-                            if (willOpen) {
-                                const hn = document.getElementById('hoinghi-sub-items');
-                                const hnArrow = document.getElementById('hoinghi-sub-arrow');
-
-                                if (hn) hn.classList.add('hidden');
-                                if (hnArrow) hnArrow.classList.remove('rotate-90');
-
-                                requestAnimationFrame(() => {
-                                    const menuRect = menu.getBoundingClientRect();
-                                    const buttonRect = button.getBoundingClientRect();
-
-                                    const desiredTop = menuRect.top + 62;
-                                    const delta = buttonRect.top - desiredTop;
-
-                                    menu.scrollTo({
-                                        top: Math.max(0, menu.scrollTop + delta),
-                                        behavior: 'smooth'
-                                    });
-                                });
-                            }
-                        "
-                        class="w-full flex items-center justify-between
-                               px-3 py-3 rounded-xl
-                               text-[14px] font-bold
-                               text-[#123B67] dark:text-slate-100
-                               hover:bg-blue-50 dark:hover:bg-slate-800
-                               transition-colors group">
-
-                        <div class="flex items-center gap-3">
-
-                            <div class="w-10 h-10 rounded-xl
-                                        bg-violet-50 dark:bg-violet-950/40
-                                        border border-violet-100 dark:border-violet-900
-                                        flex items-center justify-center
-                                        text-violet-600 shrink-0
-                                        group-hover:scale-105 transition-transform">
-
-                                <i class="bi bi-mortarboard-fill text-lg"></i>
-
-                            </div>
-
-                            <div class="text-left">
-
-                                <div class="leading-tight">
-                                    Bồi dưỡng chuyên môn
-                                </div>
-
-                                <div class="text-[10px] font-medium
-                                            text-slate-400 mt-1">
-                                    Tập huấn • Hội thảo • BDTX
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <i id="bdcm-sub-arrow"
-                           class="bi bi-chevron-right
-                                  text-xs text-slate-400
-                                  transition-transform duration-200">
-                        </i>
-
-                    </button>
-
-
-                    <div id="bdcm-sub-items"
-                         class="hidden ml-5 mr-1 mt-1 mb-2
-                                pl-4 py-1
-                                border-l-2 border-violet-200
-                                dark:border-violet-800
-                                space-y-0.5">
-
-                        <a href="baocao-tap-huan.html"
-                           class="block px-3 py-2.5 rounded-lg
-                                  text-[13px] font-medium text-slate-700
-                                  dark:text-slate-300
-                                  hover:bg-violet-50 hover:text-violet-700
-                                  dark:hover:bg-slate-800 transition">
-                            Tập huấn
-                        </a>
-
-                        <a href="HoiThao.html"
-                           class="block px-3 py-2.5 rounded-lg
-                                  text-[13px] font-medium text-slate-700
-                                  dark:text-slate-300
-                                  hover:bg-violet-50 hover:text-violet-700
-                                  dark:hover:bg-slate-800 transition">
-                            Hội thảo
-                        </a>
 
                         <a href="baocao-shcm.html"
                            class="block px-3 py-2.5 rounded-lg
@@ -1970,7 +1644,10 @@ export function renderHome() {
 
                     </div>
 
-                    <span>Báo cáo chuyên môn</span>
+                    <div class="text-left">
+                        <div class="leading-tight">Báo cáo chuyên môn</div>
+                        <div class="text-[10px] font-medium text-slate-400 mt-1">Công tác tháng • Định kỳ • Đột xuất</div>
+                    </div>
                 </a>
 
 
@@ -1995,12 +1672,15 @@ export function renderHome() {
 
                     </div>
 
-                    <span>Hoạt động giáo dục</span>
+                    <div class="text-left">
+                        <div class="leading-tight">Hoạt động giáo dục</div>
+                        <div class="text-[10px] font-medium text-slate-400 mt-1">Hoạt động • Kết quả • Minh chứng</div>
+                    </div>
                 </a>
 
 
                 <!-- =================================================
-                     5. CÁC CUỘC THI
+                     5. THI - CUỘC THI
                 ================================================== -->
                 <a href="cac-cuoc-thi.html"
                    class="flex items-center gap-3
@@ -2020,7 +1700,10 @@ export function renderHome() {
 
                     </div>
 
-                    <span>Các cuộc thi</span>
+                    <div class="text-left">
+                        <div class="leading-tight">Thi - Cuộc thi</div>
+                        <div class="text-[10px] font-medium text-slate-400 mt-1">HSG • KHKT • Đăng ký • Kết quả</div>
+                    </div>
                 </a>
 
 
@@ -2045,7 +1728,10 @@ export function renderHome() {
 
                     </div>
 
-                    <span>Chuyển đổi số</span>
+                    <div class="text-left">
+                        <div class="leading-tight">Chuyển đổi số</div>
+                        <div class="text-[10px] font-medium text-slate-400 mt-1">Nhiệm vụ CĐS • Sản phẩm số • Minh chứng</div>
+                    </div>
                 </a>
 
 
@@ -2070,7 +1756,10 @@ export function renderHome() {
 
                     </div>
 
-                    <span>Hành chính</span>
+                    <div class="text-left">
+                        <div class="leading-tight">Hành chính</div>
+                        <div class="text-[10px] font-medium text-slate-400 mt-1">Biểu mẫu • Kê khai • Báo cáo hành chính</div>
+                    </div>
                 </a>
 
             </div>
