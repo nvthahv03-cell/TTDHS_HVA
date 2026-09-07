@@ -1513,271 +1513,324 @@ export function renderHome() {
 
 
 <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
-   
-        <div class="relative">
-            <div data-dropdown-toggle="nghiepvuso-dropdown"
-                class="group relative rounded-2xl bg-gradient-to-br from-indigo-700 via-blue-700 to-sky-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-visible border border-blue-400/40 active:scale-[0.98]">
+<div class="relative">
 
-                <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+    <!-- CARD NGHIỆP VỤ SỐ -->
+    <div data-dropdown-toggle="nghiepvuso-dropdown"
+         class="group relative rounded-2xl
+                bg-gradient-to-br from-indigo-700 via-blue-700 to-sky-600
+                text-white p-3.5 shadow-md hover:shadow-xl
+                transition-all duration-300 cursor-pointer overflow-visible
+                border border-blue-400/40 active:scale-[0.98]">
 
-                <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
-                    <i class="bi bi-journal-check text-white text-lg"></i>
+        <div class="absolute top-0 right-0 w-20 h-20
+                    bg-white/20 rounded-full blur-xl
+                    group-hover:scale-150 transition-all duration-500
+                    pointer-events-none"></div>
+
+        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md
+                    flex items-center justify-center shadow-inner mb-3
+                    group-hover:scale-110 transition-transform duration-300
+                    border border-white/30">
+            <i class="bi bi-journal-check text-white text-lg"></i>
+        </div>
+
+        <div class="flex items-center justify-between">
+            <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">
+                NGHIỆP VỤ SỐ
+            </h3>
+            <i class="bi bi-chevron-up text-xs text-blue-100
+                      transition-transform duration-300"
+               data-dropdown-arrow></i>
+        </div>
+
+        <p class="text-[10px] text-blue-50 font-medium">
+            Thực hiện • Báo cáo • Minh chứng
+        </p>
+    </div>
+
+    <!-- DROPDOWN NGHIỆP VỤ SỐ -->
+    <div id="nghiepvuso-dropdown"
+         data-dropdown-menu
+         class="hidden fixed sm:absolute
+                left-1/2 -translate-x-1/2
+                sm:translate-x-0 sm:left-auto sm:right-0
+                bottom-4 sm:bottom-[calc(100%+0.6rem)]
+                z-[999]
+                w-[92vw] sm:w-[350px]
+                max-h-[72vh]
+                overflow-y-auto overscroll-contain
+                bg-white dark:bg-slate-900
+                rounded-2xl shadow-2xl
+                border border-slate-200 dark:border-slate-800">
+
+        <!-- HEADER -->
+        <div class="sticky top-0 z-20
+                    bg-white/95 dark:bg-slate-900/95
+                    backdrop-blur-md
+                    border-b border-slate-200 dark:border-slate-800
+                    px-4 py-3">
+
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg
+                            bg-gradient-to-br from-[#2563EB] to-[#7C3AED]
+                            text-white flex items-center justify-center shadow-sm">
+                    <i class="bi bi-mortarboard-fill text-sm"></i>
                 </div>
 
-                <div class="flex items-center justify-between">
-                    <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">
+                <div>
+                    <div class="text-[13px] font-extrabold tracking-wide
+                                text-[#0F4C81] dark:text-blue-300">
                         NGHIỆP VỤ SỐ
-                    </h3>
-                    <i class="bi bi-chevron-up text-xs text-blue-100 transition-transform duration-300"
-                        data-dropdown-arrow></i>
-                </div>
-
-                <p class="text-[10px] text-blue-50 font-medium">
-                    Thực hiện • Báo cáo • Minh chứng
-                </p>
-            </div>
-
-            <!-- Dropup Menu Nghiệp vụ số theo chuẩn sơ đồ cây -->
-
-        <div id="nghiepvuso-dropdown"
-             data-dropdown-menu
-             class="hidden fixed sm:absolute
-                    left-1/2 -translate-x-1/2
-                    sm:translate-x-0 sm:left-auto sm:right-0
-                    bottom-4 sm:bottom-[calc(100%+0.6rem)]
-                    z-[999]
-                    w-[92vw] sm:w-[350px]
-                    max-h-[72vh]
-                    overflow-y-auto overscroll-contain
-                    bg-white dark:bg-slate-900
-                    rounded-2xl shadow-2xl
-                    border border-slate-200 dark:border-slate-800">
-
-            <!-- HEADER CỐ ĐỊNH -->
-            <div class="sticky top-0 z-20
-                        bg-white/95 dark:bg-slate-900/95
-                        backdrop-blur-md
-                        border-b border-slate-200 dark:border-slate-800
-                        px-4 py-3">
-
-                <div class="flex items-center gap-2.5">
-
-                    <div class="w-8 h-8 rounded-lg
-                                bg-gradient-to-br from-[#2563EB] to-[#7C3AED]
-                                text-white flex items-center justify-center shadow-sm">
-                        <i class="bi bi-mortarboard-fill text-sm"></i>
                     </div>
-
-                    <div>
-                        <div class="text-[13px] font-extrabold
-                                    tracking-wide text-[#0F4C81]
-                                    dark:text-blue-300">
-                            NGHIỆP VỤ SỐ
-                        </div>
-
-                        <div class="text-[9px] text-slate-400 font-medium">
-                            TTĐHS_HVA • Không gian nghiệp vụ giáo viên
-                        </div>
+                    <div class="text-[9px] text-slate-400 font-medium">
+                        TTĐHS_HVA • Không gian nghiệp vụ giáo viên
                     </div>
-
                 </div>
             </div>
+        </div>
 
+        <!-- NỘI DUNG -->
+        <div class="p-3 space-y-1.5">
 
-            <!-- NỘI DUNG MENU -->
-            <div class="p-3 space-y-1.5">
+            <!-- 1. HỘI NGHỊ - HỘI THẢO -->
+            <a href="HoiThao.html"
+               class="flex items-center justify-between gap-3
+                      px-3 py-3 rounded-xl
+                      text-[#123B67] dark:text-slate-100
+                      hover:bg-blue-50 dark:hover:bg-slate-800 transition">
 
-                <!-- 1. HỘI NGHỊ - HỘI THẢO -->
-                <a href="HoiThao.html"
-                   class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl
-                          text-[#123B67] dark:text-slate-100
-                          hover:bg-blue-50 dark:hover:bg-slate-800 transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50
-                                    border border-blue-100 dark:border-blue-900
-                                    flex items-center justify-center text-[#2563EB] shrink-0">
-                            <i class="bi bi-people-fill text-lg"></i>
-                        </div>
-                        <div class="text-left">
-                            <div class="text-[14px] font-bold leading-tight">Hội nghị - Hội thảo</div>
-                            <div class="text-[10px] font-medium text-slate-400 mt-1">
-                                Báo cáo tham dự • Thu hoạch • Minh chứng
-                            </div>
-                        </div>
-                    </div>
-                    <i class="bi bi-chevron-right text-xs text-slate-400"></i>
-                </a>
-
-                <!-- 2. BỒI DƯỠNG CHUYÊN MÔN -->
-                <div class="relative border-t border-slate-100 dark:border-slate-800 pt-1">
-                    <button type="button"
-                            id="bdcm-menu-button"
-                            onclick="
-                                event.stopPropagation();
-                                const items = document.getElementById('bdcm-sub-items');
-                                const arrow = document.getElementById('bdcm-sub-arrow');
-                                const willOpen = items.classList.contains('hidden');
-                                items.classList.toggle('hidden');
-                                arrow.classList.toggle('rotate-90', willOpen);
-                            "
-                            class="w-full flex items-center justify-between
-                                   px-3 py-3 rounded-xl text-[14px] font-bold
-                                   text-[#123B67] dark:text-slate-100
-                                   hover:bg-violet-50 dark:hover:bg-slate-800
-                                   transition-colors group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl
-                                        bg-violet-50 dark:bg-violet-950/40
-                                        border border-violet-100 dark:border-violet-900
-                                        flex items-center justify-center
-                                        text-violet-600 shrink-0
-                                        group-hover:scale-105 transition-transform">
-                                <i class="bi bi-mortarboard-fill text-lg"></i>
-                            </div>
-                            <div class="text-left">
-                                <div class="leading-tight">Bồi dưỡng chuyên môn</div>
-                                <div class="text-[10px] font-medium text-slate-400 mt-1">
-                                    Tập huấn • SHCM • BDTX
-                                </div>
-                            </div>
-                        </div>
-                        <i id="bdcm-sub-arrow"
-                           class="bi bi-chevron-right text-xs text-slate-400
-                                  transition-transform duration-200"></i>
-                    </button>
-
-                    <div id="bdcm-sub-items"
-                         class="hidden ml-5 mr-1 mt-1 mb-2 pl-4 py-1
-                                border-l-2 border-violet-200 dark:border-violet-800
-                                space-y-0.5">
-                        <a href="baocao-tap-huan.html"
-                           class="block px-3 py-2.5 rounded-lg text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-violet-50 hover:text-violet-700
-                                  dark:hover:bg-slate-800 transition">
-                            Tập huấn
-                        </a>
-
-                        <a href="baocao-shcm.html"
-                           class="block px-3 py-2.5 rounded-lg text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-violet-50 hover:text-violet-700
-                                  dark:hover:bg-slate-800 transition">
-                            Sinh hoạt chuyên môn
-                        </a>
-
-                        <a href="baocao-bdtx.html"
-                           class="block px-3 py-2.5 rounded-lg text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-violet-50 hover:text-violet-700
-                                  dark:hover:bg-slate-800 transition">
-                            Bồi dưỡng thường xuyên
-                        </a>
-
-                        <a href="baocao-khac.html"
-                           class="block px-3 py-2.5 rounded-lg text-[13px] font-medium
-                                  text-slate-700 dark:text-slate-300
-                                  hover:bg-violet-50 hover:text-violet-700
-                                  dark:hover:bg-slate-800 transition">
-                            Khác
-                        </a>
-                    </div>
-                </div>
-
-                <!-- 3. BÁO CÁO CHUYÊN MÔN -->
-                <a href="baocao-chuyenmon.html"
-                   class="flex items-center gap-3 px-3 py-3 rounded-xl
-                          text-[14px] font-bold text-[#123B67] dark:text-slate-100
-                          hover:bg-blue-50 dark:hover:bg-slate-800 transition">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl
+                                bg-blue-50 dark:bg-blue-950/50
                                 border border-blue-100 dark:border-blue-900
-                                flex items-center justify-center text-blue-600 shrink-0">
-                        <i class="bi bi-bar-chart-line-fill text-lg"></i>
-                    </div>
-                    <div class="text-left">
-                        <div class="leading-tight">Báo cáo chuyên môn</div>
-                        <div class="text-[10px] font-medium text-slate-400 mt-1">
-                            Công tác tháng • Định kỳ • Đột xuất
-                        </div>
-                    </div>
-                </a>
-
-                <!-- 4. HOẠT ĐỘNG GIÁO DỤC -->
-                <a href="hoatdong-giaoduc.html"
-                   class="flex items-center gap-3 px-3 py-3 rounded-xl
-                          text-[14px] font-bold text-[#123B67] dark:text-slate-100
-                          hover:bg-blue-50 dark:hover:bg-slate-800 transition">
-                    <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/30
-                                border border-amber-100 dark:border-amber-900
-                                flex items-center justify-center text-amber-500 shrink-0">
-                        <i class="bi bi-activity text-lg"></i>
-                    </div>
-                    <div class="text-left">
-                        <div class="leading-tight">Hoạt động giáo dục</div>
-                        <div class="text-[10px] font-medium text-slate-400 mt-1">
-                            Hoạt động • Kết quả • Minh chứng
-                        </div>
-                    </div>
-                </a>
-
-                <!-- 5. THI - CUỘC THI -->
-                <a href="cac-cuoc-thi.html"
-                   class="flex items-center gap-3 px-3 py-3 rounded-xl
-                          text-[14px] font-bold text-[#123B67] dark:text-slate-100
-                          hover:bg-blue-50 dark:hover:bg-slate-800 transition">
-                    <div class="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-950/30
-                                border border-orange-100 dark:border-orange-900
-                                flex items-center justify-center text-orange-500 shrink-0">
-                        <i class="bi bi-award-fill text-lg"></i>
-                    </div>
-                    <div class="text-left">
-                        <div class="leading-tight">Thi - Cuộc thi</div>
-                        <div class="text-[10px] font-medium text-slate-400 mt-1">
-                            HSG • KHKT • Đăng ký • Kết quả
-                        </div>
-                    </div>
-                </a>
-
-                <!-- 6. CHUYỂN ĐỔI SỐ -->
-                <a href="chuyen-doi-so.html"
-                   class="flex items-center gap-3 px-3 py-3 rounded-xl
-                          text-[14px] font-bold text-[#123B67] dark:text-slate-100
-                          hover:bg-blue-50 dark:hover:bg-slate-800 transition">
-                    <div class="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/30
-                                border border-cyan-100 dark:border-cyan-900
-                                flex items-center justify-center text-cyan-600 shrink-0">
-                        <i class="bi bi-laptop-fill text-lg"></i>
-                    </div>
-                    <div class="text-left">
-                        <div class="leading-tight">Chuyển đổi số</div>
-                        <div class="text-[10px] font-medium text-slate-400 mt-1">
-                            Nhiệm vụ CĐS • Sản phẩm số • Minh chứng
-                        </div>
-                    </div>
-                </a>
-
-                <!-- 7. HÀNH CHÍNH -->
-                <a href="hanh-chinh.html"
-                   class="flex items-center gap-3 px-3 py-3 rounded-xl
-                          text-[14px] font-bold text-[#123B67] dark:text-slate-100
-                          hover:bg-blue-50 dark:hover:bg-slate-800 transition">
-                    <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800
-                                border border-slate-200 dark:border-slate-700
                                 flex items-center justify-center
-                                text-slate-600 dark:text-slate-300 shrink-0">
-                        <i class="bi bi-building-fill text-lg"></i>
+                                text-[#2563EB] shrink-0">
+                        <i class="bi bi-people-fill text-lg"></i>
                     </div>
+
                     <div class="text-left">
-                        <div class="leading-tight">Hành chính</div>
+                        <div class="text-[14px] font-bold leading-tight">
+                            Hội nghị - Hội thảo
+                        </div>
                         <div class="text-[10px] font-medium text-slate-400 mt-1">
-                            Biểu mẫu • Kê khai • Báo cáo hành chính
+                            Báo cáo tham dự • Thu hoạch • Minh chứng
                         </div>
                     </div>
-                </a>
+                </div>
 
+                <i class="bi bi-chevron-right text-xs text-slate-400"></i>
+            </a>
+
+            <!-- 2. BỒI DƯỠNG CHUYÊN MÔN -->
+            <div class="relative border-t border-slate-100 dark:border-slate-800 pt-1">
+
+                <button type="button"
+                        id="bdcm-menu-button"
+                        onclick="
+                            event.stopPropagation();
+                            const items = document.getElementById('bdcm-sub-items');
+                            const arrow = document.getElementById('bdcm-sub-arrow');
+                            if (!items || !arrow) return;
+                            const willOpen = items.classList.contains('hidden');
+                            items.classList.toggle('hidden');
+                            arrow.classList.toggle('rotate-90', willOpen);
+                        "
+                        class="w-full flex items-center justify-between
+                               px-3 py-3 rounded-xl
+                               text-[14px] font-bold
+                               text-[#123B67] dark:text-slate-100
+                               hover:bg-violet-50 dark:hover:bg-slate-800
+                               transition-colors group">
+
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl
+                                    bg-violet-50 dark:bg-violet-950/40
+                                    border border-violet-100 dark:border-violet-900
+                                    flex items-center justify-center
+                                    text-violet-600 shrink-0
+                                    group-hover:scale-105 transition-transform">
+                            <i class="bi bi-mortarboard-fill text-lg"></i>
+                        </div>
+
+                        <div class="text-left">
+                            <div class="leading-tight">Bồi dưỡng chuyên môn</div>
+                            <div class="text-[10px] font-medium text-slate-400 mt-1">
+                                Tập huấn • SHCM • BDTX
+                            </div>
+                        </div>
+                    </div>
+
+                    <i id="bdcm-sub-arrow"
+                       class="bi bi-chevron-right text-xs text-slate-400
+                              transition-transform duration-200"></i>
+                </button>
+
+                <div id="bdcm-sub-items"
+                     class="hidden ml-5 mr-1 mt-1 mb-2
+                            pl-4 py-1 border-l-2
+                            border-violet-200 dark:border-violet-800
+                            space-y-0.5">
+
+                    <a href="baocao-tap-huan.html"
+                       class="block px-3 py-2.5 rounded-lg
+                              text-[13px] font-medium
+                              text-slate-700 dark:text-slate-300
+                              hover:bg-violet-50 hover:text-violet-700
+                              dark:hover:bg-slate-800 transition">
+                        Tập huấn
+                    </a>
+
+                    <a href="baocao-shcm.html"
+                       class="block px-3 py-2.5 rounded-lg
+                              text-[13px] font-medium
+                              text-slate-700 dark:text-slate-300
+                              hover:bg-violet-50 hover:text-violet-700
+                              dark:hover:bg-slate-800 transition">
+                        Sinh hoạt chuyên môn
+                    </a>
+
+                    <a href="baocao-bdtx.html"
+                       class="block px-3 py-2.5 rounded-lg
+                              text-[13px] font-medium
+                              text-slate-700 dark:text-slate-300
+                              hover:bg-violet-50 hover:text-violet-700
+                              dark:hover:bg-slate-800 transition">
+                        Bồi dưỡng thường xuyên
+                    </a>
+
+                    <a href="baocao-khac.html"
+                       class="block px-3 py-2.5 rounded-lg
+                              text-[13px] font-medium
+                              text-slate-700 dark:text-slate-300
+                              hover:bg-violet-50 hover:text-violet-700
+                              dark:hover:bg-slate-800 transition">
+                        Khác
+                    </a>
+                </div>
             </div>
+
+            <!-- 3. BÁO CÁO CHUYÊN MÔN -->
+            <a href="baocao-chuyenmon.html"
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
+                      text-[14px] font-bold
+                      text-[#123B67] dark:text-slate-100
+                      hover:bg-blue-50 dark:hover:bg-slate-800 transition">
+
+                <div class="w-10 h-10 rounded-xl
+                            bg-blue-50 dark:bg-blue-950/40
+                            border border-blue-100 dark:border-blue-900
+                            flex items-center justify-center
+                            text-blue-600 shrink-0">
+                    <i class="bi bi-bar-chart-line-fill text-lg"></i>
+                </div>
+
+                <div class="text-left">
+                    <div class="leading-tight">Báo cáo chuyên môn</div>
+                    <div class="text-[10px] font-medium text-slate-400 mt-1">
+                        Công tác tháng • Định kỳ • Đột xuất
+                    </div>
+                </div>
+            </a>
+
+            <!-- 4. HOẠT ĐỘNG GIÁO DỤC -->
+            <a href="hoatdong-giaoduc.html"
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
+                      text-[14px] font-bold
+                      text-[#123B67] dark:text-slate-100
+                      hover:bg-blue-50 dark:hover:bg-slate-800 transition">
+
+                <div class="w-10 h-10 rounded-xl
+                            bg-amber-50 dark:bg-amber-950/30
+                            border border-amber-100 dark:border-amber-900
+                            flex items-center justify-center
+                            text-amber-500 shrink-0">
+                    <i class="bi bi-activity text-lg"></i>
+                </div>
+
+                <div class="text-left">
+                    <div class="leading-tight">Hoạt động giáo dục</div>
+                    <div class="text-[10px] font-medium text-slate-400 mt-1">
+                        Hoạt động • Kết quả • Minh chứng
+                    </div>
+                </div>
+            </a>
+
+            <!-- 5. THI - CUỘC THI -->
+            <a href="cac-cuoc-thi.html"
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
+                      text-[14px] font-bold
+                      text-[#123B67] dark:text-slate-100
+                      hover:bg-blue-50 dark:hover:bg-slate-800 transition">
+
+                <div class="w-10 h-10 rounded-xl
+                            bg-orange-50 dark:bg-orange-950/30
+                            border border-orange-100 dark:border-orange-900
+                            flex items-center justify-center
+                            text-orange-500 shrink-0">
+                    <i class="bi bi-award-fill text-lg"></i>
+                </div>
+
+                <div class="text-left">
+                    <div class="leading-tight">Thi - Cuộc thi</div>
+                    <div class="text-[10px] font-medium text-slate-400 mt-1">
+                        HSG • KHKT • Đăng ký • Kết quả
+                    </div>
+                </div>
+            </a>
+
+            <!-- 6. CHUYỂN ĐỔI SỐ -->
+            <a href="chuyen-doi-so.html"
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
+                      text-[14px] font-bold
+                      text-[#123B67] dark:text-slate-100
+                      hover:bg-blue-50 dark:hover:bg-slate-800 transition">
+
+                <div class="w-10 h-10 rounded-xl
+                            bg-cyan-50 dark:bg-cyan-950/30
+                            border border-cyan-100 dark:border-cyan-900
+                            flex items-center justify-center
+                            text-cyan-600 shrink-0">
+                    <i class="bi bi-laptop-fill text-lg"></i>
+                </div>
+
+                <div class="text-left">
+                    <div class="leading-tight">Chuyển đổi số</div>
+                    <div class="text-[10px] font-medium text-slate-400 mt-1">
+                        Nhiệm vụ CĐS • Sản phẩm số • Minh chứng
+                    </div>
+                </div>
+            </a>
+
+            <!-- 7. HÀNH CHÍNH -->
+            <a href="hanh-chinh.html"
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
+                      text-[14px] font-bold
+                      text-[#123B67] dark:text-slate-100
+                      hover:bg-blue-50 dark:hover:bg-slate-800 transition">
+
+                <div class="w-10 h-10 rounded-xl
+                            bg-slate-100 dark:bg-slate-800
+                            border border-slate-200 dark:border-slate-700
+                            flex items-center justify-center
+                            text-slate-600 dark:text-slate-300 shrink-0">
+                    <i class="bi bi-building-fill text-lg"></i>
+                </div>
+
+                <div class="text-left">
+                    <div class="leading-tight">Hành chính</div>
+                    <div class="text-[10px] font-medium text-slate-400 mt-1">
+                        Biểu mẫu • Kê khai • Báo cáo hành chính
+                    </div>
+                </div>
+            </a>
+
         </div>
-        </div>
+    </div>
+</div>
+
+<!-- ====================================================== -->
+
     <!-- ====================================================== -->
 <!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ                               -->
 <!-- ====================================================== -->
