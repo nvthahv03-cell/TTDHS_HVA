@@ -1053,7 +1053,7 @@ export function renderHome() {
 </div>
 
 
-<!-- ================= NHẮC VIỆC ================= -->
+<!-- ================= NHẮC NHỞ - TÁC VỤ NHANH BGH ================= -->
 <div class="relative overflow-hidden
             rounded-xl
             bg-gradient-to-r from-blue-50/80 via-indigo-50/50 to-cyan-50/80
@@ -1064,25 +1064,32 @@ export function renderHome() {
             backdrop-blur-md
             flex items-center gap-2">
 
-    <!-- Nhãn cố định -->
-    <div class="flex items-center gap-1.5
-                px-2.5 py-1
-                rounded-lg
-                bg-[#2563EB]
-                text-white
-                text-[10px]
-                font-extrabold
-                shadow-sm
-                shrink-0 z-10">
+    <!-- Nút tác vụ nhanh -->
+    <a href="NhacViecBGH.html"
+       id="btn-hva-reminder"
+       title="Nhắc nhở GV • NV • Công vụ"
+       class="flex items-center gap-1.5
+              px-2.5 py-1
+              rounded-lg
+              bg-[#2563EB] hover:bg-[#1D4ED8]
+              text-white
+              shadow-sm
+              shrink-0 z-10
+              transition active:scale-[0.98]">
 
         <i class="bi bi-bell-fill text-amber-300 text-[11px]"></i>
 
-        <span class="uppercase tracking-[0.08em]">
-            NHẮC VIỆC
+        <span class="flex flex-col leading-none">
+            <span class="uppercase tracking-[0.06em] text-[10px] font-extrabold">
+                NHẮC NHỞ
+            </span>
+            <span class="text-[8px] font-semibold text-blue-100 mt-0.5 normal-case tracking-normal">
+                GV • NV • Công vụ
+            </span>
         </span>
-    </div>
+    </a>
 
-    <!-- Nội dung chạy -->
+    <!-- Nội dung nhắc việc hệ thống chạy -->
     <marquee
         behavior="scroll"
         direction="left"
@@ -1092,20 +1099,20 @@ export function renderHome() {
         onmouseover="this.stop();"
         onmouseout="this.start();"
         class="text-[11px]
-               font-semibold
+               font-bold
                tracking-[0.01em]
-               text-slate-600
+               text-[#C2410C]
                leading-none">
 
         <span class="whitespace-nowrap">
 
             Hoàn thành báo cáo chuyên môn năm học trước ngày 15 hàng tháng.
 
-            <span class="mx-5 text-blue-400">✦</span>
+            <span class="mx-5 text-orange-400">✦</span>
 
             Lịch họp Chuyên môn định kỳ tuần này chuyển sang sáng Thứ 5.
 
-            <span class="mx-5 text-blue-400">✦</span>
+            <span class="mx-5 text-orange-400">✦</span>
 
             Đã cập nhật danh sách phê duyệt kế hoạch bài dạy mới trên hệ thống.
 
@@ -2094,25 +2101,7 @@ export function renderHome() {
     </span>
 
 </a>
-<!-- NHẮC VIỆC BGH -->
-<a href="NhacViecBGH.html"
-   class="w-full flex items-center gap-2.5
-          px-3 py-2 rounded-lg
-          hover:bg-rose-50
-          dark:hover:bg-slate-800 transition text-left">
-
-    <i class="bi bi-bell-fill
-              text-rose-600 w-5 text-center"></i>
-
-    <span class="text-[11px] font-semibold
-                 text-slate-700 dark:text-slate-200">
-        Nhắc việc BGH
-    </span>
-
-</a>
-
-
-                    <button type="button"
+<button type="button"
                             class="w-full flex items-center gap-2.5
                                    px-3 py-2 rounded-lg
                                    hover:bg-cyan-50
