@@ -1065,7 +1065,8 @@ export function renderHome() {
             flex items-center gap-2">
 
     <!-- Nút tác vụ nhanh -->
-    <a href="NhacViecBGH.html"
+    <button type="button"
+       onclick="openHVAReminderModal(event)"
        id="btn-hva-reminder"
        title="Nhắc nhở GV • NV • Công vụ"
        class="flex items-center gap-1.5
@@ -1087,7 +1088,7 @@ export function renderHome() {
                 GV • NV • Công vụ
             </span>
         </span>
-    </a>
+    </button>
 
     <!-- Nội dung nhắc việc hệ thống chạy -->
     <marquee
@@ -2724,6 +2725,156 @@ export function renderHome() {
     </div>
 
 </section>
+
+<!-- ====================================================== -->
+<!-- MODAL NHẮC NHỞ GV • NV • CÔNG VỤ                      -->
+<!-- ====================================================== -->
+<div id="hva-reminder-modal"
+     class="hidden fixed inset-0 z-[2000] bg-slate-950/45 backdrop-blur-[2px]
+            p-3 sm:p-5 overflow-y-auto"
+     onclick="if(event.target===this) closeHVAReminderModal()">
+
+    <div class="w-full max-w-3xl mx-auto my-3 sm:my-8
+                bg-white dark:bg-slate-900 rounded-2xl shadow-2xl
+                border border-slate-200 dark:border-slate-700 overflow-hidden">
+
+        <div class="px-4 sm:px-5 py-4 border-b border-slate-200 dark:border-slate-700
+                    flex items-start justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 text-white
+                            flex items-center justify-center shadow-sm">
+                    <i class="bi bi-bell-fill"></i>
+                </div>
+                <div>
+                    <div class="text-[15px] font-extrabold text-[#123B67] dark:text-white">
+                        NHẮC NHỞ CÔNG VỤ
+                    </div>
+                    <div class="text-[10px] font-semibold text-slate-500 mt-0.5">
+                        GV • NV • Tiếp nhận • Phản hồi
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="closeHVAReminderModal()"
+                    class="w-9 h-9 rounded-lg border border-slate-200
+                           hover:bg-slate-100 text-slate-500">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="p-4 sm:p-5 space-y-4">
+
+            <div class="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-2">
+                <select id="hva-reminder-team"
+                        onchange="loadHVAReminderPeople()"
+                        class="w-full h-11 rounded-xl border border-slate-300 bg-white
+                               px-3 text-[12px] font-semibold text-slate-700 outline-none
+                               focus:ring-2 focus:ring-blue-200">
+                    <option value="">Tất cả Tổ/Bộ phận</option>
+                </select>
+
+                <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input id="hva-reminder-search" type="text"
+                           oninput="renderHVAReminderPeople()"
+                           placeholder="Tìm GV/NV theo họ tên..."
+                           class="w-full h-11 rounded-xl border border-slate-300 bg-white
+                                  pl-9 pr-3 text-[12px] font-semibold text-slate-700 outline-none
+                                  focus:ring-2 focus:ring-blue-200">
+                </div>
+            </div>
+
+            <div id="hva-reminder-people"
+                 class="border border-slate-200 rounded-xl max-h-52 overflow-y-auto bg-white">
+                <div class="p-5 text-center text-[11px] text-slate-400">
+                    Đang tải danh sách nhân sự...
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label class="text-[11px] font-extrabold text-slate-700">
+                        NGƯỜI ĐÃ CHỌN
+                    </label>
+                    <span id="hva-reminder-selected-count"
+                          class="text-[10px] font-bold text-blue-600">0 người</span>
+                </div>
+                <div id="hva-reminder-selected"
+                     class="min-h-[46px] rounded-xl border border-dashed border-slate-300
+                            p-2 flex flex-wrap gap-2">
+                    <span class="text-[11px] text-slate-400 px-1 py-1">
+                        Chưa chọn GV/NV.
+                    </span>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-extrabold text-slate-700 mb-1.5">
+                    NỘI DUNG NHẮC NHỞ
+                </label>
+                <select id="hva-reminder-type"
+                        onchange="toggleHVAReminderOther()"
+                        class="w-full h-11 rounded-xl border border-slate-300 bg-white
+                               px-3 text-[12px] font-semibold text-slate-700 outline-none
+                               focus:ring-2 focus:ring-blue-200">
+                    <option value="">— Chọn nội dung nhắc nhở —</option>
+                    <option>Đi họp chưa đúng giờ</option>
+                    <option>Thực hiện giờ dạy chưa đúng giờ</option>
+                    <option>Thực hiện nhiệm vụ/công việc chưa đúng thời hạn</option>
+                    <option>Tác phong chưa phù hợp</option>
+                    <option>Chưa bảo đảm trật tự lớp học</option>
+                    <option>Để học sinh ăn/uống trong giờ học</option>
+                    <option>Để học sinh sử dụng điện thoại không đúng quy định</option>
+                    <option>Học sinh ngủ trong giờ học</option>
+                    <option>Vắng trong giờ làm việc chưa báo/xin phép theo quy định</option>
+                    <option value="KHAC">Khác...</option>
+                </select>
+            </div>
+
+            <div id="hva-reminder-other-wrap" class="hidden">
+                <label class="block text-[11px] font-extrabold text-slate-700 mb-1.5">
+                    NỘI DUNG KHÁC
+                </label>
+                <textarea id="hva-reminder-other" rows="2"
+                          placeholder="Nhập nội dung nhắc nhở..."
+                          class="w-full rounded-xl border border-slate-300 bg-white
+                                 px-3 py-2.5 text-[12px] text-slate-700 outline-none
+                                 focus:ring-2 focus:ring-blue-200"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-[11px] font-extrabold text-slate-700 mb-1.5">
+                    THÔNG TIN CỤ THỂ
+                    <span class="font-medium text-slate-400">(không bắt buộc)</span>
+                </label>
+                <textarea id="hva-reminder-detail" rows="2"
+                          placeholder="Ví dụ: Tiết 2, lớp 11/3, ngày 08/09/2026..."
+                          class="w-full rounded-xl border border-slate-300 bg-white
+                                 px-3 py-2.5 text-[12px] text-slate-700 outline-none
+                                 focus:ring-2 focus:ring-blue-200"></textarea>
+            </div>
+
+            <div id="hva-reminder-status"
+                 class="hidden rounded-xl px-3 py-2 text-[11px] font-semibold"></div>
+
+            <div class="flex items-center justify-end gap-2 pt-1">
+                <button type="button" onclick="closeHVAReminderModal()"
+                        class="px-4 h-10 rounded-xl border border-slate-300
+                               text-[11px] font-bold text-slate-600 hover:bg-slate-50">
+                    ĐÓNG
+                </button>
+                <button type="button" id="hva-reminder-send"
+                        onclick="sendHVAReminder()"
+                        class="px-5 h-10 rounded-xl bg-blue-600 hover:bg-blue-700
+                               text-white text-[11px] font-extrabold shadow-sm
+                               disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="bi bi-send-fill mr-1.5"></i>GỬI NHẮC NHỞ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 `;
 
       // =====================================================
@@ -4200,3 +4351,345 @@ window.openThiDuaModule = function(type, event) {
         moduleNames[type] || type
     );
 };
+
+
+// ======================================================
+// NHẮC NHỞ GV • NV • CÔNG VỤ
+// ======================================================
+const HVA_REMINDER_API =
+    'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+
+let HVA_REMINDER_PEOPLE = [];
+let HVA_REMINDER_SELECTED = new Map();
+
+function getHVAReminderUser() {
+    try {
+        return JSON.parse(
+            sessionStorage.getItem('user') ||
+            localStorage.getItem('user') ||
+            '{}'
+        );
+    } catch (_) {
+        return {};
+    }
+}
+
+function isHVAReminderManager() {
+    const u = getHVAReminderUser();
+    const role = String(u.role || u.vaiTro || u.VAITRO || '').toUpperCase();
+    const permission = String(u.permission || u.quyen || u.QUYEN || '').toUpperCase();
+    return role.includes('ADMIN') ||
+           role.includes('HIỆU TRƯỞNG') ||
+           role.includes('HIEU TRUONG') ||
+           role.includes('HT') ||
+           role.includes('PHT') ||
+           permission.includes('ADMIN') ||
+           permission.includes('QUAN_TRI') ||
+           permission.includes('QUẢN TRỊ') ||
+           permission.includes('DIEU_HANH') ||
+           permission.includes('ĐIỀU HÀNH');
+}
+
+window.setupHVAReminderPermission = function() {
+    const btn = document.getElementById('btn-hva-reminder');
+    if (!btn) return;
+    btn.classList.toggle('hidden', !isHVAReminderManager());
+};
+
+window.openHVAReminderModal = async function(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    if (!isHVAReminderManager()) {
+        alert('Tài khoản chưa được cấp quyền sử dụng tác vụ Nhắc nhở công vụ.');
+        return;
+    }
+    const modal = document.getElementById('hva-reminder-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+    await loadHVAReminderTeams();
+    await loadHVAReminderPeople();
+};
+
+window.closeHVAReminderModal = function() {
+    document.getElementById('hva-reminder-modal')?.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+};
+
+async function loadHVAReminderTeams() {
+    const select = document.getElementById('hva-reminder-team');
+    if (!select || select.dataset.loaded === '1') return;
+    try {
+        const r = await fetch(
+            HVA_REMINDER_API + '?action=getDanhSachTo&_=' + Date.now(),
+            { cache: 'no-store' }
+        );
+        const data = await r.json();
+        const list = Array.isArray(data) ? data :
+                     Array.isArray(data?.data) ? data.data : [];
+        select.innerHTML = '<option value="">Tất cả Tổ/Bộ phận</option>' +
+            list.map(x => {
+                const name = String(x.tenTo || x.to || x.name || '').trim();
+                return name
+                    ? `<option value="${escapeHVAReminderHtml(name)}">${escapeHVAReminderHtml(name)}</option>`
+                    : '';
+            }).join('');
+        select.dataset.loaded = '1';
+    } catch (e) {
+        showHVAReminderStatus('Không tải được danh sách Tổ/Bộ phận: ' + e.message, true);
+    }
+}
+
+window.loadHVAReminderPeople = async function() {
+    const box = document.getElementById('hva-reminder-people');
+    const team = document.getElementById('hva-reminder-team')?.value || '';
+    if (!box) return;
+    box.innerHTML = '<div class="p-5 text-center text-[11px] text-slate-400">Đang tải danh sách nhân sự...</div>';
+    try {
+        const url = HVA_REMINDER_API +
+            '?action=getNhanSuTheoTo&to=' + encodeURIComponent(team) +
+            '&_=' + Date.now();
+        const r = await fetch(url, { cache: 'no-store' });
+        const data = await r.json();
+        HVA_REMINDER_PEOPLE = Array.isArray(data) ? data :
+                              Array.isArray(data?.data) ? data.data : [];
+        renderHVAReminderPeople();
+    } catch (e) {
+        box.innerHTML = '<div class="p-5 text-center text-[11px] text-red-500">Không tải được danh sách nhân sự.</div>';
+    }
+};
+
+window.renderHVAReminderPeople = function() {
+    const box = document.getElementById('hva-reminder-people');
+    if (!box) return;
+    const q = String(document.getElementById('hva-reminder-search')?.value || '')
+        .trim().toLocaleLowerCase('vi');
+
+    const list = HVA_REMINDER_PEOPLE.filter(p => {
+        const hay = [p.hoTen, p.to, p.chucVu, p.vaiTro, p.username]
+            .join(' ').toLocaleLowerCase('vi');
+        return !q || hay.includes(q);
+    });
+
+    if (!list.length) {
+        box.innerHTML = '<div class="p-5 text-center text-[11px] text-slate-400">Không tìm thấy GV/NV phù hợp.</div>';
+        return;
+    }
+
+    box.innerHTML = list.map((p, i) => {
+        const username = String(p.username || '').trim();
+        const key = username || String(p.hoTen || '').trim();
+        const checked = HVA_REMINDER_SELECTED.has(key);
+        const phone = String(p.soDienThoai || p.dienThoai || p.phone || p.mobile || '').trim();
+        return `
+        <label class="flex items-center gap-3 px-3 py-2.5 border-b last:border-b-0
+                      border-slate-100 hover:bg-blue-50/60 cursor-pointer">
+            <input type="checkbox" ${checked ? 'checked' : ''}
+                   onchange="toggleHVAReminderPerson(${i}, this.checked)"
+                   class="w-4 h-4 rounded border-slate-300 text-blue-600">
+            <div class="flex-1 min-w-0">
+                <div class="text-[12px] font-extrabold text-slate-800 truncate">
+                    ${escapeHVAReminderHtml(p.hoTen || username)}
+                </div>
+                <div class="text-[10px] font-semibold text-slate-400 truncate mt-0.5">
+                    ${escapeHVAReminderHtml(p.to || 'Chưa xác định Tổ/Bộ phận')}
+                </div>
+            </div>
+            <div class="shrink-0 text-right">
+                <div class="text-[11px] font-bold ${phone ? 'text-slate-700' : 'text-slate-400'}">
+                    ${phone ? escapeHVAReminderHtml(phone) : 'Chưa có SĐT'}
+                </div>
+                ${phone ? `
+                <div class="mt-1 flex justify-end gap-1">
+                    <button type="button" onclick="event.preventDefault();event.stopPropagation();copyHVAReminderPhone('${escapeHVAReminderJs(phone)}')"
+                            class="px-1.5 py-0.5 rounded bg-slate-100 text-[9px] font-bold text-slate-600">📋 Copy</button>
+                    <a href="tel:${escapeHVAReminderHtml(phone.replace(/\s+/g,''))}"
+                       onclick="event.stopPropagation()"
+                       class="px-1.5 py-0.5 rounded bg-green-50 text-[9px] font-bold text-green-700">📞 Gọi</a>
+                </div>` : ''}
+            </div>
+        </label>`;
+    }).join('');
+
+    // Lưu index của list lọc để toggle đúng người.
+    box._renderedPeople = list;
+};
+
+window.toggleHVAReminderPerson = function(index, checked) {
+    const box = document.getElementById('hva-reminder-people');
+    const p = box?._renderedPeople?.[index];
+    if (!p) return;
+    const key = String(p.username || p.hoTen || '').trim();
+    if (!key) return;
+    if (checked) HVA_REMINDER_SELECTED.set(key, p);
+    else HVA_REMINDER_SELECTED.delete(key);
+    renderHVAReminderSelected();
+};
+
+function renderHVAReminderSelected() {
+    const box = document.getElementById('hva-reminder-selected');
+    const count = document.getElementById('hva-reminder-selected-count');
+    const list = [...HVA_REMINDER_SELECTED.values()];
+    if (count) count.textContent = `${list.length} người`;
+    if (!box) return;
+    box.innerHTML = list.length ? list.map(p => {
+        const key = String(p.username || p.hoTen || '').trim();
+        return `
+        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg
+                     bg-blue-50 border border-blue-100 text-[10px] font-bold text-blue-700">
+            ${escapeHVAReminderHtml(p.hoTen || key)}
+            <button type="button"
+                    onclick="removeHVAReminderPerson('${escapeHVAReminderJs(key)}')"
+                    class="text-blue-400 hover:text-red-500">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </span>`;
+    }).join('') :
+    '<span class="text-[11px] text-slate-400 px-1 py-1">Chưa chọn GV/NV.</span>';
+}
+
+window.removeHVAReminderPerson = function(key) {
+    HVA_REMINDER_SELECTED.delete(key);
+    renderHVAReminderSelected();
+    renderHVAReminderPeople();
+};
+
+window.copyHVAReminderPhone = async function(phone) {
+    try {
+        await navigator.clipboard.writeText(phone);
+        showHVAReminderStatus('✓ Đã sao chép số điện thoại: ' + phone, false);
+    } catch (_) {
+        const ta = document.createElement('textarea');
+        ta.value = phone;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showHVAReminderStatus('✓ Đã sao chép số điện thoại: ' + phone, false);
+    }
+};
+
+window.toggleHVAReminderOther = function() {
+    const v = document.getElementById('hva-reminder-type')?.value || '';
+    document.getElementById('hva-reminder-other-wrap')
+        ?.classList.toggle('hidden', v !== 'KHAC');
+};
+
+function showHVAReminderStatus(message, isError) {
+    const el = document.getElementById('hva-reminder-status');
+    if (!el) return;
+    el.textContent = message;
+    el.className = 'rounded-xl px-3 py-2 text-[11px] font-semibold ' +
+        (isError ? 'bg-red-50 text-red-700 border border-red-100'
+                 : 'bg-emerald-50 text-emerald-700 border border-emerald-100');
+}
+
+window.sendHVAReminder = async function() {
+    const recipients = [...HVA_REMINDER_SELECTED.values()];
+    const type = document.getElementById('hva-reminder-type')?.value || '';
+    const other = String(document.getElementById('hva-reminder-other')?.value || '').trim();
+    const detail = String(document.getElementById('hva-reminder-detail')?.value || '').trim();
+
+    if (!recipients.length) return showHVAReminderStatus('Vui lòng chọn ít nhất 01 GV/NV.', true);
+    if (!type) return showHVAReminderStatus('Vui lòng chọn nội dung nhắc nhở.', true);
+    if (type === 'KHAC' && !other) return showHVAReminderStatus('Vui lòng nhập nội dung nhắc nhở khác.', true);
+
+    const content = type === 'KHAC' ? other : type;
+    const fullContent = detail ? `${content}. Thông tin cụ thể: ${detail}` : content;
+    const user = getHVAReminderUser();
+    const senderName = user.fullName || user.hoTen || user.name || user.username || 'BGH HVA';
+    const senderUsername = user.username || user.userName || user.maGV || '';
+
+    const now = new Date();
+    const publishId = 'NN-' +
+        now.getFullYear() +
+        String(now.getMonth()+1).padStart(2,'0') +
+        String(now.getDate()).padStart(2,'0') + '-' +
+        String(now.getHours()).padStart(2,'0') +
+        String(now.getMinutes()).padStart(2,'0') +
+        String(now.getSeconds()).padStart(2,'0') + '-' +
+        Math.random().toString(36).slice(2,6).toUpperCase();
+
+    const payload = {
+        action: 'publishDocument',
+        publishId,
+        moduleSource: 'NhacNhoCongVu',
+        documentType: 'NHẮC NHỞ CÔNG VỤ',
+        destinations: [{ id: 'ThongBao', name: 'Thông báo' }],
+        sender: { username: senderUsername, fullName: senderName },
+        recipients: recipients.map(p => ({
+            username: p.username,
+            hoTen: p.hoTen,
+            to: p.to
+        })),
+        document: {
+            docId: publishId,
+            moduleSource: 'NhacNhoCongVu',
+            type: 'NHẮC NHỞ CÔNG VỤ',
+            title: '🔔 Nhắc nhở công vụ',
+            author: senderName,
+            data: {
+                tieuDe: '🔔 Nhắc nhở công vụ',
+                noiDung: fullContent,
+                loaiNhacNho: content,
+                thongTinCuThe: detail,
+                yeuCauTiepNhan: true,
+                choPhepPhanHoi: true
+            }
+        }
+    };
+
+    const btn = document.getElementById('hva-reminder-send');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-arrow-repeat mr-1.5"></i>ĐANG GỬI...';
+    }
+
+    try {
+        const r = await fetch(HVA_REMINDER_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+        });
+        const data = await r.json();
+        if (!data || data.success !== true) {
+            throw new Error(data?.message || 'Không gửi được nhắc nhở.');
+        }
+        showHVAReminderStatus(
+            `✓ Đã gửi nhắc nhở đến ${recipients.length} GV/NV.`,
+            false
+        );
+        HVA_REMINDER_SELECTED.clear();
+        renderHVAReminderSelected();
+        renderHVAReminderPeople();
+        document.getElementById('hva-reminder-type').value = '';
+        document.getElementById('hva-reminder-other').value = '';
+        document.getElementById('hva-reminder-detail').value = '';
+        toggleHVAReminderOther();
+    } catch (e) {
+        showHVAReminderStatus('Gửi chưa thành công: ' + e.message, true);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-send-fill mr-1.5"></i>GỬI NHẮC NHỞ';
+        }
+    }
+};
+
+function escapeHVAReminderHtml(v) {
+    return String(v ?? '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+    }[c]));
+}
+
+function escapeHVAReminderJs(v) {
+    return String(v ?? '')
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/\r?\n/g, ' ');
+}
+
+setTimeout(setupHVAReminderPermission, 150);
+
