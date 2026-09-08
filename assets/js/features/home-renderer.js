@@ -1512,7 +1512,7 @@ export function renderHome() {
 <!-- ================= HẾT THI ĐUA ================= -->
 
 
-    <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
+ <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
 <div class="relative">
 
     <!-- CARD NGHIỆP VỤ SỐ -->
@@ -1554,12 +1554,12 @@ export function renderHome() {
          data-dropdown-menu
         class="hidden fixed sm:absolute
        left-3 right-3
-       sm:left-auto sm:right-0
+       sm:left-0 sm:right-auto sm:translate-x-0
        top-16 sm:top-auto
-       bottom-auto sm:bottom-[calc(100%-2.2rem)]
+       bottom-auto sm:bottom-[calc(100%+0.6rem)]
        z-[999]
        w-auto sm:w-[370px]
-       max-h-[calc(100vh-5rem)] sm:max-h-[68vh]
+       max-h-[calc(100vh-5rem)] sm:max-h-[76vh]
        overflow-y-auto overscroll-contain
        bg-white dark:bg-slate-900
        rounded-2xl shadow-2xl
@@ -1615,7 +1615,7 @@ export function renderHome() {
                             Hội nghị - Hội thảo
                         </div>
                         <div class="text-[10px] font-medium text-slate-400 mt-1">
-                            Tham dự • Thu hoạch • Minh chứng
+                            Báo cáo tham dự • Thu hoạch • Minh chứng
                         </div>
                     </div>
                 </div>
@@ -1706,33 +1706,43 @@ export function renderHome() {
                               text-slate-700 dark:text-slate-300
                               hover:bg-violet-50 hover:text-violet-700
                               dark:hover:bg-slate-800 transition">
-                        Bồi dưỡng khác
+                        Khác
                     </a>
                 </div>
             </div>
 
-            <!-- 3. BÁO CÁO CHUYÊN MÔN -->
-            <a href="baocao-chuyenmon.html"
-               class="flex items-center gap-3 px-3 py-3 rounded-xl
-                      text-[14px] font-bold
-                      text-[#123B67] dark:text-slate-100
-                      hover:bg-blue-50 dark:hover:bg-slate-800 transition">
-
-                <div class="w-10 h-10 rounded-xl
-                            bg-blue-50 dark:bg-blue-950/40
-                            border border-blue-100 dark:border-blue-900
-                            flex items-center justify-center
-                            text-blue-600 shrink-0">
-                    <i class="bi bi-bar-chart-line-fill text-lg"></i>
-                </div>
-
-                <div class="text-left">
-                    <div class="leading-tight">Báo cáo chuyên môn</div>
-                    <div class="text-[10px] font-medium text-slate-400 mt-1">
-                        Công tác tháng • Định kỳ • Đột xuất
+            <!-- 3. HỒ SƠ CHUYÊN MÔN -->
+            <div class="relative border-t border-slate-100 dark:border-slate-800 pt-1">
+                <button type="button" id="hscm-menu-button"
+                        onclick="event.stopPropagation(); const items=document.getElementById('hscm-sub-items'); const arrow=document.getElementById('hscm-sub-arrow'); if(!items||!arrow)return; const willOpen=items.classList.contains('hidden'); items.classList.toggle('hidden'); arrow.classList.toggle('rotate-90',willOpen);"
+                        class="w-full flex items-center justify-between px-3 py-3 rounded-xl text-[14px] font-bold text-[#123B67] dark:text-slate-100 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors group">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-105 transition-transform">
+                            <i class="bi bi-folder2-open text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="leading-tight">Hồ sơ chuyên môn</div>
+                            <div class="text-[10px] font-medium text-slate-400 mt-1">Kế hoạch • Hồ sơ • Báo cáo</div>
+                        </div>
                     </div>
+                    <i id="hscm-sub-arrow" class="bi bi-chevron-right text-xs text-slate-400 transition-transform duration-200"></i>
+                </button>
+
+                <div id="hscm-sub-items" class="hidden ml-5 mr-1 mt-1 mb-2 pl-4 py-1 border-l-2 border-blue-200 dark:border-blue-800 space-y-0.5">
+                    <div class="px-3 pt-2 pb-1 text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Kế hoạch - Hồ sơ</div>
+                    <a href="phancong-chuyenmon.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Phân công chuyên môn</a>
+                    <a href="kehoach-tochuyenmon.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch tổ chuyên môn</a>
+                    <a href="kehoach-canhan.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch cá nhân</a>
+                    <a href="kehoach-baidday.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch bài dạy</a>
+                    <a href="kehoach-thuchanh-phongbomon.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch thực hành / phòng bộ môn</a>
+                    <a href="hoso-chuyenmon-khac.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Hồ sơ chuyên môn khác</a>
+                    <div class="px-3 pt-3 pb-1 text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Báo cáo</div>
+                    <a href="baocao-congtac-thang.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo công tác tháng</a>
+                    <a href="baocao-dinhky.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo định kỳ</a>
+                    <a href="baocao-theoyeucau.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo theo yêu cầu</a>
+                    <a href="lichsu-baocao.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Lịch sử báo cáo</a>
                 </div>
-            </a>
+            </div>
 
             <!-- 4. HOẠT ĐỘNG GIÁO DỤC -->
             <a href="hoatdong-giaoduc.html"
@@ -1752,7 +1762,7 @@ export function renderHome() {
                 <div class="text-left">
                     <div class="leading-tight">Hoạt động giáo dục</div>
                     <div class="text-[10px] font-medium text-slate-400 mt-1">
-                        Thực hiện • Kết quả • Minh chứng
+                        Hoạt động • Kết quả • Minh chứng
                     </div>
                 </div>
             </a>
