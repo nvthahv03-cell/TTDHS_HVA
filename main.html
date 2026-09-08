@@ -2366,6 +2366,12 @@ async function openHVANotification(encodedId) {
         destination.includes('nhac-nho') ||
         destination.includes('reminder');
 
+    const isReminderResult =
+        type.includes('đã tiếp nhận nhắc nhở') ||
+        type.includes('da tiep nhan nhac nho') ||
+        type.includes('phản hồi nhắc nhở') ||
+        type.includes('phan hoi nhac nho');
+
 
     if (isReminder) {
 
@@ -2585,7 +2591,8 @@ async function openHVANotification(encodedId) {
                                 border-t border-slate-200
                                 bg-slate-50">
 
-                        <div class="grid grid-cols-2 gap-3">
+                        <div id="hva-reminder-user-actions"
+                             class="grid grid-cols-2 gap-3">
 
                             <button type="button"
                                     id="hva-reminder-accept-btn"
@@ -2631,6 +2638,17 @@ async function openHVANotification(encodedId) {
                             </button>
 
                         </div>
+
+                        <button type="button"
+                                id="hva-reminder-bgh-confirm-btn"
+                                onclick="confirmHVAReminderByBGH()"
+                                class="hidden w-full h-11 rounded-xl
+                                       bg-[#0F4C81] hover:bg-[#0B3C66]
+                                       text-white text-[11px] font-extrabold
+                                       items-center justify-center gap-2 transition">
+                            <i class="bi bi-check-circle-fill"></i>
+                            XÁC NHẬN
+                        </button>
 
                     </div>
 
@@ -2685,65 +2703,46 @@ async function openHVANotification(encodedId) {
             String(item.id || '');
 
 
-        // ============================================================
-// RESET TOÀN BỘ TRẠNG THÁI PHẢN HỒI KHI MỞ MỖI NHẮC NHỞ
-// ============================================================
+        // ====================================================
+        // PHÂN QUYỀN GIAO DIỆN:
+        // - Tin gốc: GV/NV được Tiếp nhận / Phản hồi
+        // - Tin kết quả: BGH chỉ Xác nhận để khép việc
+        // ====================================================
+        modal.dataset.isReminderResult = isReminderResult ? '1' : '0';
 
-const replyArea =
-    document.getElementById(
-        'hva-reminder-reply-area'
-    );
+        const replyArea = document.getElementById('hva-reminder-reply-area');
+        const replyText = document.getElementById('hva-reminder-reply-text');
+        const replyButton = document.getElementById('hva-reminder-send-reply');
+        const userActions = document.getElementById('hva-reminder-user-actions');
+        const confirmButton = document.getElementById('hva-reminder-bgh-confirm-btn');
 
-if (replyArea) {
-    replyArea.classList.add('hidden');
-}
+        replyArea?.classList.add('hidden');
 
+        if (replyText) {
+            replyText.value = '';
+            replyText.disabled = false;
+            replyText.readOnly = false;
+        }
 
-const replyText =
-    document.getElementById(
-        'hva-reminder-reply-text'
-    );
+        if (replyButton) {
+            replyButton.disabled = false;
+            replyButton.innerHTML = `
+                <i class="bi bi-send-fill"></i>
+                GỬI PHẢN HỒI
+            `;
+            replyButton.classList.remove('bg-slate-500', 'cursor-default');
+            replyButton.classList.add('bg-[#0F4C81]', 'hover:bg-[#0B3C66]');
+        }
 
-if (replyText) {
-
-    // Xóa nội dung của nhắc nhở trước
-    replyText.value = '';
-
-    // Bắt buộc mở khóa lại textarea
-    replyText.disabled = false;
-
-    replyText.readOnly = false;
-}
-
-
-const replyButton =
-    document.getElementById(
-        'hva-reminder-send-reply'
-    );
-
-if (replyButton) {
-
-    // Bắt buộc mở khóa lại nút
-    replyButton.disabled = false;
-
-    // Trả nút về trạng thái ban đầu
-    replyButton.innerHTML = `
-        <i class="bi bi-send-fill"></i>
-        GỬI PHẢN HỒI
-    `;
-
-    // Xóa trạng thái của lần gửi trước
-    replyButton.classList.remove(
-        'bg-slate-500',
-        'cursor-default'
-    );
-
-    // Trả màu nút gửi
-    replyButton.classList.add(
-        'bg-[#0F4C81]',
-        'hover:bg-[#0B3C66]'
-    );
-}
+        if (isReminderResult) {
+            userActions?.classList.add('hidden');
+            confirmButton?.classList.remove('hidden');
+            confirmButton?.classList.add('flex');
+        } else {
+            userActions?.classList.remove('hidden');
+            confirmButton?.classList.add('hidden');
+            confirmButton?.classList.remove('flex');
+        }
 
 
         // ----------------------------------------------------
@@ -2767,6 +2766,64 @@ if (replyButton) {
 
 window.openHVANotification =
     openHVANotification;
+
+
+// ============================================================
+// BGH XÁC NHẬN KẾT QUẢ NHẮC NHỞ
+// Ghi Sheet + đóng thông báo hai phía; không gửi ngược cho GV/NV
+// ============================================================
+async function confirmHVAReminderByBGH() {
+    const modal = document.getElementById('hva-reminder-detail-modal');
+    const notificationId = String(modal?.dataset.notificationId || '').trim();
+    const user = getNotificationUser();
+    const button = document.getElementById('hva-reminder-bgh-confirm-btn');
+
+    if (!notificationId || !user.username) {
+        AppMain?.showToast?.('Không xác định được thông báo hoặc tài khoản xác nhận.');
+        return;
+    }
+
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = '<i class="bi bi-arrow-repeat"></i> ĐANG XÁC NHẬN...';
+    }
+
+    try {
+        const response = await fetch(HVA_NOTIFICATION_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+                action: 'confirmReminderByBGH',
+                notificationId,
+                username: user.username,
+                fullName: user.fullName || ''
+            })
+        });
+
+        const result = await response.json();
+        if (!result || result.success !== true) {
+            throw new Error(result?.message || 'Không xác nhận được nhắc nhở.');
+        }
+
+        closeHVAReminderDetail();
+        await loadHVANotifications();
+        renderHVANotifications();
+        AppMain?.showToast?.('Đã xác nhận và khép nhắc nhở.');
+
+        // Báo cho Home cập nhật phần Việc của tôi nếu đang có nhắc nhở leo thang.
+        window.dispatchEvent(new CustomEvent('hva-reminder-closed'));
+
+    } catch (error) {
+        console.error('[HVA NHẮC NHỞ] Lỗi BGH xác nhận:', error);
+        if (button) {
+            button.disabled = false;
+            button.innerHTML = '<i class="bi bi-check-circle-fill"></i> XÁC NHẬN';
+        }
+        AppMain?.showToast?.('Xác nhận chưa thành công: ' + (error?.message || 'Lỗi không xác định'));
+    }
+}
+
+window.confirmHVAReminderByBGH = confirmHVAReminderByBGH;
 
 
 // ============================================================
