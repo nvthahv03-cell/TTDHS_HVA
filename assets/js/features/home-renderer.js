@@ -2155,6 +2155,10 @@ export function renderHome() {
                 border border-teal-400/40
                 active:scale-[0.98]">
 
+        <div id="hvaDieuHanhSoLock" class="hidden absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-amber-300/95 border border-amber-100/90 shadow-md items-center justify-center pointer-events-none" title="Chưa được cấp quyền">
+            <i class="bi bi-lock-fill text-amber-900 text-[12px]"></i>
+        </div>
+
         <div class="absolute top-0 right-0
                     w-20 h-20 bg-white/20 rounded-full blur-xl
                     group-hover:scale-150
@@ -2178,7 +2182,7 @@ export function renderHome() {
             <h3 class="text-xs font-extrabold
                        tracking-tight text-white mb-0.5
                        whitespace-nowrap">
-                <i id="hvaDieuHanhSoLock" class="bi bi-lock-fill hidden mr-1"></i>ĐIỀU HÀNH SỐ
+                ĐIỀU HÀNH SỐ
             </h3>
 
             <i class="bi bi-chevron-up
@@ -2802,16 +2806,26 @@ export function renderHome() {
 
     <!-- TRỤ CỘT 4: QUẢN TRỊ -->
     <div class="relative">
-        <div id="hvaQuanTriCard" data-dropdown-toggle="quantri-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-visible border border-slate-500/40 active:scale-[0.98]">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
+        <div id="hvaQuanTriCard" data-dropdown-toggle="quantri-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-visible border border-blue-300/45 active:scale-[0.98]">
+            <div id="hvaQuanTriLock" class="hidden absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-amber-300/95 border border-amber-100/90 shadow-md items-center justify-center pointer-events-none" title="Chưa được cấp quyền">
+                <i class="bi bi-lock-fill text-amber-900 text-[12px]"></i>
+            </div>
+            <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500 pointer-events-none"></div>
             <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
-                <i class="bi bi-graph-up-arrow text-white text-lg"></i>
+                <svg viewBox="0 0 48 48" class="w-7 h-7 text-white" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M28.5 8.5c-8.1 0-14.2 5.7-14.2 13.4 0 3.9 1.5 7 4.1 9.4 1.5 1.4 2.4 3.1 2.4 5.1v2.1h12.4v-4.3c0-1.5.7-2.9 1.9-3.8 3.1-2.3 5-5.9 5-10.1 0-6.8-5-11.8-11.6-11.8Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14.7 23.2H9.5m7.1-8.1-4-3.2m12-4.5V3.5m9.2 7.7 3.4-3.5m2.4 12.6h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".9"/>
+                    <circle cx="25.1" cy="19.3" r="2.2" fill="currentColor"/>
+                    <circle cx="31.7" cy="16.2" r="1.7" fill="currentColor" opacity=".9"/>
+                    <circle cx="32.2" cy="24.3" r="1.7" fill="currentColor" opacity=".9"/>
+                    <path d="M26.8 18.4l3.2-1.5m-3.1 3.6 3.6 2.8m-5.4-1.8v5.2h5.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
             </div>
             <div class="flex items-center justify-between">
-                <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5"><i id="hvaQuanTriLock" class="bi bi-lock-fill hidden mr-1"></i>QUẢN TRỊ</h3>
-                <i class="bi bi-chevron-up text-xs text-slate-200 transition-transform duration-300" data-dropdown-arrow></i>
+                <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">QUẢN TRỊ</h3>
+                <i class="bi bi-chevron-up text-xs text-blue-100 transition-transform duration-300" data-dropdown-arrow></i>
             </div>
-            <p class="text-[10px] text-slate-100 font-medium">Kế hoạch • Thi đua • KPI</p>
+            <p class="text-[10px] text-blue-50 font-medium">Hệ thống • Dữ liệu • Phân quyền</p>
         </div>
 
         <!-- Dropup Menu Quản trị theo chuẩn sơ đồ cây -->
@@ -3194,12 +3208,10 @@ export function renderHome() {
     // Chỉ tác động 2 card này, KHÔNG đụng NGHIỆP VỤ SỐ.
     // =====================================================
     function setupHVAMainMenuPermission() {
-        let user = {};
-        try {
-            user = JSON.parse(sessionStorage.getItem('user') || '{}');
-        } catch (error) {
-            user = {};
-        }
+        // Dùng đúng nguồn tài khoản mà toàn hệ thống HVA đang dùng.
+        // Có tài khoản được lưu ở localStorage (không chỉ sessionStorage),
+        // nên đọc riêng sessionStorage sẽ nhận {} và khóa nhầm cả BGH.
+        const user = getCurrentHVAUser();
 
         const rawProfile = Object.values(user || {})
             .filter(v => ['string', 'number', 'boolean'].includes(typeof v))
@@ -3244,15 +3256,18 @@ export function renderHome() {
                 card.style.cursor = 'pointer';
                 card.removeAttribute('aria-disabled');
                 lock?.classList.add('hidden');
+                lock?.classList.remove('flex');
                 return;
             }
 
             // Khóa UX nhưng vẫn cho bấm để giải thích lý do bị khóa.
             card.removeAttribute('data-dropdown-toggle');
-            card.classList.add('opacity-65', 'grayscale');
-            card.style.cursor = 'not-allowed';
+            // Giữ nguyên màu card; chỉ báo khóa bằng ổ khóa vàng ở góc phải.
+            card.classList.remove('opacity-65', 'grayscale');
+            card.style.cursor = 'pointer';
             card.setAttribute('aria-disabled', 'true');
             lock?.classList.remove('hidden');
+            lock?.classList.add('flex');
             dropdown?.classList.add('hidden');
 
             card.addEventListener('click', function hvaLockedMenuNotice(event) {
