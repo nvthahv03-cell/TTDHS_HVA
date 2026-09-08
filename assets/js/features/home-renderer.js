@@ -1512,6 +1512,9 @@ export function renderHome() {
 <!-- ================= HẾT THI ĐUA ================= -->
 
 
+    <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
+<div class="relative">
+
     <!-- CARD NGHIỆP VỤ SỐ -->
     <div data-dropdown-toggle="nghiepvuso-dropdown"
          class="group relative rounded-2xl
@@ -1589,12 +1592,6 @@ export function renderHome() {
         </div>
 
         <!-- NỘI DUNG -->
-        <!--
-          KIẾN TRÚC HVA:
-          BGH tạo/giao/phát hành tại ĐIỀU HÀNH SỐ.
-          VIỆC CỦA TÔI là cửa nhận việc.
-          NGHIỆP VỤ SỐ là nơi GV trực tiếp thực hiện nghiệp vụ.
-        -->
         <div class="p-3 space-y-1.5">
 
             <!-- 1. HỘI NGHỊ - HỘI THẢO -->
@@ -1716,7 +1713,7 @@ export function renderHome() {
 
             <!-- 3. BÁO CÁO CHUYÊN MÔN -->
             <a href="baocao-chuyenmon.html"
-               class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
                       text-[14px] font-bold
                       text-[#123B67] dark:text-slate-100
                       hover:bg-blue-50 dark:hover:bg-slate-800 transition">
@@ -1735,13 +1732,11 @@ export function renderHome() {
                         Công tác tháng • Định kỳ • Đột xuất
                     </div>
                 </div>
-
-                <i class="bi bi-chevron-right text-xs text-slate-400 shrink-0"></i>
             </a>
 
             <!-- 4. HOẠT ĐỘNG GIÁO DỤC -->
             <a href="hoatdong-giaoduc.html"
-               class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
                       text-[14px] font-bold
                       text-[#123B67] dark:text-slate-100
                       hover:bg-blue-50 dark:hover:bg-slate-800 transition">
@@ -1760,13 +1755,11 @@ export function renderHome() {
                         Thực hiện • Kết quả • Minh chứng
                     </div>
                 </div>
-
-                <i class="bi bi-chevron-right text-xs text-slate-400 shrink-0"></i>
             </a>
 
             <!-- 5. THI - CUỘC THI -->
             <a href="cac-cuoc-thi.html"
-               class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
                       text-[14px] font-bold
                       text-[#123B67] dark:text-slate-100
                       hover:bg-blue-50 dark:hover:bg-slate-800 transition">
@@ -1785,13 +1778,11 @@ export function renderHome() {
                         HSG • KHKT • Đăng ký • Kết quả
                     </div>
                 </div>
-
-                <i class="bi bi-chevron-right text-xs text-slate-400 shrink-0"></i>
             </a>
 
             <!-- 6. CHUYỂN ĐỔI SỐ -->
             <a href="chuyen-doi-so.html"
-               class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
                       text-[14px] font-bold
                       text-[#123B67] dark:text-slate-100
                       hover:bg-blue-50 dark:hover:bg-slate-800 transition">
@@ -1810,13 +1801,11 @@ export function renderHome() {
                         Nhiệm vụ CĐS • Sản phẩm số • Minh chứng
                     </div>
                 </div>
-
-                <i class="bi bi-chevron-right text-xs text-slate-400 shrink-0"></i>
             </a>
 
             <!-- 7. HÀNH CHÍNH -->
             <a href="hanh-chinh.html"
-               class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
                       text-[14px] font-bold
                       text-[#123B67] dark:text-slate-100
                       hover:bg-blue-50 dark:hover:bg-slate-800 transition">
@@ -1835,12 +1824,13 @@ export function renderHome() {
                         Biểu mẫu • Kê khai • Báo cáo hành chính
                     </div>
                 </div>
-
-                <i class="bi bi-chevron-right text-xs text-slate-400 shrink-0"></i>
             </a>
 
         </div>
     </div>
+</div>
+
+<!-- ====================================================== -->
 
 
     <!-- ====================================================== -->
