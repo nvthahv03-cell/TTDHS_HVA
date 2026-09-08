@@ -4396,11 +4396,98 @@ window.setupHVAReminderPermission = function() {
     btn.classList.toggle('hidden', !isHVAReminderManager());
 };
 
-window.openHVAReminderModal = async function(event) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
+const HVA_REMINDER_CACHE_KEY = 'HVA_REMINDER_DIRECTORY_V1';
+const HVA_REMINDER_CACHE_TTL = 10 * 60 * 1000;
+let HVA_REMINDER_TEAMS = [];
+let HVA_REMINDER_DIRECTORY_READY = false;
+let HVA_REMINDER_DIRECTORY_PROMISE = null;
+
+function readHVAReminderDirectoryCache() {
+    try {
+        const raw = sessionStorage.getItem(HVA_REMINDER_CACHE_KEY);
+        if (!raw) return false;
+        const cache = JSON.parse(raw);
+        if (!cache || Date.now() - Number(cache.savedAt || 0) > HVA_REMINDER_CACHE_TTL) return false;
+        if (!Array.isArray(cache.people) || !Array.isArray(cache.teams)) return false;
+        HVA_REMINDER_PEOPLE = cache.people;
+        HVA_REMINDER_TEAMS = cache.teams;
+        HVA_REMINDER_DIRECTORY_READY = true;
+        return true;
+    } catch (_) { return false; }
+}
+
+function writeHVAReminderDirectoryCache() {
+    try {
+        sessionStorage.setItem(HVA_REMINDER_CACHE_KEY, JSON.stringify({
+            savedAt: Date.now(), teams: HVA_REMINDER_TEAMS, people: HVA_REMINDER_PEOPLE
+        }));
+    } catch (_) {}
+}
+
+async function fetchHVAReminderJson(url) {
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const text = await r.text();
+    try { return JSON.parse(text); }
+    catch (_) { throw new Error('Máy chủ trả dữ liệu không đúng định dạng.'); }
+}
+
+function renderHVAReminderTeams() {
+    const select = document.getElementById('hva-reminder-team');
+    if (!select) return;
+    const current = select.value || '';
+    select.innerHTML = '<option value="">Tất cả Tổ/Bộ phận</option>' +
+        HVA_REMINDER_TEAMS.map(x => {
+            const name = String(x.tenTo || x.to || x.name || x || '').trim();
+            return name ? `<option value="${escapeHVAReminderHtml(name)}">${escapeHVAReminderHtml(name)}</option>` : '';
+        }).join('');
+    if ([...select.options].some(o => o.value === current)) select.value = current;
+    select.dataset.loaded = '1';
+}
+
+async function ensureHVAReminderDirectory() {
+    if (HVA_REMINDER_DIRECTORY_READY) return true;
+    if (readHVAReminderDirectoryCache()) {
+        renderHVAReminderTeams();
+        renderHVAReminderPeople();
+        return true;
     }
+    if (HVA_REMINDER_DIRECTORY_PROMISE) return HVA_REMINDER_DIRECTORY_PROMISE;
+
+    HVA_REMINDER_DIRECTORY_PROMISE = (async () => {
+        const stamp = Date.now();
+        const teamUrl = HVA_REMINDER_API + '?action=getDanhSachTo&_=' + stamp;
+        const peopleUrl = HVA_REMINDER_API + '?action=getNhanSuTheoTo&to=&_=' + stamp;
+        const results = await Promise.allSettled([
+            fetchHVAReminderJson(teamUrl), fetchHVAReminderJson(peopleUrl)
+        ]);
+
+        if (results[1].status !== 'fulfilled') throw results[1].reason;
+        const peopleData = results[1].value;
+        HVA_REMINDER_PEOPLE = Array.isArray(peopleData) ? peopleData :
+                              Array.isArray(peopleData?.data) ? peopleData.data : [];
+
+        if (results[0].status === 'fulfilled') {
+            const teamData = results[0].value;
+            HVA_REMINDER_TEAMS = Array.isArray(teamData) ? teamData :
+                                 Array.isArray(teamData?.data) ? teamData.data : [];
+        } else {
+            const unique = [...new Set(HVA_REMINDER_PEOPLE.map(p => String(p.to || '').trim()).filter(Boolean))];
+            HVA_REMINDER_TEAMS = unique.map(tenTo => ({ tenTo }));
+        }
+
+        HVA_REMINDER_DIRECTORY_READY = true;
+        writeHVAReminderDirectoryCache();
+        renderHVAReminderTeams();
+        renderHVAReminderPeople();
+        return true;
+    })().finally(() => { HVA_REMINDER_DIRECTORY_PROMISE = null; });
+
+    return HVA_REMINDER_DIRECTORY_PROMISE;
+}
+
+window.openHVAReminderModal = async function(event) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
     if (!isHVAReminderManager()) {
         alert('Tài khoản chưa được cấp quyền sử dụng tác vụ Nhắc nhở công vụ.');
         return;
@@ -4409,8 +4496,19 @@ window.openHVAReminderModal = async function(event) {
     if (!modal) return;
     modal.classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
-    await loadHVAReminderTeams();
-    await loadHVAReminderPeople();
+
+    const box = document.getElementById('hva-reminder-people');
+    if (HVA_REMINDER_DIRECTORY_READY || readHVAReminderDirectoryCache()) {
+        renderHVAReminderTeams();
+        renderHVAReminderPeople();
+        return;
+    }
+    if (box) box.innerHTML = '<div class="p-5 text-center text-[11px] text-slate-400">Đang tải danh sách nhân sự...</div>';
+    try { await ensureHVAReminderDirectory(); }
+    catch (e) {
+        if (box) box.innerHTML = '<div class="p-5 text-center text-[11px] text-red-500">Không tải được danh sách nhân sự.</div>';
+        showHVAReminderStatus('Không tải được danh sách GV/NV: ' + e.message, true);
+    }
 };
 
 window.closeHVAReminderModal = function() {
@@ -4419,46 +4517,15 @@ window.closeHVAReminderModal = function() {
 };
 
 async function loadHVAReminderTeams() {
-    const select = document.getElementById('hva-reminder-team');
-    if (!select || select.dataset.loaded === '1') return;
-    try {
-        const r = await fetch(
-            HVA_REMINDER_API + '?action=getDanhSachTo&_=' + Date.now(),
-            { cache: 'no-store' }
-        );
-        const data = await r.json();
-        const list = Array.isArray(data) ? data :
-                     Array.isArray(data?.data) ? data.data : [];
-        select.innerHTML = '<option value="">Tất cả Tổ/Bộ phận</option>' +
-            list.map(x => {
-                const name = String(x.tenTo || x.to || x.name || '').trim();
-                return name
-                    ? `<option value="${escapeHVAReminderHtml(name)}">${escapeHVAReminderHtml(name)}</option>`
-                    : '';
-            }).join('');
-        select.dataset.loaded = '1';
-    } catch (e) {
-        showHVAReminderStatus('Không tải được danh sách Tổ/Bộ phận: ' + e.message, true);
-    }
+    await ensureHVAReminderDirectory();
+    renderHVAReminderTeams();
 }
 
 window.loadHVAReminderPeople = async function() {
-    const box = document.getElementById('hva-reminder-people');
-    const team = document.getElementById('hva-reminder-team')?.value || '';
-    if (!box) return;
-    box.innerHTML = '<div class="p-5 text-center text-[11px] text-slate-400">Đang tải danh sách nhân sự...</div>';
-    try {
-        const url = HVA_REMINDER_API +
-            '?action=getNhanSuTheoTo&to=' + encodeURIComponent(team) +
-            '&_=' + Date.now();
-        const r = await fetch(url, { cache: 'no-store' });
-        const data = await r.json();
-        HVA_REMINDER_PEOPLE = Array.isArray(data) ? data :
-                              Array.isArray(data?.data) ? data.data : [];
-        renderHVAReminderPeople();
-    } catch (e) {
-        box.innerHTML = '<div class="p-5 text-center text-[11px] text-red-500">Không tải được danh sách nhân sự.</div>';
+    if (!HVA_REMINDER_DIRECTORY_READY && !readHVAReminderDirectoryCache()) {
+        try { await ensureHVAReminderDirectory(); } catch (_) { return; }
     }
+    renderHVAReminderPeople();
 };
 
 window.renderHVAReminderPeople = function() {
@@ -4467,10 +4534,12 @@ window.renderHVAReminderPeople = function() {
     const q = String(document.getElementById('hva-reminder-search')?.value || '')
         .trim().toLocaleLowerCase('vi');
 
+    const team = String(document.getElementById('hva-reminder-team')?.value || '').trim();
     const list = HVA_REMINDER_PEOPLE.filter(p => {
-        const hay = [p.hoTen, p.to, p.chucVu, p.vaiTro, p.username]
+        const personTeam = String(p.to || p.toBoPhan || '').trim();
+        const hay = [p.hoTen, personTeam, p.chucVu, p.vaiTro, p.username]
             .join(' ').toLocaleLowerCase('vi');
-        return !q || hay.includes(q);
+        return (!team || personTeam === team) && (!q || hay.includes(q));
     });
 
     if (!list.length) {
