@@ -3384,13 +3384,7 @@ function getCurrentHVAUser() {
 }
 
 async function loadMyTasks() {
-    expectedMode = String(expectedMode || 'IN').toUpperCase();
-    if (String(parsed.mode || 'IN').toUpperCase() !== expectedMode) {
-        if (status) status.textContent = expectedMode === 'OUT' ? 'Đây không phải mã QR ra.' : 'Đây không phải mã QR vào.';
-        setTimeout(() => openMeetingQrScanner(expectedMeetingId, expectedMode), 900);
-        return;
-    }
-
+    // VIỆC CỦA TÔI là luồng độc lập. Không đặt logic QR cuộc họp tại đây.
     const user = getCurrentHVAUser();
 
     const username =
@@ -3422,7 +3416,9 @@ async function loadMyTasks() {
 
         const data = await response.json();
 
-        HVA_MY_TASKS = Array.isArray(data) ? data : [];
+        HVA_MY_TASKS = Array.isArray(data)
+            ? data
+            : (data && data.success === true && Array.isArray(data.tasks) ? data.tasks : []);
 
         updateMyTaskCounters();
 
@@ -4085,71 +4081,79 @@ function updateMyWorkTotalBadge() {
 // PHÂN LOẠI TRẠNG THÁI
 // =====================================================
 
+function parseHVATaskDeadline_(value) {
+    if (!value) return null;
+    if (value instanceof Date && !isNaN(value.getTime())) return value;
+
+    const text = String(value).trim();
+    if (!text) return null;
+
+    // Chuẩn HVA: dd/mm/yyyy hoặc dd/mm/yyyy HH:mm
+    let m = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T](\d{1,2}):(\d{2}))?/);
+    if (m) {
+        const d = new Date(
+            Number(m[3]), Number(m[2]) - 1, Number(m[1]),
+            m[4] == null ? 23 : Number(m[4]),
+            m[5] == null ? 59 : Number(m[5]),
+            m[4] == null ? 59 : 0, 0
+        );
+        return isNaN(d.getTime()) ? null : d;
+    }
+
+    const d = new Date(text);
+    return isNaN(d.getTime()) ? null : d;
+}
+
+function normalizeHVATaskStatus_(value) {
+    return String(value || '')
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/Đ/g, 'D').replace(/đ/g, 'd')
+        .toUpperCase();
+}
+
 function getMyTaskGroups() {
-
     const now = new Date();
-
     const assigned = [];
     const doing = [];
     const overdue = [];
     const completed = [];
 
     HVA_MY_TASKS.forEach(task => {
+        const status = normalizeHVATaskStatus_(task.trangThai || task.status);
+        const deadline = parseHVATaskDeadline_(
+            task.hanHoanThanh || task.deadline || task.hanXuLy || ''
+        );
 
-        const status = String(task.trangThai || '').trim();
-
-        let deadline = null;
-
-        if (task.hanHoanThanh) {
-            deadline = new Date(task.hanHoanThanh);
-
-            if (isNaN(deadline.getTime())) {
-                deadline = null;
-            }
-        }
-
-        if (status === 'Hoàn thành') {
+        if (status === 'HOAN THANH' || status === 'DA HOAN THANH' || status === 'COMPLETED') {
             completed.push(task);
             return;
         }
 
-        if (
-            deadline &&
-            deadline.getTime() < now.getTime()
-        ) {
+        if (deadline && deadline.getTime() < now.getTime()) {
             overdue.push(task);
             return;
         }
 
         if (
-            status === 'Đã tiếp nhận' ||
-            status === 'Đang thực hiện'
+            status === 'DA TIEP NHAN' ||
+            status === 'DANG THUC HIEN' ||
+            status === 'DOING' ||
+            status === 'IN PROGRESS'
         ) {
             doing.push(task);
             return;
         }
 
-        // Mới khởi tạo và các trạng thái chưa tiếp nhận
         assigned.push(task);
     });
 
-    return {
-        ASSIGNED: assigned,
-        DOING: doing,
-        OVERDUE: overdue,
-        COMPLETED: completed
-    };
+    return { ASSIGNED: assigned, DOING: doing, OVERDUE: overdue, COMPLETED: completed };
 }
 
-
-// =====================================================
-// CẬP NHẬT 4 BỘ ĐẾM
-// =====================================================
-
 function updateMyTaskCounters() {
-
     const groups = getMyTaskGroups();
-
     const setCount = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
@@ -4162,37 +4166,92 @@ function updateMyTaskCounters() {
     updateMyWorkTotalBadge();
 }
 
+function getHVATaskText_(task, keys, fallback = '') {
+    for (const key of keys) {
+        const value = task && task[key];
+        if (value !== undefined && value !== null && String(value).trim() !== '') {
+            return String(value).trim();
+        }
+    }
+    return fallback;
+}
 
-// =====================================================
-// MỞ DANH SÁCH VIỆC
-// =====================================================
+function closeHVAMyTasksModal_() {
+    document.getElementById('hvaMyTasksModal')?.remove();
+}
+window.closeHVAMyTasksModal = closeHVAMyTasksModal_;
+
+function renderHVAMyTasksModal_(type, tasks) {
+    closeHVAMyTasksModal_();
+
+    const meta = {
+        ASSIGNED:  { title: 'VIỆC ĐƯỢC GIAO', icon: 'bi-inbox-fill', cls: 'text-blue-700', bg: 'bg-blue-50' },
+        DOING:     { title: 'ĐANG THỰC HIỆN', icon: 'bi-hourglass-split', cls: 'text-amber-700', bg: 'bg-amber-50' },
+        OVERDUE:   { title: 'QUÁ HẠN', icon: 'bi-exclamation-triangle-fill', cls: 'text-red-700', bg: 'bg-red-50' },
+        COMPLETED: { title: 'HOÀN THÀNH', icon: 'bi-check-circle-fill', cls: 'text-emerald-700', bg: 'bg-emerald-50' }
+    }[type] || { title: 'VIỆC CỦA TÔI', icon: 'bi-list-task', cls: 'text-slate-700', bg: 'bg-slate-50' };
+
+    const esc = escapeMyWorkHtml;
+    const rows = tasks.length ? tasks.map(task => {
+        const title = getHVATaskText_(task, ['tieuDe', 'tenNhiemVu', 'noiDung', 'taskName'], 'Nhiệm vụ');
+        const content = getHVATaskText_(task, ['noiDung', 'moTa', 'description'], '');
+        const deadline = getHVATaskText_(task, ['hanHoanThanh', 'deadline', 'hanXuLy'], '');
+        const assigner = getHVATaskText_(task, ['nguoiGiao', 'hoTenNguoiGiao', 'senderName'], '');
+        const status = getHVATaskText_(task, ['trangThai', 'status'], '');
+
+        return `<div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+            <div class="flex items-start gap-2.5">
+                <div class="w-8 h-8 rounded-lg ${meta.bg} ${meta.cls} flex items-center justify-center shrink-0">
+                    <i class="bi ${meta.icon}"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                    <div class="text-[11px] font-extrabold text-slate-900 leading-snug">${esc(title)}</div>
+                    ${content && content !== title ? `<div class="mt-1 text-[9px] text-slate-600 leading-relaxed">${esc(content)}</div>` : ''}
+                    <div class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[8px] text-slate-500">
+                        ${deadline ? `<span><i class="bi bi-calendar-event mr-1"></i>Hạn: <b>${esc(deadline)}</b></span>` : ''}
+                        ${assigner ? `<span><i class="bi bi-person-check mr-1"></i>${esc(assigner)}</span>` : ''}
+                        ${status ? `<span><i class="bi bi-flag mr-1"></i>${esc(status)}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }).join('') : `<div class="py-8 text-center text-[10px] text-slate-400">Hiện không có nhiệm vụ trong nhóm này.</div>`;
+
+    document.body.insertAdjacentHTML('beforeend', `
+        <div id="hvaMyTasksModal" class="fixed inset-0 z-[9999] bg-slate-900/55 backdrop-blur-[1px] flex items-center justify-center p-3">
+            <div class="w-full max-w-md max-h-[84vh] bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div class="px-4 py-3 ${meta.bg} border-b border-slate-200 flex items-center justify-between gap-3">
+                    <div>
+                        <div class="text-[11px] font-extrabold ${meta.cls}"><i class="bi ${meta.icon} mr-1.5"></i>${meta.title}</div>
+                        <div class="text-[8px] text-slate-500 mt-0.5">${tasks.length} nhiệm vụ</div>
+                    </div>
+                    <button type="button" onclick="closeHVAMyTasksModal()" class="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-500 flex items-center justify-center">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="p-3 space-y-2 overflow-y-auto max-h-[70vh]">${rows}</div>
+            </div>
+        </div>`);
+
+    const modal = document.getElementById('hvaMyTasksModal');
+    modal?.addEventListener('click', e => {
+        if (e.target === modal) closeHVAMyTasksModal_();
+    });
+}
 
 window.openMyTasks = async function(type, event) {
-
     if (event) {
         event.preventDefault();
         event.stopPropagation();
     }
 
-    if (!HVA_MY_TASKS.length) {
-        await loadMyTasks();
-    }
+    // Mỗi lần bấm đều lấy dữ liệu mới để 4 trạng thái phản ánh đúng hiện tại.
+    await loadMyTasks();
 
     const groups = getMyTaskGroups();
     const tasks = groups[type] || [];
-
-    // Tạm thời kiểm tra dữ liệu.
-    // Bước sau ta thay bằng giao diện danh sách đẹp.
-    console.log('[HVA] Việc của tôi:', type, tasks);
-
-    if (!tasks.length) {
-        alert('Hiện không có nhiệm vụ trong nhóm này.');
-        return;
-    }
-
-    console.table(tasks);
+    renderHVAMyTasksModal_(type, tasks);
 };
-
 
 
 // =====================================================
