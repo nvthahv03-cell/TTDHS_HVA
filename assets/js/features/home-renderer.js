@@ -1554,9 +1554,9 @@ export function renderHome() {
          data-dropdown-menu
         class="hidden fixed sm:absolute
        left-3 right-3
-       sm:left-0 sm:right-auto sm:translate-x-0
-       top-16 sm:top-auto
-       bottom-auto sm:bottom-[calc(100%+0.6rem)]
+        sm:left-auto sm:right-0 sm:translate-x-0
+        top-16 sm:top-[calc(100%+0.6rem)]
+        bottom-auto sm:bottom-auto
        z-[999]
        w-auto sm:w-[370px]
        max-h-[calc(100vh-5rem)] sm:max-h-[76vh]
