@@ -1556,7 +1556,7 @@ export function renderHome() {
        left-3 right-3
        sm:left-auto sm:right-0
        top-16 sm:top-auto
-       bottom-auto sm:bottom-[calc(100%+0.6rem)]
+       bottom-auto sm:bottom-[calc(100%-2.2rem)]
        z-[999]
        w-auto sm:w-[370px]
        max-h-[calc(100vh-5rem)] sm:max-h-[68vh]
