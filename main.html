@@ -2780,7 +2780,8 @@ window.toggleHVAReminderReply =
 
 
 // ============================================================
-// ĐÃ TIẾP NHẬN
+// NHẮC NHỞ CÔNG VỤ - ĐÃ TIẾP NHẬN
+// GHI BACKEND THẬT
 // ============================================================
 async function acceptHVAReminder() {
 
@@ -2789,13 +2790,32 @@ async function acceptHVAReminder() {
             'hva-reminder-detail-modal'
         );
 
+
     const notificationId =
-        modal?.dataset.notificationId || '';
+        String(
+            modal?.dataset.notificationId ||
+            ''
+        ).trim();
+
 
     if (!notificationId) {
 
         AppMain?.showToast?.(
             'Không xác định được thông báo.'
+        );
+
+        return;
+    }
+
+
+    const user =
+        getNotificationUser();
+
+
+    if (!user.username) {
+
+        AppMain?.showToast?.(
+            'Không xác định được tài khoản người dùng.'
         );
 
         return;
@@ -2825,19 +2845,92 @@ async function acceptHVAReminder() {
     }
 
 
-    /*
-     * CHƯA GỬI BACKEND Ở BƯỚC NÀY.
-     * Chỉ dựng đúng UI và giữ notificationId.
-     * Khi nối backend sẽ thay phần này bằng action
-     * ghi nhận tiếp nhận thực tế.
-     */
+    try {
 
-    setTimeout(() => {
+        const response =
+            await fetch(
+                HVA_NOTIFICATION_API,
+                {
+                    method: 'POST',
 
+                    headers: {
+                        'Content-Type':
+                            'text/plain;charset=utf-8'
+                    },
+
+                    body: JSON.stringify({
+
+                        action:
+                            'acceptReminder',
+
+                        notificationId:
+                            notificationId,
+
+                        username:
+                            user.username,
+
+                        fullName:
+                            user.fullName || ''
+                    })
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                'HTTP ' +
+                response.status
+            );
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !result ||
+            result.success !== true
+        ) {
+
+            throw new Error(
+                result?.message ||
+                'Không ghi nhận được tiếp nhận.'
+            );
+        }
+
+
+        // ----------------------------------------------------
+        // CẬP NHẬT ITEM TRÊN CLIENT
+        // ----------------------------------------------------
+        const item =
+            HVA_NOTIFICATIONS.find(
+                x =>
+                    String(x.id) ===
+                    String(notificationId)
+            );
+
+
+        if (item) {
+
+            item.trangThai =
+                'ĐÃ TIẾP NHẬN';
+        }
+
+
+        // ----------------------------------------------------
+        // GIAO DIỆN
+        // ----------------------------------------------------
         if (button) {
 
+            button.disabled = true;
+
             button.innerHTML = `
-                <i class="bi bi-check-circle-fill"></i>
+                <i class="bi
+                          bi-check-circle-fill">
+                </i>
+
                 ĐÃ TIẾP NHẬN
             `;
 
@@ -2847,24 +2940,63 @@ async function acceptHVAReminder() {
             );
 
             button.classList.add(
-                'bg-slate-500'
+                'bg-slate-500',
+                'cursor-default'
             );
         }
 
 
         AppMain?.showToast?.(
-            'Đã ghi nhận tiếp nhận trên giao diện.'
+            'Đã ghi nhận tiếp nhận.'
         );
 
-    }, 350);
+
+        // Làm mới Notification Center
+        await loadHVANotifications();
+
+        renderHVANotifications();
+
+
+    } catch (error) {
+
+        console.error(
+            '[HVA NHẮC NHỞ] Lỗi tiếp nhận:',
+            error
+        );
+
+
+        if (button) {
+
+            button.disabled = false;
+
+            button.innerHTML = `
+                <i class="bi
+                          bi-check-circle-fill">
+                </i>
+
+                ĐÃ TIẾP NHẬN
+            `;
+        }
+
+
+        AppMain?.showToast?.(
+            'Chưa ghi nhận được: ' +
+            (
+                error?.message ||
+                'Lỗi không xác định'
+            )
+        );
+    }
 }
+
 
 window.acceptHVAReminder =
     acceptHVAReminder;
 
 
 // ============================================================
-// GỬI PHẢN HỒI / GIẢI TRÌNH
+// NHẮC NHỞ CÔNG VỤ
+// GỬI PHẢN HỒI / GIẢI TRÌNH THẬT VỀ BACKEND
 // ============================================================
 async function sendHVAReminderReply() {
 
@@ -2873,8 +3005,12 @@ async function sendHVAReminderReply() {
             'hva-reminder-detail-modal'
         );
 
+
     const notificationId =
-        modal?.dataset.notificationId || '';
+        String(
+            modal?.dataset.notificationId ||
+            ''
+        ).trim();
 
 
     const textarea =
@@ -2884,7 +3020,10 @@ async function sendHVAReminderReply() {
 
 
     const content =
-        textarea?.value.trim() || '';
+        String(
+            textarea?.value ||
+            ''
+        ).trim();
 
 
     if (!notificationId) {
@@ -2904,6 +3043,20 @@ async function sendHVAReminderReply() {
         );
 
         textarea?.focus();
+
+        return;
+    }
+
+
+    const user =
+        getNotificationUser();
+
+
+    if (!user.username) {
+
+        AppMain?.showToast?.(
+            'Không xác định được tài khoản người dùng.'
+        );
 
         return;
     }
@@ -2932,34 +3085,163 @@ async function sendHVAReminderReply() {
     }
 
 
-    /*
-     * CHƯA GỬI BACKEND Ở BƯỚC NÀY.
-     * notificationId + content đã sẵn sàng.
-     * Bước backend tiếp theo sẽ ghi phản hồi thật.
-     */
+    try {
 
-    setTimeout(() => {
+        const response =
+            await fetch(
+                HVA_NOTIFICATION_API,
+                {
+                    method: 'POST',
 
-        if (button) {
+                    headers: {
+                        'Content-Type':
+                            'text/plain;charset=utf-8'
+                    },
 
-            button.innerHTML = `
-                <i class="bi bi-check-circle-fill"></i>
-                ĐÃ GỬI
-            `;
+                    body: JSON.stringify({
+
+                        action:
+                            'replyReminder',
+
+                        notificationId:
+                            notificationId,
+
+                        username:
+                            user.username,
+
+                        fullName:
+                            user.fullName || '',
+
+                        content:
+                            content
+                    })
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                'HTTP ' +
+                response.status
+            );
         }
 
 
+        const result =
+            await response.json();
+
+
+        if (
+            !result ||
+            result.success !== true
+        ) {
+
+            throw new Error(
+                result?.message ||
+                'Không gửi được phản hồi.'
+            );
+        }
+
+
+        // ----------------------------------------------------
+        // CẬP NHẬT CLIENT
+        // ----------------------------------------------------
+        const item =
+            HVA_NOTIFICATIONS.find(
+                x =>
+                    String(x.id) ===
+                    String(notificationId)
+            );
+
+
+        if (item) {
+
+            item.trangThai =
+                'ĐÃ PHẢN HỒI';
+        }
+
+
+        // ----------------------------------------------------
+        // KHÓA NỘI DUNG SAU KHI GỬI THÀNH CÔNG
+        // ----------------------------------------------------
         if (textarea) {
+
             textarea.disabled = true;
         }
 
 
+        if (button) {
+
+            button.disabled = true;
+
+            button.innerHTML = `
+                <i class="bi
+                          bi-check-circle-fill">
+                </i>
+
+                ĐÃ GỬI
+            `;
+
+            button.classList.remove(
+                'bg-[#0F4C81]',
+                'hover:bg-[#0B3C66]'
+            );
+
+            button.classList.add(
+                'bg-slate-500',
+                'cursor-default'
+            );
+        }
+
+
         AppMain?.showToast?.(
-            'Đã ghi nhận phản hồi trên giao diện.'
+            result.sentToName
+                ? 'Đã gửi phản hồi đến ' +
+                  result.sentToName +
+                  '.'
+                : 'Đã gửi phản hồi.'
         );
 
-    }, 350);
+
+        // ----------------------------------------------------
+        // TẢI LẠI THÔNG BÁO
+        // ----------------------------------------------------
+        await loadHVANotifications();
+
+        renderHVANotifications();
+
+
+    } catch (error) {
+
+        console.error(
+            '[HVA NHẮC NHỞ] Lỗi gửi phản hồi:',
+            error
+        );
+
+
+        if (button) {
+
+            button.disabled = false;
+
+            button.innerHTML = `
+                <i class="bi bi-send-fill"></i>
+
+                GỬI PHẢN HỒI
+            `;
+        }
+
+
+        AppMain?.showToast?.(
+            'Gửi phản hồi chưa thành công: ' +
+            (
+                error?.message ||
+                'Lỗi không xác định'
+            )
+        );
+    }
 }
+
 
 window.sendHVAReminderReply =
     sendHVAReminderReply;
