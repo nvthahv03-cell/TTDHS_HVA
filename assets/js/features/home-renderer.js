@@ -1258,7 +1258,7 @@ export function renderHome() {
             <!-- 1. VĂN BẢN - QUY ĐỊNH -->
             <button type="button"
                     data-thidua-action="VANBAN"
-                    onclick="openThiDuaModule('VANBAN', event)"
+                    onclick="event.preventDefault(); event.stopPropagation(); openThiDuaVanBanModal(); return false;"
                     class="w-full flex items-center justify-between
                            px-3 py-2.5 rounded-xl
                            hover:bg-blue-50
@@ -4499,6 +4499,28 @@ function updateHVASchoolDate() {
 }
 
 setTimeout(updateHVASchoolDate, 100);
+
+// =====================================================
+// CHỐT CLICK VĂN BẢN - QUY ĐỊNH: LUÔN MỞ PANEL TRÊN HOME
+// Chặn mọi handler/đường dẫn cũ (ví dụ KhoVanBan.html) nếu còn sót do cache/DOM cũ.
+// =====================================================
+function bindThiDuaVanBanPanelGuard_() {
+    const btn = document.querySelector('[data-thidua-action="VANBAN"]');
+    if (!btn || btn.dataset.hvaVanBanGuard === '1') return;
+    btn.dataset.hvaVanBanGuard = '1';
+    btn.removeAttribute('href');
+    btn.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const menu = document.getElementById('thidua-dropdown');
+        if (menu) menu.classList.add('hidden');
+        openThiDuaVanBanModal();
+    }, true);
+}
+
+setTimeout(bindThiDuaVanBanPanelGuard_, 0);
+setTimeout(bindThiDuaVanBanPanelGuard_, 300);
+setTimeout(bindThiDuaVanBanPanelGuard_, 1200);
 
 // ======================================================
 // THI ĐUA - KHEN THƯỞNG
