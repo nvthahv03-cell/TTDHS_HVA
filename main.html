@@ -2805,10 +2805,14 @@ async function confirmHVAReminderByBGH() {
             throw new Error(result?.message || 'Không xác nhận được nhắc nhở.');
         }
 
-        closeHVAReminderDetail();
-        await loadHVANotifications();
+        // Backend đã CLOSED hai phía. Cập nhật UI ngay, không tải lại toàn bộ chuông.
+        HVA_NOTIFICATIONS = HVA_NOTIFICATIONS.filter(
+            x => String(x.id) !== String(notificationId)
+        );
+        updateNotificationBadges();
         renderHVANotifications();
-        AppMain?.showToast?.('Đã xác nhận và khép nhắc nhở.');
+        closeHVAReminderDetail();
+        AppMain?.showToast?.('Đã xác nhận thành công.');
 
         // Báo cho Home cập nhật phần Việc của tôi nếu đang có nhắc nhở leo thang.
         window.dispatchEvent(new CustomEvent('hva-reminder-closed'));
@@ -3053,9 +3057,8 @@ async function acceptHVAReminder() {
         );
 
 
-        // Làm mới Notification Center
-        await loadHVANotifications();
-
+        // Cập nhật ngay từ dữ liệu client; không tải lại toàn bộ Notification Center.
+        updateNotificationBadges();
         renderHVANotifications();
 
 
@@ -3307,10 +3310,13 @@ async function sendHVAReminderReply() {
 
 
         // ----------------------------------------------------
-        // TẢI LẠI THÔNG BÁO
+        // CẬP NHẬT UI TẠI CHỖ - KHÔNG TẢI LẠI TOÀN BỘ CHUÔNG
         // ----------------------------------------------------
-        await loadHVANotifications();
-
+        const repliedItem = HVA_NOTIFICATIONS.find(
+            x => String(x.id) === String(notificationId)
+        );
+        if (repliedItem) repliedItem.trangThai = 'ĐÃ PHẢN HỒI';
+        updateNotificationBadges();
         renderHVANotifications();
 
 
