@@ -2107,21 +2107,21 @@ export function renderHome() {
     </span>
 
 </a>
-<a href="BanHanhPhatHanh.html"
-                       class="w-full flex items-center gap-2.5
-                              px-3 py-2 rounded-lg
-                              hover:bg-cyan-50
-                              dark:hover:bg-slate-800 transition text-left">
+<button type="button"
+                            class="w-full flex items-center gap-2.5
+                                   px-3 py-2 rounded-lg
+                                   hover:bg-cyan-50
+                                   dark:hover:bg-slate-800 transition text-left">
 
                         <i class="bi bi-send-check-fill
                                   text-cyan-600 w-5 text-center"></i>
 
                         <span class="text-[11px] font-semibold
                                      text-slate-700 dark:text-slate-200">
-                            Ban hành - Phát hành
+                            TT Phát hành
                         </span>
 
-                    </a>
+                    </button>
 
 
                     <button type="button"
@@ -4559,8 +4559,15 @@ const HVA_THIDUA_VANBAN_API = MY_TASK_API_URL;
 const HVA_THIDUA_VANBAN_KEYWORDS = ['thi đua', 'khen thưởng', 'đánh giá', 'xếp loại'];
 let HVA_THIDUA_VANBAN_CACHE = null;
 
-function closeThiDuaVanBanModal() {
-    document.getElementById('hva-thidua-vanban-modal')?.remove();
+function closeThiDuaVanBanModal(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    const modal = document.getElementById('hva-thidua-vanban-modal');
+    if (!modal) return;
+    modal.remove();
+    document.body.classList.remove('overflow-hidden');
 }
 
 function openThiDuaKhoVanBan() {
@@ -4655,12 +4662,12 @@ function renderThiDuaVanBanList_(docs) {
 
 async function openThiDuaVanBanModal() {
     closeThiDuaVanBanModal();
-    const html = `<div id="hva-thidua-vanban-modal" class="fixed inset-0 z-[9999] bg-slate-900/45 backdrop-blur-[2px] flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="if(event.target===this) closeThiDuaVanBanModal()">
+    const html = `<div id="hva-thidua-vanban-modal" class="fixed inset-0 z-[9999] bg-slate-900/45 backdrop-blur-[2px] flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="if(event.target===this){ event.preventDefault(); event.stopPropagation(); closeThiDuaVanBanModal(event); }">
       <div class="w-full sm:max-w-xl bg-white rounded-t-[26px] sm:rounded-[26px] shadow-2xl overflow-hidden max-h-[88vh] flex flex-col">
         <div class="px-5 pt-5 pb-4 border-b border-slate-100 flex items-start gap-3">
           <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-sm shrink-0"><i class="bi bi-file-earmark-text-fill text-lg"></i></div>
           <div class="min-w-0 flex-1"><div class="text-[15px] font-extrabold text-[#123B67]">VĂN BẢN – QUY ĐỊNH</div><div class="text-[10px] text-slate-400 mt-0.5">Thi đua • Khen thưởng • Đánh giá</div></div>
-          <button type="button" onclick="closeThiDuaVanBanModal()" class="w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center"><i class="bi bi-x-lg"></i></button>
+          <button type="button" onclick="closeThiDuaVanBanModal(event); return false;" class="w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center"><i class="bi bi-x-lg"></i></button>
         </div>
         <div class="px-5 py-3 bg-blue-50/70 border-b border-blue-100"><div id="hva-td-vb-count" class="text-[11px] leading-relaxed text-slate-600"><span class="inline-block w-3 h-3 mr-1 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></span> Đang tìm các văn bản liên quan từ Kho văn bản HVA...</div></div>
         <div id="hva-td-vb-list" class="p-4 space-y-2 overflow-y-auto flex-1"></div>
@@ -4672,6 +4679,7 @@ async function openThiDuaVanBanModal() {
       </div>
     </div>`;
     document.body.insertAdjacentHTML('beforeend', html);
+    document.body.classList.add('overflow-hidden');
     try {
         const docs = await loadThiDuaVanBan_();
         if (document.getElementById('hva-thidua-vanban-modal')) renderThiDuaVanBanList_(docs);
