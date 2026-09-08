@@ -1258,6 +1258,7 @@ export function renderHome() {
             <!-- 1. VĂN BẢN - QUY ĐỊNH -->
             <button type="button"
                     data-thidua-action="VANBAN"
+                    onclick="openThiDuaModule('VANBAN', event)"
                     class="w-full flex items-center justify-between
                            px-3 py-2.5 rounded-xl
                            hover:bg-blue-50
@@ -4511,6 +4512,11 @@ window.openThiDuaModule = function(type, event) {
     const menu = document.getElementById('thidua-dropdown');
     if (menu) menu.classList.add('hidden');
 
+    if (type === 'VANBAN') {
+        openThiDuaVanBanModal();
+        return;
+    }
+
     const moduleNames = {
         VANBAN: 'Văn bản - Quy định',
         KEKHAI_THANG: 'Kê khai công việc tháng',
@@ -4520,11 +4526,141 @@ window.openThiDuaModule = function(type, event) {
         KHENTHUONG: 'Khen thưởng - Thành tích'
     };
 
-    console.log(
-        '[THI ĐUA - KHEN THƯỞNG]',
-        moduleNames[type] || type
-    );
+    console.log('[THI ĐUA - KHEN THƯỞNG]', moduleNames[type] || type);
 };
+
+// =====================================================
+// THI ĐUA - VĂN BẢN, QUY ĐỊNH
+// Nguồn duy nhất: Kho văn bản HVA
+// =====================================================
+const HVA_THIDUA_VANBAN_API = MY_TASK_API_URL;
+const HVA_THIDUA_VANBAN_KEYWORDS = ['thi đua', 'khen thưởng', 'đánh giá', 'xếp loại'];
+let HVA_THIDUA_VANBAN_CACHE = null;
+
+function closeThiDuaVanBanModal() {
+    document.getElementById('hva-thidua-vanban-modal')?.remove();
+}
+
+function openThiDuaKhoVanBan() {
+    closeThiDuaVanBanModal();
+    openKhoVanBan();
+}
+
+function hvaTdEscape_(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function hvaTdField_(item, keys) {
+    for (const key of keys) {
+        if (item && item[key] !== undefined && item[key] !== null && String(item[key]).trim()) {
+            return String(item[key]).trim();
+        }
+    }
+    return '';
+}
+
+function hvaTdDateValue_(value) {
+    if (!value) return 0;
+    const text = String(value).trim();
+    const m = text.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+    if (m) return new Date(+m[3], +m[2]-1, +m[1]).getTime();
+    const t = new Date(text).getTime();
+    return Number.isFinite(t) ? t : 0;
+}
+
+function hvaTdNormalizeDocs_(responses) {
+    const map = new Map();
+    responses.flat().forEach((item, index) => {
+        if (!item || typeof item !== 'object') return;
+        const so = hvaTdField_(item, ['soVanBan','soKyHieu','so','kyHieu','so_van_ban']);
+        const title = hvaTdField_(item, ['tenVanBan','trichYeu','tieuDe','noiDung','ten','title']);
+        if (!so && !title) return;
+        const date = hvaTdField_(item, ['ngayBanHanh','ngayVanBan','ngay','date']);
+        const url = hvaTdField_(item, ['url','fileUrl','pdfUrl','link','duongDan','driveUrl']);
+        const agency = hvaTdField_(item, ['coQuanBanHanh','coQuan','donViBanHanh','nguon']);
+        const key = (so + '|' + title).toLocaleLowerCase('vi');
+        if (!map.has(key)) map.set(key, { so, title, date, url, agency, _i:index });
+    });
+    return [...map.values()].sort((a,b) => hvaTdDateValue_(b.date) - hvaTdDateValue_(a.date) || a._i-b._i);
+}
+
+async function loadThiDuaVanBan_() {
+    if (Array.isArray(HVA_THIDUA_VANBAN_CACHE)) return HVA_THIDUA_VANBAN_CACHE;
+    const jobs = HVA_THIDUA_VANBAN_KEYWORDS.map(async q => {
+        const url = HVA_THIDUA_VANBAN_API + '?action=searchVanBan&q=' + encodeURIComponent(q) + '&_=' + Date.now();
+        const res = await fetch(url, { method:'GET', cache:'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (Array.isArray(data)) return data;
+        if (Array.isArray(data?.data)) return data.data;
+        if (Array.isArray(data?.items)) return data.items;
+        return [];
+    });
+    const settled = await Promise.allSettled(jobs);
+    const good = settled.filter(x => x.status === 'fulfilled').map(x => x.value);
+    if (!good.length) throw new Error('Không tải được Kho văn bản');
+    HVA_THIDUA_VANBAN_CACHE = hvaTdNormalizeDocs_(good);
+    return HVA_THIDUA_VANBAN_CACHE;
+}
+
+function renderThiDuaVanBanList_(docs) {
+    const count = document.getElementById('hva-td-vb-count');
+    const list = document.getElementById('hva-td-vb-list');
+    if (!count || !list) return;
+    count.innerHTML = `Có <b class="text-blue-700">${docs.length}</b> văn bản liên quan đến công tác <b>Thi đua – Khen thưởng</b>. Thầy/Cô bấm vào văn bản bên dưới để xem.`;
+
+    if (!docs.length) {
+        list.innerHTML = `<div class="py-6 text-center text-[12px] text-slate-500">Chưa tìm thấy văn bản Thi đua – Khen thưởng trong danh sách tra cứu nhanh.</div>`;
+        return;
+    }
+
+    list.innerHTML = docs.map((d,i) => {
+        const meta = [d.so, d.date, d.agency].filter(Boolean).map(hvaTdEscape_).join(' • ');
+        const action = d.url
+            ? `<a href="${hvaTdEscape_(d.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="shrink-0 px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-[9px] font-extrabold hover:bg-blue-100">XEM</a>`
+            : `<button type="button" onclick="openThiDuaKhoVanBan()" class="shrink-0 px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-600 text-[9px] font-extrabold">TRA CỨU</button>`;
+        return `<div class="flex gap-2.5 items-start px-3 py-3 rounded-xl border border-slate-100 bg-white hover:bg-blue-50/60 transition">
+            <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-[10px] font-extrabold shrink-0">${i+1}</div>
+            <div class="min-w-0 flex-1">
+                <div class="text-[11px] font-bold text-[#123B67] leading-snug">${hvaTdEscape_(d.title || d.so || 'Văn bản')}</div>
+                <div class="text-[8.5px] text-slate-400 mt-1 leading-relaxed">${meta || 'Văn bản từ Kho văn bản HVA'}</div>
+            </div>${action}</div>`;
+    }).join('');
+}
+
+async function openThiDuaVanBanModal() {
+    closeThiDuaVanBanModal();
+    const html = `<div id="hva-thidua-vanban-modal" class="fixed inset-0 z-[9999] bg-slate-900/45 backdrop-blur-[2px] flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="if(event.target===this) closeThiDuaVanBanModal()">
+      <div class="w-full sm:max-w-xl bg-white rounded-t-[26px] sm:rounded-[26px] shadow-2xl overflow-hidden max-h-[88vh] flex flex-col">
+        <div class="px-5 pt-5 pb-4 border-b border-slate-100 flex items-start gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-sm shrink-0"><i class="bi bi-file-earmark-text-fill text-lg"></i></div>
+          <div class="min-w-0 flex-1"><div class="text-[15px] font-extrabold text-[#123B67]">VĂN BẢN – QUY ĐỊNH</div><div class="text-[10px] text-slate-400 mt-0.5">Thi đua • Khen thưởng • Đánh giá</div></div>
+          <button type="button" onclick="closeThiDuaVanBanModal()" class="w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="px-5 py-3 bg-blue-50/70 border-b border-blue-100"><div id="hva-td-vb-count" class="text-[11px] leading-relaxed text-slate-600"><span class="inline-block w-3 h-3 mr-1 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></span> Đang tìm các văn bản liên quan từ Kho văn bản HVA...</div></div>
+        <div id="hva-td-vb-list" class="p-4 space-y-2 overflow-y-auto flex-1"></div>
+        <div class="mx-4 mb-4 p-3 rounded-2xl bg-amber-50 border border-amber-200">
+          <div class="text-[10.5px] font-extrabold text-amber-800">🔎 Không tìm thấy văn bản cần tra cứu?</div>
+          <div class="text-[9.5px] text-amber-700 mt-1 leading-relaxed">Thầy/Cô vui lòng vào <b>Tài nguyên số → Kho văn bản</b> để tìm kiếm các văn bản mới nhất được nhà trường cập nhật và lưu trữ.</div>
+          <button type="button" onclick="openThiDuaKhoVanBan()" class="mt-2 w-full py-2 rounded-xl bg-white border border-amber-200 text-amber-800 text-[10px] font-extrabold hover:bg-amber-100"><i class="bi bi-folder2-open mr-1"></i> MỞ KHO VĂN BẢN</button>
+        </div>
+      </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', html);
+    try {
+        const docs = await loadThiDuaVanBan_();
+        if (document.getElementById('hva-thidua-vanban-modal')) renderThiDuaVanBanList_(docs);
+    } catch (err) {
+        const count = document.getElementById('hva-td-vb-count');
+        const list = document.getElementById('hva-td-vb-list');
+        if (count) count.innerHTML = `<b>Chưa tải được danh sách tra cứu nhanh.</b> Thầy/Cô có thể mở Kho văn bản bên dưới để tìm kiếm.`;
+        if (list) list.innerHTML = `<div class="py-5 text-center text-[11px] text-slate-400">Không làm gián đoạn thao tác: Kho văn bản vẫn có thể mở trực tiếp.</div>`;
+        console.warn('[THI DUA] Lỗi tải văn bản:', err);
+    }
+}
 
 
 // ======================================================
