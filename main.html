@@ -2685,20 +2685,65 @@ async function openHVANotification(encodedId) {
             String(item.id || '');
 
 
-        // Reset khu phản hồi
-        document.getElementById(
-            'hva-reminder-reply-area'
-        )?.classList.add('hidden');
+        // ============================================================
+// RESET TOÀN BỘ TRẠNG THÁI PHẢN HỒI KHI MỞ MỖI NHẮC NHỞ
+// ============================================================
+
+const replyArea =
+    document.getElementById(
+        'hva-reminder-reply-area'
+    );
+
+if (replyArea) {
+    replyArea.classList.add('hidden');
+}
 
 
-        const replyText =
-            document.getElementById(
-                'hva-reminder-reply-text'
-            );
+const replyText =
+    document.getElementById(
+        'hva-reminder-reply-text'
+    );
 
-        if (replyText) {
-            replyText.value = '';
-        }
+if (replyText) {
+
+    // Xóa nội dung của nhắc nhở trước
+    replyText.value = '';
+
+    // Bắt buộc mở khóa lại textarea
+    replyText.disabled = false;
+
+    replyText.readOnly = false;
+}
+
+
+const replyButton =
+    document.getElementById(
+        'hva-reminder-send-reply'
+    );
+
+if (replyButton) {
+
+    // Bắt buộc mở khóa lại nút
+    replyButton.disabled = false;
+
+    // Trả nút về trạng thái ban đầu
+    replyButton.innerHTML = `
+        <i class="bi bi-send-fill"></i>
+        GỬI PHẢN HỒI
+    `;
+
+    // Xóa trạng thái của lần gửi trước
+    replyButton.classList.remove(
+        'bg-slate-500',
+        'cursor-default'
+    );
+
+    // Trả màu nút gửi
+    replyButton.classList.add(
+        'bg-[#0F4C81]',
+        'hover:bg-[#0B3C66]'
+    );
+}
 
 
         // ----------------------------------------------------
