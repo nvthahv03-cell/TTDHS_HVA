@@ -3213,10 +3213,10 @@ export function renderHome() {
         // nên đọc riêng sessionStorage sẽ nhận {} và khóa nhầm cả BGH.
         const user = getCurrentHVAUser();
 
-        const rawProfile = Object.values(user || {})
-            .filter(v => ['string', 'number', 'boolean'].includes(typeof v))
-            .map(v => String(v))
-            .join(' | ')
+        // Quét TOÀN BỘ hồ sơ đăng nhập, kể cả các trường lồng nhau.
+        // Trước đây chỉ Object.values() cấp 1 nên nếu chức vụ/quyền nằm trong
+        // object con thì BGH bị nhận thành GV thường và bị khóa nhầm.
+        const rawProfile = JSON.stringify(user || {})
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
             .replace(/Đ/g, 'D').replace(/đ/g, 'd')
@@ -3252,7 +3252,9 @@ export function renderHome() {
 
             if (allowed) {
                 card.setAttribute('data-dropdown-toggle', dropdownId);
-                card.classList.remove('opacity-65', 'grayscale');
+                card.classList.remove('opacity-40', 'opacity-50', 'opacity-60', 'opacity-65', 'grayscale', 'pointer-events-none');
+                card.style.opacity = '1';
+                card.style.filter = 'none';
                 card.style.cursor = 'pointer';
                 card.removeAttribute('aria-disabled');
                 lock?.classList.add('hidden');
@@ -3263,7 +3265,9 @@ export function renderHome() {
             // Khóa UX nhưng vẫn cho bấm để giải thích lý do bị khóa.
             card.removeAttribute('data-dropdown-toggle');
             // Giữ nguyên màu card; chỉ báo khóa bằng ổ khóa vàng ở góc phải.
-            card.classList.remove('opacity-65', 'grayscale');
+            card.classList.remove('opacity-40', 'opacity-50', 'opacity-60', 'opacity-65', 'grayscale', 'pointer-events-none');
+            card.style.opacity = '1';
+            card.style.filter = 'none';
             card.style.cursor = 'pointer';
             card.setAttribute('aria-disabled', 'true');
             lock?.classList.remove('hidden');
