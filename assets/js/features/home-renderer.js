@@ -2145,7 +2145,7 @@ export function renderHome() {
 <div class="relative">
 
     <!-- CARD ĐIỀU HÀNH SỐ -->
-    <div id="hva-dieuhanhso-card" data-dropdown-toggle="dieuhanhso-dropdown"
+    <div id="hvaDieuHanhSoCard" data-dropdown-toggle="dieuhanhso-dropdown"
          class="group relative rounded-2xl
                 bg-gradient-to-br from-teal-700 via-emerald-700 to-cyan-700
                 text-white p-3.5
@@ -2178,7 +2178,7 @@ export function renderHome() {
             <h3 class="text-xs font-extrabold
                        tracking-tight text-white mb-0.5
                        whitespace-nowrap">
-                ĐIỀU HÀNH SỐ <span id="hva-dieuhanhso-lock" class="hidden ml-1 text-amber-200"><i class="bi bi-lock-fill"></i></span>
+                <i id="hvaDieuHanhSoLock" class="bi bi-lock-fill hidden mr-1"></i>ĐIỀU HÀNH SỐ
             </h3>
 
             <i class="bi bi-chevron-up
@@ -2802,13 +2802,13 @@ export function renderHome() {
 
     <!-- TRỤ CỘT 4: QUẢN TRỊ -->
     <div class="relative">
-        <div id="hva-quantri-card" data-dropdown-toggle="quantri-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-visible border border-slate-500/40 active:scale-[0.98]">
+        <div id="hvaQuanTriCard" data-dropdown-toggle="quantri-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-visible border border-slate-500/40 active:scale-[0.98]">
             <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500"></div>
             <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
                 <i class="bi bi-graph-up-arrow text-white text-lg"></i>
             </div>
             <div class="flex items-center justify-between">
-                <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5">QUẢN TRỊ <span id="hva-quantri-lock" class="hidden ml-1 text-amber-200"><i class="bi bi-lock-fill"></i></span></h3>
+                <h3 class="text-xs font-extrabold tracking-tight text-white mb-0.5"><i id="hvaQuanTriLock" class="bi bi-lock-fill hidden mr-1"></i>QUẢN TRỊ</h3>
                 <i class="bi bi-chevron-up text-xs text-slate-200 transition-transform duration-300" data-dropdown-arrow></i>
             </div>
             <p class="text-[10px] text-slate-100 font-medium">Kế hoạch • Thi đua • KPI</p>
@@ -3186,65 +3186,102 @@ export function renderHome() {
 
     setupDigitalConnectPermission();
 
-  
-    
-// =====================================================
-    // PHÂN QUYỀN 2 TRỤ CỘT: ĐIỀU HÀNH SỐ / QUẢN TRỊ
-    // GV-NV thường: khóa cả hai.
-    // TTCM/TTVP: mở Điều hành số, khóa Quản trị.
-    // BGH/Admin: mở theo quyền quản trị.
     // =====================================================
-    function setupHVAExecutivePermission() {
+    // PHÂN QUYỀN 2 TRỤ CỘT: ĐIỀU HÀNH SỐ / QUẢN TRỊ
+    // GV/NV thường: khóa cả hai.
+    // TTCM/TTVP: mở Điều hành số, khóa Quản trị.
+    // BGH/Admin: mở theo quyền cấp cao.
+    // Chỉ tác động 2 card này, KHÔNG đụng NGHIỆP VỤ SỐ.
+    // =====================================================
+    function setupHVAMainMenuPermission() {
         let user = {};
         try {
-            user = JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}');
-        } catch (_) { user = {}; }
-
-        const raw = [
-            user.role, user.vaiTro, user.VAITRO,
-            user.chucVu, user.chucvu, user.position,
-            user.permission, user.quyen, user.QUYEN
-        ].filter(Boolean).join(' | ').toUpperCase();
-
-        const isAdmin = /ADMIN|QUẢN TRỊ|QUAN_TRI/.test(raw);
-        const isBGH = /PHÓ HIỆU TRƯỞNG|PHO HIEU TRUONG|PHT|HIỆU TRƯỞNG|HIEU TRUONG/.test(raw) ||
-                      /(^|[^A-Z])HT([^A-Z]|$)/.test(raw);
-        const isTTCM = /TTCM|TỔ TRƯỞNG CHUYÊN MÔN|TO TRUONG CHUYEN MON/.test(raw);
-        const isTTVP = /TTVP|TỔ TRƯỞNG VĂN PHÒNG|TO TRUONG VAN PHONG/.test(raw);
-
-        const canEnterExecutive = isAdmin || isBGH || isTTCM || isTTVP;
-        const canEnterAdmin = isAdmin || isBGH;
-
-        function applyCard(cardId, lockId, allowed, label) {
-            const card = document.getElementById(cardId);
-            const lock = document.getElementById(lockId);
-            if (!card) return;
-
-            card.dataset.hvaAllowed = allowed ? '1' : '0';
-            lock?.classList.toggle('hidden', allowed);
-            card.classList.toggle('grayscale', !allowed);
-            card.classList.toggle('opacity-70', !allowed);
-
-            if (!allowed) {
-                card.setAttribute('aria-disabled', 'true');
-                card.title = label + ' - Chưa được cấp quyền';
-            } else {
-                card.removeAttribute('aria-disabled');
-                card.title = '';
-            }
+            user = JSON.parse(sessionStorage.getItem('user') || '{}');
+        } catch (error) {
+            user = {};
         }
 
-        applyCard('hva-dieuhanhso-card', 'hva-dieuhanhso-lock', canEnterExecutive, 'ĐIỀU HÀNH SỐ');
-        applyCard('hva-quantri-card', 'hva-quantri-lock', canEnterAdmin, 'QUẢN TRỊ');
+        const rawProfile = Object.values(user || {})
+            .filter(v => ['string', 'number', 'boolean'].includes(typeof v))
+            .map(v => String(v))
+            .join(' | ')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/Đ/g, 'D').replace(/đ/g, 'd')
+            .toUpperCase();
 
-        // Chặn ngay ở lớp giao diện. Không dùng pointer-events-none để người dùng
-        // vẫn bấm được và biết vì sao chức năng bị khóa.
-        window.HVA_EXEC_PERMISSION = {
-            canEnterExecutive, canEnterAdmin, isAdmin, isBGH, isTTCM, isTTVP
-        };
+        const hasAny = (...keys) => keys.some(k => rawProfile.includes(k));
+
+        const isAdmin = hasAny('ADMIN', 'QUAN TRI HE THONG', 'QUAN_TRI');
+        const isBGH = hasAny(
+            'PHO HIEU TRUONG', 'PHT',
+            'HIEU TRUONG',
+            'BAN GIAM HIEU', 'BGH'
+        );
+        const isTTCM = hasAny(
+            'TTCM',
+            'TO TRUONG CHUYEN MON',
+            'TO TRUONG CM'
+        );
+        const isTTVP = hasAny(
+            'TTVP',
+            'TO TRUONG VAN PHONG',
+            'TO TRUONG VP'
+        );
+
+        const canOpenDieuHanhSo = isAdmin || isBGH || isTTCM || isTTVP;
+        const canOpenQuanTri = isAdmin || isBGH;
+
+        function applyCardPermission(cardId, lockId, dropdownId, allowed) {
+            const card = document.getElementById(cardId);
+            const lock = document.getElementById(lockId);
+            const dropdown = document.getElementById(dropdownId);
+            if (!card) return;
+
+            if (allowed) {
+                card.setAttribute('data-dropdown-toggle', dropdownId);
+                card.classList.remove('opacity-65', 'grayscale');
+                card.style.cursor = 'pointer';
+                card.removeAttribute('aria-disabled');
+                lock?.classList.add('hidden');
+                return;
+            }
+
+            // Khóa UX nhưng vẫn cho bấm để giải thích lý do bị khóa.
+            card.removeAttribute('data-dropdown-toggle');
+            card.classList.add('opacity-65', 'grayscale');
+            card.style.cursor = 'not-allowed';
+            card.setAttribute('aria-disabled', 'true');
+            lock?.classList.remove('hidden');
+            dropdown?.classList.add('hidden');
+
+            card.addEventListener('click', function hvaLockedMenuNotice(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                if (typeof showToast === 'function') {
+                    showToast('Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
+                } else {
+                    alert('Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
+                }
+            });
+        }
+
+        applyCardPermission(
+            'hvaDieuHanhSoCard',
+            'hvaDieuHanhSoLock',
+            'dieuhanhso-dropdown',
+            canOpenDieuHanhSo
+        );
+
+        applyCardPermission(
+            'hvaQuanTriCard',
+            'hvaQuanTriLock',
+            'quantri-dropdown',
+            canOpenQuanTri
+        );
     }
 
-    setupHVAExecutivePermission();
+    setupHVAMainMenuPermission();
 
 // 2. Khởi tạo các sự kiện giao diện và PWA App
     initMenuLogic();
@@ -3296,21 +3333,10 @@ function initMenuLogic() {
    document.querySelectorAll("[data-dropdown-toggle]").forEach(btn => {
 
     btn.addEventListener("click", function (e) {
+        
 
         e.stopPropagation();
-
-        if (this.dataset.hvaAllowed === '0') {
-            e.preventDefault();
-            const name = this.id === 'hva-quantri-card' ? 'QUẢN TRỊ' : 'ĐIỀU HÀNH SỐ';
-            if (typeof showToast === 'function') {
-                showToast('🔒 ' + name + ': Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
-            } else {
-                alert('🔒 ' + name + '
-
-Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
-            }
-            return;
-        }
+       
 
         const menuId = this.dataset.dropdownToggle;
         const menu = document.getElementById(menuId);
