@@ -1,211 +1,46 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ban hành - Phát hành | TTĐHS HVA</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ban hành – Phát hành | TTĐHS HVA</title>
 <style>
-body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#f8fafc;color:#0f172a}
-.hva-shadow{box-shadow:0 18px 50px rgba(15,76,129,.10)}
-.hva-field{width:100%;border:1px solid #cbd5e1;border-radius:12px;background:#fff;padding:.7rem .8rem;font-size:13px;outline:none}
-.hva-field:focus{border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,.15)}
-.hva-label{display:block;font-size:10px;font-weight:800;letter-spacing:.04em;color:#475569;margin-bottom:6px}
-</style>
-</head>
-<body>
-<div class="min-h-screen">
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-      <div class="flex items-center gap-3 min-w-0">
-        <button onclick="history.back()" class="w-9 h-9 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50"><i class="bi bi-arrow-left"></i></button>
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-600 to-blue-700 text-white flex items-center justify-center shadow"><i class="bi bi-send-check-fill"></i></div>
-        <div class="min-w-0"><h1 class="text-[15px] sm:text-lg font-black text-[#123B67] leading-tight">BAN HÀNH – PHÁT HÀNH</h1><p class="text-[10px] sm:text-xs text-slate-400 font-semibold">Văn bản nhà trường • Kế hoạch tổ • Thông báo</p></div>
-      </div>
-      <div id="userBadge" class="hidden sm:block text-right text-xs"><div id="userName" class="font-bold text-slate-700"></div><div id="userRole" class="text-slate-400"></div></div>
-    </div>
-  </header>
-
-  <main class="max-w-6xl mx-auto px-4 py-5">
-    <div class="bg-white rounded-2xl border border-slate-200 hva-shadow overflow-hidden">
-      <div class="px-5 py-4 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-cyan-50">
-        <div class="text-xs font-black text-[#0F4C81]">01. CHỌN PHẠM VI PHÁT HÀNH</div>
-        <div class="grid sm:grid-cols-2 gap-3 mt-3">
-          <button id="scopeSchool" onclick="setScope('SCHOOL')" class="scope-btn rounded-xl border-2 border-blue-600 bg-blue-50 p-4 text-left">
-            <div class="flex gap-3"><i class="bi bi-building-fill text-blue-700 text-xl"></i><div><div class="font-black text-sm text-blue-800">CẤP TRƯỜNG</div><div class="text-[11px] text-slate-500 mt-1">Chọn văn bản đã có trong Kho văn bản HVA</div></div></div>
-          </button>
-          <button id="scopeTeam" onclick="setScope('TEAM')" class="scope-btn rounded-xl border-2 border-slate-200 bg-white p-4 text-left">
-            <div class="flex gap-3"><i class="bi bi-people-fill text-cyan-700 text-xl"></i><div><div class="font-black text-sm text-slate-700">CẤP TỔ / BỘ PHẬN</div><div class="text-[11px] text-slate-500 mt-1">TTCM/TTVP tải PDF nội bộ trực tiếp khi phát hành</div></div></div>
-          </button>
-        </div>
-      </div>
-
-      <div class="p-5 space-y-5">
-        <section>
-          <div class="text-xs font-black text-[#0F4C81] mb-3">02. THÔNG TIN PHÁT HÀNH</div>
-          <div class="grid md:grid-cols-2 gap-4">
-            <div><label class="hva-label">LOẠI PHÁT HÀNH</label><select id="docType" class="hva-field" onchange="onTypeChange()"></select></div>
-            <div id="teamBox" class="hidden"><label class="hva-label">TỔ / BỘ PHẬN</label><div id="teamControl"></div></div>
-          </div>
-          <div id="monthFields" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
-            <div><label class="hva-label">THÁNG</label><select id="planMonth" class="hva-field" onchange="updateAutoMessage()"></select></div>
-            <div><label class="hva-label">NĂM</label><select id="planYear" class="hva-field" onchange="updateAutoMessage()"></select></div>
-            <div class="col-span-2 sm:col-span-1"><label class="hva-label">NĂM HỌC</label><input id="schoolYear" class="hva-field bg-slate-50" readonly></div>
-          </div>
-        </section>
-
-        <section id="schoolSource">
-          <div class="text-xs font-black text-[#0F4C81] mb-3">03. CHỌN VĂN BẢN TỪ KHO HVA</div>
-          <div class="flex gap-2"><input id="docSearch" class="hva-field" placeholder="Nhập số văn bản, trích yếu hoặc tên văn bản..." onkeydown="if(event.key==='Enter') searchKho()"><button onclick="searchKho()" class="px-4 rounded-xl bg-[#0F4C81] text-white text-xs font-bold whitespace-nowrap"><i class="bi bi-search mr-1"></i>TÌM</button></div>
-          <div id="searchResult" class="mt-3 rounded-xl border border-dashed border-slate-200 p-4 text-center text-xs text-slate-400">Văn bản cấp trường được lấy từ Kho văn bản HVA, không tải lại PDF.</div>
-        </section>
-
-        <section id="teamSource" class="hidden">
-          <div class="text-xs font-black text-[#0F4C81] mb-3">03. TỆP VĂN BẢN CỦA TỔ / BỘ PHẬN</div>
-          <label class="block rounded-2xl border-2 border-dashed border-cyan-200 bg-cyan-50/40 p-6 text-center cursor-pointer hover:bg-cyan-50">
-            <input id="teamPdf" type="file" accept="application/pdf,.pdf" class="hidden" onchange="onPdfSelected(this)">
-            <i class="bi bi-file-earmark-pdf-fill text-3xl text-cyan-700"></i><div class="font-bold text-sm text-slate-700 mt-2">Chọn tệp PDF</div><div id="pdfName" class="text-[11px] text-slate-400 mt-1">Chỉ sử dụng PDF • Tệp sẽ được lưu khi phát hành</div>
-          </label>
-        </section>
-
-        <section>
-          <div class="text-xs font-black text-[#0F4C81] mb-3">04. NỘI DUNG THÔNG BÁO</div>
-          <textarea id="message" rows="4" class="hva-field leading-relaxed" placeholder="Nhập nội dung thông báo gửi đến người nhận..."></textarea>
-          <div class="text-[10px] text-slate-400 mt-1.5">Hệ thống tự tạo nội dung đối với Kế hoạch tháng của tổ; người phát hành có thể chỉnh sửa trước khi gửi.</div>
-        </section>
-
-        <section>
-          <div class="flex items-center justify-between mb-3"><div class="text-xs font-black text-[#0F4C81]">05. NGƯỜI NHẬN</div><span id="recipientCount" class="text-[10px] font-bold text-blue-700 bg-blue-50 rounded-full px-2.5 py-1">Chưa xác định</span></div>
-          <div id="recipientArea" class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-500">Cấp trường: chọn đối tượng nhận ở bước hoàn thiện. Cấp tổ: hệ thống tự lấy toàn bộ thành viên của đúng tổ/bộ phận.</div>
-        </section>
-
-        <div id="status" class="hidden rounded-xl px-4 py-3 text-xs font-semibold"></div>
-        <div class="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-2 border-t border-slate-100">
-          <button onclick="history.back()" class="px-5 py-3 rounded-xl border border-slate-300 text-slate-600 text-xs font-bold">HỦY</button>
-          <button onclick="previewDocument()" class="px-5 py-3 rounded-xl border border-blue-200 bg-blue-50 text-blue-700 text-xs font-bold"><i class="bi bi-eye-fill mr-1"></i>XEM TRƯỚC</button>
-          <button onclick="preparePublish(event)" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 text-white text-xs font-black shadow"><i class="bi bi-send-check-fill mr-1.5"></i>PHÁT HÀNH</button>
-        </div>
-      </div>
-    </div>
-  </main>
-</div>
+*{box-sizing:border-box}body{margin:0;background:#f5f8fc;color:#172033;font:14px Arial,sans-serif}.app{max-width:1120px;margin:20px auto;padding:0 14px}.head,.card{background:#fff;border:1px solid #dbe5f1;border-radius:14px;box-shadow:0 4px 18px #17345d12}.head{padding:18px 22px;display:flex;justify-content:space-between;gap:16px;align-items:center}.head h1{margin:0;color:#0b4d8c;font-size:22px}.sub{margin-top:5px;color:#66758a}.user{text-align:right;font-weight:700}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.card{padding:18px}.wide{grid-column:1/-1}.ttl{font-weight:800;color:#0b4d8c;font-size:15px;margin-bottom:12px}.scope,.source{display:flex;gap:10px;flex-wrap:wrap}.choice{border:1px solid #c9d7e8;background:#fff;border-radius:10px;padding:11px 15px;cursor:pointer;font-weight:700}.choice.on{border-color:#0b67b2;background:#eef7ff;color:#075a9e}.panel{margin-top:12px;padding:14px;border:1px solid #dce7f2;border-radius:10px;background:#fbfdff}input,select,textarea{width:100%;border:1px solid #cbd8e7;border-radius:9px;padding:10px;background:#fff;font:inherit}textarea{min-height:86px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.search{display:flex;gap:8px}.search input{flex:1}.btn{border:0;border-radius:9px;padding:10px 15px;font-weight:700;cursor:pointer;background:#0b67b2;color:#fff}.btn.ghost{background:#eef4fb;color:#164d7e}.btn.green{background:#177245}.result{margin-top:10px;max-height:260px;overflow:auto}.doc{border:1px solid #dbe5ef;border-radius:9px;padding:10px;margin:7px 0;background:#fff;display:flex;justify-content:space-between;gap:10px}.doc b{display:block;margin-bottom:4px}.meta{font-size:12px;color:#68788c}.docBtns{display:flex;gap:6px;align-items:center;white-space:nowrap}.mini{border:1px solid #bdd0e4;background:#fff;border-radius:7px;padding:6px 8px;cursor:pointer;color:#15568e}.selected{border:1px solid #9ac7a9;background:#f1fbf4;border-radius:9px;padding:11px;margin-top:10px}.people{max-height:220px;overflow:auto;border:1px solid #dce7f2;border-radius:9px;padding:8px}.person{display:flex;gap:8px;align-items:center;padding:6px}.person input{width:auto}.status{margin-top:12px;padding:10px;border-radius:9px;background:#eef6ff;color:#174f7d;display:none}.status.err{background:#fff0f0;color:#a32d2d}.actions{display:flex;justify-content:flex-end;gap:9px;margin-top:14px}@media(max-width:760px){.grid,.row{grid-template-columns:1fr}.head{align-items:flex-start}.user{display:none}.doc{display:block}.docBtns{margin-top:8px}}
+</style></head><body><div class="app">
+<div class="head"><div><h1>BAN HÀNH – PHÁT HÀNH</h1><div class="sub">TTĐHS HVA · Một văn bản – một file gốc – phát hành nhiều lần</div></div><div class="user"><div id="userName"></div><div class="sub" id="userRole"></div></div></div>
+<div class="grid">
+<div class="card"><div class="ttl">1. PHẠM VI PHÁT HÀNH</div><div class="scope"><button id="scSchool" class="choice" onclick="setScope('SCHOOL')">🏫 Nhà trường</button><button id="scTeam" class="choice" onclick="setScope('TEAM')">👥 Tổ/Bộ phận</button></div><div class="panel"><label>Loại văn bản</label><select id="docType" style="margin-top:6px"></select><div id="teamIssuerBox" style="margin-top:10px;display:none"><label>Tổ/Bộ phận phát hành</label><select id="issuerTeam" onchange="issuerChanged()" style="margin-top:6px"></select></div></div></div>
+<div class="card"><div class="ttl">2. ĐỐI TƯỢNG NHẬN</div><label>Tổ/Bộ phận nhận</label><select id="recipientTeam" onchange="loadRecipients()" style="margin-top:6px"></select><div style="margin:10px 0 6px"><label><input type="checkbox" id="allPeople" checked onchange="toggleAll()" style="width:auto"> Chọn tất cả</label></div><div id="recipientArea" class="people">Chọn Tổ/Bộ phận để tải danh sách.</div></div>
+<div class="card wide"><div class="ttl">3. VĂN BẢN PHÁT HÀNH</div><div class="source"><button id="srcKho" class="choice on" onclick="setSource('KHO')">🔎 TỪ KHO VĂN BẢN HVA</button><button id="srcUpload" class="choice" onclick="setSource('UPLOAD')">📤 TẢI VĂN BẢN LÊN</button></div>
+<div id="khoPanel" class="panel"><div class="search"><input id="q" placeholder="Nhập số văn bản, từ khóa hoặc tên file..." onkeydown="if(event.key==='Enter')searchKho()"><button class="btn" onclick="searchKho()">Tìm</button></div><div id="results" class="result"></div></div>
+<div id="uploadPanel" class="panel" style="display:none"><div class="row"><div><label>Đưa file gốc vào</label><select id="folderKey" style="margin-top:6px"><option value="DOCUMENT_IN">Văn bản đến</option><option value="DOCUMENT_OUT">Văn bản đi</option></select></div><div><label>Chọn PDF</label><input id="pdfFile" type="file" accept="application/pdf,.pdf" style="margin-top:6px" onchange="fileChanged()"></div></div><div class="sub" style="margin-top:8px">Hệ thống kiểm tra trùng trước khi đưa file vào Kho. File đã có sẽ không được tạo thêm.</div></div>
+<div id="selectedDoc"></div></div>
+<div class="card wide"><div class="ttl">4. NỘI DUNG PHÁT HÀNH</div><div class="row"><div><label>Năm học</label><input id="schoolYear" value="2026–2027" style="margin-top:6px"></div><div><label>Tiêu đề hiển thị</label><input id="title" placeholder="Tự lấy từ tên văn bản; có thể chỉnh" style="margin-top:6px"></div></div><label style="display:block;margin-top:10px">Nội dung thông báo</label><textarea id="message" style="margin-top:6px" placeholder="Đề nghị Thầy/Cô xem văn bản và thực hiện theo nội dung được ban hành/phát hành."></textarea><div id="status" class="status"></div><div class="actions"><button class="btn ghost" onclick="previewSelected()">👁 Mở văn bản</button><button id="publishBtn" class="btn green" onclick="publishNow()">✓ Phát hành</button></div></div>
+</div></div>
 <script>
 const API='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
-let SCOPE='SCHOOL', SELECTED_DOC=null, CURRENT_USER={}, SELECTED_TEAM='', SCHOOL_RECIPIENT_TEAM='';
-function norm(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toUpperCase()}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-function unwrap(d){if(Array.isArray(d))return d; for(const k of ['data','items','result'])if(Array.isArray(d?.[k]))return d[k]; return []}
-function user(){try{return JSON.parse(sessionStorage.getItem('user')||localStorage.getItem('user')||'{}')}catch(_){return {}}}
-function userText(u){return norm(JSON.stringify(u||{}))}
-function isManager(u){const t=userText(u);return ['ADMIN','HIEU TRUONG','PHO HIEU TRUONG','PHT','BGH','TTCM','TO TRUONG CHUYEN MON','TTVP','TO TRUONG VAN PHONG'].some(x=>t.includes(x))}
-function isSchoolManager(u){const t=userText(u);return ['ADMIN','HIEU TRUONG','PHO HIEU TRUONG','PHT','BGH'].some(x=>t.includes(x))}
-function getTeam(u){return String(u.to||u.toBoPhan||u.toCM||u.tenTo||u.department||u.boPhan||'').trim()}
-function init(){CURRENT_USER=user(); if(!isManager(CURRENT_USER)){alert('Tài khoản chưa được cấp quyền Ban hành – Phát hành.');history.back();return}
- document.getElementById('userName').textContent=CURRENT_USER.fullName||CURRENT_USER.hoTen||CURRENT_USER.name||CURRENT_USER.username||'';
- document.getElementById('userRole').textContent=CURRENT_USER.vaiTro||CURRENT_USER.role||CURRENT_USER.chucVu||'';
- const m=document.getElementById('planMonth'),y=document.getElementById('planYear'),now=new Date(); for(let i=1;i<=12;i++)m.add(new Option('Tháng '+i,i)); for(let i=now.getFullYear()-1;i<=now.getFullYear()+2;i++)y.add(new Option(i,i));m.value=now.getMonth()+1;y.value=now.getFullYear();
- if(!isSchoolManager(CURRENT_USER)) setScope('TEAM'); else setScope('SCHOOL');
-}
-async function setScope(scope){
- if(scope==='SCHOOL'&&!isSchoolManager(CURRENT_USER)){showStatus('Tài khoản TTCM/TTVP chỉ phát hành văn bản thuộc tổ/bộ phận.',true);return}
- SCOPE=scope; SELECTED_DOC=null;
- const school=scope==='SCHOOL';
- document.getElementById('scopeSchool').className='scope-btn rounded-xl border-2 p-4 text-left '+(school?'border-blue-600 bg-blue-50':'border-slate-200 bg-white');
- document.getElementById('scopeTeam').className='scope-btn rounded-xl border-2 p-4 text-left '+(!school?'border-cyan-600 bg-cyan-50':'border-slate-200 bg-white');
- document.getElementById('schoolSource').classList.toggle('hidden',!school);
- document.getElementById('teamSource').classList.toggle('hidden',school);
- document.getElementById('teamBox').classList.toggle('hidden',school);
- fillTypes();
- if(!school){
-   await renderTeamControl();
- }else{
-   SELECTED_TEAM='';
-   await renderSchoolRecipientControl();
- }
- onTypeChange();
-}
-async function renderTeamControl(){
- const box=document.getElementById('teamControl');
- const ownTeam=getTeam(CURRENT_USER);
- if(!isSchoolManager(CURRENT_USER)){
-   SELECTED_TEAM=ownTeam;
-   box.innerHTML='<input class="hva-field bg-slate-50 font-semibold" value="'+esc(ownTeam||'Chưa xác định tổ/bộ phận')+'" readonly>';
-   await loadTeamRecipients(SELECTED_TEAM);
-   return;
- }
- box.innerHTML='<select id="teamSelect" class="hva-field font-semibold"><option value="">— Chọn Tổ/Bộ phận —</option></select>';
- const sel=document.getElementById('teamSelect');
- sel.onchange=async()=>{SELECTED_TEAM=sel.value;updateAutoMessage();await loadTeamRecipients(SELECTED_TEAM)};
- document.getElementById('recipientCount').textContent='Chưa chọn tổ';
- document.getElementById('recipientArea').textContent='Thầy/Cô chọn Tổ/Bộ phận để hệ thống tự lấy danh sách người nhận.';
- try{
-   const r=await fetch(API+'?action=getDanhSachTo&_='+Date.now(),{cache:'no-store'});
-   const raw=await r.json(); const a=unwrap(raw);
-   const teams=[];
-   a.forEach(x=>{const name=String(typeof x==='string'?x:(x.tenTo||x.to||x.name||x.ten||'')).trim();if(name&&!teams.includes(name))teams.push(name)});
-   teams.forEach(t=>sel.add(new Option(t,t)));
-   if(!teams.length) sel.innerHTML='<option value="">Không tải được danh sách Tổ/Bộ phận</option>';
- }catch(e){
-   sel.innerHTML='<option value="">Không tải được danh sách Tổ/Bộ phận</option>';
-   showStatus('Không tải được danh sách Tổ/Bộ phận.',true);
- }
-}
-async function renderSchoolRecipientControl(){
- const area=document.getElementById('recipientArea');
- SCHOOL_RECIPIENT_TEAM=''; window.__HVA_TEAM_PEOPLE=[];
- document.getElementById('recipientCount').textContent='Chưa chọn tổ';
- area.innerHTML='<div class="font-bold text-slate-700 mb-2">Phát hành đến Tổ/Bộ phận</div><select id="schoolRecipientTeam" class="hva-field"><option value="">— Chọn Tổ/Bộ phận nhận —</option></select><div id="schoolRecipientPeople" class="mt-3 text-slate-500">Chọn Tổ/Bộ phận để tải danh sách người nhận.</div>';
- const sel=document.getElementById('schoolRecipientTeam');
- sel.onchange=async()=>{SCHOOL_RECIPIENT_TEAM=sel.value;await loadTeamRecipients(SCHOOL_RECIPIENT_TEAM)};
- try{
-   const r=await fetch(API+'?action=getDanhSachTo&_='+Date.now(),{cache:'no-store'}); const a=unwrap(await r.json()); const teams=[];
-   a.forEach(x=>{const name=String(typeof x==='string'?x:(x.tenTo||x.to||x.name||x.ten||'')).trim();if(name&&!teams.includes(name))teams.push(name)});
-   teams.forEach(t=>sel.add(new Option(t,t)));
- }catch(e){showStatus('Không tải được danh sách Tổ/Bộ phận nhận.',true)}
-}
-function fileToDataUrl(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result||''));r.onerror=()=>reject(new Error('Không đọc được tệp PDF.'));r.readAsDataURL(file)})}
-function publishId(){return 'PH-'+Date.now()+'-'+Math.floor(Math.random()*10000)}
-function docTitle(){if(SCOPE==='TEAM'){const f=document.getElementById('teamPdf').files?.[0];return f?f.name.replace(/\.pdf$/i,''):'Tài liệu phát hành'}return String(SELECTED_DOC?.trichYeu||SELECTED_DOC?.tenVanBan||SELECTED_DOC?.title||'Văn bản phát hành')}
-function selectedDocUrl(){const d=SELECTED_DOC||{};return String(d.fileUrl||d.pdfUrl||d.url||d.link||d.duongDan||'')}
-async function preparePublish(ev){
- const msg=document.getElementById('message').value.trim(); if(!msg)return showStatus('Chưa có nội dung thông báo.',true);
- if(SCOPE==='SCHOOL'&&!SELECTED_DOC)return showStatus('Chưa chọn văn bản từ Kho HVA.',true);
- if(SCOPE==='SCHOOL'&&!SCHOOL_RECIPIENT_TEAM)return showStatus('Chưa chọn Tổ/Bộ phận nhận.',true);
- if(SCOPE==='TEAM'&&!SELECTED_TEAM)return showStatus('Chưa chọn Tổ/Bộ phận phát hành.',true);
- const people=Array.isArray(window.__HVA_TEAM_PEOPLE)?window.__HVA_TEAM_PEOPLE:[]; if(!people.length)return showStatus('Danh sách người nhận đang trống.',true);
- const btn=ev && ev.currentTarget ? ev.currentTarget : null; if(btn)btn.disabled=true; showStatus('Đang phát hành...',false);
- try{
-   let fileInfo={fileId:'',fileUrl:'',fileName:''};
-   if(SCOPE==='TEAM'){
-     const f=document.getElementById('teamPdf').files?.[0]; if(!f)throw new Error('Chưa chọn PDF của tổ/bộ phận.');
-     if(f.size>12*1024*1024)throw new Error('PDF vượt 12 MB. Vui lòng giảm dung lượng trước khi phát hành.');
-     const base64Data=await fileToDataUrl(f);
-     const up=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'uploadPublishPdf',teamName:SELECTED_TEAM,fileName:f.name,base64Data,username:CURRENT_USER.username||'',fullName:CURRENT_USER.fullName||CURRENT_USER.hoTen||''})});
-     const ur=await up.json(); if(!ur?.success)throw new Error(ur?.message||'Không lưu được PDF vào Drive.'); fileInfo=ur;
-   }else{fileInfo.fileUrl=selectedDocUrl();fileInfo.fileId=String(SELECTED_DOC.id||SELECTED_DOC.docId||SELECTED_DOC.maVanBan||'');fileInfo.fileName=String(SELECTED_DOC.tenFile||SELECTED_DOC.fileName||'')}
-   const id=publishId(), type=document.getElementById('docType').value, targetTeam=SCOPE==='TEAM'?SELECTED_TEAM:SCHOOL_RECIPIENT_TEAM;
-   const payload={action:'publishDocument',publishId:id,moduleSource:'BanHanhPhatHanh',documentType:type,sender:{username:CURRENT_USER.username||'',fullName:CURRENT_USER.fullName||CURRENT_USER.hoTen||'',workPosition:CURRENT_USER.workPosition||CURRENT_USER.chucVu||CURRENT_USER.vaiTro||'',department:getTeam(CURRENT_USER)},document:{docId:fileInfo.fileId||'',type:type,title:docTitle(),author:CURRENT_USER.fullName||CURRENT_USER.hoTen||'',data:{tieuDe:docTitle(),noiDung:msg,documentUrl:fileInfo.fileUrl||'',fileUrl:fileInfo.fileUrl||'',fileName:fileInfo.fileName||'',scope:SCOPE,teamName:targetTeam,schoolYear:document.getElementById('schoolYear').value||'',month:document.getElementById('planMonth').value||'',year:document.getElementById('planYear').value||''}},recipients:people,destinations:[{id:'ThongBao',name:'Thông báo'}]};
-   const pr=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}); const result=await pr.json(); if(!result?.success)throw new Error(result?.message||'Backend không xác nhận phát hành.');
-   showStatus(`Đã phát hành thành công đến ${result.recipientCount||people.length} người${fileInfo.folderKey?' • Lưu Drive: '+fileInfo.folderKey:''}.`,false);
- }catch(e){showStatus('Không phát hành được: '+e.message,true)}finally{if(btn)btn.disabled=false}
-}
-function fillTypes(){const s=document.getElementById('docType');s.innerHTML=SCOPE==='SCHOOL'?'<option value="QUYET_DINH">Ban hành Quyết định</option><option value="KE_HOACH_TRUONG">Ban hành Kế hoạch của trường</option><option value="THONG_BAO_TRUONG">Ban hành Thông báo của trường</option>':'<option value="KE_HOACH_THANG_TO">Phát hành Kế hoạch tháng của tổ</option><option value="KE_HOACH_TO">Phát hành Kế hoạch khác của tổ</option><option value="THONG_BAO_TO">Phát hành Thông báo của tổ</option>'}
-function onTypeChange(){const monthly=document.getElementById('docType').value==='KE_HOACH_THANG_TO';document.getElementById('monthFields').classList.toggle('hidden',!monthly);updateAutoMessage()}
-function updateAutoMessage(){if(document.getElementById('docType').value!=='KE_HOACH_THANG_TO')return;const m=document.getElementById('planMonth').value,y=document.getElementById('planYear').value,t=SELECTED_TEAM||getTeam(CURRENT_USER)||'Tổ/Bộ phận';document.getElementById('schoolYear').value=(Number(m)>=8?y:(Number(y)-1))+'–'+(Number(m)>=8?Number(y)+1:y);document.getElementById('message').value=`Kế hoạch và phân công nhiệm vụ tháng ${m}/${y} – ${t} đã được phát hành. Đề nghị Thầy/Cô xem kế hoạch, thực hiện các nhiệm vụ được phân công và bảo đảm tiến độ, chế độ báo cáo theo yêu cầu.`}
-async function searchKho(){const q=document.getElementById('docSearch').value.trim(),box=document.getElementById('searchResult');if(!q){box.innerHTML='<span class="text-amber-600">Vui lòng nhập từ khóa tìm văn bản.</span>';return}box.innerHTML='<i class="bi bi-arrow-repeat"></i> Đang tìm trong Kho văn bản HVA...';try{const r=await fetch(API+'?action=searchVanBan&q='+encodeURIComponent(q)+'&_='+Date.now(),{cache:'no-store'});const a=unwrap(await r.json());if(!a.length){box.innerHTML='Không tìm thấy văn bản phù hợp.';return}box.innerHTML='<div class="space-y-2 text-left">'+a.slice(0,20).map((d,i)=>`<button onclick="chooseDoc(${i})" class="doc-row w-full p-3 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50 text-left" data-i="${i}"><div class="text-xs font-bold text-slate-700">${esc(d.trichYeu||d.tenVanBan||'Văn bản')}</div><div class="text-[10px] text-slate-400 mt-1">${esc(d.soVanBan||'')} ${d.ngayBanHanh?'• '+esc(d.ngayBanHanh):''}</div></button>`).join('')+'</div>';window.__HVA_DOCS=a}catch(e){box.innerHTML='<span class="text-red-600">Không tải được Kho văn bản: '+esc(e.message)+'</span>'}}
-function chooseDoc(i){SELECTED_DOC=(window.__HVA_DOCS||[])[i];document.querySelectorAll('.doc-row').forEach((x,j)=>{x.classList.toggle('border-blue-600',j===i);x.classList.toggle('bg-blue-50',j===i)});if(!document.getElementById('message').value.trim()){const title=SELECTED_DOC.trichYeu||SELECTED_DOC.tenVanBan||'Văn bản';document.getElementById('message').value=`${title} đã được ban hành. Đề nghị Thầy/Cô xem và thực hiện theo nội dung văn bản.`}}
-async function loadTeamRecipients(team){
- const t=String(team||SELECTED_TEAM||(!isSchoolManager(CURRENT_USER)?getTeam(CURRENT_USER):'')).trim(),area=document.getElementById('recipientArea');
- window.__HVA_TEAM_PEOPLE=[];
- if(!t){document.getElementById('recipientCount').textContent='Chưa chọn tổ';area.innerHTML='<span class="text-slate-500">Thầy/Cô chọn Tổ/Bộ phận để hệ thống tự lấy danh sách người nhận.</span>';return}
- area.textContent='Đang tải thành viên '+t+'...';
- try{const r=await fetch(API+'?action=getNhanSuTheoTo&to='+encodeURIComponent(t)+'&_='+Date.now(),{cache:'no-store'});const a=unwrap(await r.json());window.__HVA_TEAM_PEOPLE=a;document.getElementById('recipientCount').textContent=a.length+' người';area.innerHTML='<div class="font-bold text-slate-700 mb-2">'+esc(t)+'</div><div class="flex flex-wrap gap-1.5">'+a.map(p=>`<span class="px-2 py-1 rounded-lg bg-white border border-slate-200 text-[10px]">${esc(p.hoTen||p.username)}</span>`).join('')+'</div>'}catch(e){document.getElementById('recipientCount').textContent='Lỗi';area.innerHTML='<span class="text-red-600">Không tải được danh sách thành viên.</span>'}
-}
-function onPdfSelected(inp){const f=inp.files?.[0];if(!f)return;if(f.type!=='application/pdf'&&!f.name.toLowerCase().endsWith('.pdf')){inp.value='';showStatus('Chỉ nhận tệp PDF.',true);return}document.getElementById('pdfName').innerHTML='<b class="text-slate-700">'+esc(f.name)+'</b> • '+(f.size/1024/1024).toFixed(2)+' MB'}
-function previewDocument(){if(SCOPE==='TEAM'){const f=document.getElementById('teamPdf').files?.[0];if(!f)return showStatus('Chưa chọn tệp PDF.',true);window.open(URL.createObjectURL(f),'_blank');return}if(!SELECTED_DOC)return showStatus('Chưa chọn văn bản từ Kho HVA.',true);showStatus('Văn bản đã được chọn. API Kho hiện tại chưa trả liên kết PDF; em sẽ nối trường file/link ở bước backend.',true)}
-function showStatus(s,err){const b=document.getElementById('status');b.classList.remove('hidden','bg-red-50','text-red-700','border-red-200','bg-emerald-50','text-emerald-700','border-emerald-200');b.classList.add('border',err?'bg-red-50':'bg-emerald-50',err?'text-red-700':'text-emerald-700',err?'border-red-200':'border-emerald-200');b.textContent=s}
+let CURRENT_USER={},SCOPE='SCHOOL',SOURCE='KHO',SELECTED_DOC=null,PEOPLE=[];
+function user(){try{return JSON.parse(sessionStorage.getItem('user')||localStorage.getItem('user')||'{}')}catch(e){return {}}}
+function norm(v){return String(v||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d')}
+function teamOf(u){return u.department||u.toBoPhan||u.to||''}function roleOf(u){return [u.role,u.vaiTro,u.workPosition,u.chucVu,u.permissions,u.quyen].filter(Boolean).join(' ')}
+function schoolManager(u){return /hieu truong|pho hieu truong|bgh|admin|quan tri/.test(norm(roleOf(u)))}
+function manager(u){return schoolManager(u)||/ttcm|ttvp|to truong|truong to/.test(norm(roleOf(u)))}
+function unwrap(x){return Array.isArray(x)?x:(Array.isArray(x?.data)?x.data:[])}
+function status(t,err=false){const e=document.getElementById('status');e.textContent=t;e.className='status'+(err?' err':'');e.style.display='block'}
+async function init(){CURRENT_USER=user();document.getElementById('userName').textContent=CURRENT_USER.fullName||CURRENT_USER.hoTen||CURRENT_USER.username||'';document.getElementById('userRole').textContent=roleOf(CURRENT_USER);if(!manager(CURRENT_USER)){alert('Tài khoản chưa được cấp quyền Ban hành – Phát hành.');history.back();return}await loadTeams();setScope(schoolManager(CURRENT_USER)?'SCHOOL':'TEAM');}
+async function loadTeams(){const r=await fetch(API+'?action=getDanhSachTo&_='+Date.now(),{cache:'no-store'});const a=unwrap(await r.json());const names=a.map(x=>x.tenTo||x.to||x.name||x).filter(Boolean);['issuerTeam','recipientTeam'].forEach(id=>{const s=document.getElementById(id);s.innerHTML='<option value="">— Vui lòng chọn —</option>'+names.map(x=>`<option>${esc(x)}</option>`).join('')});}
+function setScope(v){if(v==='SCHOOL'&&!schoolManager(CURRENT_USER))return status('TTCM/TTVP chỉ phát hành trong phạm vi Tổ/Bộ phận.',true);SCOPE=v;document.getElementById('scSchool').classList.toggle('on',v==='SCHOOL');document.getElementById('scTeam').classList.toggle('on',v==='TEAM');document.getElementById('teamIssuerBox').style.display=v==='TEAM'?'block':'none';if(v==='TEAM'){document.getElementById('issuerTeam').value=teamOf(CURRENT_USER);document.getElementById('issuerTeam').disabled=!schoolManager(CURRENT_USER);document.getElementById('recipientTeam').value=teamOf(CURRENT_USER);loadRecipients()}fillTypes();}
+function fillTypes(){document.getElementById('docType').innerHTML=SCOPE==='SCHOOL'?'<option value="QUYET_DINH">Quyết định</option><option value="KE_HOACH_TRUONG">Kế hoạch của trường</option><option value="THONG_BAO_TRUONG">Thông báo của trường</option><option value="VAN_BAN_KHAC">Văn bản khác</option>':'<option value="KE_HOACH_THANG_TO">Kế hoạch tháng của tổ</option><option value="KE_HOACH_TO">Kế hoạch của tổ</option><option value="THONG_BAO_TO">Thông báo của tổ</option><option value="VAN_BAN_KHAC">Văn bản khác</option>'}
+function issuerChanged(){if(SCOPE==='TEAM'){document.getElementById('recipientTeam').value=document.getElementById('issuerTeam').value;loadRecipients()}}
+function setSource(v){SOURCE=v;SELECTED_DOC=null;document.getElementById('srcKho').classList.toggle('on',v==='KHO');document.getElementById('srcUpload').classList.toggle('on',v==='UPLOAD');document.getElementById('khoPanel').style.display=v==='KHO'?'block':'none';document.getElementById('uploadPanel').style.display=v==='UPLOAD'?'block':'none';renderSelected()}
+async function searchKho(){const q=document.getElementById('q').value.trim();if(!q)return status('Nhập từ khóa cần tìm.',true);const box=document.getElementById('results');box.innerHTML='Đang tìm trong Kho mới...';try{const r=await fetch(API+'?action=searchKhoVanBanNew&q='+encodeURIComponent(q)+'&_='+Date.now(),{cache:'no-store'});const a=unwrap(await r.json());box.innerHTML=a.length?a.map((d,i)=>`<div class="doc"><div><b>${esc(d.tenVanBan||d.fileName)}</b><div class="meta">${esc(d.loaiKho||'')} · ${esc(d.fileName||'')}</div></div><div class="docBtns"><button class="mini" onclick="openUrl('${js(d.fileUrl)}')">Mở</button><button class="mini" onclick="openUrl('${js(d.downloadUrl)}')">Tải</button><button class="mini" onclick="chooseDoc(${i})">Chọn</button></div></div>`).join(''):'Không tìm thấy văn bản phù hợp.';window.__KHO_RESULTS=a}catch(e){box.textContent='Lỗi tìm Kho: '+e.message}}
+function chooseDoc(i){SELECTED_DOC=(window.__KHO_RESULTS||[])[i]||null;if(SELECTED_DOC&&!document.getElementById('title').value)document.getElementById('title').value=SELECTED_DOC.tenVanBan||'';renderSelected()}
+async function fileChanged(){const f=document.getElementById('pdfFile').files?.[0];SELECTED_DOC=null;renderSelected();if(!f)return;if(!/\.pdf$/i.test(f.name))return status('Chỉ nhận file PDF.',true);status('Đang kiểm tra trùng trong Kho...',false);try{const r=await post({action:'checkKhoVanBanDuplicate',fileName:f.name,size:f.size});if(r.duplicated){SELECTED_DOC=r.document;setSource('KHO');document.getElementById('q').value=f.name.replace(/\.pdf$/i,'');renderSelected();return status('Văn bản này đã có trong Kho. Hệ thống đã chuyển sang dùng file gốc, không tải trùng.',true)}status('Chưa có trong Kho. File sẽ được đưa vào Kho khi thầy/cô bấm Phát hành.',false);document.getElementById('title').value=f.name.replace(/\.pdf$/i,'')}catch(e){status(e.message,true)}}
+async function ensureDocument(){if(SOURCE==='KHO'){if(!SELECTED_DOC)throw new Error('Chưa chọn văn bản từ Kho HVA.');return SELECTED_DOC}const f=document.getElementById('pdfFile').files?.[0];if(!f)throw new Error('Chưa chọn PDF tải lên.');const data=await fileData(f);const r=await post({action:'uploadKhoVanBanNew',folderKey:document.getElementById('folderKey').value,fileName:f.name,base64Data:data,username:CURRENT_USER.username||'',fullName:CURRENT_USER.fullName||CURRENT_USER.hoTen||''});if(!r.success)throw new Error(r.message||'Không đưa được văn bản vào Kho.');SELECTED_DOC=r;renderSelected();return r}
+async function loadRecipients(){const t=document.getElementById('recipientTeam').value,box=document.getElementById('recipientArea');PEOPLE=[];if(!t){box.textContent='Chọn Tổ/Bộ phận để tải danh sách.';return}box.textContent='Đang tải...';try{const r=await fetch(API+'?action=getNhanSuTheoTo&to='+encodeURIComponent(t)+'&_='+Date.now(),{cache:'no-store'});PEOPLE=unwrap(await r.json());box.innerHTML=PEOPLE.map((p,i)=>`<label class="person"><input class="pc" type="checkbox" data-i="${i}" checked> <span><b>${esc(p.hoTen||p.fullName||p.username)}</b> <span class="meta">${esc(p.vaiTro||p.chucVu||'')}</span></span></label>`).join('')||'Không có nhân sự.';document.getElementById('allPeople').checked=true}catch(e){box.textContent='Lỗi tải người nhận.'}}
+function toggleAll(){document.querySelectorAll('.pc').forEach(x=>x.checked=document.getElementById('allPeople').checked)}
+function recipients(){return [...document.querySelectorAll('.pc:checked')].map(x=>PEOPLE[Number(x.dataset.i)]).filter(Boolean)}
+async function publishNow(){const btn=document.getElementById('publishBtn');btn.disabled=true;try{const target=document.getElementById('recipientTeam').value;if(!target)throw new Error('Chưa chọn Tổ/Bộ phận nhận.');const rec=recipients();if(!rec.length)throw new Error('Chưa chọn người nhận.');status('Đang chuẩn bị văn bản...',false);const d=await ensureDocument();const title=document.getElementById('title').value.trim()||d.tenVanBan||d.fileName||'Văn bản phát hành',msg=document.getElementById('message').value.trim()||'Đề nghị Thầy/Cô xem văn bản và thực hiện theo nội dung được ban hành/phát hành.';const id='PH-'+Date.now()+'-'+Math.random().toString(36).slice(2,7).toUpperCase();const payload={action:'publishDocument',publishId:id,moduleSource:'BanHanhPhatHanh',documentType:document.getElementById('docType').value,sender:{username:CURRENT_USER.username||'',fullName:CURRENT_USER.fullName||CURRENT_USER.hoTen||'',workPosition:CURRENT_USER.workPosition||CURRENT_USER.chucVu||CURRENT_USER.vaiTro||'',department:teamOf(CURRENT_USER)},document:{docId:d.fileId||'',type:document.getElementById('docType').value,title,author:CURRENT_USER.fullName||CURRENT_USER.hoTen||'',data:{tieuDe:title,noiDung:msg,documentUrl:d.fileUrl||'',fileUrl:d.fileUrl||'',downloadUrl:d.downloadUrl||'',fileName:d.fileName||'',folderKey:d.folderKey||'',scope:SCOPE,issuerTeam:SCOPE==='TEAM'?document.getElementById('issuerTeam').value:'NHÀ TRƯỜNG',recipientTeam:target,schoolYear:document.getElementById('schoolYear').value}},recipients:rec,destinations:[{id:'ThongBao',name:'Thông báo'}]};status('Đang phát hành...',false);const rs=await post(payload);if(!rs.success)throw new Error(rs.message||'Backend không xác nhận phát hành.');status(`Đã phát hành thành công đến ${rs.recipientCount||rec.length} người. File gốc: ${d.fileName||title}`,false)}catch(e){status(e.message||String(e),true)}finally{btn.disabled=false}}
+function renderSelected(){const b=document.getElementById('selectedDoc');if(!SELECTED_DOC){b.innerHTML='';return}b.innerHTML=`<div class="selected"><b>✓ Đã chọn:</b> ${esc(SELECTED_DOC.tenVanBan||SELECTED_DOC.fileName||'')} <span class="meta"> · ${esc(SELECTED_DOC.loaiKho||'')}</span> <button class="mini" onclick="previewSelected()">Mở</button> <button class="mini" onclick="openUrl('${js(SELECTED_DOC.downloadUrl||'')}')">Tải</button></div>`}
+function previewSelected(){if(SELECTED_DOC?.fileUrl)return openUrl(SELECTED_DOC.fileUrl);if(SOURCE==='UPLOAD'){const f=document.getElementById('pdfFile').files?.[0];if(f)return window.open(URL.createObjectURL(f),'_blank')}status('Chưa chọn văn bản.',true)}
+function openUrl(u){if(u)window.open(u,'_blank','noopener')}
+function fileData(f){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(f)})}
+async function post(o){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)});return await r.json()}
+function esc(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function js(v){return String(v||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 window.addEventListener('DOMContentLoaded',init);
-</script>
-</body>
-</html>
+</script></body></html>
