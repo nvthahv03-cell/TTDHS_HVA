@@ -1299,9 +1299,10 @@ export function renderHome() {
             </button>
 
 
-            <!-- 2. KÊ KHAI CÔNG VIỆC THÁNG -->
+            <!-- 2. KẾ HOẠCH - BÁO CÁO THÁNG -->
             <button type="button"
                     data-thidua-action="KEKHAI_THANG"
+                    onclick="event.preventDefault(); event.stopPropagation(); openThiDuaKeHoachBaoCaoThang(event); return false;"
                     class="w-full flex items-center justify-between
                            px-3 py-2.5 rounded-xl
                            hover:bg-cyan-50
@@ -1325,12 +1326,12 @@ export function renderHome() {
                                     font-bold
                                     text-[#123B67]
                                     dark:text-slate-100">
-                            Kê khai công việc tháng
+                            Kế hoạch - Báo cáo tháng
                         </div>
 
                         <div class="text-[9px]
                                     text-slate-400 mt-0.5">
-                            Công việc • Kết quả • Minh chứng
+                            Giao việc • Thực hiện • Minh chứng
                         </div>
                     </div>
 
@@ -2108,6 +2109,7 @@ export function renderHome() {
 
 </a>
 <button type="button"
+                            onclick="event.preventDefault(); event.stopPropagation(); window.location.href='BanHanhPhatHanh.html';"
                             class="w-full flex items-center gap-2.5
                                    px-3 py-2 rounded-lg
                                    hover:bg-cyan-50
@@ -2118,7 +2120,7 @@ export function renderHome() {
 
                         <span class="text-[11px] font-semibold
                                      text-slate-700 dark:text-slate-200">
-                            TT Phát hành
+                            Ban hành - Phát hành
                         </span>
 
                     </button>
@@ -4541,7 +4543,7 @@ window.openThiDuaModule = function(type, event) {
 
     const moduleNames = {
         VANBAN: 'Văn bản - Quy định',
-        KEKHAI_THANG: 'Kê khai công việc tháng',
+        KEKHAI_THANG: 'Kế hoạch - Báo cáo tháng',
         XEPLOAI_THANG: 'Đánh giá - Xếp loại tháng',
         THEODOI: 'Theo dõi thi đua',
         XEPLOAI_NAM: 'Đánh giá - Xếp loại cuối năm',
@@ -4552,6 +4554,44 @@ window.openThiDuaModule = function(type, event) {
 };
 
 // =====================================================
+// THI ĐUA - KẾ HOẠCH, BÁO CÁO THÁNG
+// =====================================================
+window.closeThiDuaKeHoachBaoCaoThang = function(event) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    document.getElementById('hva-thidua-khbc-modal')?.remove();
+    document.body.classList.remove('overflow-hidden');
+};
+
+window.openThiDuaKeHoachBaoCaoThang = function(event) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    document.getElementById('thidua-dropdown')?.classList.add('hidden');
+    window.closeThiDuaKeHoachBaoCaoThang();
+    const html = `<div id="hva-thidua-khbc-modal" class="fixed inset-0 z-[9999] bg-slate-900/45 backdrop-blur-[2px] flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="w-full sm:max-w-xl bg-white rounded-t-[26px] sm:rounded-[26px] shadow-2xl overflow-hidden">
+        <div class="px-5 pt-5 pb-4 border-b border-slate-100 flex items-start gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-cyan-600 to-blue-600 text-white flex items-center justify-center shadow-sm shrink-0"><i class="bi bi-calendar2-check-fill text-lg"></i></div>
+          <div class="min-w-0 flex-1"><div class="text-[15px] font-extrabold text-[#123B67]">KẾ HOẠCH – BÁO CÁO THÁNG</div><div class="text-[10px] text-slate-400 mt-0.5">Giao việc • Thực hiện • Minh chứng</div></div>
+          <button type="button" onclick="event.preventDefault(); event.stopImmediatePropagation(); document.getElementById('hva-thidua-khbc-modal')?.remove(); document.body.classList.remove('overflow-hidden'); return false;" class="w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="p-4 space-y-3">
+          <button type="button" onclick="event.preventDefault(); event.stopPropagation(); alert('Kế hoạch tháng của tổ sẽ tự động hiển thị tại đây sau khi TTCM phát hành.');" class="w-full p-4 rounded-2xl border border-blue-100 bg-blue-50/60 hover:bg-blue-50 text-left flex items-center gap-3 transition">
+            <div class="w-11 h-11 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+            <div class="min-w-0 flex-1"><div class="text-[12px] font-extrabold text-[#123B67]">KẾ HOẠCH CÔNG VIỆC THÁNG CỦA TỔ</div><div class="text-[9.5px] text-slate-500 mt-1">Xem • Tải kế hoạch đã được TTCM phát hành</div></div><i class="bi bi-chevron-right text-slate-400"></i>
+          </button>
+          <button type="button" onclick="event.preventDefault(); event.stopPropagation(); alert('Chức năng Báo cáo thực hiện kế hoạch tháng sẽ được nối sau khi luồng phát hành kế hoạch tháng hoàn tất.');" class="w-full p-4 rounded-2xl border border-cyan-100 bg-cyan-50/60 hover:bg-cyan-50 text-left flex items-center gap-3 transition">
+            <div class="w-11 h-11 rounded-xl bg-cyan-600 text-white flex items-center justify-center shrink-0"><i class="bi bi-clipboard2-check-fill"></i></div>
+            <div class="min-w-0 flex-1"><div class="text-[12px] font-extrabold text-[#123B67]">BÁO CÁO THỰC HIỆN KẾ HOẠCH THÁNG</div><div class="text-[9.5px] text-slate-500 mt-1">Kết quả • Tiến độ • Minh chứng • Ghi chú</div></div><i class="bi bi-chevron-right text-slate-400"></i>
+          </button>
+        </div>
+      </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', html);
+    document.body.classList.add('overflow-hidden');
+    const modal = document.getElementById('hva-thidua-khbc-modal');
+    modal?.addEventListener('click', function(e){ if(e.target === modal) window.closeThiDuaKeHoachBaoCaoThang(e); });
+};
+
+// =====================================================
 // THI ĐUA - VĂN BẢN, QUY ĐỊNH
 // Nguồn duy nhất: Kho văn bản HVA
 // =====================================================
@@ -4559,7 +4599,7 @@ const HVA_THIDUA_VANBAN_API = MY_TASK_API_URL;
 const HVA_THIDUA_VANBAN_KEYWORDS = ['thi đua', 'khen thưởng', 'đánh giá', 'xếp loại'];
 let HVA_THIDUA_VANBAN_CACHE = null;
 
-function closeThiDuaVanBanModal(event) {
+window.closeThiDuaVanBanModal = function(event) {
     if (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -4667,7 +4707,7 @@ async function openThiDuaVanBanModal() {
         <div class="px-5 pt-5 pb-4 border-b border-slate-100 flex items-start gap-3">
           <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-sm shrink-0"><i class="bi bi-file-earmark-text-fill text-lg"></i></div>
           <div class="min-w-0 flex-1"><div class="text-[15px] font-extrabold text-[#123B67]">VĂN BẢN – QUY ĐỊNH</div><div class="text-[10px] text-slate-400 mt-0.5">Thi đua • Khen thưởng • Đánh giá</div></div>
-          <button type="button" onclick="closeThiDuaVanBanModal(event); return false;" class="w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center"><i class="bi bi-x-lg"></i></button>
+          <button type="button" onclick="event.preventDefault(); event.stopImmediatePropagation(); document.getElementById('hva-thidua-vanban-modal')?.remove(); document.body.classList.remove('overflow-hidden'); return false;" class="w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center"><i class="bi bi-x-lg"></i></button>
         </div>
         <div class="px-5 py-3 bg-blue-50/70 border-b border-blue-100"><div id="hva-td-vb-count" class="text-[11px] leading-relaxed text-slate-600"><span class="inline-block w-3 h-3 mr-1 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></span> Đang tìm các văn bản liên quan từ Kho văn bản HVA...</div></div>
         <div id="hva-td-vb-list" class="p-4 space-y-2 overflow-y-auto flex-1"></div>
