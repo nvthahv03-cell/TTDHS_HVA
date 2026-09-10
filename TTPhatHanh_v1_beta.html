@@ -12,6 +12,9 @@
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .custom-accordion-content { max-height: 0; overflow: hidden; transition: max-height .22s ease; }
+        .custom-accordion-content.open { max-height: 520px; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
@@ -377,6 +380,7 @@ const StorageEngine = {
         khoAllMembers: [],
         khoTeamMembers: [],
         khoCurrentTeam: '',
+        khoSearch: '',
         userPermissions: { canPublish: true, role: CONFIG.ROLES.ADMIN },
         isPublishing: false
     };
@@ -565,50 +569,91 @@ const StorageEngine = {
                 const esc = (v) => String(v == null ? '' : v)
                     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
                     .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-                const teams = Array.isArray(state.khoTeams) ? state.khoTeams : [];
-                const members = Array.isArray(state.khoTeamMembers) ? state.khoTeamMembers : [];
-                const selected = new Set((recipients || []).map(r => String((r && r.username) || '')));
+                const allToData = Array.isArray(state.khoTeams) ? state.khoTeams : [];
+                const selectedUsernames = new Set((recipients || []).map(r => String((r && r.username) || '')));
+                const kw = String(state.khoSearch || '').trim().toLowerCase();
 
-                const teamOptions = ['<option value="">— Chọn Tổ/Bộ phận —</option>']
-                    .concat(teams.map(t => `<option value="${esc(t.tenTo)}" ${String(t.tenTo) === String(state.khoCurrentTeam) ? 'selected' : ''}>${esc(t.tenTo)} (${Number(t.soLuong || 0)})</option>`))
-                    .join('');
+                const blocks = allToData.map((toObj, index) => {
+                    const members = Array.isArray(toObj.members) ? toObj.members : [];
+                    const matchToName = String(toObj.tenTo || '').toLowerCase().includes(kw);
+                    const matchedMembers = members.filter(m =>
+                        String(m.hoTen || '').toLowerCase().includes(kw) ||
+                        String(m.username || '').toLowerCase().includes(kw) ||
+                        String(m.chucVu || '').toLowerCase().includes(kw)
+                    );
+                    if (kw && !matchToName && matchedMembers.length === 0) return '';
+                    const membersToDisplay = (kw && !matchToName) ? matchedMembers : members;
+                    const allSelected = members.length > 0 && members.every(m => selectedUsernames.has(String(m.username || '')));
+                    const isOpen = kw !== '';
+                    return `
+                        <div class="border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm transition">
+                            <div class="p-3 bg-slate-50/80 flex items-center justify-between gap-2 hover:bg-slate-100/80 transition select-none">
+                                <button type="button" onclick="Controller.toggleKhoAccordion('khoAccBody_${index}','khoAccIcon_${index}')" class="flex-1 flex items-center gap-2.5 text-left font-bold text-xs text-[#0F4C81]">
+                                    <i id="khoAccIcon_${index}" class="bi bi-chevron-right text-slate-400 text-xs transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}"></i>
+                                    <i class="bi bi-folder2-open text-blue-600 text-base"></i>
+                                    <span>${esc(toObj.tenTo)}</span>
+                                    <span class="text-[11px] font-normal text-slate-500">(${members.length} thành viên)</span>
+                                </button>
+                                <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition">
+                                    <input type="checkbox" ${allSelected ? 'checked' : ''} onchange="Controller.toggleKhoTeamAll(${index}, this.checked)" class="w-3.5 h-3.5 text-[#0F4C81] rounded focus:ring-0">
+                                    <span>Chọn toàn bộ tổ</span>
+                                </label>
+                            </div>
+                            <div id="khoAccBody_${index}" class="custom-accordion-content ${isOpen ? 'open' : ''} bg-blue-50/20 border-t border-slate-100">
+                                <div class="p-3 grid grid-cols-1 gap-2">
+                                    ${membersToDisplay.map(m => {
+                                        const checked = selectedUsernames.has(String(m.username || ''));
+                                        return `
+                                            <label class="flex items-center justify-between p-2 rounded-xl bg-white border ${checked ? 'border-blue-400 bg-blue-50/40' : 'border-slate-200/80'} hover:border-blue-300 hover:bg-blue-50/30 cursor-pointer transition">
+                                                <div class="flex items-center gap-2.5 min-w-0">
+                                                    <input type="checkbox" ${checked ? 'checked' : ''} onchange="Controller.toggleKhoUser('${esc(m.username)}', this.checked)" class="w-4 h-4 text-[#0F4C81] rounded focus:ring-0">
+                                                    <div class="truncate">
+                                                        <div class="text-xs font-bold text-slate-800 truncate">${esc(m.hoTen)}</div>
+                                                        <div class="text-[10px] text-slate-500 truncate">${esc(m.chucVu || 'Giáo viên')}</div>
+                                                    </div>
+                                                </div>
+                                                <i class="bi ${checked ? 'bi-check-circle-fill text-blue-600' : 'bi-circle text-slate-300'} text-sm"></i>
+                                            </label>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        </div>`;
+                }).filter(Boolean).join('');
 
-                const memberHtml = !state.khoCurrentTeam
-                    ? '<p class="text-xs text-slate-500 italic">Chọn Tổ/Bộ phận để hiển thị danh sách nhân sự.</p>'
-                    : (members.length ? `
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-[11px] font-bold text-slate-600">${members.length} nhân sự</span>
-                            <button type="button" id="kho-toggle-all" class="text-[11px] font-bold text-blue-700 hover:underline">Chọn/Bỏ chọn cả tổ</button>
-                        </div>
-                        <div class="space-y-1.5 max-h-64 overflow-y-auto custom-scrollbar">
-                            ${members.map(m => `
-                                <label class="flex items-start gap-2 p-2 rounded-lg border border-slate-200 bg-white hover:bg-blue-50 cursor-pointer">
-                                    <input type="checkbox" class="kho-recipient-checkbox mt-0.5" data-username="${esc(m.username)}" ${selected.has(String(m.username)) ? 'checked' : ''}>
-                                    <span class="min-w-0">
-                                        <span class="block text-xs font-bold text-slate-800">${esc(m.hoTen)}</span>
-                                        <span class="block text-[10px] text-slate-500">${esc([m.chucVu || m.vaiTro || '', m.to || ''].filter(Boolean).join(' · '))}</span>
-                                    </span>
-                                </label>`).join('')}
-                        </div>`
-                    : '<p class="text-xs text-rose-600 font-semibold">Không có nhân sự trong Tổ/Bộ phận này.</p>');
+                const fullTeams = allToData.filter(t => Array.isArray(t.members) && t.members.length && t.members.every(m => selectedUsernames.has(String(m.username || ''))));
+                const chips = [];
+                fullTeams.forEach(t => chips.push(`<span class="px-2.5 py-1 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-800 text-[11px] font-bold">Tổ ${esc(t.tenTo)} (${t.members.length})</span>`));
+                allToData.forEach(t => {
+                    const isFull = Array.isArray(t.members) && t.members.length && t.members.every(m => selectedUsernames.has(String(m.username || '')));
+                    if (!isFull) (t.members || []).forEach(m => {
+                        if (selectedUsernames.has(String(m.username || ''))) chips.push(`<span class="px-2.5 py-1 rounded-lg bg-white border border-blue-200 text-[#0F4C81] text-[11px] font-semibold">${esc(m.hoTen)}</span>`);
+                    });
+                });
 
                 container.innerHTML = `
                     <div class="space-y-3">
-                        <div>
-                            <label class="block text-[11px] font-extrabold text-slate-600 uppercase mb-1">Tổ/Bộ phận</label>
-                            <select id="kho-team-select" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-200">${teamOptions}</select>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="text-[11px] font-bold uppercase tracking-wider text-[#0F4C81]">Chọn đối tượng tiếp nhận</div>
+                            <div class="flex gap-1.5">
+                                <span class="px-2 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-bold">${fullTeams.length} tổ</span>
+                                <span class="px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold">${selectedUsernames.size} cá nhân</span>
+                            </div>
                         </div>
-                        <div>${memberHtml}</div>
-                        <div class="text-[11px] font-bold ${selected.size ? 'text-emerald-700' : 'text-rose-600'}">Đã chọn: ${selected.size} người nhận</div>
+                        <div class="relative">
+                            <input id="khoSearchRecipient" type="text" value="${esc(state.khoSearch || '')}" oninput="Controller.filterKhoRecipients(this.value)" placeholder="Tìm tổ hoặc giáo viên..." class="w-full rounded-xl border border-slate-300 bg-slate-50/50 pl-9 pr-3 py-2.5 text-xs font-medium outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100">
+                            <i class="bi bi-search absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                        </div>
+                        <div class="space-y-2.5 max-h-[420px] overflow-y-auto pr-1 custom-scrollbar">
+                            ${blocks || '<div class="p-5 text-center text-xs text-slate-400 italic">Không tìm thấy tổ hoặc giáo viên phù hợp.</div>'}
+                        </div>
+                        <div class="pt-2 border-t border-slate-100">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase">Đã chọn</span>
+                                <button type="button" onclick="Controller.clearKhoRecipients()" class="text-[10px] font-semibold text-red-600 hover:underline">Xóa toàn bộ chọn</button>
+                            </div>
+                            <div class="min-h-[38px] flex flex-wrap gap-1.5 items-center">${chips.length ? chips.join('') : '<span class="text-[11px] text-slate-400 italic">Chưa chọn đối tượng nào...</span>'}</div>
+                        </div>
                     </div>`;
-
-                const teamSelect = document.getElementById('kho-team-select');
-                if (teamSelect) teamSelect.addEventListener('change', e => Controller.loadKhoTeam(e.target.value));
-                container.querySelectorAll('.kho-recipient-checkbox').forEach(cb => {
-                    cb.addEventListener('change', e => Controller.toggleKhoRecipient(e.target.dataset.username, e.target.checked));
-                });
-                const allBtn = document.getElementById('kho-toggle-all');
-                if (allBtn) allBtn.addEventListener('click', () => Controller.toggleKhoAll());
                 return;
             }
 
@@ -916,64 +961,112 @@ const Controller = {
     loadKhoPersonnelAll: async () => {
         const container = document.getElementById('recipient-selector-container');
         if (container) {
-            container.innerHTML = '<div class="flex items-center gap-2 text-xs font-semibold text-blue-700"><span class="inline-block w-3 h-3 rounded-full border-2 border-blue-200 border-t-blue-700 animate-spin"></span>Đang tải danh sách nhân sự...</div>';
+            container.innerHTML = `
+                <div class="space-y-2">
+                    <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
+                    <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
+                    <div class="h-10 bg-slate-100 rounded-xl animate-pulse"></div>
+                </div>`;
         }
         try {
-            // Backend hiện tại: getNhanSuTheoTo với to rỗng trả toàn bộ nhân sự.
-            const data = await Controller.fetchJson('getNhanSuTheoTo', {}, 8000);
-            const all = Array.isArray(data) ? data : (Array.isArray(data && data.data) ? data.data : []);
+            // DÙNG ĐÚNG LUỒNG ĐANG CHẠY NHANH Ở GIAO VIỆC:
+            // 1) lấy danh sách tổ; 2) lấy nhân sự từng tổ SONG SONG bằng Promise.all.
+            const urlTo = new URL(CONFIG.SCRIPT_URL);
+            urlTo.searchParams.set('action', 'getDanhSachTo');
+            const res = await fetch(urlTo.toString(), { cache: 'no-store' });
+            if (!res.ok) throw new Error('Không tải được danh sách tổ');
+            const listTo = await res.json();
+            if (!Array.isArray(listTo)) throw new Error('Dữ liệu danh sách tổ không hợp lệ');
 
-            const counts = {};
-            all.forEach(m => {
-                const team = String(m.to || '').trim();
-                if (team) counts[team] = (counts[team] || 0) + 1;
-            });
-            TTDHS_State.khoTeams = Object.keys(counts)
-                .sort((a, b) => a.localeCompare(b, 'vi'))
-                .map(tenTo => ({ tenTo, soLuong: counts[tenTo] }));
-            TTDHS_State.khoAllMembers = all;
-            TTDHS_State.khoTeamMembers = [];
-            TTDHS_State.khoCurrentTeam = '';
+            const allToData = await Promise.all(listTo.map(async (toItem) => {
+                const tenTo = String((toItem && toItem.tenTo) || toItem || '').trim();
+                if (!tenTo) return null;
+                try {
+                    const u = new URL(CONFIG.SCRIPT_URL);
+                    u.searchParams.set('action', 'getNhanSuTheoTo');
+                    u.searchParams.set('to', tenTo);
+                    const resNS = await fetch(u.toString(), { cache: 'no-store' });
+                    if (!resNS.ok) throw new Error(`HTTP ${resNS.status}`);
+                    const membersRaw = await resNS.json();
+                    const members = Array.isArray(membersRaw) ? membersRaw : [];
+                    return {
+                        tenTo,
+                        soLuong: members.length || Number((toItem && toItem.soLuong) || 0),
+                        members: members.map(m => ({
+                            username: m.username || m.maGV || m.hoTen || '',
+                            hoTen: m.hoTen || m.fullName || '',
+                            chucVu: m.chucVu || m.vaiTro || 'Giáo viên',
+                            vaiTro: m.vaiTro || m.chucVu || '',
+                            to: m.to || tenTo,
+                            tenTo
+                        })).filter(m => m.username)
+                    };
+                } catch (err) {
+                    console.error('Lỗi tải nhân sự tổ:', tenTo, err);
+                    return { tenTo, soLuong: 0, members: [] };
+                }
+            }));
+
+            TTDHS_State.khoTeams = allToData.filter(Boolean);
+            TTDHS_State.khoSearch = '';
             Controller.refreshUI();
         } catch (err) {
-            console.error('Lỗi tải nhân sự:', err);
+            console.error('Lỗi tải danh sách nhân sự:', err);
             if (container) {
-                container.innerHTML = `<p class="text-xs text-rose-600 font-semibold">Không tải được nhân sự: ${String(err.message || err)}</p>`;
+                container.innerHTML = `
+                    <div class="p-4 text-center">
+                        <div class="text-xs text-rose-600 font-bold">Không tải được danh sách nhân sự</div>
+                        <button type="button" onclick="Controller.loadKhoPersonnelAll()" class="mt-2 text-[11px] font-bold text-[#0F4C81] hover:underline">Thử lại</button>
+                    </div>`;
             }
         }
     },
 
-    loadKhoTeam: (tenTo) => {
-        TTDHS_State.khoCurrentTeam = String(tenTo || '');
-        const all = Array.isArray(TTDHS_State.khoAllMembers) ? TTDHS_State.khoAllMembers : [];
-        TTDHS_State.khoTeamMembers = !TTDHS_State.khoCurrentTeam ? [] : all.filter(m =>
-            String(m.to || '').trim().toLowerCase() === TTDHS_State.khoCurrentTeam.trim().toLowerCase()
-        );
-        Controller.refreshUI();
+    toggleKhoAccordion: (bodyId, iconId) => {
+        const body = document.getElementById(bodyId);
+        const icon = document.getElementById(iconId);
+        if (!body) return;
+        const open = body.classList.toggle('open');
+        if (icon) icon.classList.toggle('rotate-90', open);
     },
 
-    toggleKhoRecipient: (username, checked) => {
+    filterKhoRecipients: (value) => {
+        TTDHS_State.khoSearch = String(value || '');
+        Controller.refreshUI();
+        const input = document.getElementById('khoSearchRecipient');
+        if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); }
+    },
+
+    toggleKhoUser: (username, checked) => {
         const u = String(username || '');
-        const member = (TTDHS_State.khoTeamMembers || []).find(m => String(m.username || '') === u);
+        let member = null;
+        for (const t of (TTDHS_State.khoTeams || [])) {
+            member = (t.members || []).find(m => String(m.username || '') === u);
+            if (member) break;
+        }
         if (!member) return;
         TTDHS_State.recipients = (TTDHS_State.recipients || []).filter(r => String((r && r.username) || '') !== u);
         if (checked) TTDHS_State.recipients.push({
             username: member.username || '', hoTen: member.hoTen || '', vaiTro: member.vaiTro || '',
-            chucVu: member.chucVu || member.vaiTro || '', to: member.to || TTDHS_State.khoCurrentTeam || ''
+            chucVu: member.chucVu || member.vaiTro || '', to: member.to || member.tenTo || ''
         });
         Controller.refreshUI();
     },
 
-    toggleKhoAll: () => {
-        const members = Array.isArray(TTDHS_State.khoTeamMembers) ? TTDHS_State.khoTeamMembers : [];
-        const currentUsernames = new Set((TTDHS_State.recipients || []).map(r => String((r && r.username) || '')));
-        const allSelected = members.length > 0 && members.every(m => currentUsernames.has(String(m.username || '')));
-        const memberNames = new Set(members.map(m => String(m.username || '')));
-        TTDHS_State.recipients = (TTDHS_State.recipients || []).filter(r => !memberNames.has(String((r && r.username) || '')));
-        if (!allSelected) members.forEach(m => TTDHS_State.recipients.push({
+    toggleKhoTeamAll: (teamIndex, checked) => {
+        const team = (TTDHS_State.khoTeams || [])[Number(teamIndex)];
+        if (!team) return;
+        const names = new Set((team.members || []).map(m => String(m.username || '')));
+        TTDHS_State.recipients = (TTDHS_State.recipients || []).filter(r => !names.has(String((r && r.username) || '')));
+        if (checked) (team.members || []).forEach(m => TTDHS_State.recipients.push({
             username: m.username || '', hoTen: m.hoTen || '', vaiTro: m.vaiTro || '',
-            chucVu: m.chucVu || m.vaiTro || '', to: m.to || TTDHS_State.khoCurrentTeam || ''
+            chucVu: m.chucVu || m.vaiTro || '', to: m.to || team.tenTo || ''
         }));
+        Controller.refreshUI();
+    },
+
+    clearKhoRecipients: () => {
+        TTDHS_State.recipients = [];
         Controller.refreshUI();
     },
 
