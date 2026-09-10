@@ -1640,28 +1640,43 @@ export function renderHome() {
         <div class="p-3 space-y-1.5">
 
             <!-- 1. HÀNH CHÍNH -->
-            <a href="hanh-chinh.html"
-               class="flex items-center gap-3 px-3 py-3 rounded-xl
-                      text-[14px] font-bold
-                      text-[#123B67] dark:text-slate-100
-                      hover:bg-blue-50 dark:hover:bg-slate-800 transition">
-
-                <div class="w-10 h-10 rounded-xl
-                            bg-slate-100 dark:bg-slate-800
-                            border border-slate-200 dark:border-slate-700
-                            flex items-center justify-center
-                            text-slate-600 dark:text-slate-300 shrink-0">
-                    <i class="bi bi-building-fill text-lg"></i>
-                </div>
-
-                <div class="text-left">
-                    <div class="leading-tight">Hành chính</div>
-                    <div class="text-[10px] font-medium text-slate-400 mt-1">
-                        Báo cáo tháng • Kê khai • Hồ sơ cá nhân
+            <div class="rounded-xl overflow-hidden">
+                <button type="button"
+                        onclick="window.toggleHVAHanhChinhMenu(event)"
+                        class="w-full flex items-center justify-between gap-3 px-3 py-3 rounded-xl
+                               text-[14px] font-bold text-[#123B67] dark:text-slate-100
+                               hover:bg-blue-50 dark:hover:bg-slate-800 transition text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800
+                                    border border-slate-200 dark:border-slate-700
+                                    flex items-center justify-center text-slate-600 dark:text-slate-300 shrink-0">
+                            <i class="bi bi-building-fill text-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="leading-tight">Hành chính</div>
+                            <div class="text-[10px] font-medium text-slate-400 mt-1">Báo cáo tháng • Kê khai • Hồ sơ cá nhân</div>
+                        </div>
                     </div>
-                </div>
-            </a>
+                    <i id="hva-hanhchinh-arrow" class="bi bi-chevron-right text-xs text-slate-400 transition-transform duration-200"></i>
+                </button>
 
+                <div id="hva-hanhchinh-items" class="hidden ml-5 mr-1 mt-1 mb-2 pl-4 py-1 border-l-2 border-slate-200 dark:border-slate-700 space-y-0.5">
+                    <a href="BaoCaoDanhGiaCongViecThang.html"
+                       onclick="event.stopPropagation()"
+                       class="flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">
+                        <i class="bi bi-clipboard2-data text-blue-600"></i>
+                        <span>Báo cáo công việc tháng</span>
+                    </a>
+                    <button type="button" onclick="event.stopPropagation(); alert('Nghiệp vụ Kê khai đang được hoàn thiện.');"
+                            class="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition text-left">
+                        <i class="bi bi-ui-checks-grid"></i><span>Kê khai</span>
+                    </button>
+                    <button type="button" onclick="event.stopPropagation(); alert('Nghiệp vụ Hồ sơ cá nhân đang được hoàn thiện.');"
+                            class="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition text-left">
+                        <i class="bi bi-person-vcard"></i><span>Hồ sơ cá nhân</span>
+                    </button>
+                </div>
+            </div>
 
             <!-- 2. HỘI NGHỊ - HỘI THẢO -->
             <a href="HoiThao.html"
@@ -5514,3 +5529,20 @@ setInterval(loadEscalatedHVAReminders, 5 * 60 * 1000);
 
 
 setTimeout(setupHVAReminderPermission, 150);
+
+// =====================================================
+// NGHIỆP VỤ SỐ → HÀNH CHÍNH
+// Kết nối Báo cáo công việc tháng theo QĐ 32/2026/QĐ-UBND.
+// =====================================================
+window.toggleHVAHanhChinhMenu = function(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    const items = document.getElementById('hva-hanhchinh-items');
+    const arrow = document.getElementById('hva-hanhchinh-arrow');
+    if (!items) return;
+    const open = items.classList.contains('hidden');
+    items.classList.toggle('hidden', !open);
+    if (arrow) arrow.classList.toggle('rotate-90', open);
+};
