@@ -372,6 +372,7 @@ const StorageEngine = {
     const TTDHS_State = {
         rawSource: null,
         document: ModuleAdapter.toStandardDocument(null),
+        documents: [],
         destinations: JSON.parse(JSON.stringify(CONFIG.DEFAULT_DESTINATIONS)),
         workflowSteps: JSON.parse(JSON.stringify(CONFIG.DEFAULT_WORKFLOW_STEPS)),
         linkedDocs: [],
@@ -468,11 +469,12 @@ const StorageEngine = {
             const isPermitted = PermissionEngine.checkPermission(state.userPermissions, CONFIG.ACTIONS.PUBLISH);
             const versionStatus = VersionEngine.checkConflict(state.document.version);
             const hasSource = state.document.moduleSource !== 'UnknownModule';
+            const documentCount = Array.isArray(state.documents) && state.documents.length ? state.documents.length : 1;
             const hasRecipients = state.recipients.length > 0;
             const hasDestinations = state.destinations.some(d => d.selected);
 
             const checks = [
-                { label: "Kiểm tra module nguồn", pass: hasSource, msg: hasSource ? state.document.moduleSource : "Chưa có dữ liệu nguồn" },
+                { label: "Kiểm tra module nguồn", pass: hasSource, msg: hasSource ? `${state.document.moduleSource} • ${documentCount} văn bản` : "Chưa có dữ liệu nguồn" },
                 { label: "Kiểm tra quyền phát hành", pass: isPermitted, msg: isPermitted ? "Đủ thẩm quyền" : "Thiếu thẩm quyền" },
                 { label: "Kiểm tra phiên bản mới hơn", pass: !versionStatus.conflict, msg: "Phiên bản mới nhất" },
                 { label: "Kiểm tra đối tượng nhận", pass: hasRecipients, msg: hasRecipients ? `${state.recipients.length} nhóm nhận` : "Chưa chọn người nhận" },
@@ -511,13 +513,21 @@ const StorageEngine = {
         },
         preparePayload: (state) => {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const isKho = String(state.document && state.document.moduleSource || '').toLowerCase() === 'khovanban';
+            const docs = isKho && Array.isArray(state.documents) && state.documents.length
+                ? state.documents
+                : [state.document];
+            const batchId = PublishEngine.createPublishId();
+
             return {
-                action: 'publishDocument',
-                publishId: PublishEngine.createPublishId(),
+                action: isKho ? 'publishDocuments' : 'publishDocument',
+                publishId: batchId,
+                batchPublishId: batchId,
                 projectCode: CONFIG.PROJECT_CODE,
                 moduleSource: state.document.moduleSource,
                 documentType: state.document.type,
                 document: state.document,
+                documents: docs,
                 sender: {
                     username: user.username || '',
                     fullName: user.fullName || state.document.author || '',
@@ -551,13 +561,59 @@ const StorageEngine = {
     // 7. RENDER ENGINE (PURE UI PRESENTATION LAYER)
     // =================================================================
     const RenderEngine = {
-        renderHeaderInfo: (documentState) => {
+        renderHeaderInfo: (documentState, state) => {
+            const docs = Array.isArray(state && state.documents) ? state.documents : [];
+            const isBatch = docs.length > 1;
+
             document.getElementById('source-module-name').innerText = documentState.moduleSource;
-            document.getElementById('doc-type-badge').innerText = documentState.type;
-            document.getElementById('doc-id-badge').innerText = `Mã: ${documentState.docId}`;
-            document.getElementById('doc-version-badge').innerText = documentState.version;
-            document.getElementById('doc-title-display').innerText = documentState.title;
-            document.getElementById('doc-summary-display').innerText = `Người soạn: ${documentState.author} | Ngày tạo: ${documentState.createdAt}`;
+            document.getElementById('doc-type-badge').innerText = isBatch ? 'PHÁT HÀNH THEO LÔ' : documentState.type;
+            document.getElementById('doc-id-badge').innerText = isBatch ? `${docs.length} văn bản` : `Mã: ${documentState.docId}`;
+            document.getElementById('doc-version-badge').innerText = documentState.version || 'v1.0.0';
+
+            const titleEl = document.getElementById('doc-title-display');
+            const summaryEl = document.getElementById('doc-summary-display');
+
+            if (!isBatch) {
+                titleEl.innerText = documentState.title;
+                summaryEl.innerText = `Người soạn: ${documentState.author} | Ngày tạo: ${documentState.createdAt}`;
+                const old = document.getElementById('batch-documents-list');
+                if (old) old.remove();
+                return;
+            }
+
+            titleEl.innerText = `ĐÃ CHỌN ${docs.length} VĂN BẢN ĐỂ PHÁT HÀNH`;
+            summaryEl.innerText = 'Các văn bản dùng chung một danh sách người nhận và cùng một lần phát hành.';
+
+            let box = document.getElementById('batch-documents-list');
+            if (!box) {
+                box = document.createElement('div');
+                box.id = 'batch-documents-list';
+                box.className = 'mt-3 grid grid-cols-1 md:grid-cols-2 gap-2';
+                summaryEl.parentElement.appendChild(box);
+            }
+            const esc = v => String(v == null ? '' : v)
+              .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+              .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+            box.innerHTML = docs.map((d,i) => {
+                const data = d.data || d;
+                const name = data.soVanBan || d.title || data.fileName || `Văn bản ${i+1}`;
+                const summary = data.trichYeu || d.trichYeu || '';
+                const url = data.fileUrl || d.fileUrl || '';
+                const down = data.downloadUrl || d.downloadUrl || '';
+                return `<div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <div class="flex items-start gap-2">
+                      <span class="shrink-0 w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-extrabold">${i+1}</span>
+                      <div class="min-w-0 flex-1">
+                        <div class="text-xs font-extrabold text-slate-800">${esc(name)}</div>
+                        <div class="text-[10px] text-slate-500 mt-1 line-clamp-2">${esc(summary)}</div>
+                        <div class="mt-2 flex gap-2">
+                          ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener" class="text-[10px] font-bold text-blue-700">👁 Xem</a>` : ''}
+                          ${down ? `<a href="${esc(down)}" target="_blank" rel="noopener" class="text-[10px] font-bold text-emerald-700">⬇ Tải PDF</a>` : ''}
+                        </div>
+                      </div>
+                    </div>
+                </div>`;
+            }).join('');
         },
 
         renderRecipients: (recipients, state) => {
@@ -760,7 +816,7 @@ const StorageEngine = {
         },
 
         renderAll: (state, checkResult, pipeline) => {
-            RenderEngine.renderHeaderInfo(state.document);
+            RenderEngine.renderHeaderInfo(state.document, state);
             RenderEngine.renderRecipients(state.recipients, state);
             RenderEngine.renderDestinations(state.destinations);
             RenderEngine.toggleWorkflowCard(state.destinations);
@@ -795,67 +851,74 @@ const Controller = {
         try {
             const urlParams = new URLSearchParams(window.location.search);
             const source = String(urlParams.get('source') || '').trim();
-            const fileId = String(urlParams.get('fileId') || '').trim();
-            const sourceRow = String(urlParams.get('sourceRow') || '').trim();
+            const fileIdsParam = String(urlParams.get('fileIds') || '').trim();
+            const fileIdLegacy = String(urlParams.get('fileId') || '').trim();
 
-            if (source.toLowerCase() === 'khovanban' && fileId) {
-                // FAST PATH: nhận metadata trực tiếp từ Sidebar để render ngay, không chờ API văn bản.
-                let khoDoc = Controller.decodeHandoff(urlParams.get('handoff'));
+            if (source.toLowerCase() === 'khovanban' && (fileIdsParam || fileIdLegacy)) {
+                const fileIds = (fileIdsParam || fileIdLegacy)
+                    .split(',').map(x => x.trim()).filter(Boolean);
 
-                // Fallback tương thích URL cũ: chỉ khi không có handoff mới gọi API lấy văn bản.
-                if (!khoDoc) {
-                    const data = await Controller.fetchJson('getKhoVanBanFile', { fileId: fileId }, 8000);
-                    if (!data || data.success !== true) {
-                        throw new Error((data && data.message) || 'Backend không trả được văn bản từ Kho.');
-                    }
-                    khoDoc = data;
+                // Một request duy nhất lấy metadata cho toàn bộ lô.
+                const lookup = await Controller.fetchJson(
+                    'getKhoVanBanFiles',
+                    { fileIds: fileIds.join(',') },
+                    12000
+                );
+                if (!lookup || (!lookup.success && !lookup.partial) || !Array.isArray(lookup.documents) || !lookup.documents.length) {
+                    throw new Error((lookup && lookup.message) || 'Không lấy được danh sách văn bản từ Kho.');
                 }
 
-                const rawSource = {
-                    moduleSource: 'KhoVanBan',
-                    source: 'KhoVanBan',
-                    sourceRow: sourceRow || khoDoc.sourceRow || '',
-                    docId: khoDoc.fileId || fileId,
-                    id: khoDoc.fileId || fileId,
-                    fileId: khoDoc.fileId || fileId,
-                    title: khoDoc.trichYeu || khoDoc.tenVanBan || khoDoc.fileName || 'Văn bản HVA',
-                    name: khoDoc.fileName || khoDoc.tenVanBan || 'Văn bản HVA',
-                    type: khoDoc.loaiKho || 'VĂN BẢN',
-                    version: 'v1.0.0',
-                    author: khoDoc.nguoiDuaVao || 'Trường THPT Hòa Vang',
-                    createdAt: khoDoc.ngayTaoDrive || '',
-                    fileUrl: khoDoc.fileUrl || '',
-                    downloadUrl: khoDoc.downloadUrl || '',
-                    trichYeu: khoDoc.trichYeu || '',
-                    tuKhoa: khoDoc.tuKhoa || '',
-                    preserveOriginalFile: true,
-                    publishingMode: 'DOCUMENT_ONLY',
-                    allowTaskWorkflow: false,
-                    data: {
-                        fileId: khoDoc.fileId || fileId,
-                        fileName: khoDoc.fileName || '',
-                        tenVanBan: khoDoc.tenVanBan || '',
-                        loaiKho: khoDoc.loaiKho || '',
-                        folderKey: khoDoc.folderKey || '',
-                        folderId: khoDoc.folderId || '',
+                const standardDocs = lookup.documents.map((khoDoc, index) => {
+                    const raw = {
+                        moduleSource: 'KhoVanBan',
+                        source: 'KhoVanBan',
+                        sourceRow: khoDoc.sourceRow || '',
+                        docId: khoDoc.fileId,
+                        id: khoDoc.fileId,
+                        fileId: khoDoc.fileId,
+                        title: khoDoc.trichYeu || khoDoc.tenVanBan || khoDoc.fileName || `Văn bản ${index+1}`,
+                        name: khoDoc.fileName || khoDoc.tenVanBan || `Văn bản ${index+1}`,
+                        type: khoDoc.loaiKho || 'VĂN BẢN',
+                        version: 'v1.0.0',
+                        author: khoDoc.nguoiDuaVao || 'Trường THPT Hòa Vang',
+                        createdAt: khoDoc.ngayTaoDrive || '',
                         fileUrl: khoDoc.fileUrl || '',
                         downloadUrl: khoDoc.downloadUrl || '',
                         trichYeu: khoDoc.trichYeu || '',
-                        tuKhoa: khoDoc.tuKhoa || '',
-                        sourceRow: sourceRow || khoDoc.sourceRow || ''
-                    },
-                    recipients: []
-                };
+                        preserveOriginalFile: true,
+                        publishingMode: 'DOCUMENT_ONLY',
+                        allowTaskWorkflow: false,
+                        data: {
+                            fileId: khoDoc.fileId,
+                            fileName: khoDoc.fileName || '',
+                            tenVanBan: khoDoc.tenVanBan || '',
+                            loaiKho: khoDoc.loaiKho || '',
+                            folderKey: khoDoc.folderKey || '',
+                            folderId: khoDoc.folderId || '',
+                            fileUrl: khoDoc.fileUrl || '',
+                            downloadUrl: khoDoc.downloadUrl || '',
+                            trichYeu: khoDoc.trichYeu || '',
+                            tuKhoa: khoDoc.tuKhoa || '',
+                            sourceRow: khoDoc.sourceRow || ''
+                        },
+                        recipients: []
+                    };
+                    return ModuleAdapter.toStandardDocument(raw);
+                });
 
-                StorageEngine.save(CONFIG.STORAGE_KEYS.CURRENT_DOC, rawSource);
-                TTDHS_State.rawSource = rawSource;
-                TTDHS_State.document = ModuleAdapter.toStandardDocument(rawSource);
+                TTDHS_State.documents = standardDocs;
+                TTDHS_State.document = standardDocs[0];
+                TTDHS_State.rawSource = {
+                    moduleSource:'KhoVanBan',
+                    documents: lookup.documents,
+                    recipients:[]
+                };
                 TTDHS_State.recipients = [];
                 TTDHS_State.linkedDocs = [];
                 Controller.applySourceDefaults('KhoVanBan');
                 Controller.refreshUI();
 
-                // Không chặn giao diện: tải toàn bộ nhân sự chỉ bằng 1 request rồi tự gom Tổ/Bộ phận.
+                // Dùng đúng loader Giao việc đã chạy ổn.
                 Controller.loadKhoPersonnelAll();
                 return;
             }
@@ -864,15 +927,16 @@ const Controller = {
             if (storedDoc) {
                 TTDHS_State.rawSource = storedDoc;
                 TTDHS_State.document = ModuleAdapter.toStandardDocument(storedDoc);
+                TTDHS_State.documents = [TTDHS_State.document];
                 TTDHS_State.recipients = ModuleAdapter.getRecipients(storedDoc);
                 TTDHS_State.linkedDocs = ModuleAdapter.getLinkedDocs(storedDoc);
                 Controller.applySourceDefaults(TTDHS_State.document.moduleSource);
             }
             Controller.refreshUI();
         } catch (err) {
-            console.error('KhoVanBan handoff error:', err);
+            console.error('KhoVanBan batch handoff error:', err);
             Controller.refreshUI();
-            alert('KHÔNG TẢI ĐƯỢC VĂN BẢN TỪ KHO\n' + (err.message || err));
+            alert('KHÔNG TẢI ĐƯỢC VĂN BẢN TỪ KHO\\n' + (err.message || err));
         }
     },
 
@@ -1096,7 +1160,7 @@ const Controller = {
             const payload = PublishEngine.preparePayload(TTDHS_State);
             const result = await PublishEngine.postToBackend(payload);
             StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_RESULT, result);
-            alert('PHÁT HÀNH THÀNH CÔNG');
+            alert(result.documentCount ? ('PHÁT HÀNH THÀNH CÔNG ' + result.documentCount + ' VĂN BẢN') : 'PHÁT HÀNH THÀNH CÔNG');
         } catch (err) {
             console.error(err);
             alert('PHÁT HÀNH KHÔNG THÀNH CÔNG\n' + (err.message || err));
@@ -1107,6 +1171,15 @@ const Controller = {
     },
 
     openPreviewModal: () => {
+        const docs = Array.isArray(TTDHS_State.documents) ? TTDHS_State.documents : [];
+        if (docs.length > 1) {
+            const d = docs[0] || {};
+            const data = d.data || {};
+            const url = d.fileUrl || data.fileUrl || d.downloadUrl || data.downloadUrl || '';
+            if (url) window.open(url, '_blank', 'noopener');
+            else alert('Văn bản chưa có đường dẫn tệp gốc.');
+            return;
+        }
         const raw = TTDHS_State.rawSource || {};
         const data = raw.data || {};
         const url = raw.fileUrl || data.fileUrl || raw.downloadUrl || data.downloadUrl || '';
