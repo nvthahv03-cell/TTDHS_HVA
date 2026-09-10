@@ -1326,12 +1326,12 @@ export function renderHome() {
                                     font-bold
                                     text-[#123B67]
                                     dark:text-slate-100">
-                            Kế hoạch - Báo cáo tháng
+                            Kế hoạch - Chỉ tiêu
                         </div>
 
                         <div class="text-[9px]
                                     text-slate-400 mt-0.5">
-                            Giao việc • Thực hiện • Minh chứng
+                            Kế hoạch • Chỉ tiêu • Tiến độ
                         </div>
                     </div>
 
@@ -1417,7 +1417,7 @@ export function renderHome() {
 
                         <div class="text-[9px]
                                     text-slate-400 mt-0.5">
-                            Theo tháng • Học kỳ • Năm học
+                            Tháng • Quý • Học kỳ I, II • Năm học
                         </div>
                     </div>
 
@@ -1460,7 +1460,7 @@ export function renderHome() {
 
                         <div class="text-[9px]
                                     text-slate-400 mt-0.5">
-                            Hồ sơ • Nhận xét • Kết quả
+                            Tự đánh giá • Tổ • BGH
                         </div>
                     </div>
 
