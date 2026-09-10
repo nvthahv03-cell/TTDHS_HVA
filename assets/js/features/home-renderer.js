@@ -1604,7 +1604,31 @@ export function renderHome() {
         <!-- NỘI DUNG -->
         <div class="p-3 space-y-1.5">
 
-            <!-- 1. HỘI NGHỊ - HỘI THẢO -->
+            <!-- 1. HÀNH CHÍNH -->
+            <a href="hanh-chinh.html"
+               class="flex items-center gap-3 px-3 py-3 rounded-xl
+                      text-[14px] font-bold
+                      text-[#123B67] dark:text-slate-100
+                      hover:bg-blue-50 dark:hover:bg-slate-800 transition">
+
+                <div class="w-10 h-10 rounded-xl
+                            bg-slate-100 dark:bg-slate-800
+                            border border-slate-200 dark:border-slate-700
+                            flex items-center justify-center
+                            text-slate-600 dark:text-slate-300 shrink-0">
+                    <i class="bi bi-building-fill text-lg"></i>
+                </div>
+
+                <div class="text-left">
+                    <div class="leading-tight">Hành chính</div>
+                    <div class="text-[10px] font-medium text-slate-400 mt-1">
+                        Báo cáo tháng • Kê khai • Hồ sơ cá nhân
+                    </div>
+                </div>
+            </a>
+
+
+            <!-- 2. HỘI NGHỊ - HỘI THẢO -->
             <a href="HoiThao.html"
                class="flex items-center justify-between gap-3
                       px-3 py-3 rounded-xl
@@ -1633,7 +1657,7 @@ export function renderHome() {
                 <i class="bi bi-chevron-right text-xs text-slate-400"></i>
             </a>
 
-            <!-- 2. BỒI DƯỠNG CHUYÊN MÔN -->
+            <!-- 3. BỒI DƯỠNG CHUYÊN MÔN -->
             <div class="relative border-t border-slate-100 dark:border-slate-800 pt-1">
 
                 <button type="button"
@@ -1721,7 +1745,7 @@ export function renderHome() {
                 </div>
             </div>
 
-            <!-- 3. HỒ SƠ CHUYÊN MÔN -->
+            <!-- 4. HỒ SƠ CHUYÊN MÔN -->
             <div class="relative border-t border-slate-100 dark:border-slate-800 pt-1">
                 <button type="button" id="hscm-menu-button"
                         onclick="event.stopPropagation(); const items=document.getElementById('hscm-sub-items'); const arrow=document.getElementById('hscm-sub-arrow'); if(!items||!arrow)return; const willOpen=items.classList.contains('hidden'); items.classList.toggle('hidden'); arrow.classList.toggle('rotate-90',willOpen);"
@@ -1754,7 +1778,7 @@ export function renderHome() {
                 </div>
             </div>
 
-            <!-- 4. HOẠT ĐỘNG GIÁO DỤC -->
+            <!-- 5. HOẠT ĐỘNG GIÁO DỤC -->
             <a href="hoatdong-giaoduc.html"
                class="flex items-center gap-3 px-3 py-3 rounded-xl
                       text-[14px] font-bold
@@ -1777,7 +1801,7 @@ export function renderHome() {
                 </div>
             </a>
 
-            <!-- 5. THI - CUỘC THI -->
+            <!-- 6. THI - CUỘC THI -->
             <a href="cac-cuoc-thi.html"
                class="flex items-center gap-3 px-3 py-3 rounded-xl
                       text-[14px] font-bold
@@ -1800,7 +1824,7 @@ export function renderHome() {
                 </div>
             </a>
 
-            <!-- 6. CHUYỂN ĐỔI SỐ -->
+            <!-- 7. CHUYỂN ĐỔI SỐ -->
             <a href="chuyen-doi-so.html"
                class="flex items-center gap-3 px-3 py-3 rounded-xl
                       text-[14px] font-bold
@@ -1818,30 +1842,7 @@ export function renderHome() {
                 <div class="text-left">
                     <div class="leading-tight">Chuyển đổi số</div>
                     <div class="text-[10px] font-medium text-slate-400 mt-1">
-                        Nhiệm vụ CĐS • Sản phẩm số • Minh chứng
-                    </div>
-                </div>
-            </a>
-
-            <!-- 7. HÀNH CHÍNH -->
-            <a href="hanh-chinh.html"
-               class="flex items-center gap-3 px-3 py-3 rounded-xl
-                      text-[14px] font-bold
-                      text-[#123B67] dark:text-slate-100
-                      hover:bg-blue-50 dark:hover:bg-slate-800 transition">
-
-                <div class="w-10 h-10 rounded-xl
-                            bg-slate-100 dark:bg-slate-800
-                            border border-slate-200 dark:border-slate-700
-                            flex items-center justify-center
-                            text-slate-600 dark:text-slate-300 shrink-0">
-                    <i class="bi bi-building-fill text-lg"></i>
-                </div>
-
-                <div class="text-left">
-                    <div class="leading-tight">Hành chính</div>
-                    <div class="text-[10px] font-medium text-slate-400 mt-1">
-                        Biểu mẫu • Kê khai • Báo cáo hành chính
+                        CĐS • CNTT • CSDL ngành
                     </div>
                 </div>
             </a>
@@ -5478,4 +5479,3 @@ setInterval(loadEscalatedHVAReminders, 5 * 60 * 1000);
 
 
 setTimeout(setupHVAReminderPermission, 150);
-
