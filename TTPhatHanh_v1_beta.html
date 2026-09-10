@@ -236,6 +236,7 @@
         DEFAULT_DESTINATIONS: [
             { id: "LichCongTac", name: "Lịch công tác", icon: "bi-calendar-week-fill", selected: false },
             { id: "TaiNguyenSo", name: "Tài nguyên số", icon: "bi-folder-symlink-fill", selected: false },
+            { id: "KhoVanBan", name: "Kho văn bản", icon: "bi-archive-fill", selected: false },
             { id: "ThongBao", name: "Thông báo", icon: "bi-megaphone-fill", selected: false },
             { id: "ViecCuaToi", name: "Việc của tôi", icon: "bi-clipboard-check-fill", selected: false },
             { id: "TienIchSo", name: "Tiện ích số", icon: "bi-cpu-fill", selected: false },
@@ -372,6 +373,9 @@ const StorageEngine = {
         workflowSteps: JSON.parse(JSON.stringify(CONFIG.DEFAULT_WORKFLOW_STEPS)),
         linkedDocs: [],
         recipients: [],
+        khoTeams: [],
+        khoTeamMembers: [],
+        khoCurrentTeam: '',
         userPermissions: { canPublish: true, role: CONFIG.ROLES.ADMIN },
         isPublishing: false
     };
@@ -551,13 +555,72 @@ const StorageEngine = {
             document.getElementById('doc-summary-display').innerText = `Người soạn: ${documentState.author} | Ngày tạo: ${documentState.createdAt}`;
         },
 
-        renderRecipients: (recipients) => {
+        renderRecipients: (recipients, documentState) => {
             const container = document.getElementById('recipient-selector-container');
             if (!container) return;
+
+            const srcName = String(documentState?.moduleSource || '').toLowerCase();
+
+            if (srcName === 'khovanban') {
+                const selectedUsers = new Set(
+                    (recipients || []).map(r => String(r.username || '').trim().toLowerCase())
+                );
+
+                const teamOptions = [
+                    '<option value="">— Chọn Tổ/Bộ phận —</option>',
+                    ...(TTDHS_State.khoTeams || []).map(t => {
+                        const name = t.tenTo || t.name || '';
+                        const count = Number(t.soLuong || 0);
+                        const selected = name === TTDHS_State.khoCurrentTeam ? ' selected' : '';
+                        return `<option value="${name.replace(/"/g,'&quot;')}"${selected}>${name}${count ? ` (${count})` : ''}</option>`;
+                    })
+                ].join('');
+
+                const members = TTDHS_State.khoTeamMembers || [];
+                const memberHtml = members.length ? `
+                    <label class="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-100 rounded-lg text-xs font-bold text-blue-900 cursor-pointer">
+                        <input type="checkbox" onchange="Controller.toggleKhoAll(this.checked)" class="rounded border-blue-300">
+                        <span>Chọn tất cả trong tổ</span>
+                    </label>
+                    <div class="max-h-64 overflow-y-auto custom-scrollbar border border-slate-200 rounded-xl divide-y divide-slate-100">
+                        ${members.map(r => {
+                            const u = String(r.username || '');
+                            const checked = selectedUsers.has(u.toLowerCase()) ? ' checked' : '';
+                            const meta = [r.chucVu || r.vaiTro || '', r.to || r.toBoPhan || ''].filter(Boolean).join(' · ');
+                            return `
+                                <label class="flex items-start gap-2 px-3 py-2.5 hover:bg-slate-50 cursor-pointer">
+                                    <input type="checkbox"${checked}
+                                           onchange="Controller.toggleKhoRecipient('${u.replace(/'/g,"\\'")}', this.checked)"
+                                           class="mt-0.5 rounded border-blue-300">
+                                    <span class="min-w-0">
+                                        <span class="block text-xs font-bold text-slate-800">${r.hoTen || u}</span>
+                                        <span class="block text-[10px] text-slate-500">${meta}</span>
+                                    </span>
+                                </label>`;
+                        }).join('')}
+                    </div>`
+                    : '<p class="text-xs text-slate-400 italic">Chọn Tổ/Bộ phận để tải danh sách người nhận.</p>';
+
+                container.innerHTML = `
+                    <div class="space-y-2">
+                        <label class="block text-[11px] font-bold text-slate-600 uppercase">Tổ/Bộ phận nhận</label>
+                        <select onchange="Controller.loadKhoTeam(this.value)"
+                                class="w-full h-10 px-3 rounded-xl border border-slate-300 bg-white text-xs font-semibold">
+                            ${teamOptions}
+                        </select>
+                        ${memberHtml}
+                        <div class="px-3 py-2 rounded-lg ${recipients.length ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-amber-50 border border-amber-200 text-amber-800'} text-xs font-bold">
+                            ${recipients.length ? `Đã chọn ${recipients.length} người nhận` : 'Chưa chọn người nhận'}
+                        </div>
+                    </div>`;
+                return;
+            }
+
             if (!recipients || recipients.length === 0) {
                 container.innerHTML = '<p class="text-xs text-rose-600 font-semibold">Chưa có đối tượng nhận từ module nguồn.</p>';
                 return;
             }
+
             container.innerHTML = recipients.map((r, i) => `
                 <div class="flex items-start gap-2 p-2.5 rounded-xl border border-blue-100 bg-blue-50/60">
                     <i class="bi bi-person-check-fill text-blue-600 mt-0.5"></i>
@@ -658,7 +721,7 @@ const StorageEngine = {
 
         renderAll: (state, checkResult, pipeline) => {
             RenderEngine.renderHeaderInfo(state.document);
-            RenderEngine.renderRecipients(state.recipients);
+            RenderEngine.renderRecipients(state.recipients, state.document);
             RenderEngine.renderDestinations(state.destinations);
             RenderEngine.toggleWorkflowCard(state.destinations);
             RenderEngine.renderWorkflowSteps(state.workflowSteps, state.document);
@@ -672,16 +735,83 @@ const StorageEngine = {
 // 8. CONTROLLER (SOLE SYSTEM ORCHESTRATOR)
 // =================================================================
 const Controller = {
-    init: () => {
+    init: async () => {
         Controller.setupEventBusListeners();
-        const storedDoc = StorageEngine.load(CONFIG.STORAGE_KEYS.CURRENT_DOC);
+
+        let storedDoc = StorageEngine.load(CONFIG.STORAGE_KEYS.CURRENT_DOC);
+
+        const params = new URLSearchParams(window.location.search);
+        const source = String(params.get('source') || '').trim();
+        const fileId = String(params.get('fileId') || '').trim();
+        const sourceRow = Number(params.get('sourceRow') || 0);
+
+        if (source.toLowerCase() === 'khovanban' && fileId) {
+            try {
+                const response = await fetch(
+                    CONFIG.SCRIPT_URL +
+                    '?action=getKhoVanBanFile&fileId=' + encodeURIComponent(fileId) +
+                    '&_=' + Date.now(),
+                    { cache: 'no-store' }
+                );
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const doc = await response.json();
+                if (!doc || doc.success !== true) {
+                    throw new Error((doc && doc.message) || 'Không tải được văn bản từ Kho.');
+                }
+
+                storedDoc = {
+                    moduleSource: 'KhoVanBan',
+                    source: 'KhoVanBan',
+                    docId: doc.fileId,
+                    id: doc.fileId,
+                    title: doc.trichYeu || doc.tenVanBan || doc.fileName,
+                    name: doc.fileName,
+                    type: doc.loaiKho || 'VĂN BẢN',
+                    version: 'v1.0.0',
+                    author: doc.nguoiDuaVao || 'HVA',
+                    createdAt: doc.ngayTaoDrive || new Date().toISOString(),
+                    recipients: [],
+                    linkedDocs: [],
+                    data: {
+                        sourceType: 'SYS_KhoVanBan',
+                        sourceSheet: 'SYS_KhoVanBan',
+                        sourceRow: sourceRow,
+                        fileId: doc.fileId,
+                        fileName: doc.fileName,
+                        fileUrl: doc.fileUrl,
+                        downloadUrl: doc.downloadUrl,
+                        mimeType: doc.mimeType,
+                        loaiKho: doc.loaiKho,
+                        folderKey: doc.folderKey,
+                        folderId: doc.folderId,
+                        trichYeu: doc.trichYeu || '',
+                        tuKhoa: doc.tuKhoa || '',
+                        publishingMode: 'DOCUMENT_ONLY',
+                        allowTaskWorkflow: false,
+                        preserveOriginalFile: true
+                    }
+                };
+
+                StorageEngine.save(CONFIG.STORAGE_KEYS.CURRENT_DOC, storedDoc);
+            } catch (err) {
+                console.error(err);
+                alert('KHÔNG TẢI ĐƯỢC VĂN BẢN TỪ KHO\n' + (err.message || err));
+            }
+        }
+
         if (storedDoc) {
             TTDHS_State.rawSource = storedDoc;
             TTDHS_State.document = ModuleAdapter.toStandardDocument(storedDoc);
             TTDHS_State.recipients = ModuleAdapter.getRecipients(storedDoc);
             TTDHS_State.linkedDocs = ModuleAdapter.getLinkedDocs(storedDoc);
             Controller.applySourceDefaults(TTDHS_State.document.moduleSource);
+
+            if (String(TTDHS_State.document.moduleSource || '').toLowerCase() === 'khovanban') {
+                await Controller.loadKhoTeams();
+            }
         }
+
         Controller.refreshUI();
     },
 
@@ -731,6 +861,11 @@ const Controller = {
                 if (requested.has(id)) selectWorkflow(id);
             });
 
+        } else if (srcName === 'khovanban') {
+            selectDestination('KhoVanBan');
+            selectDestination('ThongBao');
+            selectWorkflow('CONFIRM_READ');
+
         } else if (srcName.includes('giao') || srcName.includes('nhiemvu') || srcName.includes('nhiệm vụ')) {
             selectDestination('ViecCuaToi');
             selectDestination('ThongBao');
@@ -748,6 +883,95 @@ const Controller = {
     },
 
     setupEventBusListeners: () => {},
+
+    loadKhoTeams: async () => {
+        try {
+            const response = await fetch(
+                CONFIG.SCRIPT_URL + '?action=getDanhSachTo&_=' + Date.now(),
+                { cache: 'no-store' }
+            );
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            TTDHS_State.khoTeams = Array.isArray(data) ? data : [];
+        } catch (err) {
+            console.error('Không tải được danh sách tổ:', err);
+            TTDHS_State.khoTeams = [];
+        }
+    },
+
+    loadKhoTeam: async (teamName) => {
+        TTDHS_State.khoCurrentTeam = teamName || '';
+        TTDHS_State.khoTeamMembers = [];
+
+        if (!teamName) {
+            RenderEngine.renderRecipients(TTDHS_State.recipients, TTDHS_State.document);
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                CONFIG.SCRIPT_URL +
+                '?action=getNhanSuTheoTo&to=' + encodeURIComponent(teamName) +
+                '&_=' + Date.now(),
+                { cache: 'no-store' }
+            );
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            TTDHS_State.khoTeamMembers = Array.isArray(data) ? data : [];
+        } catch (err) {
+            console.error('Không tải được nhân sự theo tổ:', err);
+            TTDHS_State.khoTeamMembers = [];
+        }
+
+        RenderEngine.renderRecipients(TTDHS_State.recipients, TTDHS_State.document);
+    },
+
+    toggleKhoRecipient: (username, checked) => {
+        const u = String(username || '').trim().toLowerCase();
+        if (!u) return;
+
+        const member = (TTDHS_State.khoTeamMembers || []).find(r =>
+            String(r.username || '').trim().toLowerCase() === u
+        );
+
+        if (checked) {
+            const exists = TTDHS_State.recipients.some(r =>
+                String(r.username || '').trim().toLowerCase() === u
+            );
+            if (!exists && member) TTDHS_State.recipients.push(member);
+        } else {
+            TTDHS_State.recipients = TTDHS_State.recipients.filter(r =>
+                String(r.username || '').trim().toLowerCase() !== u
+            );
+        }
+
+        Controller.refreshUI();
+    },
+
+    toggleKhoAll: (checked) => {
+        const members = TTDHS_State.khoTeamMembers || [];
+        const memberUsers = new Set(
+            members.map(r => String(r.username || '').trim().toLowerCase())
+        );
+
+        if (checked) {
+            members.forEach(member => {
+                const u = String(member.username || '').trim().toLowerCase();
+                if (!u) return;
+                const exists = TTDHS_State.recipients.some(r =>
+                    String(r.username || '').trim().toLowerCase() === u
+                );
+                if (!exists) TTDHS_State.recipients.push(member);
+            });
+        } else {
+            TTDHS_State.recipients = TTDHS_State.recipients.filter(r =>
+                !memberUsers.has(String(r.username || '').trim().toLowerCase())
+            );
+        }
+
+        Controller.refreshUI();
+    },
+
     refreshUI: () => {
         const preCheckResult = PreCheckEngine.runChecks(TTDHS_State);
         const pipeline = WorkflowEngine.generatePipeline(TTDHS_State.document, TTDHS_State.destinations, TTDHS_State.workflowSteps);
@@ -811,6 +1035,11 @@ const Controller = {
 
     openPreviewModal: () => {
         const d = TTDHS_State.document;
+        const fileUrl = d && d.data ? d.data.fileUrl : '';
+        if (String(d.moduleSource || '').toLowerCase() === 'khovanban' && fileUrl) {
+            window.open(fileUrl, '_blank');
+            return;
+        }
         alert(`XEM TRƯỚC NỘI DUNG\n---------------------------\nTiêu đề: ${d.title}\nNguồn: ${d.moduleSource}\nNgười nhận: ${TTDHS_State.recipients.length}\nĐiểm đến: ${TTDHS_State.destinations.filter(x => x.selected).map(x => x.name).join(', ')}`);
     },
     resetDraft: () => {
