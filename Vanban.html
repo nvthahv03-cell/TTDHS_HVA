@@ -179,7 +179,8 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-h
 </div>
 
 <script>
-const GATEWAY_URL="https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec";
+const LEGACY_GATEWAY_URL="https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec";
+const MAIN_GATEWAY_URL="https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec";
 
 const State={documents:[],category:"all",timeFilter:"all",search:"",selected:new Set(),selectedDocId:null};
 
@@ -207,6 +208,12 @@ function init(){
 function norm(v){return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/Đ/g,"D").toLowerCase().trim();}
 function val(o,...keys){for(const k of keys){if(o&&o[k]!==undefined&&o[k]!==null&&String(o[k]).trim()!=="")return o[k]}return""}
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function currentUsername(){
+  try{
+    const u=JSON.parse(sessionStorage.getItem("user")||localStorage.getItem("user")||"{}");
+    return String(u.username||"").trim();
+  }catch(e){return""}
+}
 
 function isPublished(v){const s=norm(v);return s==="phat hanh"||s==="da phat hanh"||s==="published";}
 function fileUrl(raw){
@@ -230,19 +237,41 @@ function mapDoc(d,i){
     direction:String(direction||""),
     scope:String(scope||""),
     noiNhan:String(val(d,"noiNhan","NoiNhan","donViNhan","DonViNhan")||""),
-    file:String(val(d,"fileID","FileID","fileId","FILEID","fileUrl","FileUrl","url","Url","link","Link","tep","Tep")||""),
+    file:String(val(d,"fileUrl","FileUrl","fileID","FileID","fileId","FILEID","url","Url","link","Link","tep","Tep")||""),
+    downloadUrl:String(val(d,"downloadUrl","DownloadUrl")||""),
     status:String(val(d,"trangThai","TrangThai","status","Status")||"")
   };
 }
 
 async function fetchData(){
   setLoading();
+  const username=currentUsername();
+
   try{
-    const res=await fetch(`${GATEWAY_URL}?action=searchVanBan&_=${Date.now()}`,{cache:"no-store"});
-    if(!res.ok)throw new Error(`HTTP ${res.status}`);
-    const result=await res.json();
-    const raw=Array.isArray(result)?result:(result.data||result.result||[]);
-    State.documents=raw.map(mapDoc).filter(d=>isPublished(d.status));
+    // Giữ 27 văn bản cũ để không mất dữ liệu trước trình diễn,
+    // đồng thời ghép văn bản phát hành mới theo đúng username.
+    const reqLegacy=fetch(`${LEGACY_GATEWAY_URL}?action=searchVanBan&_=${Date.now()}`,{cache:"no-store"})
+      .then(async r=>r.ok?await r.json():[])
+      .catch(()=>[]);
+
+    const reqNew=username
+      ? fetch(`${MAIN_GATEWAY_URL}?action=getPublishedDocumentsByUser&username=${encodeURIComponent(username)}&_=${Date.now()}`,{cache:"no-store"})
+          .then(async r=>r.ok?await r.json():({documents:[]}))
+          .catch(()=>({documents:[]}))
+      : Promise.resolve({documents:[]});
+
+    const [legacyResult,newResult]=await Promise.all([reqLegacy,reqNew]);
+    const legacyRaw=Array.isArray(legacyResult)?legacyResult:(legacyResult.data||legacyResult.result||[]);
+    const newRaw=Array.isArray(newResult)?newResult:(newResult.documents||newResult.data||newResult.result||[]);
+
+    const merged=[...newRaw.map(mapDoc),...legacyRaw.map(mapDoc)].filter(d=>isPublished(d.status));
+    const seen=new Set();
+    State.documents=merged.filter(d=>{
+      const key=norm(d.file||d.id||`${d.soVB}|${d.ngayBH}|${d.trichYeu}`);
+      if(!key||seen.has(key))return false;
+      seen.add(key);return true;
+    });
+
     State.selected.clear();
     render();
   }catch(err){
@@ -401,10 +430,11 @@ function updateDownloadButton(){
   document.getElementById("downloadText").textContent=n?`Tải file (${n})`:"Tải file";
 }
 function downloadSelected(){
-  const docs=State.documents.filter(d=>State.selected.has(d.id)&&d.file);
+  const docs=State.documents.filter(d=>State.selected.has(d.id)&&(d.downloadUrl||d.file));
   if(!docs.length){showToast("Thầy/Cô hãy chọn văn bản có tệp cần tải.","warning");return}
-  if(docs.length===1){window.open(fileUrl(docs[0].file),"_blank","noopener");return}
-  showToast(`Đã chọn ${docs.length} văn bản. Chức năng đóng gói ZIP cần API tải nhiều tệp ở Gateway.`,"info");
+  if(docs.length===1){window.open(docs[0].downloadUrl||fileUrl(docs[0].file),"_blank","noopener");return}
+  docs.forEach((d,i)=>setTimeout(()=>window.open(d.downloadUrl||fileUrl(d.file),"_blank","noopener"),i*180));
+  showToast(`Đang mở ${docs.length} tệp đã chọn để tải.`,"success");
 }
 
 function clearSearch(){document.getElementById("searchInput").value="";document.getElementById("clearSearch").classList.add("hidden");State.search="";render()}
