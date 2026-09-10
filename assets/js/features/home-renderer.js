@@ -1560,20 +1560,55 @@ export function renderHome() {
     </div>
 
     <!-- DROPDOWN NGHIỆP VỤ SỐ -->
+    <!-- FIX 10/09/2026:
+         - Luôn neo theo viewport, không neo ngược lên trên card.
+         - Căn giữa màn hình và giới hạn chiều rộng để không mất chữ bên phải.
+         - Chừa khoảng trên dưới an toàn, chống cắt header khi cửa sổ thấp/zoom lớn.
+         - Ẩn tràn ngang, cho phép nội dung xuống dòng tự nhiên. -->
+    <style>
+        #nghiepvuso-dropdown {
+            position: fixed !important;
+            left: 50% !important;
+            right: auto !important;
+            top: max(72px, env(safe-area-inset-top)) !important;
+            bottom: auto !important;
+            transform: translateX(-50%) !important;
+            width: min(420px, calc(100vw - 24px)) !important;
+            max-width: calc(100vw - 24px) !important;
+            max-height: calc(100dvh - 96px) !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            overscroll-behavior: contain;
+        }
+
+        #nghiepvuso-dropdown a,
+        #nghiepvuso-dropdown button {
+            min-width: 0;
+        }
+
+        #nghiepvuso-dropdown a > div:first-child,
+        #nghiepvuso-dropdown button > div:first-child {
+            min-width: 0;
+        }
+
+        #nghiepvuso-dropdown .text-left {
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        #nghiepvuso-dropdown .text-left > div {
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    </style>
+
     <div id="nghiepvuso-dropdown"
          data-dropdown-menu
-        class="hidden fixed sm:absolute
-       left-3 right-3
-       sm:left-0 sm:right-auto sm:translate-x-0
-       top-16 sm:top-auto
-       bottom-auto sm:bottom-[calc(100%+0.6rem)]
-       z-[999]
-       w-auto sm:w-[370px]
-       max-h-[calc(100vh-5rem)] sm:max-h-[76vh]
-       overflow-y-auto overscroll-contain
-       bg-white dark:bg-slate-900
-       rounded-2xl shadow-2xl
-       border border-slate-200 dark:border-slate-800"
+         class="hidden z-[999]
+                bg-white dark:bg-slate-900
+                rounded-2xl shadow-2xl
+                border border-slate-200 dark:border-slate-800
+                overscroll-contain"
 
         <!-- HEADER -->
         <div class="sticky top-0 z-20
