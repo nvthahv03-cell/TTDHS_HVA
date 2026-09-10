@@ -374,6 +374,7 @@ const StorageEngine = {
         linkedDocs: [],
         recipients: [],
         khoTeams: [],
+        khoAllMembers: [],
         khoTeamMembers: [],
         khoCurrentTeam: '',
         userPermissions: { canPublish: true, role: CONFIG.ROLES.ADMIN },
@@ -729,6 +730,20 @@ const StorageEngine = {
 // 8. CONTROLLER (SOLE SYSTEM ORCHESTRATOR)
 // =================================================================
 const Controller = {
+    decodeHandoff: (encoded) => {
+        if (!encoded) return null;
+        try {
+            let b64 = String(encoded).replace(/-/g, '+').replace(/_/g, '/');
+            while (b64.length % 4) b64 += '=';
+            const binary = atob(b64);
+            const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+            return JSON.parse(new TextDecoder('utf-8').decode(bytes));
+        } catch (err) {
+            console.warn('Không giải mã được handoff:', err);
+            return null;
+        }
+    },
+
     init: async () => {
         Controller.setupEventBusListeners();
 
@@ -738,32 +753,23 @@ const Controller = {
             const fileId = String(urlParams.get('fileId') || '').trim();
             const sourceRow = String(urlParams.get('sourceRow') || '').trim();
 
-            // Handoff riêng từ SYS_KhoVanBan: lấy văn bản trực tiếp từ backend.
-            // Không ghép chuỗi query thủ công để tránh lỗi encode dấu & vào action.
             if (source.toLowerCase() === 'khovanban' && fileId) {
-                const apiUrl = new URL(CONFIG.SCRIPT_URL);
-                apiUrl.searchParams.set('action', 'getKhoVanBanFile');
-                apiUrl.searchParams.set('fileId', fileId);
+                // FAST PATH: nhận metadata trực tiếp từ Sidebar để render ngay, không chờ API văn bản.
+                let khoDoc = Controller.decodeHandoff(urlParams.get('handoff'));
 
-                const response = await fetch(apiUrl.toString(), {
-                    method: 'GET',
-                    cache: 'no-store',
-                    redirect: 'follow'
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const khoDoc = await response.json();
-                if (!khoDoc || khoDoc.success !== true) {
-                    throw new Error((khoDoc && khoDoc.message) || 'Backend không trả được văn bản từ Kho.');
+                // Fallback tương thích URL cũ: chỉ khi không có handoff mới gọi API lấy văn bản.
+                if (!khoDoc) {
+                    const data = await Controller.fetchJson('getKhoVanBanFile', { fileId: fileId }, 8000);
+                    if (!data || data.success !== true) {
+                        throw new Error((data && data.message) || 'Backend không trả được văn bản từ Kho.');
+                    }
+                    khoDoc = data;
                 }
 
                 const rawSource = {
                     moduleSource: 'KhoVanBan',
                     source: 'KhoVanBan',
-                    sourceRow: sourceRow,
+                    sourceRow: sourceRow || khoDoc.sourceRow || '',
                     docId: khoDoc.fileId || fileId,
                     id: khoDoc.fileId || fileId,
                     fileId: khoDoc.fileId || fileId,
@@ -791,7 +797,7 @@ const Controller = {
                         downloadUrl: khoDoc.downloadUrl || '',
                         trichYeu: khoDoc.trichYeu || '',
                         tuKhoa: khoDoc.tuKhoa || '',
-                        sourceRow: sourceRow
+                        sourceRow: sourceRow || khoDoc.sourceRow || ''
                     },
                     recipients: []
                 };
@@ -803,11 +809,12 @@ const Controller = {
                 TTDHS_State.linkedDocs = [];
                 Controller.applySourceDefaults('KhoVanBan');
                 Controller.refreshUI();
-                await Controller.loadKhoTeams();
+
+                // Không chặn giao diện: tải toàn bộ nhân sự chỉ bằng 1 request rồi tự gom Tổ/Bộ phận.
+                Controller.loadKhoPersonnelAll();
                 return;
             }
 
-            // Các module cũ vẫn dùng localStorage như trước.
             const storedDoc = StorageEngine.load(CONFIG.STORAGE_KEYS.CURRENT_DOC);
             if (storedDoc) {
                 TTDHS_State.rawSource = storedDoc;
@@ -839,7 +846,6 @@ const Controller = {
             const d = TTDHS_State.destinations.find(x => x.id === id);
             if (d) d.selected = true;
         };
-
         const selectWorkflow = (id) => {
             const s = TTDHS_State.workflowSteps.find(x => x.id === id);
             if (s) s.selected = true;
@@ -849,43 +855,23 @@ const Controller = {
                           String(TTDHS_State.document?.type || '').toUpperCase() === 'MEETING';
 
         if (isMeeting) {
-            // CuocHop is authoritative for its own workflow.
-            // Keep CONFIRM_READ as the baseline; then honor interactive steps sent by CuocHop.
-            const requested = new Set(sourceWorkflow.map(x =>
-                typeof x === 'string' ? x : (x && x.id)
-            ).filter(Boolean));
-
+            const requested = new Set(sourceWorkflow.map(x => typeof x === 'string' ? x : (x && x.id)).filter(Boolean));
             requested.add('CONFIRM_READ');
-
-            // Notification is always the announcement surface for a meeting.
             selectDestination('ThongBao');
-
-            // Any interactive meeting workflow needs "ViecCuaToi" so recipients can act.
             const interactiveIds = ['CONFIRM_READ', 'CONFIRM_ATTENDANCE', 'QR_ATTENDANCE'];
-            const hasInteractiveWorkflow = interactiveIds.some(id => requested.has(id));
-
-            if (hasInteractiveWorkflow) selectDestination('ViecCuaToi');
-
-            interactiveIds.forEach(id => {
-                if (requested.has(id)) selectWorkflow(id);
-            });
-
+            if (interactiveIds.some(id => requested.has(id))) selectDestination('ViecCuaToi');
+            interactiveIds.forEach(id => { if (requested.has(id)) selectWorkflow(id); });
         } else if (srcName.includes('giao') || srcName.includes('nhiemvu') || srcName.includes('nhiệm vụ')) {
             selectDestination('ViecCuaToi');
             selectDestination('ThongBao');
-            ['CONFIRM_READ','ACCEPT_TASK','IN_PROGRESS','REPORT_RESULT','COMPLETE','ATTACH_PROOF']
-                .forEach(selectWorkflow);
-
+            ['CONFIRM_READ','ACCEPT_TASK','IN_PROGRESS','REPORT_RESULT','COMPLETE','ATTACH_PROOF'].forEach(selectWorkflow);
         } else if (srcName.includes('lichcongtac')) {
             selectDestination('LichCongTac');
             selectWorkflow('SHOW_ONLY');
-
         } else if (srcName.includes('khovanban')) {
-            // Văn bản từ Kho chỉ là phát hành thông tin/văn bản; không tạo nhiệm vụ.
             selectDestination('KhoVanBan');
             selectDestination('ThongBao');
             selectWorkflow('CONFIRM_READ');
-
         } else {
             selectDestination('ThongBao');
             selectWorkflow('CONFIRM_READ');
@@ -906,69 +892,91 @@ const Controller = {
         TTDHS_State.workflowSteps = WorkflowEngine.toggleStep(TTDHS_State.workflowSteps, stepId);
         Controller.refreshUI();
     },
-    fetchJson: async (action, params = {}) => {
+
+    fetchJson: async (action, params = {}, timeoutMs = 8000) => {
         const apiUrl = new URL(CONFIG.SCRIPT_URL);
         apiUrl.searchParams.set('action', action);
         Object.entries(params).forEach(([k, v]) => apiUrl.searchParams.set(k, String(v == null ? '' : v)));
-        const response = await fetch(apiUrl.toString(), { method: 'GET', cache: 'no-store', redirect: 'follow' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.json();
-    },
-    loadKhoTeams: async () => {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), timeoutMs);
         try {
-            const data = await Controller.fetchJson('getDanhSachTo');
-            const list = Array.isArray(data) ? data : (Array.isArray(data && data.data) ? data.data : []);
-            TTDHS_State.khoTeams = list;
-            Controller.refreshUI();
+            const response = await fetch(apiUrl.toString(), {
+                method: 'GET', cache: 'no-store', redirect: 'follow', signal: ctrl.signal
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
         } catch (err) {
-            console.error('Lỗi tải Tổ/Bộ phận:', err);
-            alert('Không tải được danh sách Tổ/Bộ phận: ' + (err.message || err));
+            if (err && err.name === 'AbortError') throw new Error('Backend phản hồi quá chậm.');
+            throw err;
+        } finally {
+            clearTimeout(timer);
         }
     },
-    loadKhoTeam: async (tenTo) => {
-        TTDHS_State.khoCurrentTeam = String(tenTo || '');
-        TTDHS_State.khoTeamMembers = [];
-        Controller.refreshUI();
-        if (!TTDHS_State.khoCurrentTeam) return;
+
+    loadKhoPersonnelAll: async () => {
+        const container = document.getElementById('recipient-selector-container');
+        if (container) {
+            container.innerHTML = '<div class="flex items-center gap-2 text-xs font-semibold text-blue-700"><span class="inline-block w-3 h-3 rounded-full border-2 border-blue-200 border-t-blue-700 animate-spin"></span>Đang tải danh sách nhân sự...</div>';
+        }
         try {
-            const data = await Controller.fetchJson('getNhanSuTheoTo', { to: TTDHS_State.khoCurrentTeam });
-            const list = Array.isArray(data) ? data : (Array.isArray(data && data.data) ? data.data : []);
-            TTDHS_State.khoTeamMembers = list;
+            // Backend hiện tại: getNhanSuTheoTo với to rỗng trả toàn bộ nhân sự.
+            const data = await Controller.fetchJson('getNhanSuTheoTo', {}, 8000);
+            const all = Array.isArray(data) ? data : (Array.isArray(data && data.data) ? data.data : []);
+
+            const counts = {};
+            all.forEach(m => {
+                const team = String(m.to || '').trim();
+                if (team) counts[team] = (counts[team] || 0) + 1;
+            });
+            TTDHS_State.khoTeams = Object.keys(counts)
+                .sort((a, b) => a.localeCompare(b, 'vi'))
+                .map(tenTo => ({ tenTo, soLuong: counts[tenTo] }));
+            TTDHS_State.khoAllMembers = all;
+            TTDHS_State.khoTeamMembers = [];
+            TTDHS_State.khoCurrentTeam = '';
             Controller.refreshUI();
         } catch (err) {
             console.error('Lỗi tải nhân sự:', err);
-            alert('Không tải được danh sách nhân sự: ' + (err.message || err));
+            if (container) {
+                container.innerHTML = `<p class="text-xs text-rose-600 font-semibold">Không tải được nhân sự: ${String(err.message || err)}</p>`;
+            }
         }
     },
+
+    loadKhoTeam: (tenTo) => {
+        TTDHS_State.khoCurrentTeam = String(tenTo || '');
+        const all = Array.isArray(TTDHS_State.khoAllMembers) ? TTDHS_State.khoAllMembers : [];
+        TTDHS_State.khoTeamMembers = !TTDHS_State.khoCurrentTeam ? [] : all.filter(m =>
+            String(m.to || '').trim().toLowerCase() === TTDHS_State.khoCurrentTeam.trim().toLowerCase()
+        );
+        Controller.refreshUI();
+    },
+
     toggleKhoRecipient: (username, checked) => {
         const u = String(username || '');
         const member = (TTDHS_State.khoTeamMembers || []).find(m => String(m.username || '') === u);
         if (!member) return;
         TTDHS_State.recipients = (TTDHS_State.recipients || []).filter(r => String((r && r.username) || '') !== u);
         if (checked) TTDHS_State.recipients.push({
-            username: member.username || '',
-            hoTen: member.hoTen || '',
-            vaiTro: member.vaiTro || '',
-            chucVu: member.chucVu || member.vaiTro || '',
-            to: member.to || TTDHS_State.khoCurrentTeam || ''
+            username: member.username || '', hoTen: member.hoTen || '', vaiTro: member.vaiTro || '',
+            chucVu: member.chucVu || member.vaiTro || '', to: member.to || TTDHS_State.khoCurrentTeam || ''
         });
         Controller.refreshUI();
     },
+
     toggleKhoAll: () => {
         const members = Array.isArray(TTDHS_State.khoTeamMembers) ? TTDHS_State.khoTeamMembers : [];
         const currentUsernames = new Set((TTDHS_State.recipients || []).map(r => String((r && r.username) || '')));
         const allSelected = members.length > 0 && members.every(m => currentUsernames.has(String(m.username || '')));
         const memberNames = new Set(members.map(m => String(m.username || '')));
         TTDHS_State.recipients = (TTDHS_State.recipients || []).filter(r => !memberNames.has(String((r && r.username) || '')));
-        if (!allSelected) {
-            members.forEach(m => TTDHS_State.recipients.push({
-                username: m.username || '', hoTen: m.hoTen || '', vaiTro: m.vaiTro || '',
-                chucVu: m.chucVu || m.vaiTro || '', to: m.to || TTDHS_State.khoCurrentTeam || ''
-            }));
-        }
+        if (!allSelected) members.forEach(m => TTDHS_State.recipients.push({
+            username: m.username || '', hoTen: m.hoTen || '', vaiTro: m.vaiTro || '',
+            chucVu: m.chucVu || m.vaiTro || '', to: m.to || TTDHS_State.khoCurrentTeam || ''
+        }));
         Controller.refreshUI();
     },
-    toggleRecipient: () => {},
+
     addLinkedDocument: () => {
         const title = prompt('Nhập tên tài liệu liên quan:');
         if (title && title.trim()) {
@@ -989,43 +997,35 @@ const Controller = {
             return;
         }
         const btn = document.getElementById('btn-execute-publish');
-        const old = btn ? btn.innerHTML : '';
+        TTDHS_State.isPublishing = true;
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="bi bi-hourglass-split"></i> ĐANG PHÁT HÀNH...'; }
         try {
-            TTDHS_State.isPublishing = true;
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i><span>Đang ghi CSDL & phát hành...</span>';
-            }
             const payload = PublishEngine.preparePayload(TTDHS_State);
             const result = await PublishEngine.postToBackend(payload);
-            payload.status = 'PUBLISHED';
-            payload.backendResult = result;
-            StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_PUBLISHED, payload);
             StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_RESULT, result);
-            window.dispatchEvent(new CustomEvent('DOCUMENT_PUBLISHED', { detail: payload }));
-            if (typeof publishChannel !== 'undefined') publishChannel.postMessage(payload);
-            StorageEngine.remove(CONFIG.STORAGE_KEYS.CURRENT_DOC);
-            alert(`PHÁT HÀNH THÀNH CÔNG\nMã phát hành: ${result.publishId || payload.publishId}\nĐã ghi CSDL và tạo thông báo cho ${result.recipientCount || payload.recipients.length} người nhận.`);
-            window.location.href = 'main.html';
+            alert('PHÁT HÀNH THÀNH CÔNG');
         } catch (err) {
             console.error(err);
-            alert('PHÁT HÀNH CHƯA THÀNH CÔNG\n' + (err.message || err));
+            alert('PHÁT HÀNH KHÔNG THÀNH CÔNG\n' + (err.message || err));
         } finally {
             TTDHS_State.isPublishing = false;
-            if (btn) { btn.disabled = false; btn.innerHTML = old; }
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-rocket-takeoff-fill text-lg"></i> KÍCH HOẠT PHÁT HÀNH SỐ'; }
         }
     },
 
     openPreviewModal: () => {
-        const d = TTDHS_State.document;
-        alert(`XEM TRƯỚC NỘI DUNG\n---------------------------\nTiêu đề: ${d.title}\nNguồn: ${d.moduleSource}\nNgười nhận: ${TTDHS_State.recipients.length}\nĐiểm đến: ${TTDHS_State.destinations.filter(x => x.selected).map(x => x.name).join(', ')}`);
+        const raw = TTDHS_State.rawSource || {};
+        const data = raw.data || {};
+        const url = raw.fileUrl || data.fileUrl || raw.downloadUrl || data.downloadUrl || '';
+        if (url) window.open(url, '_blank', 'noopener');
+        else alert('Văn bản chưa có đường dẫn tệp gốc.');
     },
+
     resetDraft: () => {
-        StorageEngine.remove(CONFIG.STORAGE_KEYS.CURRENT_DOC);
-        window.location.href = 'main.html';
+        if (confirm('Tải lại trạng thái ban đầu?')) location.reload();
     }
 };
-    // Tự động khởi chạy duy nhất Controller khi DOM sẵn sàng
+
     document.addEventListener('DOMContentLoaded', Controller.init);
     </script>
 </body>
