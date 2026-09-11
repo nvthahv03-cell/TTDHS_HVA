@@ -1346,6 +1346,7 @@ export function renderHome() {
             <!-- 3. ĐÁNH GIÁ - XẾP LOẠI THÁNG -->
             <button type="button"
                     data-thidua-action="XEPLOAI_THANG"
+                    onclick="event.preventDefault(); event.stopPropagation(); openThiDuaXepLoaiThang(event); return false;"
                     class="w-full flex items-center justify-between
                            px-3 py-2.5 rounded-xl
                            hover:bg-indigo-50
@@ -4754,6 +4755,23 @@ window.openThiDuaModule = function(type, event) {
     };
 
     console.log('[THI ĐUA - KHEN THƯỞNG]', moduleNames[type] || type);
+};
+
+// =====================================================
+// THI ĐUA - ĐÁNH GIÁ, XẾP LOẠI THÁNG THEO QĐ32
+// Mở trang độc lập HVA_QD32.html trong cùng cửa sổ để giữ
+// đúng luồng điều hướng của TTĐHS_HVA và phiên đăng nhập.
+// =====================================================
+window.openThiDuaXepLoaiThang = function(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    const menu = document.getElementById('thidua-dropdown');
+    if (menu) menu.classList.add('hidden');
+
+    window.location.assign('HVA_QD32.html');
 };
 
 // =====================================================
