@@ -5564,3 +5564,79 @@ window.toggleHVAHanhChinhMenu = function(event) {
     items.classList.toggle('hidden', !open);
     if (arrow) arrow.classList.toggle('rotate-90', open);
 };
+
+// =====================================================
+// DANH XƯNG NGƯỜI DÙNG
+// Ưu tiên dữ liệu Giới tính/Danh xưng; không tự gán "Thầy"
+// khi chưa xác định. Xác nhận: Trần Thu Hà là nữ.
+// =====================================================
+function hvaNormalizePersonText_(value) {
+    return String(value || '').trim().toLowerCase().normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/\s+/g, ' ');
+}
+
+function hvaGetSignedInUser_() {
+    try {
+        return JSON.parse(
+            sessionStorage.getItem('user') ||
+            localStorage.getItem('user') ||
+            '{}'
+        );
+    } catch (error) {
+        return {};
+    }
+}
+
+function hvaResolveHonorific_(user, fullName) {
+    const declared = hvaNormalizePersonText_([
+        user.gioiTinh, user.GIOITINH, user.gender, user.sex,
+        user.phai, user.danhXung, user.xungHo
+    ].filter(Boolean).join(' '));
+
+    if (/(^| )(nu|female|co|ba)( |$)/.test(declared)) return 'Cô';
+    if (/(^| )(nam|male|thay|ong)( |$)/.test(declared)) return 'Thầy';
+
+    const confirmedFemaleNames = ['tran thu ha'];
+    if (confirmedFemaleNames.includes(hvaNormalizePersonText_(fullName))) return 'Cô';
+    return '';
+}
+
+function hvaApplyCorrectUserHonorific_() {
+    const nameElement = document.getElementById('assistantName');
+    if (!nameElement) return;
+
+    const user = hvaGetSignedInUser_();
+    const storedName = String(
+        user.hoTen || user.fullName || user.name || user.username || ''
+    ).trim();
+    const displayedName = String(nameElement.textContent || '')
+        .replace(/^\s*(Thầy|Cô)\s+/i, '').trim();
+    const fullName = storedName || displayedName;
+    if (!fullName || fullName === '...') return;
+
+    const honorific = hvaResolveHonorific_(user, fullName);
+    const correctText = honorific ? (honorific + ' ' + fullName) : fullName;
+    if (nameElement.textContent.trim() !== correctText) {
+        nameElement.textContent = correctText;
+    }
+}
+
+function hvaWatchUserHonorific_() {
+    const nameElement = document.getElementById('assistantName');
+    if (!nameElement || nameElement.dataset.hvaHonorificWatcher === '1') return;
+    nameElement.dataset.hvaHonorificWatcher = '1';
+    new MutationObserver(function() {
+        hvaApplyCorrectUserHonorific_();
+    }).observe(nameElement, { childList:true, characterData:true, subtree:true });
+    hvaApplyCorrectUserHonorific_();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hvaWatchUserHonorific_);
+} else {
+    hvaWatchUserHonorific_();
+}
+setTimeout(hvaWatchUserHonorific_, 250);
+setTimeout(hvaApplyCorrectUserHonorific_, 1200);
