@@ -1655,7 +1655,7 @@ export function renderHome() {
                         </div>
                         <div class="text-left">
                             <div class="leading-tight">Hành chính</div>
-                            <div class="text-[10px] font-medium text-slate-400 mt-1">Báo cáo tháng • Kê khai • Hồ sơ cá nhân</div>
+                            <div class="text-[10px] font-medium text-slate-400 mt-1">Báo cáo • Xin phép • Công vụ • Hồ sơ cá nhân</div>
                         </div>
                     </div>
                     <i id="hva-hanhchinh-arrow" class="bi bi-chevron-right text-xs text-slate-400 transition-transform duration-200"></i>
@@ -1667,6 +1667,12 @@ export function renderHome() {
                        class="flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">
                         <i class="bi bi-clipboard2-data text-blue-600"></i>
                         <span>Báo cáo công việc tháng</span>
+                    </a>
+                    <a href="BaoCaoHanhChinh.html"
+                       onclick="event.stopPropagation()"
+                       class="flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">
+                        <i class="bi bi-building-check text-emerald-600"></i>
+                        <span>Báo cáo hành chính – Xin phép – Công vụ</span>
                     </a>
                     <button type="button" onclick="event.stopPropagation(); alert('Nghiệp vụ Kê khai đang được hoàn thiện.');"
                             class="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition text-left">
