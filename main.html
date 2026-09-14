@@ -1353,6 +1353,10 @@
                 if (modal) modal.classList.add('hidden');
             },
             showToast: function(msg) {
+                if (typeof window.hvaNotify === 'function') {
+                    window.hvaNotify(String(msg || ''), {kind:'info', title:'THÔNG BÁO HỆ THỐNG'});
+                    return;
+                }
                 const toast = document.getElementById('toast-message');
                 const toastText = document.getElementById('toast-text');
                 if (toast && toastText) {
