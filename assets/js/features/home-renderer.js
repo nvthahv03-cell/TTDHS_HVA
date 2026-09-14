@@ -3732,6 +3732,21 @@ function hvaKsbcEsc_(value) {
     }[char]));
 }
 
+// Popup thống nhất của TT Điều hành số HVA, thay hộp thoại mặc định của trình duyệt.
+function showHVAAppNotice_(message, options = {}) {
+    const kind = options.kind || 'info';
+    const title = options.title || 'THÔNG BÁO HỆ THỐNG';
+    const icon = kind === 'success' ? 'bi-check-circle-fill' : kind === 'error' ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill';
+    const color = kind === 'success' ? 'emerald' : kind === 'error' ? 'rose' : 'blue';
+    let modal = document.getElementById('hvaAppNoticeModal');
+    if (!modal) { modal = document.createElement('div'); modal.id = 'hvaAppNoticeModal'; modal.className = 'hidden fixed inset-0 z-[160] bg-slate-950/55 backdrop-blur-sm p-4 items-center justify-center'; document.body.appendChild(modal); }
+    modal.innerHTML = `<div class="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl border border-${color}-100"><div class="bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white flex items-center gap-3"><span class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center"><i class="bi bi-cpu-fill text-xl"></i></span><div><div class="text-[13px] font-black">${hvaKsbcEsc_(title)}</div><div class="text-[9px] text-blue-100">Trung tâm Điều hành số HVA</div></div></div><div class="px-5 py-5 text-center"><div class="mx-auto w-14 h-14 rounded-full bg-${color}-50 text-${color}-600 flex items-center justify-center"><i class="bi ${icon} text-3xl"></i></div><div class="mt-4 text-[13px] leading-6 font-bold text-slate-700 whitespace-pre-line">${hvaKsbcEsc_(message)}</div><button type="button" class="mt-5 w-full rounded-xl bg-[#0F4C81] py-3 text-[11px] font-extrabold text-white">ĐÃ HIỂU</button></div></div>`;
+    const close = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
+    modal.querySelector('button')?.addEventListener('click', close, {once:true}); modal.onclick = e => { if (e.target === modal) close(); };
+    modal.classList.remove('hidden'); modal.classList.add('flex');
+}
+window.hvaNotify = showHVAAppNotice_;
+
 function ensureHVASurveyPollModal_() {
     if (document.getElementById('hvaSurveyPollModal')) return;
     const modal = document.createElement('div');
@@ -3821,7 +3836,10 @@ window.submitHVAInternalSurvey = async function(surveyId) {
 async function submitHVASurveyAnswers_(item,answers) {
     const user=getCurrentHVAUser();
     const response=await fetch(MY_TASK_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'submitSurveyPollResponse',surveyId:item.surveyId,username:user.username||user.userName||user.maGV||'',fullName:user.hoTen||user.fullName||user.name||'',answers:answers})});
-    const data=JSON.parse(await response.text()); if(!data.success)return alert(data.message||'Không gửi được dữ liệu.'); alert(data.message||'Đã ghi nhận.'); await loadHVASurveyPollInbox_(true);
+    const data=JSON.parse(await response.text());
+    if(!data.success)return showHVAAppNotice_(data.message||'Không gửi được dữ liệu.',{kind:'error',title:'CHƯA HOÀN TẤT'});
+    showHVAAppNotice_(item.objectType==='POLL' ? 'Thầy/cô đã hoàn thành bình chọn đúng thời hạn.\nChúc thầy/cô một ngày làm việc hiệu quả và hạnh phúc.' : 'Thầy/cô đã hoàn thành khảo sát đúng thời hạn.\nChúc thầy/cô một ngày làm việc hiệu quả và hạnh phúc.', {kind:'success',title:item.objectType==='POLL'?'ĐÃ GHI NHẬN BÌNH CHỌN':'ĐÃ GHI NHẬN KHẢO SÁT'});
+    await loadHVASurveyPollInbox_(true);
 }
 
 function bindHVAHomeQuickBadgeSync_() {
