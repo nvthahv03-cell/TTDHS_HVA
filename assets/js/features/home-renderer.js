@@ -10,7 +10,7 @@ export function renderHome() {
     container.innerHTML = `
 
 <style>
-  /* HVA Responsive Home V3 14/09/2026 - chỉ đổi bố cục, không đổi nghiệp vụ. */
+  /* HVA Responsive Home V4 14/09/2026 - tiếp nhận khảo sát/bình chọn. */
   #hva-main-modules {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 78px minmax(0, 1fr);
@@ -2710,12 +2710,13 @@ export function renderHome() {
         id="hva-home-poll"
         class="hva-center-action"
         aria-label="Mở Khảo sát - Bình chọn"
-        onclick="event.preventDefault(); event.stopPropagation(); window.location.href='KhaosatBinhchon.html';">
+        onclick="event.preventDefault(); event.stopPropagation(); window.openHVASurveyPollInbox?.();">
     <span class="hva-center-action-icon bg-gradient-to-br from-emerald-500 to-green-600">
         <i class="bi bi-bar-chart-fill"></i>
-        <span id="hva-home-poll-badge" class="hva-center-action-badge hidden">0</span>
+        <span id="hva-home-poll-badge" class="hva-center-action-badge">0</span>
     </span>
     <span>Bình chọn</span>
+    <small id="hva-home-poll-label" class="text-[8px] sm:text-[9px] font-bold text-slate-500 leading-tight">0 bình chọn</small>
 </button>
 
     <!-- TRỤ CỘT 4: QUẢN TRỊ -->
@@ -3139,8 +3140,8 @@ export function renderHome() {
 
 `;
 
-    container.dataset.hvaHomeVersion = '20260914-v3';
-    console.info('[HVA Home] Đã nạp giao diện responsive 20260914-v3');
+    container.dataset.hvaHomeVersion = '20260914-v4';
+    console.info('[HVA Home] Đã nạp giao diện responsive 20260914-v4');
 
       // =====================================================
     // VIỆC CỦA TÔI | KẾT NỐI SỐ
@@ -3679,6 +3680,7 @@ function hidePWAPopup() {
 
 function bindHomeEvents() {
     bindHVAHomeQuickBadgeSync_();
+    setTimeout(loadHVASurveyPollInbox_, 350);
 
     // Sự kiện Nút Android
     document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
@@ -3716,6 +3718,110 @@ function bindHomeEvents() {
             setTimeout(() => showPWAPopup(true), 1500);
         }
     }
+}
+
+// =====================================================
+// HỘP TIẾP NHẬN KHẢO SÁT - BÌNH CHỌN
+// Home chỉ cho người nhận thực hiện; chức năng tạo vẫn ở Điều hành số.
+// =====================================================
+let HVA_SURVEY_POLL_ITEMS = [];
+
+function hvaKsbcEsc_(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, char => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[char]));
+}
+
+function ensureHVASurveyPollModal_() {
+    if (document.getElementById('hvaSurveyPollModal')) return;
+    const modal = document.createElement('div');
+    modal.id = 'hvaSurveyPollModal';
+    modal.className = 'hidden fixed inset-0 z-[120] bg-slate-950/60 backdrop-blur-sm p-2 sm:p-4 items-center justify-center';
+    modal.innerHTML = `<div class="bg-white w-full max-w-2xl max-h-[92vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <header class="px-4 py-3 bg-gradient-to-r from-emerald-600 to-green-500 text-white flex items-center justify-between">
+        <div><b class="text-sm">KHẢO SÁT – BÌNH CHỌN</b><div class="text-[9px] text-emerald-50">Nội dung được gửi đến Thầy/Cô</div></div>
+        <button type="button" onclick="window.closeHVASurveyPollInbox()" class="w-9 h-9 rounded-xl bg-white/15 hover:bg-white/25" aria-label="Đóng"><i class="bi bi-x-lg"></i></button>
+      </header>
+      <div id="hvaSurveyPollModalBody" class="p-3 sm:p-4 overflow-y-auto space-y-3"><div class="py-10 text-center text-slate-400">Đang tải dữ liệu...</div></div>
+    </div>`;
+    modal.addEventListener('click', event => { if (event.target === modal) window.closeHVASurveyPollInbox(); });
+    document.body.appendChild(modal);
+}
+
+window.closeHVASurveyPollInbox = function() {
+    const modal = document.getElementById('hvaSurveyPollModal');
+    modal?.classList.add('hidden'); modal?.classList.remove('flex');
+};
+
+window.openHVASurveyPollInbox = function() {
+    ensureHVASurveyPollModal_();
+    const modal = document.getElementById('hvaSurveyPollModal');
+    modal.classList.remove('hidden'); modal.classList.add('flex');
+    loadHVASurveyPollInbox_(true);
+};
+
+function renderHVASurveyPollInbox_() {
+    const box = document.getElementById('hvaSurveyPollModalBody'); if (!box) return;
+    const pending = HVA_SURVEY_POLL_ITEMS.filter(item => item.status !== 'ĐÃ HOÀN THÀNH' && !item.expired);
+    if (!pending.length) {
+        box.innerHTML = '<div class="py-12 text-center"><i class="bi bi-check-circle text-4xl text-emerald-500"></i><div class="mt-3 font-extrabold text-slate-700">Không có bình chọn hoặc khảo sát đang chờ</div></div>';
+        return;
+    }
+    box.innerHTML = pending.map(item => {
+      const isPoll = item.objectType === 'POLL';
+      const questions = Array.isArray(item.questions) ? item.questions : [];
+      const fields = isPoll ? questions.slice(0,1).map(q => `<div class="space-y-2">${(q.options||[]).filter(Boolean).map((o,i) => `<label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-emerald-50 cursor-pointer"><input type="${item.multiPoll ? 'checkbox':'radio'}" name="ksbc-${hvaKsbcEsc_(item.surveyId)}-${hvaKsbcEsc_(q.id)}" value="${hvaKsbcEsc_(o)}"><span class="text-[11px] font-bold text-slate-700">${hvaKsbcEsc_(o)}</span></label>`).join('')}</div>`).join('') : '';
+      return `<article class="rounded-2xl border ${isPoll?'border-emerald-200':'border-blue-200'} bg-white overflow-hidden shadow-sm" data-ksbc-id="${hvaKsbcEsc_(item.surveyId)}">
+        <div class="p-3 sm:p-4"><div class="text-[9px] font-extrabold ${isPoll?'text-emerald-600':'text-blue-600'} uppercase">${isPoll?'Bình chọn':'Khảo sát'}</div><h3 class="mt-1 text-sm font-extrabold text-slate-900">${hvaKsbcEsc_(item.title)}</h3><p class="mt-1 text-[10px] text-slate-500">${hvaKsbcEsc_(item.description||'')}</p>
+        ${isPoll ? fields : `<button type="button" onclick="window.openHVASurveyForm('${hvaKsbcEsc_(item.surveyId)}')" class="mt-3 w-full py-3 rounded-xl bg-blue-600 text-white text-[11px] font-extrabold"><i class="bi bi-box-arrow-up-right mr-1"></i>BẤM VÀO ĐÂY ĐỂ KHẢO SÁT</button>`}
+        ${isPoll ? `<button type="button" onclick="window.submitHVASurveyPoll('${hvaKsbcEsc_(item.surveyId)}')" class="mt-3 w-full py-3 rounded-xl bg-emerald-600 text-white text-[11px] font-extrabold">GỬI BÌNH CHỌN</button>`:''}</div></article>`;
+    }).join('');
+}
+
+async function loadHVASurveyPollInbox_(renderModal) {
+    const user = getCurrentHVAUser(), username = String(user.username || user.userName || user.maGV || '').trim();
+    const badge = document.getElementById('hva-home-poll-badge'), label = document.getElementById('hva-home-poll-label');
+    if (!username) { if(label) label.textContent='0 bình chọn'; return; }
+    try {
+        const response = await fetch(`${MY_TASK_API_URL}?action=getSurveyPollsByUser&username=${encodeURIComponent(username)}&_=${Date.now()}`, {cache:'no-store'});
+        const raw = await response.text();
+        if (!response.ok || /^\s*</.test(raw)) throw new Error('Backend chưa hỗ trợ API khảo sát – bình chọn');
+        const data = JSON.parse(raw); HVA_SURVEY_POLL_ITEMS = data.success && Array.isArray(data.items) ? data.items : [];
+        const pollCount = Number(data.pollCount)||0, surveyCount=Number(data.surveyCount)||0, total=pollCount+surveyCount;
+        if(badge){badge.textContent=String(total);badge.classList.remove('hidden');}
+        if(label) label.textContent = surveyCount ? `${pollCount} bình chọn • ${surveyCount} khảo sát` : `${pollCount} bình chọn`;
+        if(renderModal) renderHVASurveyPollInbox_();
+    } catch(error) {
+        console.warn('[HVA KSBC]',error); if(badge){badge.textContent='0';badge.classList.remove('hidden');} if(label)label.textContent='0 bình chọn';
+        if(renderModal){const box=document.getElementById('hvaSurveyPollModalBody');if(box)box.innerHTML='<div class="py-8 text-center text-slate-500">Chưa kết nối được dữ liệu khảo sát – bình chọn.</div>';}
+    }
+}
+
+window.submitHVASurveyPoll = async function(surveyId) {
+    const item=HVA_SURVEY_POLL_ITEMS.find(x=>String(x.surveyId)===String(surveyId)), card=document.querySelector(`[data-ksbc-id="${CSS.escape(String(surveyId))}"]`);
+    if(!item||!card)return; const q=(item.questions||[])[0];
+    const selected=[...card.querySelectorAll('input:checked')].map(x=>x.value); if(!selected.length)return alert('Vui lòng chọn một phương án.');
+    await submitHVASurveyAnswers_(item,[{questionId:q?.id||'Q1',question:q?.text||item.title,answer:selected}]);
+};
+
+window.openHVASurveyForm = function(surveyId) {
+    const item=HVA_SURVEY_POLL_ITEMS.find(x=>String(x.surveyId)===String(surveyId)); if(!item)return;
+    if(item.surveyType==='external' && item.externalUrl){window.open(item.externalUrl,'_blank','noopener'); if(confirm('Thầy/Cô đã hoàn thành khảo sát trên liên kết vừa mở?')) submitHVASurveyAnswers_(item,[]); return;}
+    const card=document.querySelector(`[data-ksbc-id="${CSS.escape(String(surveyId))}"]`), questions=Array.isArray(item.questions)?item.questions:[];
+    card.querySelector('.p-3, .p-4').innerHTML += `<form class="mt-3 space-y-3" data-ksbc-form>${questions.map((q,i)=>`<div><b class="text-[11px]">${i+1}. ${hvaKsbcEsc_(q.text)}</b>${['single','multi'].includes(q.kind)?`<div class="mt-2 space-y-1">${(q.options||[]).filter(Boolean).map(o=>`<label class="flex gap-2 p-2 border rounded-lg"><input type="${q.kind==='multi'?'checkbox':'radio'}" name="q-${hvaKsbcEsc_(q.id)}" value="${hvaKsbcEsc_(o)}">${hvaKsbcEsc_(o)}</label>`).join('')}</div>`:q.kind==='scale'?`<select name="q-${hvaKsbcEsc_(q.id)}" class="mt-2 w-full border rounded-xl p-2"><option value="">Chọn mức</option>${[1,2,3,4,5].map(n=>`<option>${n}</option>`).join('')}</select>`:`<textarea name="q-${hvaKsbcEsc_(q.id)}" class="mt-2 w-full border rounded-xl p-2" rows="3"></textarea>`}</div>`).join('')}<button type="button" class="w-full py-3 rounded-xl bg-blue-600 text-white text-[11px] font-extrabold" onclick="window.submitHVAInternalSurvey('${hvaKsbcEsc_(surveyId)}')">GỬI KHẢO SÁT</button></form>`;
+    card.querySelector('button[onclick^="window.openHVASurveyForm"]')?.remove();
+};
+
+window.submitHVAInternalSurvey = async function(surveyId) {
+    const item=HVA_SURVEY_POLL_ITEMS.find(x=>String(x.surveyId)===String(surveyId)), card=document.querySelector(`[data-ksbc-id="${CSS.escape(String(surveyId))}"]`), form=card?.querySelector('[data-ksbc-form]'); if(!item||!form)return;
+    const answers=(item.questions||[]).map(q=>{const nodes=[...form.querySelectorAll(`[name="q-${CSS.escape(String(q.id))}"]`)];const chosen=nodes.filter(n=>n.checked||!['radio','checkbox'].includes(n.type)).map(n=>n.value).filter(Boolean);return{questionId:q.id,question:q.text,answer:chosen};});
+    if(answers.some(a=>!a.answer.length))return alert('Vui lòng trả lời đầy đủ các câu hỏi.'); await submitHVASurveyAnswers_(item,answers);
+};
+
+async function submitHVASurveyAnswers_(item,answers) {
+    const user=getCurrentHVAUser();
+    const response=await fetch(MY_TASK_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'submitSurveyPollResponse',surveyId:item.surveyId,username:user.username||user.userName||user.maGV||'',fullName:user.hoTen||user.fullName||user.name||'',answers:answers})});
+    const data=JSON.parse(await response.text()); if(!data.success)return alert(data.message||'Không gửi được dữ liệu.'); alert(data.message||'Đã ghi nhận.'); await loadHVASurveyPollInbox_(true);
 }
 
 function bindHVAHomeQuickBadgeSync_() {
