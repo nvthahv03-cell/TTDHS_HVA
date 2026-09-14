@@ -4250,10 +4250,10 @@ setTimeout(() => {
 
                                 </div>
 
-                                <div class="text-[9.5px]
-                                            text-slate-400
+                                <div class="text-[10px]
+                                            text-slate-600 font-medium
                                             mt-1
-                                            truncate">
+                                            line-clamp-2 leading-relaxed">
 
                                     ${escapeHTML(item.meta)}
 
@@ -4313,6 +4313,53 @@ setTimeout(() => {
        MỞ KẾT QUẢ
     ===================================================== */
 
+    function showPersonnelDetail(item) {
+        const person = item.raw || {};
+        const workGroups = Array.isArray(person.nhomCongTacLabels)
+            ? person.nhomCongTacLabels.join(' • ')
+            : Object.keys(person.nhomCongTac || {}).join(' • ');
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 z-[1200] flex items-center justify-center bg-slate-950/55 backdrop-blur-sm p-4';
+        modal.innerHTML = `
+            <div role="dialog" aria-modal="true" class="w-full max-w-sm overflow-hidden rounded-3xl border border-blue-100 bg-white shadow-2xl">
+                <div class="flex items-center justify-between bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15"><i class="bi bi-person-vcard-fill text-xl"></i></span>
+                        <div><div class="text-[14px] font-black">THÔNG TIN NHÂN SỰ</div><div class="mt-0.5 text-[9px] text-blue-100">Trung tâm Điều hành số HVA</div></div>
+                    </div>
+                    <button type="button" data-person-close class="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 hover:bg-white/25"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="space-y-3 px-5 py-5 text-slate-700">
+                    <div class="text-center text-[17px] font-black text-[#123B67]">${escapeHTML(item.title)}</div>
+                    <div class="rounded-2xl bg-slate-50 p-4 text-[12px] leading-6">
+                        <div><span class="font-bold text-slate-500">Vị trí/Vai trò:</span> ${escapeHTML(person.viTriViecLam || person.chucVu || person.vaiTro || item.meta || 'CBQL/GV/NV')}</div>
+                        ${person.to ? `<div><span class="font-bold text-slate-500">Tổ/Bộ phận:</span> ${escapeHTML(person.to)}</div>` : ''}
+                        ${person.lopChuNhiem ? `<div><span class="font-bold text-slate-500">GVCN lớp:</span> ${escapeHTML(person.lopChuNhiem)}</div>` : ''}
+                        ${person.ngaySinh ? `<div><span class="font-bold text-slate-500">Ngày sinh:</span> ${escapeHTML(person.ngaySinh)}</div>` : ''}
+                        ${item.phone ? `<div><span class="font-bold text-slate-500">Điện thoại:</span> <span class="font-bold text-[#0F4C81]">${escapeHTML(item.phone)}</span></div>` : ''}
+                        ${workGroups ? `<div><span class="font-bold text-slate-500">Nhóm công tác:</span> ${escapeHTML(workGroups)}</div>` : ''}
+                    </div>
+                    <div class="grid ${item.phone ? 'grid-cols-2' : 'grid-cols-1'} gap-2">
+                        ${item.phone ? `<a href="tel:${escapeHTML(item.phone.replace(/\s+/g,''))}" class="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-[11px] font-extrabold text-white"><i class="bi bi-telephone-fill"></i> GỌI ĐIỆN</a>
+                        <button type="button" data-copy-phone class="flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-[11px] font-extrabold text-white"><i class="bi bi-copy"></i> SAO CHÉP SỐ</button>` : ''}
+                    </div>
+                </div>
+            </div>`;
+        const close = () => modal.remove();
+        modal.querySelector('[data-person-close]')?.addEventListener('click', close);
+        modal.addEventListener('click', event => { if (event.target === modal) close(); });
+        modal.querySelector('[data-copy-phone]')?.addEventListener('click', async function () {
+            try {
+                await navigator.clipboard.writeText(item.phone);
+                this.innerHTML = '<i class="bi bi-check-lg"></i> ĐÃ SAO CHÉP';
+                this.classList.replace('bg-blue-600', 'bg-emerald-600');
+            } catch (error) {
+                window.hvaNotify?.('Số điện thoại: ' + item.phone, {kind:'info', title:'THÔNG TIN LIÊN HỆ'});
+            }
+        });
+        document.body.appendChild(modal);
+    }
+
     async function openSearchResult(item) {
 
         if (!item) return;
@@ -4321,29 +4368,7 @@ setTimeout(() => {
         /* ---------- NHÂN SỰ / GVCN ---------- */
 
         if (item.kind === 'NHANSU') {
-            if (item.phone) {
-                if (window.matchMedia('(max-width: 767px)').matches) {
-                    window.location.href = 'tel:' + item.phone.replace(/\s+/g, '');
-                } else {
-                    try {
-                        await navigator.clipboard.writeText(item.phone);
-                        window.hvaNotify?.(
-                            'Đã sao chép số điện thoại ' + item.phone + ' của ' + item.title + '.',
-                            { kind:'success', title:'ĐÃ SAO CHÉP SỐ ĐIỆN THOẠI' }
-                        );
-                    } catch (error) {
-                        window.hvaNotify?.(
-                            item.title + '\nSố điện thoại: ' + item.phone,
-                            { kind:'info', title:'THÔNG TIN NHÂN SỰ' }
-                        );
-                    }
-                }
-            } else {
-                window.hvaNotify?.(
-                    item.title + '\n' + item.meta + (item.extra ? '\n' + item.extra : ''),
-                    { kind:'info', title:'THÔNG TIN NHÂN SỰ' }
-                );
-            }
+            showPersonnelDetail(item);
             return;
         }
 
