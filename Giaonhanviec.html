@@ -357,14 +357,30 @@
 
                 <!-- THỐNG KÊ REALTIME (J) -->
                 <div class="flex items-center gap-2">
-                    <span id="statTo" class="px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold">0 tổ</span>
+                    <span id="statTo" class="px-2.5 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold">0 nhóm</span>
                     <span id="statNguoi" class="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#0F4C81] text-xs font-bold">0 cá nhân</span>
                 </div>
             </div>
 
+            <!-- NHÓM PHÂN LOẠI NGƯỜI NHẬN -->
+            <div id="recipientCategoryTabs" class="grid grid-cols-3 gap-2 p-1.5 rounded-xl bg-slate-100 border border-slate-200">
+                <button type="button" data-recipient-category="COUNCIL" onclick="switchRecipientCategory('COUNCIL')"
+                    class="recipient-category-tab px-2 py-2 rounded-lg text-[11px] sm:text-xs font-bold text-slate-600 transition">
+                    <i class="bi bi-people-fill mr-1"></i>Hội đồng
+                </button>
+                <button type="button" data-recipient-category="TEAM" onclick="switchRecipientCategory('TEAM')"
+                    class="recipient-category-tab px-2 py-2 rounded-lg text-[11px] sm:text-xs font-bold text-slate-600 transition bg-white text-[#0F4C81] shadow-sm">
+                    <i class="bi bi-diagram-3-fill mr-1"></i>Tổ/Bộ phận
+                </button>
+                <button type="button" data-recipient-category="WORKGROUP" onclick="switchRecipientCategory('WORKGROUP')"
+                    class="recipient-category-tab px-2 py-2 rounded-lg text-[11px] sm:text-xs font-bold text-slate-600 transition">
+                    <i class="bi bi-person-badge-fill mr-1"></i>Nhóm công tác
+                </button>
+            </div>
+
             <!-- Ô TÌM KIẾM ĐỐI TƯỢNG (A & H) -->
             <div class="relative">
-                <input type="text" id="inputSearchDoiTuong" oninput="filterDoiTuong(this.value)" placeholder="Tìm tổ hoặc giáo viên... (VD: 'Hiền', 'Toán')" 
+                <input type="text" id="inputSearchDoiTuong" oninput="filterDoiTuong(this.value)" placeholder="Tìm nhóm hoặc cán bộ, giáo viên, nhân viên..." 
                     class="w-full rounded-xl border border-slate-300 bg-slate-50/50 pl-10 pr-10 py-2.5 text-sm font-medium text-slate-800 placeholder-slate-400 outline-none focus:border-[#0F4C81] focus:bg-white focus:ring-2 focus:ring-blue-100 transition">
                 <i class="bi bi-search absolute left-3.5 top-3 text-slate-400 text-sm"></i>
                 <button type="button" onclick="clearSearchDoiTuong()" id="btnClearSearchDT" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 p-0.5">
@@ -535,8 +551,13 @@
         username: 'nguyenvantha'
     };
 
-    let allToData = []; // Danh sách tổ & nhân sự
-    let selectedUsernames = new Set(); // Set các username cá nhân được chọn
+    let allToData = []; // Toàn bộ Hội đồng, Tổ/Bộ phận và Nhóm công tác
+    let personnelByUsername = new Map(); // Nhân sự duy nhất, chống trùng giữa nhiều nhóm
+    let selectedUsernames = new Set(); // Kết quả chọn cuối cùng
+    let manualSelectedUsernames = new Set(); // Cá nhân được chọn trực tiếp
+    let excludedUsernames = new Set(); // Cá nhân bỏ chọn trong một nhóm đã chọn
+    let selectedGroupKeys = new Set(); // Nhóm được chọn trọn
+    let activeRecipientCategory = 'TEAM';
     let vanBanChon = null; // Văn bản chọn từ kho
     let searchDebounceTimer = null;
 
@@ -587,69 +608,57 @@
     // 2. TẢI DANH SÁCH TỔ VÀ NHÂN SỰ TỪ BACKEND
     async function loadDanhSachToAndNhanSu() {
         const container = document.getElementById('containerDanhSachTo');
+        personnelByUsername.clear();
+        allToData = [];
         
         try {
-            const res = await fetch(`${SCRIPT_URL}?action=getDanhSachTo`);
+            const res = await fetch(`${SCRIPT_URL}?action=getRecipientGroupsV3&_=${Date.now()}`, { cache: 'no-store' });
             if (!res.ok) throw new Error("Không thể tải dữ liệu");
-            const listTo = await res.json();
+            const payload = await res.json();
+            const groups = Array.isArray(payload) ? payload : (payload.groups || []);
+            if (!groups.length) throw new Error("Backend chưa trả danh sách nhóm người nhận");
 
-            // Lấy thông tin nhân sự cho tất cả các tổ
-            allToData = await Promise.all(listTo.map(async (toItem) => {
-                const tenTo = toItem.tenTo || toItem;
+            allToData = await Promise.all(groups.map(async (group) => {
+                const type = group.type || 'TEAM';
+                const name = group.name || group.label || '';
+                const category = group.category || (type === 'ALL' ? 'COUNCIL' : type === 'TEAM' ? 'TEAM' : 'WORKGROUP');
                 try {
-                    const resNS = await fetch(`${SCRIPT_URL}?action=getNhanSuTheoTo&to=${encodeURIComponent(tenTo)}`);
-                    const members = await resNS.json();
+                    const url = `${SCRIPT_URL}?action=getRecipientsByGroupV3&groupType=${encodeURIComponent(type)}&groupName=${encodeURIComponent(name)}&_=${Date.now()}`;
+                    const resNS = await fetch(url, { cache: 'no-store' });
+                    const memberPayload = await resNS.json();
+                    const rawMembers = Array.isArray(memberPayload) ? memberPayload : (memberPayload.recipients || []);
+                    const members = rawMembers.map(m => {
+                        const person = {
+                            username: String(m.username || m.maGV || m.hoTen || '').trim(),
+                            hoTen: m.hoTen || m.fullName || '',
+                            chucVu: m.chucVu || m.vaiTro || 'CBQL/GV/NV',
+                            tenTo: m.toBoPhan || m.to || '',
+                            groupValue: m.groupValue || ''
+                        };
+                        if (person.username && !personnelByUsername.has(person.username)) {
+                            personnelByUsername.set(person.username, person);
+                        }
+                        return person;
+                    }).filter(m => m.username);
                     return {
-                        tenTo: tenTo,
-                        soLuong: members.length || toItem.soLuong || 0,
-                        members: members.map(m => ({
-                            username: m.username || m.maGV || m.hoTen,
-                            hoTen: m.hoTen || m.fullName,
-                            chucVu: m.chucVu || m.vaiTro || 'Giáo viên',
-                            tenTo: tenTo
-                        }))
+                        groupKey: `${type}::${name}`,
+                        groupType: type,
+                        category: category,
+                        tenTo: name,
+                        soLuong: members.length,
+                        members: members
                     };
                 } catch (err) {
-                    return { tenTo: tenTo, soLuong: 0, members: [] };
+                    return { groupKey:`${type}::${name}`, groupType:type, category:category, tenTo:name, soLuong:0, members:[] };
                 }
             }));
 
             renderAccordionTo();
         } catch (error) {
             console.error("Lỗi tải dữ liệu đối tượng:", error);
-            showToast("Không thể kết nối lấy danh sách tổ. Sử dụng dữ liệu dự phòng.", "warning");
-            
-            // Dữ liệu fallback chuẩn Enterprise cho THPT Hòa Vang
-            allToData = [
-                {
-                    tenTo: "Toán - Tin", soLuong: 4, members: [
-                        { username: "nguyenvantha", hoTen: "Nguyễn Văn Thà", chucVu: "Phó Hiệu trưởng", tenTo: "Toán - Tin" },
-                        { username: "nguyenngocchinh", hoTen: "Nguyễn Ngọc Chính", chucVu: "Tổ trưởng", tenTo: "Toán - Tin" },
-                        { username: "tranvanb", hoTen: "Trần Văn B", chucVu: "Giáo viên", tenTo: "Toán - Tin" },
-                        { username: "lethi c", hoTen: "Lê Thị C", chucVu: "Giáo viên", tenTo: "Toán - Tin" }
-                    ]
-                },
-                {
-                    tenTo: "Ngữ văn", soLuong: 3, members: [
-                        { username: "tranthanhhien", hoTen: "Trần Thanh Hiền", chucVu: "Tổ trưởng", tenTo: "Ngữ văn" },
-                        { username: "nguyenthihien", hoTen: "Nguyễn Thị Hiền", chucVu: "Giáo viên", tenTo: "Ngữ văn" },
-                        { username: "phamvan d", hoTen: "Phạm Văn D", chucVu: "Giáo viên", tenTo: "Ngữ văn" }
-                    ]
-                },
-                {
-                    tenTo: "Tiếng Anh", soLuong: 2, members: [
-                        { username: "hothithuthanh", hoTen: "Hồ Thị Thu Thanh", chucVu: "Tổ trưởng", tenTo: "Tiếng Anh" },
-                        { username: "dinhvane", hoTen: "Đinh Văn E", chucVu: "Giáo viên", tenTo: "Tiếng Anh" }
-                    ]
-                },
-                {
-                    tenTo: "Văn phòng", soLuong: 2, members: [
-                        { username: "nguyenvanf", hoTen: "Nguyễn Văn F", chucVu: "Tổ trưởng Văn phòng", tenTo: "Văn phòng" },
-                        { username: "tranthig", hoTen: "Trần Thị G", chucVu: "Kế toán", tenTo: "Văn phòng" }
-                    ]
-                }
-            ];
-            renderAccordionTo();
+            allToData = [];
+            container.innerHTML = '<div class="p-6 text-center text-xs text-rose-500 font-semibold">Chưa tải được nhóm nhân sự. Vui lòng kiểm tra đã triển khai Backend V8 mới nhất.</div>';
+            showToast("Chưa tải được Hội đồng, Tổ/Bộ phận và Nhóm công tác.", "warning");
         }
     }
 
@@ -660,7 +669,9 @@
 
         const kw = filterKeyword.trim().toLowerCase();
 
-        allToData.forEach((toObj, index) => {
+        const activeGroups = allToData.filter(group => group.category === activeRecipientCategory);
+
+        activeGroups.forEach((toObj, index) => {
             // Lọc theo từ khóa
             const matchToName = toObj.tenTo.toLowerCase().includes(kw);
             const matchedMembers = toObj.members.filter(m => 
@@ -676,6 +687,9 @@
             // Kiểm tra trạng thái chọn trọn tổ
             const allMembersSelected = toObj.members.length > 0 && toObj.members.every(m => selectedUsernames.has(m.username));
             const someMembersSelected = toObj.members.some(m => selectedUsernames.has(m.username));
+            const encodedGroupKey = encodeURIComponent(toObj.groupKey || `${toObj.groupType || 'TEAM'}::${toObj.tenTo}`);
+            const groupIcon = toObj.category === 'COUNCIL' ? 'bi-people-fill' : toObj.category === 'WORKGROUP' ? 'bi-person-badge-fill' : 'bi-folder2-open';
+            const selectLabel = toObj.category === 'COUNCIL' ? 'Chọn Hội đồng' : toObj.category === 'TEAM' ? 'Chọn toàn bộ tổ' : 'Chọn cả nhóm';
 
             const accordionDiv = document.createElement('div');
             accordionDiv.className = "border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-sm transition";
@@ -686,14 +700,14 @@
                 <div class="p-3 bg-slate-50/80 flex items-center justify-between gap-2 hover:bg-slate-100/80 transition select-none">
                     <button type="button" onclick="toggleAccordion('accBody_${index}', 'accIcon_${index}')" class="flex-1 flex items-center gap-2.5 text-left font-bold text-xs text-[#0F4C81]">
                         <i id="accIcon_${index}" class="bi bi-chevron-right text-slate-400 text-xs transition-transform duration-200 ${isOpenDefault ? 'rotate-90' : ''}"></i>
-                        <i class="bi bi-folder2-open text-blue-600 text-base"></i>
+                        <i class="bi ${groupIcon} text-blue-600 text-base"></i>
                         <span>${toObj.tenTo}</span>
                         <span class="text-[11px] font-normal text-slate-500">(${toObj.members.length} thành viên)</span>
                     </button>
 
                     <label class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition">
-                        <input type="checkbox" ${allMembersSelected ? 'checked' : ''} onchange="toggleSelectAllInTo('${toObj.tenTo}', this.checked)" class="w-3.5 h-3.5 text-[#0F4C81] rounded focus:ring-0">
-                        <span>Chọn toàn bộ tổ</span>
+                        <input type="checkbox" ${allMembersSelected ? 'checked' : ''} onchange="toggleSelectAllInTo('${encodedGroupKey}', this.checked)" class="w-3.5 h-3.5 text-[#0F4C81] rounded focus:ring-0">
+                        <span>${selectLabel}</span>
                     </label>
                 </div>
 
@@ -722,7 +736,7 @@
         });
 
         if (container.children.length === 0) {
-            container.innerHTML = '<div class="p-6 text-center text-xs text-slate-400 italic">Không tìm thấy tổ hoặc giáo viên nào khớp với từ khóa.</div>';
+            container.innerHTML = '<div class="p-6 text-center text-xs text-slate-400 italic">Không tìm thấy nhóm hoặc nhân sự phù hợp.</div>';
         }
 
         updateChipsAndStats();
@@ -742,17 +756,18 @@
     }
 
     // CHỌN / BỎ CHỌN TOÀN BỘ TỔ (D, F)
-    function toggleSelectAllInTo(tenTo, isChecked) {
-        const targetTo = allToData.find(t => t.tenTo === tenTo);
+    function toggleSelectAllInTo(encodedGroupKey, isChecked) {
+        const groupKey = decodeURIComponent(encodedGroupKey);
+        const targetTo = allToData.find(t => t.groupKey === groupKey);
         if (!targetTo) return;
 
-        targetTo.members.forEach(m => {
-            if (isChecked) {
-                selectedUsernames.add(m.username);
-            } else {
-                selectedUsernames.delete(m.username);
-            }
-        });
+        if (isChecked) {
+            selectedGroupKeys.add(groupKey);
+            targetTo.members.forEach(m => excludedUsernames.delete(m.username));
+        } else {
+            selectedGroupKeys.delete(groupKey);
+        }
+        recomputeSelectedUsernames();
 
         const inputSearch = document.getElementById('inputSearchDoiTuong').value;
         renderAccordionTo(inputSearch);
@@ -761,13 +776,28 @@
     // CHỌN / BỎ CHỌN MỘT CÁ NHÂN (E, F, G)
     function toggleUserSelection(username, isChecked) {
         if (isChecked) {
-            selectedUsernames.add(username);
+            manualSelectedUsernames.add(username);
+            excludedUsernames.delete(username);
         } else {
-            selectedUsernames.delete(username);
+            manualSelectedUsernames.delete(username);
+            excludedUsernames.add(username);
         }
+        recomputeSelectedUsernames();
 
         const inputSearch = document.getElementById('inputSearchDoiTuong').value;
         renderAccordionTo(inputSearch);
+    }
+
+    function recomputeSelectedUsernames() {
+        const next = new Set(manualSelectedUsernames);
+        selectedGroupKeys.forEach(groupKey => {
+            const group = allToData.find(item => item.groupKey === groupKey);
+            if (!group) return;
+            group.members.forEach(member => {
+                if (!excludedUsernames.has(member.username)) next.add(member.username);
+            });
+        });
+        selectedUsernames = next;
     }
 
     // TÌM KIẾM ĐỐI TƯỢNG REALTIME (A & H)
@@ -792,28 +822,32 @@
         const container = document.getElementById('containerChips');
         container.innerHTML = '';
 
-        let countFullTo = 0;
-        let countUsers = selectedUsernames.size;
+        const countUsers = selectedUsernames.size;
 
         if (countUsers === 0) {
             container.innerHTML = '<span class="text-xs text-slate-400 italic">Chưa chọn đối tượng nào...</span>';
-            document.getElementById('statTo').innerText = '0 tổ';
+            document.getElementById('statTo').innerText = '0 nhóm';
             document.getElementById('statNguoi').innerText = '0 cá nhân';
             return;
         }
 
-        // Phân loại hiển thị Chip: Nếu chọn trọn tổ -> Hiện chip Tổ. Nếu chọn lẻ -> Hiện chip Cá nhân
-        allToData.forEach(toObj => {
-            const isFullTo = toObj.members.length > 0 && toObj.members.every(m => selectedUsernames.has(m.username));
-            if (isFullTo) {
-                countFullTo++;
-                // Chip Tổ (I)
+        let countFullGroup = 0;
+        const coveredByFullGroup = new Set();
+
+        // Chỉ hiện chip cho nhóm người dùng đã chủ động chọn trọn.
+        allToData.forEach(group => {
+            const groupKey = group.groupKey || `${group.groupType || 'TEAM'}::${group.tenTo}`;
+            const isFullGroup = selectedGroupKeys.has(groupKey) &&
+                group.members.length > 0 && group.members.every(m => selectedUsernames.has(m.username));
+            if (isFullGroup) {
+                countFullGroup++;
+                group.members.forEach(m => coveredByFullGroup.add(m.username));
                 const chipTo = document.createElement('div');
                 chipTo.className = "px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs font-bold flex items-center gap-1.5 shadow-2xs";
                 chipTo.innerHTML = `
                     <i class="bi bi-building"></i>
-                    <span>Tổ ${toObj.tenTo} (${toObj.members.length})</span>
-                    <button type="button" onclick="toggleSelectAllInTo('${toObj.tenTo}', false)" class="text-indigo-400 hover:text-red-500 ml-1">
+                    <span>${group.tenTo} (${group.members.length})</span>
+                    <button type="button" onclick="toggleSelectAllInTo('${encodeURIComponent(groupKey)}', false)" class="text-indigo-400 hover:text-red-500 ml-1">
                         <i class="bi bi-x-circle-fill"></i>
                     </button>
                 `;
@@ -821,38 +855,53 @@
             }
         });
 
-        // Hiển thị Chip cá nhân đối với các tổ không được chọn trọn gói
-        allToData.forEach(toObj => {
-            const isFullTo = toObj.members.length > 0 && toObj.members.every(m => selectedUsernames.has(m.username));
-            if (!isFullTo) {
-                toObj.members.forEach(m => {
-                    if (selectedUsernames.has(m.username)) {
-                        // Chip Cá nhân (I)
-                        const chipUser = document.createElement('div');
-                        chipUser.className = "px-2.5 py-1.5 rounded-xl bg-white border border-blue-200 text-[#0F4C81] text-xs font-semibold flex items-center gap-1.5 shadow-2xs";
-                        chipUser.innerHTML = `
-                            <i class="bi bi-person-fill text-blue-600"></i>
-                            <span>${m.hoTen}</span>
-                            <span class="text-[10px] text-slate-400">(${m.tenTo})</span>
-                            <button type="button" onclick="toggleUserSelection('${m.username}', false)" class="text-slate-400 hover:text-red-500 ml-1">
-                                <i class="bi bi-x-circle-fill"></i>
-                            </button>
-                        `;
-                        container.appendChild(chipUser);
-                    }
-                });
-            }
+        // Cá nhân chỉ hiện một lần dù thuộc nhiều tổ/nhóm.
+        selectedUsernames.forEach(username => {
+            if (coveredByFullGroup.has(username)) return;
+            const m = personnelByUsername.get(username);
+            if (!m) return;
+            const chipUser = document.createElement('div');
+            chipUser.className = "px-2.5 py-1.5 rounded-xl bg-white border border-blue-200 text-[#0F4C81] text-xs font-semibold flex items-center gap-1.5 shadow-2xs";
+            chipUser.innerHTML = `
+                <i class="bi bi-person-fill text-blue-600"></i>
+                <span>${m.hoTen}</span>
+                <span class="text-[10px] text-slate-400">(${m.tenTo || 'HVA'})</span>
+                <button type="button" onclick="toggleUserSelection('${m.username}', false)" class="text-slate-400 hover:text-red-500 ml-1">
+                    <i class="bi bi-x-circle-fill"></i>
+                </button>
+            `;
+            container.appendChild(chipUser);
         });
 
-        // Cập nhật Badge Thống kê Realtime (J)
-        document.getElementById('statTo').innerText = `${countFullTo} tổ`;
+        document.getElementById('statTo').innerText = `${countFullGroup} nhóm`;
         document.getElementById('statNguoi').innerText = `${countUsers} cá nhân`;
     }
 
     function removeAllSelections() {
         selectedUsernames.clear();
+        manualSelectedUsernames.clear();
+        excludedUsernames.clear();
+        selectedGroupKeys.clear();
         renderAccordionTo(document.getElementById('inputSearchDoiTuong').value);
         showToast("Đã xóa toàn bộ đối tượng chọn", "info");
+    }
+
+    function switchRecipientCategory(category) {
+        activeRecipientCategory = category;
+        document.querySelectorAll('.recipient-category-tab').forEach(button => {
+            const active = button.dataset.recipientCategory === category;
+            button.classList.toggle('bg-white', active);
+            button.classList.toggle('text-[#0F4C81]', active);
+            button.classList.toggle('shadow-sm', active);
+            button.classList.toggle('text-slate-600', !active);
+        });
+        renderAccordionTo(document.getElementById('inputSearchDoiTuong').value);
+    }
+
+    function getSelectedPeople() {
+        return Array.from(selectedUsernames)
+            .map(username => personnelByUsername.get(username))
+            .filter(Boolean);
     }
 
     // 3. NGUỒN GIAO & TÌM KIẾM VĂN BẢN REALTIME (PHẦN 2 & 3)
@@ -990,15 +1039,11 @@
         const containerNhan = document.getElementById('pvDanhSachNhan');
         containerNhan.innerHTML = '';
         
-        allToData.forEach(toObj => {
-            toObj.members.forEach(m => {
-                if (selectedUsernames.has(m.username)) {
-                    const tag = document.createElement('span');
-                    tag.className = "px-2 py-1 bg-slate-100 border border-slate-300 rounded font-medium text-slate-800";
-                    tag.innerText = `${m.hoTen} (${m.tenTo})`;
-                    containerNhan.appendChild(tag);
-                }
-            });
+        getSelectedPeople().forEach(m => {
+            const tag = document.createElement('span');
+            tag.className = "px-2 py-1 bg-slate-100 border border-slate-300 rounded font-medium text-slate-800";
+            tag.innerText = `${m.hoTen} (${m.tenTo || 'HVA'})`;
+            containerNhan.appendChild(tag);
         });
 
         document.getElementById('pvKyTen').innerText = currentUser.fullName;
@@ -1027,19 +1072,12 @@
         }
 
         // Lấy danh sách đối tượng chọn đầy đủ thông tin
-        const targetList = [];
-        allToData.forEach(toObj => {
-            toObj.members.forEach(m => {
-                if (selectedUsernames.has(m.username)) {
-                    targetList.push({
-                        username: m.username,
-                        hoTen: m.hoTen,
-                        toBoPhan: m.tenTo,
-                        chucVu: m.chucVu
-                    });
-                }
-            });
-        });
+        const targetList = getSelectedPeople().map(m => ({
+            username: m.username,
+            hoTen: m.hoTen,
+            toBoPhan: m.tenTo,
+            chucVu: m.chucVu
+        }));
 
         const nguonGiaoVal = document.querySelector('input[name="nguonGiao"]:checked').value;
 
@@ -1172,6 +1210,9 @@
     function resetForm() {
         document.getElementById('formGiaoViec').reset();
         selectedUsernames.clear();
+        manualSelectedUsernames.clear();
+        excludedUsernames.clear();
+        selectedGroupKeys.clear();
         vanBanChon = null;
         resetVanBanDisplay();
         toggleNguonGiao('Theo văn bản');
