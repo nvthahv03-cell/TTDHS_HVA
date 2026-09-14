@@ -70,6 +70,31 @@
     .hva-quick-link:active {
         transform: scale(0.985);
     }
+
+    /* HVA 14/09/2026: khung responsive dùng chung cho điện thoại và máy tính. */
+    #main-content {
+        transition: max-width .25s ease, padding .25s ease;
+    }
+
+    @media (min-width: 1024px) {
+        #main-content {
+            max-width: 1600px !important;
+            padding-left: 1.5rem !important;
+            padding-right: 1.5rem !important;
+            padding-top: 5.75rem !important;
+        }
+
+        #hva-bottom-nav-inner {
+            max-width: 760px !important;
+        }
+    }
+
+    @media (min-width: 1536px) {
+        #main-content {
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
+        }
+    }
 </style>
     
 </head>
@@ -214,7 +239,7 @@
 
 </header>
         <!-- ================= MAIN CONTENT ================= -->
-        <main id="main-content" class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-[460px] mx-auto w-full">
+        <main id="main-content" class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-[460px] lg:max-w-[1600px] mx-auto w-full">
             <!-- Home content sẽ được render bởi HomeRenderer -->
             <div id="home-view"></div>
         </main>
@@ -304,7 +329,7 @@
             pb-safe px-6
             shadow-[0_-4px_25px_rgba(15,76,129,0.10)]">
 
-    <div class="flex items-center justify-between h-16 max-w-[460px] mx-auto">
+    <div id="hva-bottom-nav-inner" class="flex items-center justify-between h-16 max-w-[460px] lg:max-w-[760px] mx-auto">
 
         <!-- ================= TRANG CHỦ ================= -->
         <a href="#"
