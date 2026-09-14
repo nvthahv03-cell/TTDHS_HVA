@@ -1,6 +1,371 @@
-<!doctype html><html lang='vi'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>HVA · Kế hoạch Tổ chuyên môn VIP</title><style>
-:root{--b:#0b4f8a;--b2:#123b67;--bg:#f3f7fb;--line:#d9e3ee;--green:#16865c;--amber:#b7791f}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#17324d}.top{background:linear-gradient(135deg,#0a4c84,#123b67);color:white;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 18px #123b6733}.brand b{font-size:20px}.brand small{display:block;opacity:.8;margin-top:3px}.user{text-align:right;font-size:13px}.wrap{max-width:1500px;margin:22px auto;padding:0 18px}.hero,.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 6px 20px #17324d0c}.hero{padding:22px 24px;display:flex;gap:20px;justify-content:space-between;align-items:center}.hero h1{margin:0;color:var(--b2);font-size:25px}.hero p{margin:7px 0 0;color:#64778a}.controls{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:11px;padding:11px 15px;font-weight:700;cursor:pointer}.primary{background:var(--b);color:#fff}.light{background:#edf4fa;color:var(--b2)}.success{background:var(--green);color:#fff}.grid{display:grid;grid-template-columns:280px 1fr;gap:18px;margin-top:18px}.side{padding:15px}.nav{padding:13px;border-radius:12px;margin:5px 0;font-weight:700;cursor:pointer}.nav.active{background:#e8f2fb;color:var(--b)}.main{padding:22px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{border:1px solid var(--line);border-radius:14px;padding:15px}.stat strong{font-size:24px;color:var(--b)}.stat span{display:block;color:#718399;font-size:12px;margin-top:5px}.section{margin-top:18px}.section h2{font-size:16px;color:var(--b2);border-left:4px solid var(--b);padding-left:9px}.focus{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.focus input,.field input,.field select,.field textarea{width:100%;border:1px solid #cfdbe7;border-radius:9px;padding:10px;background:#fff}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:12px 0}.hint{font-size:12px;color:#718399}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:13px}table{border-collapse:collapse;width:100%;min-width:1120px}th{background:#edf4fa;color:var(--b2);font-size:12px;padding:11px;border-bottom:1px solid var(--line)}td{padding:7px;border-bottom:1px solid #e7edf3;vertical-align:top}td input,td select,td textarea{width:100%;border:1px solid #d5e0ea;border-radius:7px;padding:8px;font:inherit}td textarea{min-height:55px;resize:vertical}.status{font-size:11px;padding:5px 8px;border-radius:999px;background:#fff4db;color:#8b5d00;display:inline-block}.footerActions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.preview{display:none;background:#fff;position:fixed;inset:0;z-index:5;overflow:auto;padding:30px}.paper{max-width:1100px;margin:auto;color:#111;font-family:'Times New Roman',serif}.paper .head{display:grid;grid-template-columns:1fr 1fr;text-align:center}.paper h1{text-align:center;font-size:18px;margin-top:24px}.paper table{min-width:0;font-size:13px}.close{position:fixed;right:25px;top:20px}@media(max-width:900px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.hero{align-items:flex-start;flex-direction:column}.focus{grid-template-columns:1fr}}
-</style></head><body><header class='top'><div class='brand'><b>HỆ THỐNG CHUYÊN MÔN SỐ HVA</b><small>Trường THPT Hòa Vang · Năm học 2026–2027</small></div><div class='user'><b>TỔ TRƯỞNG CHUYÊN MÔN</b><br>Không gian lập kế hoạch số</div></header><div class='wrap'><section class='hero'><div><h1>Kế hoạch Tổ chuyên môn</h1><p>Lập kế hoạch tháng → phân công nhiệm vụ → theo dõi sản phẩm/minh chứng → xác nhận kết quả.</p></div><div class='controls'><button class='btn light' onclick='loadSample()'>Nạp kế hoạch mẫu</button><button class='btn light' onclick='preview()'>Xem trước</button><button class='btn primary' onclick='save()'>Lưu nháp</button></div></section><div class='grid'><aside class='card side'><div class='nav active'>01 · Tổng quan kế hoạch</div><div class='nav'>02 · Kế hoạch & phân công</div><div class='nav'>03 · Theo dõi thực hiện</div><div class='nav'>04 · Tổng hợp cuối tháng</div><div class='nav'>05 · Lịch sử / phiên bản</div><hr style='border:0;border-top:1px solid #e3eaf1'><div class='hint'><b>Nguyên tắc:</b><br>Người thực hiện → Nhiệm vụ cụ thể → Thời hạn → Sản phẩm/Kết quả → Minh chứng.<br><br>Không tạo hồ sơ hình thức; ưu tiên sản phẩm, dữ liệu và đường dẫn thực tế.</div></aside><main class='card main'><div class='stats'><div class='stat'><strong id='sTasks'>3</strong><span>Nhiệm vụ đã lập</span></div><div class='stat'><strong id='sPeople'>3</strong><span>Người được phân công</span></div><div class='stat'><strong>0</strong><span>Nhiệm vụ quá hạn</span></div><div class='stat'><strong>Nháp</strong><span>Trạng thái kế hoạch</span></div></div><div class='section'><h2>Thông tin kế hoạch</h2><div class='focus'><div class='field'><label>Tổ chuyên môn</label><select id='team'><option>Toán – Tin</option><option>Ngữ văn</option><option>Tiếng Anh</option><option>Lịch sử – Địa lí – GDKT&PL</option><option>Vật lí – Công nghệ</option><option>Hóa học</option><option>Sinh – GDTC – QPAN</option></select></div><div class='field'><label>Tháng</label><input id='month' value='09/2026'></div></div></div><div class='section'><h2>I. Nhiệm vụ trọng tâm</h2><div class='focus' id='focus'><input value='Ổn định nền nếp và triển khai kế hoạch giáo dục của tổ.'><input value='Rà soát tiến độ, hồ sơ và nhiệm vụ chuyên môn tháng 9.'><input value='Triển khai STEM, AI, học liệu số và nhiệm vụ chuyển đổi số phù hợp.'><input value='Phân công nhiệm vụ cụ thể, có sản phẩm và minh chứng.'></div></div><div class='section'><div class='toolbar'><div><h2 style='margin:0'>II. Kế hoạch và phân công thực hiện</h2><div class='hint'>Tập trung nhiệm vụ ngoài dạy học/nghiệp vụ thường xuyên; mỗi việc phải kiểm chứng được.</div></div><button class='btn light' onclick='addRow()'>＋ Thêm nhiệm vụ</button></div><div class='tablewrap'><table><thead><tr><th>TT</th><th>Người thực hiện</th><th>Nhóm nhiệm vụ</th><th>Nhiệm vụ cụ thể</th><th>Thời hạn</th><th>Sản phẩm/Kết quả cần đạt</th><th>Minh chứng</th><th>Trạng thái</th><th></th></tr></thead><tbody id='rows'></tbody></table></div></div><div class='section'><h2>III. Tổ chức thực hiện</h2><div class='hint'>Tổ trưởng triển khai, theo dõi tiến độ, kiểm tra sản phẩm/minh chứng và xác nhận kết quả. Thành viên chủ động thực hiện đúng yêu cầu, thời hạn. Nhiệm vụ phát sinh được bổ sung trực tiếp vào kế hoạch và lưu lịch sử thay đổi.</div></div><div class='footerActions'><button class='btn light' onclick='preview()'>Xem trước kế hoạch</button><button class='btn success' onclick="alert('Bản demo: Đã kiểm tra dữ liệu. Khi nối Backend, thao tác này sẽ gửi kế hoạch đến PHT CM/luồng phê duyệt.')">Gửi kế hoạch</button></div></main></div></div><div class='preview' id='preview'><button class='btn primary close' onclick="document.getElementById('preview').style.display='none'">Đóng</button><div class='paper' id='paper'></div></div><script>
-const groups=['Nhiệm vụ chuyên môn của tổ','Kiểm tra, đánh giá','Học liệu số / ngân hàng câu hỏi','STEM / AI / chuyển đổi số','Hồ sơ / dữ liệu / báo cáo','Thiết bị / phòng bộ môn','Phối hợp GVCN / học sinh','Nhiệm vụ khác'];let data=[['Trần Thanh Hiền','STEM / AI / chuyển đổi số','Rà soát và đề xuất nội dung ứng dụng CNTT, AI phù hợp trong hoạt động tổ.','18/09/2026','Danh mục nội dung và đề xuất triển khai','Đường dẫn sản phẩm / xác nhận'],['GV được phân công','Học liệu số / ngân hàng câu hỏi','Xây dựng hoặc cập nhật học liệu số phục vụ dạy học theo phân công của tổ.','25/09/2026','Học liệu hoàn chỉnh, dùng được','Link học liệu'],['Tổ trưởng','Hồ sơ / dữ liệu / báo cáo','Tổng hợp kết quả thực hiện nhiệm vụ tháng và xác nhận sản phẩm của thành viên.','30/09/2026','Bảng tổng hợp kết quả tháng','Xác nhận trên HVA']];
-function esc(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}function render(){let b=document.getElementById('rows');b.innerHTML='';data.forEach((r,i)=>{b.innerHTML+=`<tr><td>${i+1}</td><td><input value="${esc(r[0])}" oninput="data[${i}][0]=this.value;stats()"></td><td><select onchange="data[${i}][1]=this.value">${groups.map(g=>`<option ${g==r[1]?'selected':''}>${g}</option>`).join('')}</select></td><td><textarea oninput="data[${i}][2]=this.value">${esc(r[2])}</textarea></td><td><input type='date' value='${r[3].split('/').reverse().join('-')}' onchange="data[${i}][3]=this.value.split('-').reverse().join('/')"></td><td><textarea oninput="data[${i}][4]=this.value">${esc(r[4])}</textarea></td><td><textarea oninput="data[${i}][5]=this.value">${esc(r[5])}</textarea></td><td><span class='status'>Chưa thực hiện</span></td><td><button class='btn light' onclick='data.splice(${i},1);render();stats()'>×</button></td></tr>`});stats()}function stats(){document.getElementById('sTasks').textContent=data.length;document.getElementById('sPeople').textContent=new Set(data.map(x=>x[0]).filter(Boolean)).size}function addRow(){data.push(['',groups[0],'','','','','']);render()}function loadSample(){document.getElementById('month').value='09/2026';alert('Đã nạp khung kế hoạch mẫu tháng 9/2026. Thầy/cô có thể chỉnh trực tiếp từng nội dung.')}function save(){localStorage.setItem('hva_kh_tcm',JSON.stringify({data,month:month.value,team:team.value}));alert('Đã lưu nháp trên trình duyệt.')}function preview(){let fs=[...document.querySelectorAll('#focus input')].map(x=>x.value);let rows=data.map((r,i)=>`<tr><td>${i+1}</td>${r.slice(0,6).map(x=>`<td>${esc(x)}</td>`).join('')}</tr>`).join('');paper.innerHTML=`<div class='head'><div><b>TRƯỜNG THPT HÒA VANG</b><br>TỔ: ${esc(team.value).toUpperCase()}</div><div><b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b><br><b>Độc lập - Tự do - Hạnh phúc</b></div></div><h1>KẾ HOẠCH VÀ PHÂN CÔNG NHIỆM VỤ THÁNG ${esc(month.value)}<br><small>Năm học 2026–2027</small></h1><p>Căn cứ chức năng, nhiệm vụ của tổ; căn cứ Kế hoạch giáo dục năm học 2026–2027, kế hoạch công tác tháng của Trường THPT Hòa Vang và các nhiệm vụ được giao, Tổ ${esc(team.value)} xây dựng kế hoạch và phân công nhiệm vụ như sau:</p><b>I. NHIỆM VỤ TRỌNG TÂM</b><ol>${fs.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><b>II. KẾ HOẠCH VÀ PHÂN CÔNG THỰC HIỆN</b><table border='1' cellspacing='0' cellpadding='6'><tr><th>TT</th><th>Người thực hiện</th><th>Nhóm nhiệm vụ</th><th>Nhiệm vụ cụ thể</th><th>Thời hạn</th><th>Sản phẩm/Kết quả</th><th>Minh chứng</th></tr>${rows}</table><p><b>III. TỔ CHỨC THỰC HIỆN</b></p><p>1. Tổ trưởng tổ chức triển khai, phân công, theo dõi tiến độ; kiểm tra sản phẩm/minh chứng và xác nhận kết quả thực hiện nhiệm vụ của từng thành viên.</p><p>2. Thành viên chủ động thực hiện nhiệm vụ được giao đúng yêu cầu và thời hạn; sản phẩm/minh chứng được lưu tại nơi quy định hoặc liên kết trên hệ thống.</p><p>3. Nhiệm vụ phát sinh trong tháng được bổ sung vào kế hoạch/phân công, bảo đảm xác định rõ người thực hiện, thời hạn, sản phẩm/kết quả cần đạt và minh chứng.</p>`;document.getElementById('preview').style.display='block'}let saved=localStorage.getItem('hva_kh_tcm');if(saved){try{let x=JSON.parse(saved);data=x.data||data;month.value=x.month||'09/2026';team.value=x.team||team.value}catch(e){}}render();
-</script></body></html>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HVA · Kế hoạch Tổ chuyên môn</title>
+<style>
+:root{
+  --navy:#0b2f57;--blue:#155fa0;--blue2:#0d4e86;--cyan:#0ea5b7;--sky:#eaf5ff;
+  --bg:#f3f7fb;--card:#fff;--line:#dbe5ef;--text:#18324a;--muted:#6d7f91;
+  --green:#14855f;--amber:#c67a10;--red:#c33b4a;--violet:#6d52b5;
+  --shadow:0 12px 35px rgba(22,55,86,.10);--r:18px
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh}
+.topbar{height:68px;background:linear-gradient(120deg,#082b50,#0d4e86 60%,#1178a5);color:#fff;display:flex;align-items:center;padding:0 24px;box-shadow:0 4px 18px rgba(0,0,0,.16);position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:12px;min-width:340px}
+.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#fff,#d9efff);display:grid;place-items:center;color:#0b4f85;font-weight:900;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.brand h1{font-size:16px;margin:0;font-weight:850;letter-spacing:.3px}
+.brand small{display:block;color:#cfe7f7;margin-top:2px}
+.top-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.iconbtn,.topbtn{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;border-radius:11px;padding:9px 12px;font-weight:700}
+.shell{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:calc(100vh - 68px)}
+.sidebar{background:#fff;border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:68px;height:calc(100vh - 68px);overflow:auto}
+.usercard{padding:14px;border-radius:15px;background:linear-gradient(145deg,#eef7ff,#f9fcff);border:1px solid #dcebf7;margin-bottom:15px}
+.userrow{display:flex;gap:10px;align-items:center}.avatar{width:38px;height:38px;border-radius:12px;background:#d7eafa;color:#0d558f;display:grid;place-items:center;font-weight:900}
+.usercard b{font-size:13px}.usercard small{display:block;color:var(--muted);margin-top:3px}
+.menu-label{font-size:10px;color:#91a0af;font-weight:850;text-transform:uppercase;letter-spacing:1px;margin:14px 10px 7px}
+.nav{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:11px;color:#4c6074;font-weight:700;font-size:13px;margin:3px 0}
+.nav.active{background:#eaf4ff;color:#0c5795;box-shadow:inset 3px 0 #1675bd}.nav .ico{width:22px;text-align:center}
+.main{padding:22px 24px 50px;min-width:0}
+.breadcrumb{font-size:12px;color:#8291a1;margin-bottom:8px}
+.hero{background:linear-gradient(120deg,#fff,#f5fbff);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:20px 22px;display:flex;gap:20px;align-items:center}
+.hero h2{margin:0;color:#103c67;font-size:23px}.hero p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+.hero .badge{margin-left:auto;white-space:nowrap;background:#e8f7f1;color:#117458;border:1px solid #ccecdf;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}
+.btn{border:1px solid var(--line);background:#fff;color:#24445f;border-radius:11px;padding:10px 13px;font-weight:800;font-size:12px;box-shadow:0 3px 10px rgba(20,50,80,.04)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 7px 16px rgba(20,50,80,.09)}
+.btn.primary{background:linear-gradient(135deg,#0f5c9b,#1379b7);color:#fff;border-color:#0f65a5}
+.btn.green{background:#15825e;color:#fff;border-color:#15825e}.btn.danger{color:#b53242;background:#fff7f8;border-color:#f0cbd0}
+.btn.ghost{background:#f7fafc}.btn.sm{padding:7px 9px;border-radius:9px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.card-head{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:linear-gradient(#fff,#fbfdff)}
+.step{width:28px;height:28px;border-radius:9px;background:#e8f3ff;color:#0e5c9d;display:grid;place-items:center;font-size:12px;font-weight:900}
+.card-head h3{margin:0;font-size:14px;color:#153f64}.card-head small{color:var(--muted);margin-left:auto}
+.card-body{padding:18px}
+.formgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+.field{grid-column:span 6}.field.full{grid-column:1/-1}.field.third{grid-column:span 4}.field.quarter{grid-column:span 3}
+label{display:block;font-size:11px;font-weight:850;color:#52677b;margin:0 0 6px}
+.req{color:#d13d4c}
+input,select,textarea{width:100%;border:1px solid #cedae6;border-radius:10px;background:#fff;padding:10px 11px;color:#203d55;outline:none;transition:.15s}
+input:focus,select:focus,textarea:focus{border-color:#5aa1d6;box-shadow:0 0 0 3px rgba(46,135,201,.11)}
+textarea{resize:vertical;min-height:78px;line-height:1.5}
+.focus-list{display:grid;gap:9px}
+.focus-row{display:grid;grid-template-columns:34px 1fr 36px;gap:8px;align-items:start}
+.focus-num{height:40px;border-radius:10px;background:#edf5fb;display:grid;place-items:center;font-weight:900;color:#0f5b95}
+.remove{border:0;background:#fff1f3;color:#bd3645;border-radius:9px;height:40px;font-weight:900}
+.hint{font-size:11px;color:#7a8c9e;line-height:1.45;margin-top:6px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:13px}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:1050px;font-size:12px}
+th{background:#edf5fb;color:#31536e;text-align:left;padding:10px 9px;border-bottom:1px solid #cfdeeb;font-size:10px;text-transform:uppercase;letter-spacing:.35px;position:sticky;top:0;z-index:1}
+td{padding:8px;border-bottom:1px solid #e7eef4;vertical-align:top;background:#fff}
+tr:last-child td{border-bottom:0}
+td input,td select,td textarea{padding:8px;border-radius:8px;font-size:12px;min-width:110px}
+td textarea{min-height:55px}
+.tt{width:45px;text-align:center;font-weight:850;color:#567}
+.row-actions{display:flex;gap:5px}.mini{width:31px;height:31px;border:1px solid #d7e1ea;background:#fff;border-radius:8px;color:#567}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 0}
+.stat{padding:12px;border:1px solid var(--line);border-radius:12px;background:#fbfdff}.stat b{font-size:19px;color:#0e568f}.stat span{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+.side-card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+.side-title{padding:13px 15px;border-bottom:1px solid var(--line);font-size:12px;font-weight:850;color:#31516d}
+.side-body{padding:14px}
+.progress{height:8px;background:#edf2f6;border-radius:999px;overflow:hidden;margin:8px 0}.progress>i{display:block;height:100%;background:linear-gradient(90deg,#1687bd,#18a37d);width:0%}
+.check{display:flex;gap:8px;font-size:11px;color:#617486;line-height:1.35;margin:9px 0}.dot{width:18px;height:18px;flex:0 0 18px;border-radius:50%;background:#edf2f6;display:grid;place-items:center;font-size:10px}.check.ok .dot{background:#daf2e8;color:#0d805b}
+.notice{padding:11px 12px;background:#fff9eb;border:1px solid #f0dfb8;border-radius:11px;color:#806226;font-size:11px;line-height:1.5}
+.statusline{display:flex;gap:8px;flex-wrap:wrap}.pill{border-radius:999px;padding:6px 9px;background:#eef4f8;color:#526a7e;font-size:10px;font-weight:800}.pill.blue{background:#e6f2ff;color:#0d5f9e}.pill.green{background:#e6f6ef;color:#137353}
+.footer-actions{position:sticky;bottom:0;background:rgba(243,247,251,.94);backdrop-filter:blur(8px);border-top:1px solid #dbe5ef;padding:12px 0;display:flex;justify-content:flex-end;gap:8px;z-index:20}
+.modal{position:fixed;inset:0;background:rgba(10,29,47,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}.modal.show{display:flex}
+.modalbox{background:#fff;border-radius:18px;width:min(1100px,96vw);max-height:92vh;overflow:auto;box-shadow:0 30px 90px rgba(0,0,0,.3)}
+.modalhead{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:14px 17px;display:flex;align-items:center;z-index:2}.modalhead b{color:#173f63}.modalhead button{margin-left:auto}
+.preview{padding:30px 42px;font-family:"Times New Roman",serif;color:#111;font-size:14px;line-height:1.45}
+.doc-head{display:grid;grid-template-columns:1fr 1fr;gap:30px;text-align:center}.doc-head b{display:block}.doc-title{text-align:center;margin:25px 0 18px}.doc-title h2{font-size:17px;margin:0 0 5px}.doc-title b{font-size:14px}
+.preview table{min-width:0;font-size:12px}.preview th{position:static;background:#fff;color:#111;text-transform:none;letter-spacing:0;text-align:center;border:1px solid #333;padding:5px}.preview td{border:1px solid #333;padding:5px;color:#111}
+.sign{display:grid;grid-template-columns:1fr 1fr;margin-top:24px;text-align:center}.sign div:last-child{font-weight:700}
+.toast{position:fixed;right:22px;bottom:22px;background:#173e60;color:#fff;border-radius:12px;padding:12px 15px;box-shadow:0 12px 35px rgba(0,0,0,.22);font-size:12px;font-weight:750;display:none;z-index:200}.toast.show{display:block;animation:fade .25s}
+@keyframes fade{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:1050px){.shell{grid-template-columns:1fr}.sidebar{display:none}.grid{grid-template-columns:1fr}.brand{min-width:0}.hero .badge{display:none}}
+@media(max-width:700px){.main{padding:14px}.topbar{padding:0 12px}.brand small{display:none}.top-actions .topbtn{display:none}.formgrid{display:block}.field{margin-bottom:10px}.summary{grid-template-columns:1fr 1fr}.hero{align-items:flex-start}.preview{padding:18px}.doc-head{gap:10px;font-size:11px}}
+@media print{body{background:#fff}.topbar,.sidebar,.hero,.toolbar,.grid,.footer-actions,.toast{display:none!important}.modal{position:static;background:#fff;display:block!important;padding:0}.modalbox{box-shadow:none;max-height:none;width:100%;border-radius:0}.modalhead{display:none}.preview{padding:0}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="brand"><div class="logo">HVA</div><div><h1>HỆ THỐNG CHUYÊN MÔN SỐ HVA</h1><small>Trường THPT Hòa Vang · Năm học 2026–2027</small></div></div>
+  <div class="top-actions"><button class="iconbtn" onclick="toggleHelp()">?</button><button class="topbtn" onclick="saveDraft()">Lưu nhanh</button></div>
+</header>
+<div class="shell">
+<aside class="sidebar">
+  <div class="usercard"><div class="userrow"><div class="avatar">TT</div><div><b>Tổ trưởng chuyên môn</b><small>Không gian điều hành tổ</small></div></div></div>
+  <div class="menu-label">Chuyên môn</div>
+  <div class="nav"><span class="ico">⌂</span>Tổng quan</div>
+  <div class="nav active"><span class="ico">▣</span>Kế hoạch tổ chuyên môn</div>
+  <div class="nav"><span class="ico">✓</span>Phân công nhiệm vụ</div>
+  <div class="nav"><span class="ico">◫</span>Báo cáo tháng</div>
+  <div class="menu-label">Theo dõi</div>
+  <div class="nav"><span class="ico">◷</span>Tiến độ thực hiện</div>
+  <div class="nav"><span class="ico">◎</span>Minh chứng số</div>
+  <div class="nav"><span class="ico">▤</span>Lịch sử kế hoạch</div>
+</aside>
+
+<main class="main">
+  <div class="breadcrumb">HVA / Chuyên môn / Kế hoạch tổ chuyên môn</div>
+  <section class="hero">
+    <div><h2>Kế hoạch Tổ chuyên môn</h2><p>Lập kế hoạch tháng, giao nhiệm vụ cụ thể, xác định thời hạn – sản phẩm – minh chứng và theo dõi tiến độ trên một màn hình.</p></div>
+    <div class="badge" id="heroStatus">● Đang soạn thảo</div>
+  </section>
+
+  <div class="toolbar">
+    <button class="btn primary" onclick="newPlan()">＋ Kế hoạch mới</button>
+    <button class="btn" onclick="loadSample()">✦ Nạp kế hoạch mẫu</button>
+    <button class="btn" onclick="saveDraft()">▣ Lưu nháp</button>
+    <button class="btn" onclick="openPreview()">◉ Xem trước</button>
+    <button class="btn" onclick="exportJSON()">⇩ Sao lưu dữ liệu</button>
+    <label class="btn" style="cursor:pointer">⇧ Phục hồi dữ liệu<input type="file" accept=".json" onchange="importJSON(event)" hidden></label>
+  </div>
+
+  <div class="grid">
+  <div>
+    <section class="card">
+      <div class="card-head"><div class="step">1</div><h3>Thông tin kế hoạch</h3><small>Các trường có dấu * là bắt buộc</small></div>
+      <div class="card-body">
+        <div class="formgrid">
+          <div class="field"><label>Tổ chuyên môn <span class="req">*</span></label>
+            <select id="team"><option value="">— Chọn tổ chuyên môn —</option><option>Toán – Tin</option><option>Ngữ văn</option><option>Tiếng Anh</option><option>Lịch sử – Địa lí – GD KT&PL</option><option>Vật lí – Công nghệ</option><option>Hóa học</option><option>Sinh – GDTC – QPAN</option></select>
+          </div>
+          <div class="field quarter"><label>Tháng <span class="req">*</span></label><select id="month"></select></div>
+          <div class="field quarter"><label>Năm <span class="req">*</span></label><select id="year"><option>2026</option><option>2027</option></select></div>
+          <div class="field"><label>Năm học</label><input id="schoolYear" value="2026–2027" readonly></div>
+          <div class="field"><label>Tổ trưởng</label><input id="leader" placeholder="Họ và tên tổ trưởng"></div>
+          <div class="field full"><label>Căn cứ / nguồn nhiệm vụ</label><textarea id="basis" placeholder="Ví dụ: Kế hoạch giáo dục năm học; kế hoạch công tác tháng của nhà trường; nhiệm vụ được giao và yêu cầu thực tế của tổ."></textarea></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><div class="step">2</div><h3>I. Nhiệm vụ trọng tâm</h3><small id="focusCount">0 nội dung</small></div>
+      <div class="card-body">
+        <div id="focusList" class="focus-list"></div>
+        <button class="btn sm ghost" style="margin-top:10px" onclick="addFocus()">＋ Thêm nhiệm vụ trọng tâm</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><div class="step">3</div><h3>II. Kế hoạch và phân công thực hiện</h3><small>Ưu tiên nhiệm vụ ngoài dạy học thường xuyên</small></div>
+      <div class="card-body">
+        <div class="notice">Mỗi nhiệm vụ cần xác định rõ <b>người thực hiện → nhiệm vụ cụ thể → thời hạn → sản phẩm/kết quả → minh chứng</b>. Không ghi chung chung và không tạo thêm hồ sơ chỉ để làm minh chứng.</div>
+        <div class="table-wrap" style="margin-top:12px">
+          <table>
+            <thead><tr><th style="width:45px">TT</th><th style="width:155px">Người thực hiện</th><th style="width:165px">Nhóm nhiệm vụ</th><th style="width:270px">Nhiệm vụ cụ thể</th><th style="width:125px">Thời hạn</th><th style="width:220px">Sản phẩm / Kết quả</th><th style="width:210px">Minh chứng</th><th style="width:78px">Thao tác</th></tr></thead>
+            <tbody id="taskBody"></tbody>
+          </table>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:11px"><button class="btn sm primary" onclick="addTask()">＋ Thêm nhiệm vụ</button><button class="btn sm" onclick="duplicateLast()">⧉ Nhân bản dòng cuối</button></div>
+        <div class="summary">
+          <div class="stat"><b id="sTasks">0</b><span>Tổng nhiệm vụ</span></div>
+          <div class="stat"><b id="sPeople">0</b><span>Người được giao</span></div>
+          <div class="stat"><b id="sComplete">0</b><span>Dòng đủ thông tin</span></div>
+          <div class="stat"><b id="sRate">0%</b><span>Mức hoàn thiện</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><div class="step">4</div><h3>III. Tổ chức thực hiện</h3></div>
+      <div class="card-body">
+        <textarea id="implementation" style="min-height:150px">1. Tổ trưởng tổ chức triển khai, phân công, theo dõi tiến độ; kiểm tra sản phẩm/minh chứng và xác nhận kết quả thực hiện nhiệm vụ của từng thành viên.
+2. Thành viên chủ động thực hiện nhiệm vụ được giao đúng yêu cầu và thời hạn; sản phẩm/minh chứng được lưu tại nơi quy định hoặc liên kết trên hệ thống.
+3. Nhiệm vụ phát sinh trong tháng được bổ sung vào kế hoạch/phân công, bảo đảm xác định rõ người thực hiện, thời hạn, sản phẩm/kết quả cần đạt và minh chứng.
+4. Cuối tháng, tổ trưởng tổng hợp kết quả thực hiện làm căn cứ báo cáo và đánh giá mức độ hoàn thành nhiệm vụ.</textarea>
+      </div>
+    </section>
+  </div>
+
+  <aside>
+    <div class="side-card">
+      <div class="side-title">MỨC ĐỘ HOÀN THIỆN</div>
+      <div class="side-body"><div style="display:flex;justify-content:space-between;font-size:12px"><b id="progressText">0%</b><span style="color:var(--muted)">Tự động kiểm tra</span></div><div class="progress"><i id="progressBar"></i></div><div id="checks"></div></div>
+    </div>
+    <div class="side-card">
+      <div class="side-title">TRẠNG THÁI KẾ HOẠCH</div>
+      <div class="side-body"><div class="statusline"><span class="pill blue" id="statusPill">Bản nháp</span><span class="pill" id="savedAt">Chưa lưu</span></div><div class="hint" style="margin-top:10px">Dữ liệu nháp được lưu ngay trên trình duyệt của thiết bị này. Khi nối Backend HVA, khối lưu/gửi có thể thay bằng API mà không cần đổi cấu trúc giao diện.</div></div>
+    </div>
+    <div class="side-card">
+      <div class="side-title">NGUYÊN TẮC HVA</div>
+      <div class="side-body">
+        <div class="check ok"><span class="dot">✓</span><span>Bám sát kế hoạch công tác tháng và nhiệm vụ thực tế.</span></div>
+        <div class="check ok"><span class="dot">✓</span><span>Giao việc cụ thể, có thời hạn và sản phẩm kiểm chứng.</span></div>
+        <div class="check ok"><span class="dot">✓</span><span>Minh chứng ưu tiên dữ liệu, sản phẩm hoặc liên kết có sẵn.</span></div>
+        <div class="check ok"><span class="dot">✓</span><span>Không đưa “dự giờ, thao giảng” thành chỉ tiêu kế hoạch tháng.</span></div>
+      </div>
+    </div>
+    <div class="side-card" id="helpCard" style="display:none">
+      <div class="side-title">HƯỚNG DẪN NHANH</div>
+      <div class="side-body"><div class="hint">1) Chọn tổ và tháng. 2) Nhập nhiệm vụ trọng tâm. 3) Giao từng nhiệm vụ cụ thể. 4) Kiểm tra thanh hoàn thiện. 5) Xem trước văn bản. 6) Gửi kế hoạch khi đủ dữ liệu.</div></div>
+    </div>
+  </aside>
+  </div>
+
+  <div class="footer-actions">
+    <button class="btn" onclick="saveDraft()">Lưu nháp</button>
+    <button class="btn" onclick="openPreview()">Xem trước</button>
+    <button class="btn green" onclick="submitPlan()">Gửi kế hoạch</button>
+  </div>
+</main>
+</div>
+</div>
+
+<div class="modal" id="previewModal">
+  <div class="modalbox">
+    <div class="modalhead"><b>Xem trước Kế hoạch Tổ chuyên môn</b><button class="btn sm" onclick="closePreview()">✕ Đóng</button><button class="btn sm primary" style="margin-left:8px" onclick="window.print()">In / Lưu PDF</button></div>
+    <div class="preview" id="previewDoc"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const GROUPS=[
+"Chuyên môn của tổ","Kiểm tra – đánh giá","Học liệu số","Ngân hàng câu hỏi/đề","Chuyên đề – STEM/AI",
+"Bồi dưỡng học sinh","Hồ sơ kiểm định/chất lượng","Hoạt động trải nghiệm/CLB","Phối hợp GVCN – tư vấn học sinh",
+"Thiết bị – phòng bộ môn","CNTT – dữ liệu – CSDL ngành","Truyền thông","Nghiên cứu – sáng kiến","Nhiệm vụ khác"
+];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let taskSeq=0, focusSeq=0;
+
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400)}
+function init(){
+  $("#month").innerHTML=Array.from({length:12},(_,i)=>`<option value="${i+1}">${String(i+1).padStart(2,"0")}</option>`).join("");
+  $("#month").value="9";
+  addFocus();addFocus();addFocus();
+  for(let i=0;i<5;i++) addTask();
+  loadLocal();
+  bindWatch();
+  updateAll();
+}
+function bindWatch(){document.addEventListener("input",e=>{if(e.target.matches("input,textarea,select"))updateAll()});document.addEventListener("change",e=>{if(e.target.matches("input,textarea,select"))updateAll()})}
+function addFocus(value=""){
+  const id=++focusSeq, div=document.createElement("div");div.className="focus-row";div.dataset.id=id;
+  div.innerHTML=`<div class="focus-num"></div><textarea class="focus-input" placeholder="Nhập nhiệm vụ trọng tâm của tổ trong tháng...">${esc(value)}</textarea><button class="remove" title="Xóa" onclick="removeFocus(this)">×</button>`;
+  $("#focusList").appendChild(div);renumberFocus();updateAll()
+}
+function removeFocus(btn){if($$(".focus-row").length<=1){toast("Kế hoạch cần ít nhất 01 dòng nhiệm vụ trọng tâm.");return}btn.closest(".focus-row").remove();renumberFocus();updateAll()}
+function renumberFocus(){$$(".focus-row").forEach((r,i)=>r.querySelector(".focus-num").textContent=i+1);$("#focusCount").textContent=$$(".focus-row").length+" nội dung"}
+function groupOptions(selected=""){return `<option value="">— Chọn nhóm —</option>`+GROUPS.map(g=>`<option ${g===selected?"selected":""}>${g}</option>`).join("")}
+function addTask(data={}){
+  const tr=document.createElement("tr");tr.dataset.id=++taskSeq;
+  tr.innerHTML=`<td class="tt"></td>
+  <td><input class="t-person" placeholder="GV/cá nhân/nhóm" value="${esc(data.person||"")}"></td>
+  <td><select class="t-group">${groupOptions(data.group||"")}</select></td>
+  <td><textarea class="t-task" placeholder="Nêu rõ việc phải làm, phạm vi và yêu cầu...">${esc(data.task||"")}</textarea></td>
+  <td><input class="t-deadline" type="date" value="${esc(data.deadline||"")}"></td>
+  <td><textarea class="t-product" placeholder="Sản phẩm hoặc kết quả cần đạt">${esc(data.product||"")}</textarea></td>
+  <td><textarea class="t-proof" placeholder="Link, dữ liệu, văn bản, xác nhận...">${esc(data.proof||"")}</textarea></td>
+  <td><div class="row-actions"><button class="mini" title="Nhân bản" onclick="cloneRow(this)">⧉</button><button class="mini" title="Xóa" onclick="removeTask(this)">×</button></div></td>`;
+  $("#taskBody").appendChild(tr);renumberTasks();updateAll()
+}
+function getRowData(tr){return{person:tr.querySelector(".t-person").value,group:tr.querySelector(".t-group").value,task:tr.querySelector(".t-task").value,deadline:tr.querySelector(".t-deadline").value,product:tr.querySelector(".t-product").value,proof:tr.querySelector(".t-proof").value}}
+function cloneRow(btn){addTask(getRowData(btn.closest("tr")))}
+function duplicateLast(){const rows=$$("#taskBody tr");rows.length?addTask(getRowData(rows.at(-1))):addTask()}
+function removeTask(btn){const rows=$$("#taskBody tr");if(rows.length<=1){toast("Cần giữ ít nhất 01 dòng phân công.");return}btn.closest("tr").remove();renumberTasks();updateAll()}
+function renumberTasks(){$$("#taskBody tr").forEach((r,i)=>r.querySelector(".tt").textContent=i+1)}
+function fmtDate(v){if(!v)return"";const [y,m,d]=v.split("-");return`${d}/${m}/${y}`}
+function collect(){
+ return{
+  team:$("#team").value,month:$("#month").value,year:$("#year").value,schoolYear:$("#schoolYear").value,
+  leader:$("#leader").value,basis:$("#basis").value,implementation:$("#implementation").value,
+  focus:$$(".focus-input").map(x=>x.value),tasks:$$("#taskBody tr").map(getRowData),
+  status:$("#statusPill").textContent
+ }
+}
+function setData(d){
+ $("#team").value=d.team||"";$("#month").value=d.month||"9";$("#year").value=d.year||"2026";$("#leader").value=d.leader||"";
+ $("#basis").value=d.basis||"";$("#implementation").value=d.implementation||$("#implementation").value;
+ $("#focusList").innerHTML="";focusSeq=0;(d.focus?.length?d.focus:[""]).forEach(addFocus);
+ $("#taskBody").innerHTML="";taskSeq=0;(d.tasks?.length?d.tasks:[{}]).forEach(addTask);
+ $("#statusPill").textContent=d.status||"Bản nháp";updateAll()
+}
+function validation(){
+ const d=collect(), tasks=d.tasks.filter(t=>Object.values(t).some(Boolean));
+ const complete=tasks.filter(t=>t.person&&t.group&&t.task&&t.deadline&&t.product&&t.proof).length;
+ const people=new Set(tasks.map(t=>t.person.trim()).filter(Boolean)).size;
+ const focusOk=d.focus.some(x=>x.trim());
+ const checks=[
+  ["Đã chọn tổ chuyên môn",!!d.team],
+  ["Đã xác định tháng kế hoạch",!!d.month&&!!d.year],
+  ["Có ít nhất 01 nhiệm vụ trọng tâm",focusOk],
+  ["Có ít nhất 01 nhiệm vụ phân công",tasks.length>0],
+  ["Các dòng nhiệm vụ đã đủ 6 trường",tasks.length>0&&complete===tasks.length]
+ ];
+ const score=Math.round(checks.filter(x=>x[1]).length/checks.length*100);
+ return{d,tasks,complete,people,checks,score,valid:score===100}
+}
+function updateAll(){
+ const v=validation();
+ $("#sTasks").textContent=v.tasks.length;$("#sPeople").textContent=v.people;$("#sComplete").textContent=v.complete;$("#sRate").textContent=v.score+"%";
+ $("#progressText").textContent=v.score+"%";$("#progressBar").style.width=v.score+"%";
+ $("#checks").innerHTML=v.checks.map(c=>`<div class="check ${c[1]?"ok":""}"><span class="dot">${c[1]?"✓":"·"}</span><span>${c[0]}</span></div>`).join("");
+ renumberFocus();renumberTasks()
+}
+function saveDraft(){
+ const d=collect();d.status="Bản nháp";localStorage.setItem("HVA_KH_TO_CM_VIP",JSON.stringify(d));
+ $("#statusPill").textContent="Bản nháp";$("#savedAt").textContent="Đã lưu "+new Date().toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"});
+ $("#heroStatus").textContent="● Đã lưu bản nháp";toast("Đã lưu bản nháp trên thiết bị.")
+}
+function loadLocal(){try{const s=localStorage.getItem("HVA_KH_TO_CM_VIP");if(s){setData(JSON.parse(s));$("#savedAt").textContent="Đã phục hồi bản nháp";}}catch(e){}}
+function newPlan(){if(!confirm("Tạo kế hoạch mới? Dữ liệu đang nhập chưa lưu có thể bị mất."))return;localStorage.removeItem("HVA_KH_TO_CM_VIP");location.reload()}
+function loadSample(){
+ const y=$("#year").value||"2026",m=String($("#month").value||"9").padStart(2,"0");
+ setData({
+  team:$("#team").value||"Toán – Tin",month:$("#month").value||"9",year:y,leader:$("#leader").value,
+  basis:`Căn cứ Kế hoạch giáo dục năm học 2026–2027; kế hoạch công tác tháng ${m}/${y} của Trường THPT Hòa Vang; chức năng, nhiệm vụ của tổ và các nhiệm vụ được giao.`,
+  focus:[
+   "Rà soát và tổ chức thực hiện kế hoạch giáo dục của tổ bảo đảm đúng tiến độ, yêu cầu chuyên môn.",
+   "Hoàn thiện học liệu, ngân hàng câu hỏi/đề và các sản phẩm chuyên môn theo kế hoạch tháng.",
+   "Thực hiện các nhiệm vụ dữ liệu, chuyển đổi số và nhiệm vụ được nhà trường phân công; bảo đảm có sản phẩm, minh chứng."
+  ],
+  tasks:[
+   {person:"Tổ trưởng",group:"Chuyên môn của tổ",task:"Rà soát tiến độ thực hiện kế hoạch giáo dục; tổng hợp nội dung cần điều chỉnh và triển khai trong tổ.",deadline:`${y}-${m}-18`,product:"Bảng rà soát/ghi nhận nội dung cần điều chỉnh và kết quả triển khai.",proof:"Kế hoạch, dữ liệu hoặc xác nhận trên hệ thống HVA."},
+   {person:"Giáo viên được phân công",group:"Học liệu số",task:"Xây dựng hoặc hoàn thiện học liệu số phục vụ dạy học theo nội dung được tổ phân công.",deadline:`${y}-${m}-25`,product:"Học liệu số hoàn chỉnh, sử dụng được trong dạy học.",proof:"Đường dẫn học liệu/sản phẩm trên kho số."},
+   {person:"Nhóm chuyên môn",group:"Ngân hàng câu hỏi/đề",task:"Bổ sung câu hỏi, ma trận/đặc tả hoặc đề kiểm tra theo nhiệm vụ của nhóm chuyên môn.",deadline:`${y}-${m}-26`,product:"Bộ câu hỏi/đề hoặc dữ liệu ngân hàng đã được rà soát.",proof:"Tệp/đường dẫn sản phẩm và xác nhận của tổ trưởng."},
+   {person:"Giáo viên được phân công",group:"CNTT – dữ liệu – CSDL ngành",task:"Cập nhật dữ liệu chuyên môn thuộc phạm vi được giao; kiểm tra tính đầy đủ và chính xác trước khi báo cáo.",deadline:`${y}-${m}-28`,product:"Dữ liệu được cập nhật đầy đủ, đúng cấu trúc và thời hạn.",proof:"Dữ liệu hệ thống/ảnh xác nhận/trạng thái hoàn thành."}
+  ]
+ });toast("Đã nạp kế hoạch mẫu. Thầy/cô chỉnh lại theo nhiệm vụ thực tế của tổ.")
+}
+function buildPreview(){
+ const v=validation(),d=v.d, focus=d.focus.filter(x=>x.trim()),tasks=v.tasks;
+ const basis=d.basis.trim()||`Căn cứ chức năng, nhiệm vụ của tổ; căn cứ Kế hoạch giáo dục năm học ${esc(d.schoolYear)}, kế hoạch công tác tháng ${esc(d.month)}/${esc(d.year)} của Trường THPT Hòa Vang và các nhiệm vụ được giao, Tổ ${esc(d.team||"…")} xây dựng Kế hoạch và phân công nhiệm vụ tháng như sau:`;
+ return `<div class="doc-head"><div><b>TRƯỜNG THPT HÒA VANG</b><b>TỔ: ${esc((d.team||"……………………").toUpperCase())}</b><div>────────</div></div><div><b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b><b>Độc lập - Tự do - Hạnh phúc</b><div>──────────────</div></div></div>
+ <div class="doc-title"><h2>KẾ HOẠCH VÀ PHÂN CÔNG NHIỆM VỤ THÁNG ${esc(d.month||"…")}/${esc(d.year||"…")}</h2><b>Năm học ${esc(d.schoolYear)}</b></div>
+ <p>${esc(basis)}</p>
+ <p><b>I. NHIỆM VỤ TRỌNG TÂM</b></p>${focus.length?focus.map((x,i)=>`<p>${i+1}. ${esc(x)}</p>`).join(""):"<p>Chưa nhập.</p>"}
+ <p><b>II. KẾ HOẠCH VÀ PHÂN CÔNG THỰC HIỆN</b></p>
+ <table><thead><tr><th>TT</th><th>Người thực hiện</th><th>Nhóm nhiệm vụ</th><th>Nhiệm vụ cụ thể</th><th>Thời hạn</th><th>Sản phẩm/Kết quả</th><th>Minh chứng</th></tr></thead><tbody>
+ ${tasks.map((t,i)=>`<tr><td style="text-align:center">${i+1}</td><td>${esc(t.person)}</td><td>${esc(t.group)}</td><td>${esc(t.task)}</td><td style="text-align:center">${esc(fmtDate(t.deadline))}</td><td>${esc(t.product)}</td><td>${esc(t.proof)}</td></tr>`).join("")||'<tr><td colspan="7">Chưa có nhiệm vụ.</td></tr>'}
+ </tbody></table>
+ <p><b>III. TỔ CHỨC THỰC HIỆN</b></p>${esc(d.implementation).split("\n").map(x=>`<p>${x}</p>`).join("")}
+ <div class="sign"><div><b>DUYỆT CỦA BAN GIÁM HIỆU</b><br><br><br><br><br></div><div><b>TỔ TRƯỞNG</b><br><span style="font-weight:400">(Ký, ghi rõ họ tên)</span><br><br><br><br>${esc(d.leader)}</div></div>`;
+}
+function openPreview(){$("#previewDoc").innerHTML=buildPreview();$("#previewModal").classList.add("show")}
+function closePreview(){$("#previewModal").classList.remove("show")}
+function submitPlan(){
+ const v=validation();if(!v.valid){toast("Chưa thể gửi: vui lòng hoàn thiện các mục còn thiếu.");window.scrollTo({top:0,behavior:"smooth"});return}
+ if(!confirm("Xác nhận gửi kế hoạch? Bản mô phỏng này sẽ khóa trạng thái ở mức “Đã gửi” trên thiết bị."))return;
+ const d=collect();d.status="Đã gửi";localStorage.setItem("HVA_KH_TO_CM_VIP",JSON.stringify(d));$("#statusPill").textContent="Đã gửi";$("#statusPill").className="pill green";$("#heroStatus").textContent="✓ Kế hoạch đã gửi";toast("Đã ghi nhận trạng thái Đã gửi (mô phỏng frontend).")
+}
+function exportJSON(){
+ const blob=new Blob([JSON.stringify(collect(),null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`HVA_KH_ToCM_${$("#month").value}_${$("#year").value}.json`;a.click();URL.revokeObjectURL(a.href)
+}
+function importJSON(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{setData(JSON.parse(r.result));toast("Đã phục hồi dữ liệu.");}catch(err){toast("Tệp dữ liệu không hợp lệ.")}};r.readAsText(f);e.target.value=""}
+function toggleHelp(){const c=$("#helpCard");c.style.display=c.style.display==="none"?"block":"none"}
+$("#previewModal").addEventListener("click",e=>{if(e.target.id==="previewModal")closePreview()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closePreview();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="s"){e.preventDefault();saveDraft()}})
+init();
+</script>
+</body>
+</html>
