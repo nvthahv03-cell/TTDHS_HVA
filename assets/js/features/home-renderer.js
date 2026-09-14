@@ -2031,15 +2031,14 @@ export function renderHome() {
 
 
             <!-- ========================================== -->
-            <!-- 01. ĐIỀU HÀNH CHUNG                       -->
+            <!-- 01. ĐIỀU HÀNH - PHÁT HÀNH                 -->
             <!-- ========================================== -->
             <div class="rounded-xl border border-teal-100
                         dark:border-slate-700 overflow-hidden">
 
                 <button type="button"
                         onclick="event.stopPropagation();
-                                 document.getElementById('dh-chung-items').classList.toggle('hidden');
-                                 document.getElementById('dh-chung-arrow').classList.toggle('rotate-90');"
+                                 window.toggleHVADieuHanhSection('dh-chung-items','dh-chung-arrow');"
                         class="w-full flex items-center justify-between
                                px-3 py-2.5
                                bg-teal-50/70 dark:bg-slate-800
@@ -2059,11 +2058,11 @@ export function renderHome() {
                             <div class="text-[11px] font-extrabold
                                         text-[#123B67]
                                         dark:text-slate-100">
-                                ĐIỀU HÀNH CHUNG
+                                ĐIỀU HÀNH - PHÁT HÀNH
                             </div>
 
                             <div class="text-[8.5px] text-slate-400 mt-0.5">
-                                Nhiệm vụ • Lịch • Họp • Phát hành
+                                Nhiệm vụ • Lịch • Họp • Thông báo • Phát hành
                             </div>
                         </div>
 
@@ -2167,7 +2166,7 @@ export function renderHome() {
 
 </a>
 <button type="button"
-                            onclick="event.preventDefault(); event.stopPropagation(); window.location.href='BanHanhPhatHanh.html';"
+                            onclick="event.preventDefault(); event.stopPropagation(); window.location.href='TTPhatHanh_v1_beta.html';"
                             class="w-full flex items-center gap-2.5
                                    px-3 py-2 rounded-lg
                                    hover:bg-cyan-50
@@ -2178,7 +2177,7 @@ export function renderHome() {
 
                         <span class="text-[11px] font-semibold
                                      text-slate-700 dark:text-slate-200">
-                            Ban hành - Phát hành
+                            Trung tâm phát hành
                         </span>
 
                     </button>
@@ -2213,8 +2212,7 @@ export function renderHome() {
 
                 <button type="button"
                         onclick="event.stopPropagation();
-                                 document.getElementById('dh-chuyenmon-items').classList.toggle('hidden');
-                                 document.getElementById('dh-chuyenmon-arrow').classList.toggle('rotate-90');"
+                                 window.toggleHVADieuHanhSection('dh-chuyenmon-items','dh-chuyenmon-arrow');"
                         class="w-full flex items-center justify-between
                                px-3 py-2.5
                                hover:bg-blue-50
@@ -2296,11 +2294,6 @@ export function renderHome() {
                     </button>
 
                     <button type="button" class="dh-menu-item">
-                        <i class="bi bi-person-vcard-fill"></i>
-                        <span>Công tác học sinh - Chủ nhiệm</span>
-                    </button>
-
-                    <button type="button" class="dh-menu-item">
                         <i class="bi bi-trophy-fill"></i>
                         <span>Các cuộc thi</span>
                     </button>
@@ -2311,15 +2304,14 @@ export function renderHome() {
 
 
             <!-- ========================================== -->
-            <!-- 03. TỔ CHỨC - PHONG TRÀO                  -->
+            <!-- 03. HỌC SINH - PHONG TRÀO                 -->
             <!-- ========================================== -->
             <div class="rounded-xl border border-rose-100
                         dark:border-slate-700 overflow-hidden">
 
                 <button type="button"
                         onclick="event.stopPropagation();
-                                 document.getElementById('dh-phongtrao-items').classList.toggle('hidden');
-                                 document.getElementById('dh-phongtrao-arrow').classList.toggle('rotate-90');"
+                                 window.toggleHVADieuHanhSection('dh-phongtrao-items','dh-phongtrao-arrow');"
                         class="w-full flex items-center justify-between
                                px-3 py-2.5
                                hover:bg-rose-50
@@ -2336,11 +2328,11 @@ export function renderHome() {
                         <div>
                             <div class="text-[11px] font-extrabold
                                         text-[#123B67] dark:text-slate-100">
-                                TỔ CHỨC - PHONG TRÀO
+                                HỌC SINH - PHONG TRÀO
                             </div>
 
                             <div class="text-[8.5px] text-slate-400 mt-0.5">
-                                Đoàn • Thi đua • Sự kiện
+                                Chủ nhiệm • Đoàn • Sự kiện
                             </div>
                         </div>
 
@@ -2357,13 +2349,13 @@ export function renderHome() {
                      class="hidden p-1.5 bg-white dark:bg-slate-900">
 
                     <button type="button" class="dh-menu-item">
-                        <i class="bi bi-people"></i>
-                        <span>Đoàn Thanh niên</span>
+                        <i class="bi bi-person-vcard-fill"></i>
+                        <span>Công tác học sinh - Chủ nhiệm</span>
                     </button>
 
                     <button type="button" class="dh-menu-item">
-                        <i class="bi bi-trophy"></i>
-                        <span>Thi đua - Khen thưởng</span>
+                        <i class="bi bi-people"></i>
+                        <span>Đoàn Thanh niên</span>
                     </button>
 
                     <button type="button" class="dh-menu-item">
@@ -2384,8 +2376,7 @@ export function renderHome() {
 
                 <button type="button"
                         onclick="event.stopPropagation();
-                                 document.getElementById('dh-chatluong-items').classList.toggle('hidden');
-                                 document.getElementById('dh-chatluong-arrow').classList.toggle('rotate-90');"
+                                 window.toggleHVADieuHanhSection('dh-chatluong-items','dh-chatluong-arrow');"
                         class="w-full flex items-center justify-between
                                px-3 py-2.5
                                hover:bg-amber-50
@@ -2450,8 +2441,7 @@ export function renderHome() {
 
                 <button type="button"
                         onclick="event.stopPropagation();
-                                 document.getElementById('dh-congdong-items').classList.toggle('hidden');
-                                 document.getElementById('dh-congdong-arrow').classList.toggle('rotate-90');"
+                                 window.toggleHVADieuHanhSection('dh-congdong-items','dh-congdong-arrow');"
                         class="w-full flex items-center justify-between
                                px-3 py-2.5
                                hover:bg-violet-50
@@ -2511,8 +2501,7 @@ export function renderHome() {
 
                 <button type="button"
                         onclick="event.stopPropagation();
-                                 document.getElementById('dh-hotro-items').classList.toggle('hidden');
-                                 document.getElementById('dh-hotro-arrow').classList.toggle('rotate-90');"
+                                 window.toggleHVADieuHanhSection('dh-hotro-items','dh-hotro-arrow');"
                         class="w-full flex items-center justify-between
                                px-3 py-2.5
                                hover:bg-slate-50
@@ -5553,6 +5542,34 @@ setInterval(loadEscalatedHVAReminders, 5 * 60 * 1000);
 
 
 setTimeout(setupHVAReminderPermission, 150);
+
+// =====================================================
+// ĐIỀU HÀNH SỐ
+// Chỉ mở một nhóm chức năng tại một thời điểm.
+// =====================================================
+window.toggleHVADieuHanhSection = function(itemsId, arrowId) {
+    const target = document.getElementById(itemsId);
+    if (!target) return;
+    const willOpen = target.classList.contains('hidden');
+    [
+        ['dh-chung-items', 'dh-chung-arrow'],
+        ['dh-chuyenmon-items', 'dh-chuyenmon-arrow'],
+        ['dh-phongtrao-items', 'dh-phongtrao-arrow'],
+        ['dh-chatluong-items', 'dh-chatluong-arrow'],
+        ['dh-congdong-items', 'dh-congdong-arrow'],
+        ['dh-hotro-items', 'dh-hotro-arrow']
+    ].forEach(function(pair) {
+        const items = document.getElementById(pair[0]);
+        const arrow = document.getElementById(pair[1]);
+        if (items) items.classList.add('hidden');
+        if (arrow) arrow.classList.remove('rotate-90');
+    });
+    if (willOpen) {
+        target.classList.remove('hidden');
+        const arrow = document.getElementById(arrowId);
+        if (arrow) arrow.classList.add('rotate-90');
+    }
+};
 
 // =====================================================
 // NGHIỆP VỤ SỐ → HÀNH CHÍNH
