@@ -1034,8 +1034,9 @@ export function renderHome() {
 
     <span class="mx-1.5 text-blue-300">•</span>
 
-    <span class="font-extrabold text-[#0F4C81]">
-        Tuần 01
+    <span id="hva-school-week"
+          class="font-extrabold text-[#0F4C81]">
+        Tuần --
     </span>
 
     <span class="mx-1.5 text-blue-300">•</span>
@@ -4739,6 +4740,17 @@ function updateHVASchoolDate() {
 
     el.textContent =
         `${thu[now.getDay()]}, ${day}/${month}/${year}`;
+
+    const weekEl = document.getElementById('hva-school-week');
+    if (weekEl) {
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const firstWeekStart = new Date(2026, 8, 7);
+        const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
+        const weekNumber = Math.floor((today.getTime() - firstWeekStart.getTime()) / millisecondsPerWeek) + 1;
+        weekEl.textContent = weekNumber > 0
+            ? `Tuần ${String(weekNumber).padStart(2, '0')}`
+            : 'Chưa bắt đầu năm học';
+    }
 }
 
 setTimeout(updateHVASchoolDate, 100);
