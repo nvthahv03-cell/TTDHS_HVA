@@ -1914,6 +1914,48 @@ export function renderHome() {
     <!-- ====================================================== -->
 <!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ                               -->
 <!-- ====================================================== -->
+<style>
+    #dieuhanhso-dropdown .dh-menu-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 0.55rem 0.7rem;
+        border: 1px solid transparent;
+        border-radius: 0.65rem;
+        background: transparent;
+        color: #334155;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.25rem;
+        text-align: left;
+        transition: background-color .16s ease, border-color .16s ease, color .16s ease;
+    }
+    #dieuhanhso-dropdown .dh-menu-item i {
+        width: 1.25rem;
+        flex: 0 0 1.25rem;
+        color: #2563EB;
+        font-size: 13px;
+        text-align: center;
+    }
+    #dieuhanhso-dropdown .dh-menu-item span {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+    #dieuhanhso-dropdown .dh-menu-item:hover {
+        background: #EFF6FF;
+        border-color: #DBEAFE;
+        color: #1D4ED8;
+    }
+    .dark #dieuhanhso-dropdown .dh-menu-item {
+        color: #CBD5E1;
+    }
+    .dark #dieuhanhso-dropdown .dh-menu-item:hover {
+        background: #1E293B;
+        border-color: #334155;
+        color: #BFDBFE;
+    }
+</style>
 <div class="relative">
 
     <!-- CARD ĐIỀU HÀNH SỐ -->
@@ -2275,7 +2317,7 @@ export function renderHome() {
 
                     <button type="button" class="dh-menu-item">
                         <i class="bi bi-award-fill"></i>
-                        <span>Bồi dưỡng HSG</span>
+                        <span>Bồi dưỡng học sinh giỏi</span>
                     </button>
 
                     <button type="button" class="dh-menu-item">
