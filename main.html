@@ -216,17 +216,18 @@
 
     <button id="btn-quick-search"
             type="button"
-            aria-label="Tra cứu nhanh"
-            title="Tra cứu nhanh"
-            class="relative w-10 h-10 rounded-xl bg-white border border-slate-200 shadow-sm
-                   flex items-center justify-center hover:bg-blue-50 active:scale-95 transition">
+            aria-label="Tìm nhanh"
+            title="Tra cứu nhanh bằng chữ hoặc giọng nói"
+            class="relative h-10 w-10 sm:w-auto sm:px-3 rounded-xl bg-white border border-slate-200 shadow-sm
+                   flex items-center justify-center gap-2 hover:bg-blue-50 active:scale-95 transition">
         <i class="bi bi-search text-[#0F4C81] text-[19px]"></i>
+        <span class="hidden sm:inline text-[11px] font-extrabold text-[#0F4C81] whitespace-nowrap">Tìm nhanh</span>
     </button>
 
     <button id="btn-notification"
             type="button"
             aria-label="Thông báo"
-            class="relative
+            class="hidden relative
                    w-10 h-10
                    rounded-xl
                    bg-white
@@ -499,7 +500,7 @@
                                     font-extrabold
                                     text-[#0F4C81]
                                     tracking-wide">
-                            TRA CỨU HỆ THỐNG
+                            TRA CỨU NHANH HVA
                         </div>
 
                         <div class="text-[10px]
@@ -603,6 +604,23 @@
 
 
             <div class="space-y-1">
+
+                <!-- NHÂN SỰ - GVCN -->
+                <button type="button"
+                        data-search-type="NHANSU"
+                        class="search-type-item w-full flex items-center justify-between
+                               px-3 py-2.5 rounded-xl hover:bg-violet-50 transition text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center">
+                            <i class="bi bi-people-fill text-lg"></i>
+                        </div>
+                        <div>
+                            <div class="text-[13px] font-bold text-[#123B67]">Nhân sự – GVCN</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">Họ tên • Điện thoại • Tổ • Lớp chủ nhiệm</div>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right text-xs text-slate-400"></i>
+                </button>
 
 
                 <!-- VĂN BẢN -->
@@ -3843,10 +3861,12 @@ setTimeout(() => {
                     ('VB_' + index),
 
                 title:
+                    doc.displayTitle ||
                     doc.trichYeu ||
                     doc.TrichYeu ||
                     doc.tenVanBan ||
                     doc.TenVanBan ||
+                    doc.fileName ||
                     'Văn bản',
 
                 meta:
@@ -3868,6 +3888,34 @@ setTimeout(() => {
                 url: fileUrl
             };
         });
+    }
+
+
+    /* =====================================================
+       API: NHÂN SỰ - GVCN
+    ===================================================== */
+
+    async function searchPersonnel(keyword) {
+        const url = SEARCH_API +
+            '?action=searchNhanSuQuick' +
+            '&q=' + encodeURIComponent(keyword) +
+            '&_=' + Date.now();
+
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+
+        return unwrapArray(data).map((person, index) => ({
+            kind: 'NHANSU',
+            id: person.username || ('NS_' + index),
+            title: person.hoTen || person.fullName || 'Nhân sự',
+            meta: person.lopChuNhiem
+                ? 'GVCN lớp ' + person.lopChuNhiem
+                : (person.vaiTro || person.chucVu || person.viTriViecLam || 'CBQL/GV/NV'),
+            extra: [person.to, person.dienThoai].filter(Boolean).join(' • '),
+            phone: String(person.dienThoai || '').trim(),
+            raw: person
+        }));
     }
 
 
@@ -4019,6 +4067,13 @@ setTimeout(() => {
 
         switch (kind) {
 
+            case 'NHANSU':
+                return {
+                    icon: 'bi-person-vcard-fill',
+                    iconBox: 'bg-violet-50 text-violet-600',
+                    label: 'Nhân sự'
+                };
+
             case 'VANBAN':
                 return {
                     icon: 'bi-file-earmark-text-fill',
@@ -4150,7 +4205,8 @@ setTimeout(() => {
                                             text-[#123B67]
                                             mt-0.5
                                             leading-snug
-                                            line-clamp-2">
+                                            line-clamp-3"
+                                     title="${escapeHTML(item.title)}">
 
                                     ${escapeHTML(item.title)}
 
@@ -4222,6 +4278,36 @@ setTimeout(() => {
     async function openSearchResult(item) {
 
         if (!item) return;
+
+
+        /* ---------- NHÂN SỰ / GVCN ---------- */
+
+        if (item.kind === 'NHANSU') {
+            if (item.phone) {
+                if (window.matchMedia('(max-width: 767px)').matches) {
+                    window.location.href = 'tel:' + item.phone.replace(/\s+/g, '');
+                } else {
+                    try {
+                        await navigator.clipboard.writeText(item.phone);
+                        window.hvaNotify?.(
+                            'Đã sao chép số điện thoại ' + item.phone + ' của ' + item.title + '.',
+                            { kind:'success', title:'ĐÃ SAO CHÉP SỐ ĐIỆN THOẠI' }
+                        );
+                    } catch (error) {
+                        window.hvaNotify?.(
+                            item.title + '\nSố điện thoại: ' + item.phone,
+                            { kind:'info', title:'THÔNG TIN NHÂN SỰ' }
+                        );
+                    }
+                }
+            } else {
+                window.hvaNotify?.(
+                    item.title + '\n' + item.meta + (item.extra ? '\n' + item.extra : ''),
+                    { kind:'info', title:'THÔNG TIN NHÂN SỰ' }
+                );
+            }
+            return;
+        }
 
 
         /* ---------- VĂN BẢN ---------- */
@@ -4322,6 +4408,14 @@ setTimeout(() => {
         try {
 
             let results = [];
+
+            if (
+                ACTIVE_SEARCH_TYPE === 'ALL' ||
+                ACTIVE_SEARCH_TYPE === 'NHANSU'
+            ) {
+                const personnel = await searchPersonnel(keyword);
+                results.push(...personnel);
+            }
 
 
             if (
