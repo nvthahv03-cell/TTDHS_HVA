@@ -3138,6 +3138,9 @@ export function renderHome() {
 
 `;
 
+    container.dataset.hvaHomeVersion = '20260914-v2';
+    console.info('[HVA Home] Đã nạp giao diện responsive 20260914-v2');
+
       // =====================================================
     // VIỆC CỦA TÔI | KẾT NỐI SỐ
     // =====================================================
@@ -4686,12 +4689,26 @@ window.loadMeetingAttendanceApprovals = async function(){
     const box=document.getElementById('hvaMeetingApprovalList'), username=getApprovalUsername_();
     if(!box||!username)return;
     try{
-        const r=await fetch(`${MY_TASK_API_URL}?action=getPendingMeetingAttendanceApprovals&username=${encodeURIComponent(username)}`);
-        const d=await r.json();
+        const r=await fetch(`${MY_TASK_API_URL}?action=getPendingMeetingAttendanceApprovals&username=${encodeURIComponent(username)}&_=${Date.now()}`,{cache:'no-store'});
+        const raw=await r.text();
+        const type=String(r.headers.get('content-type')||'').toLowerCase();
+        if(!r.ok)throw new Error(`HTTP ${r.status}`);
+        if(type.includes('text/html')||/^\s*</.test(raw)){
+            console.warn('[HVA] Backend chưa trả JSON cho getPendingMeetingAttendanceApprovals.');
+            HVA_MEETING_APPROVALS=[];
+            renderMeetingAttendanceApprovals_();
+            box.innerHTML='<div class="py-2 text-slate-400">Chưa có dữ liệu xác nhận từ hệ thống.</div>';
+            return;
+        }
+        let d;
+        try{d=JSON.parse(raw);}catch(_){throw new Error('Dữ liệu phản hồi chưa đúng định dạng');}
         HVA_MEETING_APPROVALS=d&&d.success?d.approvals||[]:[];
         renderMeetingAttendanceApprovals_();
     }catch(e){
-        box.innerHTML=`<div class="text-red-600 font-semibold">Không tải được lượt xác nhận: ${escapeMyWorkHtml(e.message)}</div>`;
+        console.error('[HVA] Không tải được dữ liệu xác nhận:',e);
+        HVA_MEETING_APPROVALS=[];
+        renderMeetingAttendanceApprovals_();
+        box.innerHTML='<div class="py-2 text-slate-400">Tạm thời chưa tải được dữ liệu xác nhận. Thầy/Cô có thể bấm tải lại.</div>';
     }
 };
 
