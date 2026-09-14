@@ -201,17 +201,27 @@
 
             </div>
 
-            <div id="current-date"
+            <div id="header-slogan"
                  class="text-[10px]
                         text-slate-500
-                        font-medium">
+                        font-semibold truncate">
+                Kết nối dữ liệu • Điều hành hiệu quả
             </div>
 
         </div>
 
         <!-- ================= RIGHT ================= -->
         <!-- ================= RIGHT: THÔNG BÁO ================= -->
-<div class="flex items-center shrink-0 -translate-y-[2px]">
+<div class="flex items-center gap-2 shrink-0 -translate-y-[2px]">
+
+    <button id="btn-quick-search"
+            type="button"
+            aria-label="Tra cứu nhanh"
+            title="Tra cứu nhanh"
+            class="relative w-10 h-10 rounded-xl bg-white border border-slate-200 shadow-sm
+                   flex items-center justify-center hover:bg-blue-50 active:scale-95 transition">
+        <i class="bi bi-search text-[#0F4C81] text-[19px]"></i>
+    </button>
 
     <button id="btn-notification"
             type="button"
@@ -532,7 +542,7 @@
                        autocomplete="off"
                        placeholder="Nhập nội dung cần tra cứu..."
                        class="w-full h-11
-                              pl-10 pr-11
+                              pl-10 pr-[5.5rem]
                               rounded-xl
                               bg-white
                               border border-blue-200
@@ -545,6 +555,18 @@
                               focus:ring-2 focus:ring-blue-100
                               shadow-sm
                               transition">
+
+                <button type="button"
+                        id="global-search-mic"
+                        aria-label="Tra cứu bằng giọng nói"
+                        title="Tra cứu bằng giọng nói"
+                        class="absolute right-11 top-1/2
+                               -translate-y-1/2
+                               w-8 h-8 rounded-lg
+                               bg-cyan-50 hover:bg-cyan-100
+                               text-cyan-700 flex items-center justify-center transition">
+                    <i class="bi bi-mic-fill text-sm"></i>
+                </button>
 
                 <button type="button"
                         id="global-search-submit"
@@ -1522,24 +1544,7 @@
                 document.querySelectorAll('.dashboard-dropdown').forEach(m => m.classList.add('hidden'));
             }
         });
-        function updateCurrentDate() {
-    const d = new Date();
-
-    const thu = [
-        "Chủ nhật",
-        "Thứ Hai",
-        "Thứ Ba",
-        "Thứ Tư",
-        "Thứ Năm",
-        "Thứ Sáu",
-        "Thứ Bảy"
-    ];
-
-    document.getElementById("current-date").textContent =
-        `${thu[d.getDay()]}, ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-}
-
-updateCurrentDate();
+        // Ngày/tuần đã hiển thị tại Home; vùng cạnh logo dùng slogan cố định.
     </script>
     <script>
     
@@ -3487,6 +3492,8 @@ setTimeout(() => {
     const panelBox = document.getElementById('search-panel-box');
     const input = document.getElementById('global-search-input');
     const submitBtn = document.getElementById('global-search-submit');
+    const micBtn = document.getElementById('global-search-mic');
+    const headerSearchBtn = document.getElementById('btn-quick-search');
 
     const typeButtons = Array.from(
         document.querySelectorAll('[data-search-type]')
@@ -4468,6 +4475,12 @@ setTimeout(() => {
             openSearchPanel();
         });
 
+    headerSearchBtn?.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        openSearchPanel();
+    });
+
 
     document.getElementById('close-search-panel')
         ?.addEventListener('click', function (event) {
@@ -4495,6 +4508,49 @@ setTimeout(() => {
     submitBtn?.addEventListener('click', function () {
 
         performSearch();
+    });
+
+    micBtn?.addEventListener('click', function () {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            window.hvaNotify?.(
+                'Thiết bị hoặc trình duyệt này chưa hỗ trợ tra cứu bằng giọng nói.\nThầy/Cô vẫn có thể nhập nội dung vào ô tìm kiếm.',
+                { kind: 'info', title: 'TRA CỨU NHANH' }
+            );
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'vi-VN';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        micBtn.classList.add('bg-rose-100', 'text-rose-600', 'animate-pulse');
+        micBtn.setAttribute('aria-label', 'Đang nghe');
+
+        recognition.onresult = function (event) {
+            const spokenText = String(event.results?.[0]?.[0]?.transcript || '').trim();
+            if (!spokenText || !input) return;
+            input.value = spokenText;
+            performSearch();
+        };
+
+        recognition.onerror = function (event) {
+            if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                window.hvaNotify?.(
+                    'Thầy/Cô vui lòng cho phép trình duyệt sử dụng micro để tra cứu bằng giọng nói.',
+                    { kind: 'info', title: 'CHƯA CẤP QUYỀN MICRO' }
+                );
+            }
+        };
+
+        recognition.onend = function () {
+            micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'animate-pulse');
+            micBtn.setAttribute('aria-label', 'Tra cứu bằng giọng nói');
+        };
+
+        try { recognition.start(); }
+        catch (error) { recognition.onend(); }
     });
 
 
@@ -4601,6 +4657,73 @@ setTimeout(() => {
         }
     });
 
+})();
+</script>
+
+<script>
+/* HVA V7 - popup thống nhất thay alert mặc định của trình duyệt. */
+(function initHVAGlobalNotice(){
+    const nativeAlert = window.alert.bind(window);
+
+    function escapeNotice(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, char => ({
+            '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+        }[char]));
+    }
+
+    function inferNotice(message, options) {
+        const text = String(message || '');
+        if (options && options.title) return options;
+        if (/thành công|đã ghi nhận|đã gửi|đã hoàn thành|đã xác nhận/i.test(text)) {
+            return { ...(options || {}), kind:'success', title:'THAO TÁC THÀNH CÔNG' };
+        }
+        if (/lỗi|không thể|không tìm thấy|chưa được cấp quyền|vui lòng/i.test(text)) {
+            return { ...(options || {}), kind:'error', title:'THÔNG BÁO CẦN LƯU Ý' };
+        }
+        return { ...(options || {}), kind:'info', title:'THÔNG BÁO HỆ THỐNG' };
+    }
+
+    window.hvaNotify = function(message, options = {}) {
+        try {
+            const config = inferNotice(message, options);
+            const isSuccess = config.kind === 'success';
+            const isError = config.kind === 'error';
+            const icon = isSuccess ? 'bi-check-circle-fill' : isError ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill';
+            const tone = isSuccess ? 'text-emerald-600 bg-emerald-50' : isError ? 'text-rose-600 bg-rose-50' : 'text-blue-600 bg-blue-50';
+            let modal = document.getElementById('hva-global-notice');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'hva-global-notice';
+                modal.className = 'hidden fixed inset-0 z-[2000] bg-slate-950/55 backdrop-blur-sm p-4 items-center justify-center';
+                document.body.appendChild(modal);
+            }
+
+            modal.innerHTML = `
+                <div role="dialog" aria-modal="true" class="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl border border-blue-100">
+                    <div class="bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white flex items-center gap-3">
+                        <span class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center"><i class="bi bi-cpu-fill text-xl"></i></span>
+                        <div><div class="text-[13px] font-black">${escapeNotice(config.title)}</div><div class="text-[9px] text-blue-100">Trung tâm Điều hành số HVA</div></div>
+                    </div>
+                    <div class="px-5 py-5 text-center">
+                        <div class="mx-auto w-14 h-14 rounded-full ${tone} flex items-center justify-center"><i class="bi ${icon} text-3xl"></i></div>
+                        <div class="mt-4 text-[13px] leading-6 font-bold text-slate-700 whitespace-pre-line">${escapeNotice(message)}</div>
+                        <button type="button" class="mt-5 w-full rounded-xl bg-[#0F4C81] hover:bg-[#123B67] py-3 text-[11px] font-extrabold text-white transition">ĐÃ HIỂU</button>
+                    </div>
+                </div>`;
+
+            const close = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
+            modal.querySelector('button')?.addEventListener('click', close, { once:true });
+            modal.onclick = event => { if (event.target === modal) close(); };
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        } catch (error) {
+            nativeAlert(String(message || ''));
+        }
+    };
+
+    window.alert = function(message) {
+        window.hvaNotify(String(message == null ? '' : message));
+    };
 })();
 </script>
 
