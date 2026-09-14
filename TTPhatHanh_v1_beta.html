@@ -241,6 +241,7 @@
             { id: "TaiNguyenSo", name: "Tài nguyên số", icon: "bi-folder-symlink-fill", selected: false },
             { id: "KhoVanBan", name: "Kho văn bản", icon: "bi-archive-fill", selected: false },
             { id: "ThongBao", name: "Thông báo", icon: "bi-megaphone-fill", selected: false },
+            { id: "KhaoSatBinhChon", name: "Khảo sát – Bình chọn", icon: "bi-bar-chart-fill", selected: false },
             { id: "ViecCuaToi", name: "Việc của tôi", icon: "bi-clipboard-check-fill", selected: false },
             { id: "TienIchSo", name: "Tiện ích số", icon: "bi-cpu-fill", selected: false },
             { id: "Website", name: "Website Trường", icon: "bi-globe", selected: false },
@@ -962,8 +963,17 @@ const Controller = {
 
         const isMeeting = srcName.includes('cuochop') ||
                           String(TTDHS_State.document?.type || '').toUpperCase() === 'MEETING';
+        const documentType = String(TTDHS_State.document?.type || '').toUpperCase();
+        const isSurveyPoll = srcName.includes('khaosatbinhchon') ||
+                             srcName.includes('khaosat') ||
+                             srcName.includes('binhchon') ||
+                             documentType === 'POLL' ||
+                             documentType === 'SURVEY';
 
-        if (isMeeting) {
+        if (isSurveyPoll) {
+            // Khảo sát/Bình chọn chỉ đến đúng hộp tiếp nhận chuyên biệt trên Home.
+            selectDestination('KhaoSatBinhChon');
+        } else if (isMeeting) {
             const requested = new Set(sourceWorkflow.map(x => typeof x === 'string' ? x : (x && x.id)).filter(Boolean));
             requested.add('CONFIRM_READ');
             selectDestination('ThongBao');
