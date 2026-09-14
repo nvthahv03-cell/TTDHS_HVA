@@ -10,7 +10,7 @@ export function renderHome() {
     container.innerHTML = `
 
 <style>
-  /* HVA Responsive Home 14/09/2026 - chỉ đổi bố cục, không đổi nghiệp vụ. */
+  /* HVA Responsive Home V3 14/09/2026 - chỉ đổi bố cục, không đổi nghiệp vụ. */
   #hva-main-modules {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 78px minmax(0, 1fr);
@@ -1119,7 +1119,8 @@ export function renderHome() {
 
     <span class="mx-1.5 text-blue-300">•</span>
 
-    <span class="font-extrabold text-[#0F4C81]">
+    <span id="hva-school-week"
+          class="font-extrabold text-[#0F4C81]">
         Tuần 01
     </span>
 
@@ -1612,7 +1613,7 @@ export function renderHome() {
         id="hva-home-notification"
         class="hva-center-action"
         aria-label="Mở Thông báo"
-        onclick="event.preventDefault(); event.stopPropagation(); window.location.href='Thongbao.html';">
+        onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('btn-notification')?.click();">
     <span class="hva-center-action-icon bg-gradient-to-br from-amber-500 to-orange-600">
         <i class="bi bi-bell-fill"></i>
         <span id="hva-home-notification-badge" class="hva-center-action-badge hidden">0</span>
@@ -3138,8 +3139,8 @@ export function renderHome() {
 
 `;
 
-    container.dataset.hvaHomeVersion = '20260914-v2';
-    console.info('[HVA Home] Đã nạp giao diện responsive 20260914-v2');
+    container.dataset.hvaHomeVersion = '20260914-v3';
+    console.info('[HVA Home] Đã nạp giao diện responsive 20260914-v3');
 
       // =====================================================
     // VIỆC CỦA TÔI | KẾT NỐI SỐ
@@ -4665,7 +4666,7 @@ function ensureMeetingApprovalPanel_(){
       </div>
       <button type="button" onclick="loadMeetingAttendanceApprovals()" title="Tải lại dữ liệu" aria-label="Tải lại dữ liệu xác nhận" class="w-8 h-8 rounded-lg border border-blue-200 bg-white text-[#0F4C81] font-bold hover:bg-blue-50 active:scale-95 transition">↻</button>
     </div>
-    <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+    <div class="grid grid-cols-2 divide-x divide-slate-100">
       <section class="min-w-0">
         <button type="button" onclick="loadMeetingAttendanceApprovals()" class="w-full px-3 py-2 flex items-center justify-between text-left hover:bg-blue-50/60 transition">
           <span class="flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i class="bi bi-person-check-fill"></i></span><span><b class="block text-[11px] text-slate-900">Xác nhận tham dự</b><small class="text-[8.5px] text-slate-500">Họp • Hội nghị • Tập huấn • Hoạt động</small></span></span>
@@ -4902,8 +4903,9 @@ setTimeout(() => {
 // TRẠNG THÁI NĂM HỌC - NGÀY HIỆN TẠI
 // ======================================================
 function updateHVASchoolDate() {
-    const el = document.getElementById('hva-school-date');
-    if (!el) return;
+    const dateEl = document.getElementById('hva-school-date');
+    const weekEl = document.getElementById('hva-school-week');
+    if (!dateEl && !weekEl) return;
 
     const now = new Date();
 
@@ -4921,8 +4923,21 @@ function updateHVASchoolDate() {
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
 
-    el.textContent =
-        `${thu[now.getDay()]}, ${day}/${month}/${year}`;
+    if (dateEl) {
+        dateEl.textContent = `${thu[now.getDay()]}, ${day}/${month}/${year}`;
+    }
+
+    // Tuần 01 của năm học 2026–2027 bắt đầu từ thứ Hai 07/09/2026.
+    // Chuẩn hóa về giữa ngày để phép trừ không bị sai lệch do múi giờ/DST.
+    const currentDate = new Date(year, now.getMonth(), now.getDate(), 12, 0, 0, 0);
+    const firstWeekStart = new Date(2026, 8, 7, 12, 0, 0, 0);
+    const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
+    const calculatedWeek = Math.floor((currentDate - firstWeekStart) / millisecondsPerWeek) + 1;
+    const schoolWeek = Math.max(1, calculatedWeek);
+
+    if (weekEl) {
+        weekEl.textContent = `Tuần ${String(schoolWeek).padStart(2, '0')}`;
+    }
 }
 
 setTimeout(updateHVASchoolDate, 100);
