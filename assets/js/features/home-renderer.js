@@ -9,9 +9,93 @@ export function renderHome() {
 
     container.innerHTML = `
 
+<style>
+  /* HVA Responsive Home 14/09/2026 - chỉ đổi bố cục, không đổi nghiệp vụ. */
+  #hva-main-modules {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 78px minmax(0, 1fr);
+    gap: .65rem;
+    align-items: stretch;
+  }
+  #hva-main-modules > .relative > [data-dropdown-toggle],
+  #hva-main-modules > .hva-center-action {
+    min-height: 106px;
+    height: 100%;
+  }
+  .hva-center-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    padding: .6rem .3rem;
+    border-radius: 1rem;
+    background: rgba(255,255,255,.96);
+    border: 1px solid #dbeafe;
+    box-shadow: 0 4px 14px rgba(15,76,129,.10);
+    color: #123b67;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.05;
+    text-align: center;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .hva-center-action:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(15,76,129,.15); border-color: #93c5fd; }
+  .hva-center-action:active { transform: scale(.97); }
+  .hva-center-action-icon {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border-radius: .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 17px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.28);
+  }
+  .hva-center-action-badge {
+    position: absolute;
+    top: -7px;
+    right: -8px;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ef4444;
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 900;
+  }
+  .hva-center-action-badge.hidden { display: none; }
+  @media (max-width: 420px) {
+    #hva-main-modules { grid-template-columns: minmax(0, 1fr) 70px minmax(0, 1fr); gap: .45rem; }
+    #hva-main-modules > .relative > [data-dropdown-toggle], #hva-main-modules > .hva-center-action { min-height: 102px; }
+    #hva-main-modules > .relative > [data-dropdown-toggle] { padding: .7rem !important; }
+    #hva-main-modules > .relative > [data-dropdown-toggle] h3 { font-size: 10px !important; white-space: normal !important; line-height: 1.15 !important; }
+    #hva-main-modules > .relative > [data-dropdown-toggle] p { font-size: 8px !important; line-height: 1.2 !important; }
+    .hva-center-action { font-size: 9px; }
+  }
+  @media (min-width: 1024px) {
+    #hva-dashboard-top { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(430px, 1fr); gap: 1rem; align-items: start; }
+    #hva-dashboard-top > #hva-assistant-card { margin-bottom: 0; min-height: 100%; }
+    #hva-personal-center { margin-bottom: 0; padding-left: 0; padding-right: 0; }
+    #hva-quick-tools { max-width: none; gap: 3rem; }
+    #hva-main-modules { grid-template-columns: minmax(0, 1fr) 190px minmax(0, 1fr); gap: .9rem; }
+    #hva-main-modules > .relative > [data-dropdown-toggle], #hva-main-modules > .hva-center-action { min-height: 122px; }
+    .hva-center-action { flex-direction: row; gap: .8rem; padding: 1rem; font-size: 14px; }
+    .hva-center-action-icon { width: 46px; height: 46px; font-size: 20px; }
+  }
+</style>
+
+<section id="hva-dashboard-top">
 
 <!-- HVA Assistant -->
-<div class="relative mb-2 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-indigo-950 via-blue-900 to-slate-900 shadow-xl p-3.5 text-white">
+<div id="hva-assistant-card" class="relative mb-2 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-indigo-950 via-blue-900 to-slate-900 shadow-xl p-3.5 text-white">
 
     <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-cyan-400/20 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -133,7 +217,7 @@ export function renderHome() {
 <!-- TRUNG TÂM CÁ NHÂN: VIỆC CỦA TÔI | KẾT NỐI SỐ          -->
 <!-- ====================================================== -->
 
-<div class="grid grid-cols-2 gap-3 px-3 mb-4">
+<div id="hva-personal-center" class="grid grid-cols-2 gap-3 px-3 mb-4">
 
     <!-- ================= VIỆC CỦA TÔI ================= -->
     <div class="relative">
@@ -666,8 +750,9 @@ export function renderHome() {
     </div>
 
 </div>
+</section>
 <!-- CONTAINER 3 TÁC VỤ VNeID STYLE -->
-<div class="flex justify-center items-start gap-2 sm:gap-8 md:gap-12 mb-2 relative z-30 max-w-lg mx-auto px-4">
+<div id="hva-quick-tools" class="flex justify-center items-start gap-2 sm:gap-8 md:gap-12 mb-2 relative z-30 max-w-lg lg:max-w-none mx-auto px-4">
 
   <!-- ================= SHORTCUT 1: LỊCH CÔNG TÁC ================= -->
   <!-- ================= SHORTCUT 1: LỊCH CÔNG TÁC ================= -->
@@ -1034,9 +1119,8 @@ export function renderHome() {
 
     <span class="mx-1.5 text-blue-300">•</span>
 
-    <span id="hva-school-week"
-          class="font-extrabold text-[#0F4C81]">
-        Tuần --
+    <span class="font-extrabold text-[#0F4C81]">
+        Tuần 01
     </span>
 
     <span class="mx-1.5 text-blue-300">•</span>
@@ -1125,7 +1209,7 @@ export function renderHome() {
 </div>
 
 <!-- 04 TRỤ CỘT CHÍNH -->
-<section class="grid grid-cols-2 gap-3 mb-2">
+<section id="hva-main-modules" class="mb-2">
 
     <!-- ====================================================== -->
 <!-- TRỤ CỘT 1: THI ĐUA - KHEN THƯỞNG                       -->
@@ -1522,6 +1606,19 @@ export function renderHome() {
 
 </div>
 <!-- ================= HẾT THI ĐUA ================= -->
+
+<!-- TÁC VỤ NHANH Ở GIỮA: THÔNG BÁO -->
+<button type="button"
+        id="hva-home-notification"
+        class="hva-center-action"
+        aria-label="Mở Thông báo"
+        onclick="event.preventDefault(); event.stopPropagation(); window.location.href='Thongbao.html';">
+    <span class="hva-center-action-icon bg-gradient-to-br from-amber-500 to-orange-600">
+        <i class="bi bi-bell-fill"></i>
+        <span id="hva-home-notification-badge" class="hva-center-action-badge hidden">0</span>
+    </span>
+    <span>Thông báo</span>
+</button>
 
 
  <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
@@ -2607,6 +2704,19 @@ export function renderHome() {
 </div>
 <!-- ================= HẾT ĐIỀU HÀNH SỐ ================= -->
 
+<!-- TÁC VỤ NHANH Ở GIỮA: BÌNH CHỌN -->
+<button type="button"
+        id="hva-home-poll"
+        class="hva-center-action"
+        aria-label="Mở Khảo sát - Bình chọn"
+        onclick="event.preventDefault(); event.stopPropagation(); window.location.href='KhaosatBinhchon.html';">
+    <span class="hva-center-action-icon bg-gradient-to-br from-emerald-500 to-green-600">
+        <i class="bi bi-bar-chart-fill"></i>
+        <span id="hva-home-poll-badge" class="hva-center-action-badge hidden">0</span>
+    </span>
+    <span>Bình chọn</span>
+</button>
+
     <!-- TRỤ CỘT 4: QUẢN TRỊ -->
     <div class="relative">
         <div id="hvaQuanTriCard" data-dropdown-toggle="quantri-dropdown" class="group relative rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-600 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-visible border border-blue-300/45 active:scale-[0.98]">
@@ -3564,6 +3674,8 @@ function hidePWAPopup() {
 }
 
 function bindHomeEvents() {
+    bindHVAHomeQuickBadgeSync_();
+
     // Sự kiện Nút Android
     document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
         hidePWAPopup();
@@ -3601,6 +3713,31 @@ function bindHomeEvents() {
         }
     }
 }
+
+function bindHVAHomeQuickBadgeSync_() {
+    const source = document.getElementById('header-notification-badge');
+    const target = document.getElementById('hva-home-notification-badge');
+    if (!target) return;
+
+    const sync = () => {
+        const value = Math.max(0, Number.parseInt(source?.textContent || '0', 10) || 0);
+        target.textContent = String(value);
+        target.classList.toggle('hidden', value === 0 || source?.classList.contains('hidden'));
+    };
+
+    sync();
+    if (source && !source.dataset.hvaHomeBadgeObserved) {
+        source.dataset.hvaHomeBadgeObserved = '1';
+        new MutationObserver(sync).observe(source, {
+            childList: true,
+            characterData: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
+}
+
 function openKhoVanBan() {
     // Chuyển trực tiếp sang giao diện trang Kho Văn Bản
     window.location.href = 'VanBan.html';
@@ -4517,15 +4654,30 @@ function ensureMeetingApprovalPanel_(){
     const root=document.getElementById('home-view'); if(!root||document.getElementById('hvaMeetingApprovalPanel'))return;
     const box=document.createElement('div');
     box.id='hvaMeetingApprovalPanel';
-    box.className='mt-3 rounded-2xl border border-red-200 bg-white overflow-hidden shadow-sm';
-    box.innerHTML=`<div class="px-3 py-2.5 bg-red-50 flex items-center justify-between">
+    box.className='mt-3 mb-2 rounded-2xl border border-blue-100 bg-white overflow-hidden shadow-sm';
+    box.innerHTML=`<div class="px-3 py-2.5 bg-gradient-to-r from-blue-50 to-slate-50 flex items-center justify-between">
       <div>
-        <div class="text-[12px] font-extrabold text-slate-900"><span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-1.5"></span>PHIẾU XÁC NHẬN THAM DỰ</div>
-        <div class="text-[9px] text-slate-600">Dữ liệu QR do HVA ghi nhận • Người có trách nhiệm xác nhận và giải trình khi cần</div>
+        <div class="text-[12px] font-extrabold text-[#123B67]"><span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-1.5"></span>XÁC NHẬN VÀ GIẢI TRÌNH</div>
+        <div class="text-[9px] text-slate-600">Dữ liệu QR do HVA ghi nhận • Xác nhận đúng cấp, giải trình khi cần</div>
       </div>
-      <button type="button" onclick="loadMeetingAttendanceApprovals()" class="w-8 h-8 rounded-lg border border-red-200 bg-white font-bold">↻</button>
+      <button type="button" onclick="loadMeetingAttendanceApprovals()" title="Tải lại dữ liệu" aria-label="Tải lại dữ liệu xác nhận" class="w-8 h-8 rounded-lg border border-blue-200 bg-white text-[#0F4C81] font-bold hover:bg-blue-50 active:scale-95 transition">↻</button>
     </div>
-    <div id="hvaMeetingApprovalList" class="p-3 text-[10px] text-slate-400 text-center">Đang kiểm tra lượt xác nhận...</div>`;
+    <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+      <section class="min-w-0">
+        <button type="button" onclick="loadMeetingAttendanceApprovals()" class="w-full px-3 py-2 flex items-center justify-between text-left hover:bg-blue-50/60 transition">
+          <span class="flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i class="bi bi-person-check-fill"></i></span><span><b class="block text-[11px] text-slate-900">Xác nhận tham dự</b><small class="text-[8.5px] text-slate-500">Họp • Hội nghị • Tập huấn • Hoạt động</small></span></span>
+          <span id="hvaMeetingApprovalCount" class="min-w-7 h-7 px-2 rounded-lg bg-blue-50 text-blue-700 text-[11px] font-extrabold flex items-center justify-center">0</span>
+        </button>
+        <div id="hvaMeetingApprovalList" class="px-3 pb-3 text-[10px] text-slate-400 text-center">Đang kiểm tra lượt xác nhận...</div>
+      </section>
+      <section class="min-w-0">
+        <button type="button" onclick="loadMeetingAttendanceApprovals()" class="w-full px-3 py-2 flex items-center justify-between text-left hover:bg-red-50/60 transition">
+          <span class="flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center"><i class="bi bi-file-earmark-exclamation-fill"></i></span><span><b class="block text-[11px] text-slate-900">Cần xác minh, giải trình</b><small class="text-[8.5px] text-slate-500">Thiếu quét QR • Đến muộn • Về sớm • Dữ liệu bất thường</small></span></span>
+          <span id="hvaMeetingExplanationCount" class="min-w-7 h-7 px-2 rounded-lg bg-red-50 text-red-600 text-[11px] font-extrabold flex items-center justify-center">0</span>
+        </button>
+        <div id="hvaMeetingExplanationList" class="px-3 pb-3 text-[10px] text-slate-400 text-center">Không có dữ liệu cần giải trình.</div>
+      </section>
+    </div>`;
     root.appendChild(box);
 }
 
@@ -4547,8 +4699,22 @@ function approvalStageLabel_(s){return s==='TO_BO_PHAN'?'TTCM/Trưởng bộ ph�
 
 function renderMeetingAttendanceApprovals_(){
     const box=document.getElementById('hvaMeetingApprovalList'); if(!box)return;
+    const approvalCount=document.getElementById('hvaMeetingApprovalCount');
+    const explanationCount=document.getElementById('hvaMeetingExplanationCount');
+    const explanationList=document.getElementById('hvaMeetingExplanationList');
+    const issueCount=HVA_MEETING_APPROVALS.reduce((total,a)=>{
+        const s=a&&a.summary?a.summary:{};
+        return total+Number(s.missing||0)+Number(s.late||0);
+    },0);
+    if(approvalCount)approvalCount.textContent=String(HVA_MEETING_APPROVALS.length);
+    if(explanationCount)explanationCount.textContent=String(issueCount);
+    if(explanationList){
+        explanationList.innerHTML=issueCount
+          ? `<button type="button" onclick="document.getElementById('hvaMeetingApprovalList')?.scrollIntoView({behavior:'smooth',block:'center'})" class="w-full py-2 rounded-lg bg-red-50 text-red-700 font-extrabold hover:bg-red-100 transition">${issueCount} trường hợp cần kiểm tra trong hồ sơ xác nhận</button>`
+          : 'Không có dữ liệu cần giải trình.';
+    }
     if(!HVA_MEETING_APPROVALS.length){
-        box.innerHTML='<div class="py-3 text-slate-400">Không có lượt xác nhận đang chờ.</div>';
+        box.innerHTML='<div class="py-2 text-slate-400">Không có lượt xác nhận đang chờ.</div>';
         return;
     }
     box.innerHTML=HVA_MEETING_APPROVALS.map(a=>{
@@ -4740,17 +4906,6 @@ function updateHVASchoolDate() {
 
     el.textContent =
         `${thu[now.getDay()]}, ${day}/${month}/${year}`;
-
-    const weekEl = document.getElementById('hva-school-week');
-    if (weekEl) {
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const firstWeekStart = new Date(2026, 8, 7);
-        const millisecondsPerWeek = 7 * 24 * 60 * 60 * 1000;
-        const weekNumber = Math.floor((today.getTime() - firstWeekStart.getTime()) / millisecondsPerWeek) + 1;
-        weekEl.textContent = weekNumber > 0
-            ? `Tuần ${String(weekNumber).padStart(2, '0')}`
-            : 'Chưa bắt đầu năm học';
-    }
 }
 
 setTimeout(updateHVASchoolDate, 100);
