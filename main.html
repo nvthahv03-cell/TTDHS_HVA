@@ -95,6 +95,22 @@
             padding-right: 2rem !important;
         }
     }
+
+    #hva-main-drawer {
+        transform: translateX(-105%);
+        transition: transform .24s cubic-bezier(.2,.8,.2,1);
+    }
+    #hva-main-drawer.is-open { transform: translateX(0); }
+    #hva-main-drawer-overlay { transition: opacity .2s ease; }
+    #hva-main-drawer-overlay.is-open { display: block; opacity: 1; }
+    .hva-drawer-link {
+        width: 100%; display: flex; align-items: center; gap: .75rem;
+        padding: .7rem .8rem; border-radius: .8rem; color: #334155;
+        font-size: 12px; font-weight: 750; text-align: left;
+        transition: background .16s ease, color .16s ease, transform .16s ease;
+    }
+    .hva-drawer-link:hover { background: #eff6ff; color: #0f4c81; }
+    .hva-drawer-link:active { transform: scale(.985); }
 </style>
     
 </head>
@@ -238,6 +254,34 @@
     </div>
 
 </header>
+
+<!-- MENU BA GẠCH: hoạt động độc lập, không phụ thuộc module Home -->
+<div id="hva-main-drawer-overlay" class="hidden fixed inset-0 z-[80] bg-slate-950/40 backdrop-blur-[1px] opacity-0" aria-hidden="true"></div>
+<aside id="hva-main-drawer" class="fixed inset-y-0 left-0 z-[90] w-[86vw] max-w-[310px] bg-white shadow-2xl border-r border-blue-100 flex flex-col" aria-hidden="true">
+    <div class="px-4 py-4 bg-gradient-to-r from-[#0F4C81] to-[#1565C0] text-white flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center shrink-0"><i class="bi bi-cpu-fill"></i></div>
+            <div class="min-w-0"><div class="text-[12px] font-extrabold truncate">TRUNG TÂM ĐIỀU HÀNH SỐ</div><div class="text-[9px] text-blue-100 truncate">Trường THPT Hòa Vang</div></div>
+        </div>
+        <button id="hva-main-drawer-close" type="button" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center" aria-label="Đóng menu"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3 space-y-1">
+        <button type="button" class="hva-drawer-link bg-blue-50 text-[#0F4C81]" data-hva-drawer-action="HOME"><i class="bi bi-house-door-fill w-5 text-center text-blue-600"></i><span>Trang chủ</span></button>
+        <button type="button" class="hva-drawer-link" data-hva-drawer-action="MY_WORK"><i class="bi bi-person-check-fill w-5 text-center text-blue-600"></i><span>Việc của tôi</span></button>
+        <a class="hva-drawer-link" href="Lichcongtac.html"><i class="bi bi-calendar3 w-5 text-center text-blue-600"></i><span>Lịch công tác</span></a>
+        <a class="hva-drawer-link" href="Thongbao.html"><i class="bi bi-bell-fill w-5 text-center text-amber-500"></i><span>Thông báo</span></a>
+        <a class="hva-drawer-link" href="KhaosatBinhchon.html"><i class="bi bi-bar-chart-fill w-5 text-center text-emerald-600"></i><span>Khảo sát – Bình chọn</span></a>
+        <div class="my-2 border-t border-slate-100"></div>
+        <button type="button" class="hva-drawer-link" data-hva-home-menu="thidua-dropdown"><i class="bi bi-trophy-fill w-5 text-center text-blue-600"></i><span>Thi đua – Khen thưởng</span></button>
+        <button type="button" class="hva-drawer-link" data-hva-home-menu="nghiepvuso-dropdown"><i class="bi bi-clipboard-check-fill w-5 text-center text-indigo-600"></i><span>Nghiệp vụ số</span></button>
+        <button type="button" class="hva-drawer-link" data-hva-home-menu="dieuhanhso-dropdown"><i class="bi bi-cpu-fill w-5 text-center text-emerald-600"></i><span>Điều hành số</span></button>
+        <button type="button" class="hva-drawer-link" data-hva-home-menu="quantri-dropdown"><i class="bi bi-gear-fill w-5 text-center text-violet-600"></i><span>Quản trị</span></button>
+        <div class="my-2 border-t border-slate-100"></div>
+        <button type="button" class="hva-drawer-link" data-hva-drawer-action="SEARCH"><i class="bi bi-search w-5 text-center text-sky-600"></i><span>Tra cứu hệ thống</span></button>
+        <button type="button" class="hva-drawer-link" data-hva-drawer-action="LINKS"><i class="bi bi-globe2 w-5 text-center text-cyan-600"></i><span>Kết nối – Liên kết nhanh</span></button>
+    </div>
+    <div class="px-4 py-3 border-t border-slate-100 text-[9px] text-slate-400">HVA Digital • Giao diện V2 ngày 14/09/2026</div>
+</aside>
         <!-- ================= MAIN CONTENT ================= -->
         <main id="main-content" class="flex-1 px-4 pt-24 safe-pb overflow-y-auto max-w-[460px] lg:max-w-[1600px] mx-auto w-full">
             <!-- Home content sẽ được render bởi HomeRenderer -->
@@ -1290,7 +1334,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
     <script src="services/api.js"></script>
-    <script type="module" src="assets/js/core/app.js"></script>
+    <script type="module" src="assets/js/core/app.js?v=20260914-v2"></script>
 
     <!-- LOGIC BẢO TRÌ & ĐỒNG BỘ TOÀN CỤC -->
     <script>
@@ -4553,6 +4597,62 @@ setTimeout(() => {
         }
     });
 
+})();
+</script>
+
+<script>
+/* HVA V2 - menu ba gạch độc lập và có thể điều khiển Home sau khi Home render. */
+(function initHVAMainDrawer(){
+    const button = document.getElementById('btn-menu');
+    const drawer = document.getElementById('hva-main-drawer');
+    const overlay = document.getElementById('hva-main-drawer-overlay');
+    const closeButton = document.getElementById('hva-main-drawer-close');
+    if (!button || !drawer || !overlay) return;
+
+    const open = () => {
+        drawer.classList.add('is-open');
+        overlay.classList.remove('hidden');
+        requestAnimationFrame(() => overlay.classList.add('is-open'));
+        drawer.setAttribute('aria-hidden','false');
+        overlay.setAttribute('aria-hidden','false');
+        document.body.classList.add('overflow-hidden');
+    };
+    const close = () => {
+        drawer.classList.remove('is-open');
+        overlay.classList.remove('is-open');
+        drawer.setAttribute('aria-hidden','true');
+        overlay.setAttribute('aria-hidden','true');
+        document.body.classList.remove('overflow-hidden');
+        window.setTimeout(() => overlay.classList.add('hidden'), 220);
+    };
+
+    button.addEventListener('click', function(event){ event.preventDefault(); event.stopPropagation(); drawer.classList.contains('is-open') ? close() : open(); });
+    closeButton?.addEventListener('click', close);
+    overlay.addEventListener('click', close);
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') close(); });
+
+    drawer.addEventListener('click', function(event){
+        const menuButton = event.target.closest('[data-hva-home-menu]');
+        if (menuButton) {
+            const menuId = menuButton.getAttribute('data-hva-home-menu');
+            close();
+            window.setTimeout(() => {
+                const card = document.querySelector(`[data-dropdown-toggle="${menuId}"]`);
+                card?.scrollIntoView({behavior:'smooth',block:'center'});
+                window.setTimeout(() => card?.click(), 260);
+            }, 80);
+            return;
+        }
+
+        const actionButton = event.target.closest('[data-hva-drawer-action]');
+        if (!actionButton) return;
+        const action = actionButton.getAttribute('data-hva-drawer-action');
+        close();
+        if (action === 'HOME') window.scrollTo({top:0,behavior:'smooth'});
+        if (action === 'MY_WORK') document.getElementById('btn-my-work')?.click();
+        if (action === 'SEARCH') document.getElementById('bottom-search')?.click();
+        if (action === 'LINKS') document.getElementById('bottom-links')?.click();
+    });
 })();
 </script>
     
