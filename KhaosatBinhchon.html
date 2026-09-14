@@ -594,8 +594,8 @@ function goPublishing(){
     recipientDetails:people,
     linkedDocs,attachments:linkedDocs,
     data:{...d,shareLink:mode==='external'?d.externalUrl:getShareLink(),recipients:people,createdAt:new Date().toISOString()},
-    destinations:['ThongBao','ViecCuaToi'],
-    workflow:['CONFIRM_READ'],
+    destinations:[mode==='poll'?'BinhChon':'KhaoSat'],
+    workflow:[mode==='poll'?'SUBMIT_VOTE':'SUBMIT_SURVEY'],
     createdAt:new Date().toISOString()
   };
   localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify(current));
