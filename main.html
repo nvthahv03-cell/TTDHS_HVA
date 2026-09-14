@@ -269,7 +269,7 @@
         <button type="button" class="hva-drawer-link bg-blue-50 text-[#0F4C81]" data-hva-drawer-action="HOME"><i class="bi bi-house-door-fill w-5 text-center text-blue-600"></i><span>Trang chủ</span></button>
         <button type="button" class="hva-drawer-link" data-hva-drawer-action="MY_WORK"><i class="bi bi-person-check-fill w-5 text-center text-blue-600"></i><span>Việc của tôi</span></button>
         <a class="hva-drawer-link" href="Lichcongtac.html"><i class="bi bi-calendar3 w-5 text-center text-blue-600"></i><span>Lịch công tác</span></a>
-        <a class="hva-drawer-link" href="Thongbao.html"><i class="bi bi-bell-fill w-5 text-center text-amber-500"></i><span>Thông báo</span></a>
+        <button type="button" class="hva-drawer-link" data-hva-drawer-action="NOTIFICATIONS"><i class="bi bi-bell-fill w-5 text-center text-amber-500"></i><span>Thông báo</span></button>
         <a class="hva-drawer-link" href="KhaosatBinhchon.html"><i class="bi bi-bar-chart-fill w-5 text-center text-emerald-600"></i><span>Khảo sát – Bình chọn</span></a>
         <div class="my-2 border-t border-slate-100"></div>
         <button type="button" class="hva-drawer-link" data-hva-home-menu="thidua-dropdown"><i class="bi bi-trophy-fill w-5 text-center text-blue-600"></i><span>Thi đua – Khen thưởng</span></button>
@@ -1334,7 +1334,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
     <script src="services/api.js"></script>
-    <script type="module" src="assets/js/core/app.js?v=20260914-v2"></script>
+    <script type="module" src="assets/js/core/app.js?v=20260914-v3"></script>
 
     <!-- LOGIC BẢO TRÌ & ĐỒNG BỘ TOÀN CỤC -->
     <script>
@@ -4650,6 +4650,7 @@ setTimeout(() => {
         close();
         if (action === 'HOME') window.scrollTo({top:0,behavior:'smooth'});
         if (action === 'MY_WORK') document.getElementById('btn-my-work')?.click();
+        if (action === 'NOTIFICATIONS') document.getElementById('btn-notification')?.click();
         if (action === 'SEARCH') document.getElementById('bottom-search')?.click();
         if (action === 'LINKS') document.getElementById('bottom-links')?.click();
     });
