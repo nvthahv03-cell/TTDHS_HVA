@@ -3504,6 +3504,7 @@ setTimeout(() => {
         'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 
     let ACTIVE_SEARCH_TYPE = 'ALL';
+    let ACTIVE_PERSONNEL_CATEGORY = 'COUNCIL';
     let SEARCH_TIMER = null;
 
     const panel = document.getElementById('search-panel');
@@ -3534,6 +3535,33 @@ setTimeout(() => {
     if (groupBox) {
         groupBox.insertAdjacentElement('afterend', resultBox);
     }
+
+    const personnelTabs = document.createElement('div');
+    personnelTabs.id = 'personnel-search-tabs';
+    personnelTabs.className = 'hidden mt-3 grid grid-cols-3 gap-1 rounded-xl bg-slate-100 p-1';
+    personnelTabs.innerHTML = `
+        <button type="button" data-personnel-category="COUNCIL" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">Hội đồng</button>
+        <button type="button" data-personnel-category="TEAM" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">Tổ/Bộ phận</button>
+        <button type="button" data-personnel-category="WORKGROUP" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">Nhóm công tác</button>`;
+    resultBox.insertAdjacentElement('beforebegin', personnelTabs);
+
+    function updatePersonnelTabs() {
+        personnelTabs.querySelectorAll('[data-personnel-category]').forEach(btn => {
+            const active = btn.dataset.personnelCategory === ACTIVE_PERSONNEL_CATEGORY;
+            btn.classList.toggle('bg-white', active);
+            btn.classList.toggle('text-[#0F4C81]', active);
+            btn.classList.toggle('shadow-sm', active);
+        });
+    }
+
+    personnelTabs.addEventListener('click', function (event) {
+        const button = event.target.closest('[data-personnel-category]');
+        if (!button) return;
+        ACTIVE_PERSONNEL_CATEGORY = button.dataset.personnelCategory || 'COUNCIL';
+        updatePersonnelTabs();
+        if (input?.value.trim()) performSearch();
+        else input?.focus();
+    });
 
 
     /* =====================================================
@@ -3683,6 +3711,8 @@ setTimeout(() => {
 
         resultBox.classList.add('hidden');
         resultBox.innerHTML = '';
+        personnelTabs.classList.toggle('hidden', ACTIVE_SEARCH_TYPE !== 'NHANSU');
+        updatePersonnelTabs();
 
         typeButtons.forEach(btn => {
             btn.classList.remove(
@@ -3896,9 +3926,12 @@ setTimeout(() => {
     ===================================================== */
 
     async function searchPersonnel(keyword) {
+        const user = getSearchUser();
         const url = SEARCH_API +
             '?action=searchNhanSuQuick' +
             '&q=' + encodeURIComponent(keyword) +
+            '&username=' + encodeURIComponent(user.username || '') +
+            '&category=' + encodeURIComponent(ACTIVE_PERSONNEL_CATEGORY) +
             '&_=' + Date.now();
 
         const response = await fetch(url, { cache: 'no-store' });
@@ -3912,7 +3945,12 @@ setTimeout(() => {
             meta: person.lopChuNhiem
                 ? 'GVCN lớp ' + person.lopChuNhiem
                 : (person.vaiTro || person.chucVu || person.viTriViecLam || 'CBQL/GV/NV'),
-            extra: [person.to, person.dienThoai].filter(Boolean).join(' • '),
+            extra: [
+                person.to,
+                person.dienThoai,
+                person.ngaySinh ? 'Sinh ' + person.ngaySinh : '',
+                ...(person.nhomCongTacLabels || [])
+            ].filter(Boolean).join(' • '),
             phone: String(person.dienThoai || '').trim(),
             raw: person
         }));
@@ -4519,6 +4557,13 @@ setTimeout(() => {
 
 
             ACTIVE_SEARCH_TYPE = type;
+            if (type === 'NHANSU') {
+                ACTIVE_PERSONNEL_CATEGORY = 'COUNCIL';
+                personnelTabs.classList.remove('hidden');
+                updatePersonnelTabs();
+            } else {
+                personnelTabs.classList.add('hidden');
+            }
 
             typeButtons.forEach(btn => {
 
@@ -4695,6 +4740,33 @@ setTimeout(() => {
             closeSearchPanel();
         }
     });
+
+    async function showBirthdayGreetingOnce() {
+        const user = getSearchUser();
+        if (!user.username) return;
+        const today = new Date();
+        const dayKey = [today.getFullYear(), today.getMonth() + 1, today.getDate()].join('-');
+        const storageKey = 'HVA_BIRTHDAY_GREETING_' + user.username + '_' + dayKey;
+        if (localStorage.getItem(storageKey) === '1') return;
+        try {
+            const url = SEARCH_API + '?action=getBirthdayGreeting&username=' +
+                encodeURIComponent(user.username) + '&_=' + Date.now();
+            const response = await fetch(url, {cache:'no-store'});
+            if (!response.ok) return;
+            const data = await response.json();
+            if (!data?.isBirthday) return;
+            localStorage.setItem(storageKey, '1');
+            window.hvaNotify?.(
+                'Hôm nay là ngày sinh nhật của ' + (data.hoTen || user.fullName || 'Thầy/Cô') + '.\n\n' +
+                (data.message || 'Kính chúc Thầy/Cô luôn mạnh khỏe, hạnh phúc và thành công!'),
+                {kind:'success', title:'TT ĐIỀU HÀNH SỐ HVA CHÚC MỪNG SINH NHẬT'}
+            );
+        } catch (error) {
+            console.warn('[HVA BIRTHDAY] Chưa tải được lời chúc:', error);
+        }
+    }
+
+    window.setTimeout(showBirthdayGreetingOnce, 1800);
 
 
 })();
