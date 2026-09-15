@@ -214,6 +214,25 @@ export function renderHome() {
 
         </div>
 
+        <!-- HVA ASSISTANT V1: vùng hội thoại mở rộng khi người dùng gửi câu hỏi -->
+        <div id="assistantConversation"
+             class="hidden mt-2 rounded-xl border border-white/15 bg-slate-950/20 backdrop-blur-md overflow-hidden">
+            <div class="flex items-center justify-between px-2.5 py-1.5 border-b border-white/10">
+                <div class="flex items-center gap-1.5 text-[9.5px] font-bold text-cyan-100">
+                    <i class="bi bi-chat-dots-fill"></i>
+                    Hội thoại HVA Assistant
+                </div>
+                <button id="assistantClearBtn" type="button"
+                        title="Đóng và xóa hội thoại"
+                        class="w-6 h-6 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 flex items-center justify-center transition active:scale-95">
+                    <i class="bi bi-x-lg text-[9px]"></i>
+                </button>
+            </div>
+            <div id="assistantMessages"
+                 class="max-h-[210px] overflow-y-auto px-2.5 py-2 space-y-2 scroll-smooth">
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -6013,4 +6032,3 @@ window.toggleHVAHanhChinhMenu = function(event) {
     items.classList.toggle('hidden', !open);
     if (arrow) arrow.classList.toggle('rotate-90', open);
 };
-
