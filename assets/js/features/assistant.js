@@ -1,15 +1,17 @@
 import { Storage } from '../core/storage.js';
+import { STORAGE_KEYS } from '../core/constants.js';
 import { $ } from '../core/utils.js';
 
 // =====================================================
-// HVA ASSISTANT V1 - 15/09/2026
+// HVA ASSISTANT V2 REAL DATA - 15/09/2026
 // - Xưng danh theo hồ sơ nhân sự
 // - Chào theo thời gian, 22:00–04:59 chào khuya
 // - Hội thoại ngay trên Home
 // - Enter / nút gửi
 // - Nhập giọng nói nếu trình duyệt hỗ trợ
-// - Router tác vụ HVA an toàn (chỉ điều hướng/tra cứu cục bộ)
-// - Không chứa API key; sẵn điểm nối Backend AI ở V2
+// - Đọc dữ liệu nhiệm vụ thật từ Backend HVA theo tài khoản đăng nhập
+// - Router tác vụ HVA + điều hướng an toàn
+// - Không chứa AI API key ở frontend
 // =====================================================
 
 function firstValue(user, keys) {
@@ -129,9 +131,17 @@ function randomMessage(honor, greetingInfo) {
 }
 
 function getProfile() {
-    const user = Storage.getUser() || {};
+    // Storage.getUser() là hồ sơ rút gọn dùng cho giao diện.
+    // Assistant V2 cần object đăng nhập đầy đủ để lấy đúng username.
+    const storedUser = Storage.get(STORAGE_KEYS.USER, {}) || {};
+    const compactUser = Storage.getUser() || {};
+    const user = { ...compactUser, ...storedUser };
+
     return {
         raw: user,
+        username: firstValue(user, [
+            'username', 'userName', 'tenDangNhap', 'maGV', 'maGv', 'account'
+        ]),
         honor: getHonorific(user),
         fullName: firstValue(user, [
             'fullName', 'hoTen', 'HO_TEN', 'hoten', 'name', 'username'
@@ -236,6 +246,172 @@ function setBusy(busy) {
     if (input) input.disabled = busy;
 }
 
+
+const HVA_TASK_API_URL =
+    'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+
+function isMyWorkQuestion(question) {
+    const q = normalizeText(question);
+    return /(viec cua toi|nhiem vu cua toi|con viec gi|toi co viec gi|hom nay.*viec|viec.*hom nay|qua han|dang thuc hien|sap den han|sap het han)/.test(q);
+}
+
+function parseHVADeadline(value) {
+    if (!value) return null;
+    if (value instanceof Date && !Number.isNaN(value.getTime())) return value;
+
+    const s = String(value).trim();
+    if (!s) return null;
+
+    // dd/MM/yyyy [HH:mm]
+    let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?$/);
+    if (m) {
+        return new Date(
+            Number(m[3]), Number(m[2]) - 1, Number(m[1]),
+            Number(m[4] || 23), Number(m[5] || 59), 59
+        );
+    }
+
+    // yyyy-MM-dd / ISO / giá trị Date parse được.
+    const d = new Date(s);
+    return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function normalizeTaskStatus(value) {
+    return normalizeText(value);
+}
+
+function isCompletedTask(task) {
+    const status = normalizeTaskStatus(task?.trangThai);
+    return status.includes('hoan thanh') || Number(task?.tienDo || 0) >= 100;
+}
+
+function isOverdueTask(task, now = new Date()) {
+    if (isCompletedTask(task)) return false;
+    const deadline = parseHVADeadline(task?.hanHoanThanh);
+    return !!deadline && deadline.getTime() < now.getTime();
+}
+
+function formatDeadline(value) {
+    const d = parseHVADeadline(value);
+    if (!d) return String(value || '').trim();
+    const hasTime = /\d{1,2}:\d{2}/.test(String(value || ''));
+    return d.toLocaleDateString('vi-VN') +
+        (hasTime ? ` ${d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}` : '');
+}
+
+function taskTimeValue(task) {
+    const d = parseHVADeadline(task?.hanHoanThanh);
+    return d ? d.getTime() : Number.MAX_SAFE_INTEGER;
+}
+
+async function fetchMyTasks() {
+    const p = getProfile();
+    if (!p.username) {
+        throw new Error('MISSING_USERNAME');
+    }
+
+    const url = HVA_TASK_API_URL +
+        '?action=getTaskByUser&username=' + encodeURIComponent(p.username) +
+        '&_=' + Date.now();
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            cache: 'no-store',
+            signal: controller.signal
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP_${response.status}`);
+        }
+
+        const data = await response.json();
+        if (!Array.isArray(data)) {
+            throw new Error('INVALID_TASK_DATA');
+        }
+        return data;
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
+function buildMyWorkAnswer(tasks) {
+    const p = getProfile();
+    const call = p.honor || 'Thầy/Cô';
+    const now = new Date();
+
+    const all = Array.isArray(tasks) ? tasks : [];
+    const active = all.filter(task => !isCompletedTask(task));
+    const overdue = active.filter(task => isOverdueTask(task, now));
+    const inProgress = active.filter(task => normalizeTaskStatus(task.trangThai).includes('dang thuc hien'));
+    const newTasks = active.filter(task => {
+        const s = normalizeTaskStatus(task.trangThai);
+        return s.includes('moi khoi tao') || s.includes('da tiep nhan');
+    });
+
+    const upcoming = active
+        .filter(task => !isOverdueTask(task, now) && parseHVADeadline(task.hanHoanThanh))
+        .sort((a, b) => taskTimeValue(a) - taskTimeValue(b));
+
+    if (!active.length) {
+        return {
+            text: `${call} hiện không có nhiệm vụ nào đang chờ xử lý trong “Việc của tôi”.`,
+            actions: [{ label: 'Mở Việc của tôi', action: 'mywork', value: '' }]
+        };
+    }
+
+    const lines = [`${call} hiện có ${active.length} nhiệm vụ cần theo dõi.`];
+
+    if (overdue.length) lines.push(`• ${overdue.length} việc quá hạn`);
+    if (inProgress.length) lines.push(`• ${inProgress.length} việc đang thực hiện`);
+    if (newTasks.length) lines.push(`• ${newTasks.length} việc mới/đã tiếp nhận`);
+
+    const nearest = upcoming[0];
+    if (nearest) {
+        const title = String(nearest.tieuDe || nearest.noiDung || 'Nhiệm vụ').trim();
+        const deadline = formatDeadline(nearest.hanHoanThanh);
+        lines.push('');
+        lines.push(`Gần hạn nhất: ${title}${deadline ? ` — hạn ${deadline}` : ''}.`);
+    } else if (overdue.length) {
+        const oldestOverdue = overdue
+            .slice()
+            .sort((a, b) => taskTimeValue(a) - taskTimeValue(b))[0];
+        const title = String(oldestOverdue.tieuDe || oldestOverdue.noiDung || 'Nhiệm vụ').trim();
+        const deadline = formatDeadline(oldestOverdue.hanHoanThanh);
+        lines.push('');
+        lines.push(`Cần ưu tiên: ${title}${deadline ? ` — hạn ${deadline}` : ''}.`);
+    }
+
+    return {
+        text: lines.join('\n'),
+        actions: [{ label: `Xem ${active.length} việc`, action: 'mywork', value: '' }]
+    };
+}
+
+async function answerMyWorkFromBackend() {
+    try {
+        const tasks = await fetchMyTasks();
+        return buildMyWorkAnswer(tasks);
+    } catch (error) {
+        console.error('[HVA Assistant][MyWork]', error);
+
+        if (error?.message === 'MISSING_USERNAME') {
+            return {
+                text: 'Em chưa xác định được tên đăng nhập của tài khoản hiện tại. Vui lòng đăng xuất và đăng nhập lại HVA.',
+                actions: []
+            };
+        }
+
+        return {
+            text: 'Em chưa đọc được dữ liệu “Việc của tôi” từ HVA lúc này. Thầy/Cô có thể mở trực tiếp khu vực này và thử lại sau.',
+            actions: [{ label: 'Mở Việc của tôi', action: 'mywork', value: '' }]
+        };
+    }
+}
+
 function localAssistantAnswer(question) {
     const p = getProfile();
     const q = normalizeText(question);
@@ -273,13 +449,6 @@ function localAssistantAnswer(question) {
         };
     }
 
-    if (/(viec cua toi|nhiem vu cua toi|con viec gi|viec gi|qua han|dang thuc hien)/.test(q)) {
-        return {
-            text: `Em có thể mở “Việc của tôi”. Ở V1 em chưa tự đọc số liệu backend để tránh trả lời sai; bước kế tiếp sẽ nối dữ liệu nhiệm vụ thật.`,
-            actions: [{ label: 'Mở Việc của tôi', action: 'mywork', value: '' }]
-        };
-    }
-
     if (/(hom nay ngay may|ngay hom nay|may gio|gio bay gio)/.test(q)) {
         const now = new Date();
         return {
@@ -289,7 +458,7 @@ function localAssistantAnswer(question) {
 
     if (/(lam duoc gi|giup duoc gi|chuc nang|tro giup|huong dan)/.test(q)) {
         return {
-            text: `V1 hiện hỗ trợ nhận diện tài khoản, hội thoại trên Home, mở Lịch cá nhân, Lịch công tác, Việc của tôi và Kho văn bản. AI tổng hợp dữ liệu HVA sẽ được nối qua Backend ở V2.`,
+            text: `HVA Assistant hiện đã đọc được dữ liệu thật của “Việc của tôi” theo tài khoản đăng nhập; đồng thời hỗ trợ mở Lịch cá nhân, Lịch công tác và Kho văn bản. Các nguồn dữ liệu HVA khác sẽ được nối tiếp theo từng nghiệp vụ.`,
             actions: [
                 { label: 'Lịch cá nhân', action: 'href', value: 'LichCaNhan.html' },
                 { label: 'Việc của tôi', action: 'mywork', value: '' },
@@ -299,8 +468,8 @@ function localAssistantAnswer(question) {
     }
 
     return {
-        text: `Em đã nhận câu hỏi của ${call.toLowerCase()}. HVA Assistant V1 hiện mới xử lý các tác vụ HVA cục bộ; câu hỏi mở/soạn thảo/tổng hợp sẽ hoạt động khi mình nối Backend AI ở bước tiếp theo.`,
-        actions: [{ label: 'Xem khả năng V1', action: 'prompt', value: 'Bạn làm được gì?' }]
+        text: `Em đã nhận câu hỏi của ${call.toLowerCase()}. Hiện em có thể đọc “Việc của tôi” từ HVA và hỗ trợ điều hướng các chức năng đã kết nối.`,
+        actions: [{ label: 'Xem khả năng Assistant', action: 'prompt', value: 'Bạn làm được gì?' }]
     };
 }
 
@@ -317,10 +486,12 @@ async function handleQuestion(rawQuestion) {
     setBusy(true);
 
     try {
-        // V1: router cục bộ, KHÔNG giả lập AI và KHÔNG để API key ở frontend.
-        // V2: thay khối dưới bằng fetch tới Backend HVA Assistant.
-        const answer = localAssistantAnswer(question);
-        await new Promise(resolve => setTimeout(resolve, 180));
+        // V2: câu hỏi về “Việc của tôi” đọc dữ liệu thật từ Backend HVA.
+        // Các tác vụ chưa nối dữ liệu vẫn dùng router cục bộ an toàn.
+        const answer = isMyWorkQuestion(question)
+            ? await answerMyWorkFromBackend()
+            : localAssistantAnswer(question);
+
         addBubble('assistant', answer.text, answer.actions || []);
     } catch (error) {
         console.error('[HVA Assistant]', error);
