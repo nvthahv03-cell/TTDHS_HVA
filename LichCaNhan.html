@@ -97,63 +97,9 @@
   <button id="save" class="mt-4 w-full h-12 bg-[#0F4C81] text-white rounded-xl font-extrabold">Lưu vào Lịch cá nhân</button>
  </div>
 </div>
-
-<!-- HVA Google Calendar setup modal -->
-<div id="googleSetupModal" class="hidden fixed inset-0 z-[190] bg-slate-900/45 backdrop-blur-[3px] items-center justify-center p-4">
-  <div class="w-full max-w-[420px] bg-white rounded-[26px] shadow-2xl overflow-hidden">
-    <div class="h-1.5 bg-gradient-to-r from-[#0F4C81] via-[#2563EB] to-[#13B6C8]"></div>
-    <div class="p-5">
-      <div class="flex items-start gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0">
-          <img src="./assets/brand/HVA_Logo_Compact.png"
-               onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
-               class="w-10 h-10 object-contain" alt="HVA">
-          <i class="bi bi-calendar3 text-2xl text-[#2563EB]" style="display:none"></i>
-        </div>
-        <div class="min-w-0 flex-1">
-          <div class="text-[10px] font-extrabold tracking-wide text-blue-500">HVA DIGITAL</div>
-          <div class="text-[15px] font-extrabold text-[#0F4C81] mt-0.5">KẾT NỐI GOOGLE CALENDAR</div>
-          <div class="text-[10px] text-slate-400 mt-1">Lịch cá nhân • Đồng bộ tùy chọn</div>
-        </div>
-        <button id="googleSetupCloseX" class="w-9 h-9 rounded-xl bg-slate-50 text-slate-500 shrink-0" aria-label="Đóng">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </div>
-
-      <div class="mt-5 rounded-2xl border border-amber-100 bg-amber-50/70 p-4">
-        <div class="flex gap-3">
-          <div class="w-9 h-9 rounded-xl bg-white text-amber-500 flex items-center justify-center shrink-0 shadow-sm">
-            <i class="bi bi-info-circle-fill"></i>
-          </div>
-          <div>
-            <div class="text-xs font-extrabold text-slate-700">Chức năng đang được cấu hình</div>
-            <div class="text-[10px] leading-5 text-slate-500 mt-1">
-              HVA chưa được cấp cấu hình kết nối Google Calendar dùng chung.
-              Thầy/cô chưa cần thực hiện thao tác kỹ thuật nào.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-4 rounded-2xl bg-blue-50/70 p-3.5">
-        <div class="text-[10px] font-bold text-[#0F4C81]">
-          <i class="bi bi-shield-check mr-1"></i> Khi hoàn tất cấu hình
-        </div>
-        <div class="text-[9px] leading-5 text-slate-500 mt-1">
-          Người dùng chỉ cần bấm <b>Kết nối</b>, chọn tài khoản Google và cấp quyền Calendar.
-          HVA không yêu cầu giáo viên nhập Client ID hoặc Client Secret.
-        </div>
-      </div>
-
-      <button id="googleSetupClose" class="mt-5 w-full h-11 rounded-xl bg-[#0F4C81] text-white text-xs font-extrabold shadow-sm">
-        Đã hiểu
-      </button>
-    </div>
-  </div>
-</div>
-
 <div id="toast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] bg-slate-900 text-white px-4 py-3 rounded-xl text-xs"></div>
 
+<script>window.HVA_GOOGLE_OAUTH_CLIENT_ID='427950120972-6icpeer59ormao8cm8u5ev4dqebcvkqu.apps.googleusercontent.com';</script>
 <script>
 const $=id=>document.getElementById(id),pad=n=>String(n).padStart(2,'0'),iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),fmt=d=>pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear(),addD=(d,n)=>{let x=new Date(d);x.setDate(x.getDate()+n);return x},mon=d=>addD(new Date(d.getFullYear(),d.getMonth(),d.getDate()),-(d.getDay()+6)%7);
 let sel=new Date(),cur=new Date(),view='day';sel=new Date(sel.getFullYear(),sel.getMonth(),sel.getDate());cur=new Date(sel);
@@ -218,7 +164,7 @@ function googleStatus(msg, connected=false){
 }
 function initGoogleTokenClient(){
   if(!HVA_GOOGLE_OAUTH_CLIENT_ID){
-    googleStatus('Chưa kết nối • Đang chờ cấu hình HVA');
+    googleStatus('Chưa cấu hình OAuth Client ID cho HVA');
     return false;
   }
   if(!googleReady()){
@@ -267,18 +213,19 @@ function disconnectGoogle(){
   say('Đã ngắt kết nối Google Calendar.');
 }
 function showGoogleSetup(){
-  const m=$('googleSetupModal');
-  if(!m) return;
-  m.classList.remove('hidden');
-  m.classList.add('flex');
-  document.body.style.overflow='hidden';
-}
-function closeGoogleSetup(){
-  const m=$('googleSetupModal');
-  if(!m) return;
-  m.classList.add('hidden');
-  m.classList.remove('flex');
-  document.body.style.overflow='';
+  const id = prompt(
+    'HVA chưa có Google OAuth Client ID.\\n\\n' +
+    'Dán OAuth 2.0 Client ID loại Web application của dự án HVA vào đây.\\n' +
+    'Client ID không phải Client Secret và có thể đặt ở frontend.'
+  );
+  if(!id) return;
+  if(!/\.apps\.googleusercontent\.com$/.test(id.trim())){
+    say('OAuth Client ID chưa đúng định dạng.');
+    return;
+  }
+  localStorage.setItem('HVA_GOOGLE_OAUTH_CLIENT_ID', id.trim());
+  say('Đã lưu Client ID trên thiết bị. Tải lại trang để kết nối.');
+  setTimeout(()=>location.reload(),900);
 }
 function rangeForCurrentView(){
   let a,b;
@@ -433,11 +380,6 @@ render = function(){
   renderHVAOriginal();
 };
 
-$('googleSetupClose').onclick=closeGoogleSetup;
-$('googleSetupCloseX').onclick=closeGoogleSetup;
-$('googleSetupModal').onclick=(e)=>{if(e.target===$('googleSetupModal')) closeGoogleSetup()};
-document.addEventListener('keydown',(e)=>{if(e.key==='Escape') closeGoogleSetup()});
-
 $('google').onclick=()=>{
   if(googleAccessToken) disconnectGoogle();
   else requestGoogleConnection();
@@ -447,7 +389,7 @@ $('googlePush').onclick=()=>pushVisibleHvaTasks();
 
 setTimeout(()=>{
   if(HVA_GOOGLE_OAUTH_CLIENT_ID) initGoogleTokenClient();
-  else googleStatus('Chưa kết nối • Đang chờ cấu hình HVA');
+  else googleStatus('Chưa cấu hình OAuth Client ID cho HVA');
 },900);
 
 profile();render();
