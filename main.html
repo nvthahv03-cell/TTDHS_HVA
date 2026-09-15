@@ -382,9 +382,10 @@
 
 
         <!-- ================= LỊCH CÁ NHÂN ================= -->
-        <a href="LichCaNhan.html"
+        <a href="./LichCaNhan.html"
            id="bottom-personal-calendar"
            data-nav="personal-calendar"
+           onclick="window.location.href='./LichCaNhan.html'; return false;"
            aria-label="Lịch cá nhân"
            title="Lịch cá nhân"
            class="nav-item flex flex-col items-center justify-center flex-1
@@ -4616,10 +4617,9 @@ setTimeout(() => {
     // Tìm kiếm/tra cứu toàn HVA chỉ còn ở nút Tìm nhanh trên Header.
     document.getElementById('bottom-personal-calendar')
         ?.addEventListener('click', function (event) {
-
+            event.preventDefault();
             event.stopPropagation();
-            // Lịch cá nhân là màn riêng theo tài khoản đăng nhập.
-            // Lịch công tác vẫn giữ độc lập trong menu và Tra cứu hệ thống.
+            window.location.href = './LichCaNhan.html';
         });
 
     headerSearchBtn?.addEventListener('click', function (event) {
