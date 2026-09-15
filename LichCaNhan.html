@@ -6,6 +6,7 @@
 <link rel="icon" href="./favicon.ico">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f4f8fc;color:#172033;font-family:Arial,sans-serif;padding-bottom:82px}.card{box-shadow:0 8px 24px rgba(15,76,129,.09)}.active{background:#0F4C81!important;color:#fff!important}.safe{padding-bottom:env(safe-area-inset-bottom)}
 </style>
@@ -59,7 +60,19 @@
  </section>
 
  <section class="mt-4 bg-white rounded-[18px] border border-slate-200 p-4">
-  <div class="flex justify-between items-center gap-3"><div><div class="text-xs font-extrabold text-[#0F4C81]"><i class="bi bi-google"></i> Đồng bộ Google Calendar</div><div class="text-[9px] text-slate-400 mt-1">Tùy chọn • Không đồng bộ, HVA vẫn hoạt động bình thường.</div></div><button id="google" class="px-3 py-2 rounded-xl border border-blue-200 text-blue-600 text-[10px] font-bold">Thiết lập</button></div>
+  <div class="flex justify-between items-start gap-3">
+    <div class="min-w-0">
+      <div class="text-xs font-extrabold text-[#0F4C81]"><i class="bi bi-google"></i> Google Calendar</div>
+      <div id="googleStatus" class="text-[9px] text-slate-400 mt-1">Chưa kết nối • Tùy chọn</div>
+      <div id="googleAccount" class="hidden text-[9px] text-emerald-600 font-bold mt-1 truncate"></div>
+    </div>
+    <button id="google" class="shrink-0 px-3 py-2 rounded-xl border border-blue-200 text-blue-600 text-[10px] font-bold">Kết nối</button>
+  </div>
+  <div id="googleActions" class="hidden grid grid-cols-2 gap-2 mt-3">
+    <button id="googlePull" class="h-9 rounded-xl bg-blue-50 text-[#0F4C81] text-[10px] font-extrabold"><i class="bi bi-cloud-arrow-down mr-1"></i>Nạp lịch Google</button>
+    <button id="googlePush" class="h-9 rounded-xl bg-emerald-50 text-emerald-700 text-[10px] font-extrabold"><i class="bi bi-cloud-arrow-up mr-1"></i>Đẩy việc HVA</button>
+  </div>
+  <div class="text-[8px] text-slate-400 mt-2">HVA chỉ truy cập Calendar sau khi chính người dùng cấp quyền. Có thể ngắt kết nối bất kỳ lúc nào.</div>
  </section>
 </main>
 
@@ -111,14 +124,273 @@ function renderList(){ $('dateLabel').textContent=['Chủ nhật','Thứ Hai','T
  $('list').querySelectorAll('.del').forEach(b=>b.onclick=()=>{let id=b.closest('.item').dataset.id;if(confirm('Xóa nhắc việc này?')){tasks=tasks.filter(t=>t.id!==id);persist();render()}})
 }
 function render(){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.v===view));renderCal();renderList();stats()}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{view=b.dataset.v;cur=new Date(sel);render()});
-$('prev').onclick=()=>{cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()-1,1):addD(cur,view==='week'?-7:-1);sel=new Date(cur);render()};
-$('next').onclick=()=>{cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()+1,1):addD(cur,view==='week'?7:1);sel=new Date(cur);render()};
+document.querySelectorAll('.tab').forEach(b=>b.onclick=async()=>{view=b.dataset.v;cur=new Date(sel);render();if(googleAccessToken)await loadGoogleEventsForRange()});
+$('prev').onclick=async()=>{cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()-1,1):addD(cur,view==='week'?-7:-1);sel=new Date(cur);render();if(googleAccessToken)await loadGoogleEventsForRange()};
+$('next').onclick=async()=>{cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()+1,1):addD(cur,view==='week'?7:1);sel=new Date(cur);render();if(googleAccessToken)await loadGoogleEventsForRange()};
 $('goToday').onclick=()=>{sel=new Date();sel=new Date(sel.getFullYear(),sel.getMonth(),sel.getDate());cur=new Date(sel);view='day';render()};
 function closeM(){$('modal').classList.add('hidden');$('modal').classList.remove('flex')}
 $('add').onclick=()=>{$('d').value=iso(sel);$('title').value='';$('tm').value='';$('note').value='';$('modal').classList.remove('hidden');$('modal').classList.add('flex')};$('x').onclick=closeM;
 $('save').onclick=()=>{let t=$('title').value.trim();if(!t){say('Vui lòng nhập nội dung công việc.');return}tasks.push({id:'pc_'+Date.now(),owner:uid,title:t,date:$('d').value||iso(sel),time:$('tm').value,note:$('note').value.trim(),reminder:Number($('rem').value),done:false});persist();sel=new Date(($('d').value||iso(sel))+'T00:00');cur=new Date(sel);closeM();render();say('Đã lưu nhắc việc cá nhân.')};
-$('google').onclick=()=>say('Sẵn sàng tích hợp Google Calendar ở bước kết nối HVA.');
+
+
+/* =========================================================
+   HVA ↔ GOOGLE CALENDAR
+   - OAuth theo từng người dùng bằng Google Identity Services.
+   - Không dùng Client Secret ở trình duyệt.
+   - Chỉ xin quyền sự kiện Calendar.
+   - Access token chỉ giữ trong bộ nhớ của phiên hiện tại.
+   ========================================================= */
+const HVA_GOOGLE_OAUTH_CLIENT_ID =
+  window.HVA_GOOGLE_OAUTH_CLIENT_ID ||
+  localStorage.getItem('HVA_GOOGLE_OAUTH_CLIENT_ID') ||
+  '';
+
+const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/calendar.events';
+let googleTokenClient = null;
+let googleAccessToken = '';
+let googleEvents = [];
+
+function googleReady(){
+  return !!(window.google && google.accounts && google.accounts.oauth2);
+}
+function googleStatus(msg, connected=false){
+  $('googleStatus').textContent = msg;
+  $('googleStatus').className = connected
+    ? 'text-[9px] text-emerald-600 font-bold mt-1'
+    : 'text-[9px] text-slate-400 mt-1';
+  $('googleActions').classList.toggle('hidden', !connected);
+  $('google').textContent = connected ? 'Ngắt kết nối' : 'Kết nối';
+}
+function initGoogleTokenClient(){
+  if(!HVA_GOOGLE_OAUTH_CLIENT_ID){
+    googleStatus('Chưa cấu hình OAuth Client ID cho HVA');
+    return false;
+  }
+  if(!googleReady()){
+    googleStatus('Đang tải dịch vụ Google…');
+    return false;
+  }
+  if(googleTokenClient) return true;
+
+  googleTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: HVA_GOOGLE_OAUTH_CLIENT_ID,
+    scope: GOOGLE_SCOPE,
+    callback: async (resp) => {
+      if(resp.error){
+        googleStatus('Google từ chối hoặc chưa cấp quyền');
+        say('Chưa kết nối được Google Calendar.');
+        return;
+      }
+      googleAccessToken = resp.access_token || '';
+      if(!googleAccessToken) return;
+      googleStatus('Đã kết nối Google Calendar', true);
+      await loadGoogleEventsForRange();
+      say('Đã kết nối và nạp lịch Google Calendar.');
+    }
+  });
+  return true;
+}
+function requestGoogleConnection(){
+  if(!HVA_GOOGLE_OAUTH_CLIENT_ID){
+    showGoogleSetup();
+    return;
+  }
+  if(!initGoogleTokenClient()){
+    setTimeout(requestGoogleConnection, 700);
+    return;
+  }
+  googleTokenClient.requestAccessToken({prompt:'consent'});
+}
+function disconnectGoogle(){
+  if(googleAccessToken && googleReady()){
+    try{ google.accounts.oauth2.revoke(googleAccessToken, ()=>{}); }catch(e){}
+  }
+  googleAccessToken='';
+  googleEvents=[];
+  googleStatus('Chưa kết nối • Tùy chọn', false);
+  render();
+  say('Đã ngắt kết nối Google Calendar.');
+}
+function showGoogleSetup(){
+  const id = prompt(
+    'HVA chưa có Google OAuth Client ID.\\n\\n' +
+    'Dán OAuth 2.0 Client ID loại Web application của dự án HVA vào đây.\\n' +
+    'Client ID không phải Client Secret và có thể đặt ở frontend.'
+  );
+  if(!id) return;
+  if(!/\.apps\.googleusercontent\.com$/.test(id.trim())){
+    say('OAuth Client ID chưa đúng định dạng.');
+    return;
+  }
+  localStorage.setItem('HVA_GOOGLE_OAUTH_CLIENT_ID', id.trim());
+  say('Đã lưu Client ID trên thiết bị. Tải lại trang để kết nối.');
+  setTimeout(()=>location.reload(),900);
+}
+function rangeForCurrentView(){
+  let a,b;
+  if(view==='day'){ a=new Date(sel); b=addD(a,1); }
+  else if(view==='week'){ a=mon(cur); b=addD(a,7); }
+  else { a=new Date(cur.getFullYear(),cur.getMonth(),1); b=new Date(cur.getFullYear(),cur.getMonth()+1,1); }
+  return [a,b];
+}
+async function gcalFetch(url, options={}){
+  if(!googleAccessToken) throw new Error('NO_TOKEN');
+  const r = await fetch(url, {
+    ...options,
+    headers:{
+      'Authorization':'Bearer '+googleAccessToken,
+      'Content-Type':'application/json',
+      ...(options.headers||{})
+    }
+  });
+  if(r.status===401){
+    googleAccessToken='';
+    googleStatus('Phiên Google đã hết hạn • Kết nối lại', false);
+    throw new Error('TOKEN_EXPIRED');
+  }
+  if(!r.ok){
+    let m='Google Calendar API '+r.status;
+    try{const j=await r.json();m=j?.error?.message||m}catch(e){}
+    throw new Error(m);
+  }
+  if(r.status===204) return {};
+  return r.json();
+}
+async function loadGoogleEventsForRange(){
+  if(!googleAccessToken) return;
+  try{
+    const [a,b]=rangeForCurrentView();
+    const q = new URLSearchParams({
+      timeMin:a.toISOString(),
+      timeMax:b.toISOString(),
+      singleEvents:'true',
+      orderBy:'startTime',
+      maxResults:'250'
+    });
+    const data = await gcalFetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?'+q);
+    googleEvents = (data.items||[]).filter(e=>e.status!=='cancelled');
+    render();
+  }catch(e){
+    console.error('HVA Google Calendar load:',e);
+    if(e.message!=='TOKEN_EXPIRED') say('Chưa nạp được lịch Google: '+e.message);
+  }
+}
+function googleEventsForDate(date){
+  const key=iso(date);
+  return googleEvents.filter(e=>{
+    const s=e.start?.dateTime||e.start?.date;
+    if(!s) return false;
+    return s.slice(0,10)===key;
+  });
+}
+function toGoogleEvent(t){
+  const minutes = Number(t.reminder||0);
+  let start,end;
+  if(t.time){
+    const local = new Date(t.date+'T'+t.time+':00');
+    const endLocal = new Date(local.getTime()+60*60*1000);
+    start={dateTime:local.toISOString(),timeZone:'Asia/Ho_Chi_Minh'};
+    end={dateTime:endLocal.toISOString(),timeZone:'Asia/Ho_Chi_Minh'};
+  }else{
+    const d0=new Date(t.date+'T00:00:00');
+    const d1=addD(d0,1);
+    start={date:iso(d0)};
+    end={date:iso(d1)};
+  }
+  return {
+    summary:t.title,
+    description:(t.note? t.note+'\\n\\n':'')+'Nguồn: HVA • Lịch cá nhân',
+    start,end,
+    reminders: minutes>0
+      ? {useDefault:false,overrides:[{method:'popup',minutes}]}
+      : {useDefault:true},
+    extendedProperties:{private:{hvaTaskId:t.id,hvaOwner:uid}}
+  };
+}
+async function pushOneTaskToGoogle(t){
+  if(t.googleEventId) return {skipped:true};
+  const event = await gcalFetch(
+    'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+    {method:'POST',body:JSON.stringify(toGoogleEvent(t))}
+  );
+  t.googleEventId=event.id;
+  t.googleHtmlLink=event.htmlLink||'';
+  t.syncedAt=new Date().toISOString();
+  return event;
+}
+async function pushVisibleHvaTasks(){
+  if(!googleAccessToken){requestGoogleConnection();return}
+  const [a,b]=rangeForCurrentView();
+  const candidates=tasks.filter(t=>{
+    const d=new Date(t.date+'T00:00:00');
+    return d>=a&&d<b&&!t.googleEventId;
+  });
+  if(!candidates.length){say('Không có việc HVA mới cần đẩy sang Google.');return}
+  let ok=0;
+  try{
+    for(const t of candidates){await pushOneTaskToGoogle(t);ok++}
+    persist();
+    await loadGoogleEventsForRange();
+    say('Đã đồng bộ '+ok+' việc HVA sang Google Calendar.');
+  }catch(e){
+    persist();
+    console.error('HVA Google push:',e);
+    say('Đồng bộ được '+ok+' việc; sau đó gặp lỗi: '+e.message);
+  }
+}
+function googleEventCard(e){
+  const s=e.start?.dateTime||e.start?.date||'';
+  const timed=!!e.start?.dateTime;
+  let time='Cả ngày';
+  if(timed){
+    const d=new Date(s);
+    time=pad(d.getHours())+':'+pad(d.getMinutes());
+  }
+  return `<div class="bg-white border border-blue-100 rounded-[18px] p-3 card">
+    <div class="flex gap-3">
+      <div class="w-9 h-9 shrink-0 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><i class="bi bi-google"></i></div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs font-extrabold text-slate-700">${esc(e.summary||'(Không có tiêu đề)')}</div>
+        <div class="text-[9px] text-slate-400 mt-1"><i class="bi bi-clock"></i> ${time} &nbsp; • &nbsp; Google Calendar</div>
+      </div>
+      ${e.htmlLink?`<a href="${e.htmlLink}" target="_blank" rel="noopener" class="w-8 h-8 flex items-center justify-center text-blue-500"><i class="bi bi-box-arrow-up-right"></i></a>`:''}
+    </div>
+  </div>`;
+}
+
+/* Mở rộng render danh sách: việc HVA + lịch Google của đúng ngày. */
+const renderListHVAOriginal = renderList;
+renderList = function(){
+  renderListHVAOriginal();
+  if(!googleAccessToken) return;
+  const ge = googleEventsForDate(sel);
+  if(!ge.length) return;
+  const host=$('list');
+  host.insertAdjacentHTML('beforeend',
+    `<div class="pt-2 text-[9px] font-extrabold text-blue-600">GOOGLE CALENDAR</div>`+
+    ge.map(googleEventCard).join('')
+  );
+  $('empty').classList.add('hidden');
+};
+
+/* Khi đổi ngày/tuần/tháng, nạp lại khoảng lịch Google. */
+const renderHVAOriginal = render;
+render = function(){
+  renderHVAOriginal();
+};
+
+$('google').onclick=()=>{
+  if(googleAccessToken) disconnectGoogle();
+  else requestGoogleConnection();
+};
+$('googlePull').onclick=()=>loadGoogleEventsForRange();
+$('googlePush').onclick=()=>pushVisibleHvaTasks();
+
+setTimeout(()=>{
+  if(HVA_GOOGLE_OAUTH_CLIENT_ID) initGoogleTokenClient();
+  else googleStatus('Chưa cấu hình OAuth Client ID cho HVA');
+},900);
+
 profile();render();
 </script>
 </body></html>
