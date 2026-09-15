@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#0F4C81">
+    <link rel="preconnect" href="https://script.google.com">
+    <link rel="preconnect" href="https://script.googleusercontent.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Đăng nhập | Trung tâm Quản trị số HVA – Trường THPT Hòa Vang</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico?v=20260915c">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=20260915c">
@@ -308,7 +312,6 @@
     <script>
        
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec";
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
         const loginForm     = document.getElementById("loginForm");
         const usernameInput = document.getElementById("username");
         const passwordInput = document.getElementById("password");
@@ -331,74 +334,89 @@
 
             const username = usernameInput.value.trim();
             const rawPassword = passwordInput.value.trim();
-            const password = "HVA@" + rawPassword;
 
             if (!username || !rawPassword) {
                 showError("Vui lòng nhập đầy đủ tên đăng nhập và 4 số tự nhiên của mật khẩu.");
                 return;
             }
 
+            if (!/^\d{4}$/.test(rawPassword)) {
+                showError("Mật khẩu HVA gồm đúng 4 chữ số.");
+                passwordInput.focus();
+                return;
+            }
+
+            const password = "HVA@" + rawPassword;
+
             setLoading(true);
             hideError();
+
+            // Không để giao diện treo vô thời hạn nếu Apps Script/mạng gặp sự cố.
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
 
             try {
                 const response = await fetch(WEB_APP_URL, {
                     method: "POST",
+                    headers: {
+                        "Content-Type": "text/plain;charset=UTF-8"
+                    },
                     body: JSON.stringify({
                         action: "login",
                         username,
                         password
-                    })
+                    }),
+                    cache: "no-store",
+                    signal: controller.signal
                 });
 
                 if (!response.ok) {
-                    throw new Error("Lỗi kết nối máy chủ. Mã lỗi: " + response.status);
+                    throw new Error("HTTP_" + response.status);
                 }
 
                 const result = await response.json();
 
-                if (result.success) {
-
-    // Lưu người dùng đăng nhập
-    localStorage.setItem(
-        "user",
-        JSON.stringify(result.user)
-    );
-
-    // Dọn cache giao diện/PWA cũ trước khi vào hệ thống
-    try {
-        if ("caches" in window) {
-            const cacheNames = await caches.keys();
-
-            await Promise.all(
-                cacheNames.map(cacheName =>
-                    caches.delete(cacheName)
-                )
-            );
-
-            console.log(
-                "[HVA] Đã dọn cache phiên bản cũ."
-            );
-        }
-    } catch (cacheError) {
-        console.warn(
-            "[HVA] Không thể dọn cache:",
-            cacheError
-        );
-    }
-
-    // Vào Dashboard và tránh lấy main.html cũ từ cache
-    window.location.replace(
-        "main.html?v=" + Date.now()
-    );
-
-} else {
-                    showError(result.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+                if (!result || result.success !== true || !result.user) {
+                    showError(
+                        result?.message ||
+                        "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin."
+                    );
+                    return;
                 }
+
+                // Lưu đúng đối tượng user backend trả về.
+                // Các trường giới tính/VTVL/chức vụ/tổ-bộ phận tiếp tục được giữ nguyên
+                // để HVA Assistant xưng hô và phân quyền chính xác.
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(result.user)
+                );
+
+                /*
+                 * HVA LOGIN FAST 15/09/2026
+                 * Không xóa toàn bộ Cache Storage tại mỗi lần đăng nhập.
+                 * Việc quản lý phiên bản/cache thuộc PWA/service worker.
+                 * Nhờ vậy sau khi backend xác thực thành công, chuyển Dashboard ngay.
+                 */
+                window.location.replace("main.html");
+
             } catch (error) {
-                console.error(error);
-                showError("Đã xảy ra lỗi mạng hoặc không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
+                console.error("[HVA Login]", error);
+
+                if (error?.name === "AbortError") {
+                    showError(
+                        "Máy chủ HVA phản hồi quá lâu. Vui lòng kiểm tra kết nối mạng và thử đăng nhập lại."
+                    );
+                } else {
+                    showError(
+                        "Đã xảy ra lỗi mạng hoặc không thể kết nối đến máy chủ. Vui lòng thử lại sau."
+                    );
+                }
             } finally {
+                clearTimeout(timeoutId);
+
+                // Nếu đã chuyển trang thì đoạn này không ảnh hưởng.
+                // Nếu đăng nhập lỗi, trả form về trạng thái sẵn sàng.
                 setLoading(false);
             }
         });
