@@ -9,8 +9,7 @@ const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './site.webmanifest',
-  './android-chrome-192x192.png',
+   './android-chrome-192x192.png',
   './android-chrome-512x512.png',
   './favicon.ico'
 ];
