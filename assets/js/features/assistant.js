@@ -2,10 +2,18 @@ import { Storage } from '../core/storage.js';
 import { $ } from '../core/utils.js';
 
 // =====================================================
-// HVA ASSISTANT - LỜI CHÀO & DANH XƯNG THỐNG NHẤT
-// - CBQL/GV: Nam = Thầy, Nữ = Cô
-// - Nhân viên: Nam = Anh, Nữ = Chị
-// - 22:00–04:59: Chào khuya + nhắc nghỉ ngơi
+// HVA ASSISTANT - DANH XƯNG & LỜI CHÀO THỐNG NHẤT
+//
+// QUY TẮC CHỐT:
+// 1. CBQL / Giáo viên:
+//    - Nam -> Thầy
+//    - Nữ  -> Cô
+// 2. Nhân viên:
+//    - Nam -> Anh
+//    - Nữ  -> Chị
+// 3. Ưu tiên nhận diện NHÂN VIÊN theo Vị trí việc làm / chức vụ
+//    trước khi xét các vai trò hệ thống khác.
+// 4. 22:00–04:59: Chào khuya + nhắc nghỉ ngơi.
 // =====================================================
 
 function firstValue(user, keys) {
@@ -30,13 +38,13 @@ function normalizeText(value) {
 
 function getGender(user) {
     const raw = normalizeText(firstValue(user, [
-        'gioiTinh', 'GIOITINH', 'gender', 'sex', 'phai'
+        'gioiTinh', 'gender', 'GIOITINH', 'sex', 'phai'
     ]));
 
     if (raw === 'nu' || raw === 'female') return 'NU';
     if (raw === 'nam' || raw === 'male') return 'NAM';
 
-    // Chỉ dùng danh xưng đã có trong hồ sơ làm phương án dự phòng.
+    // Chỉ dùng danh xưng có sẵn trong hồ sơ làm fallback.
     const title = normalizeText(firstValue(user, ['danhXung', 'xungHo']));
     if (['co', 'chi', 'ba'].includes(title)) return 'NU';
     if (['thay', 'anh', 'ong'].includes(title)) return 'NAM';
@@ -44,24 +52,95 @@ function getGender(user) {
     return '';
 }
 
+function isEmployeePosition(value) {
+    const p = normalizeText(value);
+    if (!p) return false;
+
+    // Nhóm vị trí nhân viên trường học.
+    return /(^| )(nhan vien|van thu|giao vu|ke toan|thu vien|y te|bao ve|tap vu|thiet bi|thu quy|lai xe|phuc vu)( |$)/.test(p);
+}
+
+function isManagerPosition(value) {
+    const p = normalizeText(value);
+    if (!p) return false;
+
+    return /(hieu truong|pho hieu truong|ban giam hieu|bgh|can bo quan ly|cbql)/.test(p);
+}
+
+function isTeacherPosition(value) {
+    const p = normalizeText(value);
+    if (!p) return false;
+
+    return /(giao vien|teacher|(^| )gv( |$)|ttcm|tpcm|to truong chuyen mon|to pho chuyen mon)/.test(p);
+}
+
 function getStaffGroup(user) {
-    const raw = normalizeText([
-        firstValue(user, ['nhomNhanSu', 'nhom', 'loaiNhanSu', 'doiTuong']),
-        firstValue(user, ['role', 'vaiTro']),
-        firstValue(user, ['chucDanh', 'chucVu', 'CHUCVU']),
-        firstValue(user, ['viTriViecLam', 'viTri', 'workPosition', 'position']),
-        firstValue(user, ['department', 'toBoPhan', 'to_BoPhan', 'boPhan'])
-    ].filter(Boolean).join(' '));
+    // -------------------------------------------------
+    // ƯU TIÊN 1: Vị trí việc làm / chức vụ thực tế.
+    // Đây là nguồn quyết định cách xưng hô.
+    // -------------------------------------------------
+    const workPosition = firstValue(user, [
+        'workPosition',
+        'viTriViecLam',
+        'viTri',
+        'position',
+        'chucVu',
+        'CHUCVU',
+        'chucDanh'
+    ]);
 
-    if (/(hieu truong|pho hieu truong|ban giam hieu|bgh|cbql|can bo quan ly)/.test(raw)) {
-        return 'CBQL';
-    }
+    // Nếu vị trí việc làm là Nhân viên thì CHỐT NV ngay,
+    // không để role/vaiTro hệ thống phía sau ghi đè.
+    if (isEmployeePosition(workPosition)) return 'NV';
 
-    if (/(giao vien|teacher|(^| )gv( |$)|ttcm|tpcm|to truong chuyen mon|to pho chuyen mon)/.test(raw)) {
-        return 'GV';
-    }
+    if (isManagerPosition(workPosition)) return 'CBQL';
 
-    if (/(nhan vien|staff|van thu|giao vu|ke toan|thu vien|y te|bao ve|tap vu|thiet bi)/.test(raw)) {
+    if (isTeacherPosition(workPosition)) return 'GV';
+
+    // -------------------------------------------------
+    // ƯU TIÊN 2: Nhóm nhân sự / vai trò nghiệp vụ.
+    // Chỉ dùng khi Vị trí việc làm chưa đủ để phân nhóm.
+    // -------------------------------------------------
+    const personnelGroup = normalizeText(firstValue(user, [
+        'nhomNhanSu',
+        'nhom',
+        'loaiNhanSu',
+        'doiTuong'
+    ]));
+
+    if (/(nhan vien|staff)/.test(personnelGroup)) return 'NV';
+    if (/(cbql|can bo quan ly|ban giam hieu)/.test(personnelGroup)) return 'CBQL';
+    if (/(giao vien|teacher|(^| )gv( |$))/.test(personnelGroup)) return 'GV';
+
+    // -------------------------------------------------
+    // ƯU TIÊN 3: role/vaiTro hệ thống.
+    // Không cho role hệ thống làm mất phân loại NV đã có.
+    // -------------------------------------------------
+    const role = normalizeText(firstValue(user, [
+        'role',
+        'vaiTro'
+    ]));
+
+    if (/(nhan vien|staff|(^| )nv( |$))/.test(role)) return 'NV';
+    if (/(cbql|can bo quan ly|ban giam hieu)/.test(role)) return 'CBQL';
+    if (/(giao vien|teacher|(^| )gv( |$)|ttcm|tpcm)/.test(role)) return 'GV';
+
+    // -------------------------------------------------
+    // ƯU TIÊN 4: Tổ/Bộ phận - chỉ làm fallback.
+    // -------------------------------------------------
+    const department = firstValue(user, [
+        'department',
+        'toBoPhan',
+        'to_BoPhan',
+        'boPhan',
+        'tenTo'
+    ]);
+
+    const dep = normalizeText(department);
+
+    if (
+        /(van phong|y te|van thu|giao vu|ke toan|thu vien|bao ve|tap vu|thiet bi)/.test(dep)
+    ) {
         return 'NV';
     }
 
@@ -72,15 +151,19 @@ function getHonorific(user) {
     const gender = getGender(user);
     const group = getStaffGroup(user);
 
-    // Không đoán giới tính khi hồ sơ thiếu dữ liệu.
+    // Không đoán giới tính nếu CSDL chưa có dữ liệu.
     if (!gender) return '';
 
     if (group === 'NV') {
         return gender === 'NU' ? 'Chị' : 'Anh';
     }
 
-    // CBQL/GV và trường hợp chưa phân nhóm nhưng là tài khoản nhà trường:
-    // dùng Thầy/Cô theo giới tính.
+    if (group === 'CBQL' || group === 'GV') {
+        return gender === 'NU' ? 'Cô' : 'Thầy';
+    }
+
+    // Nếu chưa phân nhóm được nhưng đã có giới tính:
+    // dùng cách xưng hô nhà trường mặc định Thầy/Cô.
     return gender === 'NU' ? 'Cô' : 'Thầy';
 }
 
@@ -94,9 +177,19 @@ function getGreetingInfo() {
             hour: h
         };
     }
-    if (h < 11) return { text: '🌅 Chào buổi sáng', isNight: false, hour: h };
-    if (h < 14) return { text: '☀️ Chào buổi trưa', isNight: false, hour: h };
-    if (h < 18) return { text: '🌤️ Chào buổi chiều', isNight: false, hour: h };
+
+    if (h < 11) {
+        return { text: '🌅 Chào buổi sáng', isNight: false, hour: h };
+    }
+
+    if (h < 14) {
+        return { text: '☀️ Chào buổi trưa', isNight: false, hour: h };
+    }
+
+    if (h < 18) {
+        return { text: '🌤️ Chào buổi chiều', isNight: false, hour: h };
+    }
+
     return { text: '🌙 Chào buổi tối', isNight: false, hour: h };
 }
 
@@ -116,6 +209,7 @@ function randomMessage(honor, greetingInfo) {
     }
 
     const subject = honor ? honor.toLowerCase() : 'thầy/cô';
+
     const list = [
         `Hôm nay tôi có thể hỗ trợ gì cho ${subject}?`,
         `Chúc ${subject} một ngày làm việc hiệu quả.`,
@@ -132,17 +226,33 @@ function renderAssistantGreeting() {
     const greetingInfo = getGreetingInfo();
 
     const fullName = firstValue(user, [
-        'fullName', 'hoTen', 'HO_TEN', 'hoten', 'name', 'username'
+        'fullName',
+        'hoTen',
+        'HO_TEN',
+        'hoten',
+        'name',
+        'username'
     ]);
 
     const workPosition = firstValue(user, [
-        'workPosition', 'viTriViecLam', 'viTri', 'chucVu',
-        'CHUCVU', 'position', 'chucDanh', 'vaiTro'
+        'workPosition',
+        'viTriViecLam',
+        'viTri',
+        'position',
+        'chucVu',
+        'CHUCVU',
+        'chucDanh',
+        'vaiTro'
     ]);
 
     const department = firstValue(user, [
-        'department', 'toBoPhan', 'to_BoPhan', 'tenTo',
-        'toChuyenMon', 'boPhan', 'donVi'
+        'department',
+        'toBoPhan',
+        'to_BoPhan',
+        'tenTo',
+        'toChuyenMon',
+        'boPhan',
+        'donVi'
     ]);
 
     const greetingEl = $('#assistantGreeting');
@@ -162,7 +272,10 @@ function renderAssistantGreeting() {
 
     if (posEl) {
         const parts = [];
-        if (workPosition) parts.push(workPosition);
+
+        if (workPosition) {
+            parts.push(workPosition);
+        }
 
         if (
             department &&
@@ -178,11 +291,12 @@ function renderAssistantGreeting() {
         msgEl.textContent = randomMessage(honor, greetingInfo);
     }
 
-    // Nếu HomeRenderer có sẵn dòng assistantNightNote thì dùng luôn.
-    // Không tạo thêm DOM mới để tránh làm thay đổi giao diện hiện tại.
+    // HomeRenderer đã có sẵn assistantNightNote.
+    // Chỉ cập nhật nội dung, không tạo DOM mới.
     if (nightNoteEl) {
         if (greetingInfo.isNight) {
-            nightNoteEl.textContent = getNightMessage(honor, greetingInfo.hour);
+            nightNoteEl.textContent =
+                getNightMessage(honor, greetingInfo.hour);
             nightNoteEl.classList.remove('hidden');
         } else {
             nightNoteEl.textContent = '';
