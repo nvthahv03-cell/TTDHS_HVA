@@ -6132,4 +6132,3 @@ hvaApplyUserGreeting_();
 setTimeout(hvaApplyUserGreeting_, 250);
 setInterval(hvaApplyUserGreeting_, 60 * 1000);
 
-}
