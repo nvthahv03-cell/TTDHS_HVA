@@ -381,19 +381,21 @@
         </a>
 
 
-        <!-- ================= TRA CỨU ================= -->
-        <a href="#"
-           id="bottom-search"
-           data-nav="search"
+        <!-- ================= LỊCH CÁ NHÂN ================= -->
+        <a href="Lichcongtac.html"
+           id="bottom-personal-calendar"
+           data-nav="personal-calendar"
+           aria-label="Lịch cá nhân"
+           title="Lịch cá nhân"
            class="nav-item flex flex-col items-center justify-center flex-1
                   text-[#2563EB]
                   hover:text-[#0F4C81]
                   py-1 transition">
 
-            <i class="bi bi-search text-xl"></i>
+            <i class="bi bi-calendar3 text-xl"></i>
 
             <span class="text-[10px] font-bold mt-1">
-                Tra cứu
+                Lịch cá nhân
             </span>
 
         </a>
@@ -4610,13 +4612,15 @@ setTimeout(() => {
        EVENTS
     ===================================================== */
 
-    document.getElementById('bottom-search')
+    // Bottom navigation: Lịch cá nhân.
+    // Tìm kiếm/tra cứu toàn HVA chỉ còn ở nút Tìm nhanh trên Header.
+    document.getElementById('bottom-personal-calendar')
         ?.addEventListener('click', function (event) {
 
-            event.preventDefault();
             event.stopPropagation();
-
-            openSearchPanel();
+            // Giai đoạn hiện tại dùng màn Lịch công tác đang hoạt động ổn định.
+            // Khi Lịch cá nhân ngày/tuần/tháng được tách thành module riêng,
+            // chỉ cần đổi href của nút này, không ảnh hưởng Tìm nhanh.
         });
 
     headerSearchBtn?.addEventListener('click', function (event) {
