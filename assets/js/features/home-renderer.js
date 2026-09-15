@@ -6133,5 +6133,3 @@ setTimeout(hvaApplyUserGreeting_, 250);
 setInterval(hvaApplyUserGreeting_, 60 * 1000);
 
 }
-setTimeout(hvaWatchUserHonorific_, 250);
-setTimeout(hvaApplyCorrectUserHonorific_, 1200);
