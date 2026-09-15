@@ -6061,7 +6061,7 @@ function hvaResolveStaffGroup_(user) {
 
 function hvaResolveGender_(user) {
     const declared = hvaNormalizePersonText_([
-        user.gioiTinh, user.GIOITINH, user.gender, user.sex, user.phai
+        user.gioiTinh, user.GioiTinh, user.GIOITINH, user['Giới tính'], user.gender, user.sex, user.phai
     ].filter(Boolean).join(' '));
     if (/(^| )(nu|female)( |$)/.test(declared)) return 'NU';
     if (/(^| )(nam|male)( |$)/.test(declared)) return 'NAM';
@@ -6073,18 +6073,19 @@ function hvaResolveGender_(user) {
 }
 
 function hvaResolveHonorific_(user) {
-    const group = hvaResolveStaffGroup_(user);
+    // Chuẩn xưng hô HVA dùng thống nhất theo giới tính trong CSDL nhân sự:
+    // Nam = Thầy | Nữ = Cô. Không suy đoán từ họ tên.
     const gender = hvaResolveGender_(user);
-    if (group === 'NV') return gender === 'NU' ? 'Chị' : gender === 'NAM' ? 'Anh' : '';
-    if (group === 'CBQL' || group === 'GV') return gender === 'NU' ? 'Cô' : gender === 'NAM' ? 'Thầy' : '';
+    if (gender === 'NU') return 'Cô';
+    if (gender === 'NAM') return 'Thầy';
     return '';
 }
 
 function hvaGreetingByTime_(hour) {
     if (hour >= 22 || hour < 5) return { text:'🌙 Chào khuya,', night:true };
-    if (hour < 11) return { text:'☀️ Chào buổi sáng,', night:false };
-    if (hour < 14) return { text:'🌤️ Chào buổi trưa,', night:false };
-    if (hour < 18) return { text:'🌇 Chào buổi chiều,', night:false };
+    if (hour < 11) return { text:'🌅 Chào buổi sáng,', night:false };
+    if (hour < 13.5) return { text:'☀️ Chào buổi trưa,', night:false };
+    if (hour < 18) return { text:'🌤️ Chào buổi chiều,', night:false };
     return { text:'🌙 Chào buổi tối,', night:false };
 }
 
@@ -6117,8 +6118,11 @@ function hvaApplyUserGreeting_() {
 
     if (nightEl) {
         if (greeting.night) {
-            const subject = honorific || 'Thầy/Cô/Anh/Chị';
-            nightEl.textContent = `Khuya rồi, ${subject} nhớ nghỉ ngơi sớm nhé! 😊`;
+            const subject = honorific || fullName || 'bạn';
+            const hour = new Date().getHours();
+            nightEl.textContent = (hour >= 23 || hour < 5)
+                ? `Đã khá khuya rồi, ${subject} nên nghỉ ngơi để giữ sức cho ngày mai nhé. 😊`
+                : `Khuya rồi, ${subject} nhớ nghỉ ngơi sớm nhé! 😊`;
             nightEl.classList.remove('hidden');
         } else {
             nightEl.textContent = '';
@@ -6131,4 +6135,3 @@ function hvaApplyUserGreeting_() {
 hvaApplyUserGreeting_();
 setTimeout(hvaApplyUserGreeting_, 250);
 setInterval(hvaApplyUserGreeting_, 60 * 1000);
-
