@@ -184,6 +184,12 @@ export function renderHome() {
                 class="flex-1 bg-transparent outline-none text-[11px] font-medium text-slate-800 placeholder-slate-400"
             >
 
+            <!-- Gợi ý -->
+            <button id="assistantSuggestBtn" type="button" title="Gợi ý câu hỏi"
+                class="ml-1.5 h-8 px-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition flex items-center justify-center gap-1 text-[9.5px] font-bold text-slate-600 active:scale-95">
+                <span>Gợi ý</span><i class="bi bi-chevron-down text-[8px]"></i>
+            </button>
+
             <!-- Micro -->
             <button
                 id="assistantMicBtn"
@@ -214,7 +220,12 @@ export function renderHome() {
 
         </div>
 
-        <!-- HVA ASSISTANT V1: vùng hội thoại mở rộng khi người dùng gửi câu hỏi -->
+        <div id="assistantSuggestPanel"
+             class="hidden mt-1.5 rounded-xl border border-white/15 bg-slate-950/35 backdrop-blur-md p-1.5">
+            <div id="assistantSuggestList" class="grid gap-1"></div>
+        </div>
+
+        <!-- HVA ASSISTANT: vùng hội thoại mở rộng khi người dùng gửi câu hỏi -->
         <div id="assistantConversation"
              class="hidden mt-2 rounded-xl border border-white/15 bg-slate-950/20 backdrop-blur-md overflow-hidden">
             <div class="flex items-center justify-between px-2.5 py-1.5 border-b border-white/10">
@@ -223,9 +234,10 @@ export function renderHome() {
                     Hội thoại HVA Assistant
                 </div>
                 <button id="assistantClearBtn" type="button"
-                        title="Đóng và xóa hội thoại"
-                        class="w-6 h-6 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 flex items-center justify-center transition active:scale-95">
-                    <i class="bi bi-x-lg text-[9px]"></i>
+                        title="Làm mới hội thoại"
+                        class="h-6 px-2 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 flex items-center gap-1 justify-center transition active:scale-95">
+                    <i class="bi bi-arrow-clockwise text-[9px]"></i>
+                    <span class="text-[8.5px] font-bold">Làm mới</span>
                 </button>
             </div>
             <div id="assistantMessages"
