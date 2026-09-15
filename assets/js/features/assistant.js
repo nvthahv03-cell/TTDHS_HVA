@@ -250,6 +250,9 @@ function setBusy(busy) {
 const HVA_TASK_API_URL =
     'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 
+let taskCache = { username: '', at: 0, data: null };
+const TASK_CACHE_TTL_MS = 30000;
+
 function isMyWorkQuestion(question) {
     const q = normalizeText(question);
     return /(viec cua toi|nhiem vu cua toi|con viec gi|toi co viec gi|hom nay.*viec|viec.*hom nay|qua han|dang thuc hien|sap den han|sap het han)/.test(q);
@@ -304,34 +307,28 @@ function taskTimeValue(task) {
     return d ? d.getTime() : Number.MAX_SAFE_INTEGER;
 }
 
-async function fetchMyTasks() {
+async function fetchMyTasks({ force = false } = {}) {
     const p = getProfile();
-    if (!p.username) {
-        throw new Error('MISSING_USERNAME');
+    if (!p.username) throw new Error('MISSING_USERNAME');
+
+    const now = Date.now();
+    if (!force && taskCache.username === p.username &&
+        Array.isArray(taskCache.data) && now - taskCache.at < TASK_CACHE_TTL_MS) {
+        return taskCache.data;
     }
 
     const url = HVA_TASK_API_URL +
         '?action=getTaskByUser&username=' + encodeURIComponent(p.username) +
-        '&_=' + Date.now();
+        '&_=' + now;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
-
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
     try {
-        const response = await fetch(url, {
-            method: 'GET',
-            cache: 'no-store',
-            signal: controller.signal
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP_${response.status}`);
-        }
-
+        const response = await fetch(url, { method: 'GET', cache: 'no-store', signal: controller.signal });
+        if (!response.ok) throw new Error(`HTTP_${response.status}`);
         const data = await response.json();
-        if (!Array.isArray(data)) {
-            throw new Error('INVALID_TASK_DATA');
-        }
+        if (!Array.isArray(data)) throw new Error('INVALID_TASK_DATA');
+        taskCache = { username: p.username, at: Date.now(), data };
         return data;
     } finally {
         clearTimeout(timeoutId);
@@ -342,20 +339,17 @@ function buildMyWorkAnswer(tasks) {
     const p = getProfile();
     const call = p.honor || 'Thầy/Cô';
     const now = new Date();
-
     const all = Array.isArray(tasks) ? tasks : [];
-    const active = all.filter(task => !isCompletedTask(task));
-    const overdue = active.filter(task => isOverdueTask(task, now));
-    const inProgress = active.filter(task => normalizeTaskStatus(task.trangThai).includes('dang thuc hien'));
-    const newTasks = active.filter(task => {
-        const s = normalizeTaskStatus(task.trangThai);
-        return s.includes('moi khoi tao') || s.includes('da tiep nhan');
-    });
 
-    const upcoming = active
-        .filter(task => !isOverdueTask(task, now) && parseHVADeadline(task.hanHoanThanh))
-        .sort((a, b) => taskTimeValue(a) - taskTimeValue(b));
+    const completed = [], overdue = [], doing = [], assigned = [];
+    for (const task of all) {
+        if (isCompletedTask(task)) completed.push(task);
+        else if (isOverdueTask(task, now)) overdue.push(task);
+        else if (normalizeTaskStatus(task?.trangThai).includes('dang thuc hien')) doing.push(task);
+        else assigned.push(task);
+    }
 
+    const active = [...assigned, ...doing, ...overdue];
     if (!active.length) {
         return {
             text: `${call} hiện không có nhiệm vụ nào đang chờ xử lý trong “Việc của tôi”.`,
@@ -364,27 +358,21 @@ function buildMyWorkAnswer(tasks) {
     }
 
     const lines = [`${call} hiện có ${active.length} nhiệm vụ cần theo dõi.`];
-
+    if (assigned.length) lines.push(`• ${assigned.length} việc được giao`);
+    if (doing.length) lines.push(`• ${doing.length} việc đang thực hiện`);
     if (overdue.length) lines.push(`• ${overdue.length} việc quá hạn`);
-    if (inProgress.length) lines.push(`• ${inProgress.length} việc đang thực hiện`);
-    if (newTasks.length) lines.push(`• ${newTasks.length} việc mới/đã tiếp nhận`);
 
-    const nearest = upcoming[0];
-    if (nearest) {
-        const title = String(nearest.tieuDe || nearest.noiDung || 'Nhiệm vụ').trim();
-        const deadline = formatDeadline(nearest.hanHoanThanh);
-        lines.push('');
-        lines.push(`Gần hạn nhất: ${title}${deadline ? ` — hạn ${deadline}` : ''}.`);
-    } else if (overdue.length) {
-        const oldestOverdue = overdue
-            .slice()
-            .sort((a, b) => taskTimeValue(a) - taskTimeValue(b))[0];
-        const title = String(oldestOverdue.tieuDe || oldestOverdue.noiDung || 'Nhiệm vụ').trim();
-        const deadline = formatDeadline(oldestOverdue.hanHoanThanh);
-        lines.push('');
-        lines.push(`Cần ưu tiên: ${title}${deadline ? ` — hạn ${deadline}` : ''}.`);
+    if (overdue.length) {
+        const t = overdue.slice().sort((x,y) => taskTimeValue(x)-taskTimeValue(y))[0];
+        lines.push('', `Cần ưu tiên: ${String(t.tieuDe || t.noiDung || 'Nhiệm vụ').trim()}${t.hanHoanThanh ? ` — hạn ${formatDeadline(t.hanHoanThanh)}` : ''}.`);
+    } else {
+        const future = [...assigned, ...doing].filter(t => parseHVADeadline(t.hanHoanThanh))
+            .sort((x,y) => taskTimeValue(x)-taskTimeValue(y));
+        if (future[0]) {
+            const t = future[0];
+            lines.push('', `Gần hạn nhất: ${String(t.tieuDe || t.noiDung || 'Nhiệm vụ').trim()} — hạn ${formatDeadline(t.hanHoanThanh)}.`);
+        }
     }
-
     return {
         text: lines.join('\n'),
         actions: [{ label: `Xem ${active.length} việc`, action: 'mywork', value: '' }]
@@ -468,8 +456,8 @@ function localAssistantAnswer(question) {
     }
 
     return {
-        text: `Em đã nhận câu hỏi của ${call.toLowerCase()}. Hiện em có thể đọc “Việc của tôi” từ HVA và hỗ trợ điều hướng các chức năng đã kết nối.`,
-        actions: [{ label: 'Xem khả năng Assistant', action: 'prompt', value: 'Bạn làm được gì?' }]
+        text: `Thầy/Cô muốn hỏi gì khác thì cứ nói hoặc soạn tin nhắn nhé. Em sẽ hỗ trợ hoặc chuyển đến trợ lý ảo khi phù hợp.`,
+        actions: [{ label: 'Xem gợi ý', action: 'suggest', value: '' }]
     };
 }
 
@@ -528,7 +516,47 @@ function runAction(action, value) {
         const input = $('#assistantInput');
         if (input) input.value = value;
         handleQuestion(value);
+        return;
     }
+    if (action === 'suggest') toggleSuggestions(true);
+}
+
+const ASSISTANT_SUGGESTIONS = [
+    'Tóm tắt ngày làm việc của tôi',
+    'Hôm nay tôi có việc gì?',
+    'Việc nào cần ưu tiên xử lý?',
+    'Việc nào sắp đến hạn?',
+    'Lịch tuần có thay đổi, bổ sung không?',
+    'Sáng thứ Bảy tuần này có cuộc họp nào không?',
+    'Có khảo sát, bình chọn nào sắp hết hạn không?',
+    'Tôi có thông báo mới nào chưa đọc?'
+];
+
+function renderSuggestions() {
+    const list = $('#assistantSuggestList');
+    if (!list || list.dataset.hvaReady === '1') return;
+    list.dataset.hvaReady = '1';
+    const frag = document.createDocumentFragment();
+    ASSISTANT_SUGGESTIONS.forEach(text => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'hva-assistant-suggestion w-full text-left rounded-lg px-2.5 py-1.5 text-[9.5px] font-semibold text-cyan-50 bg-white/10 hover:bg-white/20 transition';
+        btn.textContent = text;
+        btn.dataset.prompt = text;
+        frag.appendChild(btn);
+    });
+    const note = document.createElement('div');
+    note.className = 'px-2.5 pt-1.5 pb-1 text-[9px] leading-snug text-cyan-100/90';
+    note.textContent = '💬 Thầy/Cô muốn hỏi gì khác thì cứ nói hoặc soạn tin nhắn nhé. Em sẽ hỗ trợ hoặc chuyển đến trợ lý ảo khi phù hợp.';
+    frag.appendChild(note);
+    list.appendChild(frag);
+}
+function toggleSuggestions(forceOpen = null) {
+    const panel = $('#assistantSuggestPanel');
+    if (!panel) return;
+    renderSuggestions();
+    const open = forceOpen === null ? panel.classList.contains('hidden') : !!forceOpen;
+    panel.classList.toggle('hidden', !open);
 }
 
 function bindConversation() {
@@ -536,6 +564,8 @@ function bindConversation() {
     const send = $('#assistantSendBtn');
     const mic = $('#assistantMicBtn');
     const clear = $('#assistantClearBtn');
+    const suggestBtn = $('#assistantSuggestBtn');
+    const suggestList = $('#assistantSuggestList');
     const messages = $('#assistantMessages');
 
     if (!input || !send) return;
@@ -562,7 +592,18 @@ function bindConversation() {
     clear?.addEventListener('click', () => {
         if (messages) messages.innerHTML = '';
         $('#assistantConversation')?.classList.add('hidden');
+        $('#assistantSuggestPanel')?.classList.add('hidden');
+        input.value = '';
         input.focus();
+    });
+
+    suggestBtn?.addEventListener('click', () => toggleSuggestions());
+    suggestList?.addEventListener('click', event => {
+        const btn = event.target.closest('.hva-assistant-suggestion');
+        if (!btn) return;
+        const prompt = btn.dataset.prompt || '';
+        toggleSuggestions(false);
+        if (prompt) handleQuestion(prompt);
     });
 
     if (mic) {
