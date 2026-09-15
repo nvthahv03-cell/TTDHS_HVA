@@ -400,6 +400,44 @@ async function answerMyWorkFromBackend() {
     }
 }
 
+const HVA_AI_API_URL = HVA_TASK_API_URL;
+
+function isHVAInternalQuestion(question) {
+    const q = normalizeText(question);
+    return /(khao sat|binh chon|thong bao|thoi khoa bieu|tkb|cuoc hop|lich tuan|lich cong tac|lich ca nhan|lich cua toi|tom tat ngay lam viec|van ban|kho van ban|nhiem vu|viec cua toi)/.test(q);
+}
+
+async function askVirtualAssistant(question) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 18000);
+
+    try {
+        const response = await fetch(HVA_AI_API_URL, {
+            method: 'POST',
+            cache: 'no-store',
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            body: JSON.stringify({
+                action: 'askVirtualAssistant',
+                question: String(question || '').trim()
+            }),
+            signal: controller.signal
+        });
+
+        if (!response.ok) throw new Error(`HTTP_${response.status}`);
+
+        const data = await response.json();
+        if (!data?.success || !String(data?.answer || '').trim()) {
+            const err = new Error(data?.message || 'AI_UNAVAILABLE');
+            err.hvaMessage = data?.message || '';
+            throw err;
+        }
+
+        return { text: String(data.answer).trim(), actions: [] };
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
 function localAssistantAnswer(question) {
     const p = getProfile();
     const q = normalizeText(question);
@@ -455,10 +493,15 @@ function localAssistantAnswer(question) {
         };
     }
 
-    return {
-        text: `Thầy/Cô muốn hỏi gì khác thì cứ nói hoặc soạn tin nhắn nhé. Em sẽ hỗ trợ hoặc chuyển đến trợ lý ảo khi phù hợp.`,
-        actions: [{ label: 'Xem gợi ý', action: 'suggest', value: '' }]
-    };
+    if (isHVAInternalQuestion(question)) {
+        return {
+            text: `Nội dung này cần tra cứu từ dữ liệu HVA tương ứng. Nguồn nghiệp vụ này chưa được nối vào Assistant nên em chưa trả lời bằng dữ liệu thật để tránh sai thông tin.`,
+            actions: [{ label: 'Xem gợi ý', action: 'suggest', value: '' }]
+        };
+    }
+
+    // Câu hỏi mở ngoài nghiệp vụ HVA -> chuyển sang trợ lý ảo backend.
+    return { useAI: true };
 }
 
 async function handleQuestion(rawQuestion) {
@@ -476,14 +519,24 @@ async function handleQuestion(rawQuestion) {
     try {
         // V2: câu hỏi về “Việc của tôi” đọc dữ liệu thật từ Backend HVA.
         // Các tác vụ chưa nối dữ liệu vẫn dùng router cục bộ an toàn.
-        const answer = isMyWorkQuestion(question)
-            ? await answerMyWorkFromBackend()
-            : localAssistantAnswer(question);
+        let answer;
+
+        if (isMyWorkQuestion(question)) {
+            answer = await answerMyWorkFromBackend();
+        } else {
+            answer = localAssistantAnswer(question);
+            if (answer?.useAI) {
+                answer = await askVirtualAssistant(question);
+            }
+        }
 
         addBubble('assistant', answer.text, answer.actions || []);
     } catch (error) {
         console.error('[HVA Assistant]', error);
-        addBubble('assistant', 'HVA Assistant đang gặp lỗi xử lý. Vui lòng thử lại.');
+        const msg = error?.name === 'AbortError'
+            ? 'Trợ lý ảo phản hồi hơi lâu. Thầy/Cô vui lòng thử lại.'
+            : (error?.hvaMessage || 'HVA Assistant đang gặp lỗi xử lý. Vui lòng thử lại.');
+        addBubble('assistant', msg);
     } finally {
         setBusy(false);
         input?.focus();
