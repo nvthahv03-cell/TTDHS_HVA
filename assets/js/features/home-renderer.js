@@ -168,6 +168,10 @@ export function renderHome() {
 
             </div>
 
+            <div id="assistantNightNote"
+                 class="hidden text-amber-200/95 text-[9.5px] font-semibold leading-tight mt-1">
+            </div>
+
         </div>
 
         <!-- Ô hỏi AI -->
@@ -213,6 +217,24 @@ export function renderHome() {
     </div>
 
 </div>
+
+<!-- HVA PWA INSTALL CARD: chỉ hiện trên thiết bị di động chưa cài app -->
+<div id="hva-install-card" class="hidden mb-3 rounded-2xl border border-blue-100 bg-white/95 shadow-md overflow-hidden">
+    <div class="flex items-center gap-3 px-3.5 py-3">
+        <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center shrink-0">
+            <img src="./assets/brand/HVA_Logo_Transparent.png?v=20260915e" alt="HVA Digital" class="w-9 h-9 object-contain">
+        </div>
+        <div class="flex-1 min-w-0">
+            <div class="text-[11px] font-black text-[#0F4C81]">CÀI ĐẶT HVA TRÊN ĐIỆN THOẠI</div>
+            <div id="hva-install-subtitle" class="text-[9.5px] text-slate-500 font-medium mt-0.5 leading-snug">Đưa HVA ra Màn hình chính để truy cập nhanh như một ứng dụng.</div>
+        </div>
+        <button id="hva-install-now" type="button"
+                class="shrink-0 rounded-xl bg-[#0F4C81] hover:bg-[#123B67] active:scale-95 px-3 py-2 text-[10px] font-extrabold text-white shadow-sm transition">
+            Cài đặt
+        </button>
+    </div>
+</div>
+
 <!-- ====================================================== -->
 <!-- TRUNG TÂM CÁ NHÂN: VIỆC CỦA TÔI | KẾT NỐI SỐ          -->
 <!-- ====================================================== -->
@@ -3140,8 +3162,8 @@ export function renderHome() {
 
 `;
 
-    container.dataset.hvaHomeVersion = '20260914-v4';
-    console.info('[HVA Home] Đã nạp giao diện responsive 20260914-v4');
+    container.dataset.hvaHomeVersion = '20260915-final';
+    console.info('[HVA Home] Đã nạp HVA Home FINAL 15/09/2026');
 
       // =====================================================
     // VIỆC CỦA TÔI | KẾT NỐI SỐ
@@ -3618,7 +3640,7 @@ function renderPWAPopups() {
                     📱
                 </div>
                 <h3 class="text-base font-bold text-slate-900 mb-1">Cài đặt ứng dụng</h3>
-                <p class="text-xs text-slate-500 mb-6">Thêm TTĐHS_HVA vào màn hình chính để truy cập nhanh và tiện lợi hơn.</p>
+                <p class="text-xs text-slate-500 mb-6">Đưa HVA ra Màn hình chính để truy cập nhanh như một ứng dụng.</p>
                 <div class="flex gap-2.5">
                     <button id="pwa-dismiss-btn" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">Để sau</button>
                     <button id="pwa-confirm-btn" class="flex-1 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-500/25 transition">Cài đặt ngay</button>
@@ -3639,7 +3661,7 @@ function renderPWAPopups() {
                     </div>
                     <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
                         <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">2</span>
-                        <span>Chọn <b>Add to Home Screen</b></span>
+                        <span>Chọn <b>Thêm vào Màn hình chính</b> (Add to Home Screen)</span>
                     </div>
                     <div class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 border border-slate-100">
                         <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">3</span>
@@ -3682,42 +3704,81 @@ function bindHomeEvents() {
     bindHVAHomeQuickBadgeSync_();
     setTimeout(loadHVASurveyPollInbox_, 350);
 
-    // Sự kiện Nút Android
-    document.getElementById('pwa-dismiss-btn')?.addEventListener('click', () => {
-        hidePWAPopup();
-        localStorage.setItem('pwa-dismissed', Date.now().toString());
+    const installCard = document.getElementById('hva-install-card');
+    const installButton = document.getElementById('hva-install-now');
+    const installSubtitle = document.getElementById('hva-install-subtitle');
+    const mobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    const refreshInstallCard = () => {
+        if (!installCard) return;
+        const hide = isStandalone() || !mobileDevice;
+        installCard.classList.toggle('hidden', hide);
+        if (!hide && isIOS()) {
+            if (installButton) installButton.textContent = 'Hướng dẫn';
+            if (installSubtitle) installSubtitle.textContent = 'Cài HVA lên Màn hình chính của iPhone/iPad bằng Safari.';
+        } else if (!hide) {
+            if (installButton) installButton.textContent = 'Cài đặt';
+            if (installSubtitle) installSubtitle.textContent = 'Đưa HVA ra Màn hình chính để truy cập nhanh như một ứng dụng.';
+        }
+    };
+
+    refreshInstallCard();
+
+    // Android/Chrome: khi trình duyệt phát prompt thì giữ lại và bật card.
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        window.deferredPrompt = event;
+        refreshInstallCard();
     });
 
+    installButton?.addEventListener('click', async () => {
+        if (isStandalone()) {
+            refreshInstallCard();
+            return;
+        }
+
+        if (isIOS()) {
+            showPWAPopup(true);
+            return;
+        }
+
+        if (window.deferredPrompt) {
+            const promptEvent = window.deferredPrompt;
+            promptEvent.prompt();
+            try {
+                const choice = await promptEvent.userChoice;
+                if (choice?.outcome === 'accepted') {
+                    window.deferredPrompt = null;
+                }
+            } catch (error) {
+                console.warn('[HVA PWA] Không đọc được kết quả cài đặt:', error);
+            }
+            return;
+        }
+
+        // Chrome có thể chưa phát beforeinstallprompt ngay sau khi tải trang.
+        showHVAAppNotice_(
+            'Nếu hộp cài đặt chưa xuất hiện, Thầy/Cô/Anh/Chị mở menu ⋮ của Chrome và chọn “Install and create shortcut” hoặc “Cài đặt ứng dụng”.',
+            { kind:'info', title:'CÀI ĐẶT HVA' }
+        );
+    });
+
+    window.addEventListener('appinstalled', () => {
+        window.deferredPrompt = null;
+        localStorage.setItem('HVA_PWA_INSTALLED', '1');
+        refreshInstallCard();
+        showHVAAppNotice_('HVA đã được cài đặt trên thiết bị.', { kind:'success', title:'CÀI ĐẶT THÀNH CÔNG' });
+    });
+
+    // Các nút trong popup hướng dẫn.
+    document.getElementById('pwa-dismiss-btn')?.addEventListener('click', hidePWAPopup);
     document.getElementById('pwa-confirm-btn')?.addEventListener('click', () => {
         hidePWAPopup();
-        if (window.deferredPrompt) {
-            window.deferredPrompt.prompt();
-            window.deferredPrompt.userChoice.then(() => {
-                window.deferredPrompt = null;
-            });
-        } else if (typeof PWA?.install === 'function') {
-            PWA.install();
-        }
+        installButton?.click();
     });
-
-    // Sự kiện Nút iOS
     document.getElementById('pwa-ios-close')?.addEventListener('click', hidePWAPopup);
-    document.getElementById('pwa-ios-got-it')?.addEventListener('click', () => {
-        hidePWAPopup();
-        localStorage.setItem('pwa-ios-dismissed', Date.now().toString());
-    });
-
-    // Không hiển thị nếu ứng dụng đã được cài đặt (chạy ở chế độ standalone)
-    if (isStandalone()) return;
-
-   
-    // Lắng nghe và kiểm tra thiết bị iOS
-    if (isIOS()) {
-        const iosDismissed = localStorage.getItem('pwa-ios-dismissed');
-        if (!iosDismissed || Date.now() - Number(iosDismissed) > 2 * 24 * 60 * 60 * 1000) {
-            setTimeout(() => showPWAPopup(true), 1500);
-        }
-    }
+    document.getElementById('pwa-ios-got-it')?.addEventListener('click', hidePWAPopup);
 }
 
 // =====================================================
@@ -5954,9 +6015,9 @@ window.toggleHVAHanhChinhMenu = function(event) {
 };
 
 // =====================================================
-// DANH XƯNG NGƯỜI DÙNG
-// Ưu tiên dữ liệu Giới tính/Danh xưng; không tự gán "Thầy"
-// khi chưa xác định. Xác nhận: Trần Thu Hà là nữ.
+// HVA - LỜI CHÀO & DANH XƯNG TỪ DỮ LIỆU NHÂN SỰ
+// CBQL/GV: Nam = Thầy, Nữ = Cô | NV: Nam = Anh, Nữ = Chị
+// Họ tên, chức vụ/VTVL và Tổ/Bộ phận lấy từ hồ sơ user sau đăng nhập.
 // =====================================================
 function hvaNormalizePersonText_(value) {
     return String(value || '').trim().toLowerCase().normalize('NFD')
@@ -5977,54 +6038,100 @@ function hvaGetSignedInUser_() {
     }
 }
 
-function hvaResolveHonorific_(user, fullName) {
-    const declared = hvaNormalizePersonText_([
-        user.gioiTinh, user.GIOITINH, user.gender, user.sex,
-        user.phai, user.danhXung, user.xungHo
-    ].filter(Boolean).join(' '));
-
-    if (/(^| )(nu|female|co|ba)( |$)/.test(declared)) return 'Cô';
-    if (/(^| )(nam|male|thay|ong)( |$)/.test(declared)) return 'Thầy';
-
-    const confirmedFemaleNames = ['tran thu ha'];
-    if (confirmedFemaleNames.includes(hvaNormalizePersonText_(fullName))) return 'Cô';
+function hvaFirstValue_(user, keys) {
+    for (const key of keys) {
+        const value = user?.[key];
+        if (value !== undefined && value !== null && String(value).trim()) return String(value).trim();
+    }
     return '';
 }
 
-function hvaApplyCorrectUserHonorific_() {
-    const nameElement = document.getElementById('assistantName');
-    if (!nameElement) return;
+function hvaResolveStaffGroup_(user) {
+    const explicit = hvaNormalizePersonText_([
+        user.nhomNhanSu, user.nhom, user.loaiNhanSu, user.doiTuong,
+        user.role, user.vaiTro, user.chucDanh, user.chucVu, user.viTriViecLam,
+        user.position, user.department
+    ].filter(Boolean).join(' '));
+
+    if (/(nhan vien|staff|van thu|giao vu|ke toan|thu vien|y te|bao ve|tap vu|thiet bi)/.test(explicit)) return 'NV';
+    if (/(hieu truong|pho hieu truong|ban giam hieu|bgh|cbql|can bo quan ly)/.test(explicit)) return 'CBQL';
+    if (/(giao vien|teacher|gv|ttcm|tpcm|to truong chuyen mon|to pho chuyen mon)/.test(explicit)) return 'GV';
+    return '';
+}
+
+function hvaResolveGender_(user) {
+    const declared = hvaNormalizePersonText_([
+        user.gioiTinh, user.GIOITINH, user.gender, user.sex, user.phai
+    ].filter(Boolean).join(' '));
+    if (/(^| )(nu|female)( |$)/.test(declared)) return 'NU';
+    if (/(^| )(nam|male)( |$)/.test(declared)) return 'NAM';
+
+    const title = hvaNormalizePersonText_([user.danhXung, user.xungHo].filter(Boolean).join(' '));
+    if (/(^| )(co|chi|ba)( |$)/.test(title)) return 'NU';
+    if (/(^| )(thay|anh|ong)( |$)/.test(title)) return 'NAM';
+    return '';
+}
+
+function hvaResolveHonorific_(user) {
+    const group = hvaResolveStaffGroup_(user);
+    const gender = hvaResolveGender_(user);
+    if (group === 'NV') return gender === 'NU' ? 'Chị' : gender === 'NAM' ? 'Anh' : '';
+    if (group === 'CBQL' || group === 'GV') return gender === 'NU' ? 'Cô' : gender === 'NAM' ? 'Thầy' : '';
+    return '';
+}
+
+function hvaGreetingByTime_(hour) {
+    if (hour >= 22 || hour < 5) return { text:'🌙 Chào khuya,', night:true };
+    if (hour < 11) return { text:'☀️ Chào buổi sáng,', night:false };
+    if (hour < 14) return { text:'🌤️ Chào buổi trưa,', night:false };
+    if (hour < 18) return { text:'🌇 Chào buổi chiều,', night:false };
+    return { text:'🌙 Chào buổi tối,', night:false };
+}
+
+function hvaApplyUserGreeting_() {
+    const greetingEl = document.getElementById('assistantGreeting');
+    const nameEl = document.getElementById('assistantName');
+    const positionEl = document.getElementById('assistantPosition');
+    const nightEl = document.getElementById('assistantNightNote');
+    if (!greetingEl || !nameEl || !positionEl) return;
 
     const user = hvaGetSignedInUser_();
-    const storedName = String(
-        user.hoTen || user.fullName || user.name || user.username || ''
-    ).trim();
-    const displayedName = String(nameElement.textContent || '')
-        .replace(/^\s*(Thầy|Cô)\s+/i, '').trim();
-    const fullName = storedName || displayedName;
-    if (!fullName || fullName === '...') return;
+    const fullName = hvaFirstValue_(user, ['hoTen','fullName','name','HO_TEN','hoten','username']);
+    const honorific = hvaResolveHonorific_(user);
+    const greeting = hvaGreetingByTime_(new Date().getHours());
 
-    const honorific = hvaResolveHonorific_(user, fullName);
-    const correctText = honorific ? (honorific + ' ' + fullName) : fullName;
-    if (nameElement.textContent.trim() !== correctText) {
-        nameElement.textContent = correctText;
+    const position = hvaFirstValue_(user, [
+        'chucVu','CHUCVU','viTriViecLam','viTri','position','chucDanh','vaiTro'
+    ]);
+    const department = hvaFirstValue_(user, [
+        'toBoPhan','to_BoPhan','to','tenTo','toChuyenMon','boPhan','department','donVi'
+    ]);
+
+    greetingEl.textContent = greeting.text;
+    nameEl.textContent = [honorific, fullName].filter(Boolean).join(' ') || 'Người dùng HVA';
+
+    const parts = [];
+    if (position) parts.push(position);
+    if (department && hvaNormalizePersonText_(department) !== hvaNormalizePersonText_(position)) parts.push(department);
+    positionEl.textContent = parts.join(' • ') || 'HVA Digital';
+
+    if (nightEl) {
+        if (greeting.night) {
+            const subject = honorific || 'Thầy/Cô/Anh/Chị';
+            nightEl.textContent = `Khuya rồi, ${subject} nhớ nghỉ ngơi sớm nhé! 😊`;
+            nightEl.classList.remove('hidden');
+        } else {
+            nightEl.textContent = '';
+            nightEl.classList.add('hidden');
+        }
     }
 }
 
-function hvaWatchUserHonorific_() {
-    const nameElement = document.getElementById('assistantName');
-    if (!nameElement || nameElement.dataset.hvaHonorificWatcher === '1') return;
-    nameElement.dataset.hvaHonorificWatcher = '1';
-    new MutationObserver(function() {
-        hvaApplyCorrectUserHonorific_();
-    }).observe(nameElement, { childList:true, characterData:true, subtree:true });
-    hvaApplyCorrectUserHonorific_();
-}
+// Chạy ngay sau render Home và cập nhật lại khi qua mốc thời gian.
+hvaApplyUserGreeting_();
+setTimeout(hvaApplyUserGreeting_, 250);
+setInterval(hvaApplyUserGreeting_, 60 * 1000);
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', hvaWatchUserHonorific_);
-} else {
-    hvaWatchUserHonorific_();
 }
 setTimeout(hvaWatchUserHonorific_, 250);
 setTimeout(hvaApplyCorrectUserHonorific_, 1200);
