@@ -27,46 +27,93 @@
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'Segoe UI', '-apple-system', 'sans-serif']
+                        sans: ['Be Vietnam Pro', 'Segoe UI', '-apple-system', 'sans-serif']
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        :root {
+            --hva-navy: #073B72;
+            --hva-blue: #0A66C2;
+            --hva-cyan: #12C7EA;
+            --hva-ink: #10233E;
+        }
+        body { font-family: 'Be Vietnam Pro', sans-serif; -webkit-tap-highlight-color: transparent; }
         .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
         .safe-pt { padding-top: env(safe-area-inset-top); }
-        .brand-logo {
-            width: 132px;
-            height: 132px;
-            object-fit: contain;
-            filter: drop-shadow(0 12px 24px rgba(15, 76, 129, .16));
+
+        .digital-bg {
+            background:
+              radial-gradient(circle at 12% 18%, rgba(18,199,234,.20), transparent 28%),
+              radial-gradient(circle at 88% 76%, rgba(10,102,194,.16), transparent 32%),
+              linear-gradient(135deg, #F8FCFF 0%, #EDF7FF 48%, #F7FBFF 100%);
         }
-        .brand-kicker {
-            letter-spacing: .16em;
+        .digital-grid {
+            background-image:
+              linear-gradient(rgba(15,76,129,.055) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(15,76,129,.055) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,.75), transparent 88%);
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.75), transparent 88%);
+        }
+        .digital-orbit {
+            position:absolute; border:1px solid rgba(18,199,234,.26);
+            border-radius:9999px; transform:rotate(-16deg);
+        }
+        .digital-node {
+            position:absolute; width:8px; height:8px; border-radius:50%;
+            background:#13C8EA; box-shadow:0 0 0 6px rgba(19,200,234,.10), 0 0 24px rgba(19,200,234,.55);
+        }
+        .brand-logo {
+            width: 158px;
+            height: 158px;
+            object-fit: contain;
+            filter: drop-shadow(0 16px 30px rgba(7,59,114,.18));
         }
         .brand-slogan {
-            background: linear-gradient(90deg, #0F4C81 0%, #0B74C9 48%, #18BFE8 100%);
+            background: linear-gradient(90deg, #07539A 0%, #0A75CE 48%, #08B9DE 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
         .ms-blur-card {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(255,255,255,.82);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            box-shadow: 0 24px 70px rgba(17,66,111,.13), inset 0 1px 0 rgba(255,255,255,.85);
+        }
+        .login-shell { max-width: 430px; }
+        .hva-input {
+            min-height: 48px;
+            font-size: 14px;
+        }
+        .hva-button {
+            min-height: 50px;
+            background: linear-gradient(100deg, #075296 0%, #0A68BD 58%, #0B8FD0 100%);
+            box-shadow: 0 12px 26px rgba(10,102,194,.22);
+        }
+        @media (max-width: 640px) {
+            .brand-logo { width: 138px; height: 138px; }
         }
     </style>
 </head>
 <body class="h-full bg-ms-bg text-slate-800 overflow-x-hidden antialiased selection:bg-ms-secondary/20 selection:text-ms-primary">
 
-    <!-- Background Decorative Gradient Blobs -->
-    <div class="fixed inset-0 -z-50 overflow-hidden bg-[#F5F7FA]">
-        <div class="absolute -top-[15%] -left-[10%] w-[60%] h-[50%] rounded-full bg-[#29B6F6]/15 blur-[120px]"></div>
-        <div class="absolute top-[40%] -right-[15%] w-[65%] h-[55%] rounded-full bg-[#0F4C81]/10 blur-[140px]"></div>
+    <!-- HVA Digital Background -->
+    <div class="fixed inset-0 -z-50 overflow-hidden digital-bg">
+        <div class="absolute inset-0 digital-grid opacity-70"></div>
+        <div class="digital-orbit w-[760px] h-[300px] -top-24 -left-40"></div>
+        <div class="digital-orbit w-[680px] h-[260px] -bottom-24 -right-40"></div>
+        <div class="digital-node top-[16%] left-[10%]"></div>
+        <div class="digital-node top-[28%] right-[12%]"></div>
+        <div class="digital-node bottom-[18%] left-[16%]"></div>
+        <div class="absolute top-0 right-0 w-[38vw] h-[38vw] rounded-full bg-cyan-300/10 blur-[100px]"></div>
+        <div class="absolute bottom-0 left-0 w-[34vw] h-[34vw] rounded-full bg-blue-500/10 blur-[110px]"></div>
     </div>
 
     <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8 safe-pt safe-pb">
@@ -74,39 +121,36 @@
         <!-- Header Block: HVA Brand -->
         <div class="text-center mb-6">
             <img
-                src="assets/brand/HVA_Logo_Compact.png?v=20260915"
-                alt="Trung tâm Quản trị số HVA – Trường THPT Hòa Vang"
-                class="brand-logo mx-auto mb-3"
+                src="./assets/brand/HVA_Logo_Compact.png?v=20260915b"
+                alt="HVA Digital"
+                class="brand-logo mx-auto mb-2"
             >
-            <p class="text-[10px] sm:text-[11px] font-extrabold text-ms-primary uppercase brand-kicker">
-                HVA DIGITAL
-            </p>
-            <h1 class="text-[22px] sm:text-2xl font-extrabold text-slate-900 tracking-tight mt-1 leading-tight">
+            <h1 class="text-[25px] sm:text-[29px] font-extrabold text-[#10233E] tracking-[-0.035em] leading-tight">
                 Trung tâm Quản trị số HVA
             </h1>
-            <p class="text-xs sm:text-[13px] font-bold text-ms-primary mt-1 uppercase tracking-[0.08em]">
+            <p class="text-[12px] sm:text-[13px] font-bold text-[#075296] mt-1.5 uppercase tracking-[0.12em]">
                 Trường THPT Hòa Vang
             </p>
-            <p class="text-xs sm:text-[13px] font-bold brand-slogan mt-2">
+            <p class="text-[13px] sm:text-[14px] font-semibold brand-slogan mt-2">
                 Quản trị thông minh • Giáo dục sáng tạo
             </p>
         </div>
 
         <!-- Login Card Block -->
-        <div class="w-full max-w-sm">
-            <div class="ms-blur-card border border-slate-200/80 rounded-2xl shadow-xl shadow-slate-200/60 p-6 sm:p-7 transition-all">
+        <div class="w-full login-shell">
+            <div class="ms-blur-card border border-white/80 rounded-[24px] p-6 sm:p-8 transition-all">
 
                 <div class="mb-5 pb-4 border-b border-slate-100">
-                    <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                    <h2 class="text-[17px] font-bold text-[#16314F] flex items-center gap-2">
                         <i class="bi bi-shield-lock-fill text-ms-primary"></i> Đăng nhập hệ thống
                     </h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Sử dụng tài khoản cán bộ, giáo viên, nhân viên đã được cấp</p>
+                    <p class="text-[12px] sm:text-[13px] text-slate-500 mt-1 leading-relaxed">Sử dụng tài khoản cán bộ, giáo viên, nhân viên đã được cấp</p>
                 </div>
 
                 <form id="loginForm" class="space-y-4">
                     <!-- Username Input -->
                     <div>
-                        <label for="username" class="block text-[11px] font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
+                        <label for="username" class="block text-[11px] font-bold text-slate-600 mb-2 uppercase tracking-[0.08em]">
                             Tên đăng nhập
                         </label>
                         <div class="relative">
@@ -120,14 +164,14 @@
                                 required
                                 autocomplete="username"
                                 placeholder="Nhập tên đăng nhập"
-                                class="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 bg-white/90 text-slate-800 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-ms-primary/20 focus:border-ms-primary transition-all shadow-sm"
+                                class="hva-input w-full pl-10 pr-3.5 py-3 rounded-xl border border-slate-200/90 bg-white/90 text-slate-800 font-medium placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-sky-500/10 focus:border-[#0A66C2] transition-all shadow-sm"
                             >
                         </div>
                     </div>
 
                     <!-- Password Input -->
                     <div>
-                        <label for="password" class="block text-[11px] font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
+                        <label for="password" class="block text-[11px] font-bold text-slate-600 mb-2 uppercase tracking-[0.08em]">
                             Mật khẩu
                         </label>
                         <div class="relative">
@@ -148,7 +192,7 @@
                                 inputmode="numeric"
                                 autocomplete="current-password"
                                 placeholder="4 số bí mật"
-                                class="w-full pl-20 pr-10 py-2.5 rounded-xl border border-slate-200 bg-white/90 text-slate-800 text-xs font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-ms-primary/20 focus:border-ms-primary transition-all shadow-sm"
+                                class="hva-input w-full pl-20 pr-10 py-3 rounded-xl border border-slate-200/90 bg-white/90 text-slate-800 font-medium placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-sky-500/10 focus:border-[#0A66C2] transition-all shadow-sm"
                             >
                             <button 
                                 type="button"
@@ -177,7 +221,7 @@
             </div>
 
             <!-- Footer Copy -->
-            <div class="text-center text-[11px] text-slate-400 mt-6 space-y-0.5">
+            <div class="text-center text-[11px] sm:text-[12px] text-slate-400 mt-6 space-y-1">
                 <p>© 2026 Trung tâm Quản trị số HVA – Trường THPT Hòa Vang</p>
                 <p class="font-medium text-ms-primary/80">HVA Digital • Quản trị thông minh • Giáo dục sáng tạo</p>
             </div>
