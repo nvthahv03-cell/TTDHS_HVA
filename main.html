@@ -17,7 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#0F4C81">
     <link rel="manifest" href="manifest.json">
-    <title>TTDHS_HVA - Trung tâm Điều hành số THPT Hòa Vang</title>
+    <title>Trung tâm Quản trị số HVA – Trường THPT Hòa Vang</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -147,32 +147,12 @@
 
         </button>
 
-        <!-- ================= LOGO ================= -->
-        <div class="ml-2
-                    w-10 h-10
-                    rounded-xl
-                    bg-gradient-to-br
-                    from-[#0F4C81]
-                    via-[#1565C0]
-                    to-[#29B6F6]
-                    shadow-md
-                    flex flex-col
-                    items-center
-                    justify-center
-                    shrink-0">
-
-            <i class="bi bi-cpu-fill text-white text-sm"></i>
-
-            <span class="text-[7px]
-                         text-white
-                         font-bold
-                         tracking-wide
-                         leading-none">
-
-                HVA
-
-            </span>
-
+        <!-- ================= LOGO HVA CHÍNH THỨC ================= -->
+        <div class="ml-2 w-10 h-10 flex items-center justify-center shrink-0">
+            <img src="./assets/brand/HVA_Logo_Transparent.png?v=20260915e"
+                 alt="HVA Digital"
+                 class="w-10 h-10 object-contain"
+                 draggable="false">
         </div>
 
         <!-- ================= TIÊU ĐỀ ================= -->
@@ -185,7 +165,7 @@
                         text-slate-400
                         truncate">
 
-                TRUNG TÂM ĐIỀU HÀNH SỐ
+                TRUNG TÂM QUẢN TRỊ SỐ HVA
 
             </div>
 
@@ -205,7 +185,7 @@
                  class="text-[10px]
                         text-slate-500
                         font-semibold truncate">
-                Kết nối dữ liệu • Điều hành hiệu quả
+                Quản trị thông minh • Giáo dục sáng tạo
             </div>
 
         </div>
@@ -271,8 +251,8 @@
 <aside id="hva-main-drawer" class="fixed inset-y-0 left-0 z-[90] w-[86vw] max-w-[310px] bg-white shadow-2xl border-r border-blue-100 flex flex-col" aria-hidden="true">
     <div class="px-4 py-4 bg-gradient-to-r from-[#0F4C81] to-[#1565C0] text-white flex items-center justify-between gap-3">
         <div class="flex items-center gap-3 min-w-0">
-            <div class="w-10 h-10 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center shrink-0"><i class="bi bi-cpu-fill"></i></div>
-            <div class="min-w-0"><div class="text-[12px] font-extrabold truncate">TRUNG TÂM ĐIỀU HÀNH SỐ</div><div class="text-[9px] text-blue-100 truncate">Trường THPT Hòa Vang</div></div>
+            <div class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0"><img src="./assets/brand/HVA_Logo_Transparent.png?v=20260915e" alt="HVA Digital" class="w-9 h-9 object-contain" draggable="false"></div>
+            <div class="min-w-0"><div class="text-[12px] font-extrabold truncate">TRUNG TÂM QUẢN TRỊ SỐ HVA</div><div class="text-[9px] text-blue-100 truncate">Trường THPT Hòa Vang</div></div>
         </div>
         <button id="hva-main-drawer-close" type="button" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center" aria-label="Đóng menu"><i class="bi bi-x-lg"></i></button>
     </div>
@@ -1374,7 +1354,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
     <script src="services/api.js"></script>
-    <script type="module" src="assets/js/core/app.js?v=20260914-v4"></script>
+    <script type="module" src="assets/js/core/app.js?v=20260915-final"></script>
 
     <!-- LOGIC BẢO TRÌ & ĐỒNG BỘ TOÀN CỤC -->
     <script>
@@ -4325,7 +4305,7 @@ setTimeout(() => {
                 <div class="flex items-center justify-between bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white">
                     <div class="flex items-center gap-3">
                         <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15"><i class="bi bi-person-vcard-fill text-xl"></i></span>
-                        <div><div class="text-[14px] font-black">THÔNG TIN NHÂN SỰ</div><div class="mt-0.5 text-[9px] text-blue-100">Trung tâm Điều hành số HVA</div></div>
+                        <div><div class="text-[14px] font-black">THÔNG TIN NHÂN SỰ</div><div class="mt-0.5 text-[9px] text-blue-100">Trung tâm Quản trị số HVA</div></div>
                     </div>
                     <button type="button" data-person-close class="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 hover:bg-white/25"><i class="bi bi-x-lg"></i></button>
                 </div>
@@ -4893,7 +4873,7 @@ setTimeout(() => {
                 <div role="dialog" aria-modal="true" class="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl border border-blue-100">
                     <div class="bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white flex items-center gap-3">
                         <span class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center"><i class="bi bi-cpu-fill text-xl"></i></span>
-                        <div><div class="text-[13px] font-black">${escapeNotice(config.title)}</div><div class="text-[9px] text-blue-100">Trung tâm Điều hành số HVA</div></div>
+                        <div><div class="text-[13px] font-black">${escapeNotice(config.title)}</div><div class="text-[9px] text-blue-100">Trung tâm Quản trị số HVA</div></div>
                     </div>
                     <div class="px-5 py-5 text-center">
                         <div class="mx-auto w-14 h-14 rounded-full ${tone} flex items-center justify-center"><i class="bi ${icon} text-3xl"></i></div>
