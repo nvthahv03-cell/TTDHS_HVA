@@ -128,10 +128,25 @@ function hvaSalutation(){
  return staff?(female?'Chị':male?'Anh':'Anh/Chị'):(female?'Cô':male?'Thầy':'Thầy/Cô');
 }
 function profile(){
- let n=U.fullName||U.hoTen||U.name||U.displayName||'Người dùng HVA',r=U.position||U.chucVu||U.role||'',dp=U.department||U.to||U.toChuyenMon||'';
- $('who').textContent=n;$('role').textContent=[r,dp].filter(Boolean).join(' • ');
- let h=new Date().getHours(),tod=h<11?'Chào buổi sáng':h<14?'Chào buổi trưa':h<18?'Chào buổi chiều':'Chào buổi tối';
- $('greet').textContent=tod+', '+hvaSalutation();
+ let n=U.fullName||U.hoTen||U.name||U.displayName||'Người dùng HVA',
+     r=U.position||U.chucVu||U.workPosition||U.viTriViecLam||U.role||'',
+     dp=U.department||U.toBoPhan||U.to||U.toChuyenMon||'',
+     sal=hvaSalutation();
+
+ $('who').textContent='';
+ $('role').textContent=[r,dp].filter(Boolean).join(' • ');
+
+ let h=new Date().getHours(),
+     tod=(h>=22||h<5)?'Chào khuya':
+         h<11?'Chào buổi sáng':
+         h<14?'Chào buổi trưa':
+         h<18?'Chào buổi chiều':'Chào buổi tối';
+
+ // Chuẩn HVA: lời chào + danh xưng + họ tên trên cùng một dòng.
+ $('greet').textContent=tod+', '+sal+' '+n;
+
+ // Dòng "who" cũ không còn dùng để tránh lặp lại họ tên.
+ $('who').classList.add('hidden');
 }
 function stats(){let n=new Date(),today=new Date(n.getFullYear(),n.getMonth(),n.getDate()),m=mon(today),su=addD(m,6);$('sToday').textContent=tasks.filter(t=>t.date===iso(today)&&!t.done).length;$('sWeek').textContent=tasks.filter(t=>{let x=new Date(t.date+'T00:00');return x>=m&&x<=su&&!t.done}).length;$('sLate').textContent=tasks.filter(t=>!t.done&&new Date(t.date+'T23:59')<n).length}
 function renderCal(){let c=$('calendar');
