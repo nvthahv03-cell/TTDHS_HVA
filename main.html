@@ -382,7 +382,7 @@
 
 
         <!-- ================= LỊCH CÁ NHÂN ================= -->
-        <a href="Lichcongtac.html"
+        <a href="LichCaNhan.html"
            id="bottom-personal-calendar"
            data-nav="personal-calendar"
            aria-label="Lịch cá nhân"
@@ -4618,9 +4618,8 @@ setTimeout(() => {
         ?.addEventListener('click', function (event) {
 
             event.stopPropagation();
-            // Giai đoạn hiện tại dùng màn Lịch công tác đang hoạt động ổn định.
-            // Khi Lịch cá nhân ngày/tuần/tháng được tách thành module riêng,
-            // chỉ cần đổi href của nút này, không ảnh hưởng Tìm nhanh.
+            // Lịch cá nhân là màn riêng theo tài khoản đăng nhập.
+            // Lịch công tác vẫn giữ độc lập trong menu và Tra cứu hệ thống.
         });
 
     headerSearchBtn?.addEventListener('click', function (event) {
