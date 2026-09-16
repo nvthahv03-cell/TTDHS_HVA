@@ -8,7 +8,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f6f9fc;color:#172033;font-family:"Segoe UI Variable","Segoe UI",Inter,Arial,sans-serif;padding-bottom:84px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}.card{box-shadow:0 5px 18px rgba(15,76,129,.055)}.active{background:#0F4C81!important;color:#fff!important;box-shadow:0 6px 16px rgba(15,76,129,.18)}.safe{padding-bottom:env(safe-area-inset-bottom)}button{transition:transform .14s ease,box-shadow .14s ease,background-color .14s ease}button:active{transform:scale(.98)}.hva-shell{max-width:768px;margin:0 auto}.hva-hero{background:linear-gradient(135deg,#0b4d80 0%,#1466a5 58%,#2675dc 100%);box-shadow:0 10px 28px rgba(15,76,129,.14)}.hva-stat{background:rgba(255,255,255,.105);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(4px)}.hva-tabbar{box-shadow:0 4px 16px rgba(15,76,129,.045)}.hva-date-card{box-shadow:0 5px 18px rgba(15,76,129,.045)}.hva-timeline{position:relative}.hva-timeline:before{content:"";position:absolute;left:76px;top:12px;bottom:12px;width:1px;background:#dce7f2}.hva-event{display:grid;grid-template-columns:62px 20px minmax(0,1fr);align-items:start;min-height:62px;padding:7px 0}.hva-time{font-size:12px;font-weight:700;color:#35506b;text-align:right;padding-top:9px;font-variant-numeric:tabular-nums}.hva-dotwrap{display:flex;justify-content:center;padding-top:13px;position:relative;z-index:1}.hva-dot{width:9px;height:9px;border-radius:999px;background:#2563eb;box-shadow:0 0 0 4px #eef5ff}.hva-dot.hva{background:#0f4c81;box-shadow:0 0 0 4px #edf5fb}.hva-eventbody{padding:6px 10px 8px 6px;min-width:0}.hva-eventtitle{font-size:13px;line-height:1.35;font-weight:650;color:#1f3347}.hva-meta{margin-top:4px;font-size:10px;color:#8798aa;display:flex;gap:7px;align-items:center;flex-wrap:wrap}.hva-source{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:999px;background:#eef5ff;color:#2563eb;font-size:9px;font-weight:650}.hva-source.local{background:#edf5fb;color:#0f4c81}.hva-open{color:#94a3b8;text-decoration:none;margin-left:auto}.hva-googlebox{background:linear-gradient(180deg,#fff,#fbfdff)}@media(max-width:520px){.hva-timeline:before{left:68px}.hva-event{grid-template-columns:54px 20px minmax(0,1fr)}.hva-time{font-size:11px}.hva-eventtitle{font-size:12.5px}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f6f9fc;color:#172033;font-family:"Segoe UI Variable","Segoe UI",Inter,Arial,sans-serif;padding-bottom:84px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}.card{box-shadow:0 5px 18px rgba(15,76,129,.055)}.active{background:#0F4C81!important;color:#fff!important;box-shadow:0 6px 16px rgba(15,76,129,.18)}.safe{padding-bottom:env(safe-area-inset-bottom)}button{transition:transform .14s ease,box-shadow .14s ease,background-color .14s ease}button:active{transform:scale(.98)}.hva-shell{max-width:768px;margin:0 auto}.hva-hero{background:linear-gradient(135deg,#0b4d80 0%,#1466a5 58%,#2675dc 100%);box-shadow:0 10px 28px rgba(15,76,129,.14)}.hva-stat{background:rgba(255,255,255,.105);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(4px)}.hva-tabbar{box-shadow:0 4px 16px rgba(15,76,129,.045)}.hva-date-card{box-shadow:0 5px 18px rgba(15,76,129,.045)}.hva-timeline{position:relative}.hva-timeline:before{content:"";position:absolute;left:76px;top:12px;bottom:12px;width:1px;background:#dce7f2}.hva-event{display:grid;grid-template-columns:62px 20px minmax(0,1fr);align-items:start;min-height:62px;padding:7px 0}.hva-time{font-size:12px;font-weight:700;color:#35506b;text-align:right;padding-top:9px;font-variant-numeric:tabular-nums}.hva-dotwrap{display:flex;justify-content:center;padding-top:13px;position:relative;z-index:1}.hva-dot{width:9px;height:9px;border-radius:999px;background:#2563eb;box-shadow:0 0 0 4px #eef5ff}.hva-dot.hva{background:#0f4c81;box-shadow:0 0 0 4px #edf5fb}.hva-eventbody{padding:6px 10px 8px 6px;min-width:0}.hva-eventtitle{font-size:13px;line-height:1.35;font-weight:650;color:#1f3347}.hva-meta{margin-top:4px;font-size:10px;color:#8798aa;display:flex;gap:7px;align-items:center;flex-wrap:wrap}.hva-source{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:999px;background:#eef5ff;color:#2563eb;font-size:9px;font-weight:650}.hva-source.local{background:#edf5fb;color:#0f4c81}.hva-open{color:#94a3b8;text-decoration:none;margin-left:auto}.hva-googlebox{background:linear-gradient(180deg,#fff,#fbfdff)}.hva-sync-btn{position:relative;overflow:hidden;border:1px solid transparent;box-shadow:0 4px 12px rgba(15,76,129,.08)}.hva-sync-btn:disabled{opacity:.72;cursor:wait;transform:none}.hva-sync-btn .bi-arrow-repeat{animation:hvaSpin .75s linear infinite}@keyframes hvaSpin{to{transform:rotate(360deg)}}@media(max-width:520px){.hva-timeline:before{left:68px}.hva-event{grid-template-columns:54px 20px minmax(0,1fr)}.hva-time{font-size:11px}.hva-eventtitle{font-size:12.5px}}
 </style>
 </head>
 <body>
@@ -71,8 +71,8 @@
     <button id="google" class="shrink-0 px-3 py-2 rounded-xl border border-blue-200 text-blue-600 text-[10px] font-semibold">Kết nối</button>
   </div>
   <div id="googleActions" class="hidden grid grid-cols-2 gap-2 mt-3">
-    <button id="googlePull" class="h-9 rounded-xl bg-blue-50 text-[#0F4C81] text-[10px] font-extrabold"><i class="bi bi-cloud-arrow-down mr-1"></i>Nạp lịch Google</button>
-    <button id="googlePush" class="h-9 rounded-xl bg-emerald-50 text-emerald-700 text-[10px] font-extrabold"><i class="bi bi-cloud-arrow-up mr-1"></i>Đẩy việc HVA</button>
+    <button id="googlePull" class="hva-sync-btn h-10 rounded-xl bg-blue-50 border-blue-100 text-[#0F4C81] text-[10px] font-extrabold"><i class="bi bi-cloud-arrow-down mr-1"></i>Nạp lịch Google</button>
+    <button id="googlePush" class="hva-sync-btn h-10 rounded-xl bg-emerald-50 border-emerald-100 text-emerald-700 text-[10px] font-extrabold"><i class="bi bi-cloud-arrow-up mr-1"></i>Đẩy việc HVA</button>
   </div>
   <div class="text-[8px] text-slate-400 mt-2">HVA chỉ truy cập Calendar sau khi chính người dùng cấp quyền. Có thể ngắt kết nối bất kỳ lúc nào.</div>
  </section>
@@ -168,7 +168,23 @@ function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&l
 function say(m){$('toast').textContent=m;$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),2300)}
 function backTarget(t){sessionStorage.setItem('HVA_BOTTOM_NAV_TARGET',t);location.href='./main.html'}
 function profile(){let n=U.fullName||U.hoTen||U.name||U.displayName||'Người dùng HVA',r=U.position||U.chucVu||U.role||'',dp=U.department||U.to||U.toChuyenMon||'';$('who').textContent=n;$('role').textContent=[r,dp].filter(Boolean).join(' • ');let h=new Date().getHours();$('greet').textContent=h<11?'Chào buổi sáng':h<14?'Chào buổi trưa':h<18?'Chào buổi chiều':'Chào buổi tối'}
-function stats(){let n=new Date(),today=new Date(n.getFullYear(),n.getMonth(),n.getDate()),m=mon(today),su=addD(m,6);$('sToday').textContent=tasks.filter(t=>t.date===iso(today)&&!t.done).length;$('sWeek').textContent=tasks.filter(t=>{let x=new Date(t.date+'T00:00');return x>=m&&x<=su&&!t.done}).length;$('sLate').textContent=tasks.filter(t=>!t.done&&new Date(t.date+'T23:59')<n).length}
+function eventDateKey(e){const s=e?.start?.dateTime||e?.start?.date||'';return s?String(s).slice(0,10):''}
+function googleHvaTaskId(e){return String(e?.extendedProperties?.private?.hvaTaskId||'').trim()}
+function uniqueGoogleEvents(list){const seen=new Set();return (list||[]).filter(e=>{const hvaId=googleHvaTaskId(e);const key=hvaId?'HVA:'+hvaId:'G:'+String(e.id||eventDateKey(e)+'|'+(e.summary||''));if(seen.has(key))return false;seen.add(key);return true})}
+function stats(){
+ let n=new Date(),today=new Date(n.getFullYear(),n.getMonth(),n.getDate()),m=mon(today),su=addD(m,7),todayKey=iso(today);
+ const localOpen=tasks.filter(t=>!t.done);
+ const syncedIds=new Set(localOpen.filter(t=>t.googleEventId).map(t=>String(t.id)));
+ const ge=uniqueGoogleEvents(googleStatsEvents.length?googleStatsEvents:googleEvents).filter(e=>!syncedIds.has(googleHvaTaskId(e)));
+ const localToday=localOpen.filter(t=>t.date===todayKey).length;
+ const googleToday=ge.filter(e=>eventDateKey(e)===todayKey).length;
+ const localWeek=localOpen.filter(t=>{let x=new Date(t.date+'T00:00');return x>=m&&x<su}).length;
+ const googleWeek=ge.filter(e=>{const k=eventDateKey(e);if(!k)return false;const x=new Date(k+'T00:00');return x>=m&&x<su}).length;
+ const overdue=localOpen.filter(t=>new Date(t.date+'T23:59')<n).length;
+ const next24=new Date(n.getTime()+24*60*60*1000);
+ const upcoming=ge.filter(e=>{const raw=e?.start?.dateTime;if(!raw)return false;const x=new Date(raw);return x>=n&&x<=next24}).length;
+ $('sToday').textContent=localToday+googleToday;$('sWeek').textContent=localWeek+googleWeek;$('sLate').textContent=overdue+upcoming;
+}
 function renderCal(){let c=$('calendar');
  if(view==='day'){ $('period').textContent='Hôm nay · '+fmt(cur);$('period2').textContent='Lịch và nhắc việc cá nhân';let a=[];for(let i=-3;i<=3;i++)a.push(addD(cur,i));c.innerHTML='<div class="grid grid-cols-7 gap-1.5">'+a.map(x=>`<button data-d="${iso(x)}" class="pick min-w-0 rounded-xl border py-2 ${same(x,sel)?'active':'bg-white border-slate-200 text-slate-600'}"><div class="text-[8px] font-medium">${['CN','T2','T3','T4','T5','T6','T7'][x.getDay()]}</div><div class="text-[16px] leading-none font-semibold mt-1.5">${x.getDate()}</div><div class="h-2 text-[6px] mt-1">${dayTasks(x).length?'●':''}</div></button>`).join('')+'</div>'}
  if(view==='week'){let m=mon(cur),su=addD(m,6);$('period').textContent='Tuần '+fmt(m)+' – '+fmt(su);$('period2').textContent='Chọn ngày để xem chi tiết';c.innerHTML='<div class="grid grid-cols-7 gap-1">'+Array.from({length:7},(_,i)=>addD(m,i)).map((x,i)=>`<button data-d="${iso(x)}" class="pick rounded-xl border py-3 ${same(x,sel)?'active':'bg-slate-50 border-slate-100'}"><div class="text-[8px] font-bold">${['T2','T3','T4','T5','T6','T7','CN'][i]}</div><div class="font-extrabold mt-1">${x.getDate()}</div><div class="text-[8px]">${dayTasks(x).length||''}</div></button>`).join('')+'</div>'}
@@ -209,6 +225,7 @@ const HVA_BACKEND_URL =
 
 let googleConnected = false;
 let googleEvents = [];
+let googleStatsEvents = [];
 let googleAccountEmail = '';
 let googleOAuthPopup = null;
 
@@ -256,6 +273,7 @@ async function restoreGoogleConnection(){
     if(googleConnected){
       googleStatus(googleAccountEmail ? 'Đã kết nối • '+googleAccountEmail : 'Đã kết nối Google Calendar', true);
       await loadGoogleEventsForRange();
+      await loadGoogleStats();
     }else{
       googleEvents=[];
       googleStatus('Chưa kết nối • Tùy chọn', false);
@@ -299,6 +317,7 @@ window.addEventListener('message', async (ev)=>{
     googleAccountEmail=String(d.email||'');
     googleStatus(googleAccountEmail ? 'Đã kết nối • '+googleAccountEmail : 'Đã kết nối Google Calendar', true);
     await loadGoogleEventsForRange();
+    await loadGoogleStats();
     say('Đã kết nối Google Calendar. Từ nay HVA sẽ tự duy trì kết nối.');
   }else{
     googleConnected=false;
@@ -315,6 +334,7 @@ async function disconnectGoogle(){
     googleConnected=false;
     googleAccountEmail='';
     googleEvents=[];
+    googleStatsEvents=[];
     googleStatus('Chưa kết nối • Tùy chọn', false);
     render();
     say('Đã ngắt kết nối Google Calendar.');
@@ -343,6 +363,16 @@ function rangeForCurrentView(){
   else if(view==='week'){ a=mon(cur); b=addD(a,7); }
   else { a=new Date(cur.getFullYear(),cur.getMonth(),1); b=new Date(cur.getFullYear(),cur.getMonth()+1,1); }
   return [a,b];
+}
+
+async function loadGoogleStats(){
+  if(!googleConnected){googleStatsEvents=[];stats();return;}
+  try{
+    const now=new Date(), a=mon(now), b=addD(a,7);
+    const data=await hvaApiGet('getGoogleCalendarEvents',{username:uid,timeMin:a.toISOString(),timeMax:b.toISOString(),maxResults:'250'});
+    googleStatsEvents=(data.items||[]).filter(e=>e.status!=='cancelled');
+    stats();
+  }catch(e){console.warn('HVA Google stats:',e);}
 }
 
 async function loadGoogleEventsForRange(){
@@ -421,6 +451,7 @@ async function pushVisibleHvaTasks(){
     for(const t of candidates){await pushOneTaskToGoogle(t);ok++}
     persist();
     await loadGoogleEventsForRange();
+    await loadGoogleStats();
     say('Đã đồng bộ '+ok+' việc HVA sang Google Calendar.');
   }catch(e){
     persist();
@@ -455,8 +486,13 @@ $('googleSetupModal').onclick=(e)=>{if(e.target===$('googleSetupModal'))closeGoo
 document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeGoogleSetup()});
 
 $('google').onclick=()=>{if(googleConnected)disconnectGoogle();else requestGoogleConnection()};
-$('googlePull').onclick=()=>loadGoogleEventsForRange();
-$('googlePush').onclick=()=>pushVisibleHvaTasks();
+async function runSyncButton(btn, workingHtml, doneHtml, job){
+  if(!btn||btn.disabled)return;const original=btn.innerHTML;btn.disabled=true;btn.innerHTML=workingHtml;
+  try{await job();btn.innerHTML=doneHtml;setTimeout(()=>{btn.innerHTML=original;btn.disabled=false},1300)}
+  catch(e){btn.innerHTML='<i class="bi bi-exclamation-triangle-fill mr-1"></i>Có lỗi';btn.classList.add('ring-2','ring-rose-200');say(e.message||'Có lỗi khi đồng bộ.');setTimeout(()=>{btn.innerHTML=original;btn.disabled=false;btn.classList.remove('ring-2','ring-rose-200')},1800)}
+}
+$('googlePull').onclick=()=>runSyncButton($('googlePull'),'<i class="bi bi-arrow-repeat mr-1"></i>Đang nạp…','<i class="bi bi-check-circle-fill mr-1"></i>Đã nạp',async()=>{await loadGoogleEventsForRange();await loadGoogleStats();say('Đã nạp lịch Google mới nhất.')});
+$('googlePush').onclick=()=>runSyncButton($('googlePush'),'<i class="bi bi-arrow-repeat mr-1"></i>Đang đẩy…','<i class="bi bi-check-circle-fill mr-1"></i>Hoàn tất',pushVisibleHvaTasks);
 
 setTimeout(()=>restoreGoogleConnection(),350);
 
