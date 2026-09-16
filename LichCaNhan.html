@@ -8,16 +8,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f4f8fc;color:#172033;font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:82px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}.card{box-shadow:0 8px 24px rgba(15,76,129,.09)}.active{background:#0F4C81!important;color:#fff!important}.safe{padding-bottom:env(safe-area-inset-bottom)}button{font-family:inherit}
-#googlePull,#googlePush{position:relative;overflow:hidden;min-height:44px;border:1px solid transparent;box-shadow:0 5px 14px rgba(15,76,129,.10);transition:transform .12s ease,box-shadow .18s ease,filter .18s ease}
-#googlePull{background:linear-gradient(135deg,#e8f2ff,#dbeafe);color:#0F4C81;border-color:#bfdbfe}
-#googlePush{background:linear-gradient(135deg,#dcfce7,#d1fae5);color:#047857;border-color:#a7f3d0}
-#googlePull:hover,#googlePush:hover{filter:brightness(.98);box-shadow:0 8px 18px rgba(15,76,129,.16)}
-#googlePull:active,#googlePush:active,.hva-btn-press{transform:scale(.965);filter:brightness(.94)}
-.hva-btn-busy{pointer-events:none;transform:scale(.985);box-shadow:0 0 0 4px rgba(37,99,235,.12),0 8px 18px rgba(15,76,129,.15)!important}
-.hva-btn-success{animation:hvaSuccess .72s ease}
-@keyframes hvaSuccess{0%{transform:scale(1)}30%{transform:scale(1.045);box-shadow:0 0 0 7px rgba(16,185,129,.16)}60%{transform:scale(.985)}100%{transform:scale(1)}}
-@keyframes hvaSpin{to{transform:rotate(360deg)}}
+*{box-sizing:border-box}body{margin:0;background:#f4f8fc;color:#172033;font-family:Arial,sans-serif;padding-bottom:82px}.card{box-shadow:0 8px 24px rgba(15,76,129,.09)}.active{background:#0F4C81!important;color:#fff!important}.safe{padding-bottom:env(safe-area-inset-bottom)}
 </style>
 </head>
 <body>
@@ -25,18 +16,18 @@
  <div class="max-w-3xl mx-auto h-[68px] px-4 flex items-center gap-3">
   <button onclick="location.href='./main.html'" class="w-10 h-10 rounded-xl bg-slate-50 text-[#0F4C81]"><i class="bi bi-chevron-left"></i></button>
   <img src="./assets/brand/HVA_Logo_Compact.png" onerror="this.src='./assets/brand/HVA_Logo_Transparent.png'" class="w-11 h-11 object-contain">
-  <div class="flex-1 min-w-0"><div class="text-[15px] font-extrabold text-[#0F4C81]">LỊCH CÁ NHÂN</div><div class="text-[11px] font-semibold text-slate-400 truncate">Trung tâm Quản trị số HVA • Trường THPT Hòa Vang</div></div>
+  <div class="flex-1 min-w-0"><div class="text-[15px] font-extrabold text-[#0F4C81]">LỊCH CÁ NHÂN</div><div class="text-[10px] font-semibold text-slate-400 truncate">Trung tâm Quản trị số HVA • Trường THPT Hòa Vang</div></div>
   <button id="goToday" class="px-3 h-9 rounded-xl bg-blue-50 text-[#0F4C81] text-xs font-bold">Hôm nay</button>
  </div>
 </header>
 
 <main class="max-w-3xl mx-auto p-4">
  <section class="rounded-[22px] p-4 text-white bg-gradient-to-br from-[#0F4C81] to-[#2563EB] card">
-  <div class="flex justify-between"><div><div id="greet" class="text-[11px] text-blue-100">Lịch làm việc của tôi</div><div id="who" class="text-lg font-extrabold mt-1">Người dùng HVA</div><div id="role" class="text-[11px] text-blue-100 mt-1"></div></div><i class="bi bi-calendar3 text-3xl opacity-80"></i></div>
+  <div class="flex justify-between"><div><div id="greet" class="text-[10px] text-blue-100">Lịch làm việc của tôi</div><div id="who" class="text-lg font-extrabold mt-1">Người dùng HVA</div><div id="role" class="text-[10px] text-blue-100 mt-1"></div></div><i class="bi bi-calendar3 text-3xl opacity-80"></i></div>
   <div class="grid grid-cols-3 gap-2 mt-4">
-   <div class="bg-white/10 rounded-xl p-2"><div class="text-[10.5px]">Hôm nay</div><b id="sToday" class="text-xl">0</b></div>
-   <div class="bg-white/10 rounded-xl p-2"><div class="text-[10.5px]">Tuần này</div><b id="sWeek" class="text-xl">0</b></div>
-   <div class="bg-white/10 rounded-xl p-2"><div class="text-[10.5px]">Cần chú ý</div><b id="sLate" class="text-xl">0</b></div>
+   <div class="bg-white/10 rounded-xl p-2"><div class="text-[9px]">Hôm nay</div><b id="sToday" class="text-xl">0</b></div>
+   <div class="bg-white/10 rounded-xl p-2"><div class="text-[9px]">Tuần này</div><b id="sWeek" class="text-xl">0</b></div>
+   <div class="bg-white/10 rounded-xl p-2"><div class="text-[9px]">Cần chú ý</div><b id="sLate" class="text-xl">0</b></div>
   </div>
  </section>
 
@@ -51,7 +42,7 @@
  <section class="mt-4 bg-white rounded-[22px] border border-slate-200 p-4 card">
   <div class="flex items-center justify-between">
    <button id="prev" class="w-9 h-9 rounded-xl bg-slate-50"><i class="bi bi-chevron-left"></i></button>
-   <div class="text-center"><div id="period" class="text-sm font-extrabold text-[#0F4C81]"></div><div id="period2" class="text-[10.5px] text-slate-400 mt-1"></div></div>
+   <div class="text-center"><div id="period" class="text-sm font-extrabold text-[#0F4C81]"></div><div id="period2" class="text-[9px] text-slate-400 mt-1"></div></div>
    <button id="next" class="w-9 h-9 rounded-xl bg-slate-50"><i class="bi bi-chevron-right"></i></button>
   </div>
   <div id="calendar" class="mt-4"></div>
@@ -59,12 +50,12 @@
 
  <section class="mt-4">
   <div class="flex justify-between items-center px-1 mb-2">
-   <div><div class="text-sm font-extrabold text-[#0F4C81]">LỊCH & VIỆC CỦA NGÀY</div><div id="dateLabel" class="text-[10.5px] text-slate-400"></div></div>
-   <button id="add" class="h-9 px-3 rounded-xl bg-[#0F4C81] text-white text-[11px] font-extrabold"><i class="bi bi-plus-lg"></i> Thêm việc</button>
+   <div><div class="text-sm font-extrabold text-[#0F4C81]">LỊCH & VIỆC CỦA NGÀY</div><div id="dateLabel" class="text-[9px] text-slate-400"></div></div>
+   <button id="add" class="h-9 px-3 rounded-xl bg-[#0F4C81] text-white text-[10px] font-extrabold"><i class="bi bi-plus-lg"></i> Thêm việc</button>
   </div>
   <div id="list" class="space-y-2"></div>
   <div id="empty" class="hidden bg-white border border-dashed border-slate-300 rounded-[20px] py-8 text-center">
-   <i class="bi bi-calendar-check text-2xl text-blue-500"></i><div class="text-xs font-bold text-slate-600 mt-2">Chưa có lịch hoặc công việc</div><div class="text-[10.5px] text-slate-400 mt-1">Có thể thêm nhắc việc cá nhân cho ngày này.</div>
+   <i class="bi bi-calendar-check text-2xl text-blue-500"></i><div class="text-xs font-bold text-slate-600 mt-2">Chưa có lịch hoặc công việc</div><div class="text-[9px] text-slate-400 mt-1">Có thể thêm nhắc việc cá nhân cho ngày này.</div>
   </div>
  </section>
 
@@ -72,25 +63,25 @@
   <div class="flex justify-between items-start gap-3">
     <div class="min-w-0">
       <div class="text-xs font-extrabold text-[#0F4C81]"><i class="bi bi-google"></i> Google Calendar</div>
-      <div id="googleStatus" class="text-[10.5px] text-slate-400 mt-1">Chưa kết nối • Tùy chọn</div>
-      <div id="googleAccount" class="hidden text-[10.5px] text-emerald-600 font-bold mt-1 truncate"></div>
+      <div id="googleStatus" class="text-[9px] text-slate-400 mt-1">Chưa kết nối • Tùy chọn</div>
+      <div id="googleAccount" class="hidden text-[9px] text-emerald-600 font-bold mt-1 truncate"></div>
     </div>
-    <button id="google" class="shrink-0 px-3 py-2 rounded-xl border border-blue-200 text-blue-600 text-[11px] font-bold">Kết nối</button>
+    <button id="google" class="shrink-0 px-3 py-2 rounded-xl border border-blue-200 text-blue-600 text-[10px] font-bold">Kết nối</button>
   </div>
   <div id="googleActions" class="hidden grid grid-cols-2 gap-2 mt-3">
-    <button id="googlePull" class="h-9 rounded-xl bg-blue-50 text-[#0F4C81] text-[11px] font-extrabold"><i class="bi bi-cloud-arrow-down mr-1"></i>NẠP LỊCH GOOGLE</button>
-    <button id="googlePush" class="h-9 rounded-xl bg-emerald-50 text-emerald-700 text-[11px] font-extrabold"><i class="bi bi-cloud-arrow-up mr-1"></i>ĐỒNG BỘ SANG GOOGLE</button>
+    <button id="googlePull" class="h-9 rounded-xl bg-blue-50 text-[#0F4C81] text-[10px] font-extrabold"><i class="bi bi-cloud-arrow-down mr-1"></i>Nạp lịch Google</button>
+    <button id="googlePush" class="h-9 rounded-xl bg-emerald-50 text-emerald-700 text-[10px] font-extrabold"><i class="bi bi-cloud-arrow-up mr-1"></i>Đẩy việc HVA</button>
   </div>
-  <div class="text-[11px] text-slate-400 mt-2">HVA chỉ truy cập Calendar sau khi chính người dùng cấp quyền. Có thể ngắt kết nối bất kỳ lúc nào.</div>
+  <div class="text-[8px] text-slate-400 mt-2">HVA chỉ truy cập Calendar sau khi chính người dùng cấp quyền. Có thể ngắt kết nối bất kỳ lúc nào.</div>
  </section>
 </main>
 
 <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 border-t border-blue-100 safe">
  <div class="h-16 max-w-[460px] mx-auto grid grid-cols-4">
-  <button onclick="location.href='./main.html'" class="text-[#0F4C81] flex flex-col items-center justify-center"><i class="bi bi-house-door-fill text-lg"></i><span class="text-[10.5px] font-bold mt-1">Trang chủ</span></button>
-  <button class="text-blue-600 flex flex-col items-center justify-center"><i class="bi bi-calendar3-fill text-lg"></i><span class="text-[10.5px] font-extrabold mt-1">Lịch cá nhân</span></button>
-  <button onclick="backTarget('links')" class="text-blue-600 flex flex-col items-center justify-center"><i class="bi bi-globe2 text-lg"></i><span class="text-[10.5px] font-bold mt-1">Kết nối</span></button>
-  <button onclick="backTarget('profile')" class="text-blue-600 flex flex-col items-center justify-center"><i class="bi bi-person-circle text-lg"></i><span class="text-[10.5px] font-bold mt-1">Cá nhân</span></button>
+  <button onclick="location.href='./main.html'" class="text-[#0F4C81] flex flex-col items-center justify-center"><i class="bi bi-house-door-fill text-lg"></i><span class="text-[9px] font-bold mt-1">Trang chủ</span></button>
+  <button class="text-blue-600 flex flex-col items-center justify-center"><i class="bi bi-calendar3-fill text-lg"></i><span class="text-[9px] font-extrabold mt-1">Lịch cá nhân</span></button>
+  <button onclick="backTarget('links')" class="text-blue-600 flex flex-col items-center justify-center"><i class="bi bi-globe2 text-lg"></i><span class="text-[9px] font-bold mt-1">Kết nối</span></button>
+  <button onclick="backTarget('profile')" class="text-blue-600 flex flex-col items-center justify-center"><i class="bi bi-person-circle text-lg"></i><span class="text-[9px] font-bold mt-1">Cá nhân</span></button>
  </div>
 </nav>
 
@@ -106,9 +97,63 @@
   <button id="save" class="mt-4 w-full h-12 bg-[#0F4C81] text-white rounded-xl font-extrabold">Lưu vào Lịch cá nhân</button>
  </div>
 </div>
+
+<!-- HVA Google Calendar setup modal -->
+<div id="googleSetupModal" class="hidden fixed inset-0 z-[190] bg-slate-900/45 backdrop-blur-[3px] items-center justify-center p-4">
+  <div class="w-full max-w-[420px] bg-white rounded-[26px] shadow-2xl overflow-hidden">
+    <div class="h-1.5 bg-gradient-to-r from-[#0F4C81] via-[#2563EB] to-[#13B6C8]"></div>
+    <div class="p-5">
+      <div class="flex items-start gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0">
+          <img src="./assets/brand/HVA_Logo_Compact.png"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
+               class="w-10 h-10 object-contain" alt="HVA">
+          <i class="bi bi-calendar3 text-2xl text-[#2563EB]" style="display:none"></i>
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="text-[10px] font-extrabold tracking-wide text-blue-500">HVA DIGITAL</div>
+          <div class="text-[15px] font-extrabold text-[#0F4C81] mt-0.5">KẾT NỐI GOOGLE CALENDAR</div>
+          <div class="text-[10px] text-slate-400 mt-1">Lịch cá nhân • Đồng bộ tùy chọn</div>
+        </div>
+        <button id="googleSetupCloseX" class="w-9 h-9 rounded-xl bg-slate-50 text-slate-500 shrink-0" aria-label="Đóng">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="mt-5 rounded-2xl border border-amber-100 bg-amber-50/70 p-4">
+        <div class="flex gap-3">
+          <div class="w-9 h-9 rounded-xl bg-white text-amber-500 flex items-center justify-center shrink-0 shadow-sm">
+            <i class="bi bi-info-circle-fill"></i>
+          </div>
+          <div>
+            <div class="text-xs font-extrabold text-slate-700">Chức năng đang được cấu hình</div>
+            <div class="text-[10px] leading-5 text-slate-500 mt-1">
+              HVA chưa được cấp cấu hình kết nối Google Calendar dùng chung.
+              Thầy/cô chưa cần thực hiện thao tác kỹ thuật nào.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 rounded-2xl bg-blue-50/70 p-3.5">
+        <div class="text-[10px] font-bold text-[#0F4C81]">
+          <i class="bi bi-shield-check mr-1"></i> Khi hoàn tất cấu hình
+        </div>
+        <div class="text-[9px] leading-5 text-slate-500 mt-1">
+          Người dùng chỉ cần bấm <b>Kết nối</b>, chọn tài khoản Google và cấp quyền Calendar.
+          HVA không yêu cầu giáo viên nhập Client ID hoặc Client Secret.
+        </div>
+      </div>
+
+      <button id="googleSetupClose" class="mt-5 w-full h-11 rounded-xl bg-[#0F4C81] text-white text-xs font-extrabold shadow-sm">
+        Đã hiểu
+      </button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] bg-slate-900 text-white px-4 py-3 rounded-xl text-xs"></div>
 
-<script>window.HVA_GOOGLE_OAUTH_CLIENT_ID='427950120972-6icpeer59ormao8cm8u5ev4dqebcvkqu.apps.googleusercontent.com';</script>
 <script>
 const $=id=>document.getElementById(id),pad=n=>String(n).padStart(2,'0'),iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),fmt=d=>pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear(),addD=(d,n)=>{let x=new Date(d);x.setDate(x.getDate()+n);return x},mon=d=>addD(new Date(d.getFullYear(),d.getMonth(),d.getDate()),-(d.getDay()+6)%7);
 let sel=new Date(),cur=new Date(),view='day';sel=new Date(sel.getFullYear(),sel.getMonth(),sel.getDate());cur=new Date(sel);
@@ -120,50 +165,23 @@ function same(a,b){return iso(a)===iso(b)}function dayTasks(x){return tasks.filt
 function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function say(m){$('toast').textContent=m;$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),2300)}
 function backTarget(t){sessionStorage.setItem('HVA_BOTTOM_NAV_TARGET',t);location.href='./main.html'}
-function hvaSalutation(){
- const gender=String(U.gender||U.gioiTinh||U.sex||'').trim().toLowerCase();
- const role=String(U.position||U.chucVu||U.role||U.vtvl||U.viTriViecLam||'').trim().toLowerCase();
- const female=/nữ|nu|female|woman/.test(gender), male=/nam|male|man/.test(gender);
- const staff=/nhân viên|nhan vien|văn thư|van thu|kế toán|ke toan|y tế|y te|thư viện|thu vien|thiết bị|thiet bi|bảo vệ|bao ve|tạp vụ|tap vu/.test(role);
- return staff?(female?'Chị':male?'Anh':'Anh/Chị'):(female?'Cô':male?'Thầy':'Thầy/Cô');
-}
-function profile(){
- let n=U.fullName||U.hoTen||U.name||U.displayName||'Người dùng HVA',
-     r=U.position||U.chucVu||U.workPosition||U.viTriViecLam||U.role||'',
-     dp=U.department||U.toBoPhan||U.to||U.toChuyenMon||'',
-     sal=hvaSalutation();
-
- $('who').textContent='';
- $('role').textContent=[r,dp].filter(Boolean).join(' • ');
-
- let h=new Date().getHours(),
-     tod=(h>=22||h<5)?'Chào khuya':
-         h<11?'Chào buổi sáng':
-         h<14?'Chào buổi trưa':
-         h<18?'Chào buổi chiều':'Chào buổi tối';
-
- // Chuẩn HVA: lời chào + danh xưng + họ tên trên cùng một dòng.
- $('greet').textContent=tod+', '+sal+' '+n;
-
- // Dòng "who" cũ không còn dùng để tránh lặp lại họ tên.
- $('who').classList.add('hidden');
-}
+function profile(){let n=U.fullName||U.hoTen||U.name||U.displayName||'Người dùng HVA',r=U.position||U.chucVu||U.role||'',dp=U.department||U.to||U.toChuyenMon||'';$('who').textContent=n;$('role').textContent=[r,dp].filter(Boolean).join(' • ');let h=new Date().getHours();$('greet').textContent=h<11?'Chào buổi sáng':h<14?'Chào buổi trưa':h<18?'Chào buổi chiều':'Chào buổi tối'}
 function stats(){let n=new Date(),today=new Date(n.getFullYear(),n.getMonth(),n.getDate()),m=mon(today),su=addD(m,6);$('sToday').textContent=tasks.filter(t=>t.date===iso(today)&&!t.done).length;$('sWeek').textContent=tasks.filter(t=>{let x=new Date(t.date+'T00:00');return x>=m&&x<=su&&!t.done}).length;$('sLate').textContent=tasks.filter(t=>!t.done&&new Date(t.date+'T23:59')<n).length}
 function renderCal(){let c=$('calendar');
- if(view==='day'){ $('period').textContent='Hôm nay • '+fmt(cur);$('period2').textContent='Lịch và nhắc việc cá nhân';let a=[];for(let i=-3;i<=3;i++)a.push(addD(cur,i));c.innerHTML='<div class="grid grid-cols-7 gap-1.5 w-full">'+a.map(x=>`<button data-d="${iso(x)}" class="pick w-full min-w-0 rounded-2xl border py-3 ${same(x,sel)?'active':'bg-white border-slate-200 text-slate-600'}"><div class="text-[10.5px] font-bold">${['CN','T2','T3','T4','T5','T6','T7'][x.getDay()]}</div><div class="text-xl font-extrabold mt-1">${x.getDate()}</div><div class="text-[11px] mt-1 min-h-[16px]">${dayTasks(x).length?'●':''}</div></button>`).join('')+'</div>'}
- if(view==='week'){let m=mon(cur),su=addD(m,6);$('period').textContent='Tuần '+fmt(m)+' – '+fmt(su);$('period2').textContent='Chọn ngày để xem chi tiết';c.innerHTML='<div class="grid grid-cols-7 gap-1">'+Array.from({length:7},(_,i)=>addD(m,i)).map((x,i)=>`<button data-d="${iso(x)}" class="pick rounded-xl border py-3 ${same(x,sel)?'active':'bg-slate-50 border-slate-100'}"><div class="text-[11px] font-bold">${['T2','T3','T4','T5','T6','T7','CN'][i]}</div><div class="font-extrabold mt-1">${x.getDate()}</div><div class="text-[11px]">${dayTasks(x).length||''}</div></button>`).join('')+'</div>'}
- if(view==='month'){let f=new Date(cur.getFullYear(),cur.getMonth(),1),st=addD(f,-(f.getDay()+6)%7);$('period').textContent='Tháng '+(cur.getMonth()+1)+'/'+cur.getFullYear();$('period2').textContent='Tổng quan công việc theo tháng';c.innerHTML='<div class="grid grid-cols-7 text-center text-[11px] font-bold text-slate-400 mb-2">'+['T2','T3','T4','T5','T6','T7','CN'].map(x=>'<div>'+x+'</div>').join('')+'</div><div class="grid grid-cols-7 gap-1">'+Array.from({length:42},(_,i)=>addD(st,i)).map(x=>`<button data-d="${iso(x)}" class="pick aspect-square rounded-xl ${same(x,sel)?'active':x.getMonth()===cur.getMonth()?'border bg-white':'text-slate-300'}"><div class="text-[11px] font-bold">${x.getDate()}</div><div class="text-[7px]">${dayTasks(x).length?'●':''}</div></button>`).join('')+'</div>'}
+ if(view==='day'){ $('period').textContent='Hôm nay • '+fmt(cur);$('period2').textContent='Lịch và nhắc việc cá nhân';let a=[];for(let i=-3;i<=3;i++)a.push(addD(cur,i));c.innerHTML='<div class="flex gap-2 overflow-x-auto pb-1">'+a.map(x=>`<button data-d="${iso(x)}" class="pick min-w-[62px] rounded-2xl border py-3 ${same(x,sel)?'active':'bg-white border-slate-200 text-slate-600'}"><div class="text-[9px] font-bold">${['CN','T2','T3','T4','T5','T6','T7'][x.getDay()]}</div><div class="text-xl font-extrabold mt-1">${x.getDate()}</div><div class="text-[8px] mt-1">${dayTasks(x).length?'●':''}</div></button>`).join('')+'</div>'}
+ if(view==='week'){let m=mon(cur),su=addD(m,6);$('period').textContent='Tuần '+fmt(m)+' – '+fmt(su);$('period2').textContent='Chọn ngày để xem chi tiết';c.innerHTML='<div class="grid grid-cols-7 gap-1">'+Array.from({length:7},(_,i)=>addD(m,i)).map((x,i)=>`<button data-d="${iso(x)}" class="pick rounded-xl border py-3 ${same(x,sel)?'active':'bg-slate-50 border-slate-100'}"><div class="text-[8px] font-bold">${['T2','T3','T4','T5','T6','T7','CN'][i]}</div><div class="font-extrabold mt-1">${x.getDate()}</div><div class="text-[8px]">${dayTasks(x).length||''}</div></button>`).join('')+'</div>'}
+ if(view==='month'){let f=new Date(cur.getFullYear(),cur.getMonth(),1),st=addD(f,-(f.getDay()+6)%7);$('period').textContent='Tháng '+(cur.getMonth()+1)+'/'+cur.getFullYear();$('period2').textContent='Tổng quan công việc theo tháng';c.innerHTML='<div class="grid grid-cols-7 text-center text-[8px] font-bold text-slate-400 mb-2">'+['T2','T3','T4','T5','T6','T7','CN'].map(x=>'<div>'+x+'</div>').join('')+'</div><div class="grid grid-cols-7 gap-1">'+Array.from({length:42},(_,i)=>addD(st,i)).map(x=>`<button data-d="${iso(x)}" class="pick aspect-square rounded-xl ${same(x,sel)?'active':x.getMonth()===cur.getMonth()?'border bg-white':'text-slate-300'}"><div class="text-[10px] font-bold">${x.getDate()}</div><div class="text-[7px]">${dayTasks(x).length?'●':''}</div></button>`).join('')+'</div>'}
  c.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{sel=new Date(b.dataset.d+'T00:00');cur=new Date(sel);render()})
 }
 function remText(v){return v==1440?'Trước 1 ngày':v==60?'Trước 1 giờ':v==30?'Trước 30 phút':v==15?'Trước 15 phút':'Đúng giờ'}
-function renderList(){ $('dateLabel').textContent=['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][sel.getDay()]+', '+fmt(sel);let a=dayTasks(sel);$('empty').classList.toggle('hidden',!!a.length);$('list').innerHTML=a.map(t=>`<div class="item bg-white border border-slate-200 rounded-[18px] p-3 card" data-id="${t.id}"><div class="flex gap-3"><button class="done w-9 h-9 shrink-0 rounded-xl ${t.done?'bg-emerald-100 text-emerald-600':'bg-blue-50 text-blue-600'}"><i class="bi ${t.done?'bi-check2-circle':'bi-circle'}"></i></button><div class="flex-1 min-w-0"><div class="text-xs font-extrabold ${t.done?'line-through text-slate-400':'text-slate-700'}">${esc(t.title)}</div><div class="text-[10.5px] text-slate-400 mt-1"><i class="bi bi-clock"></i> ${t.time||'Cả ngày'} &nbsp; <i class="bi bi-bell"></i> ${remText(t.reminder)}</div>${t.note?'<div class="text-[10.5px] text-slate-500 mt-2">'+esc(t.note)+'</div>':''}</div><button class="del w-8 h-8 text-slate-300"><i class="bi bi-trash3"></i></button></div></div>`).join('');
+function renderList(){ $('dateLabel').textContent=['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][sel.getDay()]+', '+fmt(sel);let a=dayTasks(sel);$('empty').classList.toggle('hidden',!!a.length);$('list').innerHTML=a.map(t=>`<div class="item bg-white border border-slate-200 rounded-[18px] p-3 card" data-id="${t.id}"><div class="flex gap-3"><button class="done w-9 h-9 shrink-0 rounded-xl ${t.done?'bg-emerald-100 text-emerald-600':'bg-blue-50 text-blue-600'}"><i class="bi ${t.done?'bi-check2-circle':'bi-circle'}"></i></button><div class="flex-1 min-w-0"><div class="text-xs font-extrabold ${t.done?'line-through text-slate-400':'text-slate-700'}">${esc(t.title)}</div><div class="text-[9px] text-slate-400 mt-1"><i class="bi bi-clock"></i> ${t.time||'Cả ngày'} &nbsp; <i class="bi bi-bell"></i> ${remText(t.reminder)}</div>${t.note?'<div class="text-[9px] text-slate-500 mt-2">'+esc(t.note)+'</div>':''}</div><button class="del w-8 h-8 text-slate-300"><i class="bi bi-trash3"></i></button></div></div>`).join('');
  $('list').querySelectorAll('.done').forEach(b=>b.onclick=()=>{let id=b.closest('.item').dataset.id;tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t);persist();render()});
  $('list').querySelectorAll('.del').forEach(b=>b.onclick=()=>{let id=b.closest('.item').dataset.id;if(confirm('Xóa nhắc việc này?')){tasks=tasks.filter(t=>t.id!==id);persist();render()}})
 }
 function render(){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.v===view));renderCal();renderList();stats()}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=async()=>{view=b.dataset.v;cur=new Date(sel);render();if(googleAccessToken)await loadGoogleEventsForRange()});
-$('prev').onclick=async()=>{cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()-1,1):addD(cur,view==='week'?-7:-1);sel=new Date(cur);render();if(googleAccessToken)await loadGoogleEventsForRange()};
-$('next').onclick=async()=>{cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()+1,1):addD(cur,view==='week'?7:1);sel=new Date(cur);render();if(googleAccessToken)await loadGoogleEventsForRange()};
+document.querySelectorAll('.tab').forEach(b=>b.onclick=async()=>{view=b.dataset.v;cur=new Date(sel);render();if(googleConnected)await loadGoogleEventsForRange()});
+$('prev').onclick=async()=>{cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()-1,1):addD(cur,view==='week'?-7:-1);sel=new Date(cur);render();if(googleConnected)await loadGoogleEventsForRange()};
+$('next').onclick=async()=>{cur=view==='month'?new Date(cur.getFullYear(),cur.getMonth()+1,1):addD(cur,view==='week'?7:1);sel=new Date(cur);render();if(googleConnected)await loadGoogleEventsForRange()};
 $('goToday').onclick=()=>{sel=new Date();sel=new Date(sel.getFullYear(),sel.getMonth(),sel.getDate());cur=new Date(sel);view='day';render()};
 function closeM(){$('modal').classList.add('hidden');$('modal').classList.remove('flex')}
 $('add').onclick=()=>{$('d').value=iso(sel);$('title').value='';$('tm').value='';$('note').value='';$('modal').classList.remove('hidden');$('modal').classList.add('flex')};$('x').onclick=closeM;
@@ -171,97 +189,145 @@ $('save').onclick=()=>{let t=$('title').value.trim();if(!t){say('Vui lòng nhậ
 
 
 /* =========================================================
-   HVA ↔ GOOGLE CALENDAR
-   - OAuth theo từng người dùng bằng Google Identity Services.
-   - Không dùng Client Secret ở trình duyệt.
-   - Chỉ xin quyền sự kiện Calendar.
-   - Access token chỉ giữ trong bộ nhớ của phiên hiện tại.
+   HVA ↔ GOOGLE CALENDAR • SERVER OAUTH PRO
+   - Kết nối Google một lần bằng OAuth Authorization Code ở Backend HVA.
+   - Refresh token chỉ lưu phía Backend (Script Properties), không xuống trình duyệt.
+   - Frontend không giữ Client Secret/Refresh Token/Access Token.
+   - Backend tự làm mới access token khi cần.
    ========================================================= */
-const HVA_GOOGLE_OAUTH_CLIENT_ID =
-  window.HVA_GOOGLE_OAUTH_CLIENT_ID ||
-  localStorage.getItem('HVA_GOOGLE_OAUTH_CLIENT_ID') ||
-  '';
+const HVA_BACKEND_URL =
+  window.HVA_BACKEND_URL ||
+  'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 
-const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/calendar.events';
-let googleTokenClient = null;
-let googleAccessToken = '';
+let googleConnected = false;
 let googleEvents = [];
+let googleAccountEmail = '';
+let googleOAuthPopup = null;
 
-function googleReady(){
-  return !!(window.google && google.accounts && google.accounts.oauth2);
-}
 function googleStatus(msg, connected=false){
   $('googleStatus').textContent = msg;
   $('googleStatus').className = connected
-    ? 'text-[10.5px] text-emerald-600 font-bold mt-1'
-    : 'text-[10.5px] text-slate-400 mt-1';
+    ? 'text-[9px] text-emerald-600 font-bold mt-1'
+    : 'text-[9px] text-slate-400 mt-1';
   $('googleActions').classList.toggle('hidden', !connected);
   $('google').textContent = connected ? 'Ngắt kết nối' : 'Kết nối';
 }
-function initGoogleTokenClient(){
-  if(!HVA_GOOGLE_OAUTH_CLIENT_ID){
-    googleStatus('Chưa cấu hình OAuth Client ID cho HVA');
-    return false;
-  }
-  if(!googleReady()){
-    googleStatus('Đang tải dịch vụ Google…');
-    return false;
-  }
-  if(googleTokenClient) return true;
 
-  googleTokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: HVA_GOOGLE_OAUTH_CLIENT_ID,
-    scope: GOOGLE_SCOPE,
-    callback: async (resp) => {
-      if(resp.error){
-        googleStatus('Google từ chối hoặc chưa cấp quyền');
-        say('Chưa kết nối được Google Calendar.');
-        return;
-      }
-      googleAccessToken = resp.access_token || '';
-      if(!googleAccessToken) return;
-      googleStatus('Đã kết nối Google Calendar', true);
-      await loadGoogleEventsForRange();
-      say('Đã kết nối và nạp lịch Google Calendar.');
-    }
+async function hvaApiGet(action, params={}){
+  const q = new URLSearchParams({action, ...params, _ts:String(Date.now())});
+  const r = await fetch(HVA_BACKEND_URL+'?'+q.toString(), {method:'GET', cache:'no-store'});
+  if(!r.ok) throw new Error('HVA Backend HTTP '+r.status);
+  const data = await r.json();
+  if(data && data.success===false) throw new Error(data.message||'HVA Backend báo lỗi.');
+  return data;
+}
+async function hvaApiPost(payload){
+  const r = await fetch(HVA_BACKEND_URL, {
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(payload),
+    cache:'no-store'
   });
-  return true;
+  if(!r.ok) throw new Error('HVA Backend HTTP '+r.status);
+  const data = await r.json();
+  if(data && data.success===false) throw new Error(data.message||'HVA Backend báo lỗi.');
+  return data;
 }
-function requestGoogleConnection(){
-  if(!HVA_GOOGLE_OAUTH_CLIENT_ID){
-    showGoogleSetup();
+
+async function restoreGoogleConnection(){
+  if(!uid || uid==='guest'){
+    googleConnected=false;
+    googleStatus('Chưa đăng nhập HVA', false);
     return;
   }
-  if(!initGoogleTokenClient()){
-    setTimeout(requestGoogleConnection, 700);
+  googleStatus('Đang kiểm tra kết nối Google…', false);
+  try{
+    const data=await hvaApiGet('googleCalendarStatus',{username:uid});
+    googleConnected=!!data.connected;
+    googleAccountEmail=String(data.email||'');
+    if(googleConnected){
+      googleStatus(googleAccountEmail ? 'Đã kết nối • '+googleAccountEmail : 'Đã kết nối Google Calendar', true);
+      await loadGoogleEventsForRange();
+    }else{
+      googleEvents=[];
+      googleStatus('Chưa kết nối • Tùy chọn', false);
+      render();
+    }
+  }catch(e){
+    console.error('HVA Google status:',e);
+    googleConnected=false;
+    googleStatus('Chưa kiểm tra được kết nối Google', false);
+  }
+}
+
+async function requestGoogleConnection(){
+  if(!uid || uid==='guest'){
+    say('Thầy/Cô cần đăng nhập HVA trước khi kết nối Google Calendar.');
     return;
   }
-  googleTokenClient.requestAccessToken({prompt:'consent'});
-}
-function disconnectGoogle(){
-  if(googleAccessToken && googleReady()){
-    try{ google.accounts.oauth2.revoke(googleAccessToken, ()=>{}); }catch(e){}
+  try{
+    googleStatus('Đang mở Google để cấp quyền…', false);
+    const data=await hvaApiGet('prepareGoogleCalendarOAuth',{username:uid});
+    if(!data.authUrl) throw new Error('Backend chưa trả đường dẫn Google OAuth.');
+    const w=520,h=700;
+    const left=Math.max(0,(screen.width-w)/2), top=Math.max(0,(screen.height-h)/2);
+    googleOAuthPopup=window.open(data.authUrl,'hvaGoogleCalendarOAuth',`width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`);
+    if(!googleOAuthPopup){
+      googleStatus('Trình duyệt đang chặn cửa sổ Google', false);
+      say('Vui lòng cho phép cửa sổ bật lên để kết nối Google Calendar.');
+    }
+  }catch(e){
+    console.error('HVA Google connect:',e);
+    googleStatus('Chưa kết nối • Tùy chọn', false);
+    say('Chưa mở được kết nối Google Calendar: '+e.message);
   }
-  googleAccessToken='';
-  googleEvents=[];
-  googleStatus('Chưa kết nối • Tùy chọn', false);
-  render();
-  say('Đã ngắt kết nối Google Calendar.');
 }
+
+window.addEventListener('message', async (ev)=>{
+  const d=ev && ev.data;
+  if(!d || d.type!=='HVA_GOOGLE_CALENDAR_OAUTH') return;
+  if(d.success){
+    googleConnected=true;
+    googleAccountEmail=String(d.email||'');
+    googleStatus(googleAccountEmail ? 'Đã kết nối • '+googleAccountEmail : 'Đã kết nối Google Calendar', true);
+    await loadGoogleEventsForRange();
+    say('Đã kết nối Google Calendar. Từ nay HVA sẽ tự duy trì kết nối.');
+  }else{
+    googleConnected=false;
+    googleStatus('Chưa kết nối • Tùy chọn', false);
+    say('Chưa kết nối được Google Calendar'+(d.message?': '+d.message:'.'));
+  }
+});
+
+async function disconnectGoogle(){
+  if(!googleConnected){ googleStatus('Chưa kết nối • Tùy chọn', false); return; }
+  if(!confirm('Ngắt liên kết Google Calendar khỏi tài khoản HVA này?')) return;
+  try{
+    await hvaApiPost({action:'disconnectGoogleCalendar',username:uid});
+    googleConnected=false;
+    googleAccountEmail='';
+    googleEvents=[];
+    googleStatus('Chưa kết nối • Tùy chọn', false);
+    render();
+    say('Đã ngắt kết nối Google Calendar.');
+  }catch(e){
+    say('Chưa ngắt được Google Calendar: '+e.message);
+  }
+}
+
 function showGoogleSetup(){
-  const id = prompt(
-    'HVA chưa có Google OAuth Client ID.\\n\\n' +
-    'Dán OAuth 2.0 Client ID loại Web application của dự án HVA vào đây.\\n' +
-    'Client ID không phải Client Secret và có thể đặt ở frontend.'
-  );
-  if(!id) return;
-  if(!/\.apps\.googleusercontent\.com$/.test(id.trim())){
-    say('OAuth Client ID chưa đúng định dạng.');
-    return;
-  }
-  localStorage.setItem('HVA_GOOGLE_OAUTH_CLIENT_ID', id.trim());
-  say('Đã lưu Client ID trên thiết bị. Tải lại trang để kết nối.');
-  setTimeout(()=>location.reload(),900);
+  const m=$('googleSetupModal');
+  if(!m) return;
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+  document.body.style.overflow='hidden';
+}
+function closeGoogleSetup(){
+  const m=$('googleSetupModal');
+  if(!m) return;
+  m.classList.add('hidden');
+  m.classList.remove('flex');
+  document.body.style.overflow='';
 }
 function rangeForCurrentView(){
   let a,b;
@@ -270,46 +336,29 @@ function rangeForCurrentView(){
   else { a=new Date(cur.getFullYear(),cur.getMonth(),1); b=new Date(cur.getFullYear(),cur.getMonth()+1,1); }
   return [a,b];
 }
-async function gcalFetch(url, options={}){
-  if(!googleAccessToken) throw new Error('NO_TOKEN');
-  const r = await fetch(url, {
-    ...options,
-    headers:{
-      'Authorization':'Bearer '+googleAccessToken,
-      'Content-Type':'application/json',
-      ...(options.headers||{})
-    }
-  });
-  if(r.status===401){
-    googleAccessToken='';
-    googleStatus('Phiên Google đã hết hạn • Kết nối lại', false);
-    throw new Error('TOKEN_EXPIRED');
-  }
-  if(!r.ok){
-    let m='Google Calendar API '+r.status;
-    try{const j=await r.json();m=j?.error?.message||m}catch(e){}
-    throw new Error(m);
-  }
-  if(r.status===204) return {};
-  return r.json();
-}
+
 async function loadGoogleEventsForRange(){
-  if(!googleAccessToken) return;
+  if(!googleConnected) return;
   try{
     const [a,b]=rangeForCurrentView();
-    const q = new URLSearchParams({
+    const data=await hvaApiGet('getGoogleCalendarEvents',{
+      username:uid,
       timeMin:a.toISOString(),
       timeMax:b.toISOString(),
-      singleEvents:'true',
-      orderBy:'startTime',
       maxResults:'250'
     });
-    const data = await gcalFetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?'+q);
-    googleEvents = (data.items||[]).filter(e=>e.status!=='cancelled');
+    googleEvents=(data.items||[]).filter(e=>e.status!=='cancelled');
     render();
   }catch(e){
     console.error('HVA Google Calendar load:',e);
-    if(e.message!=='TOKEN_EXPIRED') say('Chưa nạp được lịch Google: '+e.message);
+    if(/RECONNECT_GOOGLE/i.test(e.message||'')){
+      googleConnected=false;
+      googleEvents=[];
+      googleStatus('Quyền Google đã bị thu hồi • Kết nối lại', false);
+      render();
+      return;
+    }
+    say('Chưa nạp được lịch Google: '+e.message);
   }
 }
 function googleEventsForDate(date){
@@ -321,11 +370,11 @@ function googleEventsForDate(date){
   });
 }
 function toGoogleEvent(t){
-  const minutes = Number(t.reminder||0);
+  const minutes=Number(t.reminder||0);
   let start,end;
   if(t.time){
-    const local = new Date(t.date+'T'+t.time+':00');
-    const endLocal = new Date(local.getTime()+60*60*1000);
+    const local=new Date(t.date+'T'+t.time+':00');
+    const endLocal=new Date(local.getTime()+60*60*1000);
     start={dateTime:local.toISOString(),timeZone:'Asia/Ho_Chi_Minh'};
     end={dateTime:endLocal.toISOString(),timeZone:'Asia/Ho_Chi_Minh'};
   }else{
@@ -336,27 +385,23 @@ function toGoogleEvent(t){
   }
   return {
     summary:t.title,
-    description:(t.note? t.note+'\\n\\n':'')+'Nguồn: HVA • Lịch cá nhân',
+    description:(t.note?t.note+'\n\n':'')+'Nguồn: HVA • Lịch cá nhân',
     start,end,
-    reminders: minutes>0
-      ? {useDefault:false,overrides:[{method:'popup',minutes}]}
-      : {useDefault:true},
+    reminders:minutes>0?{useDefault:false,overrides:[{method:'popup',minutes}]}:{useDefault:true},
     extendedProperties:{private:{hvaTaskId:t.id,hvaOwner:uid}}
   };
 }
 async function pushOneTaskToGoogle(t){
   if(t.googleEventId) return {skipped:true};
-  const event = await gcalFetch(
-    'https://www.googleapis.com/calendar/v3/calendars/primary/events',
-    {method:'POST',body:JSON.stringify(toGoogleEvent(t))}
-  );
-  t.googleEventId=event.id;
+  const data=await hvaApiPost({action:'createGoogleCalendarEvent',username:uid,event:toGoogleEvent(t)});
+  const event=data.event||data;
+  t.googleEventId=event.id||'';
   t.googleHtmlLink=event.htmlLink||'';
   t.syncedAt=new Date().toISOString();
   return event;
 }
 async function pushVisibleHvaTasks(){
-  if(!googleAccessToken){requestGoogleConnection();return}
+  if(!googleConnected){requestGoogleConnection();return}
   const [a,b]=rangeForCurrentView();
   const candidates=tasks.filter(t=>{
     const d=new Date(t.date+'T00:00:00');
@@ -372,77 +417,54 @@ async function pushVisibleHvaTasks(){
   }catch(e){
     persist();
     console.error('HVA Google push:',e);
-    say('Đồng bộ được '+ok+' việc; sau đó gặp lỗi: '+e.message);
+    if(/RECONNECT_GOOGLE/i.test(e.message||'')){
+      googleConnected=false;
+      googleStatus('Quyền Google đã bị thu hồi • Kết nối lại', false);
+    }
+    say('Đồng bộ được '+ok+' việc; sau đó gặp lỗi: '+e.message.replace('RECONNECT_GOOGLE:',''));
   }
 }
 function googleEventCard(e){
   const s=e.start?.dateTime||e.start?.date||'';
   const timed=!!e.start?.dateTime;
   let time='Cả ngày';
-  if(timed){
-    const d=new Date(s);
-    time=pad(d.getHours())+':'+pad(d.getMinutes());
-  }
+  if(timed){const d=new Date(s);time=pad(d.getHours())+':'+pad(d.getMinutes())}
   return `<div class="bg-white border border-blue-100 rounded-[18px] p-3 card">
     <div class="flex gap-3">
       <div class="w-9 h-9 shrink-0 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><i class="bi bi-google"></i></div>
       <div class="flex-1 min-w-0">
         <div class="text-xs font-extrabold text-slate-700">${esc(e.summary||'(Không có tiêu đề)')}</div>
-        <div class="text-[10.5px] text-slate-400 mt-1"><i class="bi bi-clock"></i> ${time} &nbsp; • &nbsp; Google Calendar</div>
+        <div class="text-[9px] text-slate-400 mt-1"><i class="bi bi-clock"></i> ${time} &nbsp; • &nbsp; Google Calendar</div>
       </div>
       ${e.htmlLink?`<a href="${e.htmlLink}" target="_blank" rel="noopener" class="w-8 h-8 flex items-center justify-center text-blue-500"><i class="bi bi-box-arrow-up-right"></i></a>`:''}
     </div>
   </div>`;
 }
 
-/* Mở rộng render danh sách: việc HVA + lịch Google của đúng ngày. */
-const renderListHVAOriginal = renderList;
-renderList = function(){
+const renderListHVAOriginal=renderList;
+renderList=function(){
   renderListHVAOriginal();
-  if(!googleAccessToken) return;
-  const ge = googleEventsForDate(sel);
+  if(!googleConnected) return;
+  const ge=googleEventsForDate(sel);
   if(!ge.length) return;
   const host=$('list');
   host.insertAdjacentHTML('beforeend',
-    `<div class="pt-2 text-[10.5px] font-extrabold text-blue-600">GOOGLE CALENDAR</div>`+
+    `<div class="pt-2 text-[9px] font-extrabold text-blue-600">GOOGLE CALENDAR</div>`+
     ge.map(googleEventCard).join('')
   );
   $('empty').classList.add('hidden');
 };
 
-/* Khi đổi ngày/tuần/tháng, nạp lại khoảng lịch Google. */
-const renderHVAOriginal = render;
-render = function(){
-  renderHVAOriginal();
-};
+$('googleSetupClose').onclick=closeGoogleSetup;
+$('googleSetupCloseX').onclick=closeGoogleSetup;
+$('googleSetupModal').onclick=(e)=>{if(e.target===$('googleSetupModal'))closeGoogleSetup()};
+document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeGoogleSetup()});
 
-$('google').onclick=()=>{
-  if(googleAccessToken) disconnectGoogle();
-  else requestGoogleConnection();
-};
-async function hvaActionFeedback(btn,busyText,successText,action){
- if(!btn||btn.dataset.busy==='1')return;
- const original=btn.innerHTML;btn.dataset.busy='1';btn.classList.add('hva-btn-press');
- setTimeout(()=>btn.classList.remove('hva-btn-press'),130);
- await new Promise(r=>setTimeout(r,90));
- btn.classList.add('hva-btn-busy');
- btn.innerHTML='<i class="bi bi-arrow-repeat mr-1" style="display:inline-block;animation:hvaSpin .75s linear infinite"></i>'+busyText;
- try{
-   await action();
-   btn.classList.remove('hva-btn-busy');btn.classList.add('hva-btn-success');
-   btn.innerHTML='<i class="bi bi-check-circle-fill mr-1"></i>'+successText;
-   setTimeout(()=>{btn.classList.remove('hva-btn-success');btn.innerHTML=original;btn.dataset.busy='0'},1250);
- }catch(e){
-   btn.classList.remove('hva-btn-busy');btn.innerHTML=original;btn.dataset.busy='0';throw e;
- }
-}
-$('googlePull').onclick=()=>hvaActionFeedback($('googlePull'),'ĐANG NẠP LỊCH…','ĐÃ NẠP LỊCH',()=>loadGoogleEventsForRange());
-$('googlePush').onclick=()=>hvaActionFeedback($('googlePush'),'ĐANG ĐỒNG BỘ…','ĐÃ ĐỒNG BỘ',()=>pushVisibleHvaTasks());
+$('google').onclick=()=>{if(googleConnected)disconnectGoogle();else requestGoogleConnection()};
+$('googlePull').onclick=()=>loadGoogleEventsForRange();
+$('googlePush').onclick=()=>pushVisibleHvaTasks();
 
-setTimeout(()=>{
-  if(HVA_GOOGLE_OAUTH_CLIENT_ID) initGoogleTokenClient();
-  else googleStatus('Chưa cấu hình OAuth Client ID cho HVA');
-},900);
+setTimeout(()=>restoreGoogleConnection(),350);
 
 profile();render();
 </script>
