@@ -393,6 +393,21 @@
                 );
 
                 /*
+                 * HVA SECURITY SESSION V1 - 25/09/2026
+                 * AuthService V2 trả sessionToken + expiresAt.
+                 * Lưu riêng khỏi object user để chuẩn bị Gateway Security.
+                 */
+                if (!result.sessionToken || !result.expiresAt) {
+                    localStorage.removeItem("hvaSessionToken");
+                    localStorage.removeItem("hvaSessionExpiresAt");
+                    showError("Phiên đăng nhập HVA không hợp lệ. Vui lòng đăng nhập lại.");
+                    return;
+                }
+
+                localStorage.setItem("hvaSessionToken", String(result.sessionToken));
+                localStorage.setItem("hvaSessionExpiresAt", String(result.expiresAt));
+
+                /*
                  * HVA LOGIN FAST 15/09/2026
                  * Không xóa toàn bộ Cache Storage tại mỗi lần đăng nhập.
                  * Việc quản lý phiên bản/cache thuộc PWA/service worker.
