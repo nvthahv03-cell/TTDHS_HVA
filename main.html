@@ -2427,18 +2427,32 @@ async function markHVANotificationRead(item) {
 
     try {
 
-        // HVA-01 SECURITY
-        // Session token được HVAAuthRequest tự gắn vào body.
-        // Không gửi username từ client để xác định chủ thể.
-        // Backend lấy identity chính thức từ session.
+        if (
+            !window.HVAAuthRequest ||
+            typeof window.HVAAuthRequest.withAuthBody !== 'function'
+        ) {
+            throw new Error('HVA_AUTH_REQUEST_NOT_READY');
+        }
+
+        // Backend xác định username thật từ session.
+        // Frontend không còn gửi username để cấp quyền.
+        const payload =
+            window.HVAAuthRequest.withAuthBody({
+                action: 'markNotificationRead',
+                id: item.id
+            });
+
         const response =
-            await window.HVAAuthRequest.postJson(
-                HVA_NOTIFICATION_API,
-                {
-                    action: 'markNotificationRead',
-                    id: item.id
-                }
-            );
+            await fetch(HVA_NOTIFICATION_API, {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                },
+
+                body: JSON.stringify(payload)
+            });
 
         if (!response.ok) {
             throw new Error('HTTP ' + response.status);
@@ -2455,14 +2469,11 @@ async function markHVANotificationRead(item) {
             return true;
         }
 
-        if (result && result.success === false) {
-
-            console.warn(
-                '[HVA] Không đánh dấu được thông báo:',
-                result.code || '',
-                result.message || ''
-            );
-        }
+        console.warn(
+            '[HVA] Không đánh dấu được thông báo:',
+            result?.code || '',
+            result?.message || ''
+        );
 
     } catch (error) {
 
@@ -2474,7 +2485,6 @@ async function markHVANotificationRead(item) {
 
     return false;
 }
-
 // ------------------------------------------------------------
 // CLICK MỘT THÔNG BÁO
 // ------------------------------------------------------------
