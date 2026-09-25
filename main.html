@@ -1707,7 +1707,9 @@ const HVA_NOTIFICATION_API =
     'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 
 let HVA_NOTIFICATIONS = [];
-
+let HVA_NOTIFICATIONS_LOADING = null;
+let HVA_NOTIFICATIONS_LAST_LOAD = 0;
+const HVA_NOTIFICATIONS_FRESH_MS = 30000;
 
 // ============================================================
 // HVA PUSH NOTIFICATION - FIREBASE CLOUD MESSAGING
@@ -2059,79 +2061,113 @@ function getNotificationUser() {
 // ------------------------------------------------------------
 // TẢI THÔNG BÁO
 // ------------------------------------------------------------
-async function loadHVANotifications() {
+async function loadHVANotifications(forceRefresh = false) {
 
     const user = getNotificationUser();
 
     if (!user.username) {
         console.warn('[HVA] Không xác định username để tải thông báo.');
-        return [];
-    }
-
-    try {
-
-        if (
-            !window.HVAAuthRequest ||
-            typeof window.HVAAuthRequest.withAuthQuery !== 'function'
-        ) {
-            throw new Error('HVA_AUTH_REQUEST_NOT_READY');
-        }
-
-        const baseUrl =
-            HVA_NOTIFICATION_API +
-            '?action=getNotificationsByUser' +
-            '&username=' + encodeURIComponent(user.username) +
-            '&_=' + Date.now();
-
-        // Chỉ gắn sessionToken.
-        // Giữ nguyên fetch trực tiếp tới HVA_NOTIFICATION_API.
-        const url =
-            window.HVAAuthRequest.withAuthQuery(baseUrl);
-
-        const response = await fetch(url, {
-            method: 'GET',
-            cache: 'no-store'
-        });
-
-        if (!response.ok) {
-            throw new Error('HTTP ' + response.status);
-        }
-
-        const data = await response.json();
-
-        if (
-            data &&
-            data.success === false
-        ) {
-            throw new Error(
-                data.code ||
-                data.message ||
-                'NOTIFICATION_API_ERROR'
-            );
-        }
-
-        HVA_NOTIFICATIONS =
-            Array.isArray(data)
-                ? data
-                : (
-                    Array.isArray(data?.data)
-                        ? data.data
-                        : []
-                );
-
-        updateNotificationBadges();
-
         return HVA_NOTIFICATIONS;
-
-    } catch (error) {
-
-        console.error(
-            '[HVA] Lỗi tải thông báo:',
-            error
-        );
-
-        return [];
     }
+
+    const now = Date.now();
+
+    // Dữ liệu còn mới → dùng ngay, không gọi Backend lại
+    if (
+        !forceRefresh &&
+        HVA_NOTIFICATIONS_LAST_LOAD > 0 &&
+        (now - HVA_NOTIFICATIONS_LAST_LOAD) < HVA_NOTIFICATIONS_FRESH_MS
+    ) {
+        return HVA_NOTIFICATIONS;
+    }
+
+    // Nếu đang có request tải thông báo → dùng chung request đó
+    if (HVA_NOTIFICATIONS_LOADING) {
+        return HVA_NOTIFICATIONS_LOADING;
+    }
+
+    HVA_NOTIFICATIONS_LOADING = (async () => {
+
+        try {
+
+            if (
+                !window.HVAAuthRequest ||
+                typeof window.HVAAuthRequest.withAuthQuery !== 'function'
+            ) {
+                throw new Error('HVA_AUTH_REQUEST_NOT_READY');
+            }
+
+            const baseUrl =
+                HVA_NOTIFICATION_API +
+                '?action=getNotificationsByUser' +
+                '&username=' + encodeURIComponent(user.username) +
+                '&_=' + Date.now();
+
+            const url =
+                window.HVAAuthRequest.withAuthQuery(baseUrl);
+
+            const response = await fetch(url, {
+                method: 'GET',
+                cache: 'no-store'
+            });
+
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+
+            const data = await response.json();
+
+            if (data && data.success === false) {
+                throw new Error(
+                    data.code ||
+                    data.message ||
+                    'NOTIFICATION_API_ERROR'
+                );
+            }
+
+            HVA_NOTIFICATIONS =
+                Array.isArray(data)
+                    ? data
+                    : (
+                        Array.isArray(data?.data)
+                            ? data.data
+                            : []
+                    );
+
+            HVA_NOTIFICATIONS_LAST_LOAD = Date.now();
+
+            updateNotificationBadges();
+
+            const panel =
+                document.getElementById('notification-panel');
+
+            if (
+                panel &&
+                !panel.classList.contains('hidden')
+            ) {
+                renderHVANotifications();
+            }
+
+            return HVA_NOTIFICATIONS;
+
+        } catch (error) {
+
+            console.error(
+                '[HVA] Lỗi tải thông báo:',
+                error
+            );
+
+            // Refresh lỗi vẫn giữ dữ liệu hiện có
+            return HVA_NOTIFICATIONS;
+
+        } finally {
+
+            HVA_NOTIFICATIONS_LOADING = null;
+        }
+
+    })();
+
+    return HVA_NOTIFICATIONS_LOADING;
 }
 
 
@@ -2371,7 +2407,7 @@ function renderHVANotifications() {
 // ------------------------------------------------------------
 // MỞ PANEL
 // ------------------------------------------------------------
-async function openNotificationPanel(event) {
+function openNotificationPanel(event) {
 
     if (event) {
         event.preventDefault();
@@ -2383,11 +2419,20 @@ async function openNotificationPanel(event) {
 
     if (!panel) return;
 
+    // Mở panel NGAY
     panel.classList.remove('hidden');
 
-    await loadHVANotifications();
-
+    // Hiển thị ngay dữ liệu đã có
     renderHVANotifications();
+
+    // Cập nhật dữ liệu nền, không bắt giao diện chờ Backend
+    loadHVANotifications(false)
+        .catch(error => {
+            console.error(
+                '[HVA] Refresh thông báo nền lỗi:',
+                error
+            );
+        });
 }
 
 window.openNotificationPanel =
