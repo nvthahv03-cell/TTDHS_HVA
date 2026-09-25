@@ -1361,6 +1361,79 @@
 
     <!-- LOGIC BẢO TRÌ & ĐỒNG BỘ TOÀN CỤC -->
     <script>
+        /* HVA AUTH REQUEST V1 — TEST ONLY — 25/09/2026
+ * Đọc session đã lưu; tự gắn token cho GET/POST.
+ * Chưa thay window.fetch; chưa thay request production; không log token.
+ */
+(function(){
+'use strict';
+const TOKEN_KEY='hvaSessionToken', EXPIRES_KEY='hvaSessionExpiresAt';
+
+function getSessionToken(){return String(localStorage.getItem(TOKEN_KEY)||'').trim();}
+function getSessionExpiresAt(){
+  const n=Number(String(localStorage.getItem(EXPIRES_KEY)||'').trim());
+  return Number.isFinite(n)?n:0;
+}
+function getSessionState(){
+  const token=getSessionToken(), expiresAt=getSessionExpiresAt(), now=Date.now();
+  return {hasToken:!!token,tokenLength:token.length,expiresAt,
+          expired:!!expiresAt&&expiresAt<=now,
+          validLocal:!!token&&!!expiresAt&&expiresAt>now};
+}
+function requireLocalSession(){
+  const s=getSessionState();
+  if(!s.hasToken){const e=new Error('AUTH_REQUIRED');e.code='AUTH_REQUIRED';throw e;}
+  if(!s.expiresAt||s.expired){const e=new Error('SESSION_EXPIRED');e.code='SESSION_EXPIRED';throw e;}
+  return getSessionToken();
+}
+function withAuthQuery(url){
+  const u=new URL(url,window.location.href);
+  u.searchParams.set('sessionToken',requireLocalSession());
+  return u.toString();
+}
+function withAuthBody(payload){
+  const src=payload&&typeof payload==='object'?payload:{};
+  return Object.assign({},src,{sessionToken:requireLocalSession()});
+}
+async function authGet(url,options){
+  return fetch(withAuthQuery(url),Object.assign({},options||{},{method:'GET'}));
+}
+async function authPostJson(url,payload,options){
+  const opts=Object.assign({},options||{});
+  opts.method='POST';
+  opts.headers=Object.assign({},opts.headers||{},{
+    'Content-Type':'text/plain;charset=utf-8'
+  });
+  opts.body=JSON.stringify(withAuthBody(payload));
+  return fetch(url,opts);
+}
+window.HVAAuthRequest=Object.freeze({
+  getSessionState,withAuthQuery,withAuthBody,get:authGet,postJson:authPostJson
+});
+
+window.TEST_HVA_AUTH_REQUEST_V1=function(){
+  const s=getSessionState(); let getOK=false,postOK=false;
+  try{
+    const u=new URL(withAuthQuery('https://example.invalid/api?action=test'));
+    getOK=u.searchParams.has('sessionToken') &&
+      String(u.searchParams.get('sessionToken')||'').length===s.tokenLength;
+  }catch(e){}
+  try{
+    const b=withAuthBody({action:'test',username:'__CLIENT_VALUE__'});
+    postOK=Object.prototype.hasOwnProperty.call(b,'sessionToken') &&
+      String(b.sessionToken||'').length===s.tokenLength &&
+      b.username==='__CLIENT_VALUE__';
+  }catch(e){}
+  const out={
+    test:'HVA_AUTH_REQUEST_V1',hasToken:s.hasToken,tokenLength:s.tokenLength,
+    expiresAtPresent:!!s.expiresAt,expired:s.expired,validLocal:s.validLocal,
+    getTokenAttached:getOK,postTokenAttached:postOK,tokenValueLogged:false,
+    productionFetchChanged:false,backendCalled:false,
+    success:s.validLocal&&getOK&&postOK
+  };
+  console.log('[HVA AUTH REQUEST V1]',out); return out;
+};
+})();
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7IsfWAfnsOa4SIyMiKEB-qQurwW5FpxuKcT83aeCHXhiAf60sJSc0t4KQXE3N427E/exec";
 
         // ----------------------------------------------------
