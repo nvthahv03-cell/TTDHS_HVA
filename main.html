@@ -2155,23 +2155,15 @@ function updateNotificationBadges() {
 
         if (!badge) return;
 
-        if (unread > 0) {
+        // Luôn hiển thị số lượng thông báo chưa đọc,
+        // kể cả khi bằng 0.
+        badge.textContent =
+            unread > 99 ? '99+' : String(unread);
 
-            badge.textContent =
-                unread > 99 ? '99+' : unread;
-
-            badge.classList.remove('hidden');
-            badge.classList.add('flex');
-
-        } else {
-
-            badge.classList.add('hidden');
-            badge.classList.remove('flex');
-        }
-
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
     });
 }
-
 
 // ------------------------------------------------------------
 // ESCAPE HTML
