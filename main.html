@@ -2076,8 +2076,9 @@ async function loadHVANotifications() {
             '&username=' + encodeURIComponent(user.username) +
             '&_=' + Date.now();
 
-        const response = await fetch(url, {
-            method: 'GET',
+        // HVA-01 SECURITY:
+        // Session token được HVAAuthRequest tự động gắn vào request.
+        const response = await window.HVAAuthRequest.get(url, {
             cache: 'no-store'
         });
 
@@ -2086,6 +2087,21 @@ async function loadHVANotifications() {
         }
 
         const data = await response.json();
+
+        // Backend có thể trả object lỗi xác thực thay vì mảng thông báo.
+        if (data && data.success === false) {
+
+            console.warn(
+                '[HVA] Không tải được thông báo:',
+                data.code || '',
+                data.message || ''
+            );
+
+            HVA_NOTIFICATIONS = [];
+            updateNotificationBadges();
+
+            return [];
+        }
 
         HVA_NOTIFICATIONS =
             Array.isArray(data) ? data : [];
@@ -2096,7 +2112,13 @@ async function loadHVANotifications() {
 
     } catch (error) {
 
-        console.error('[HVA] Lỗi tải thông báo:', error);
+        console.error(
+            '[HVA] Lỗi tải thông báo:',
+            error
+        );
+
+        HVA_NOTIFICATIONS = [];
+        updateNotificationBadges();
 
         return [];
     }
