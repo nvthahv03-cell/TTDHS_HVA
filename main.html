@@ -2599,11 +2599,11 @@ async function openHVANotification(encodedId) {
     // 2. NHIỆM VỤ → VIỆC CỦA TÔI
     // GIỮ NGUYÊN LOGIC ĐANG CHẠY
     // ========================================================
-    if (
-        destination.includes('vieccuatoi') ||
-        type.includes('nhiệm vụ') ||
-        type.includes('nhiem vu')
-    ) {
+   if (
+    destination === 'vieccuatoi' ||
+    destination === 'viec-cua-toi' ||
+    destination === 'mytasks'
+) {
 
         closeNotificationPanel();
 
