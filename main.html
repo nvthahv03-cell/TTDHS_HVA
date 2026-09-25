@@ -3981,36 +3981,72 @@ setTimeout(() => {
        API: NHÂN SỰ - GVCN
     ===================================================== */
 
-    async function searchPersonnel(keyword) {
-        const user = getSearchUser();
-        const url = SEARCH_API +
-            '?action=searchNhanSuQuick' +
-            '&q=' + encodeURIComponent(keyword) +
-            '&username=' + encodeURIComponent(user.username || '') +
-            '&category=' + encodeURIComponent(ACTIVE_PERSONNEL_CATEGORY) +
-            '&_=' + Date.now();
+   /* ============================================================================
+ * HVA-01 SEARCH PERSONNEL AUTH V1
+ * 25/09/2026
+ *
+ * THAY NGUYÊN HÀM searchPersonnel(keyword) hiện tại trong main.html.
+ * Bản hiện hành đã xác minh: hàm bắt đầu khoảng dòng 3984.
+ *
+ * Thay đổi duy nhất:
+ *   fetch(url, ...)  ->  window.HVAAuthRequest.get(url, ...)
+ *
+ * Giữ nguyên q / username / category để tương thích trong giai đoạn chuyển tiếp.
+ * HVAAuthRequest sẽ tự gắn sessionToken.
+ * Chưa bật Gateway production.
+ * ========================================================================== */
 
-        const response = await fetch(url, { cache: 'no-store' });
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        const data = await response.json();
+async function searchPersonnel(keyword) {
+    const user = getSearchUser();
 
-        return unwrapArray(data).map((person, index) => ({
-            kind: 'NHANSU',
-            id: person.username || ('NS_' + index),
-            title: person.hoTen || person.fullName || 'Nhân sự',
-            meta: person.lopChuNhiem
-                ? 'GVCN lớp ' + person.lopChuNhiem
-                : (person.vaiTro || person.chucVu || person.viTriViecLam || 'CBQL/GV/NV'),
-            extra: [
-                person.to,
-                person.dienThoai,
-                person.ngaySinh ? 'Sinh ' + person.ngaySinh : '',
-                ...(person.nhomCongTacLabels || [])
-            ].filter(Boolean).join(' • '),
-            phone: String(person.dienThoai || '').trim(),
-            raw: person
-        }));
+    const url = SEARCH_API +
+        '?action=searchNhanSuQuick' +
+        '&q=' + encodeURIComponent(keyword) +
+        '&username=' + encodeURIComponent(user.username || '') +
+        '&category=' + encodeURIComponent(ACTIVE_PERSONNEL_CATEGORY) +
+        '&_=' + Date.now();
+
+    if (
+        !window.HVAAuthRequest ||
+        typeof window.HVAAuthRequest.get !== 'function'
+    ) {
+        throw new Error('HVA_AUTH_REQUEST_NOT_READY');
     }
+
+    const response = await window.HVAAuthRequest.get(
+        url,
+        { cache: 'no-store' }
+    );
+
+    if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
+    }
+
+    const data = await response.json();
+
+    return unwrapArray(data).map((person, index) => ({
+        kind: 'NHANSU',
+        id: person.username || ('NS_' + index),
+        title: person.hoTen || person.fullName || 'Nhân sự',
+        meta: person.lopChuNhiem
+            ? 'GVCN lớp ' + person.lopChuNhiem
+            : (
+                person.vaiTro ||
+                person.chucVu ||
+                person.viTriViecLam ||
+                'CBQL/GV/NV'
+            ),
+        extra: [
+            person.to,
+            person.dienThoai,
+            person.ngaySinh ? 'Sinh ' + person.ngaySinh : '',
+            ...(person.nhomCongTacLabels || [])
+        ].filter(Boolean).join(' • '),
+        phone: String(person.dienThoai || '').trim(),
+        raw: person
+    }));
+}
+
 
 
     /* =====================================================
