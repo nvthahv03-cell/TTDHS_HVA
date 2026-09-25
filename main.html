@@ -2070,15 +2070,26 @@ async function loadHVANotifications() {
 
     try {
 
-        const url =
+        if (
+            !window.HVAAuthRequest ||
+            typeof window.HVAAuthRequest.withAuthQuery !== 'function'
+        ) {
+            throw new Error('HVA_AUTH_REQUEST_NOT_READY');
+        }
+
+        const baseUrl =
             HVA_NOTIFICATION_API +
             '?action=getNotificationsByUser' +
             '&username=' + encodeURIComponent(user.username) +
             '&_=' + Date.now();
 
-        // HVA-01 SECURITY:
-        // Session token được HVAAuthRequest tự động gắn vào request.
-        const response = await window.HVAAuthRequest.get(url, {
+        // Chỉ gắn sessionToken.
+        // Giữ nguyên fetch trực tiếp tới HVA_NOTIFICATION_API.
+        const url =
+            window.HVAAuthRequest.withAuthQuery(baseUrl);
+
+        const response = await fetch(url, {
+            method: 'GET',
             cache: 'no-store'
         });
 
@@ -2088,23 +2099,25 @@ async function loadHVANotifications() {
 
         const data = await response.json();
 
-        // Backend có thể trả object lỗi xác thực thay vì mảng thông báo.
-        if (data && data.success === false) {
-
-            console.warn(
-                '[HVA] Không tải được thông báo:',
-                data.code || '',
-                data.message || ''
+        if (
+            data &&
+            data.success === false
+        ) {
+            throw new Error(
+                data.code ||
+                data.message ||
+                'NOTIFICATION_API_ERROR'
             );
-
-            HVA_NOTIFICATIONS = [];
-            updateNotificationBadges();
-
-            return [];
         }
 
         HVA_NOTIFICATIONS =
-            Array.isArray(data) ? data : [];
+            Array.isArray(data)
+                ? data
+                : (
+                    Array.isArray(data?.data)
+                        ? data.data
+                        : []
+                );
 
         updateNotificationBadges();
 
@@ -2116,9 +2129,6 @@ async function loadHVANotifications() {
             '[HVA] Lỗi tải thông báo:',
             error
         );
-
-        HVA_NOTIFICATIONS = [];
-        updateNotificationBadges();
 
         return [];
     }
