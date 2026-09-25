@@ -2413,25 +2413,24 @@ async function markHVANotificationRead(item) {
 
     if (!item || item.daDoc) return true;
 
-    const user = getNotificationUser();
-
     try {
 
+        // HVA-01 SECURITY
+        // Session token được HVAAuthRequest tự gắn vào body.
+        // Không gửi username từ client để xác định chủ thể.
+        // Backend lấy identity chính thức từ session.
         const response =
-            await fetch(HVA_NOTIFICATION_API, {
-
-                method: 'POST',
-
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
-                },
-
-                body: JSON.stringify({
+            await window.HVAAuthRequest.postJson(
+                HVA_NOTIFICATION_API,
+                {
                     action: 'markNotificationRead',
-                    id: item.id,
-                    username: user.username
-                })
-            });
+                    id: item.id
+                }
+            );
+
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
 
         const result = await response.json();
 
@@ -2444,6 +2443,15 @@ async function markHVANotificationRead(item) {
             return true;
         }
 
+        if (result && result.success === false) {
+
+            console.warn(
+                '[HVA] Không đánh dấu được thông báo:',
+                result.code || '',
+                result.message || ''
+            );
+        }
+
     } catch (error) {
 
         console.error(
@@ -2454,7 +2462,6 @@ async function markHVANotificationRead(item) {
 
     return false;
 }
-
 
 // ------------------------------------------------------------
 // CLICK MỘT THÔNG BÁO
