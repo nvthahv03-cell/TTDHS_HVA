@@ -1441,7 +1441,7 @@ export function renderHome() {
             <!-- 2. KẾ HOẠCH - BÁO CÁO THÁNG -->
             <button type="button"
                     data-thidua-action="KEKHAI_THANG"
-                    onclick="event.preventDefault(); event.stopPropagation(); openThiDuaKeHoachBaoCaoThang(event); return false;"
+                    onclick="event.preventDefault(); event.stopImmediatePropagation(); return window.HVAOpenNotificationCenter?.();">
                     class="w-full flex items-center justify-between
                            px-3 py-2.5 rounded-xl
                            hover:bg-cyan-50
