@@ -1667,10 +1667,12 @@ export function renderHome() {
         class="hva-center-action"
         aria-label="Mở Thông báo"
         onclick="event.preventDefault(); event.stopPropagation(); window.openNotificationPanel?.();">
-    <span class="hva-center-action-icon bg-gradient-to-br from-amber-500 to-orange-600">
-        <i class="bi bi-bell-fill"></i>
-        <span id="hva-home-notification-badge" class="hva-center-action-badge hidden">0</span>
-    </span>
+   <span class="hva-center-action-icon bg-gradient-to-br from-amber-500 to-orange-600 relative">
+    <i class="bi bi-bell-fill"></i>
+
+    <span id="hva-home-notification-badge"
+          class="hva-center-action-badge flex">0</span>
+</span>
     <span>Thông báo</span>
 </button>
 
