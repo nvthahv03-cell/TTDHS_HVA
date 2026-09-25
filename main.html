@@ -3050,18 +3050,29 @@ async function openHVANotification(encodedId) {
 
     const openDriveFile = (fileId) => {
 
-        const value =
-            String(fileId || '').trim();
+    const value =
+        String(fileId || '').trim();
 
-        if (!value) {
-            return false;
-        }
+    if (!value) {
+        return false;
+    }
 
-        return openExternalUrl(
-            'https://drive.google.com/open?id=' +
-            encodeURIComponent(value)
-        );
-    };
+    // DOC-... là mã văn bản nội bộ HVA, KHÔNG phải Google Drive File ID.
+    if (/^DOC-/i.test(value)) {
+        return false;
+    }
+
+    // Drive File ID thực thường là chuỗi dài gồm chữ, số, "_" hoặc "-".
+    // Không tự tạo URL Drive từ mã nguồn không hợp lệ.
+    if (!/^[A-Za-z0-9_-]{20,}$/.test(value)) {
+        return false;
+    }
+
+    return openExternalUrl(
+        'https://drive.google.com/open?id=' +
+        encodeURIComponent(value)
+    );
+};
 
 
     // --------------------------------------------------------
