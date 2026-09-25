@@ -2949,13 +2949,155 @@ async function openHVANotification(encodedId) {
     }
 
 
+         // ========================================================
+    // 4. THÔNG BÁO / VĂN BẢN PHÁT HÀNH
+    // MỞ ĐÚNG ĐỐI TƯỢNG NGUỒN
     // ========================================================
-    // 4. THÔNG BÁO THƯỜNG
-    // TẠM GIỮ LOGIC CŨ
-    // ========================================================
-    AppMain?.showToast?.(
-        'Đã đánh dấu thông báo là đã đọc.'
-    );
+
+    const publishId =
+        String(item.publishId || '').trim();
+
+    if (!publishId) {
+        AppMain?.showToast?.(
+            'Thông báo này không có nội dung nguồn để mở.'
+        );
+        return;
+    }
+
+    try {
+
+        // ----------------------------------------------------
+        // LẤY CHI TIẾT BẢN PHÁT HÀNH
+        // SessionToken được HVAAuthRequest tự gắn vào query.
+        // ----------------------------------------------------
+        const url =
+            HVA_NOTIFICATION_API +
+            '?action=getPublicationDetailV3' +
+            '&publishId=' +
+            encodeURIComponent(publishId) +
+            '&_=' +
+            Date.now();
+
+        const response =
+            await window.HVAAuthRequest.get(
+                url,
+                {
+                    cache: 'no-store'
+                }
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                'HTTP ' + response.status
+            );
+        }
+
+        const result =
+            await response.json();
+
+        if (!result || result.success !== true) {
+            throw new Error(
+                result?.message ||
+                'Không lấy được nội dung phát hành.'
+            );
+        }
+
+
+        // ----------------------------------------------------
+        // PAYLOAD GỐC CỦA BẢN PHÁT HÀNH
+        // ----------------------------------------------------
+        const payload =
+            result.payload || {};
+
+        const documentData =
+            result.document ||
+            payload.document ||
+            {};
+
+        const data =
+            documentData.data || {};
+
+
+        // ----------------------------------------------------
+        // XÁC ĐỊNH FILE ID
+        // ----------------------------------------------------
+        const fileId =
+            String(
+                documentData.docId ||
+                data.fileId ||
+                ''
+            ).trim();
+
+
+        // ----------------------------------------------------
+        // CÓ FILE ID → MỞ FILE DRIVE
+        // ----------------------------------------------------
+        if (fileId) {
+
+            closeNotificationPanel();
+
+            const fileUrl =
+                'https://drive.google.com/open?id=' +
+                encodeURIComponent(fileId);
+
+            window.open(
+                fileUrl,
+                '_blank',
+                'noopener,noreferrer'
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // FALLBACK: PAYLOAD CÓ URL TRỰC TIẾP
+        // ----------------------------------------------------
+        const sourceUrl =
+            String(
+                data.fileUrl ||
+                data.url ||
+                documentData.fileUrl ||
+                documentData.url ||
+                ''
+            ).trim();
+
+        if (
+            sourceUrl &&
+            /^https?:\/\//i.test(sourceUrl)
+        ) {
+
+            closeNotificationPanel();
+
+            window.open(
+                sourceUrl,
+                '_blank',
+                'noopener,noreferrer'
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // BẢN PHÁT HÀNH KHÔNG CÓ FILE
+        // ----------------------------------------------------
+        AppMain?.showToast?.(
+            'Đã đọc thông báo. Nội dung này không có file đính kèm.'
+        );
+
+    } catch (error) {
+
+        console.error(
+            '[HVA] Không mở được nội dung thông báo:',
+            error
+        );
+
+        AppMain?.showToast?.(
+            error?.message ||
+            'Không mở được nội dung thông báo.'
+        );
+    }
 }
 
 
