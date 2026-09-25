@@ -3935,26 +3935,51 @@ async function submitHVASurveyAnswers_(item,answers) {
 }
 
 function bindHVAHomeQuickBadgeSync_() {
-    const source = document.getElementById('header-notification-badge');
-    const target = document.getElementById('hva-home-notification-badge');
+
+    const source =
+        document.getElementById('header-notification-badge');
+
+    const target =
+        document.getElementById('hva-home-notification-badge');
+
     if (!target) return;
 
     const sync = () => {
-        const value = Math.max(0, Number.parseInt(source?.textContent || '0', 10) || 0);
+
+        const value = Math.max(
+            0,
+            Number.parseInt(
+                source?.textContent || '0',
+                10
+            ) || 0
+        );
+
         target.textContent = String(value);
-        target.classList.toggle('hidden', value === 0 || source?.classList.contains('hidden'));
+
+        // HVA: luôn hiển thị badge,
+        // kể cả khi số thông báo chưa đọc = 0.
+        target.classList.remove('hidden');
     };
 
     sync();
-    if (source && !source.dataset.hvaHomeBadgeObserved) {
+
+    if (
+        source &&
+        !source.dataset.hvaHomeBadgeObserved
+    ) {
+
         source.dataset.hvaHomeBadgeObserved = '1';
-        new MutationObserver(sync).observe(source, {
-            childList: true,
-            characterData: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ['class']
-        });
+
+        new MutationObserver(sync).observe(
+            source,
+            {
+                childList: true,
+                characterData: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['class']
+            }
+        );
     }
 }
 
