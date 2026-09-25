@@ -1674,6 +1674,11 @@ export function renderHome() {
           class="hva-center-action-badge flex">0</span>
 </span>
     <span>Thông báo</span>
+
+<span id="hva-home-notification-label"
+      class="text-[10px] font-semibold text-slate-500 leading-tight text-center">
+    0 thông báo mới
+</span>
 </button>
 
 
@@ -3890,7 +3895,7 @@ function renderHVASurveyPollInbox_() {
 async function loadHVASurveyPollInbox_(renderModal) {
     const user = getCurrentHVAUser(), username = String(user.username || user.userName || user.maGV || '').trim();
     const badge = document.getElementById('hva-home-poll-badge'), label = document.getElementById('hva-home-poll-label');
-    if (!username) { if(label) label.textContent='0 bình chọn'; return; }
+    if (!username) { if(label) label.textContent='0 bình chọn mới'; return; }
     try {
         const response = await fetch(`${MY_TASK_API_URL}?action=getSurveyPollsByUser&username=${encodeURIComponent(username)}&_=${Date.now()}`, {cache:'no-store'});
         const raw = await response.text();
@@ -3898,7 +3903,12 @@ async function loadHVASurveyPollInbox_(renderModal) {
         const data = JSON.parse(raw); HVA_SURVEY_POLL_ITEMS = data.success && Array.isArray(data.items) ? data.items : [];
         const pollCount = Number(data.pollCount)||0, surveyCount=Number(data.surveyCount)||0, total=pollCount+surveyCount;
         if(badge){badge.textContent=String(total);badge.classList.remove('hidden');}
-        if(label) label.textContent = surveyCount ? `${pollCount} bình chọn • ${surveyCount} khảo sát` : `${pollCount} bình chọn`;
+        if (label) {
+    label.textContent =
+        surveyCount
+            ? `${pollCount} bình chọn mới • ${surveyCount} khảo sát mới`
+            : `${pollCount} bình chọn mới`;
+}
         if(renderModal) renderHVASurveyPollInbox_();
     } catch(error) {
         console.warn('[HVA KSBC]',error); if(badge){badge.textContent='0';badge.classList.remove('hidden');} if(label)label.textContent='0 bình chọn';
@@ -3944,6 +3954,9 @@ function bindHVAHomeQuickBadgeSync_() {
     const target =
         document.getElementById('hva-home-notification-badge');
 
+    const label =
+        document.getElementById('hva-home-notification-label');
+
     if (!target) return;
 
     const sync = () => {
@@ -3957,10 +3970,12 @@ function bindHVAHomeQuickBadgeSync_() {
         );
 
         target.textContent = String(value);
-
-        // HVA: luôn hiển thị badge,
-        // kể cả khi số thông báo chưa đọc = 0.
         target.classList.remove('hidden');
+
+        if (label) {
+            label.textContent =
+                `${value} thông báo mới`;
+        }
     };
 
     sync();
