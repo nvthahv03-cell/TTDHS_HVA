@@ -3130,7 +3130,17 @@ async function openHVANotification(encodedId) {
 
     // --------------------------------------------------------
     // 4C. FALLBACK: XEM NỘI DUNG THÔNG BÁO NGAY TRÊN MAIN
+    // Văn bản phát hành cũ chưa có publishId/fileUrl:
+    // vẫn xem nội dung và cho phép mở Kho văn bản HVA.
     // --------------------------------------------------------
+    const isPublishedDocument =
+        type.includes('văn bản phát hành') ||
+        type.includes('van ban phat hanh') ||
+        destination.includes('vanban') ||
+        destination.includes('van-ban') ||
+        destination.includes('khovanban') ||
+        destination.includes('kho-van-ban');
+
     closeNotificationPanel();
 
     let modal =
@@ -3280,15 +3290,33 @@ async function openHVANotification(encodedId) {
                 <!-- FOOTER -->
                 <div class="px-5 py-4
                             border-t border-slate-200
-                            bg-slate-50">
+                            bg-slate-50
+                            space-y-2">
+
+                    <button type="button"
+                            id="hva-notification-open-kho-van-ban"
+                            onclick="document.getElementById('hva-notification-detail-modal')?.classList.add('hidden'); if (typeof openKhoVanBan === 'function') { openKhoVanBan(); } else { window.location.href = 'VanBan.html'; }"
+                            class="hidden w-full h-11
+                                   rounded-xl
+                                   bg-[#0F4C81]
+                                   hover:bg-[#0B3C66]
+                                   text-white
+                                   text-[11px]
+                                   font-extrabold">
+
+                        <i class="bi bi-folder2-open mr-1.5"></i>
+                        MỞ KHO VĂN BẢN
+
+                    </button>
 
                     <button type="button"
                             onclick="document.getElementById('hva-notification-detail-modal')?.classList.add('hidden')"
                             class="w-full h-11
                                    rounded-xl
-                                   bg-[#0F4C81]
-                                   hover:bg-[#0B3C66]
-                                   text-white
+                                   border border-slate-200
+                                   bg-white
+                                   hover:bg-slate-100
+                                   text-slate-700
                                    text-[11px]
                                    font-extrabold">
 
@@ -3343,9 +3371,26 @@ async function openHVANotification(encodedId) {
         String(item.id || '');
 
 
+    const openKhoVanBanButton =
+        document.getElementById(
+            'hva-notification-open-kho-van-ban'
+        );
+
+    if (openKhoVanBanButton) {
+        openKhoVanBanButton.classList.toggle(
+            'hidden',
+            !isPublishedDocument
+        );
+    }
+
+
     modal.classList.remove('hidden');
 
 }
+
+
+
+
 
 
 
