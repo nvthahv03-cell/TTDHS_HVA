@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=20260915c">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20260915c">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+   <script defer src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -37,8 +37,30 @@
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+   <link
+    rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+>
+<noscript>
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+    >
+</noscript>
+    <link
+    rel="preload"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+>
+<noscript>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+</noscript>
     <style>
 
         :root {
@@ -194,11 +216,15 @@
 
         <!-- Header Block: HVA Brand -->
         <div class="brand-block text-center mb-6">
-            <img
-                src="./assets/brand/HVA_Logo_Transparent.png?v=20260915c"
-                alt="HVA Digital"
-                class="brand-logo mx-auto mb-2"
-            >
+           <img
+    src="./assets/brand/HVA_Logo_Transparent.png?v=20260915c"
+    alt="HVA Digital"
+    class="brand-logo mx-auto mb-2"
+    width="158"
+    height="158"
+    decoding="async"
+    fetchpriority="high"
+>
             <h1 class="brand-title text-[25px] sm:text-[29px] font-extrabold text-[#10233E] tracking-[-0.035em] leading-tight">
                 Trung tâm Quản trị số HVA
             </h1>
