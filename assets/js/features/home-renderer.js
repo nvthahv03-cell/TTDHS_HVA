@@ -1666,7 +1666,7 @@ export function renderHome() {
         id="hva-home-notification"
         class="hva-center-action"
         aria-label="Mở Thông báo"
-        onclick="event.preventDefault(); event.stopPropagation(); window.openNotificationPanel?.();">
+       onclick="event.preventDefault(); event.stopImmediatePropagation(); return window.HVAOpenNotificationCenter?.();">
    <span class="hva-center-action-icon bg-gradient-to-br from-amber-500 to-orange-600 relative">
     <i class="bi bi-bell-fill"></i>
 
