@@ -2390,7 +2390,9 @@ async function openNotificationPanel(event) {
 
 window.openNotificationPanel =
     openNotificationPanel;
-
+window.HVAOpenNotificationCenter = function () {
+    return window.openNotificationPanel();
+};
 
 // ------------------------------------------------------------
 // ĐÓNG PANEL
