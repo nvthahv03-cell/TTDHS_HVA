@@ -15,6 +15,25 @@
 
         .custom-accordion-content { max-height: 0; overflow: hidden; transition: max-height .22s ease; }
         .custom-accordion-content.open { max-height: 520px; }
+    /* =========================================================
+   HVA RECEIVER MODE
+   Người nhận chỉ xem bản đã phát hành
+   ========================================================= */
+
+body.hva-receiver-mode > * {
+    visibility: hidden;
+}
+
+body.hva-receiver-mode #hva-publication-viewer,
+body.hva-receiver-mode #hva-publication-viewer * {
+    visibility: visible;
+}
+
+body.hva-receiver-mode #hva-publication-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+}
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased">
@@ -999,18 +1018,29 @@ if (publishId) {
 
     Controller.refreshUI();
 
+// ========================================================
+// RECEIVER MODE
+// Người nhận chỉ xem nội dung đã phát hành.
+// Không hiển thị giao diện điều phối/phát hành.
+// ========================================================
+document.body.classList.add('hva-receiver-mode');
 
-
-// Receiver Mode: chỉ xem bản đã phát hành
+// Vô hiệu hóa chức năng phát hành nếu phần tử còn tồn tại.
 const publishButton =
     document.getElementById('btn-execute-publish');
-    if (publishButton) {
-        publishButton.disabled = true;
-        publishButton.innerHTML =
-            '<i class="bi bi-check-circle-fill"></i> BẢN ĐÃ PHÁT HÀNH';
-    }
 
-    return;
+if (publishButton) {
+    publishButton.disabled = true;
+    publishButton.innerHTML =
+        '<i class="bi bi-check-circle-fill"></i> BẢN ĐÃ PHÁT HÀNH';
+}
+
+// Mở Viewer sau khi dữ liệu đã dựng xong.
+requestAnimationFrame(() => {
+    Controller.openPreviewModal();
+});
+
+return;
 }
             if (source.toLowerCase() === 'khovanban' && (fileIdsParam || fileIdLegacy)) {
                 const fileIds = (fileIdsParam || fileIdLegacy)
