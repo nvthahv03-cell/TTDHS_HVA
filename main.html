@@ -3094,95 +3094,19 @@ async function openHVANotification(encodedId) {
     const publishId =
         String(item.publishId || '').trim();
 
+// --------------------------------------------------------
+// 4B. CÓ publishId → MỞ ĐÚNG BẢN TẠI TT PHÁT HÀNH
+// --------------------------------------------------------
+if (publishId) {
 
-    // --------------------------------------------------------
-    // 4B. CÓ publishId → THỬ LẤY BẢN PHÁT HÀNH
-    // --------------------------------------------------------
-    if (publishId) {
+    closeNotificationPanel();
 
-        try {
+    window.location.href =
+        'TTPhatHanh.html?publishId=' +
+        encodeURIComponent(publishId);
 
-            const url =
-                HVA_NOTIFICATION_API +
-                '?action=getPublicationDetailV3' +
-                '&publishId=' +
-                encodeURIComponent(publishId) +
-                '&_=' +
-                Date.now();
-
-            const response =
-                await window.HVAAuthRequest.get(
-                    url,
-                    {
-                        cache: 'no-store'
-                    }
-                );
-
-            if (response.ok) {
-
-                const result =
-                    await response.json();
-
-                if (
-                    result &&
-                    result.success === true
-                ) {
-
-                    const payload =
-                        result.payload || {};
-
-                    const documentData =
-                        result.document ||
-                        payload.document ||
-                        {};
-
-                    const data =
-                        documentData.data || {};
-
-                    const fileId =
-                        String(
-                            documentData.docId ||
-                            documentData.fileId ||
-                            data.fileId ||
-                            data.docId ||
-                            ''
-                        ).trim();
-
-                    if (openDriveFile(fileId)) {
-                        return;
-                    }
-
-
-                    const sourceUrl =
-                        String(
-                            data.fileUrl ||
-                            data.url ||
-                            data.link ||
-                            documentData.fileUrl ||
-                            documentData.url ||
-                            documentData.link ||
-                            payload.fileUrl ||
-                            payload.url ||
-                            ''
-                        ).trim();
-
-                    if (openExternalUrl(sourceUrl)) {
-                        return;
-                    }
-                }
-            }
-
-        } catch (error) {
-
-            // Không để lỗi nguồn phát hành cũ chặn việc xem thông báo.
-            console.warn(
-                '[HVA] Không lấy được nguồn phát hành; ' +
-                'chuyển sang nội dung thông báo:',
-                error?.message || error
-            );
-        }
-    }
-
+    return;
+}
 
     // --------------------------------------------------------
     // 4C. FALLBACK: XEM NỘI DUNG THÔNG BÁO NGAY TRÊN MAIN
