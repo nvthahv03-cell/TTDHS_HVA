@@ -999,10 +999,14 @@ if (publishId) {
 
     Controller.refreshUI();
 
-    // Receiver Mode: chỉ xem bản đã phát hành
-    const publishButton =
-        document.getElementById('btn-execute-publish');
+// Receiver Mode: mở trực tiếp nội dung bản đã phát hành
+setTimeout(() => {
+    Controller.openPreviewModal();
+}, 0);
 
+// Receiver Mode: chỉ xem bản đã phát hành
+const publishButton =
+    document.getElementById('btn-execute-publish');
     if (publishButton) {
         publishButton.disabled = true;
         publishButton.innerHTML =
