@@ -854,7 +854,163 @@ const Controller = {
             const source = String(urlParams.get('source') || '').trim();
             const fileIdsParam = String(urlParams.get('fileIds') || '').trim();
             const fileIdLegacy = String(urlParams.get('fileId') || '').trim();
+            const publishId = String(urlParams.get('publishId') || '').trim();
 
+if (publishId) {
+
+    const user = JSON.parse(
+        localStorage.getItem('user') ||
+        sessionStorage.getItem('user') ||
+        '{}'
+    );
+
+    const detail = await Controller.fetchJson(
+        'getPublicationDetailV3',
+        {
+            publishId: publishId,
+            username: user.username || ''
+        },
+        12000
+    );
+
+    if (!detail || detail.success !== true) {
+        throw new Error(
+            (detail && detail.message) ||
+            'Không tải được bản phát hành.'
+        );
+    }
+
+    const payload =
+        detail.payload &&
+        typeof detail.payload === 'object'
+            ? detail.payload
+            : {};
+
+    const sourceDocument =
+        detail.document &&
+        typeof detail.document === 'object'
+            ? detail.document
+            : (
+                payload.document &&
+                typeof payload.document === 'object'
+                    ? payload.document
+                    : {}
+            );
+
+    const sourceDocuments =
+        Array.isArray(payload.documents) &&
+        payload.documents.length
+            ? payload.documents
+            : [sourceDocument];
+
+    const standardDocs =
+        sourceDocuments
+            .filter(d => d && typeof d === 'object')
+            .map(d => ModuleAdapter.toStandardDocument({
+                ...d,
+
+                moduleSource:
+                    d.moduleSource ||
+                    payload.moduleSource ||
+                    'TTPhatHanh',
+
+                title:
+                    d.title ||
+                    d.tieuDe ||
+                    detail.title ||
+                    'Bản phát hành HVA',
+
+                author:
+                    d.author ||
+                    payload.sender?.fullName ||
+                    detail.sender?.fullName ||
+                    'HVA',
+
+                recipients:
+                    Array.isArray(payload.recipients)
+                        ? payload.recipients
+                        : [],
+
+                linkedDocs:
+                    Array.isArray(payload.attachments)
+                        ? payload.attachments
+                        : []
+            }));
+
+    if (!standardDocs.length) {
+        throw new Error(
+            'Bản phát hành không có dữ liệu tài liệu.'
+        );
+    }
+
+    TTDHS_State.rawSource = {
+        ...payload,
+        publishId: detail.publishId || publishId,
+        document: sourceDocument,
+        sender: detail.sender || payload.sender || {}
+    };
+
+    TTDHS_State.documents = standardDocs;
+    TTDHS_State.document = standardDocs[0];
+
+    TTDHS_State.recipients =
+        Array.isArray(payload.recipients)
+            ? payload.recipients
+            : [];
+
+    TTDHS_State.linkedDocs =
+        Array.isArray(payload.attachments)
+            ? payload.attachments
+            : [];
+
+    // Khôi phục đúng điểm đến của bản phát hành
+    if (Array.isArray(payload.destinations)) {
+        const selectedIds = new Set(
+            payload.destinations.map(d =>
+                String(
+                    typeof d === 'string'
+                        ? d
+                        : (d.id || '')
+                )
+            )
+        );
+
+        TTDHS_State.destinations.forEach(d => {
+            d.selected = selectedIds.has(String(d.id));
+        });
+    }
+
+    // Khôi phục đúng workflow của bản phát hành
+    if (Array.isArray(payload.workflow)) {
+        const workflowIds = new Set(
+            payload.workflow.map(w =>
+                String(
+                    typeof w === 'string'
+                        ? w
+                        : (w.id || '')
+                )
+            )
+        );
+
+        TTDHS_State.workflowSteps.forEach(w => {
+            w.selected = workflowIds.has(String(w.id));
+        });
+    }
+
+    Controller.refreshUI();
+
+    // Receiver Mode: chỉ xem bản đã phát hành
+    const publishButton =
+        document.getElementById('btn-execute-publish');
+
+    if (publishButton) {
+        publishButton.disabled = true;
+        publishButton.innerHTML =
+            '<i class="bi bi-check-circle-fill"></i> BẢN ĐÃ PHÁT HÀNH';
+    }
+
+    return;
+}
             if (source.toLowerCase() === 'khovanban' && (fileIdsParam || fileIdLegacy)) {
                 const fileIds = (fileIdsParam || fileIdLegacy)
                     .split(',').map(x => x.trim()).filter(Boolean);
