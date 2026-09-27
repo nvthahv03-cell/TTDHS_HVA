@@ -5181,12 +5181,21 @@
     // TỰ ĐỘNG NẠP SỐ LIỆU SAU KHI HOME RENDER XONG
     // =====================================================
 
+    // HVA PERF 27/09/2026:
+    // Không dồn 4 request Apps Script vào cùng thời điểm vừa mở Trang chủ.
+    // Dữ liệu cốt lõi nạp trước; số liệu duyệt cuộc họp (CBQL/TTCM) nạp sau.
     setTimeout(() => {
         loadMyTasks();
+    }, 350);
+
+    setTimeout(() => {
         loadMyMeetings();
+    }, 900);
+
+    setTimeout(() => {
         ensureMeetingApprovalPanel_();
         loadMeetingAttendanceApprovals();
-    }, 500);
+    }, 6500);
 
 
     // ======================================================
