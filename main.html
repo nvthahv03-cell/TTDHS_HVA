@@ -2103,11 +2103,7 @@ async function loadHVANotifications(forceRefresh = false) {
                 '&username=' + encodeURIComponent(user.username) +
                 '&_=' + Date.now();
 
-            const url =
-                window.HVAAuthRequest.withAuthQuery(baseUrl);
-
-            const response = await fetch(url, {
-                method: 'GET',
+            const response = await window.HVAAuthRequest.get(baseUrl, {
                 cache: 'no-store'
             });
 
@@ -2473,23 +2469,14 @@ async function markHVANotificationRead(item) {
 
         // Backend xác định username thật từ session.
         // Frontend không còn gửi username để cấp quyền.
-        const payload =
-            window.HVAAuthRequest.withAuthBody({
-                action: 'markNotificationRead',
-                id: item.id
-            });
-
         const response =
-            await fetch(HVA_NOTIFICATION_API, {
-
-                method: 'POST',
-
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
-                },
-
-                body: JSON.stringify(payload)
-            });
+            await window.HVAAuthRequest.postJson(
+                HVA_NOTIFICATION_API,
+                {
+                    action: 'markNotificationRead',
+                    id: item.id
+                }
+            );
 
         if (!response.ok) {
             throw new Error('HTTP ' + response.status);
@@ -4018,7 +4005,7 @@ setTimeout(() => {
         'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 
     let ACTIVE_SEARCH_TYPE = 'ALL';
-    let ACTIVE_PERSONNEL_CATEGORY = 'COUNCIL';
+    let ACTIVE_PERSONNEL_CATEGORY = 'CHIBO';
     let SEARCH_TIMER = null;
 
     const panel = document.getElementById('search-panel');
@@ -4052,11 +4039,12 @@ setTimeout(() => {
 
     const personnelTabs = document.createElement('div');
     personnelTabs.id = 'personnel-search-tabs';
-    personnelTabs.className = 'hidden mt-3 grid grid-cols-3 gap-1 rounded-xl bg-slate-100 p-1';
+    personnelTabs.className = 'hidden mt-3 grid grid-cols-4 gap-1 rounded-xl bg-slate-100 p-1';
     personnelTabs.innerHTML = `
-        <button type="button" data-personnel-category="COUNCIL" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">Hội đồng</button>
+        <button type="button" data-personnel-category="CHIBO" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">Chi bộ</button>
+        <button type="button" data-personnel-category="BGH" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">BGH</button>
         <button type="button" data-personnel-category="TEAM" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">Tổ/Bộ phận</button>
-        <button type="button" data-personnel-category="WORKGROUP" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">Nhóm công tác</button>`;
+        <button type="button" data-personnel-category="WORKGROUP" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">Nhóm khác</button>`;
     resultBox.insertAdjacentElement('beforebegin', personnelTabs);
 
     function updatePersonnelTabs() {
@@ -4071,7 +4059,7 @@ setTimeout(() => {
     personnelTabs.addEventListener('click', function (event) {
         const button = event.target.closest('[data-personnel-category]');
         if (!button) return;
-        ACTIVE_PERSONNEL_CATEGORY = button.dataset.personnelCategory || 'COUNCIL';
+        ACTIVE_PERSONNEL_CATEGORY = button.dataset.personnelCategory || 'CHIBO';
         updatePersonnelTabs();
         if (input?.value.trim()) performSearch();
         else input?.focus();
@@ -4489,6 +4477,8 @@ async function searchPersonnel(keyword) {
         meta: person.lopChuNhiem
             ? 'GVCN lớp ' + person.lopChuNhiem
             : (
+                person.personnelCategory === 'CHIBO' ? 'Chi bộ' :
+                person.personnelCategory === 'BGH' ? 'Ban Giám hiệu' :
                 person.vaiTro ||
                 person.chucVu ||
                 person.viTriViecLam ||
@@ -4524,7 +4514,11 @@ async function searchPersonnel(keyword) {
             encodeURIComponent(user.username) +
             '&_=' + Date.now();
 
-        const response = await fetch(url, {
+        if (!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function') {
+            throw new Error('HVA_AUTH_HELPER_MISSING');
+        }
+
+        const response = await window.HVAAuthRequest.get(url, {
             cache: 'no-store'
         });
 
@@ -4533,6 +4527,12 @@ async function searchPersonnel(keyword) {
         }
 
         const data = await response.json();
+
+        if (data?.success === false && /AUTH_REQUIRED|SESSION_INVALID/.test(String(data?.code || ''))) {
+            const error = new Error(data.code);
+            error.hvaMessage = data.message || 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.';
+            throw error;
+        }
 
         return unwrapArray(data)
             .filter(item => {
@@ -4596,7 +4596,11 @@ async function searchPersonnel(keyword) {
             encodeURIComponent(user.username) +
             '&_=' + Date.now();
 
-        const response = await fetch(url, {
+        if (!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function') {
+            throw new Error('HVA_AUTH_HELPER_MISSING');
+        }
+
+        const response = await window.HVAAuthRequest.get(url, {
             cache: 'no-store'
         });
 
@@ -4605,6 +4609,12 @@ async function searchPersonnel(keyword) {
         }
 
         const data = await response.json();
+
+        if (data?.success === false && /AUTH_REQUIRED|SESSION_INVALID/.test(String(data?.code || ''))) {
+            const error = new Error(data.code);
+            error.hvaMessage = data.message || 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.';
+            throw error;
+        }
 
         return unwrapArray(data)
             .filter(item => {
@@ -5133,7 +5143,7 @@ async function searchPersonnel(keyword) {
 
             ACTIVE_SEARCH_TYPE = type;
             if (type === 'NHANSU') {
-                ACTIVE_PERSONNEL_CATEGORY = 'COUNCIL';
+                ACTIVE_PERSONNEL_CATEGORY = 'CHIBO';
                 personnelTabs.classList.remove('hidden');
                 updatePersonnelTabs();
             } else {
