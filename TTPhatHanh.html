@@ -560,6 +560,89 @@ ContentViewerRouter.register(
 
 
 // =================================================================
+// HVA MEETING VIEWER ACTION BRIDGE - 27/09/2026
+// Chỉ phục vụ Viewer cuộc họp; không thay đổi luồng phát hành.
+// =================================================================
+window.hvaMeetingViewerCurrentUser = function() {
+    try {
+        const raw = sessionStorage.getItem('user') || localStorage.getItem('user') || '{}';
+        const u = JSON.parse(raw || '{}') || {};
+        return String(u.username || u.userName || u.maGV || '').trim();
+    } catch (_) {
+        return '';
+    }
+};
+
+window.hvaMeetingViewerPost = async function(payload) {
+    const response = await fetch(CONFIG.SCRIPT_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify(payload || {})
+    });
+    if (!response.ok) throw new Error('HTTP_' + response.status);
+    return response.json();
+};
+
+window.hvaConfirmMeetingFromViewer = async function(meetingId) {
+    const username = window.hvaMeetingViewerCurrentUser();
+    if (!meetingId) return alert('Không xác định được mã cuộc họp.');
+    if (!username) return alert('Không xác định được tài khoản đang đăng nhập.');
+    if (!window.confirm('Xác nhận tham dự cuộc họp này?')) return;
+
+    try {
+        const result = await window.hvaMeetingViewerPost({
+            action:'confirmMeetingAttendance',
+            meetingId:String(meetingId),
+            username
+        });
+        if (!result || result.success !== true) {
+            return alert((result && result.message) || 'Không thể xác nhận tham dự.');
+        }
+        alert(result.message || 'Đã xác nhận tham dự cuộc họp.');
+        const modal = document.getElementById('hva-module-content-viewer');
+        if (modal) modal.classList.add('hidden');
+        if (typeof window.loadMyMeetings === 'function') await window.loadMyMeetings();
+    } catch (error) {
+        console.error('[HVA Meeting Viewer] confirmAttendance', error);
+        alert('Có lỗi khi xác nhận tham dự.');
+    }
+};
+
+window.hvaToggleMeetingAbsenceFromViewer = function(show) {
+    const box = document.getElementById('hva-viewer-meeting-absence-box');
+    if (!box) return;
+    box.classList.toggle('hidden', !show);
+    if (show) setTimeout(() => document.getElementById('hva-viewer-meeting-absence-reason')?.focus(), 30);
+};
+
+window.hvaSubmitMeetingAbsenceFromViewer = async function(meetingId) {
+    const username = window.hvaMeetingViewerCurrentUser();
+    const reason = String(document.getElementById('hva-viewer-meeting-absence-reason')?.value || '').trim();
+    if (!meetingId) return alert('Không xác định được mã cuộc họp.');
+    if (!username) return alert('Không xác định được tài khoản đang đăng nhập.');
+    if (!reason) return alert('Vui lòng nhập lý do xin vắng.');
+
+    try {
+        const result = await window.hvaMeetingViewerPost({
+            action:'requestMeetingAbsence',
+            meetingId:String(meetingId),
+            username,
+            reason
+        });
+        if (!result || result.success !== true) {
+            return alert((result && result.message) || 'Không thể gửi yêu cầu xin vắng.');
+        }
+        alert(result.message || 'Đã gửi yêu cầu xin vắng.');
+        const modal = document.getElementById('hva-module-content-viewer');
+        if (modal) modal.classList.add('hidden');
+        if (typeof window.loadMyMeetings === 'function') await window.loadMyMeetings();
+    } catch (error) {
+        console.error('[HVA Meeting Viewer] requestAbsence', error);
+        alert('Có lỗi khi gửi yêu cầu xin vắng.');
+    }
+};
+
+// =================================================================
 // VIEWER: CUỘC HỌP
 // Adapter đầu tiên của hệ thống Viewer Router.
 // =================================================================
@@ -619,6 +702,42 @@ ContentViewerRouter.register(
 
             const documentUrl =
                 data.documentUrl || '';
+
+            const meetingId =
+                data.meetingId ||
+                data.id ||
+                raw.meetingId ||
+                raw.id ||
+                documentState.meetingId ||
+                documentState.id ||
+                '';
+
+            const requireConfirmation = (
+                data.requireConfirmation === true ||
+                ['true','1','có','co','yes','y'].includes(
+                    String(data.requireConfirmation || '').trim().toLowerCase()
+                )
+            );
+
+            const attendanceResponse =
+                String(
+                    data.attendanceResponse ||
+                    raw.attendanceResponse ||
+                    'CHƯA XÁC NHẬN'
+                ).trim();
+
+            const absenceStatus =
+                String(
+                    data.absenceStatus ||
+                    raw.absenceStatus ||
+                    ''
+                ).trim();
+
+            const responseNorm = attendanceResponse.toUpperCase();
+            const absenceNorm = absenceStatus.toUpperCase();
+            const confirmed = ['ĐÃ XÁC NHẬN THAM GIA','ĐÃ XÁC NHẬN','THAM DỰ'].includes(responseNorm);
+            const absent = responseNorm === 'XIN VẮNG' ||
+                ['CHỜ DUYỆT','ĐÃ DUYỆT','TỪ CHỐI'].includes(absenceNorm);
 
             let modal =
                 window.document.getElementById(
@@ -876,7 +995,7 @@ ContentViewerRouter.register(
                             </div>
 
                             ${
-                                data.requireConfirmation
+                                requireConfirmation
                                     ? `
                                         <div class="
                                             px-4 py-2
@@ -900,6 +1019,51 @@ ContentViewerRouter.register(
 
                     </div>
 
+
+                    ${
+                        requireConfirmation && meetingId
+                            ? `
+                                <div class="px-7 py-4 border-t border-slate-200 bg-white">
+                                    ${
+                                        confirmed
+                                            ? `<div class="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm font-bold text-emerald-700">
+                                                   <i class="bi bi-check-circle-fill mr-2"></i>Đã xác nhận tham dự
+                                               </div>`
+                                            : absent
+                                                ? `<div class="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm font-bold text-amber-700">
+                                                       <i class="bi bi-info-circle-fill mr-2"></i>${esc(absenceStatus || 'Đã gửi xin vắng')}
+                                                   </div>`
+                                                : `
+                                                    <div class="flex flex-wrap gap-3">
+                                                        <button type="button"
+                                                            onclick="window.hvaConfirmMeetingFromViewer('${esc(meetingId)}')"
+                                                            class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold">
+                                                            <i class="bi bi-check2-circle mr-2"></i>XÁC NHẬN THAM DỰ
+                                                        </button>
+                                                        <button type="button"
+                                                            onclick="window.hvaToggleMeetingAbsenceFromViewer(true)"
+                                                            class="px-5 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 font-extrabold">
+                                                            <i class="bi bi-person-x mr-2"></i>XIN VẮNG
+                                                        </button>
+                                                    </div>
+                                                    <div id="hva-viewer-meeting-absence-box" class="hidden mt-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                                                        <label class="block text-xs font-extrabold text-amber-800 mb-2">LÝ DO XIN VẮNG <span class="text-red-600">*</span></label>
+                                                        <textarea id="hva-viewer-meeting-absence-reason" rows="3"
+                                                            class="w-full rounded-xl border border-amber-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-amber-300"
+                                                            placeholder="Nhập lý do xin vắng..."></textarea>
+                                                        <div class="mt-3 flex justify-end gap-2">
+                                                            <button type="button" onclick="window.hvaToggleMeetingAbsenceFromViewer(false)"
+                                                                class="px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-bold text-slate-600">HỦY</button>
+                                                            <button type="button" onclick="window.hvaSubmitMeetingAbsenceFromViewer('${esc(meetingId)}')"
+                                                                class="px-4 py-2 rounded-lg bg-amber-600 text-white text-sm font-extrabold">GỬI XIN VẮNG</button>
+                                                        </div>
+                                                    </div>
+                                                `
+                                    }
+                                </div>
+                            `
+                            : ''
+                    }
 
                     <div class="
                         px-7 py-5
