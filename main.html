@@ -2431,6 +2431,14 @@ function openNotificationPanel(event) {
         });
 }
 
+// HVA PERF 27/09/2026: dùng chung cache thông báo giữa main và home-renderer.
+window.HVAGetNotificationsSnapshot = function () {
+    return Array.isArray(HVA_NOTIFICATIONS) ? HVA_NOTIFICATIONS.slice() : [];
+};
+window.HVALoadNotificationsShared = function (forceRefresh = false) {
+    return loadHVANotifications(forceRefresh);
+};
+
 window.openNotificationPanel =
     openNotificationPanel;
 window.HVAOpenNotificationCenter = function () {
@@ -4046,6 +4054,12 @@ setTimeout(() => {
         <button type="button" data-personnel-category="TEAM" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">Tổ/Bộ phận</button>
         <button type="button" data-personnel-category="WORKGROUP" class="personnel-category rounded-lg px-2 py-2 text-[10px] font-bold text-slate-600">Nhóm khác</button>`;
     resultBox.insertAdjacentElement('beforebegin', personnelTabs);
+    const documentTabs=document.createElement('div');documentTabs.id='document-search-tabs';documentTabs.className='hidden mt-3 space-y-2 rounded-xl bg-slate-50 border border-slate-200 p-2';
+    documentTabs.innerHTML=`<div class="grid grid-cols-2 gap-1"><button type="button" data-doc-direction="Văn bản đến" class="rounded-lg bg-white px-2 py-2 text-[10px] font-bold text-[#0F4C81] shadow-sm">Văn bản đến</button><button type="button" data-doc-direction="Văn bản đi" class="rounded-lg bg-white px-2 py-2 text-[10px] font-bold text-[#0F4C81] shadow-sm">Văn bản đi</button></div><div id="document-search-children" class="grid grid-cols-2 gap-1"></div>`;
+    resultBox.insertAdjacentElement('beforebegin',documentTabs);
+    const docChildren=documentTabs.querySelector('#document-search-children'),DOC_CHILDREN={'Văn bản đến':['Trung ương','Bộ GD','Sở GD','Phường','Khác'],'Văn bản đi':['Quyết định','Kế hoạch','Thông báo','Báo cáo','Khác']};
+    function showDocumentChildren(direction){docChildren.innerHTML=(DOC_CHILDREN[direction]||[]).map(x=>`<button type="button" data-doc-keyword="${x}" class="rounded-lg px-2 py-2 text-[10px] font-semibold text-slate-600 hover:bg-blue-50 border border-slate-200 bg-white">${x}</button>`).join('');}
+    documentTabs.addEventListener('click',e=>{const d=e.target.closest('[data-doc-direction]');if(d){showDocumentChildren(d.dataset.docDirection);return;}const k=e.target.closest('[data-doc-keyword]');if(k&&input){input.value=k.dataset.docKeyword||'';input.focus();performSearch();}});
 
     function updatePersonnelTabs() {
         personnelTabs.querySelectorAll('[data-personnel-category]').forEach(btn => {
@@ -5143,11 +5157,11 @@ async function searchPersonnel(keyword) {
 
             ACTIVE_SEARCH_TYPE = type;
             if (type === 'NHANSU') {
-                ACTIVE_PERSONNEL_CATEGORY = 'CHIBO';
-                personnelTabs.classList.remove('hidden');
-                updatePersonnelTabs();
+                ACTIVE_PERSONNEL_CATEGORY = 'CHIBO'; personnelTabs.classList.remove('hidden'); documentTabs.classList.add('hidden'); updatePersonnelTabs();
+            } else if (type === 'VANBAN') {
+                personnelTabs.classList.add('hidden'); documentTabs.classList.remove('hidden'); showDocumentChildren('Văn bản đến');
             } else {
-                personnelTabs.classList.add('hidden');
+                personnelTabs.classList.add('hidden'); documentTabs.classList.add('hidden');
             }
 
             typeButtons.forEach(btn => {
