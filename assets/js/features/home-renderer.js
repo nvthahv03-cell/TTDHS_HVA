@@ -4292,6 +4292,15 @@
             ['true','1','có','co','yes','y'].includes(String(meeting.requireConfirmation || '').trim().toLowerCase())
         );
 
+        // HVA 27/09/2026: tương thích dữ liệu cuộc họp cũ.
+        // Một số hồ sơ đã tạo trước khi chuẩn hóa requireConfirmation vẫn có
+        // trạng thái người tham dự = CHƯA XÁC NHẬN nhưng cờ cuộc họp bị rỗng/false.
+        // Khi đó vẫn phải cho chính người tham dự phản hồi Tham dự / Xin vắng.
+        const needsAttendanceResponse = (
+            requireConfirmation ||
+            responseNorm === 'CHƯA XÁC NHẬN'
+        );
+
         const modal = document.createElement('div');
         modal.id = 'hvaMeetingDetailModal';
         modal.className = 'fixed inset-0 z-[5000] bg-slate-900/45 flex items-center justify-center p-4';
@@ -4367,6 +4376,13 @@
                     </div>
                 </div>
 
+                ${needsAttendanceResponse && !confirmed && !absent ? `
+                    <div class="px-4 pt-1 pb-2">
+                        <div class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2 text-emerald-700 font-extrabold text-[10px]">
+                            <i class="bi bi-check2-circle"></i>Yêu cầu xác nhận tham dự
+                        </div>
+                    </div>` : ''}
+
                 <div class="px-4 pb-2">
                     <button type="button" onclick="registerMeetingSpeak('${esc(meeting.meetingId || '')}')"
                         class="w-full rounded-xl bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-700 font-extrabold text-[11px] py-2.5 transition">
@@ -4374,7 +4390,7 @@
                     </button>
                 </div>
                 <div class="px-4 pb-4 flex gap-2">
-                    ${requireConfirmation && !confirmed && !absent ? `
+                    ${needsAttendanceResponse && !confirmed && !absent ? `
                         <button type="button" onclick="confirmMyMeetingAttendance('${esc(meeting.meetingId || '')}')"
                             class="flex-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] py-2.5 transition">
                             <i class="bi bi-check2-circle mr-1"></i>Xác nhận tham dự
