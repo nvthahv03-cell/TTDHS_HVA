@@ -324,9 +324,32 @@ async function fetchMyTasks({ force = false } = {}) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000);
     try {
-        const response = await fetch(url, { method: 'GET', cache: 'no-store', signal: controller.signal });
-        if (!response.ok) throw new Error(`HTTP_${response.status}`);
-        const data = await response.json();
+        let data;
+
+        // HVA SECURITY COMPATIBILITY 27/09/2026:
+        // getTaskByUser là protected action. Ưu tiên gateway dùng chung của main.html
+        // để tự gắn sessionToken và xử lý phiên hết hạn thống nhất.
+        if (window.HVAAuthRequest?.get) {
+            data = await window.HVAAuthRequest.get(url, { signal: controller.signal });
+        } else {
+            const sessionToken = String(localStorage.getItem('hvaSessionToken') || '').trim();
+            const secureUrl = new URL(url, window.location.href);
+            if (sessionToken) secureUrl.searchParams.set('sessionToken', sessionToken);
+
+            const response = await fetch(secureUrl.toString(), {
+                method: 'GET',
+                cache: 'no-store',
+                signal: controller.signal
+            });
+            if (!response.ok) throw new Error(`HTTP_${response.status}`);
+            data = await response.json();
+        }
+
+        if (data?.success === false && /AUTH_REQUIRED|SESSION_INVALID/.test(String(data?.code || ''))) {
+            const err = new Error(data.code);
+            err.hvaMessage = data.message || 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.';
+            throw err;
+        }
         if (!Array.isArray(data)) throw new Error('INVALID_TASK_DATA');
         taskCache = { username: p.username, at: Date.now(), data };
         return data;
@@ -412,20 +435,31 @@ async function askVirtualAssistant(question) {
     const timeoutId = setTimeout(() => controller.abort(), 18000);
 
     try {
-        const response = await fetch(HVA_AI_API_URL, {
-            method: 'POST',
-            cache: 'no-store',
-            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-            body: JSON.stringify({
-                action: 'askVirtualAssistant',
-                question: String(question || '').trim()
-            }),
-            signal: controller.signal
-        });
+        const payload = {
+            action: 'askVirtualAssistant',
+            question: String(question || '').trim(),
+            sessionToken: String(localStorage.getItem('hvaSessionToken') || '').trim()
+        };
 
-        if (!response.ok) throw new Error(`HTTP_${response.status}`);
+        let data;
+        if (window.HVAAuthRequest?.postJson) {
+            const response = await window.HVAAuthRequest.postJson(HVA_AI_API_URL, payload, {
+                signal: controller.signal
+            });
+            if (!response.ok) throw new Error(`HTTP_${response.status}`);
+            data = await response.json();
+        } else {
+            const response = await fetch(HVA_AI_API_URL, {
+                method: 'POST',
+                cache: 'no-store',
+                headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+                body: JSON.stringify(payload),
+                signal: controller.signal
+            });
 
-        const data = await response.json();
+            if (!response.ok) throw new Error(`HTTP_${response.status}`);
+            data = await response.json();
+        }
         if (!data?.success || !String(data?.answer || '').trim()) {
             const err = new Error(data?.message || 'AI_UNAVAILABLE');
             err.hvaMessage = data?.message || '';
@@ -535,7 +569,7 @@ async function handleQuestion(rawQuestion) {
         console.error('[HVA Assistant]', error);
         const msg = error?.name === 'AbortError'
             ? 'Trợ lý ảo phản hồi hơi lâu. Thầy/Cô vui lòng thử lại.'
-            : (error?.hvaMessage || 'HVA Assistant đang gặp lỗi xử lý. Vui lòng thử lại.');
+            : (error?.hvaMessage || 'Nguồn dữ liệu trực tuyến của HVA tạm thời chưa phản hồi. Các chức năng điều hướng và hỗ trợ cục bộ vẫn hoạt động.');
         addBubble('assistant', msg);
     } finally {
         setBusy(false);
