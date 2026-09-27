@@ -4284,7 +4284,10 @@ window.openMyMeetingDetail = function(meetingId, event) {
     const response = String(meeting.attendanceResponse || 'CHƯA XÁC NHẬN').trim();
     const confirmed = response === 'ĐÃ XÁC NHẬN THAM GIA';
     const absent = response === 'XIN VẮNG' || String(meeting.absenceStatus || '').trim() !== '';
-    const requireConfirmation = meeting.requireConfirmation === true;
+    const requireConfirmation = (
+        meeting.requireConfirmation === true ||
+        ['true','1','có','co'].includes(String(meeting.requireConfirmation || '').trim().toLowerCase())
+    );
 
     const modal = document.createElement('div');
     modal.id = 'hvaMeetingDetailModal';
