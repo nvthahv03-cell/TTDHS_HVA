@@ -4078,8 +4078,11 @@
     // =====================================================
     // CUỘC HỌP CỦA TÔI - NGUỒN ĐỘC LẬP, KHÔNG TRỘN TASK
     // =====================================================
+    let HVA_MY_MEETINGS_LOADING = null;
+    let HVA_MY_MEETINGS_LAST_LOAD = 0;
+    const HVA_MY_MEETINGS_FRESH_MS = 15000;
 
-    async function loadMyMeetings() {
+    async function loadMyMeetings(forceRefresh = false) {
         const user = getCurrentHVAUser();
 
         const username =
@@ -4095,6 +4098,20 @@
             return [];
         }
 
+        const now = Date.now();
+
+        if (!forceRefresh &&
+            HVA_MY_MEETINGS_LAST_LOAD > 0 &&
+            (now - HVA_MY_MEETINGS_LAST_LOAD) < HVA_MY_MEETINGS_FRESH_MS) {
+            renderMyMeetings();
+            return HVA_MY_MEETINGS;
+        }
+
+        if (!forceRefresh && HVA_MY_MEETINGS_LOADING) {
+            return HVA_MY_MEETINGS_LOADING;
+        }
+
+        HVA_MY_MEETINGS_LOADING = (async () => {
         try {
             const url =
                 MY_TASK_API_URL +
@@ -4173,6 +4190,15 @@
             renderMyMeetings();
             updateMyWorkTotalBadge();
             return [];
+        }
+        })();
+
+        try {
+            const result = await HVA_MY_MEETINGS_LOADING;
+            HVA_MY_MEETINGS_LAST_LOAD = Date.now();
+            return result;
+        } finally {
+            HVA_MY_MEETINGS_LOADING = null;
         }
     }
 
@@ -4292,15 +4318,6 @@
             ['true','1','có','co','yes','y'].includes(String(meeting.requireConfirmation || '').trim().toLowerCase())
         );
 
-        // HVA 27/09/2026: tương thích dữ liệu cuộc họp cũ.
-        // Một số hồ sơ đã tạo trước khi chuẩn hóa requireConfirmation vẫn có
-        // trạng thái người tham dự = CHƯA XÁC NHẬN nhưng cờ cuộc họp bị rỗng/false.
-        // Khi đó vẫn phải cho chính người tham dự phản hồi Tham dự / Xin vắng.
-        const needsAttendanceResponse = (
-            requireConfirmation ||
-            responseNorm === 'CHƯA XÁC NHẬN'
-        );
-
         const modal = document.createElement('div');
         modal.id = 'hvaMeetingDetailModal';
         modal.className = 'fixed inset-0 z-[5000] bg-slate-900/45 flex items-center justify-center p-4';
@@ -4376,13 +4393,6 @@
                     </div>
                 </div>
 
-                ${needsAttendanceResponse && !confirmed && !absent ? `
-                    <div class="px-4 pt-1 pb-2">
-                        <div class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2 text-emerald-700 font-extrabold text-[10px]">
-                            <i class="bi bi-check2-circle"></i>Yêu cầu xác nhận tham dự
-                        </div>
-                    </div>` : ''}
-
                 <div class="px-4 pb-2">
                     <button type="button" onclick="registerMeetingSpeak('${esc(meeting.meetingId || '')}')"
                         class="w-full rounded-xl bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-700 font-extrabold text-[11px] py-2.5 transition">
@@ -4390,7 +4400,7 @@
                     </button>
                 </div>
                 <div class="px-4 pb-4 flex gap-2">
-                    ${needsAttendanceResponse && !confirmed && !absent ? `
+                    ${requireConfirmation && !confirmed && !absent ? `
                         <button type="button" onclick="confirmMyMeetingAttendance('${esc(meeting.meetingId || '')}')"
                             class="flex-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] py-2.5 transition">
                             <i class="bi bi-check2-circle mr-1"></i>Xác nhận tham dự
@@ -5933,16 +5943,26 @@
         if (!username) return [];
 
         try {
-            const r = await fetch(
-                MY_TASK_API_URL +
-                '?action=getNotificationsByUser&username=' + encodeURIComponent(username) +
-                '&_=' + Date.now(),
-                { cache: 'no-store' }
-            );
-            if (!r.ok) throw new Error('HTTP ' + r.status);
+            let list = [];
 
-            const data = await r.json();
-            const list = Array.isArray(data) ? data : [];
+            if (typeof window.HVALoadNotificationsShared === 'function') {
+                await window.HVALoadNotificationsShared(false);
+                list = typeof window.HVAGetNotificationsSnapshot === 'function'
+                    ? window.HVAGetNotificationsSnapshot()
+                    : [];
+            } else {
+                // Fallback tương thích nếu helper của main chưa sẵn sàng.
+                const r = await fetch(
+                    MY_TASK_API_URL +
+                    '?action=getNotificationsByUser&username=' + encodeURIComponent(username) +
+                    '&_=' + Date.now(),
+                    { cache: 'no-store' }
+                );
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                const data = await r.json();
+                list = Array.isArray(data) ? data : [];
+            }
+
             const now = Date.now();
             const threshold = HVA_REMINDER_ESCALATE_MINUTES * 60 * 1000;
 
