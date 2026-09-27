@@ -5960,16 +5960,9 @@
                     ? window.HVAGetNotificationsSnapshot()
                     : [];
             } else {
-                // Fallback tương thích nếu helper của main chưa sẵn sàng.
-                const r = await fetch(
-                    MY_TASK_API_URL +
-                    '?action=getNotificationsByUser&username=' + encodeURIComponent(username) +
-                    '&_=' + Date.now(),
-                    { cache: 'no-store' }
-                );
-                if (!r.ok) throw new Error('HTTP ' + r.status);
-                const data = await r.json();
-                list = Array.isArray(data) ? data : [];
+                // main.html là chủ sở hữu duy nhất của Notification API.
+                // Helper chưa sẵn sàng thì bỏ qua lượt này, không gọi Backend lần hai.
+                list = [];
             }
 
             const now = Date.now();
