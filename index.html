@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=20260915c">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20260915c">
 
-   <script defer src="https://cdn.tailwindcss.com"></script>
+   <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -194,6 +194,146 @@
             .login-page { padding-left:12px !important; padding-right:12px !important; }
             .brand-title { font-size:20px !important; }
             .login-card { padding-left:16px !important; padding-right:16px !important; }
+        }
+
+        /* HVA MOBILE FALLBACK 28/09/2026
+           Giữ form không bể nếu Tailwind CDN / icon font tải chậm. */
+        *, *::before, *::after { box-sizing:border-box; }
+        html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+        body { margin:0; background:#F5F7FA; color:#1e293b; }
+
+        .login-page {
+            width:100%;
+            max-width:100vw;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            padding-left:16px;
+            padding-right:16px;
+        }
+        .brand-block { width:100%; text-align:center; }
+        .brand-logo { display:block; max-width:100%; margin-left:auto; margin-right:auto; }
+        .brand-title {
+            margin:0;
+            font-weight:800;
+            color:#10233E;
+            line-height:1.18;
+            letter-spacing:-.035em;
+        }
+        .brand-school {
+            margin-bottom:0;
+            color:#075296;
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:.12em;
+        }
+        .brand-tagline { margin-bottom:0; font-weight:600; }
+
+        .login-shell { width:100%; margin-left:auto; margin-right:auto; }
+        .login-card {
+            width:100%;
+            background:rgba(255,255,255,.94);
+            border:1px solid rgba(255,255,255,.8);
+            border-radius:24px;
+            box-shadow:0 24px 70px rgba(17,66,111,.13);
+        }
+        .login-card-head { border-bottom:1px solid #f1f5f9; }
+        .login-card-head h2 {
+            margin:0;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            color:#16314F;
+            font-size:17px;
+            font-weight:700;
+        }
+        .login-card-head p { color:#64748b; }
+
+        #loginForm { display:flex; flex-direction:column; }
+        #loginForm > div { width:100%; }
+        #loginForm label {
+            display:block;
+            color:#475569;
+            font-size:11px;
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:.08em;
+        }
+        #loginForm .relative { position:relative; width:100%; }
+        #loginForm .relative > span {
+            position:absolute;
+            top:50%;
+            transform:translateY(-50%);
+            z-index:2;
+        }
+        #loginForm .relative > span:first-child { left:14px; }
+        #password + button {
+            position:absolute;
+            right:10px;
+            top:50%;
+            transform:translateY(-50%);
+            z-index:3;
+        }
+        #password ~ button { border:0; background:transparent; }
+
+        .hva-input {
+            display:block;
+            width:100%;
+            max-width:100%;
+            border:1px solid #e2e8f0;
+            border-radius:12px;
+            background:rgba(255,255,255,.96);
+            color:#1e293b;
+            outline:none;
+            box-shadow:0 1px 2px rgba(15,23,42,.05);
+        }
+        #username { padding-left:40px; padding-right:14px; }
+        #password { padding-left:80px; padding-right:40px; }
+        #password + button { min-width:36px; min-height:36px; }
+        #password::placeholder, #username::placeholder { color:#94a3b8; }
+
+        .admin-help { margin-bottom:0; }
+        #submitBtn {
+            width:100%;
+            border:0;
+            border-radius:12px;
+            color:#fff;
+            cursor:pointer;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+        }
+        #submitBtn:disabled { opacity:.6; cursor:not-allowed; }
+        #errorMsg { width:100%; }
+
+        .footer-copy { width:100%; text-align:center; color:#94a3b8; }
+        .footer-copy p { margin-top:0; margin-bottom:4px; }
+
+        @media (max-width:640px) {
+            .login-page {
+                justify-content:flex-start;
+                min-height:100dvh;
+                height:100dvh;
+                padding-top:max(10px, env(safe-area-inset-top));
+                padding-bottom:max(8px, env(safe-area-inset-bottom));
+            }
+            .brand-block { margin-top:auto; }
+            .login-shell { margin-bottom:auto; max-width:430px; }
+            .brand-logo { width:clamp(88px,13vh,118px); height:clamp(88px,13vh,118px); }
+            .brand-title { font-size:clamp(20px,5.5vw,25px); }
+            .brand-school { font-size:11px; margin-top:4px; }
+            .brand-tagline { font-size:12px; margin-top:5px; }
+            .login-card { padding:14px 18px !important; }
+            .login-card-head { margin-bottom:10px !important; padding-bottom:9px !important; }
+            #loginForm { gap:9px !important; }
+            #loginForm label { margin-bottom:5px !important; }
+            .hva-input { min-height:44px; padding-top:9px !important; padding-bottom:9px !important; font-size:16px; }
+            #submitBtn { min-height:44px; padding:10px 14px !important; font-size:13px; }
+            .admin-help { margin-top:4px; font-size:10.5px; }
+            .footer-copy { margin-top:7px !important; font-size:9.5px; }
         }
 
     </style>
