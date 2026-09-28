@@ -463,12 +463,13 @@
                 rounded-t-[26px] sm:rounded-[26px]
                 shadow-2xl
                 overflow-hidden
-                border border-slate-200">
+                border border-slate-200
+                flex flex-col">
 
         <!-- ================= HEADER ================= -->
         <div class="px-5 pt-4 pb-3
                     bg-gradient-to-r from-blue-50 via-white to-cyan-50
-                    border-b border-blue-100">
+                    border-b border-blue-100 shrink-0">
 
             <div class="flex items-center justify-between gap-3">
 
@@ -580,7 +581,7 @@
 
 
         <!-- ================= PHẠM VI TRA CỨU ================= -->
-        <div class="p-4">
+        <div id="search-panel-body" class="p-4 overflow-y-auto overscroll-contain flex-1 min-h-0">
 
             <div class="text-[10px]
                         font-extrabold
@@ -4053,7 +4054,8 @@ setTimeout(() => {
         groupBox.insertAdjacentElement('afterend', resultBox);
     }
 
-    /* HVA QUICK SEARCH - PERSONNEL ACCORDION V2 - 28/09/2026 */
+    /* HVA QUICK SEARCH - PERSONNEL DIRECTORY V4 - 28/09/2026
+       4 nhánh cấp 1: Chi bộ | Ban Giám hiệu | Tổ/Bộ phận | Nhóm công tác khác */
     const personnelTabs = document.createElement('div');
     personnelTabs.id = 'personnel-search-tabs';
     personnelTabs.className = 'hidden ml-3 mr-1 mb-2 overflow-hidden rounded-2xl border border-violet-100 bg-violet-50/40';
@@ -4072,31 +4074,50 @@ setTimeout(() => {
     personnelTabs.innerHTML = `
         <div class="px-3 py-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-violet-400">Chọn nhóm nhân sự</div>
         <div class="px-2 pb-2 space-y-1">
-            <button type="button" data-personnel-category="CHIBO" class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-violet-100 hover:bg-violet-50 transition">
-                <span class="flex items-center gap-2.5"><i class="bi bi-diagram-3-fill text-violet-500"></i><span class="text-[11px] font-bold text-[#123B67]">Chi bộ</span></span><i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
+            <button type="button" data-personnel-category="CHIBO"
+                    class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-violet-100 hover:bg-violet-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-diagram-3-fill text-violet-500"></i><span class="text-[11px] font-bold text-[#123B67]">Chi bộ</span></span>
+                <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
             </button>
-            <button type="button" data-personnel-category="BGH" class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-violet-100 hover:bg-violet-50 transition">
-                <span class="flex items-center gap-2.5"><i class="bi bi-person-badge-fill text-blue-600"></i><span class="text-[11px] font-bold text-[#123B67]">Ban Giám hiệu</span></span><i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
+
+            <button type="button" data-personnel-category="BGH"
+                    class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-blue-100 hover:bg-blue-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-person-badge-fill text-blue-600"></i><span class="text-[11px] font-bold text-[#123B67]">Ban Giám hiệu</span></span>
+                <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
             </button>
-            <div class="pt-1 px-2 text-[9px] font-extrabold uppercase tracking-[0.07em] text-slate-400">Tổ/Bộ phận</div>
-            ${HVA_PERSONNEL_UNITS.map(unit => `
-                <button type="button" data-personnel-category="TEAM" data-personnel-unit="${unit.value}" data-personnel-label="${unit.label}"
-                        class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-blue-100 hover:bg-blue-50 transition">
-                    <span class="flex items-center gap-2.5"><i class="bi ${unit.value === 'Văn phòng' ? 'bi-building text-emerald-500' : 'bi-people text-sky-500'}"></i><span class="text-[11px] font-semibold text-slate-700">${unit.label}</span></span>
-                    <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
-                </button>`).join('')}
-            <button type="button" data-personnel-category="WORKGROUP" class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-amber-100 hover:bg-amber-50 transition">
-                <span class="flex items-center gap-2.5"><i class="bi bi-grid-fill text-amber-500"></i><span class="text-[11px] font-semibold text-slate-700">Nhóm công tác khác</span></span>
+
+            <button type="button" data-personnel-branch="TEAM"
+                    class="w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-sky-100 hover:bg-sky-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-people-fill text-sky-500"></i><span class="text-[11px] font-bold text-[#123B67]">Tổ/Bộ phận</span></span>
+                <i id="personnel-team-chevron" class="bi bi-chevron-right text-[10px] text-slate-300 transition-transform duration-200"></i>
+            </button>
+            <div id="personnel-team-list" class="hidden ml-4 mt-1 space-y-1 border-l-2 border-sky-100 pl-2">
+                ${HVA_PERSONNEL_UNITS.map(unit => `
+                    <button type="button" data-personnel-category="TEAM" data-personnel-unit="${unit.value}" data-personnel-label="${unit.label}"
+                            class="personnel-category w-full flex items-center justify-between rounded-lg bg-white px-3 py-2 text-left border border-transparent hover:border-sky-100 hover:bg-sky-50 transition">
+                        <span class="flex items-center gap-2 min-w-0">
+                            <i class="bi ${unit.value === 'Văn phòng' ? 'bi-building text-emerald-500' : 'bi-people text-sky-500'} text-[11px]"></i>
+                            <span class="truncate text-[10.5px] font-semibold text-slate-700">${unit.label}</span>
+                        </span>
+                        <i class="bi bi-chevron-right text-[9px] text-slate-300"></i>
+                    </button>`).join('')}
+            </div>
+
+            <button type="button" data-personnel-branch="WORKGROUP"
+                    class="w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-amber-100 hover:bg-amber-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-grid-fill text-amber-500"></i><span class="text-[11px] font-bold text-[#123B67]">Nhóm công tác khác</span></span>
                 <i id="personnel-workgroup-chevron" class="bi bi-chevron-right text-[10px] text-slate-300 transition-transform duration-200"></i>
             </button>
             <div id="personnel-workgroup-list" class="hidden ml-4 mt-1 space-y-1 border-l-2 border-amber-100 pl-2"></div>
         </div>`;
+
     const personnelTypeButton = typeButtons.find(btn => btn.dataset.searchType === 'NHANSU');
     if (personnelTypeButton) {
         personnelTypeButton.insertAdjacentElement('afterend', personnelTabs);
     } else {
         resultBox.insertAdjacentElement('beforebegin', personnelTabs);
     }
+
     const documentTabs=document.createElement('div');documentTabs.id='document-search-tabs';documentTabs.className='hidden mt-3 space-y-2 rounded-xl bg-slate-50 border border-slate-200 p-2';
     documentTabs.innerHTML=`<div class="grid grid-cols-2 gap-1"><button type="button" data-doc-direction="Văn bản đến" class="rounded-lg bg-white px-2 py-2 text-[10px] font-bold text-[#0F4C81] shadow-sm">Văn bản đến</button><button type="button" data-doc-direction="Văn bản đi" class="rounded-lg bg-white px-2 py-2 text-[10px] font-bold text-[#0F4C81] shadow-sm">Văn bản đi</button></div><div id="document-search-children" class="grid grid-cols-2 gap-1"></div>`;
     resultBox.insertAdjacentElement('beforebegin',documentTabs);
@@ -4190,6 +4211,29 @@ setTimeout(() => {
         }
     }
 
+    function setPersonnelBranchOpen(branch, open) {
+        const teamBox = document.getElementById('personnel-team-list');
+        const workBox = document.getElementById('personnel-workgroup-list');
+        const teamChevron = document.getElementById('personnel-team-chevron');
+        const workChevron = document.getElementById('personnel-workgroup-chevron');
+
+        if (branch === 'TEAM') {
+            teamBox?.classList.toggle('hidden', !open);
+            teamChevron?.classList.toggle('rotate-90', open);
+            if (open) {
+                workBox?.classList.add('hidden');
+                workChevron?.classList.remove('rotate-90');
+            }
+        } else if (branch === 'WORKGROUP') {
+            workBox?.classList.toggle('hidden', !open);
+            workChevron?.classList.toggle('rotate-90', open);
+            if (open) {
+                teamBox?.classList.add('hidden');
+                teamChevron?.classList.remove('rotate-90');
+            }
+        }
+    }
+
     personnelTabs.addEventListener('click', function (event) {
         const retry = event.target.closest('[data-retry-workgroups]');
         if (retry) {
@@ -4211,30 +4255,32 @@ setTimeout(() => {
             return;
         }
 
+        const branchButton = event.target.closest('[data-personnel-branch]');
+        if (branchButton) {
+            const branch = branchButton.dataset.personnelBranch;
+            if (branch === 'TEAM') {
+                const box = document.getElementById('personnel-team-list');
+                setPersonnelBranchOpen('TEAM', !!box?.classList.contains('hidden'));
+            } else if (branch === 'WORKGROUP') {
+                const box = document.getElementById('personnel-workgroup-list');
+                const willOpen = !!box?.classList.contains('hidden');
+                if (willOpen) loadPersonnelWorkgroups();
+                else setPersonnelBranchOpen('WORKGROUP', false);
+            }
+            return;
+        }
+
         const button = event.target.closest('[data-personnel-category]');
         if (!button) return;
 
         const category = button.dataset.personnelCategory || 'CHIBO';
-
-        if (category === 'WORKGROUP') {
-            ACTIVE_PERSONNEL_CATEGORY = 'WORKGROUP';
-            ACTIVE_PERSONNEL_FILTER = null;
-
-            const box = document.getElementById('personnel-workgroup-list');
-            const isOpen = box && !box.classList.contains('hidden');
-            if (isOpen) {
-                box.classList.add('hidden');
-                document.getElementById('personnel-workgroup-chevron')?.classList.remove('rotate-90');
-            } else {
-                loadPersonnelWorkgroups();
-            }
-            updatePersonnelTabs();
-            return;
-        }
-
         ACTIVE_PERSONNEL_CATEGORY = category;
         ACTIVE_PERSONNEL_FILTER = category === 'TEAM'
-            ? { field:'to', value:String(button.dataset.personnelUnit || '').trim(), label:String(button.dataset.personnelLabel || '').trim() }
+            ? {
+                field:'to',
+                value:String(button.dataset.personnelUnit || '').trim(),
+                label:String(button.dataset.personnelLabel || '').trim()
+              }
             : null;
 
         updatePersonnelTabs();
