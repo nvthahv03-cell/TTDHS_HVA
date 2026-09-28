@@ -3254,6 +3254,32 @@
 
 
         // =====================================================
+        // ĐÓNG PANEL CÁ NHÂN KHI CHUYỂN SANG TÁC VỤ KHÁC
+        // =====================================================
+        function closePersonalCenterPanels() {
+            document.getElementById('myWorkPanel')?.classList.add('hidden');
+            document.getElementById('digitalConnectPanel')?.classList.add('hidden');
+
+            document.getElementById('myWorkChevron')
+                ?.classList.remove('rotate-180');
+            document.getElementById('digitalConnectChevron')
+                ?.classList.remove('rotate-180');
+        }
+
+        // Bấm bất kỳ tác vụ/menu khác ngoài 2 card cá nhân:
+        // panel đang mở phải tự thu lại, nhưng không can thiệp click bên trong panel.
+        container.addEventListener('click', function(event) {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+
+            if (target.closest('#btn-my-work, #myWorkPanel, #btn-digital-connect, #digitalConnectPanel')) {
+                return;
+            }
+
+            closePersonalCenterPanels();
+        });
+
+        // =====================================================
         // PHÂN QUYỀN KHU VỰC QUẢN TRỊ TRONG KẾT NỐI SỐ
         // =====================================================
 
