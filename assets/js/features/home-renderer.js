@@ -1203,23 +1203,24 @@
                 backdrop-blur-md
                 flex items-center gap-2">
 
-        <!-- Nút tác vụ nhanh BGH: chỉ 03 CBQL được cấp quyền -->
+        <!-- Nút tác vụ nhanh -->
         <button type="button"
            onclick="openHVAReminderModal(event)"
            id="btn-hva-reminder"
            title="Nhắc nhở công vụ"
            aria-label="Nhắc nhở công vụ"
-           class="hidden group relative w-10 h-10 sm:w-11 sm:h-11 rounded-full
+           class="hidden group relative w-11 h-11 rounded-full
                   bg-gradient-to-br from-[#2563EB] via-[#0EA5E9] to-[#06B6D4]
-                  text-white border border-white/70
-                  shadow-[0_5px_14px_rgba(37,99,235,0.28)]
-                  hover:shadow-[0_7px_18px_rgba(14,165,233,0.38)]
+                  text-white border border-white/80
+                  shadow-[0_6px_16px_rgba(37,99,235,0.30)]
+                  hover:shadow-[0_8px_20px_rgba(14,165,233,0.40)]
                   hover:-translate-y-0.5 active:scale-95
                   shrink-0 z-10 transition-all duration-200
                   items-center justify-center">
             <span class="absolute inset-[3px] rounded-full border border-white/25 pointer-events-none"></span>
-            <i class="bi bi-bell-fill text-[15px] sm:text-[16px] drop-shadow-sm"></i>
-            <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-400 border-2 border-white shadow-sm"></span>
+            <i class="bi bi-bell-fill text-[17px] drop-shadow-sm"></i>
+            <span class="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full
+                         bg-amber-400 border-2 border-white shadow-sm"></span>
         </button>
 
         <!-- Nội dung nhắc việc hệ thống chạy -->
@@ -5588,26 +5589,37 @@
 
     function isHVAReminderManager() {
         const u = getHVAReminderUser();
-        const fullName = normalizeHVAReminderIdentity_(
-            u.hoTen || u.fullName || u.name || u.hoten || u.HOTEN || ''
-        );
 
-        // Khóa đúng 03 CBQL được phép dùng tác vụ Nhắc nhở công vụ.
-        const allowedManagers = new Set([
-            'HO THI THU THANH',
-            'NGUYEN VAN THA',
-            'TRAN THI NGOC'
-        ]);
+        // Thu thập tên từ mọi cấu trúc user đang tồn tại trong HVA.
+        // assistantName là fallback quan trọng vì Assistant đã hiển thị đúng danh tính đăng nhập.
+        const candidates = [
+            u.hoTen, u.hoten, u.HOTEN,
+            u.fullName, u.fullname, u.name,
+            u.hoVaTen, u.ho_và_ten,
+            u.displayName, u.tenHienThi,
+            document.getElementById('assistantName')?.textContent
+        ]
+            .map(normalizeHVAReminderIdentity_)
+            .filter(Boolean);
 
-        return allowedManagers.has(fullName);
+        const joined = candidates.join(' | ');
+
+        // Chỉ đúng 03 CBQL hiện hành của Trường THPT Hòa Vang.
+        return joined.includes('HO THI THU THANH') ||
+               joined.includes('NGUYEN VAN THA') ||
+               joined.includes('TRAN THI NGOC');
     }
 
     window.setupHVAReminderPermission = function() {
         const btn = document.getElementById('btn-hva-reminder');
-        if (!btn) return;
+        if (!btn) return false;
+
         const allowed = isHVAReminderManager();
+
         btn.classList.toggle('hidden', !allowed);
         btn.classList.toggle('flex', allowed);
+
+        return allowed;
     };
 
     const HVA_REMINDER_CACHE_KEY = 'HVA_REMINDER_DIRECTORY_V1';
@@ -6232,7 +6244,11 @@
     setInterval(loadEscalatedHVAReminders, 5 * 60 * 1000);
 
 
-    setTimeout(setupHVAReminderPermission, 150);
+    // Profile/Assistant có thể render sau Home vài trăm ms.
+    // Thử lại ngắn hạn để cô Thanh/cô Ngọc không bị ẩn nút do tên chưa kịp nạp.
+    [150, 700, 1600].forEach(function(delay) {
+        setTimeout(setupHVAReminderPermission, delay);
+    });
 
     // =====================================================
     // ĐIỀU HÀNH SỐ
