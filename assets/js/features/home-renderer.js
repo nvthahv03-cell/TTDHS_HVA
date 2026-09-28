@@ -1203,30 +1203,23 @@
                 backdrop-blur-md
                 flex items-center gap-2">
 
-        <!-- Nút tác vụ nhanh -->
+        <!-- Nút tác vụ nhanh BGH: chỉ 03 CBQL được cấp quyền -->
         <button type="button"
            onclick="openHVAReminderModal(event)"
            id="btn-hva-reminder"
-           title="Nhắc nhở GV • NV • Công vụ"
-           class="flex items-center gap-1.5
-                  px-2.5 py-1
-                  rounded-lg
-                  bg-[#D97706] hover:bg-[#B45309]
-                  text-white
-                  shadow-sm
-                  shrink-0 z-10
-                  transition active:scale-[0.98]">
-
-            <i class="bi bi-bell-fill text-amber-100 text-[11px]"></i>
-
-            <span class="flex flex-col leading-none">
-                <span class="uppercase tracking-[0.06em] text-[10px] font-extrabold">
-                    NHẮC NHỞ
-                </span>
-                <span class="text-[8px] font-semibold text-amber-50 mt-0.5 normal-case tracking-normal">
-                    GV • NV • Công vụ
-                </span>
-            </span>
+           title="Nhắc nhở công vụ"
+           aria-label="Nhắc nhở công vụ"
+           class="hidden group relative w-10 h-10 sm:w-11 sm:h-11 rounded-full
+                  bg-gradient-to-br from-[#2563EB] via-[#0EA5E9] to-[#06B6D4]
+                  text-white border border-white/70
+                  shadow-[0_5px_14px_rgba(37,99,235,0.28)]
+                  hover:shadow-[0_7px_18px_rgba(14,165,233,0.38)]
+                  hover:-translate-y-0.5 active:scale-95
+                  shrink-0 z-10 transition-all duration-200
+                  items-center justify-center">
+            <span class="absolute inset-[3px] rounded-full border border-white/25 pointer-events-none"></span>
+            <i class="bi bi-bell-fill text-[15px] sm:text-[16px] drop-shadow-sm"></i>
+            <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-400 border-2 border-white shadow-sm"></span>
         </button>
 
         <!-- Nội dung nhắc việc hệ thống chạy -->
@@ -5582,26 +5575,39 @@
         }
     }
 
+    function normalizeHVAReminderIdentity_(value) {
+        return String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .replace(/Đ/g, 'D')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toUpperCase();
+    }
+
     function isHVAReminderManager() {
         const u = getHVAReminderUser();
-        const role = String(u.role || u.vaiTro || u.VAITRO || '').toUpperCase();
-        const permission = String(u.permission || u.quyen || u.QUYEN || '').toUpperCase();
-        return role.includes('ADMIN') ||
-               role.includes('HIỆU TRƯỞNG') ||
-               role.includes('HIEU TRUONG') ||
-               role.includes('HT') ||
-               role.includes('PHT') ||
-               permission.includes('ADMIN') ||
-               permission.includes('QUAN_TRI') ||
-               permission.includes('QUẢN TRỊ') ||
-               permission.includes('DIEU_HANH') ||
-               permission.includes('ĐIỀU HÀNH');
+        const fullName = normalizeHVAReminderIdentity_(
+            u.hoTen || u.fullName || u.name || u.hoten || u.HOTEN || ''
+        );
+
+        // Khóa đúng 03 CBQL được phép dùng tác vụ Nhắc nhở công vụ.
+        const allowedManagers = new Set([
+            'HO THI THU THANH',
+            'NGUYEN VAN THA',
+            'TRAN THI NGOC'
+        ]);
+
+        return allowedManagers.has(fullName);
     }
 
     window.setupHVAReminderPermission = function() {
         const btn = document.getElementById('btn-hva-reminder');
         if (!btn) return;
-        btn.classList.toggle('hidden', !isHVAReminderManager());
+        const allowed = isHVAReminderManager();
+        btn.classList.toggle('hidden', !allowed);
+        btn.classList.toggle('flex', allowed);
     };
 
     const HVA_REMINDER_CACHE_KEY = 'HVA_REMINDER_DIRECTORY_V1';
