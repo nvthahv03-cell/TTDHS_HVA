@@ -1203,23 +1203,24 @@
                 backdrop-blur-md
                 flex items-center gap-2">
 
-        <!-- Nút tác vụ nhanh BGH: chỉ 03 CBQL được cấp quyền -->
+        <!-- Nút tác vụ nhanh -->
         <button type="button"
            onclick="openHVAReminderModal(event)"
            id="btn-hva-reminder"
            title="Nhắc nhở công vụ"
            aria-label="Nhắc nhở công vụ"
-           class="hidden group relative w-10 h-10 sm:w-11 sm:h-11 rounded-full
+           class="hidden group relative w-11 h-11 rounded-full
                   bg-gradient-to-br from-[#2563EB] via-[#0EA5E9] to-[#06B6D4]
-                  text-white border border-white/70
-                  shadow-[0_5px_14px_rgba(37,99,235,0.28)]
-                  hover:shadow-[0_7px_18px_rgba(14,165,233,0.38)]
+                  text-white border border-white/80
+                  shadow-[0_6px_16px_rgba(37,99,235,0.30)]
+                  hover:shadow-[0_8px_20px_rgba(14,165,233,0.40)]
                   hover:-translate-y-0.5 active:scale-95
                   shrink-0 z-10 transition-all duration-200
                   items-center justify-center">
             <span class="absolute inset-[3px] rounded-full border border-white/25 pointer-events-none"></span>
-            <i class="bi bi-bell-fill text-[15px] sm:text-[16px] drop-shadow-sm"></i>
-            <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-amber-400 border-2 border-white shadow-sm"></span>
+            <i class="bi bi-bell-fill text-[17px] drop-shadow-sm"></i>
+            <span class="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full
+                         bg-amber-400 border-2 border-white shadow-sm"></span>
         </button>
 
         <!-- Nội dung nhắc việc hệ thống chạy -->
@@ -3213,6 +3214,10 @@
 
             if (isOpening && typeof loadMyMeetings === 'function') {
                 loadMyMeetings();
+            }
+
+            if (isOpening && typeof loadEscalatedHVAReminders === 'function') {
+                loadEscalatedHVAReminders(true);
             }
 
             connectPanel?.classList.add('hidden');
@@ -5588,26 +5593,37 @@
 
     function isHVAReminderManager() {
         const u = getHVAReminderUser();
-        const fullName = normalizeHVAReminderIdentity_(
-            u.hoTen || u.fullName || u.name || u.hoten || u.HOTEN || ''
-        );
 
-        // Khóa đúng 03 CBQL được phép dùng tác vụ Nhắc nhở công vụ.
-        const allowedManagers = new Set([
-            'HO THI THU THANH',
-            'NGUYEN VAN THA',
-            'TRAN THI NGOC'
-        ]);
+        // Thu thập tên từ mọi cấu trúc user đang tồn tại trong HVA.
+        // assistantName là fallback quan trọng vì Assistant đã hiển thị đúng danh tính đăng nhập.
+        const candidates = [
+            u.hoTen, u.hoten, u.HOTEN,
+            u.fullName, u.fullname, u.name,
+            u.hoVaTen, u.ho_và_ten,
+            u.displayName, u.tenHienThi,
+            document.getElementById('assistantName')?.textContent
+        ]
+            .map(normalizeHVAReminderIdentity_)
+            .filter(Boolean);
 
-        return allowedManagers.has(fullName);
+        const joined = candidates.join(' | ');
+
+        // Chỉ đúng 03 CBQL hiện hành của Trường THPT Hòa Vang.
+        return joined.includes('HO THI THU THANH') ||
+               joined.includes('NGUYEN VAN THA') ||
+               joined.includes('TRAN THI NGOC');
     }
 
     window.setupHVAReminderPermission = function() {
         const btn = document.getElementById('btn-hva-reminder');
-        if (!btn) return;
+        if (!btn) return false;
+
         const allowed = isHVAReminderManager();
+
         btn.classList.toggle('hidden', !allowed);
         btn.classList.toggle('flex', allowed);
+
+        return allowed;
     };
 
     const HVA_REMINDER_CACHE_KEY = 'HVA_REMINDER_DIRECTORY_V1';
@@ -6015,7 +6031,7 @@
         section.innerHTML = `
             <div class="flex items-center justify-between mb-1.5">
                 <div class="text-[9px] font-extrabold text-amber-700 uppercase tracking-wide">
-                    <i class="bi bi-bell-fill mr-1"></i>Nhắc nhở cần xử lý
+                    <i class="bi bi-bell-fill mr-1"></i>Nhắc nhở công vụ
                 </div>
                 <span id="hvaEscalatedReminderCount"
                       class="min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white
@@ -6095,7 +6111,7 @@
         document.body.appendChild(modal);
     }
 
-    async function loadEscalatedHVAReminders() {
+    async function loadEscalatedHVAReminders(forceRefresh = false) {
         ensureHVAReminderEscalationUI();
 
         const user = getCurrentHVAUser();
@@ -6106,44 +6122,53 @@
             let list = [];
 
             if (typeof window.HVALoadNotificationsShared === 'function') {
-                await window.HVALoadNotificationsShared(false);
+                // forceRefresh=true khi người dùng vừa mở "Việc của tôi":
+                // nhắc mới phải xuất hiện ngay, không chờ cache/chu kỳ 5 phút.
+                await window.HVALoadNotificationsShared(forceRefresh);
                 list = typeof window.HVAGetNotificationsSnapshot === 'function'
                     ? window.HVAGetNotificationsSnapshot()
                     : [];
-            } else {
-                // main.html là chủ sở hữu duy nhất của Notification API.
-                // Helper chưa sẵn sàng thì bỏ qua lượt này, không gọi Backend lần hai.
-                list = [];
             }
 
             const now = Date.now();
             const threshold = HVA_REMINDER_ESCALATE_MINUTES * 60 * 1000;
 
-            HVA_ESCALATED_REMINDERS = list.filter(item => {
-                const type = String(item.loai || '').toLowerCase();
-                const status = String(item.trangThai || '').toUpperCase();
-                const created = new Date(item.thoiGian || 0).getTime();
+            HVA_ESCALATED_REMINDERS = list
+                .filter(item => {
+                    const type = String(item.loai || '').toLowerCase();
+                    const status = String(item.trangThai || '').toUpperCase();
 
-                const isOriginalReminder =
-                    (type.includes('nhắc nhở công vụ') || type.includes('nhac nho cong vu')) &&
-                    !type.includes('đã tiếp nhận') &&
-                    !type.includes('da tiep nhan') &&
-                    !type.includes('phản hồi') &&
-                    !type.includes('phan hoi');
+                    const isOriginalReminder =
+                        (type.includes('nhắc nhở công vụ') || type.includes('nhac nho cong vu')) &&
+                        !type.includes('đã tiếp nhận') &&
+                        !type.includes('da tiep nhan') &&
+                        !type.includes('phản hồi') &&
+                        !type.includes('phan hoi');
 
-                const unresolved =
-                    status !== 'ĐÃ TIẾP NHẬN' &&
-                    status !== 'ĐÃ PHẢN HỒI' &&
-                    status !== 'CLOSED';
+                    const unresolved =
+                        status !== 'ĐÃ TIẾP NHẬN' &&
+                        status !== 'ĐÃ PHẢN HỒI' &&
+                        status !== 'CLOSED';
 
-                return isOriginalReminder && unresolved && created > 0 && (now - created >= threshold);
-            });
+                    return isOriginalReminder && unresolved;
+                })
+                .map(item => {
+                    const created = new Date(item.thoiGian || 0).getTime();
+                    return Object.assign({}, item, {
+                        _hvaCreatedAt: created,
+                        _hvaEscalated:
+                            created > 0 && (now - created >= threshold)
+                    });
+                })
+                .sort((a, b) =>
+                    Number(b._hvaCreatedAt || 0) - Number(a._hvaCreatedAt || 0)
+                );
 
             renderEscalatedHVAReminders();
             return HVA_ESCALATED_REMINDERS;
 
         } catch (e) {
-            console.error('[HVA] Lỗi tải nhắc nhở cần xử lý:', e);
+            console.error('[HVA] Lỗi tải nhắc nhở công vụ:', e);
             return [];
         }
     }
@@ -6160,41 +6185,65 @@
         if (!section || !list) return;
 
         const n = HVA_ESCALATED_REMINDERS.length;
+        const escalated = HVA_ESCALATED_REMINDERS.filter(item => item._hvaEscalated);
+
         section.classList.toggle('hidden', n === 0);
         if (count) count.textContent = n;
 
-        list.innerHTML = HVA_ESCALATED_REMINDERS.map(item => `
-            <button type="button"
-                    onclick="openEscalatedHVAReminder('${encodeURIComponent(item.id || '')}')"
-                    class="w-full text-left rounded-lg bg-white border border-amber-100
-                           px-2.5 py-2 hover:bg-amber-50 transition">
-                <div class="text-[10px] font-extrabold text-slate-800 leading-snug">
-                    ${escapeHVAReminderHtml(item.noiDung || 'Nhắc nhở công vụ')}
-                </div>
-                <div class="text-[8.5px] text-red-600 font-bold mt-1">
-                    Chưa xử lý sau ${HVA_REMINDER_ESCALATE_MINUTES} phút • Xem ngay ›
-                </div>
-            </button>
-        `).join('');
+        list.innerHTML = HVA_ESCALATED_REMINDERS.map(item => {
+            const isLate = item._hvaEscalated === true;
 
+            return `
+                <button type="button"
+                        onclick="openEscalatedHVAReminder('${encodeURIComponent(item.id || '')}')"
+                        class="w-full text-left rounded-lg bg-white border
+                               ${isLate ? 'border-amber-200' : 'border-blue-100'}
+                               px-2.5 py-2 hover:bg-slate-50 transition">
+                    <div class="flex items-start gap-2">
+                        <span class="mt-0.5 w-6 h-6 shrink-0 rounded-full flex items-center justify-center
+                                     ${isLate ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}">
+                            <i class="bi ${isLate ? 'bi-exclamation-triangle-fill' : 'bi-bell-fill'} text-[10px]"></i>
+                        </span>
+                        <div class="min-w-0 flex-1">
+                            <div class="text-[10px] font-extrabold text-slate-800 leading-snug">
+                                ${escapeHVAReminderHtml(item.noiDung || 'Nhắc nhở công vụ')}
+                            </div>
+                            <div class="text-[8.5px] font-bold mt-1
+                                        ${isLate ? 'text-red-600' : 'text-blue-600'}">
+                                ${isLate
+                                    ? `Chưa xử lý sau ${HVA_REMINDER_ESCALATE_MINUTES} phút • Xem ngay ›`
+                                    : 'Mới nhận • Chưa tiếp nhận • Xem ngay ›'}
+                            </div>
+                        </div>
+                    </div>
+                </button>
+            `;
+        }).join('');
+
+        // Badge "Việc của tôi" tính toàn bộ nhắc nhở chưa xử lý,
+        // kể cả nhắc mới chưa đủ 60 phút.
         if (n > 0) {
-            // Badge tổng của VIỆC CỦA TÔI cộng thêm nhắc nhở leo thang.
             if (totalBadge) {
                 const current = Number(totalBadge.textContent || 0);
-                const base = Math.max(0, current - Number(totalBadge.dataset.reminderCount || 0));
+                const base = Math.max(
+                    0,
+                    current - Number(totalBadge.dataset.reminderCount || 0)
+                );
                 totalBadge.dataset.reminderCount = String(n);
                 totalBadge.textContent = base + n;
                 totalBadge.classList.remove('hidden');
                 totalBadge.classList.add('flex');
             }
 
-            // Pulse xanh - đỏ vài nhịp rồi dừng, không nhấp nháy vô hạn.
-            workBtn?.classList.remove('hva-work-attention');
-            void workBtn?.offsetWidth;
-            workBtn?.classList.add('hva-work-attention');
+            // Chỉ nhắc đã quá 60 phút mới làm nút "Việc của tôi" nổi bật.
+            if (escalated.length > 0) {
+                workBtn?.classList.remove('hva-work-attention');
+                void workBtn?.offsetWidth;
+                workBtn?.classList.add('hva-work-attention');
+            }
 
-            // Popup chỉ 1 lần trong phiên cho từng thông báo.
-            const unseen = HVA_ESCALATED_REMINDERS.find(item => {
+            // Popup 60 phút chỉ dành cho nhắc đã leo thang.
+            const unseen = escalated.find(item => {
                 const key = 'HVA_REMINDER_POPUP_' + String(item.id || '');
                 return sessionStorage.getItem(key) !== '1';
             });
@@ -6209,7 +6258,10 @@
         } else if (totalBadge) {
             const oldReminder = Number(totalBadge.dataset.reminderCount || 0);
             if (oldReminder > 0) {
-                const base = Math.max(0, Number(totalBadge.textContent || 0) - oldReminder);
+                const base = Math.max(
+                    0,
+                    Number(totalBadge.textContent || 0) - oldReminder
+                );
                 totalBadge.dataset.reminderCount = '0';
                 totalBadge.textContent = base;
                 totalBadge.classList.toggle('hidden', base <= 0);
@@ -6232,7 +6284,11 @@
     setInterval(loadEscalatedHVAReminders, 5 * 60 * 1000);
 
 
-    setTimeout(setupHVAReminderPermission, 150);
+    // Profile/Assistant có thể render sau Home vài trăm ms.
+    // Thử lại ngắn hạn để cô Thanh/cô Ngọc không bị ẩn nút do tên chưa kịp nạp.
+    [150, 700, 1600].forEach(function(delay) {
+        setTimeout(setupHVAReminderPermission, delay);
+    });
 
     // =====================================================
     // ĐIỀU HÀNH SỐ
