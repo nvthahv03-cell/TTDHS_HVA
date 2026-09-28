@@ -4061,7 +4061,9 @@
     }
 
     async function loadMyTasks() {
-        // VIỆC CỦA TÔI là luồng độc lập. Không đặt logic QR cuộc họp tại đây.
+        // VIỆC CỦA TÔI dùng cùng protected API với Assistant/Kính lúp.
+        // Sau HVA Security 27/09, getTaskByUser phải đi qua HVAAuthRequest
+        // để tự gắn sessionToken; không gọi fetch() trần.
         const user = getCurrentHVAUser();
 
         const username =
@@ -4072,6 +4074,8 @@
 
         if (!username) {
             console.warn('[HVA] Không xác định được username.');
+            HVA_MY_TASKS = [];
+            updateMyTaskCounters();
             return [];
         }
 
@@ -4082,10 +4086,26 @@
                 encodeURIComponent(username) +
                 '&_=' + Date.now();
 
-            const response = await fetch(url, {
-                method: 'GET',
-                cache: 'no-store'
-            });
+            let response;
+
+            if (window.HVAAuthRequest?.get) {
+                response = await window.HVAAuthRequest.get(url, {
+                    cache: 'no-store'
+                });
+            } else {
+                const sessionToken =
+                    String(localStorage.getItem('hvaSessionToken') || '').trim();
+
+                const secureUrl = new URL(url, window.location.href);
+                if (sessionToken) {
+                    secureUrl.searchParams.set('sessionToken', sessionToken);
+                }
+
+                response = await fetch(secureUrl.toString(), {
+                    method: 'GET',
+                    cache: 'no-store'
+                });
+            }
 
             if (!response.ok) {
                 throw new Error('HTTP ' + response.status);
@@ -4093,9 +4113,26 @@
 
             const data = await response.json();
 
+            if (
+                data?.success === false &&
+                /AUTH_REQUIRED|SESSION_INVALID/.test(String(data?.code || ''))
+            ) {
+                const error = new Error(data.code);
+                error.hvaMessage =
+                    data.message ||
+                    'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.';
+                throw error;
+            }
+
             HVA_MY_TASKS = Array.isArray(data)
                 ? data
-                : (data && data.success === true && Array.isArray(data.tasks) ? data.tasks : []);
+                : (
+                    data &&
+                    data.success === true &&
+                    Array.isArray(data.tasks)
+                        ? data.tasks
+                        : []
+                );
 
             updateMyTaskCounters();
 
@@ -4103,6 +4140,8 @@
 
         } catch (error) {
             console.error('[HVA] Lỗi tải Việc của tôi:', error);
+            HVA_MY_TASKS = [];
+            updateMyTaskCounters();
             return [];
         }
     }
