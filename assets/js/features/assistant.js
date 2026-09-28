@@ -597,9 +597,26 @@ function runAction(action, value) {
     }
 
     if (action === 'mywork') {
+        const panel = $('#myWorkPanel');
         const btn = $('#btn-my-work');
-        if (btn) btn.click();
-        else addBubble('assistant', 'Không tìm thấy khu vực “Việc của tôi” trên trang hiện tại.');
+
+        if (!panel || !btn) {
+            addBubble('assistant', 'Không tìm thấy khu vực “Việc của tôi” trên trang hiện tại.');
+            return;
+        }
+
+        // Nút trong Assistant phải MỞ "Việc của tôi", không dùng click giả lập
+        // vì Home có cơ chế auto-hide/capture riêng.
+        if (panel.classList.contains('hidden')) {
+            if (typeof window.toggleMyWorkPanel === 'function') {
+                window.toggleMyWorkPanel();
+            } else {
+                panel.classList.remove('hidden');
+                $('#myWorkChevron')?.classList.add('rotate-180');
+            }
+        }
+
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         return;
     }
 
