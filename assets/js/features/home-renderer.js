@@ -3266,18 +3266,25 @@
                 ?.classList.remove('rotate-180');
         }
 
-        // Bấm bất kỳ tác vụ/menu khác ngoài 2 card cá nhân:
-        // panel đang mở phải tự thu lại, nhưng không can thiệp click bên trong panel.
-        container.addEventListener('click', function(event) {
+        // Bấm BẤT KỲ vị trí nào ngoài chính 2 nút mở panel:
+        // panel đang mở phải tự thu lại ngay, kể cả click bên trong panel để mở tác vụ/modal.
+        // Dùng capture=true để không bị các handler con stopPropagation() chặn.
+        if (window.__hvaPersonalPanelAutoCloseHandler) {
+            document.removeEventListener('click', window.__hvaPersonalPanelAutoCloseHandler, true);
+        }
+
+        window.__hvaPersonalPanelAutoCloseHandler = function(event) {
             const target = event.target;
             if (!(target instanceof Element)) return;
 
-            if (target.closest('#btn-my-work, #myWorkPanel, #btn-digital-connect, #digitalConnectPanel')) {
-                return;
-            }
+            // Chỉ giữ panel khi người dùng đang bấm chính nút VIỆC CỦA TÔI / KẾT NỐI SỐ
+            // để hàm toggle tương ứng tự quyết định mở/đóng.
+            if (target.closest('#btn-my-work, #btn-digital-connect')) return;
 
             closePersonalCenterPanels();
-        });
+        };
+
+        document.addEventListener('click', window.__hvaPersonalPanelAutoCloseHandler, true);
 
         // =====================================================
         // PHÂN QUYỀN KHU VỰC QUẢN TRỊ TRONG KẾT NỐI SỐ
@@ -5943,6 +5950,13 @@
                 .hva-work-attention {
                     animation: hvaWorkAttention .85s ease-in-out 4;
                 }
+                @keyframes hvaReminderModalIn {
+                    from { opacity: 0; transform: translateY(8px) scale(.98); }
+                    to   { opacity: 1; transform: translateY(0) scale(1); }
+                }
+                #hvaReminderEscalationModal {
+                    animation: hvaReminderModalIn .18s ease-out;
+                }
             `;
             document.head.appendChild(style);
         }
@@ -5968,6 +5982,72 @@
         const meetingSection = document.getElementById('myMeetingSection');
         if (meetingSection) meetingSection.before(section);
         else panel.appendChild(section);
+    }
+
+    function showHVAReminderEscalationModal(item) {
+        const old = document.getElementById('hvaReminderEscalationModal');
+        if (old) old.remove();
+
+        const encodedId = encodeURIComponent(item?.id || '');
+        const modal = document.createElement('div');
+        modal.id = 'hvaReminderEscalationModal';
+        modal.className = 'fixed inset-0 z-[10000] flex items-center justify-center bg-slate-950/45 backdrop-blur-[2px] p-4';
+        modal.innerHTML = `
+            <div class="w-full max-w-[430px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+                 role="dialog" aria-modal="true" aria-labelledby="hvaReminderEscalationTitle">
+                <div class="flex items-center gap-3 border-b border-slate-100 bg-gradient-to-r from-blue-50 to-cyan-50 px-5 py-4">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+                        <i class="bi bi-bell-fill text-lg"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-[10px] font-extrabold uppercase tracking-[.08em] text-amber-600">Nhắc nhở công vụ</div>
+                        <h3 id="hvaReminderEscalationTitle" class="mt-0.5 text-[16px] font-extrabold text-slate-800">
+                            Có nội dung cần xử lý
+                        </h3>
+                    </div>
+                    <button type="button" data-hva-reminder-close
+                            class="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-white hover:text-slate-700"
+                            aria-label="Đóng">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <div class="px-5 py-5">
+                    <p class="text-[13px] leading-6 text-slate-600">
+                        Thầy/Cô có nhắc nhở công vụ chưa xử lý sau
+                        <strong class="font-extrabold text-red-600">${HVA_REMINDER_ESCALATE_MINUTES} phút</strong>.
+                    </p>
+                    <div class="mt-3 rounded-xl border border-amber-100 bg-amber-50/70 px-4 py-3 text-[13px] font-bold leading-5 text-slate-800">
+                        ${escapeHVAReminderHtml(item?.noiDung || 'Nhắc nhở công vụ')}
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 border-t border-slate-100 bg-slate-50/70 px-5 py-3.5">
+                    <button type="button" data-hva-reminder-close
+                            class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-[12px] font-extrabold text-slate-600 transition hover:bg-slate-100">
+                        Để sau
+                    </button>
+                    <button type="button" data-hva-reminder-open
+                            class="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-4 py-2.5 text-[12px] font-extrabold text-white shadow-sm transition hover:brightness-105">
+                        <i class="bi bi-arrow-right-circle-fill mr-1.5"></i>Xem ngay
+                    </button>
+                </div>
+            </div>
+        `;
+
+        const close = () => modal.remove();
+        modal.querySelectorAll('[data-hva-reminder-close]').forEach(btn => {
+            btn.addEventListener('click', close);
+        });
+        modal.querySelector('[data-hva-reminder-open]')?.addEventListener('click', () => {
+            close();
+            window.openEscalatedHVAReminder(encodedId);
+        });
+        modal.addEventListener('click', event => {
+            if (event.target === modal) close();
+        });
+
+        document.body.appendChild(modal);
     }
 
     async function loadEscalatedHVAReminders() {
@@ -6078,10 +6158,7 @@
                 const key = 'HVA_REMINDER_POPUP_' + String(unseen.id || '');
                 sessionStorage.setItem(key, '1');
                 setTimeout(() => {
-                    if (confirm('Thầy/Cô có nhắc nhở công vụ chưa xử lý sau ' +
-                                HVA_REMINDER_ESCALATE_MINUTES + ' phút.\n\nXem ngay?')) {
-                        openEscalatedHVAReminder(encodeURIComponent(unseen.id || ''));
-                    }
+                    showHVAReminderEscalationModal(unseen);
                 }, 500);
             }
         } else if (totalBadge) {
