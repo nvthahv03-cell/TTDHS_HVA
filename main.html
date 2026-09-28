@@ -4020,6 +4020,7 @@ setTimeout(() => {
 
     let ACTIVE_SEARCH_TYPE = 'ALL';
     let ACTIVE_PERSONNEL_CATEGORY = 'CHIBO';
+    let ACTIVE_PERSONNEL_FILTER = null;
     let SEARCH_TIMER = null;
 
     const panel = document.getElementById('search-panel');
@@ -4051,54 +4052,40 @@ setTimeout(() => {
         groupBox.insertAdjacentElement('afterend', resultBox);
     }
 
-    /* HVA QUICK SEARCH - PERSONNEL ACCORDION V1 - 28/09/2026
-       Chỉ thay giao diện phân cấp Nhân sự; giữ nguyên API/Backend. */
+    /* HVA QUICK SEARCH - PERSONNEL ACCORDION V2 - 28/09/2026 */
     const personnelTabs = document.createElement('div');
     personnelTabs.id = 'personnel-search-tabs';
     personnelTabs.className = 'hidden ml-3 mr-1 mb-2 overflow-hidden rounded-2xl border border-violet-100 bg-violet-50/40';
+
+    const HVA_PERSONNEL_UNITS = [
+        { label: 'Tổ Toán – Tin', value: 'Toán - Tin' },
+        { label: 'Tổ Ngữ văn', value: 'Ngữ văn' },
+        { label: 'Tổ Ngoại Ngữ', value: 'Ngoại Ngữ' },
+        { label: 'Tổ Sử - Địa - GDKT&PL', value: 'Sử - Địa - GDKT&PL' },
+        { label: 'Tổ Vật lí - Công nghệ', value: 'Vật lí - Công nghệ' },
+        { label: 'Tổ Hóa học', value: 'Hóa học' },
+        { label: 'Tổ Sinh - GDTC - QPAN', value: 'Sinh - GDTC - QPAN' },
+        { label: 'Tổ Văn phòng', value: 'Văn phòng' }
+    ];
+
     personnelTabs.innerHTML = `
-        <div class="px-3 py-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-violet-400">
-            Chọn nhóm nhân sự
-        </div>
+        <div class="px-3 py-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-violet-400">Chọn nhóm nhân sự</div>
         <div class="px-2 pb-2 space-y-1">
-            <button type="button" data-personnel-category="CHIBO" data-personnel-keyword="Chi bộ"
-                    class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-violet-100 hover:bg-violet-50 transition">
-                <span class="flex items-center gap-2.5"><i class="bi bi-diagram-3-fill text-violet-500"></i><span class="text-[11px] font-bold text-[#123B67]">Chi bộ</span></span>
-                <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
+            <button type="button" data-personnel-category="CHIBO" class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-violet-100 hover:bg-violet-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-diagram-3-fill text-violet-500"></i><span class="text-[11px] font-bold text-[#123B67]">Chi bộ</span></span><i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
             </button>
-            <button type="button" data-personnel-category="BGH" data-personnel-keyword="Ban Giám hiệu"
-                    class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-violet-100 hover:bg-violet-50 transition">
-                <span class="flex items-center gap-2.5"><i class="bi bi-person-badge-fill text-blue-600"></i><span class="text-[11px] font-bold text-[#123B67]">Ban Giám hiệu</span></span>
-                <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
+            <button type="button" data-personnel-category="BGH" class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-violet-100 hover:bg-violet-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-person-badge-fill text-blue-600"></i><span class="text-[11px] font-bold text-[#123B67]">Ban Giám hiệu</span></span><i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
             </button>
-
-            <div class="pt-1 px-2 text-[9px] font-extrabold uppercase tracking-[0.07em] text-slate-400">Tổ chuyên môn</div>
-
-            ${[
-                'Toán – Tin',
-                'Ngữ văn',
-                'Tiếng Anh',
-                'Lịch sử – Địa lí – GDKT&PL',
-                'Vật lí – Công nghệ',
-                'Hóa học',
-                'Sinh – GDTC – QPAN'
-            ].map(name => `
-                <button type="button" data-personnel-category="TEAM" data-personnel-keyword="${name}"
+            <div class="pt-1 px-2 text-[9px] font-extrabold uppercase tracking-[0.07em] text-slate-400">Tổ/Bộ phận</div>
+            ${HVA_PERSONNEL_UNITS.map(unit => `
+                <button type="button" data-personnel-category="TEAM" data-personnel-unit="${unit.value}" data-personnel-label="${unit.label}"
                         class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-blue-100 hover:bg-blue-50 transition">
-                    <span class="flex items-center gap-2.5"><i class="bi bi-people text-sky-500"></i><span class="text-[11px] font-semibold text-slate-700">${name}</span></span>
+                    <span class="flex items-center gap-2.5"><i class="bi ${unit.value === 'Văn phòng' ? 'bi-building text-emerald-500' : 'bi-people text-sky-500'}"></i><span class="text-[11px] font-semibold text-slate-700">${unit.label}</span></span>
                     <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
                 </button>`).join('')}
-
-            <button type="button" data-personnel-category="TEAM" data-personnel-keyword="Tổ Văn phòng"
-                    class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-emerald-100 hover:bg-emerald-50 transition">
-                <span class="flex items-center gap-2.5"><i class="bi bi-building text-emerald-500"></i><span class="text-[11px] font-semibold text-slate-700">Tổ Văn phòng</span></span>
-                <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
-            </button>
-
-            <button type="button" data-personnel-category="WORKGROUP" data-personnel-keyword=""
-                    class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-amber-100 hover:bg-amber-50 transition">
-                <span class="flex items-center gap-2.5"><i class="bi bi-grid-fill text-amber-500"></i><span class="text-[11px] font-semibold text-slate-700">Nhóm công tác khác</span></span>
-                <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
+            <button type="button" data-personnel-category="WORKGROUP" class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-amber-100 hover:bg-amber-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-grid-fill text-amber-500"></i><span class="text-[11px] font-semibold text-slate-700">Nhóm công tác khác</span></span><i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
             </button>
         </div>`;
     const personnelTypeButton = typeButtons.find(btn => btn.dataset.searchType === 'NHANSU');
@@ -4114,16 +4101,19 @@ setTimeout(() => {
     function showDocumentChildren(direction){docChildren.innerHTML=(DOC_CHILDREN[direction]||[]).map(x=>`<button type="button" data-doc-keyword="${x}" class="rounded-lg px-2 py-2 text-[10px] font-semibold text-slate-600 hover:bg-blue-50 border border-slate-200 bg-white">${x}</button>`).join('');}
     documentTabs.addEventListener('click',e=>{const d=e.target.closest('[data-doc-direction]');if(d){showDocumentChildren(d.dataset.docDirection);return;}const k=e.target.closest('[data-doc-keyword]');if(k&&input){input.value=k.dataset.docKeyword||'';input.focus();performSearch();}});
 
+    function normalizePersonnelText(value) {
+        return String(value || '').normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+            .replace(/[–—]/g, '-').replace(/\s*-\s*/g, ' - ')
+            .replace(/\s+/g, ' ').trim().toLowerCase();
+    }
+
     function updatePersonnelTabs() {
         personnelTabs.querySelectorAll('[data-personnel-category]').forEach(btn => {
-            const active =
-                btn.dataset.personnelCategory === ACTIVE_PERSONNEL_CATEGORY &&
-                (
-                    !input?.value.trim() ||
-                    !btn.dataset.personnelKeyword ||
-                    input.value.trim() === btn.dataset.personnelKeyword
-                );
-
+            const active = btn.dataset.personnelCategory === ACTIVE_PERSONNEL_CATEGORY &&
+                (ACTIVE_PERSONNEL_CATEGORY !== 'TEAM' ||
+                 normalizePersonnelText(btn.dataset.personnelUnit) === normalizePersonnelText(ACTIVE_PERSONNEL_FILTER?.value));
             btn.classList.toggle('ring-2', active);
             btn.classList.toggle('ring-violet-200', active);
             btn.classList.toggle('shadow-sm', active);
@@ -4135,21 +4125,18 @@ setTimeout(() => {
         if (!button) return;
 
         ACTIVE_PERSONNEL_CATEGORY = button.dataset.personnelCategory || 'CHIBO';
+        ACTIVE_PERSONNEL_FILTER = ACTIVE_PERSONNEL_CATEGORY === 'TEAM'
+            ? { field:'to', value:String(button.dataset.personnelUnit || '').trim(), label:String(button.dataset.personnelLabel || '').trim() }
+            : null;
 
-        const keyword = String(button.dataset.personnelKeyword || '').trim();
+        updatePersonnelTabs();
 
-        /* Cấp Chi bộ/BGH/Tổ: chọn xong tra ngay danh sách.
-           Riêng Nhóm công tác khác chưa hard-code tên nhóm:
-           giữ WORKGROUP và đưa con trỏ lên ô tìm để nhập tên nhóm. */
-        if (keyword && input) {
-            input.value = keyword;
-            updatePersonnelTabs();
-            performSearch();
+        if (ACTIVE_PERSONNEL_CATEGORY === 'WORKGROUP') {
+            input?.focus();
             return;
         }
 
-        updatePersonnelTabs();
-        input?.focus();
+        performSearch();
     });
 
 
@@ -4531,54 +4518,52 @@ setTimeout(() => {
 
 async function searchPersonnel(keyword) {
     const user = getSearchUser();
+    const structuredUnit = ACTIVE_PERSONNEL_CATEGORY === 'TEAM'
+        ? String(ACTIVE_PERSONNEL_FILTER?.value || '').trim() : '';
+    const apiKeyword = structuredUnit || String(keyword || '').trim();
 
     const url = SEARCH_API +
         '?action=searchNhanSuQuick' +
-        '&q=' + encodeURIComponent(keyword) +
+        '&q=' + encodeURIComponent(apiKeyword) +
         '&username=' + encodeURIComponent(user.username || '') +
         '&category=' + encodeURIComponent(ACTIVE_PERSONNEL_CATEGORY) +
         '&_=' + Date.now();
 
-    if (
-        !window.HVAAuthRequest ||
-        typeof window.HVAAuthRequest.get !== 'function'
-    ) {
+    if (!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function') {
         throw new Error('HVA_AUTH_REQUEST_NOT_READY');
     }
 
-    const response = await window.HVAAuthRequest.get(
-        url,
-        { cache: 'no-store' }
-    );
-
-    if (!response.ok) {
-        throw new Error('HTTP ' + response.status);
-    }
+    const response = await window.HVAAuthRequest.get(url, { cache:'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
 
     const data = await response.json();
+    let people = unwrapArray(data);
 
-    return unwrapArray(data).map((person, index) => ({
-        kind: 'NHANSU',
-        id: person.username || ('NS_' + index),
-        title: person.hoTen || person.fullName || 'Nhân sự',
-        meta: person.lopChuNhiem
-            ? 'GVCN lớp ' + person.lopChuNhiem
-            : (
-                person.personnelCategory === 'CHIBO' ? 'Chi bộ' :
-                person.personnelCategory === 'BGH' ? 'Ban Giám hiệu' :
-                person.vaiTro ||
-                person.chucVu ||
-                person.viTriViecLam ||
-                'CBQL/GV/NV'
-            ),
-        extra: [
-            person.to,
-            person.dienThoai,
-            person.ngaySinh ? 'Sinh ' + person.ngaySinh : '',
-            ...(person.nhomCongTacLabels || [])
-        ].filter(Boolean).join(' • '),
-        phone: String(person.dienThoai || '').trim(),
-        raw: person
+    if (structuredUnit) {
+        const expected = normalizePersonnelText(structuredUnit);
+        people = people.filter(person => normalizePersonnelText(person.to) === expected);
+    }
+
+    const typedKeyword = String(keyword || '').trim();
+    if (structuredUnit && typedKeyword) {
+        const q = normalizePersonnelText(typedKeyword);
+        people = people.filter(person => [
+            person.hoTen, person.username, person.dienThoai, person.chucVu,
+            person.viTriViecLam, person.lopChuNhiem, ...(person.nhomCongTacLabels || [])
+        ].map(normalizePersonnelText).join(' ').includes(q));
+    }
+
+    return people.map((person,index) => ({
+        kind:'NHANSU',
+        id:person.username || ('NS_' + index),
+        title:person.hoTen || person.fullName || 'Nhân sự',
+        meta:person.lopChuNhiem ? 'GVCN lớp ' + person.lopChuNhiem :
+            (person.personnelCategory === 'CHIBO' ? 'Chi bộ' :
+             person.personnelCategory === 'BGH' ? 'Ban Giám hiệu' :
+             person.vaiTro || person.chucVu || person.viTriViecLam || 'CBQL/GV/NV'),
+        extra:[person.to, person.dienThoai, person.ngaySinh ? 'Sinh ' + person.ngaySinh : '', ...(person.nhomCongTacLabels || [])].filter(Boolean).join(' • '),
+        phone:String(person.dienThoai || '').trim(),
+        raw:person
     }));
 }
 
@@ -5102,15 +5087,19 @@ async function searchPersonnel(keyword) {
         const keyword =
             input?.value.trim() || '';
 
-        if (!keyword) {
+        const hasPersonnelStructure =
+            ACTIVE_SEARCH_TYPE === 'NHANSU' &&
+            (
+                ACTIVE_PERSONNEL_CATEGORY === 'CHIBO' ||
+                ACTIVE_PERSONNEL_CATEGORY === 'BGH' ||
+                (ACTIVE_PERSONNEL_CATEGORY === 'TEAM' && !!String(ACTIVE_PERSONNEL_FILTER?.value || '').trim())
+            );
 
+        if (!keyword && !hasPersonnelStructure) {
             resetSearchView();
-
             input?.focus();
-
             return;
         }
-
 
         showLoading();
 
@@ -5243,6 +5232,7 @@ async function searchPersonnel(keyword) {
                     ACTIVE_SEARCH_TYPE = 'ALL';
                 } else {
                     ACTIVE_PERSONNEL_CATEGORY = 'CHIBO';
+                    ACTIVE_PERSONNEL_FILTER = null;
                     personnelTabs.classList.remove('hidden');
                     updatePersonnelTabs();
                 }
