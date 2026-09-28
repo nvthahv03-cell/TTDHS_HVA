@@ -2149,7 +2149,7 @@
                 <h3 class="text-xs font-extrabold
                            tracking-tight text-white mb-0.5
                            whitespace-nowrap">
-                    ĐIỀU HÀNH SỐ
+                    TT QUẢN TRỊ SỐ HVA
                 </h3>
 
                 <i class="bi bi-chevron-up
@@ -2207,7 +2207,7 @@
                                     font-extrabold tracking-wide
                                     text-[#0F4C81]
                                     dark:text-cyan-300">
-                            TRUNG TÂM ĐIỀU HÀNH SỐ
+                            TT QUẢN TRỊ SỐ HVA
                         </div>
 
                         <div class="text-[9px]
