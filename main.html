@@ -4021,6 +4021,7 @@ setTimeout(() => {
     let ACTIVE_SEARCH_TYPE = 'ALL';
     let ACTIVE_PERSONNEL_CATEGORY = 'CHIBO';
     let ACTIVE_PERSONNEL_FILTER = null;
+    let PERSONNEL_WORKGROUPS_LOADED = false;
     let SEARCH_TIMER = null;
 
     const panel = document.getElementById('search-panel');
@@ -4085,8 +4086,10 @@ setTimeout(() => {
                     <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
                 </button>`).join('')}
             <button type="button" data-personnel-category="WORKGROUP" class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-amber-100 hover:bg-amber-50 transition">
-                <span class="flex items-center gap-2.5"><i class="bi bi-grid-fill text-amber-500"></i><span class="text-[11px] font-semibold text-slate-700">Nhóm công tác khác</span></span><i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
+                <span class="flex items-center gap-2.5"><i class="bi bi-grid-fill text-amber-500"></i><span class="text-[11px] font-semibold text-slate-700">Nhóm công tác khác</span></span>
+                <i id="personnel-workgroup-chevron" class="bi bi-chevron-right text-[10px] text-slate-300 transition-transform duration-200"></i>
             </button>
+            <div id="personnel-workgroup-list" class="hidden ml-4 mt-1 space-y-1 border-l-2 border-amber-100 pl-2"></div>
         </div>`;
     const personnelTypeButton = typeButtons.find(btn => btn.dataset.searchType === 'NHANSU');
     if (personnelTypeButton) {
@@ -4118,24 +4121,114 @@ setTimeout(() => {
             btn.classList.toggle('ring-violet-200', active);
             btn.classList.toggle('shadow-sm', active);
         });
+
+        personnelTabs.querySelectorAll('[data-workgroup-name]').forEach(btn => {
+            const active = ACTIVE_PERSONNEL_CATEGORY === 'WORKGROUP' &&
+                normalizePersonnelText(btn.dataset.workgroupName) === normalizePersonnelText(ACTIVE_PERSONNEL_FILTER?.value);
+            btn.classList.toggle('bg-amber-50', active);
+            btn.classList.toggle('ring-1', active);
+            btn.classList.toggle('ring-amber-200', active);
+        });
+    }
+
+    async function loadPersonnelWorkgroups() {
+        const box = document.getElementById('personnel-workgroup-list');
+        if (!box) return;
+
+        box.classList.remove('hidden');
+        const chevron = document.getElementById('personnel-workgroup-chevron');
+        chevron?.classList.add('rotate-90');
+
+        if (PERSONNEL_WORKGROUPS_LOADED) return;
+
+        box.innerHTML = `<div class="px-3 py-2 text-[10px] text-slate-400"><i class="bi bi-arrow-repeat animate-spin mr-1"></i>Đang tải danh mục nhóm...</div>`;
+
+        try {
+            if (!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function') {
+                throw new Error('HVA_AUTH_REQUEST_NOT_READY');
+            }
+
+            const url = SEARCH_API + '?action=getPersonnelWorkgroups&_=' + Date.now();
+            const response = await window.HVAAuthRequest.get(url, { cache:'no-store' });
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+
+            const data = await response.json();
+            const groups = unwrapArray(data);
+
+            if (!groups.length) {
+                box.innerHTML = `<div class="px-3 py-2 text-[10px] text-slate-400">Chưa có nhóm công tác.</div>`;
+                return;
+            }
+
+            box.innerHTML = groups.map(group => `
+                <button type="button" data-workgroup-name="${escapeHtml(group.name || '')}"
+                        class="w-full flex items-center justify-between rounded-lg bg-white px-3 py-2 text-left border border-transparent hover:border-amber-100 hover:bg-amber-50 transition">
+                    <span class="flex items-center gap-2 min-w-0">
+                        <i class="bi bi-people-fill text-amber-500 text-[11px]"></i>
+                        <span class="truncate text-[10.5px] font-semibold text-slate-700">${escapeHtml(group.name || '')}</span>
+                    </span>
+                    <span class="ml-2 flex items-center gap-2 shrink-0">
+                        <span class="text-[9px] font-bold text-slate-400">${Number(group.memberCount || 0)}</span>
+                        <i class="bi bi-chevron-right text-[9px] text-slate-300"></i>
+                    </span>
+                </button>`).join('');
+
+            PERSONNEL_WORKGROUPS_LOADED = true;
+            updatePersonnelTabs();
+        } catch (error) {
+            console.error('loadPersonnelWorkgroups error:', error);
+            box.innerHTML = `<button type="button" data-retry-workgroups="1" class="w-full rounded-lg bg-rose-50 px-3 py-2 text-left text-[10px] font-semibold text-rose-600">Không tải được danh mục nhóm · Bấm để thử lại</button>`;
+        }
     }
 
     personnelTabs.addEventListener('click', function (event) {
+        const retry = event.target.closest('[data-retry-workgroups]');
+        if (retry) {
+            PERSONNEL_WORKGROUPS_LOADED = false;
+            loadPersonnelWorkgroups();
+            return;
+        }
+
+        const workgroupButton = event.target.closest('[data-workgroup-name]');
+        if (workgroupButton) {
+            ACTIVE_PERSONNEL_CATEGORY = 'WORKGROUP';
+            ACTIVE_PERSONNEL_FILTER = {
+                field:'workgroup',
+                value:String(workgroupButton.dataset.workgroupName || '').trim(),
+                label:String(workgroupButton.dataset.workgroupName || '').trim()
+            };
+            updatePersonnelTabs();
+            performSearch();
+            return;
+        }
+
         const button = event.target.closest('[data-personnel-category]');
         if (!button) return;
 
-        ACTIVE_PERSONNEL_CATEGORY = button.dataset.personnelCategory || 'CHIBO';
-        ACTIVE_PERSONNEL_FILTER = ACTIVE_PERSONNEL_CATEGORY === 'TEAM'
+        const category = button.dataset.personnelCategory || 'CHIBO';
+
+        if (category === 'WORKGROUP') {
+            ACTIVE_PERSONNEL_CATEGORY = 'WORKGROUP';
+            ACTIVE_PERSONNEL_FILTER = null;
+
+            const box = document.getElementById('personnel-workgroup-list');
+            const isOpen = box && !box.classList.contains('hidden');
+            if (isOpen) {
+                box.classList.add('hidden');
+                document.getElementById('personnel-workgroup-chevron')?.classList.remove('rotate-90');
+            } else {
+                loadPersonnelWorkgroups();
+            }
+            updatePersonnelTabs();
+            return;
+        }
+
+        ACTIVE_PERSONNEL_CATEGORY = category;
+        ACTIVE_PERSONNEL_FILTER = category === 'TEAM'
             ? { field:'to', value:String(button.dataset.personnelUnit || '').trim(), label:String(button.dataset.personnelLabel || '').trim() }
             : null;
 
         updatePersonnelTabs();
-
-        if (ACTIVE_PERSONNEL_CATEGORY === 'WORKGROUP') {
-            input?.focus();
-            return;
-        }
-
         performSearch();
     });
 
@@ -4520,7 +4613,9 @@ async function searchPersonnel(keyword) {
     const user = getSearchUser();
     const structuredUnit = ACTIVE_PERSONNEL_CATEGORY === 'TEAM'
         ? String(ACTIVE_PERSONNEL_FILTER?.value || '').trim() : '';
-    const apiKeyword = structuredUnit || String(keyword || '').trim();
+    const structuredWorkgroup = ACTIVE_PERSONNEL_CATEGORY === 'WORKGROUP'
+        ? String(ACTIVE_PERSONNEL_FILTER?.value || '').trim() : '';
+    const apiKeyword = structuredUnit || structuredWorkgroup || String(keyword || '').trim();
 
     const url = SEARCH_API +
         '?action=searchNhanSuQuick' +
@@ -4544,8 +4639,19 @@ async function searchPersonnel(keyword) {
         people = people.filter(person => normalizePersonnelText(person.to) === expected);
     }
 
+    if (structuredWorkgroup) {
+        const expectedGroup = normalizePersonnelText(structuredWorkgroup);
+        people = people.filter(person => {
+            const groups = person.nhomCongTac || {};
+            return Object.keys(groups).some(name =>
+                normalizePersonnelText(name) === expectedGroup &&
+                !!String(groups[name] || '').trim()
+            );
+        });
+    }
+
     const typedKeyword = String(keyword || '').trim();
-    if (structuredUnit && typedKeyword) {
+    if ((structuredUnit || structuredWorkgroup) && typedKeyword) {
         const q = normalizePersonnelText(typedKeyword);
         people = people.filter(person => [
             person.hoTen, person.username, person.dienThoai, person.chucVu,
@@ -5092,7 +5198,8 @@ async function searchPersonnel(keyword) {
             (
                 ACTIVE_PERSONNEL_CATEGORY === 'CHIBO' ||
                 ACTIVE_PERSONNEL_CATEGORY === 'BGH' ||
-                (ACTIVE_PERSONNEL_CATEGORY === 'TEAM' && !!String(ACTIVE_PERSONNEL_FILTER?.value || '').trim())
+                (ACTIVE_PERSONNEL_CATEGORY === 'TEAM' && !!String(ACTIVE_PERSONNEL_FILTER?.value || '').trim()) ||
+                (ACTIVE_PERSONNEL_CATEGORY === 'WORKGROUP' && !!String(ACTIVE_PERSONNEL_FILTER?.value || '').trim())
             );
 
         if (!keyword && !hasPersonnelStructure) {
