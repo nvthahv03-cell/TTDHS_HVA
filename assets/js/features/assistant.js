@@ -255,7 +255,10 @@ const TASK_CACHE_TTL_MS = 30000;
 
 function isMyWorkQuestion(question) {
     const q = normalizeText(question);
-    return /(viec cua toi|nhiem vu cua toi|con viec gi|toi co viec gi|hom nay.*viec|viec.*hom nay|qua han|dang thuc hien|sap den han|sap het han)/.test(q);
+
+    // Các câu hỏi phải đọc trực tiếp dữ liệu "Việc của tôi",
+    // tuyệt đối không đẩy sang OpenAI.
+    return /(viec cua toi|nhiem vu cua toi|con viec gi|toi co viec gi|hom nay.*viec|viec.*hom nay|qua han|dang thuc hien|sap den han|sap het han|viec nao.*uu tien|uu tien.*viec|can uu tien.*xu ly|viec nao.*can xu ly|viec nao.*xu ly truoc|viec.*gan han|gan han.*viec)/.test(q);
 }
 
 function parseHVADeadline(value) {
