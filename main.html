@@ -524,7 +524,7 @@
                 <input id="global-search-input"
                        type="search"
                        autocomplete="off"
-                       placeholder="Nhập nội dung cần tra cứu..."
+                       placeholder="Thầy/Cô cần tìm gì trong HVA?"
                        class="w-full h-11
                               pl-10 pr-[5.5rem]
                               rounded-xl
@@ -588,7 +588,7 @@
 
             <div class="space-y-1">
 
-                <!-- NHÂN SỰ - GVCN -->
+                <!-- NHÂN SỰ -->
                 <button type="button"
                         data-search-type="NHANSU"
                         class="search-type-item w-full flex items-center justify-between
@@ -598,7 +598,7 @@
                             <i class="bi bi-people-fill text-lg"></i>
                         </div>
                         <div>
-                            <div class="text-[13px] font-bold text-[#123B67]">Nhân sự – GVCN</div>
+                            <div class="text-[13px] font-bold text-[#123B67]">Nhân sự</div>
                             <div class="text-[10px] text-slate-400 mt-0.5">Họ tên • Điện thoại • Tổ • Lớp chủ nhiệm</div>
                         </div>
                     </div>
@@ -609,7 +609,7 @@
                 <!-- VĂN BẢN -->
                 <button type="button"
                         data-search-type="VANBAN"
-                        class="search-type-item
+                        class="search-type-item hidden
                                w-full flex items-center justify-between
                                px-3 py-2.5 rounded-xl
                                hover:bg-blue-50
@@ -648,7 +648,7 @@
                 <!-- NHIỆM VỤ -->
                 <button type="button"
                         data-search-type="NHIEMVU"
-                        class="search-type-item
+                        class="search-type-item hidden
                                w-full flex items-center justify-between
                                px-3 py-2.5 rounded-xl
                                hover:bg-indigo-50
@@ -687,7 +687,7 @@
                 <!-- LỊCH CÔNG TÁC -->
                 <button type="button"
                         data-search-type="LICH"
-                        class="search-type-item
+                        class="search-type-item hidden
                                w-full flex items-center justify-between
                                px-3 py-2.5 rounded-xl
                                hover:bg-cyan-50
@@ -726,7 +726,7 @@
                 <!-- THÔNG BÁO -->
                 <button type="button"
                         data-search-type="THONGBAO"
-                        class="search-type-item
+                        class="search-type-item hidden
                                w-full flex items-center justify-between
                                px-3 py-2.5 rounded-xl
                                hover:bg-amber-50
@@ -765,7 +765,7 @@
                 <!-- TÀI LIỆU - BIỂU MẪU -->
                 <button type="button"
                         data-search-type="TAILIEU"
-                        class="search-type-item
+                        class="search-type-item hidden
                                w-full flex items-center justify-between
                                px-3 py-2.5 rounded-xl
                                hover:bg-emerald-50
@@ -817,8 +817,7 @@
                 <div class="text-[9.5px]
                             leading-relaxed
                             text-slate-400">
-                    Có thể tìm theo từ khóa, số văn bản, tên nhiệm vụ,
-                    nội dung hoặc thời gian.
+                    Thầy/Cô gõ nội dung cần tìm vào ô phía trên. HVA sẽ tra cứu trong các dữ liệu mà Thầy/Cô được quyền truy cập.
                 </div>
 
             </div>
@@ -4885,6 +4884,13 @@ async function searchPersonnel(keyword) {
                     label: 'Thông báo'
                 };
 
+            case 'CUOCHOP':
+                return {
+                    icon: 'bi-people-fill',
+                    iconBox: 'bg-cyan-50 text-cyan-700',
+                    label: 'Cuộc họp'
+                };
+
             default:
                 return {
                     icon: 'bi-search',
@@ -4922,7 +4928,7 @@ async function searchPersonnel(keyword) {
                         class="text-[10px]
                                font-bold text-blue-600">
 
-                    Nhóm tra cứu
+                    Quay lại
 
                 </button>
 
@@ -5169,6 +5175,19 @@ async function searchPersonnel(keyword) {
         }
 
 
+        /* ---------- CUỘC HỌP ---------- */
+
+        if (item.kind === 'CUOCHOP') {
+            closeSearchPanel();
+            if (item.publishId) {
+                window.location.href = './TTPhatHanh.html?publishId=' + encodeURIComponent(item.publishId);
+            } else {
+                AppMain?.showToast?.('Đã tìm thấy cuộc họp nhưng chưa có mã phát hành.');
+            }
+            return;
+        }
+
+
         /* ---------- THÔNG BÁO ---------- */
 
         if (item.kind === 'THONGBAO') {
@@ -5202,6 +5221,30 @@ async function searchPersonnel(keyword) {
        THỰC HIỆN TRA CỨU
     ===================================================== */
 
+
+    /* =====================================================
+       HVA GLOBAL SEARCH V1
+       Khi không duyệt Nhân sự theo cây, ô tìm kiếm quét hợp nhất
+       các nguồn HVA mà tài khoản hiện tại được phép truy cập.
+    ===================================================== */
+    async function searchHVA(keyword) {
+        const q = String(keyword || '').trim();
+        if (!q) return [];
+        if (!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function') {
+            throw new Error('HVA_AUTH_REQUEST_NOT_READY');
+        }
+        const url = SEARCH_API + '?action=searchHVA&q=' + encodeURIComponent(q) + '&_=' + Date.now();
+        const response = await window.HVAAuthRequest.get(url, { cache:'no-store' });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+        if (data?.success === false) {
+            const error = new Error(data.code || data.message || 'HVA_SEARCH_FAILED');
+            error.hvaMessage = data.message || 'Chưa thể tra cứu dữ liệu HVA.';
+            throw error;
+        }
+        return Array.isArray(data?.results) ? data.results : [];
+    }
+
     async function performSearch() {
 
         const keyword =
@@ -5229,50 +5272,13 @@ async function searchPersonnel(keyword) {
 
             let results = [];
 
-            if (
-                ACTIVE_SEARCH_TYPE === 'ALL' ||
-                ACTIVE_SEARCH_TYPE === 'NHANSU'
-            ) {
-                const personnel = await searchPersonnel(keyword);
-                results.push(...personnel);
+            // Duyệt Nhân sự theo cây: giữ nguyên luồng đã PASS.
+            if (ACTIVE_SEARCH_TYPE === 'NHANSU') {
+                results = await searchPersonnel(keyword);
+            } else {
+                // Tìm từ ô chính: quét hợp nhất toàn HVA theo quyền tài khoản.
+                results = await searchHVA(keyword);
             }
-
-
-            if (
-                ACTIVE_SEARCH_TYPE === 'ALL' ||
-                ACTIVE_SEARCH_TYPE === 'VANBAN'
-            ) {
-
-                const docs =
-                    await searchDocuments(keyword);
-
-                results.push(...docs);
-            }
-
-
-            if (
-                ACTIVE_SEARCH_TYPE === 'ALL' ||
-                ACTIVE_SEARCH_TYPE === 'NHIEMVU'
-            ) {
-
-                const tasks =
-                    await searchTasks(keyword);
-
-                results.push(...tasks);
-            }
-
-
-            if (
-                ACTIVE_SEARCH_TYPE === 'ALL' ||
-                ACTIVE_SEARCH_TYPE === 'THONGBAO'
-            ) {
-
-                const notifications =
-                    await searchNotifications(keyword);
-
-                results.push(...notifications);
-            }
-
 
             renderResults(results, keyword);
 
