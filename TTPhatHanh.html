@@ -638,17 +638,6 @@ window.HVAMeetingAction = {
         } finally { clearTimeout(timer); }
     },
 
-    async getServerState(meetingId='') {
-        const publishId = this.publishId();
-        if (!meetingId && !publishId) return null;
-        const r = await this.post({
-            action:'getMeetingParticipationState',
-            meetingId:String(meetingId || ''),
-            publishId
-        });
-        return r && r.success === true ? r : null;
-    },
-
     setBusy(button, busy, busyText, normalHtml) {
         if (!button) return;
         button.disabled = !!busy;
@@ -815,7 +804,7 @@ ContentViewerRouter.register(
         'MEETING'
     ],
     {
-        async open({ document: documentState, raw, data }) {
+        open({ document: documentState, raw, data }) {
 
             const esc = value =>
                 String(value ?? '')
@@ -878,21 +867,6 @@ ContentViewerRouter.register(
                 ''
             ).trim();
 
-            // Luôn đồng bộ trạng thái thật từ DB_07 trước khi dựng nút thao tác.
-            // Không dùng sessionStorage làm nguồn sự thật.
-            try {
-                const serverState = await window.HVAMeetingAction?.getServerState(meetingId);
-                if (serverState) {
-                    data.attendanceResponse = serverState.attendanceResponse || '';
-                    data.attendanceResponseAt = serverState.attendanceResponseAt || '';
-                    data.absenceStatus = serverState.absenceStatus || '';
-                    data.absenceReason = serverState.absenceReason || '';
-                    data.absenceSubmittedAt = serverState.absenceSubmittedAt || '';
-                }
-            } catch (stateError) {
-                console.warn('[HVA Meeting] Không đồng bộ được trạng thái DB_07:', stateError);
-            }
-
             const requireConfirmation = (
                 data.requireConfirmation === true ||
                 ['true','1','có','co','yes','y'].includes(
@@ -901,11 +875,17 @@ ContentViewerRouter.register(
             );
 
             const attendanceResponse = String(
-                data.attendanceResponse || ''
+                data.attendanceResponse ||
+                raw.attendanceResponse ||
+                documentState.attendanceResponse ||
+                ''
             ).trim().toUpperCase();
 
             const absenceStatus = String(
-                data.absenceStatus || ''
+                data.absenceStatus ||
+                raw.absenceStatus ||
+                documentState.absenceStatus ||
+                ''
             ).trim().toUpperCase();
 
             const localAttendanceState = window.HVAMeetingAction?.getLocalState(meetingId) || '';
@@ -918,7 +898,7 @@ ContentViewerRouter.register(
 
             const alreadyAbsent = localAttendanceState === 'ABSENT_REQUESTED' || (
                 attendanceResponse === 'XIN VẮNG' ||
-                ['CHỜ DUYỆT','ĐÃ DUYỆT','TỪ CHỐI','ĐÃ GỬI ĐƠN','ĐÃ GỬI','XIN VẮNG'].includes(absenceStatus)
+                ['CHỜ DUYỆT','ĐÃ DUYỆT','TỪ CHỐI','ĐÃ GỬI ĐƠN'].includes(absenceStatus)
             );
 
             let modal =
