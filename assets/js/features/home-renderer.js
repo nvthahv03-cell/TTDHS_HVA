@@ -2808,6 +2808,13 @@
                     <span>QUẢN TRỊ</span>
                 </div>
 
+                <!-- HVA SYSTEM MAINTENANCE & SAFE DEPLOY V1 -->
+                <button type="button" onclick="event.stopPropagation(); window.openHVAMaintenancePanel?.();"
+                    class="w-full flex items-center justify-between px-2 py-2.5 mb-1 rounded-xl text-xs font-bold text-violet-800 bg-violet-50 border border-violet-100 hover:bg-violet-100 transition-colors">
+                    <span class="flex items-center gap-2.5"><span class="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-violet-700"><i class="bi bi-tools"></i></span> Bảo trì & nâng cấp HVA</span>
+                    <span id="hva-maintenance-menu-state" class="text-[9px] px-2 py-1 rounded-full bg-emerald-100 text-emerald-700">HOẠT ĐỘNG</span>
+                </button>
+
                 <!-- 1. KẾ HOẠCH -->
                 <div class="relative">
                     <button type="button"
@@ -3522,6 +3529,65 @@
         // BGH/Admin: mở theo quyền cấp cao.
         // Chỉ tác động 2 card này, KHÔNG đụng NGHIỆP VỤ SỐ.
         // =====================================================
+        // =====================================================
+        // HVA SYSTEM MAINTENANCE & SAFE DEPLOY V1
+        // =====================================================
+        const HVA_MAINTENANCE_API = 'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+
+        function hvaMaintenanceToken_() {
+            return String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || '').trim();
+        }
+
+        async function hvaLoadMaintenanceState_() {
+            try {
+                const r = await fetch(HVA_MAINTENANCE_API + '?action=getMaintenanceStatus&_=' + Date.now(), {cache:'no-store'});
+                const d = await r.json();
+                const state = d?.state || {enabled:false,version:'HVA-2026.09.29'};
+                const badge = document.getElementById('hva-maintenance-menu-state');
+                if (badge) {
+                    badge.textContent = state.enabled ? 'BẢO TRÌ' : 'HOẠT ĐỘNG';
+                    badge.className = 'text-[9px] px-2 py-1 rounded-full ' + (state.enabled ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700');
+                }
+                return state;
+            } catch (_) { return {enabled:false,version:'HVA-2026.09.29'}; }
+        }
+
+        window.openHVAMaintenancePanel = async function() {
+            const state = await hvaLoadMaintenanceState_();
+            document.getElementById('hva-maintenance-modal')?.remove();
+            const wrap = document.createElement('div');
+            wrap.id = 'hva-maintenance-modal';
+            wrap.className = 'fixed inset-0 z-[10050] bg-slate-950/50 backdrop-blur-[2px] flex items-center justify-center p-4';
+            wrap.innerHTML = `<div class="w-full max-w-lg rounded-2xl bg-white shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+                <div class="bg-[#0F4C81] px-5 py-4 text-white flex items-center justify-between"><div><div class="text-[10px] font-bold text-blue-100">QUẢN TRỊ HỆ THỐNG</div><div class="text-base font-black">BẢO TRÌ & NÂNG CẤP HVA</div></div><button onclick="document.getElementById('hva-maintenance-modal')?.remove()" class="w-9 h-9 rounded-xl bg-white/10"><i class="bi bi-x-lg"></i></button></div>
+                <div class="p-5 space-y-4">
+                    <div class="rounded-xl border p-3 flex items-center justify-between"><div><div class="text-[10px] text-slate-400 font-bold">TRẠNG THÁI</div><div class="text-sm font-black ${state.enabled?'text-amber-600':'text-emerald-600'}">${state.enabled?'ĐANG BẢO TRÌ':'HOẠT ĐỘNG BÌNH THƯỜNG'}</div></div><i class="bi ${state.enabled?'bi-tools text-amber-500':'bi-shield-check text-emerald-500'} text-2xl"></i></div>
+                    <div><label class="text-[10px] font-bold text-slate-500">PHIÊN BẢN ĐANG CHẠY</label><input id="hva-maintenance-version" value="${escapeMyWorkHtml(state.version||'HVA-2026.09.29')}" class="mt-1 w-full rounded-xl border px-3 py-2 text-sm"></div>
+                    <div><label class="text-[10px] font-bold text-slate-500">GHI CHÚ NÂNG CẤP</label><textarea id="hva-maintenance-note" rows="3" class="mt-1 w-full rounded-xl border px-3 py-2 text-sm" placeholder="Ví dụ: Nâng cấp Cuộc họp + Reminder">${escapeMyWorkHtml(state.note||'')}</textarea></div>
+                    <div class="rounded-xl bg-slate-50 p-3 text-[11px] text-slate-600">Khi bật bảo trì, GV/NV vẫn có thể xem dữ liệu nhưng các thao tác ghi sẽ bị Backend chặn. BGH/Quản trị vẫn được phép kiểm thử.</div>
+                    <button onclick="window.hvaSetMaintenanceMode?.(${state.enabled?'false':'true'})" class="w-full h-11 rounded-xl font-black text-sm ${state.enabled?'bg-emerald-600 text-white':'bg-amber-500 text-white'}">${state.enabled?'KẾT THÚC BẢO TRÌ':'BẬT CHẾ ĐỘ BẢO TRÌ'}</button>
+                </div></div>`;
+            wrap.addEventListener('click', () => wrap.remove());
+            document.body.appendChild(wrap);
+        };
+
+        window.hvaSetMaintenanceMode = async function(enabled) {
+            const token = hvaMaintenanceToken_();
+            if (!token) return window.hvaNotify?.('Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.', {kind:'error',title:'BẢO TRÌ HVA'});
+            const version = document.getElementById('hva-maintenance-version')?.value?.trim() || 'HVA-2026.09.29';
+            const note = document.getElementById('hva-maintenance-note')?.value?.trim() || '';
+            try {
+                const r = await fetch(HVA_MAINTENANCE_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'setMaintenanceMode',enabled:!!enabled,version,note,sessionToken:token})});
+                const d = await r.json();
+                if (!d?.success) throw new Error(d?.message || 'Không cập nhật được chế độ bảo trì.');
+                document.getElementById('hva-maintenance-modal')?.remove();
+                await hvaLoadMaintenanceState_();
+                window.hvaNotify?.(d.message || 'Đã cập nhật chế độ bảo trì.', {kind:'success',title:'BẢO TRÌ HVA'});
+            } catch(e) { window.hvaNotify?.(e.message || String(e), {kind:'error',title:'BẢO TRÌ HVA'}); }
+        };
+
+        setTimeout(hvaLoadMaintenanceState_, 1200);
+
         function setupHVAMainMenuPermission() {
             // Dùng đúng nguồn tài khoản mà toàn hệ thống HVA đang dùng.
             // Có tài khoản được lưu ở localStorage (không chỉ sessionStorage),
@@ -4523,20 +4589,37 @@
     };
 
     async function postMyMeetingAction(payload) {
+        const token = String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || '').trim();
+        if (!token) throw new Error('Phiên đăng nhập không hợp lệ hoặc đã hết hạn.');
         const response = await fetch(MY_TASK_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(Object.assign({}, payload || {}, { sessionToken: token }))
         });
         if (!response.ok) throw new Error('HTTP ' + response.status);
         return response.json();
     }
 
+    window.hvaMeetingConfirmDialog = function(message) {
+        return new Promise(resolve => {
+            document.getElementById('hva-meeting-confirm-dialog')?.remove();
+            const el = document.createElement('div');
+            el.id = 'hva-meeting-confirm-dialog';
+            el.className = 'fixed inset-0 z-[10060] bg-slate-950/45 flex items-center justify-center p-4';
+            el.innerHTML = `<div class="w-full max-w-sm rounded-2xl bg-white shadow-2xl p-5"><div class="text-sm font-black text-slate-800">XÁC NHẬN CUỘC HỌP</div><div class="mt-2 text-xs text-slate-600">${escapeMyWorkHtml(message || '')}</div><div class="mt-5 grid grid-cols-2 gap-2"><button data-no class="h-10 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold">HỦY</button><button data-yes class="h-10 rounded-xl bg-[#0F4C81] text-white text-xs font-black">XÁC NHẬN</button></div></div>`;
+            const done = v => { el.remove(); resolve(v); };
+            el.querySelector('[data-no]')?.addEventListener('click', () => done(false));
+            el.querySelector('[data-yes]')?.addEventListener('click', () => done(true));
+            el.addEventListener('click', e => { if (e.target === el) done(false); });
+            document.body.appendChild(el);
+        });
+    };
+
     window.confirmMyMeetingAttendance = async function(meetingId) {
         const user = getCurrentHVAUser();
         const username = user.username || user.userName || user.maGV || '';
         if (!username) return alert('Không xác định được tài khoản người dùng.');
-        if (!window.confirm('Xác nhận tham dự cuộc họp này?')) return;
+        if (!(await window.hvaMeetingConfirmDialog?.('Xác nhận tham dự cuộc họp này?'))) return;
 
         try {
             const result = await postMyMeetingAction({
@@ -5014,62 +5097,82 @@
     function getApprovalUsername_(){ const u=getApprovalUser_(); return String(u.username||u.userName||u.maGV||'').trim(); }
     function getApprovalName_(){ const u=getApprovalUser_(); return String(u.hoTen||u.fullName||u.name||u.username||'').trim(); }
 
-    function ensureMeetingApprovalPanel_(){
-        const root=document.getElementById('home-view'); if(!root||document.getElementById('hvaMeetingApprovalPanel'))return;
-        const box=document.createElement('div');
-        box.id='hvaMeetingApprovalPanel';
-        box.className='mt-3 mb-2 rounded-2xl border border-blue-100 bg-white overflow-hidden shadow-sm';
-        box.innerHTML=`<div class="px-3 py-2.5 bg-gradient-to-r from-blue-50 to-slate-50 flex items-center justify-between">
-          <div>
-            <div class="text-[12px] font-extrabold text-[#123B67]"><span class="inline-block w-2 h-2 rounded-full bg-red-500 mr-1.5"></span>XÁC NHẬN VÀ GIẢI TRÌNH</div>
-            <div class="text-[9px] text-slate-600">Dữ liệu QR do HVA ghi nhận • Xác nhận đúng cấp, giải trình khi cần</div>
-          </div>
-          <button type="button" onclick="loadMeetingAttendanceApprovals()" title="Tải lại dữ liệu" aria-label="Tải lại dữ liệu xác nhận" class="w-8 h-8 rounded-lg border border-blue-200 bg-white text-[#0F4C81] font-bold hover:bg-blue-50 active:scale-95 transition">↻</button>
-        </div>
-        <div class="grid grid-cols-2 divide-x divide-slate-100">
-          <section class="min-w-0">
-            <button type="button" onclick="loadMeetingAttendanceApprovals()" class="w-full px-3 py-2 flex items-center justify-between text-left hover:bg-blue-50/60 transition">
-              <span class="flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i class="bi bi-person-check-fill"></i></span><span><b class="block text-[11px] text-slate-900">Xác nhận tham dự</b><small class="text-[8.5px] text-slate-500">Họp • Hội nghị • Tập huấn • Hoạt động</small></span></span>
-              <span id="hvaMeetingApprovalCount" class="min-w-7 h-7 px-2 rounded-lg bg-blue-50 text-blue-700 text-[11px] font-extrabold flex items-center justify-center">0</span>
-            </button>
-            <div id="hvaMeetingApprovalList" class="px-3 pb-3 text-[10px] text-slate-400 text-center">Đang kiểm tra lượt xác nhận...</div>
-          </section>
-          <section class="min-w-0">
-            <button type="button" onclick="loadMeetingAttendanceApprovals()" class="w-full px-3 py-2 flex items-center justify-between text-left hover:bg-red-50/60 transition">
-              <span class="flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center"><i class="bi bi-file-earmark-exclamation-fill"></i></span><span><b class="block text-[11px] text-slate-900">Cần xác minh, giải trình</b><small class="text-[8.5px] text-slate-500">Thiếu quét QR • Đến muộn • Về sớm • Dữ liệu bất thường</small></span></span>
-              <span id="hvaMeetingExplanationCount" class="min-w-7 h-7 px-2 rounded-lg bg-red-50 text-red-600 text-[11px] font-extrabold flex items-center justify-center">0</span>
-            </button>
-            <div id="hvaMeetingExplanationList" class="px-3 pb-3 text-[10px] text-slate-400 text-center">Không có dữ liệu cần giải trình.</div>
-          </section>
-        </div>`;
-        root.appendChild(box);
+    function canSeeMeetingApprovalPanel_(){
+        const u=getApprovalUser_();
+        const text=[u.vaiTro,u.chucVu,u.viTriViecLam,u.position,u.role,u.to,u.toBoPhan]
+          .filter(Boolean).join(' ').toLowerCase().normalize('NFD')
+          .replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
+        return /ban giam hieu|hieu truong|pho hieu truong|tpcm|ttcm|to truong|truong bo phan/.test(text);
     }
 
-    window.loadMeetingAttendanceApprovals = async function(){
+    function ensureMeetingApprovalPanel_(){
+        const root=document.getElementById('home-view');
+        if(!root||document.getElementById('hvaMeetingApprovalPanel'))return;
+        const box=document.createElement('div');
+        box.id='hvaMeetingApprovalPanel';
+        box.className='hidden mt-3 mb-2 rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm';
+        box.innerHTML=`
+          <div class="px-3.5 py-3 flex items-center justify-between gap-3 bg-gradient-to-r from-slate-50 to-blue-50/60 border-b border-slate-100">
+            <div class="min-w-0 flex items-center gap-2.5">
+              <span class="w-9 h-9 shrink-0 rounded-xl bg-[#0F4C81] text-white flex items-center justify-center shadow-sm"><i class="bi bi-person-check-fill"></i></span>
+              <div class="min-w-0">
+                <div class="text-[12px] font-extrabold text-[#123B67] tracking-tight">XÁC NHẬN & GIẢI TRÌNH</div>
+                <div class="text-[9px] text-slate-500 mt-0.5">Dữ liệu tham dự do HVA ghi nhận</div>
+              </div>
+            </div>
+            <button id="hvaMeetingApprovalReload" type="button" onclick="loadMeetingAttendanceApprovals(true)" title="Tải lại" aria-label="Tải lại dữ liệu xác nhận" class="hidden w-8 h-8 shrink-0 rounded-xl border border-slate-200 bg-white text-[#0F4C81] hover:bg-blue-50 active:scale-95 transition"><i class="bi bi-arrow-clockwise"></i></button>
+          </div>
+          <div class="p-2.5 space-y-2">
+            <button type="button" onclick="document.getElementById('hvaMeetingApprovalList')?.scrollIntoView({behavior:'smooth',block:'center'})" class="w-full rounded-xl border border-blue-100 bg-blue-50/45 px-3 py-2.5 flex items-center gap-3 text-left hover:bg-blue-50 transition">
+              <span class="w-8 h-8 shrink-0 rounded-lg bg-white text-blue-600 flex items-center justify-center shadow-sm"><i class="bi bi-people-fill"></i></span>
+              <span class="min-w-0 flex-1"><b class="block text-[11px] text-slate-900">Xác nhận tham dự</b><small class="block text-[8.5px] text-slate-500 mt-0.5">Họp · Hội nghị · Tập huấn · Hoạt động</small></span>
+              <span id="hvaMeetingApprovalCount" class="min-w-8 h-8 px-2 rounded-xl bg-white text-blue-700 text-[11px] font-extrabold flex items-center justify-center shadow-sm">0</span>
+            </button>
+            <button type="button" onclick="document.getElementById('hvaMeetingExplanationList')?.scrollIntoView({behavior:'smooth',block:'center'})" class="w-full rounded-xl border border-rose-100 bg-rose-50/45 px-3 py-2.5 flex items-center gap-3 text-left hover:bg-rose-50 transition">
+              <span class="w-8 h-8 shrink-0 rounded-lg bg-white text-rose-500 flex items-center justify-center shadow-sm"><i class="bi bi-exclamation-diamond-fill"></i></span>
+              <span class="min-w-0 flex-1"><b class="block text-[11px] text-slate-900">Cần xác minh, giải trình</b><small class="block text-[8.5px] text-slate-500 mt-0.5">Thiếu QR · Đến muộn · Về sớm · Bất thường</small></span>
+              <span id="hvaMeetingExplanationCount" class="min-w-8 h-8 px-2 rounded-xl bg-white text-rose-600 text-[11px] font-extrabold flex items-center justify-center shadow-sm">0</span>
+            </button>
+            <div id="hvaMeetingApprovalEmpty" class="hidden px-2 py-1 text-center text-[9px] font-semibold text-slate-400">Không có nội dung cần xử lý.</div>
+            <div id="hvaMeetingApprovalList" class="text-[10px] text-slate-500"></div>
+            <div id="hvaMeetingExplanationList" class="text-[10px] text-slate-500"></div>
+          </div>`;
+        root.appendChild(box);
+        if(canSeeMeetingApprovalPanel_()) box.classList.remove('hidden');
+    }
+
+    window.loadMeetingAttendanceApprovals = async function(forceRefresh=false){
         ensureMeetingApprovalPanel_();
-        const box=document.getElementById('hvaMeetingApprovalList'), username=getApprovalUsername_();
-        if(!box||!username)return;
+        const panel=document.getElementById('hvaMeetingApprovalPanel');
+        const box=document.getElementById('hvaMeetingApprovalList');
+        const reload=document.getElementById('hvaMeetingApprovalReload');
+        const username=getApprovalUsername_();
+        if(!panel||!box||!username)return;
+        if(reload)reload.classList.add('hidden');
         try{
             const r=await fetch(`${MY_TASK_API_URL}?action=getPendingMeetingAttendanceApprovals&username=${encodeURIComponent(username)}&_=${Date.now()}`,{cache:'no-store'});
             const raw=await r.text();
             const type=String(r.headers.get('content-type')||'').toLowerCase();
             if(!r.ok)throw new Error(`HTTP ${r.status}`);
-            if(type.includes('text/html')||/^\s*</.test(raw)){
-                console.warn('[HVA] Backend chưa trả JSON cho getPendingMeetingAttendanceApprovals.');
-                HVA_MEETING_APPROVALS=[];
-                renderMeetingAttendanceApprovals_();
-                box.innerHTML='<div class="py-2 text-slate-400">Chưa có dữ liệu xác nhận từ hệ thống.</div>';
-                return;
-            }
+            if(type.includes('text/html')||/^\s*</.test(raw))throw new Error('BACKEND_NOT_JSON');
             let d;
             try{d=JSON.parse(raw);}catch(_){throw new Error('Dữ liệu phản hồi chưa đúng định dạng');}
             HVA_MEETING_APPROVALS=d&&d.success?d.approvals||[]:[];
+            const allowed=canSeeMeetingApprovalPanel_()||HVA_MEETING_APPROVALS.length>0;
+            panel.classList.toggle('hidden',!allowed);
+            if(!allowed)return;
             renderMeetingAttendanceApprovals_();
         }catch(e){
             console.error('[HVA] Không tải được dữ liệu xác nhận:',e);
             HVA_MEETING_APPROVALS=[];
+            if(!canSeeMeetingApprovalPanel_()){
+                panel.classList.add('hidden');
+                return;
+            }
+            panel.classList.remove('hidden');
             renderMeetingAttendanceApprovals_();
-            box.innerHTML='<div class="py-2 text-slate-400">Tạm thời chưa tải được dữ liệu xác nhận. Thầy/Cô có thể bấm tải lại.</div>';
+            box.innerHTML='<div class="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-center text-[9px] font-semibold text-amber-700">Chưa tải được dữ liệu xác nhận.</div>';
+            if(reload)reload.classList.remove('hidden');
         }
     };
 
@@ -5080,35 +5183,33 @@
         const approvalCount=document.getElementById('hvaMeetingApprovalCount');
         const explanationCount=document.getElementById('hvaMeetingExplanationCount');
         const explanationList=document.getElementById('hvaMeetingExplanationList');
+        const empty=document.getElementById('hvaMeetingApprovalEmpty');
         const issueCount=HVA_MEETING_APPROVALS.reduce((total,a)=>{
             const s=a&&a.summary?a.summary:{};
-            return total+Number(s.missing||0)+Number(s.late||0);
+            return total+Number(s.missing||0)+Number(s.late||0)+Number(s.earlyLeave||s.early||0)+Number(s.abnormal||0);
         },0);
         if(approvalCount)approvalCount.textContent=String(HVA_MEETING_APPROVALS.length);
         if(explanationCount)explanationCount.textContent=String(issueCount);
+        if(empty)empty.classList.toggle('hidden',HVA_MEETING_APPROVALS.length>0||issueCount>0);
         if(explanationList){
             explanationList.innerHTML=issueCount
-              ? `<button type="button" onclick="document.getElementById('hvaMeetingApprovalList')?.scrollIntoView({behavior:'smooth',block:'center'})" class="w-full py-2 rounded-lg bg-red-50 text-red-700 font-extrabold hover:bg-red-100 transition">${issueCount} trường hợp cần kiểm tra trong hồ sơ xác nhận</button>`
-              : 'Không có dữ liệu cần giải trình.';
+              ? `<button type="button" onclick="document.getElementById('hvaMeetingApprovalList')?.scrollIntoView({behavior:'smooth',block:'center'})" class="w-full py-2 rounded-xl border border-rose-100 bg-rose-50 text-rose-700 font-extrabold hover:bg-rose-100 transition">${issueCount} trường hợp cần kiểm tra</button>`
+              : '';
         }
         if(!HVA_MEETING_APPROVALS.length){
-            box.innerHTML='<div class="py-2 text-slate-400">Không có lượt xác nhận đang chờ.</div>';
+            box.innerHTML='';
             return;
         }
         box.innerHTML=HVA_MEETING_APPROVALS.map(a=>{
             const s=a.summary||{};
-            return `<div class="mb-2 last:mb-0 rounded-xl border border-red-200 bg-white p-3 text-left shadow-sm">
+            return `<div class="mb-2 last:mb-0 rounded-xl border border-slate-200 bg-white p-3 text-left shadow-sm">
               <div class="flex justify-between gap-3 items-center">
                 <div class="min-w-0">
                   <div class="text-[11px] font-extrabold text-slate-900">${escapeMyWorkHtml(a.title||'Cuộc họp')}</div>
-                  <div class="text-[9px] font-bold text-red-600">${approvalStageLabel_(a.stage)}${a.group?' • '+escapeMyWorkHtml(a.group):''}</div>
-                  <div class="mt-1 text-[9px] text-slate-700">
-                    HVA ghi nhận: <b>${s.present||0}/${s.total||0}</b> có QR vào
-                    ${s.late?` • <span class="text-amber-700"><b>${s.late}</b> đến sau giờ bắt đầu</span>`:''}
-                    ${s.missing?` • <span class="text-red-700"><b>${s.missing}</b> chưa ghi nhận</span>`:''}
-                  </div>
+                  <div class="text-[9px] font-bold text-[#0F4C81]">${approvalStageLabel_(a.stage)}${a.group?' · '+escapeMyWorkHtml(a.group):''}</div>
+                  <div class="mt-1 text-[9px] text-slate-600"><b>${s.present||0}/${s.total||0}</b> có QR vào${s.late?` · <span class="text-amber-700"><b>${s.late}</b> đến muộn</span>`:''}${s.missing?` · <span class="text-rose-700"><b>${s.missing}</b> chưa ghi nhận</span>`:''}</div>
                 </div>
-                <button type="button" onclick="openMeetingAttendanceApproval('${escapeMyWorkHtml(a.id)}')" class="shrink-0 px-3 py-2 rounded-xl bg-slate-900 text-white text-[9px] font-extrabold shadow-md active:scale-95 transition">XEM & XÁC NHẬN</button>
+                <button type="button" onclick="openMeetingAttendanceApproval('${escapeMyWorkHtml(a.id)}')" class="shrink-0 px-3 py-2 rounded-xl bg-[#0F4C81] text-white text-[9px] font-extrabold shadow-sm active:scale-95 transition">XỬ LÝ</button>
               </div>
             </div>`;
         }).join('');
