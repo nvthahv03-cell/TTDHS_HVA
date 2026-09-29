@@ -1679,7 +1679,7 @@
     </button>
 
 
-     <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
+   <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
     <div class="relative">
 
         <!-- CARD NGHIỆP VỤ SỐ -->
@@ -1842,7 +1842,7 @@
                 </div>
 
                 <!-- 2. HỘI NGHỊ - HỘI THẢO -->
-                <a href="#" onclick="openHSG12ComingSoon('Hội nghị - Hội thảo', event); return false;"
+                <a href="HoiThao.html"
                    class="flex items-center justify-between gap-3
                           px-3 py-3 rounded-xl
                           text-[#123B67] dark:text-slate-100
@@ -1920,7 +1920,7 @@
                                 border-violet-200 dark:border-violet-800
                                 space-y-0.5">
 
-                        <a href="#" onclick="openHSG12ComingSoon('Tập huấn', event); return false;"
+                        <a href="baocao-tap-huan.html"
                            class="block px-3 py-2.5 rounded-lg
                                   text-[13px] font-medium
                                   text-slate-700 dark:text-slate-300
