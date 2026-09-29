@@ -1842,7 +1842,7 @@
                 </div>
 
                 <!-- 2. HỘI NGHỊ - HỘI THẢO -->
-                <a href="HoiThao.html"
+                <a href="#" onclick="openHSG12ComingSoon('Hội nghị - Hội thảo', event); return false;"
                    class="flex items-center justify-between gap-3
                           px-3 py-3 rounded-xl
                           text-[#123B67] dark:text-slate-100
@@ -1920,7 +1920,7 @@
                                 border-violet-200 dark:border-violet-800
                                 space-y-0.5">
 
-                        <a href="baocao-tap-huan.html"
+                        <a href="#" onclick="openHSG12ComingSoon('Tập huấn', event); return false;"
                            class="block px-3 py-2.5 rounded-lg
                                   text-[13px] font-medium
                                   text-slate-700 dark:text-slate-300
@@ -1929,7 +1929,7 @@
                             Tập huấn
                         </a>
 
-                        <a href="baocao-shcm.html"
+                        <a href="#" onclick="openHSG12ComingSoon('Sinh hoạt chuyên môn', event); return false;"
                            class="block px-3 py-2.5 rounded-lg
                                   text-[13px] font-medium
                                   text-slate-700 dark:text-slate-300
@@ -1938,7 +1938,7 @@
                             Sinh hoạt chuyên môn
                         </a>
 
-                        <a href="baocao-bdtx.html"
+                        <a href="#" onclick="openHSG12ComingSoon('Bồi dưỡng thường xuyên', event); return false;"
                            class="block px-3 py-2.5 rounded-lg
                                   text-[13px] font-medium
                                   text-slate-700 dark:text-slate-300
@@ -1947,7 +1947,7 @@
                             Bồi dưỡng thường xuyên
                         </a>
 
-                        <a href="baocao-khac.html"
+                        <a href="#" onclick="openHSG12ComingSoon('Bồi dưỡng chuyên môn - Khác', event); return false;"
                            class="block px-3 py-2.5 rounded-lg
                                   text-[13px] font-medium
                                   text-slate-700 dark:text-slate-300
@@ -1977,22 +1977,22 @@
 
                     <div id="hscm-sub-items" class="hidden ml-5 mr-1 mt-1 mb-2 pl-4 py-1 border-l-2 border-blue-200 dark:border-blue-800 space-y-0.5">
                         <div class="px-3 pt-2 pb-1 text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Kế hoạch - Hồ sơ</div>
-                        <a href="phancong-chuyenmon.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Phân công chuyên môn</a>
-                        <a href="kehoach-tochuyenmon.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch tổ chuyên môn</a>
-                        <a href="kehoach-canhan.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch cá nhân</a>
-                        <a href="kehoach-baidday.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch bài dạy</a>
-                        <a href="kehoach-thuchanh-phongbomon.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch thực hành / phòng bộ môn</a>
-                        <a href="hoso-chuyenmon-khac.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Hồ sơ chuyên môn khác</a>
+                        <a href="#" onclick="openHSG12ComingSoon('Phân công chuyên môn', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Phân công chuyên môn</a>
+                        <a href="#" onclick="openHSG12ComingSoon('Kế hoạch tổ chuyên môn', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch tổ chuyên môn</a>
+                        <a href="#" onclick="openHSG12ComingSoon('Kế hoạch cá nhân', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch cá nhân</a>
+                        <a href="#" onclick="openHSG12ComingSoon('Kế hoạch bài dạy', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch bài dạy</a>
+                        <a href="#" onclick="openHSG12ComingSoon('Kế hoạch thực hành / phòng bộ môn', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch thực hành / phòng bộ môn</a>
+                        <a href="#" onclick="openHSG12ComingSoon('Hồ sơ chuyên môn khác', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Hồ sơ chuyên môn khác</a>
                         <div class="px-3 pt-3 pb-1 text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Báo cáo</div>
-                        <a href="baocao-congtac-thang.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo công tác tháng</a>
-                        <a href="baocao-dinhky.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo định kỳ</a>
-                        <a href="baocao-theoyeucau.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo theo yêu cầu</a>
-                        <a href="lichsu-baocao.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Lịch sử báo cáo</a>
+                        <a href="#" onclick="openHSG12ComingSoon('Báo cáo công tác tháng', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo công tác tháng</a>
+                        <a href="#" onclick="openHSG12ComingSoon('Báo cáo định kỳ', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo định kỳ</a>
+                        <a href="#" onclick="openHSG12ComingSoon('Báo cáo theo yêu cầu', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo theo yêu cầu</a>
+                        <a href="#" onclick="openHSG12ComingSoon('Lịch sử báo cáo', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Lịch sử báo cáo</a>
                     </div>
                 </div>
 
                 <!-- 5. HOẠT ĐỘNG GIÁO DỤC -->
-                <a href="hoatdong-giaoduc.html"
+                <a href="#" onclick="openHSG12ComingSoon('Hoạt động giáo dục', event); return false;"
                    class="flex items-center gap-3 px-3 py-3 rounded-xl
                           text-[14px] font-bold
                           text-[#123B67] dark:text-slate-100
@@ -2115,7 +2115,7 @@
                 </div>
 
                 <!-- 7. CHUYỂN ĐỔI SỐ -->
-                <a href="chuyen-doi-so.html"
+                <a href="#" onclick="openHSG12ComingSoon('Chuyển đổi số', event); return false;"
                    class="flex items-center gap-3 px-3 py-3 rounded-xl
                           text-[14px] font-bold
                           text-[#123B67] dark:text-slate-100
