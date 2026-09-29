@@ -638,12 +638,102 @@ window.HVAMeetingAction = {
         } finally { clearTimeout(timer); }
     },
 
+    async getServerState(meetingId='') {
+        const publishId = this.publishId();
+        if (!meetingId && !publishId) return null;
+        const r = await this.post({
+            action:'getMeetingParticipationState',
+            meetingId:String(meetingId || ''),
+            publishId
+        });
+        return r && r.success === true ? r : null;
+    },
+
     setBusy(button, busy, busyText, normalHtml) {
         if (!button) return;
         button.disabled = !!busy;
         button.classList.toggle('opacity-60', !!busy);
         button.classList.toggle('cursor-wait', !!busy);
         button.innerHTML = busy ? `<i class="bi bi-arrow-repeat animate-spin mr-2"></i>${busyText}` : normalHtml;
+    },
+
+    stateKey(meetingId) {
+        return 'HVA_MEETING_ATTENDANCE_STATE:' + String(meetingId || this.publishId() || '').trim();
+    },
+
+    getLocalState(meetingId) {
+        try { return String(sessionStorage.getItem(this.stateKey(meetingId)) || '').trim().toUpperCase(); }
+        catch (_) { return ''; }
+    },
+
+    setLocalState(meetingId, state) {
+        try { sessionStorage.setItem(this.stateKey(meetingId), String(state || '').trim().toUpperCase()); }
+        catch (_) {}
+    },
+
+    actorLabel() {
+        try {
+            const u = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+            const name = String(u.hoTen || u.fullName || u.name || '').trim();
+            const explicit = String(u.xungHo || u.salutation || '').trim();
+            if (explicit && name) return explicit + ' ' + name;
+            const gender = String(u.gioiTinh || u.gender || '').trim().toLowerCase();
+            const role = String(u.vaiTro || u.role || u.chucVu || u.viTriViecLam || '').trim().toLowerCase();
+            const isStaff = /nhân viên|nhan vien|\bnv\b/.test(role);
+            let prefix = 'Thầy/Cô';
+            if (gender.includes('nữ') || gender.includes('nu') || gender === 'female') prefix = isStaff ? 'Chị' : 'Cô';
+            else if (gender.includes('nam') || gender === 'male') prefix = isStaff ? 'Anh' : 'Thầy';
+            return name ? `${prefix} ${name}` : prefix;
+        } catch (_) { return 'Thầy/Cô'; }
+    },
+
+    renderConfirmed(meetingId) {
+        this.setLocalState(meetingId, 'CONFIRMED');
+        this.hideAbsence();
+        const area = document.getElementById('hva-meeting-attendance-actions');
+        if (!area) return;
+        area.innerHTML = `<div class="px-4 py-3 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800">
+            <div class="font-extrabold"><i class="bi bi-check-circle-fill mr-2"></i>ĐÃ XÁC NHẬN THAM DỰ</div>
+            <div class="mt-1 text-sm font-semibold">${this.escape(this.actorLabel())} đã hoàn thành xác nhận tham dự cuộc họp.</div>
+            <button type="button" onclick="HVAMeetingAction.confirmedAbsenceWarning()" class="mt-3 px-4 py-2 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 text-sm font-extrabold">
+                <i class="bi bi-person-x mr-2"></i>CẦN THAY ĐỔI / XIN VẮNG
+            </button>
+        </div>`;
+    },
+
+    renderAbsent(meetingId, message) {
+        this.setLocalState(meetingId, 'ABSENT_REQUESTED');
+        const area = document.getElementById('hva-meeting-attendance-actions');
+        if (!area) return;
+        area.innerHTML = `<div class="px-4 py-3 rounded-xl border border-amber-200 bg-amber-50 text-amber-800">
+            <div class="font-extrabold"><i class="bi bi-send-check-fill mr-2"></i>ĐÃ GỬI YÊU CẦU XIN VẮNG</div>
+            <div class="mt-1 text-sm font-semibold">${this.escape(message || 'Yêu cầu xin vắng đã được hệ thống ghi nhận.')}</div>
+        </div>`;
+    },
+
+    confirmedAbsenceWarning() {
+        document.getElementById('hva-meeting-business-warning')?.remove();
+        const box = document.createElement('div');
+        box.id = 'hva-meeting-business-warning';
+        box.className = 'fixed inset-0 z-[2147483647] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4';
+        box.innerHTML = `<div class="w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-amber-200 overflow-hidden">
+            <div class="p-5 flex gap-3">
+                <div class="w-11 h-11 shrink-0 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center"><i class="bi bi-exclamation-triangle-fill text-xl"></i></div>
+                <div class="min-w-0">
+                    <div class="text-sm font-extrabold text-amber-800">THAY ĐỔI TRẠNG THÁI THAM DỰ</div>
+                    <div class="mt-2 text-sm text-slate-700 leading-relaxed">${this.escape(this.actorLabel())} đã xác nhận tham dự cuộc họp này nên không thể gửi yêu cầu xin vắng tại đây. Trường hợp phát sinh cần thay đổi, đề nghị Thầy/Cô vào Kết nối số → Gửi yêu cầu để gửi thông tin đến BGH.</div>
+                </div>
+            </div>
+            <div class="px-5 py-3 bg-slate-50 border-t flex flex-wrap justify-end gap-2">
+                <button data-close type="button" class="px-4 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 text-xs font-bold">ĐÓNG</button>
+                <button data-connect type="button" class="px-4 py-2 rounded-xl bg-[#0F4C81] text-white text-xs font-extrabold"><i class="bi bi-globe2 mr-2"></i>ĐẾN KẾT NỐI SỐ</button>
+            </div>
+        </div>`;
+        const close = () => box.remove();
+        box.querySelector('[data-close]').onclick = close;
+        box.querySelector('[data-connect]').onclick = () => { sessionStorage.setItem('HVA_OPEN_CONNECT_REQUEST','1'); location.href = './index.html#ket-noi-so'; };
+        box.addEventListener('click', e => { if (e.target === box) close(); });
+        document.body.appendChild(box);
     },
 
     async confirm(meetingId, button) {
@@ -655,9 +745,16 @@ window.HVAMeetingAction = {
         this.setBusy(button, true, 'ĐANG XÁC NHẬN...', normal);
         try {
             const r = await this.post({action:'confirmMeetingAttendance', meetingId:String(meetingId||''), publishId, username});
-            if (!r || r.success !== true) throw new Error(r?.message || 'Không thể xác nhận tham dự.');
-            this.notify(r.message || 'Đã xác nhận tham dự.', 'success', 'XÁC NHẬN THÀNH CÔNG');
-            setTimeout(() => location.reload(), 900);
+            if (!r || r.success !== true) {
+                const msg = String(r?.message || 'Không thể xác nhận tham dự.');
+                if (/đã xác nhận/i.test(msg)) {
+                    this.renderConfirmed(meetingId);
+                    return this.notify(`${this.actorLabel()} đã hoàn thành xác nhận tham dự cuộc họp.`, 'success', 'ĐÃ XÁC NHẬN THAM DỰ');
+                }
+                throw new Error(msg);
+            }
+            this.renderConfirmed(meetingId);
+            this.notify(`${this.actorLabel()} đã hoàn thành xác nhận tham dự cuộc họp.`, 'success', 'XÁC NHẬN THÀNH CÔNG');
         } catch (e) {
             console.error('[HVA Meeting] confirm:', e);
             this.setBusy(button, false, '', normal);
@@ -665,7 +762,8 @@ window.HVAMeetingAction = {
         }
     },
 
-    showAbsence() {
+    showAbsence(meetingId='') {
+        if (this.getLocalState(meetingId) === 'CONFIRMED') return this.confirmedAbsenceWarning();
         const box = document.getElementById('hva-meeting-absence-box');
         box?.classList.remove('hidden');
         setTimeout(() => { box?.scrollIntoView({behavior:'smooth', block:'nearest'}); document.getElementById('hva-meeting-absence-reason')?.focus(); }, 40);
@@ -683,13 +781,26 @@ window.HVAMeetingAction = {
         this.setBusy(button, true, 'ĐANG GỬI...', normal);
         try {
             const r = await this.post({action:'requestMeetingAbsence', meetingId:String(meetingId||''), publishId, username, reason});
-            if (!r || r.success !== true) throw new Error(r?.message || 'Không thể gửi yêu cầu xin vắng.');
+            if (!r || r.success !== true) {
+                const msg = String(r?.message || 'Không thể gửi yêu cầu xin vắng.');
+                if (/đã xác nhận.*(không thể|không th[eể]).*xin vắng|không thể đồng thời gửi đơn xin vắng/i.test(msg)) {
+                    this.setLocalState(meetingId, 'CONFIRMED');
+                    this.setBusy(button, false, '', normal);
+                    return this.confirmedAbsenceWarning();
+                }
+                throw new Error(msg);
+            }
+            this.renderAbsent(meetingId, r.message || 'Yêu cầu xin vắng đã được hệ thống ghi nhận.');
             this.notify(r.message || 'Đã gửi yêu cầu xin vắng.', 'success', 'ĐÃ GỬI XIN VẮNG');
-            setTimeout(() => location.reload(), 900);
         } catch (e) {
             console.error('[HVA Meeting] absence:', e);
             this.setBusy(button, false, '', normal);
-            this.notify(e?.message || 'Có lỗi khi gửi yêu cầu xin vắng.', 'error', 'CHƯA GỬI ĐƯỢC');
+            const msg = String(e?.message || 'Có lỗi khi gửi yêu cầu xin vắng.');
+            if (/đã xác nhận.*(không thể|không th[eể]).*xin vắng|không thể đồng thời gửi đơn xin vắng/i.test(msg)) {
+                this.setLocalState(meetingId, 'CONFIRMED');
+                return this.confirmedAbsenceWarning();
+            }
+            this.notify(msg, 'error', 'CHƯA GỬI ĐƯỢC');
         }
     }
 };
@@ -704,7 +815,7 @@ ContentViewerRouter.register(
         'MEETING'
     ],
     {
-        open({ document: documentState, raw, data }) {
+        async open({ document: documentState, raw, data }) {
 
             const esc = value =>
                 String(value ?? '')
@@ -767,6 +878,21 @@ ContentViewerRouter.register(
                 ''
             ).trim();
 
+            // Luôn đồng bộ trạng thái thật từ DB_07 trước khi dựng nút thao tác.
+            // Không dùng sessionStorage làm nguồn sự thật.
+            try {
+                const serverState = await window.HVAMeetingAction?.getServerState(meetingId);
+                if (serverState) {
+                    data.attendanceResponse = serverState.attendanceResponse || '';
+                    data.attendanceResponseAt = serverState.attendanceResponseAt || '';
+                    data.absenceStatus = serverState.absenceStatus || '';
+                    data.absenceReason = serverState.absenceReason || '';
+                    data.absenceSubmittedAt = serverState.absenceSubmittedAt || '';
+                }
+            } catch (stateError) {
+                console.warn('[HVA Meeting] Không đồng bộ được trạng thái DB_07:', stateError);
+            }
+
             const requireConfirmation = (
                 data.requireConfirmation === true ||
                 ['true','1','có','co','yes','y'].includes(
@@ -782,15 +908,17 @@ ContentViewerRouter.register(
                 data.absenceStatus || ''
             ).trim().toUpperCase();
 
-            const alreadyConfirmed = [
+            const localAttendanceState = window.HVAMeetingAction?.getLocalState(meetingId) || '';
+
+            const alreadyConfirmed = localAttendanceState === 'CONFIRMED' || [
                 'ĐÃ XÁC NHẬN THAM GIA',
                 'ĐÃ XÁC NHẬN',
                 'THAM DỰ'
             ].includes(attendanceResponse);
 
-            const alreadyAbsent = (
+            const alreadyAbsent = localAttendanceState === 'ABSENT_REQUESTED' || (
                 attendanceResponse === 'XIN VẮNG' ||
-                ['CHỜ DUYỆT','ĐÃ DUYỆT','TỪ CHỐI'].includes(absenceStatus)
+                ['CHỜ DUYỆT','ĐÃ DUYỆT','TỪ CHỐI','ĐÃ GỬI ĐƠN','ĐÃ GỬI','XIN VẮNG'].includes(absenceStatus)
             );
 
             let modal =
@@ -1078,13 +1206,14 @@ ContentViewerRouter.register(
                     ${
                         requireConfirmation
                             ? `
-                                <div class="px-7 py-4 border-t border-slate-200 bg-white shrink-0 max-h-[42vh] overflow-y-auto overscroll-contain">
+                                <div id="hva-meeting-attendance-actions" class="px-7 py-4 border-t border-slate-200 bg-white shrink-0 max-h-[42vh] overflow-y-auto overscroll-contain">
                                     ${
                                         alreadyConfirmed
                                             ? `
-                                                <div class="px-4 py-3 rounded-xl bg-emerald-50 text-emerald-800 font-bold">
-                                                    <i class="bi bi-check-circle-fill mr-2"></i>
-                                                    Đã xác nhận tham dự
+                                                <div class="px-4 py-3 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800">
+                                                    <div class="font-extrabold"><i class="bi bi-check-circle-fill mr-2"></i>ĐÃ XÁC NHẬN THAM DỰ</div>
+                                                    <div class="mt-1 text-sm font-semibold">${esc(window.HVAMeetingAction?.actorLabel?.() || 'Thầy/Cô')} đã hoàn thành xác nhận tham dự cuộc họp.</div>
+                                                    <button type="button" onclick="HVAMeetingAction.confirmedAbsenceWarning()" class="mt-3 px-4 py-2 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 text-sm font-extrabold"><i class="bi bi-person-x mr-2"></i>CẦN THAY ĐỔI / XIN VẮNG</button>
                                                 </div>
                                             `
                                             : alreadyAbsent
@@ -1107,7 +1236,7 @@ ContentViewerRouter.register(
 
                                                         <button
                                                             type="button"
-                                                            onclick="HVAMeetingAction.showAbsence()"
+                                                            onclick="HVAMeetingAction.showAbsence('${esc(meetingId)}')"
                                                             class="px-5 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 font-extrabold"
                                                         >
                                                             <i class="bi bi-person-x mr-2"></i>
