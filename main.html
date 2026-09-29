@@ -815,13 +815,11 @@
                 <i class="bi bi-lightbulb-fill
                           text-amber-400 text-xs mt-0.5"></i>
 
-               <div class="text-[10.5px]
-            leading-relaxed
-            font-semibold
-            text-slate-600">
-    Thầy/Cô, Anh/Chị gõ nội dung cần tìm vào ô phía trên.
-    HVA sẽ tra cứu trong các dữ liệu mà người dùng được quyền truy cập.
-</div>
+                <div class="text-[9.5px]
+                            leading-relaxed
+                            text-slate-400">
+                    Thầy/Cô gõ nội dung cần tìm vào ô phía trên. HVA sẽ tra cứu trong các dữ liệu mà Thầy/Cô được quyền truy cập.
+                </div>
 
             </div>
 
@@ -4225,8 +4223,9 @@ setTimeout(() => {
             } else if (branch === 'WORKGROUP') {
                 const box = document.getElementById('personnel-workgroup-list');
                 const willOpen = !!box?.classList.contains('hidden');
-               if (willOpen) loadPersonnelWorkgroups();
+                if (willOpen) loadPersonnelWorkgroups();
                 else setPersonnelBranchOpen('WORKGROUP', false);
+            }
             return;
         }
 
