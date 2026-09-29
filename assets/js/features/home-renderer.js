@@ -5293,14 +5293,7 @@ function approvalStageLabel_(s){
             : s === 'BGH'
                 ? 'BAN GIÁM HIỆU'
                 : s;
-}function approvalStageLabel_(s){
-    return s === 'TO_BO_PHAN'
-        ? 'TTCM/Trưởng bộ phận'
-        : s === 'THU_KY'
-            ? 'THƯ KÝ'
-            : s === 'BGH'
-                ? 'BAN GIÁM HIỆU'
-                : s;
+
 }
 
     function renderMeetingAttendanceApprovals_(){
