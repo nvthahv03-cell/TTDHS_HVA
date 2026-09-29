@@ -551,9 +551,7 @@ ContentViewerRouter.register(
                 return;
             }
 
-            alert(
-                'Nội dung này chưa có Viewer chuyên biệt.'
-            );
+            HVADialog.show({type:'info', title:'CHƯA CÓ TRÌNH XEM', message:'Nội dung này chưa có Viewer chuyên biệt.'});
         }
     }
 );
@@ -562,97 +560,115 @@ ContentViewerRouter.register(
 // =================================================================
 // HVA - XÁC NHẬN CUỘC HỌP (27/09/2026)
 // =================================================================
+window.HVADialog = window.HVADialog || {
+    ensure() {
+        let host = document.getElementById('hva-dialog-host');
+        if (!host) {
+            host = document.createElement('div');
+            host.id = 'hva-dialog-host';
+            document.body.appendChild(host);
+        }
+        return host;
+    },
+    close() {
+        const host = document.getElementById('hva-dialog-host');
+        if (host) host.innerHTML = '';
+    },
+    show({type='info', title='THÔNG BÁO', message='', confirmText='ĐÓNG', cancelText='', onConfirm=null}={}) {
+        const host = this.ensure();
+        const cfg = {
+            success:{icon:'bi-check-circle-fill',tone:'text-emerald-600',ring:'bg-emerald-50'},
+            warning:{icon:'bi-exclamation-triangle-fill',tone:'text-amber-600',ring:'bg-amber-50'},
+            error:{icon:'bi-x-circle-fill',tone:'text-rose-600',ring:'bg-rose-50'},
+            question:{icon:'bi-question-circle-fill',tone:'text-blue-600',ring:'bg-blue-50'},
+            info:{icon:'bi-info-circle-fill',tone:'text-blue-600',ring:'bg-blue-50'}
+        }[type] || {icon:'bi-info-circle-fill',tone:'text-blue-600',ring:'bg-blue-50'};
+        const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+        host.innerHTML = `<div class="fixed inset-0 z-[2147483646] bg-slate-950/45 backdrop-blur-[2px] flex items-center justify-center p-4">
+          <div class="w-full max-w-md rounded-3xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="px-6 pt-6 pb-4 text-center">
+              <div class="mx-auto w-12 h-12 rounded-2xl ${cfg.ring} ${cfg.tone} flex items-center justify-center text-2xl"><i class="bi ${cfg.icon}"></i></div>
+              <div class="mt-4 text-sm font-extrabold tracking-wide text-slate-900">${esc(title)}</div>
+              <div class="mt-2 text-sm leading-6 text-slate-600 whitespace-pre-line">${esc(message)}</div>
+            </div>
+            <div class="px-6 pb-6 flex justify-center gap-3">
+              ${cancelText ? `<button id="hva-dialog-cancel" class="min-w-28 px-4 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 font-bold hover:bg-slate-50">${esc(cancelText)}</button>` : ''}
+              <button id="hva-dialog-confirm" class="min-w-28 px-4 py-2.5 rounded-xl bg-[#0F4C81] text-white font-extrabold hover:bg-[#0b3c67]">${esc(confirmText)}</button>
+            </div>
+          </div></div>`;
+        const finish = (ok) => { this.close(); if (ok && typeof onConfirm === 'function') onConfirm(); };
+        document.getElementById('hva-dialog-confirm')?.addEventListener('click', () => finish(true), {once:true});
+        document.getElementById('hva-dialog-cancel')?.addEventListener('click', () => finish(false), {once:true});
+    }
+};
+
 window.HVAMeetingAction = {
+    _busy: false,
     username() {
         try {
-            const u = JSON.parse(
-                localStorage.getItem('user') ||
-                sessionStorage.getItem('user') ||
-                '{}'
-            );
+            const u = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
             return String(u.username || u.userName || '').trim();
-        } catch (_) {
-            return '';
-        }
+        } catch (_) { return ''; }
     },
-
+    publishId() { return String(new URLSearchParams(location.search).get('publishId') || '').trim(); },
     async post(payload) {
         const response = await fetch(CONFIG.SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({...(payload||{}),sessionToken:String(localStorage.getItem('hvaSessionToken')||'').trim()})
+            method: 'POST', headers: {'Content-Type':'text/plain;charset=utf-8'},
+            body: JSON.stringify({...payload, sessionToken:String(localStorage.getItem('hvaSessionToken')||'').trim()})
         });
         if (!response.ok) throw new Error('HTTP ' + response.status);
-        const data=await response.json();
-        if(data&&['SESSION_EXPIRED','SESSION_INVALID','AUTH_REQUIRED'].includes(String(data.code||''))) throw new Error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        const data = await response.json();
+        if (data && ['SESSION_EXPIRED','SESSION_INVALID','AUTH_REQUIRED'].includes(String(data.code||''))) {
+            throw new Error(data.message || 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        }
         return data;
     },
-
-    async confirm(meetingId) {
-        const username = this.username();
-        if (!meetingId) return alert('Không xác định được mã cuộc họp.');
-        if (!username) return alert('Không xác định được tài khoản đang đăng nhập.');
-        if (!confirm('Thầy/Cô xác nhận tham dự cuộc họp này?')) return;
-
-        try {
-            const r = await this.post({
-                action: 'confirmMeetingAttendance',
-                meetingId,
-                publishId:String(new URLSearchParams(location.search).get('publishId')||''),
-                username
-            });
-            if (!r || r.success !== true) {
-                return alert(r?.message || 'Không thể xác nhận tham dự.');
-            }
-            alert(r.message || 'Đã xác nhận tham dự.');
-            location.reload();
-        } catch (e) {
-            console.error('[HVA Meeting] confirm:', e);
-            alert('Có lỗi khi xác nhận tham dự.');
-        }
+    setBusy(kind, busy) {
+        this._busy = busy;
+        const ids = kind === 'absence' ? ['hva-meeting-absence-submit'] : ['hva-meeting-confirm-btn'];
+        ids.forEach(id => { const b=document.getElementById(id); if(b) b.disabled=busy; });
+        const b=document.getElementById(ids[0]);
+        if (b) b.innerHTML = busy
+            ? '<i class="bi bi-hourglass-split mr-2"></i>' + (kind==='absence'?'ĐANG GỬI...':'ĐANG XÁC NHẬN...')
+            : (kind==='absence'?'<i class="bi bi-send-check mr-2"></i>GỬI XIN VẮNG':'<i class="bi bi-check2-circle mr-2"></i>XÁC NHẬN THAM DỰ');
     },
-
+    confirm(meetingId) {
+        if (this._busy) return;
+        if (!meetingId && !this.publishId()) return HVADialog.show({type:'error',title:'KHÔNG THỂ XÁC NHẬN',message:'Không xác định được cuộc họp.'});
+        HVADialog.show({type:'question',title:'XÁC NHẬN THAM DỰ',message:'Thầy/Cô xác nhận sẽ tham dự cuộc họp này?',confirmText:'XÁC NHẬN',cancelText:'HỦY',onConfirm:()=>this.confirmNow(meetingId)});
+    },
+    async confirmNow(meetingId) {
+        if (this._busy) return;
+        this.setBusy('confirm', true);
+        try {
+            const r = await this.post({action:'confirmMeetingAttendance', meetingId:String(meetingId||''), publishId:this.publishId()});
+            if (!r || r.success !== true) throw new Error(r?.message || 'Không thể xác nhận tham dự.');
+            HVADialog.show({type:'success',title:'ĐÃ XÁC NHẬN',message:r.message || 'Đã xác nhận tham dự cuộc họp.',confirmText:'HOÀN TẤT',onConfirm:()=>location.reload()});
+        } catch(e) {
+            console.error('[HVA Meeting] confirm:',e);
+            HVADialog.show({type:'error',title:'XÁC NHẬN CHƯA THÀNH CÔNG',message:e.message || 'Có lỗi khi xác nhận tham dự.'});
+        } finally { this.setBusy('confirm', false); }
+    },
     showAbsence() {
-        document.getElementById('hva-meeting-absence-box')
-            ?.classList.remove('hidden');
-        setTimeout(() =>
-            document.getElementById('hva-meeting-absence-reason')?.focus(),
-            30
-        );
+        const box=document.getElementById('hva-meeting-absence-box');
+        box?.classList.remove('hidden');
+        setTimeout(()=>{ box?.scrollIntoView({behavior:'smooth',block:'nearest'}); document.getElementById('hva-meeting-absence-reason')?.focus(); },50);
     },
-
-    hideAbsence() {
-        document.getElementById('hva-meeting-absence-box')
-            ?.classList.add('hidden');
-    },
-
+    hideAbsence() { document.getElementById('hva-meeting-absence-box')?.classList.add('hidden'); },
     async absence(meetingId) {
-        const username = this.username();
-        const reason = String(
-            document.getElementById('hva-meeting-absence-reason')?.value || ''
-        ).trim();
-
-        if (!meetingId) return alert('Không xác định được mã cuộc họp.');
-        if (!username) return alert('Không xác định được tài khoản đang đăng nhập.');
-        if (!reason) return alert('Vui lòng nhập lý do xin vắng.');
-
+        if (this._busy) return;
+        const reason=String(document.getElementById('hva-meeting-absence-reason')?.value||'').trim();
+        if (!meetingId && !this.publishId()) return HVADialog.show({type:'error',title:'KHÔNG THỂ GỬI',message:'Không xác định được cuộc họp.'});
+        if (!reason) return HVADialog.show({type:'warning',title:'CHƯA CÓ LÝ DO',message:'Vui lòng nhập lý do xin vắng cuộc họp.'});
+        this.setBusy('absence',true);
         try {
-            const r = await this.post({
-                action: 'requestMeetingAbsence',
-                meetingId,
-                publishId:String(new URLSearchParams(location.search).get('publishId')||''),
-                username,
-                reason
-            });
-            if (!r || r.success !== true) {
-                return alert(r?.message || 'Không thể gửi yêu cầu xin vắng.');
-            }
-            alert(r.message || 'Đã gửi yêu cầu xin vắng.');
-            location.reload();
-        } catch (e) {
-            console.error('[HVA Meeting] absence:', e);
-            alert('Có lỗi khi gửi yêu cầu xin vắng.');
-        }
+            const r=await this.post({action:'requestMeetingAbsence',meetingId:String(meetingId||''),publishId:this.publishId(),reason});
+            if (!r || r.success !== true) throw new Error(r?.message || 'Không thể gửi yêu cầu xin vắng.');
+            HVADialog.show({type:'success',title:'ĐÃ GỬI XIN VẮNG',message:r.message || 'Yêu cầu xin vắng đã được gửi.',confirmText:'HOÀN TẤT',onConfirm:()=>location.reload()});
+        } catch(e) {
+            console.error('[HVA Meeting] absence:',e);
+            HVADialog.show({type:'error',title:'GỬI XIN VẮNG CHƯA THÀNH CÔNG',message:e.message || 'Có lỗi khi gửi yêu cầu xin vắng.'});
+        } finally { this.setBusy('absence',false); }
     }
 };
 
@@ -784,10 +800,11 @@ ContentViewerRouter.register(
                 <div class="
                     bg-white
                     w-full max-w-3xl
-                    max-h-[90vh]
+                    h-auto max-h-[90vh]
                     rounded-3xl
                     shadow-2xl
                     overflow-hidden
+                    flex flex-col
                 ">
 
                     <div class="
@@ -861,7 +878,7 @@ ContentViewerRouter.register(
                     <div class="
                         px-7 py-6
                         overflow-y-auto
-                        max-h-[68vh]
+                        min-h-0 flex-1
                         space-y-5
                     ">
 
@@ -1059,7 +1076,7 @@ ContentViewerRouter.register(
                                                     <div class="flex flex-wrap gap-3">
                                                         <button
                                                             type="button"
-                                                            onclick="HVAMeetingAction.confirm('${esc(meetingId)}')"
+                                                            id="hva-meeting-confirm-btn" onclick="HVAMeetingAction.confirm('${esc(meetingId)}')"
                                                             class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold"
                                                         >
                                                             <i class="bi bi-check2-circle mr-2"></i>
@@ -1100,7 +1117,7 @@ ContentViewerRouter.register(
 
                                                             <button
                                                                 type="button"
-                                                                onclick="HVAMeetingAction.absence('${esc(meetingId)}')"
+                                                                id="hva-meeting-absence-submit" onclick="HVAMeetingAction.absence('${esc(meetingId)}')"
                                                                 class="px-4 py-2 rounded-lg bg-amber-600 text-white font-extrabold"
                                                             >
                                                                 GỬI XIN VẮNG
@@ -1931,7 +1948,7 @@ return;
             document.documentElement.classList.remove('hva-boot-receiver');
             console.error('KhoVanBan batch handoff error:', err);
             Controller.refreshUI();
-            alert('KHÔNG TẢI ĐƯỢC VĂN BẢN TỪ KHO\\n' + (err.message || err));
+            HVADialog.show({type:'error', title:'KHÔNG TẢI ĐƯỢC VĂN BẢN', message:String(err?.message || err || 'Có lỗi khi tải văn bản từ kho.')});
         }
     },
 
@@ -2154,7 +2171,7 @@ return;
         if (TTDHS_State.isPublishing) return;
         const check = PreCheckEngine.runChecks(TTDHS_State);
         if (!check.allPassed) {
-            alert('Không thể phát hành. Vui lòng kiểm tra các điều kiện chưa đạt.');
+            HVADialog.show({type:'warning', title:'CHƯA THỂ PHÁT HÀNH', message:'Vui lòng kiểm tra các điều kiện chưa đạt trước khi phát hành.'});
             return;
         }
         const btn = document.getElementById('btn-execute-publish');
@@ -2164,10 +2181,10 @@ return;
             const payload = PublishEngine.preparePayload(TTDHS_State);
             const result = await PublishEngine.postToBackend(payload);
             StorageEngine.save(CONFIG.STORAGE_KEYS.LAST_RESULT, result);
-            alert(result.documentCount ? ('PHÁT HÀNH THÀNH CÔNG ' + result.documentCount + ' VĂN BẢN') : 'PHÁT HÀNH THÀNH CÔNG');
+            HVADialog.show({type:'success', title:'PHÁT HÀNH THÀNH CÔNG', message:result.documentCount ? ('Đã phát hành thành công ' + result.documentCount + ' văn bản.') : 'Nội dung đã được phát hành thành công.'});
         } catch (err) {
             console.error(err);
-            alert('PHÁT HÀNH KHÔNG THÀNH CÔNG\n' + (err.message || err));
+            HVADialog.show({type:'error', title:'PHÁT HÀNH CHƯA THÀNH CÔNG', message:String(err?.message || err || 'Có lỗi khi phát hành.')});
         } finally {
             TTDHS_State.isPublishing = false;
             if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-rocket-takeoff-fill text-lg"></i> KÍCH HOẠT PHÁT HÀNH SỐ'; }
@@ -2459,7 +2476,7 @@ return;
     },
 
     resetDraft: () => {
-        if (confirm('Tải lại trạng thái ban đầu?')) location.reload();
+        HVADialog.show({type:'question', title:'TẢI LẠI TRẠNG THÁI', message:'Thầy/Cô có muốn tải lại trạng thái ban đầu?', confirmText:'TẢI LẠI', cancelText:'HỦY', onConfirm:()=>location.reload()});
     }
 };
 
