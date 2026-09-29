@@ -4123,54 +4123,205 @@ setTimeout(() => {
     }
 
     async function loadPersonnelWorkgroups() {
-        const box = document.getElementById('personnel-workgroup-list');
-        if (!box) return;
+    const box = document.getElementById('personnel-workgroup-list');
+    if (!box) return;
 
-        box.classList.remove('hidden');
-        const chevron = document.getElementById('personnel-workgroup-chevron');
-        chevron?.classList.add('rotate-90');
+    box.classList.remove('hidden');
 
-        if (PERSONNEL_WORKGROUPS_LOADED) return;
+    const chevron =
+        document.getElementById('personnel-workgroup-chevron');
 
-        box.innerHTML = `<div class="px-3 py-2 text-[10px] text-slate-400"><i class="bi bi-arrow-repeat animate-spin mr-1"></i>Đang tải danh mục nhóm...</div>`;
+    chevron?.classList.add('rotate-90');
 
-        try {
-            if (!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function') {
-                throw new Error('HVA_AUTH_REQUEST_NOT_READY');
-            }
+    if (PERSONNEL_WORKGROUPS_LOADED) return;
 
-            const url = SEARCH_API + '?action=getPersonnelWorkgroups&_=' + Date.now();
-            const response = await window.HVAAuthRequest.get(url, { cache:'no-store' });
-            if (!response.ok) throw new Error('HTTP ' + response.status);
+    box.innerHTML = `
+        <div class="px-3 py-2 text-[10px] text-slate-400">
+            <i class="bi bi-arrow-repeat animate-spin mr-1"></i>
+            Đang tải danh mục nhóm...
+        </div>
+    `;
 
-            const data = await response.json();
-            const groups = unwrapArray(data);
-
-            if (!groups.length) {
-                box.innerHTML = `<div class="px-3 py-2 text-[10px] text-slate-400">Chưa có nhóm công tác.</div>`;
-                return;
-            }
-
-            box.innerHTML = groups.map(group => `
-                <button type="button" data-workgroup-name="${escapeSearchHtml(group.name || '')}"
-                        class="w-full flex items-center justify-between rounded-lg bg-white px-3 py-2 text-left border border-transparent hover:border-amber-100 hover:bg-amber-50 transition">
-                    <span class="flex items-center gap-2 min-w-0">
-                        <i class="bi bi-people-fill text-amber-500 text-[11px]"></i>
-                        <span class="truncate text-[10.5px] font-semibold text-slate-700">${escapeSearchHtml(group.name || '')}</span>
-                    </span>
-                    <span class="ml-2 flex items-center gap-2 shrink-0">
-                        <span class="text-[9px] font-bold text-slate-400">${Number(group.memberCount || 0)}</span>
-                        <i class="bi bi-chevron-right text-[9px] text-slate-300"></i>
-                    </span>
-                </button>`).join('');
-
-            PERSONNEL_WORKGROUPS_LOADED = true;
-            updatePersonnelTabs();
-        } catch (error) {
-            console.error('loadPersonnelWorkgroups error:', error);
-            box.innerHTML = `<button type="button" data-retry-workgroups="1" class="w-full rounded-lg bg-rose-50 px-3 py-2 text-left text-[10px] font-semibold text-rose-600">Không tải được danh mục nhóm · Bấm để thử lại</button>`;
+    try {
+        if (
+            !window.HVAAuthRequest ||
+            typeof window.HVAAuthRequest.get !== 'function'
+        ) {
+            throw new Error('HVA_AUTH_REQUEST_NOT_READY');
         }
+
+        const url =
+            SEARCH_API +
+            '?action=getPersonnelWorkgroups&_=' +
+            Date.now();
+
+        const response =
+            await window.HVAAuthRequest.get(
+                url,
+                { cache:'no-store' }
+            );
+
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
+
+        const data = await response.json();
+        const groups = unwrapArray(data);
+
+        if (!groups.length) {
+            box.innerHTML = `
+                <div class="px-3 py-2 text-[10px] text-slate-400">
+                    Chưa có nhóm công tác.
+                </div>
+            `;
+            return;
+        }
+
+        box.innerHTML = groups.map(group => {
+
+            const groupName =
+                String(group.name || '').trim();
+
+            const isGVCN =
+                normalizePersonnelText(groupName) === 'gvcn';
+
+            /* =================================================
+               RIÊNG GVCN:
+               Giữ GVCN là nhóm gốc nhưng mở tiếp 3 khối.
+               Không thay nguồn dữ liệu GVCN hiện tại.
+            ================================================= */
+            if (isGVCN) {
+                return `
+                    <div class="rounded-lg bg-white">
+
+                        <button type="button"
+                                data-gvcn-branch="1"
+                                class="w-full flex items-center justify-between
+                                       rounded-lg bg-white px-3 py-2 text-left
+                                       border border-transparent
+                                       hover:border-amber-100
+                                       hover:bg-amber-50 transition">
+
+                            <span class="flex items-center gap-2 min-w-0">
+                                <i class="bi bi-person-badge-fill
+                                          text-amber-500 text-[11px]"></i>
+
+                                <span class="truncate text-[10.5px]
+                                             font-semibold text-slate-700">
+                                    GVCN
+                                </span>
+                            </span>
+
+                            <span class="ml-2 flex items-center gap-2 shrink-0">
+
+                                <span class="text-[9px]
+                                             font-bold text-slate-400">
+                                    ${Number(group.memberCount || 0)}
+                                </span>
+
+                                <i id="personnel-gvcn-chevron"
+                                   class="bi bi-chevron-right
+                                          text-[9px] text-slate-300
+                                          transition-transform duration-200">
+                                </i>
+                            </span>
+                        </button>
+
+                        <div id="personnel-gvcn-list"
+                             class="hidden ml-4 mt-1 space-y-1
+                                    border-l-2 border-amber-100 pl-2">
+
+                            ${[10,11,12].map(khoi => `
+                                <button type="button"
+                                        data-gvcn-grade="${khoi}"
+                                        class="w-full flex items-center
+                                               justify-between rounded-lg
+                                               bg-white px-3 py-2 text-left
+                                               border border-transparent
+                                               hover:border-amber-100
+                                               hover:bg-amber-50 transition">
+
+                                    <span class="flex items-center gap-2">
+                                        <i class="bi bi-mortarboard-fill
+                                                  text-amber-400
+                                                  text-[10px]"></i>
+
+                                        <span class="text-[10.5px]
+                                                     font-semibold
+                                                     text-slate-700">
+                                            GVCN khối ${khoi}
+                                        </span>
+                                    </span>
+
+                                    <i class="bi bi-chevron-right
+                                              text-[9px]
+                                              text-slate-300"></i>
+                                </button>
+                            `).join('')}
+
+                        </div>
+                    </div>
+                `;
+            }
+
+            /* CÁC NHÓM KHÁC GIỮ NGUYÊN */
+            return `
+                <button type="button"
+                        data-workgroup-name="${escapeSearchHtml(groupName)}"
+                        class="w-full flex items-center justify-between
+                               rounded-lg bg-white px-3 py-2 text-left
+                               border border-transparent
+                               hover:border-amber-100
+                               hover:bg-amber-50 transition">
+
+                    <span class="flex items-center gap-2 min-w-0">
+
+                        <i class="bi bi-people-fill
+                                  text-amber-500 text-[11px]"></i>
+
+                        <span class="truncate text-[10.5px]
+                                     font-semibold text-slate-700">
+                            ${escapeSearchHtml(groupName)}
+                        </span>
+                    </span>
+
+                    <span class="ml-2 flex items-center
+                                 gap-2 shrink-0">
+
+                        <span class="text-[9px]
+                                     font-bold text-slate-400">
+                            ${Number(group.memberCount || 0)}
+                        </span>
+
+                        <i class="bi bi-chevron-right
+                                  text-[9px] text-slate-300"></i>
+                    </span>
+                </button>
+            `;
+
+        }).join('');
+
+        PERSONNEL_WORKGROUPS_LOADED = true;
+        updatePersonnelTabs();
+
+    } catch (error) {
+
+        console.error(
+            'loadPersonnelWorkgroups error:',
+            error
+        );
+
+        box.innerHTML = `
+            <button type="button"
+                    data-retry-workgroups="1"
+                    class="w-full rounded-lg bg-rose-50
+                           px-3 py-2 text-left text-[10px]
+                           font-semibold text-rose-600">
+                Không tải được danh mục nhóm · Bấm để thử lại
+            </button>
+        `;
     }
+}
 
     function setPersonnelBranchOpen(branch, open) {
         const teamBox = document.getElementById('personnel-team-list');
@@ -4203,6 +4354,60 @@ setTimeout(() => {
             return;
         }
 
+    /* =========================================================
+   GVCN -> KHỐI 10 / 11 / 12
+========================================================= */
+
+const gvcnBranch =
+    event.target.closest('[data-gvcn-branch]');
+
+if (gvcnBranch) {
+
+    const list =
+        document.getElementById('personnel-gvcn-list');
+
+    const chevron =
+        document.getElementById('personnel-gvcn-chevron');
+
+    const willOpen =
+        !!list?.classList.contains('hidden');
+
+    list?.classList.toggle('hidden', !willOpen);
+    chevron?.classList.toggle('rotate-90', willOpen);
+
+    return;
+}
+
+
+const gvcnGradeButton =
+    event.target.closest('[data-gvcn-grade]');
+
+if (gvcnGradeButton) {
+
+    const grade =
+        String(
+            gvcnGradeButton.dataset.gvcnGrade || ''
+        ).trim();
+
+    ACTIVE_PERSONNEL_CATEGORY = 'WORKGROUP';
+
+    /*
+       Vẫn dùng đúng nhóm GVCN hiện hành.
+       grade chỉ là bộ lọc giao diện phía client.
+    */
+    ACTIVE_PERSONNEL_FILTER = {
+        field: 'workgroup',
+        value: 'GVCN',
+        label: 'GVCN khối ' + grade,
+        grade: grade
+    };
+
+    updatePersonnelTabs();
+    performSearch();
+
+    return;
+}
+        
         const workgroupButton = event.target.closest('[data-workgroup-name]');
         if (workgroupButton) {
             ACTIVE_PERSONNEL_CATEGORY = 'WORKGROUP';
@@ -4626,66 +4831,203 @@ setTimeout(() => {
  * ========================================================================== */
 
 async function searchPersonnel(keyword) {
-    const user = getSearchUser();
-    const structuredUnit = ACTIVE_PERSONNEL_CATEGORY === 'TEAM'
-        ? String(ACTIVE_PERSONNEL_FILTER?.value || '').trim() : '';
-    const structuredWorkgroup = ACTIVE_PERSONNEL_CATEGORY === 'WORKGROUP'
-        ? String(ACTIVE_PERSONNEL_FILTER?.value || '').trim() : '';
-    const apiKeyword = structuredUnit || structuredWorkgroup || String(keyword || '').trim();
 
-    const url = SEARCH_API +
+    const user = getSearchUser();
+
+    const structuredUnit =
+        ACTIVE_PERSONNEL_CATEGORY === 'TEAM'
+            ? String(
+                ACTIVE_PERSONNEL_FILTER?.value || ''
+              ).trim()
+            : '';
+
+    const structuredWorkgroup =
+        ACTIVE_PERSONNEL_CATEGORY === 'WORKGROUP'
+            ? String(
+                ACTIVE_PERSONNEL_FILTER?.value || ''
+              ).trim()
+            : '';
+
+    const structuredGrade =
+        ACTIVE_PERSONNEL_CATEGORY === 'WORKGROUP'
+            ? String(
+                ACTIVE_PERSONNEL_FILTER?.grade || ''
+              ).trim()
+            : '';
+
+    /*
+       Quan trọng:
+       GVCN khối 10/11/12 vẫn gửi q=GVCN lên API.
+       Không gửi "GVCN khối 10" để tránh phá nguồn đã PASS.
+    */
+    const apiKeyword =
+        structuredUnit ||
+        structuredWorkgroup ||
+        String(keyword || '').trim();
+
+    const url =
+        SEARCH_API +
         '?action=searchNhanSuQuick' +
         '&q=' + encodeURIComponent(apiKeyword) +
-        '&username=' + encodeURIComponent(user.username || '') +
-        '&category=' + encodeURIComponent(ACTIVE_PERSONNEL_CATEGORY) +
+        '&username=' +
+            encodeURIComponent(user.username || '') +
+        '&category=' +
+            encodeURIComponent(ACTIVE_PERSONNEL_CATEGORY) +
         '&_=' + Date.now();
 
-    if (!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function') {
+    if (
+        !window.HVAAuthRequest ||
+        typeof window.HVAAuthRequest.get !== 'function'
+    ) {
         throw new Error('HVA_AUTH_REQUEST_NOT_READY');
     }
 
-    const response = await window.HVAAuthRequest.get(url, { cache:'no-store' });
-    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const response =
+        await window.HVAAuthRequest.get(
+            url,
+            { cache:'no-store' }
+        );
 
-    const data = await response.json();
-    let people = unwrapArray(data);
-
-    if (structuredUnit) {
-        const expected = normalizePersonnelText(structuredUnit);
-        people = people.filter(person => normalizePersonnelText(person.to) === expected);
+    if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
     }
 
+    const data = await response.json();
+
+    let people = unwrapArray(data);
+
+
+    /* TỔ/BỘ PHẬN */
+    if (structuredUnit) {
+
+        const expected =
+            normalizePersonnelText(structuredUnit);
+
+        people = people.filter(person =>
+            normalizePersonnelText(person.to) === expected
+        );
+    }
+
+
+    /* NHÓM CÔNG TÁC */
     if (structuredWorkgroup) {
-        const expectedGroup = normalizePersonnelText(structuredWorkgroup);
+
+        const expectedGroup =
+            normalizePersonnelText(
+                structuredWorkgroup
+            );
+
         people = people.filter(person => {
-            const groups = person.nhomCongTac || {};
+
+            const groups =
+                person.nhomCongTac || {};
+
             return Object.keys(groups).some(name =>
-                normalizePersonnelText(name) === expectedGroup &&
+                normalizePersonnelText(name) ===
+                    expectedGroup &&
                 !!String(groups[name] || '').trim()
             );
         });
     }
 
-    const typedKeyword = String(keyword || '').trim();
-    if ((structuredUnit || structuredWorkgroup) && typedKeyword) {
-        const q = normalizePersonnelText(typedKeyword);
-        people = people.filter(person => [
-            person.hoTen, person.username, person.dienThoai, person.chucVu,
-            person.viTriViecLam, person.lopChuNhiem, ...(person.nhomCongTacLabels || [])
-        ].map(normalizePersonnelText).join(' ').includes(q));
+
+    /* RIÊNG GVCN: LỌC THEO KHỐI */
+    if (
+        normalizePersonnelText(structuredWorkgroup) ===
+            'gvcn' &&
+        structuredGrade
+    ) {
+
+        const prefix =
+            structuredGrade + '/';
+
+        people = people.filter(person => {
+
+            const lop =
+                String(
+                    person.lopChuNhiem || ''
+                ).trim();
+
+            return lop.startsWith(prefix);
+        });
     }
 
+
+    /* TỪ KHÓA NHẬP THÊM */
+    const typedKeyword =
+        String(keyword || '').trim();
+
+    if (
+        (structuredUnit || structuredWorkgroup) &&
+        typedKeyword
+    ) {
+
+        const q =
+            normalizePersonnelText(
+                typedKeyword
+            );
+
+        people = people.filter(person => [
+
+            person.hoTen,
+            person.username,
+            person.dienThoai,
+            person.chucVu,
+            person.viTriViecLam,
+            person.lopChuNhiem,
+            ...(person.nhomCongTacLabels || [])
+
+        ].map(normalizePersonnelText)
+         .join(' ')
+         .includes(q));
+    }
+
+
     return people.map((person,index) => ({
-        kind:'NHANSU',
-        id:person.username || ('NS_' + index),
-        title:person.hoTen || person.fullName || 'Nhân sự',
-        meta:person.lopChuNhiem ? 'GVCN lớp ' + person.lopChuNhiem :
-            (person.personnelCategory === 'CHIBO' ? 'Chi bộ' :
-             person.personnelCategory === 'BGH' ? 'Ban Giám hiệu' :
-             person.vaiTro || person.chucVu || person.viTriViecLam || 'CBQL/GV/NV'),
-        extra:[person.to, person.dienThoai, person.ngaySinh ? 'Sinh ' + person.ngaySinh : '', ...(person.nhomCongTacLabels || [])].filter(Boolean).join(' • '),
-        phone:String(person.dienThoai || '').trim(),
-        raw:person
+
+        kind: 'NHANSU',
+
+        id:
+            person.username ||
+            ('NS_' + index),
+
+        title:
+            person.hoTen ||
+            person.fullName ||
+            'Nhân sự',
+
+        meta:
+            person.lopChuNhiem
+                ? 'GVCN lớp ' +
+                    person.lopChuNhiem
+                : (
+                    person.personnelCategory === 'CHIBO'
+                        ? 'Chi bộ'
+                        : person.personnelCategory === 'BGH'
+                            ? 'Ban Giám hiệu'
+                            : person.vaiTro ||
+                              person.chucVu ||
+                              person.viTriViecLam ||
+                              'CBQL/GV/NV'
+                  ),
+
+        extra: [
+            person.to,
+            person.dienThoai,
+            person.ngaySinh
+                ? 'Sinh ' + person.ngaySinh
+                : '',
+            ...(person.nhomCongTacLabels || [])
+        ]
+        .filter(Boolean)
+        .join(' • '),
+
+        phone:
+            String(
+                person.dienThoai || ''
+            ).trim(),
+
+        raw: person
     }));
 }
 
