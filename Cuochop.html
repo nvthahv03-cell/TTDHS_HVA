@@ -97,7 +97,7 @@ body{font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}::-web
         <div class="flex gap-1.5"><span id="meetingStatTo" class="badge bg-indigo-50 text-indigo-700">0 nhóm</span><span id="meetingStatNguoi" class="badge bg-blue-50 text-[#0F4C81]">0 người</span></div>
       </div>
       <div class="p-3 sm:p-4 space-y-3">
-        <div class="relative"><i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i><input id="meetingSearchNhanSu" oninput="filterMeetingNhanSu(this.value)" class="field pl-9" placeholder="Tìm tổ hoặc giáo viên..."></div>
+        <div class="relative"><i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i><input id="meetingSearchNhanSu" oninput="filterMeetingNhanSu(this.value)" class="field pl-9" style="padding-left:2.5rem!important" placeholder="Tìm tổ hoặc giáo viên..."></div>
         <div id="meetingPersonnelContainer" class="space-y-2 max-h-[330px] overflow-y-auto pr-1"><div class="py-6 text-center text-xs text-slate-400">Đang tải danh sách nhân sự...</div></div>
         <div class="border-t pt-3"><div class="flex justify-between mb-2"><span class="text-[10px] font-extrabold text-[#0F4C81] uppercase">Đã chọn</span><button type="button" onclick="removeAllMeetingSelections()" class="text-[9px] font-bold text-red-500">Xóa toàn bộ</button></div><div id="meetingSelectedChips" class="flex flex-wrap gap-1.5"><span class="text-[10px] text-slate-400 italic">Chưa chọn người tham dự...</span></div></div>
       </div>
@@ -266,7 +266,7 @@ async function loadMeetingPersonnel(){
     c.innerHTML=`<div class="p-5 text-center text-xs text-red-500 font-bold">${esc(e.message||'Không tải được Nhân sự HVA')}<br><button onclick="loadMeetingPersonnel()" class="mt-2 text-[#0F4C81]">Thử lại</button></div>`;
   }
 }
-function meetingGroupSection(title,icon,groups,kw){
+function meetingGroupSection(title,icon,groups,kw,sectionKey=''){
   if(!groups.length)return '';
   const rows=groups.map(g=>{
     const mm=g.members.filter(m=>[m.hoTen,m.username,m.chucVu,m.tenTo].some(v=>String(v||'').toLowerCase().includes(kw)));
@@ -278,7 +278,10 @@ function meetingGroupSection(title,icon,groups,kw){
     return `<div class="rounded-xl border border-slate-200 bg-white overflow-hidden"><div class="px-3 py-2.5 flex items-center justify-between gap-2"><button type="button" onclick="$('${id}').classList.toggle('hidden')" class="flex-1 text-left text-[11px] font-bold text-[#0F4C81]"><i class="bi bi-chevron-right mr-2 text-slate-400"></i>${esc(g.tenTo)} <span class="text-slate-400">${g.members.length}</span></button><label class="text-[9px] font-semibold bg-white border rounded-lg px-2 py-1"><input type="checkbox" ${all?'checked':''} onchange="toggleMeetingWholeGroup('${encodeURIComponent(g.groupKey)}',this.checked)"> Chọn nhóm</label></div><div id="${id}" class="${kw?'':'hidden'} p-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 border-t bg-blue-50/20">${show.map(m=>`<label class="flex items-center gap-2 p-2 rounded-lg border ${meetingSelectedUsernames.has(m.username)?'border-blue-300 bg-blue-50':'border-slate-200 bg-white'}"><input type="checkbox" ${meetingSelectedUsernames.has(m.username)?'checked':''} onchange="toggleMeetingUser('${esc(m.username)}',this.checked)"><div class="min-w-0"><div class="text-[10px] font-bold truncate">${esc(m.hoTen)}</div><div class="text-[9px] text-slate-400 truncate">${m.lopChuNhiem?'GVCN '+esc(m.lopChuNhiem)+' · ':''}${esc(m.chucVu)}${m.tenTo?' · '+esc(m.tenTo):''}</div></div></label>`).join('')}</div></div>`;
   }).join('');
   if(!rows)return '';
-  return `<div class="rounded-xl border border-slate-200 overflow-hidden"><div class="px-3 py-2 bg-slate-50 text-[10px] font-extrabold uppercase text-slate-700"><i class="bi ${icon} mr-1.5"></i>${title}</div><div class="p-2 space-y-1.5">${rows}</div></div>`;
+  const sectionUsers=[...new Set(groups.flatMap(g=>g.members.map(m=>m.username)).filter(Boolean))];
+  const sectionAll=sectionUsers.length&&sectionUsers.every(u=>meetingSelectedUsernames.has(u));
+  const sectionAction=sectionKey?`<label class="text-[9px] normal-case font-semibold bg-white border rounded-lg px-2 py-1"><input type="checkbox" ${sectionAll?'checked':''} onchange="toggleMeetingSection('${encodeURIComponent(sectionKey)}',this.checked)"> Chọn ${esc(title)}</label>`:'';
+  return `<div class="rounded-xl border border-slate-200 overflow-hidden"><div class="px-3 py-2 bg-slate-50 flex items-center justify-between gap-2"><div class="text-[10px] font-extrabold uppercase text-slate-700"><i class="bi ${icon} mr-1.5"></i>${title}</div>${sectionAction}</div><div class="p-2 space-y-1.5">${rows}</div></div>`;
 }
 function hashMeetingGroup(s){let h=0;for(const ch of String(s||''))h=((h<<5)-h)+ch.charCodeAt(0)|0;return h;}
 function renderMeetingPersonnel(keyword=''){
@@ -288,11 +291,12 @@ function renderMeetingPersonnel(keyword=''){
   const teams=meetingAllToData.filter(g=>g.kind==='TEAM');
   const gvcn=meetingAllToData.filter(g=>g.kind==='GVCN');
   const work=meetingAllToData.filter(g=>g.kind==='WORKGROUP');
-  c.innerHTML=[meetingGroupSection('Hội đồng','bi-building-fill',council,kw),meetingGroupSection('Nhân sự chung','bi-people-fill',root,kw),meetingGroupSection('Tổ/Bộ phận','bi-people',teams,kw),meetingGroupSection('GVCN','bi-person-badge-fill',gvcn,kw),meetingGroupSection('Nhóm công tác khác','bi-grid-fill',work,kw)].join('')||'<div class="p-5 text-center text-xs text-slate-400">Không tìm thấy nhân sự phù hợp.</div>';
+  c.innerHTML=[meetingGroupSection('Hội đồng','bi-building-fill',council,kw,'COUNCIL'),meetingGroupSection('Nhân sự chung','bi-people-fill',root,kw),meetingGroupSection('Tổ/Bộ phận','bi-people',teams,kw),meetingGroupSection('GVCN','bi-person-badge-fill',gvcn,kw),meetingGroupSection('Nhóm công tác khác','bi-grid-fill',work,kw)].join('')||'<div class="p-5 text-center text-xs text-slate-400">Không tìm thấy nhân sự phù hợp.</div>';
   updateMeetingSelectionUI();
 }
 function toggleMeetingWholeGroup(encodedKey,on){const key=decodeURIComponent(encodedKey);const g=meetingAllToData.find(x=>x.groupKey===key);if(!g)return;g.members.forEach(m=>on?meetingSelectedUsernames.add(m.username):meetingSelectedUsernames.delete(m.username));renderMeetingPersonnel($('meetingSearchNhanSu').value);}
-function toggleMeetingUser(u,on){on?meetingSelectedUsernames.add(u):meetingSelectedUsernames.delete(u);renderMeetingPersonnel($('meetingSearchNhanSu').value);}
+function toggleMeetingSection(encodedKey,on){const key=decodeURIComponent(encodedKey);const groups=key==='COUNCIL'?meetingAllToData.filter(g=>g.kind==='COUNCIL'):[];groups.forEach(g=>g.members.forEach(m=>on?meetingSelectedUsernames.add(m.username):meetingSelectedUsernames.delete(m.username)));renderMeetingPersonnel($('meetingSearchNhanSu').value);}
+function toggleMeetingUser(u,on){on?meetingSelectedUsernames.add(u):meetingSelectedUsernames.delete(u);const search=$('meetingSearchNhanSu');if(search)search.value='';renderMeetingPersonnel('');}
 function filterMeetingNhanSu(v){renderMeetingPersonnel(v)}
 function removeAllMeetingSelections(){meetingSelectedUsernames.clear();renderMeetingPersonnel($('meetingSearchNhanSu').value);}
 function selectedPeople(){const map=new Map();meetingAllToData.forEach(g=>g.members.forEach(m=>{if(meetingSelectedUsernames.has(m.username)&&!map.has(m.username))map.set(m.username,m)}));return [...map.values()];}
