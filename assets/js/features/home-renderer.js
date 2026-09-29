@@ -2015,27 +2015,104 @@
                 </a>
 
                 <!-- 6. THI - CUỘC THI -->
-                <a href="cac-cuoc-thi.html"
-                   class="flex items-center gap-3 px-3 py-3 rounded-xl
-                          text-[14px] font-bold
-                          text-[#123B67] dark:text-slate-100
-                          hover:bg-blue-50 dark:hover:bg-slate-800 transition">
+                <!-- HVA 29/09/2026: chỉ mở rộng menu Nghiệp vụ số; không tác động các vùng Home khác -->
+                <div class="rounded-xl">
+                    <button type="button"
+                            onclick="toggleHVANghiepVuThiMenu(event)"
+                            class="w-full flex items-center gap-3 px-3 py-3 rounded-xl
+                                   text-[14px] font-bold text-left
+                                   text-[#123B67] dark:text-slate-100
+                                   hover:bg-blue-50 dark:hover:bg-slate-800 transition">
 
-                    <div class="w-10 h-10 rounded-xl
-                                bg-orange-50 dark:bg-orange-950/30
-                                border border-orange-100 dark:border-orange-900
-                                flex items-center justify-center
-                                text-orange-500 shrink-0">
-                        <i class="bi bi-award-fill text-lg"></i>
-                    </div>
-
-                    <div class="text-left">
-                        <div class="leading-tight">Thi - Cuộc thi</div>
-                        <div class="text-[10px] font-medium text-slate-400 mt-1">
-                            HSG • KHKT • Đăng ký • Kết quả
+                        <div class="w-10 h-10 rounded-xl
+                                    bg-orange-50 dark:bg-orange-950/30
+                                    border border-orange-100 dark:border-orange-900
+                                    flex items-center justify-center
+                                    text-orange-500 shrink-0">
+                            <i class="bi bi-award-fill text-lg"></i>
                         </div>
+
+                        <div class="text-left flex-1 min-w-0">
+                            <div class="leading-tight">Thi - Cuộc thi</div>
+                            <div class="text-[10px] font-medium text-slate-400 mt-1">
+                                HSG • KHKT • Đăng ký • Kết quả
+                            </div>
+                        </div>
+
+                        <i id="hva-thicuoc-thi-arrow"
+                           class="bi bi-chevron-right text-[11px] text-slate-400 transition-transform duration-200"></i>
+                    </button>
+
+                    <div id="hva-thicuoc-thi-items"
+                         class="hidden ml-[52px] mr-2 mb-2 rounded-xl border border-orange-100
+                                bg-orange-50/40 dark:bg-slate-900/30 dark:border-slate-700 p-1.5">
+
+                        <!-- HỌC SINH GIỎI 12 -->
+                        <button type="button"
+                                onclick="toggleHVAHSG12Menu(event)"
+                                class="w-full flex items-center justify-between gap-2 px-2.5 py-2
+                                       rounded-lg text-left hover:bg-white dark:hover:bg-slate-800 transition">
+                            <span class="flex items-center gap-2 text-[12px] font-bold text-slate-700 dark:text-slate-200">
+                                <i class="bi bi-mortarboard-fill text-orange-500"></i>
+                                Học sinh giỏi 12
+                            </span>
+                            <i id="hva-hsg12-arrow"
+                               class="bi bi-chevron-right text-[10px] text-slate-400 transition-transform duration-200"></i>
+                        </button>
+
+                        <div id="hva-hsg12-items" class="hidden pl-6 pr-1 pb-1 space-y-0.5">
+                            <a href="hsg12-giao-vien.html"
+                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
+                                <i class="bi bi-person-video3 mr-1.5"></i>Giáo viên bồi dưỡng
+                            </a>
+                            <a href="hsg12-hoc-sinh.html"
+                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
+                                <i class="bi bi-people-fill mr-1.5"></i>Danh sách học sinh
+                            </a>
+                            <a href="hsg12-ke-hoach.html"
+                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
+                                <i class="bi bi-journal-text mr-1.5"></i>Kế hoạch bồi dưỡng
+                            </a>
+                            <a href="hsg12-thoi-khoa-bieu.html"
+                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
+                                <i class="bi bi-calendar3 mr-1.5"></i>Thời khóa biểu
+                            </a>
+
+                            <!-- DEMO THẬT: mở WebApp Sổ ghi đầu bài BD HSG 12 đang vận hành -->
+                            <a href="https://tinyurl.com/hva-bdhsg12"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="flex items-center gap-2 px-2 py-2 rounded-lg
+                                      bg-orange-500 text-white hover:bg-orange-600
+                                      shadow-sm transition font-extrabold text-[11px]">
+                                <i class="bi bi-journal-check"></i>
+                                <span>Sổ ghi đầu bài</span>
+                                <i class="bi bi-box-arrow-up-right ml-auto text-[9px]"></i>
+                            </a>
+
+                            <a href="hsg12-kiem-tra.html"
+                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
+                                <i class="bi bi-clipboard-check mr-1.5"></i>Kiểm tra - Thi thử
+                            </a>
+                            <a href="hsg12-chon-doi-tuyen.html"
+                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
+                                <i class="bi bi-trophy-fill mr-1.5"></i>Thi chọn đội tuyển
+                            </a>
+                            <a href="hsg12-ket-qua.html"
+                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
+                                <i class="bi bi-bar-chart-fill mr-1.5"></i>Kết quả - Thống kê
+                            </a>
+                        </div>
+
+                        <a href="cac-cuoc-thi.html"
+                           class="flex items-center gap-2 px-2.5 py-2 mt-1 rounded-lg
+                                  text-[11px] font-semibold text-slate-600
+                                  hover:bg-white hover:text-orange-600 transition">
+                            <i class="bi bi-grid-fill text-orange-400"></i>
+                            Các kỳ thi - cuộc thi khác
+                        </a>
                     </div>
-                </a>
+                </div>
 
                 <!-- 7. CHUYỂN ĐỔI SỐ -->
                 <a href="chuyen-doi-so.html"
@@ -6583,6 +6660,45 @@ function approvalStageLabel_(s){
             const arrow = document.getElementById(arrowId);
             if (arrow) arrow.classList.add('rotate-90');
         }
+    };
+
+    // =====================================================
+    // NGHIỆP VỤ SỐ → THI - CUỘC THI → HỌC SINH GIỎI 12
+    // Chỉ điều khiển 2 menu mới; không tác động các chức năng Home hiện hữu.
+    // =====================================================
+    window.toggleHVANghiepVuThiMenu = function(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        const items = document.getElementById('hva-thicuoc-thi-items');
+        const arrow = document.getElementById('hva-thicuoc-thi-arrow');
+        if (!items) return;
+
+        const open = items.classList.contains('hidden');
+        items.classList.toggle('hidden', !open);
+        if (arrow) arrow.classList.toggle('rotate-90', open);
+
+        if (!open) {
+            const hsgItems = document.getElementById('hva-hsg12-items');
+            const hsgArrow = document.getElementById('hva-hsg12-arrow');
+            if (hsgItems) hsgItems.classList.add('hidden');
+            if (hsgArrow) hsgArrow.classList.remove('rotate-90');
+        }
+    };
+
+    window.toggleHVAHSG12Menu = function(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        const items = document.getElementById('hva-hsg12-items');
+        const arrow = document.getElementById('hva-hsg12-arrow');
+        if (!items) return;
+
+        const open = items.classList.contains('hidden');
+        items.classList.toggle('hidden', !open);
+        if (arrow) arrow.classList.toggle('rotate-90', open);
     };
 
     // =====================================================
