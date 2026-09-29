@@ -115,7 +115,7 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-h
       <label class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold cursor-pointer"><input class="mr-2" type="radio" name="timeFilter" value="week">Tuần này</label>
       <label class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold cursor-pointer"><input class="mr-2" type="radio" name="timeFilter" value="month">Tháng này</label>
     </div>
-    <div class="mt-2 text-[11px] text-slate-400">Mặc định hiển thị toàn bộ văn bản đã phát hành. Chọn mốc thời gian khi cần lọc nhanh.</div>
+    <div class="mt-2 text-[11px] text-slate-400">Mặc định hiển thị toàn bộ văn bản trong Kho. Văn bản chưa xác định luồng được đưa vào Chờ phân loại.</div>
   </section>
 
   <section class="bg-white rounded-2xl border border-blue-200 shadow-sm p-4 sm:p-5">
@@ -203,6 +203,15 @@ function currentUsername(){
   try{
     const u=JSON.parse(sessionStorage.getItem("user")||localStorage.getItem("user")||"{}");
     return String(u.username||"").trim();
+  }catch(e){return""}
+}
+function currentSessionToken(){
+  try{
+    return String(
+      sessionStorage.getItem("hvaSessionToken") ||
+      localStorage.getItem("hvaSessionToken") ||
+      ""
+    ).trim();
   }catch(e){return""}
 }
 
@@ -309,12 +318,9 @@ function parseVNDate(v){
 function filteredDocs(){
   return State.documents.filter(d=>{
     const c=classify(d);
-    if(State.category==="unknown"){
-      if(c!=="unknown")return false;
-    }else{
-      if(!isPublished(d.status))return false;
-      if(State.category!=="all"&&c!==State.category)return false;
-    }
+    if(State.category==="den"&&c!=="den")return false;
+    if(State.category==="di"&&c!=="di")return false;
+    if(State.category==="unknown"&&c!=="unknown")return false;
     if(!matchesTime(d))return false;
     if(State.search){
       const hay=norm(`${d.soVB} ${d.trichYeu} ${d.coQuan} ${d.nguoiKy} ${d.loaiVB}`);
@@ -340,10 +346,9 @@ function render(){
 }
 
 function updateCounts(){
-  const published=State.documents.filter(d=>isPublished(d.status));
-  const all=published.length;
-  const den=published.filter(d=>classify(d)==="den").length;
-  const di=published.filter(d=>classify(d)==="di").length;
+  const all=State.documents.length;
+  const den=State.documents.filter(d=>classify(d)==="den").length;
+  const di=State.documents.filter(d=>classify(d)==="di").length;
   const unknown=State.documents.filter(d=>classify(d)==="unknown").length;
   document.getElementById("count-all").textContent=all;
   document.getElementById("count-den").textContent=den;
@@ -450,14 +455,24 @@ async function submitClassification(direction){
   const buttons=[document.getElementById("classifyIncomingBtn"),document.getElementById("classifyOutgoingBtn")];
   buttons.forEach(b=>b.disabled=true);
   try{
-    const payload={action:"classifyVanBan",id:d.id,fileId:d.file,luongVanBan:direction,username:currentUsername()};
+    const sessionToken=currentSessionToken();
+    if(!sessionToken)throw new Error("Phiên đăng nhập không hợp lệ hoặc đã hết hạn.");
+
+    const payload={
+      action:"classifyVanBan",
+      id:d.id,
+      fileId:d.file,
+      luongVanBan:direction,
+      username:currentUsername(),
+      sessionToken:sessionToken
+    };
     const res=await fetch(LEGACY_GATEWAY_URL,{
       method:"POST",
       headers:{"Content-Type":"text/plain;charset=utf-8"},
       body:JSON.stringify(payload)
     });
     const out=await res.json().catch(()=>({success:false,message:"Phản hồi không hợp lệ"}));
-    if(out.success===false)throw new Error(out.message||out.error||"Không cập nhật được phân loại.");
+    if(!out||out.success!==true)throw new Error(out.message||out.error||"Không cập nhật được phân loại.");
     d.direction=direction;
     closeClassifyModal();
     showToast(`Đã chuyển sang ${direction}.`,"success");
