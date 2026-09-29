@@ -1435,7 +1435,7 @@
                 <!-- 2. KẾ HOẠCH - BÁO CÁO THÁNG -->
                 <button type="button"
                         data-thidua-action="KEKHAI_THANG"
-                        onclick="event.preventDefault(); event.stopImmediatePropagation(); return window.HVAOpenNotificationCenter?.();">
+                        onclick="openThiDuaModule('KEKHAI_THANG', event); return false;"
                         class="w-full flex items-center justify-between
                                px-3 py-2.5 rounded-xl
                                hover:bg-cyan-50
@@ -1523,6 +1523,7 @@
                 <!-- 4. THEO DÕI THI ĐUA -->
                 <button type="button"
                         data-thidua-action="THEODOI"
+                        onclick="openThiDuaModule('THEODOI', event); return false;"
                         class="w-full flex items-center justify-between
                                px-3 py-2.5 rounded-xl
                                hover:bg-emerald-50
@@ -1566,6 +1567,7 @@
                 <!-- 5. ĐÁNH GIÁ - XẾP LOẠI CUỐI NĂM -->
                 <button type="button"
                         data-thidua-action="XEPLOAI_NAM"
+                        onclick="openThiDuaModule('XEPLOAI_NAM', event); return false;"
                         class="w-full flex items-center justify-between
                                px-3 py-2.5 rounded-xl
                                hover:bg-violet-50
@@ -1609,6 +1611,7 @@
                 <!-- 6. KHEN THƯỞNG - THÀNH TÍCH -->
                 <button type="button"
                         data-thidua-action="KHENTHUONG"
+                        onclick="openThiDuaModule('KHENTHUONG', event); return false;"
                         class="w-full flex items-center justify-between
                                px-3 py-2.5 rounded-xl
                                hover:bg-amber-50
@@ -5555,6 +5558,15 @@ function approvalStageLabel_(s){
     // ======================================================
     // THI ĐUA - KHEN THƯỞNG
     // ======================================================
+    window.closeThiDuaComingSoon = function(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        document.getElementById('hva-thidua-coming-soon')?.remove();
+        document.body.classList.remove('overflow-hidden');
+    };
+
     window.openThiDuaModule = function(type, event) {
         if (event) {
             event.preventDefault();
@@ -5566,19 +5578,55 @@ function approvalStageLabel_(s){
 
         if (type === 'VANBAN') {
             openThiDuaVanBanModal();
-            return;
+            return false;
         }
 
         const moduleNames = {
-            VANBAN: 'Văn bản - Quy định',
-            KEKHAI_THANG: 'Kế hoạch - Báo cáo tháng',
-            XEPLOAI_THANG: 'Đánh giá - Xếp loại tháng',
+            KEKHAI_THANG: 'Kế hoạch - Chỉ tiêu',
             THEODOI: 'Theo dõi thi đua',
             XEPLOAI_NAM: 'Đánh giá - Xếp loại cuối năm',
             KHENTHUONG: 'Khen thưởng - Thành tích'
         };
+        const moduleName = moduleNames[type] || 'Thi đua - Khen thưởng';
 
-        console.log('[THI ĐUA - KHEN THƯỞNG]', moduleNames[type] || type);
+        window.closeThiDuaComingSoon();
+
+        const html = `
+            <div id="hva-thidua-coming-soon"
+                 class="fixed inset-0 z-[10000] bg-slate-950/45 backdrop-blur-[2px] flex items-center justify-center p-4">
+                <div class="w-full max-w-[390px] overflow-hidden rounded-[26px] border border-blue-100 bg-white shadow-2xl">
+                    <div class="relative px-5 pt-6 pb-5 text-center bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+                        <button type="button"
+                                onclick="closeThiDuaComingSoon(event)"
+                                class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 border border-slate-100 text-slate-400 hover:text-slate-600 hover:bg-slate-50 flex items-center justify-center transition"
+                                aria-label="Đóng">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                        <div class="mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-lg shadow-blue-200/70">
+                            <i class="bi bi-tools text-[24px]"></i>
+                        </div>
+                        <div class="mt-4 text-[10px] font-extrabold tracking-[0.12em] text-blue-500 uppercase">Thi đua - Khen thưởng</div>
+                        <div class="mt-1 text-[16px] font-black text-[#123B67] leading-snug">${moduleName}</div>
+                    </div>
+                    <div class="px-5 py-5 text-center">
+                        <div class="text-[15px] font-extrabold text-slate-700">Tính năng đang hoàn thiện</div>
+                        <div class="mt-2 text-[11px] leading-relaxed text-slate-500">HVA đang hoàn thiện chức năng này để bảo đảm dữ liệu và quy trình sử dụng được đồng bộ.</div>
+                        <button type="button"
+                                onclick="closeThiDuaComingSoon(event)"
+                                class="mt-5 w-full rounded-xl bg-[#0F4C81] hover:bg-[#123B67] px-4 py-2.5 text-[11px] font-extrabold text-white shadow-sm transition active:scale-[0.98]">
+                            ĐÃ HIỂU
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+
+        document.body.insertAdjacentHTML('beforeend', html);
+        document.body.classList.add('overflow-hidden');
+        const modal = document.getElementById('hva-thidua-coming-soon');
+        modal?.addEventListener('click', function(e) {
+            if (e.target === modal) window.closeThiDuaComingSoon(e);
+        });
+        return false;
     };
 
     // =====================================================
