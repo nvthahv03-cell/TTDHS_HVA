@@ -432,7 +432,7 @@ function isHVAInternalQuestion(question) {
 
 async function askVirtualAssistant(question) {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 18000);
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     try {
         const payload = {
@@ -443,11 +443,20 @@ async function askVirtualAssistant(question) {
 
         let data;
         if (window.HVAAuthRequest?.postJson) {
-            const response = await window.HVAAuthRequest.postJson(HVA_AI_API_URL, payload, {
+            // Gateway có thể trả JSON đã parse HOẶC Response chuẩn.
+            // Hỗ trợ cả hai để tương thích với các phiên bản hardening.
+            const result = await window.HVAAuthRequest.postJson(HVA_AI_API_URL, payload, {
                 signal: controller.signal
             });
-            if (!response.ok) throw new Error(`HTTP_${response.status}`);
-            data = await response.json();
+
+            if (result && typeof result.json === 'function') {
+                if ('ok' in result && !result.ok) {
+                    throw new Error(`HTTP_${result.status || 'ERROR'}`);
+                }
+                data = await result.json();
+            } else {
+                data = result;
+            }
         } else {
             const response = await fetch(HVA_AI_API_URL, {
                 method: 'POST',
@@ -459,6 +468,13 @@ async function askVirtualAssistant(question) {
 
             if (!response.ok) throw new Error(`HTTP_${response.status}`);
             data = await response.json();
+        }
+
+        if (data?.success === false &&
+            /AUTH_REQUIRED|SESSION_INVALID/.test(String(data?.code || ''))) {
+            const err = new Error(data.code);
+            err.hvaMessage = data.message || 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.';
+            throw err;
         }
         if (!data?.success || !String(data?.answer || '').trim()) {
             const err = new Error(data?.message || 'AI_UNAVAILABLE');
