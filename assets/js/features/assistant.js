@@ -255,7 +255,7 @@ const TASK_CACHE_TTL_MS = 30000;
 
 function isMyWorkQuestion(question) {
     const q = normalizeText(question);
-    return /(viec cua toi|nhiem vu cua toi|con viec gi|toi co viec gi|hom nay.*viec|viec.*hom nay|qua han|dang thuc hien|sap den han|sap het han)/.test(q);
+    return /(viec cua toi|nhiem vu cua toi|con viec gi|toi co viec gi|hom nay.*viec|viec.*hom nay|qua han|dang thuc hien|sap den han|sap het han|viec.*uu tien|uu tien.*viec|can uu tien|can xu ly|viec nao.*xu ly|nhiem vu nao.*xu ly|gan han|den han)/.test(q);
 }
 
 function parseHVADeadline(value) {
@@ -322,7 +322,7 @@ async function fetchMyTasks({ force = false } = {}) {
         '&_=' + now;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000);
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
     try {
         let data;
 
@@ -330,7 +330,17 @@ async function fetchMyTasks({ force = false } = {}) {
         // getTaskByUser là protected action. Ưu tiên gateway dùng chung của main.html
         // để tự gắn sessionToken và xử lý phiên hết hạn thống nhất.
         if (window.HVAAuthRequest?.get) {
-            data = await window.HVAAuthRequest.get(url, { signal: controller.signal });
+            const result = await window.HVAAuthRequest.get(url, { signal: controller.signal });
+
+            // Gateway sau hardening có thể trả JSON đã parse hoặc Response chuẩn.
+            if (result && typeof result.json === 'function') {
+                if ('ok' in result && !result.ok) {
+                    throw new Error(`HTTP_${result.status || 'ERROR'}`);
+                }
+                data = await result.json();
+            } else {
+                data = result;
+            }
         } else {
             const sessionToken = String(localStorage.getItem('hvaSessionToken') || '').trim();
             const secureUrl = new URL(url, window.location.href);
@@ -432,7 +442,7 @@ function isHVAInternalQuestion(question) {
 
 async function askVirtualAssistant(question) {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 12000);
+    const timeoutId = setTimeout(() => controller.abort(), 35000);
 
     try {
         const payload = {
@@ -584,7 +594,7 @@ async function handleQuestion(rawQuestion) {
     } catch (error) {
         console.error('[HVA Assistant]', error);
         const msg = error?.name === 'AbortError'
-            ? 'Trợ lý ảo phản hồi hơi lâu. Thầy/Cô vui lòng thử lại.'
+            ? 'Trợ lý ảo đang cần thêm thời gian phản hồi. Thầy/Cô vui lòng thử lại sau ít giây.'
             : (error?.hvaMessage || 'Nguồn dữ liệu trực tuyến của HVA tạm thời chưa phản hồi. Các chức năng điều hướng và hỗ trợ cục bộ vẫn hoạt động.');
         addBubble('assistant', msg);
     } finally {
