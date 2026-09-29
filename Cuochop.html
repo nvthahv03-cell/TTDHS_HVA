@@ -196,7 +196,7 @@ async function hvaPersonnelGet(action, params={}){
   return data;
 }
 function hvaPersonnelArray(data){return Array.isArray(data)?data:(Array.isArray(data&&data.data)?data.data:(Array.isArray(data&&data.results)?data.results:[]));}
-function mapMeetingPerson(m,groupLabel){return {username:String(m.username||m.maGV||m.hoTen||'').trim(),hoTen:m.hoTen||m.fullName||'',chucVu:m.chucVu||m.vaiTro||m.viTriViecLam||'Giáo viên',tenTo:m.to||m.toBoPhan||'',groupLabel:groupLabel||''};}
+function mapMeetingPerson(m,groupLabel){const groups=m.nhomCongTac||{};const lop=String(m.lopChuNhiem||m.lopCN||groups.GVCN||groups['GVCN']||'').trim();return {username:String(m.username||m.maGV||m.hoTen||'').trim(),hoTen:m.hoTen||m.fullName||'',chucVu:m.chucVu||m.vaiTro||m.viTriViecLam||'Giáo viên',tenTo:m.to||m.toBoPhan||'',lopChuNhiem:lop,groupLabel:groupLabel||''};}
 async function loadMeetingPersonnel(){
   const c=$('meetingPersonnelContainer');
   c.innerHTML='<div class="py-6 text-center text-xs text-slate-400">Đang tải Nhân sự HVA...</div>';
@@ -231,12 +231,34 @@ async function loadMeetingPersonnel(){
       try{pushGroup('TEAM:'+name,name,'TEAM',hvaPersonnelArray(await hvaPersonnelGet('searchNhanSuQuick',{q:name,category:'TEAM'})));}
       catch(e){pushGroup('TEAM:'+name,name,'TEAM',[]);}
     }
+    // HỘI ĐỒNG = Ban Giám hiệu + 8 Tổ/Bộ phận. Dùng lại đúng dữ liệu đã tải, không gọi API mới.
+    const councilSources=groups.filter(g=>g.groupKey==='BGH'||g.kind==='TEAM');
+    councilSources.forEach(g=>pushGroup('COUNCIL:'+g.groupKey,g.tenTo,'COUNCIL',g.members));
+
     const workgroups=Array.isArray(workgroupsRaw)?workgroupsRaw:(Array.isArray(workgroupsRaw&&workgroupsRaw.data)?workgroupsRaw.data:[]);
     for(const x of workgroups){
       const name=String((x&&x.name)||(x&&x.label)||x||'').trim();
       if(!name)continue;
-      try{pushGroup('WORKGROUP:'+name,name,'WORKGROUP',hvaPersonnelArray(await hvaPersonnelGet('searchNhanSuQuick',{q:name,category:'WORKGROUP'})));}
-      catch(e){pushGroup('WORKGROUP:'+name,name,'WORKGROUP',[]);}
+      try{
+        const raw=hvaPersonnelArray(await hvaPersonnelGet('searchNhanSuQuick',{q:name,category:'WORKGROUP'}));
+        if(name.toUpperCase()==='GVCN'){
+          const mapped=raw.map(m=>mapMeetingPerson(m,'GVCN'));
+          ['10','11','12'].forEach(khoi=>{
+            const members=mapped.filter(m=>String(m.lopChuNhiem||'').startsWith(khoi+'/')).sort((a,b)=>{
+              const na=Number(String(a.lopChuNhiem).split('/')[1])||999;
+              const nb=Number(String(b.lopChuNhiem).split('/')[1])||999;
+              return na-nb||String(a.hoTen).localeCompare(String(b.hoTen),'vi');
+            });
+            pushGroup('GVCN:'+khoi,'GVCN khối '+khoi,'GVCN',members);
+          });
+        }else{
+          pushGroup('WORKGROUP:'+name,name,'WORKGROUP',raw);
+        }
+      }catch(e){
+        if(name.toUpperCase()==='GVCN'){
+          ['10','11','12'].forEach(khoi=>pushGroup('GVCN:'+khoi,'GVCN khối '+khoi,'GVCN',[]));
+        }else pushGroup('WORKGROUP:'+name,name,'WORKGROUP',[]);
+      }
     }
     meetingAllToData=groups;
     renderMeetingPersonnel();
@@ -253,7 +275,7 @@ function meetingGroupSection(title,icon,groups,kw){
     const show=kw&&!matchG?mm:g.members;
     const all=g.members.length&&g.members.every(m=>meetingSelectedUsernames.has(m.username));
     const id='mg_'+Math.abs(hashMeetingGroup(g.groupKey));
-    return `<div class="rounded-xl border border-slate-200 bg-white overflow-hidden"><div class="px-3 py-2.5 flex items-center justify-between gap-2"><button type="button" onclick="$('${id}').classList.toggle('hidden')" class="flex-1 text-left text-[11px] font-bold text-[#0F4C81]"><i class="bi bi-chevron-right mr-2 text-slate-400"></i>${esc(g.tenTo)} <span class="text-slate-400">${g.members.length}</span></button><label class="text-[9px] font-semibold bg-white border rounded-lg px-2 py-1"><input type="checkbox" ${all?'checked':''} onchange="toggleMeetingWholeGroup('${encodeURIComponent(g.groupKey)}',this.checked)"> Chọn nhóm</label></div><div id="${id}" class="${kw?'':'hidden'} p-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 border-t bg-blue-50/20">${show.map(m=>`<label class="flex items-center gap-2 p-2 rounded-lg border ${meetingSelectedUsernames.has(m.username)?'border-blue-300 bg-blue-50':'border-slate-200 bg-white'}"><input type="checkbox" ${meetingSelectedUsernames.has(m.username)?'checked':''} onchange="toggleMeetingUser('${esc(m.username)}',this.checked)"><div class="min-w-0"><div class="text-[10px] font-bold truncate">${esc(m.hoTen)}</div><div class="text-[9px] text-slate-400 truncate">${esc(m.chucVu)}${m.tenTo?' · '+esc(m.tenTo):''}</div></div></label>`).join('')}</div></div>`;
+    return `<div class="rounded-xl border border-slate-200 bg-white overflow-hidden"><div class="px-3 py-2.5 flex items-center justify-between gap-2"><button type="button" onclick="$('${id}').classList.toggle('hidden')" class="flex-1 text-left text-[11px] font-bold text-[#0F4C81]"><i class="bi bi-chevron-right mr-2 text-slate-400"></i>${esc(g.tenTo)} <span class="text-slate-400">${g.members.length}</span></button><label class="text-[9px] font-semibold bg-white border rounded-lg px-2 py-1"><input type="checkbox" ${all?'checked':''} onchange="toggleMeetingWholeGroup('${encodeURIComponent(g.groupKey)}',this.checked)"> Chọn nhóm</label></div><div id="${id}" class="${kw?'':'hidden'} p-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 border-t bg-blue-50/20">${show.map(m=>`<label class="flex items-center gap-2 p-2 rounded-lg border ${meetingSelectedUsernames.has(m.username)?'border-blue-300 bg-blue-50':'border-slate-200 bg-white'}"><input type="checkbox" ${meetingSelectedUsernames.has(m.username)?'checked':''} onchange="toggleMeetingUser('${esc(m.username)}',this.checked)"><div class="min-w-0"><div class="text-[10px] font-bold truncate">${esc(m.hoTen)}</div><div class="text-[9px] text-slate-400 truncate">${m.lopChuNhiem?'GVCN '+esc(m.lopChuNhiem)+' · ':''}${esc(m.chucVu)}${m.tenTo?' · '+esc(m.tenTo):''}</div></div></label>`).join('')}</div></div>`;
   }).join('');
   if(!rows)return '';
   return `<div class="rounded-xl border border-slate-200 overflow-hidden"><div class="px-3 py-2 bg-slate-50 text-[10px] font-extrabold uppercase text-slate-700"><i class="bi ${icon} mr-1.5"></i>${title}</div><div class="p-2 space-y-1.5">${rows}</div></div>`;
@@ -262,9 +284,11 @@ function hashMeetingGroup(s){let h=0;for(const ch of String(s||''))h=((h<<5)-h)+
 function renderMeetingPersonnel(keyword=''){
   const c=$('meetingPersonnelContainer'),kw=String(keyword||'').trim().toLowerCase();
   const root=meetingAllToData.filter(g=>g.kind==='ROOT');
+  const council=meetingAllToData.filter(g=>g.kind==='COUNCIL');
   const teams=meetingAllToData.filter(g=>g.kind==='TEAM');
+  const gvcn=meetingAllToData.filter(g=>g.kind==='GVCN');
   const work=meetingAllToData.filter(g=>g.kind==='WORKGROUP');
-  c.innerHTML=[meetingGroupSection('Nhân sự chung','bi-people-fill',root,kw),meetingGroupSection('Tổ/Bộ phận','bi-people',teams,kw),meetingGroupSection('Nhóm công tác khác','bi-grid-fill',work,kw)].join('')||'<div class="p-5 text-center text-xs text-slate-400">Không tìm thấy nhân sự phù hợp.</div>';
+  c.innerHTML=[meetingGroupSection('Hội đồng','bi-building-fill',council,kw),meetingGroupSection('Nhân sự chung','bi-people-fill',root,kw),meetingGroupSection('Tổ/Bộ phận','bi-people',teams,kw),meetingGroupSection('GVCN','bi-person-badge-fill',gvcn,kw),meetingGroupSection('Nhóm công tác khác','bi-grid-fill',work,kw)].join('')||'<div class="p-5 text-center text-xs text-slate-400">Không tìm thấy nhân sự phù hợp.</div>';
   updateMeetingSelectionUI();
 }
 function toggleMeetingWholeGroup(encodedKey,on){const key=decodeURIComponent(encodedKey);const g=meetingAllToData.find(x=>x.groupKey===key);if(!g)return;g.members.forEach(m=>on?meetingSelectedUsernames.add(m.username):meetingSelectedUsernames.delete(m.username));renderMeetingPersonnel($('meetingSearchNhanSu').value);}
