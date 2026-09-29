@@ -4225,9 +4225,12 @@ setTimeout(() => {
             } else if (branch === 'WORKGROUP') {
                 const box = document.getElementById('personnel-workgroup-list');
                 const willOpen = !!box?.classList.contains('hidden');
-                if (willOpen) loadPersonnelWorkgroups();
-                else setPersonnelBranchOpen('WORKGROUP', false);
-            }
+               if (willOpen) {
+    setPersonnelBranchOpen('WORKGROUP', true);
+    loadPersonnelWorkgroups();
+} else {
+    setPersonnelBranchOpen('WORKGROUP', false);
+}
             return;
         }
 
