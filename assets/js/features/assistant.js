@@ -255,10 +255,7 @@ const TASK_CACHE_TTL_MS = 30000;
 
 function isMyWorkQuestion(question) {
     const q = normalizeText(question);
-
-    // Các câu hỏi phải đọc trực tiếp dữ liệu "Việc của tôi",
-    // tuyệt đối không đẩy sang OpenAI.
-    return /(viec cua toi|nhiem vu cua toi|con viec gi|toi co viec gi|hom nay.*viec|viec.*hom nay|qua han|dang thuc hien|sap den han|sap het han|viec nao.*uu tien|uu tien.*viec|can uu tien.*xu ly|viec nao.*can xu ly|viec nao.*xu ly truoc|viec.*gan han|gan han.*viec)/.test(q);
+    return /(viec cua toi|nhiem vu cua toi|con viec gi|toi co viec gi|hom nay.*viec|viec.*hom nay|qua han|dang thuc hien|sap den han|sap het han)/.test(q);
 }
 
 function parseHVADeadline(value) {
@@ -333,9 +330,7 @@ async function fetchMyTasks({ force = false } = {}) {
         // getTaskByUser là protected action. Ưu tiên gateway dùng chung của main.html
         // để tự gắn sessionToken và xử lý phiên hết hạn thống nhất.
         if (window.HVAAuthRequest?.get) {
-            const response = await window.HVAAuthRequest.get(url, { signal: controller.signal });
-            if (!response.ok) throw new Error(`HTTP_${response.status}`);
-            data = await response.json();
+            data = await window.HVAAuthRequest.get(url, { signal: controller.signal });
         } else {
             const sessionToken = String(localStorage.getItem('hvaSessionToken') || '').trim();
             const secureUrl = new URL(url, window.location.href);
@@ -514,10 +509,11 @@ function localAssistantAnswer(question) {
         };
     }
 
-    if (/(hom nay ngay may|ngay hom nay|hom nay la thu may|thu may|may gio|gio bay gio)/.test(q)) {
+    if (/(hom nay ngay may|ngay hom nay|may gio|gio bay gio)/.test(q)) {
         const now = new Date();
-        const thu = ['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][now.getDay()];
-        return { text: `Hôm nay là ${thu}, ngày ${now.toLocaleDateString('vi-VN')}. Bây giờ là ${now.toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'})}.` };
+        return {
+            text: `Bây giờ là ${now.toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'})}, ngày ${now.toLocaleDateString('vi-VN')}.`
+        };
     }
 
     if (/(lam duoc gi|giup duoc gi|chuc nang|tro giup|huong dan)/.test(q)) {
