@@ -7,6 +7,28 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<div id="classifyModal" class="hidden fixed inset-0 z-[60] bg-slate-900/55 backdrop-blur-sm p-4 items-center justify-center">
+  <div class="w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden">
+    <div class="px-5 py-4 bg-gradient-to-r from-amber-600 to-orange-500 text-white flex justify-between items-center">
+      <div class="font-bold"><i class="bi bi-signpost-split-fill mr-2"></i>PHÂN LOẠI VĂN BẢN</div>
+      <button onclick="closeClassifyModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="p-5 space-y-4">
+      <div id="classifyDocInfo" class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button id="classifyIncomingBtn" onclick="submitClassification('Văn bản đến')" class="h-12 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-extrabold">
+          <i class="bi bi-inbox-fill mr-2"></i>VĂN BẢN ĐẾN
+        </button>
+        <button id="classifyOutgoingBtn" onclick="submitClassification('Văn bản đi')" class="h-12 rounded-xl border border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-800 font-extrabold">
+          <i class="bi bi-send-fill mr-2"></i>VĂN BẢN ĐI
+        </button>
+      </div>
+      <div class="text-[11px] text-slate-500">Chọn đúng luồng văn bản. Hệ thống sẽ cập nhật cột LuongVanBan trong DB_04_VanBan.</div>
+    </div>
+  </div>
+</div>
+
 <script>
 tailwind.config={theme:{extend:{colors:{brand:{500:"#1687D9",600:"#0F4C81",700:"#0b3e69",800:"#062B5B"}},fontFamily:{sans:["Inter","sans-serif"]}}}}
 </script>
@@ -77,7 +99,10 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-h
       <button data-category="den" onclick="selectCategory('den')" class="category-btn p-4 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 transition flex items-center justify-between text-sm font-extrabold text-emerald-800"><span class="flex items-center gap-2"><i class="cat-icon bi bi-inbox-fill"></i> VĂN BẢN ĐẾN</span><span id="count-den" class="text-xs px-2.5 py-1 rounded-full bg-white border border-emerald-200">0</span></button>
       <button data-category="di" onclick="selectCategory('di')" class="category-btn p-4 rounded-xl border border-teal-200 bg-teal-50 hover:bg-teal-100 transition flex items-center justify-between text-sm font-extrabold text-teal-800"><span class="flex items-center gap-2"><i class="cat-icon bi bi-send-fill"></i> VĂN BẢN ĐI</span><span id="count-di" class="text-xs px-2.5 py-1 rounded-full bg-white border border-teal-200">0</span></button>
     </div>
-    <div id="unknownNotice" class="hidden mt-3 text-xs rounded-xl border border-amber-200 bg-amber-50 text-amber-800 px-3 py-2"><i class="bi bi-exclamation-triangle-fill mr-1"></i><b id="count-unknown">0</b> văn bản đang chờ phân loại Đến/Đi.</div>
+    <button id="unknownNotice" type="button" onclick="selectCategory('unknown')" class="hidden w-full mt-3 text-left text-xs rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-800 px-3 py-2 transition">
+      <i class="bi bi-exclamation-triangle-fill mr-1"></i><b id="count-unknown">0</b> văn bản đang chờ phân loại Đến/Đi.
+      <span class="float-right font-bold">Mở để phân loại <i class="bi bi-arrow-right"></i></span>
+    </button>
   </section>
 
   <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
@@ -158,7 +183,7 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-h
 const LEGACY_GATEWAY_URL="https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec";
 const MAIN_GATEWAY_URL="https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec";
 
-const State={documents:[],category:"all",timeFilter:"all",search:"",selected:new Set(),selectedDocId:null};
+const State={documents:[],category:"all",timeFilter:"all",search:"",selected:new Set(),selectedDocId:null,classifyDocId:null};
 
 const CATEGORY_TITLES={all:"Tất cả văn bản",den:"Văn bản đến",di:"Văn bản đi",unknown:"Chờ phân loại"};
 
@@ -214,8 +239,8 @@ async function fetchData(){
   const username=currentUsername();
 
   try{
-    // Giữ 27 văn bản cũ để không mất dữ liệu trước trình diễn,
-    // đồng thời ghép văn bản phát hành mới theo đúng username.
+    // Kho legacy là nguồn quản trị DB_04_VanBan: giữ cả PHÁT HÀNH và CHỜ PHÂN LOẠI.
+    // Nguồn main chỉ bổ sung các văn bản đã phát hành theo người dùng.
     const reqLegacy=fetch(`${LEGACY_GATEWAY_URL}?action=searchVanBan&_=${Date.now()}`,{cache:"no-store"})
       .then(async r=>r.ok?await r.json():[])
       .catch(()=>[]);
@@ -230,7 +255,10 @@ async function fetchData(){
     const legacyRaw=Array.isArray(legacyResult)?legacyResult:(legacyResult.data||legacyResult.result||[]);
     const newRaw=Array.isArray(newResult)?newResult:(newResult.documents||newResult.data||newResult.result||[]);
 
-    const merged=[...newRaw.map(mapDoc),...legacyRaw.map(mapDoc)].filter(d=>isPublished(d.status));
+    const legacyDocs=legacyRaw.map(mapDoc);
+    const newDocs=newRaw.map(mapDoc).filter(d=>isPublished(d.status));
+    const merged=[...newDocs,...legacyDocs];
+
     const seen=new Set();
     State.documents=merged.filter(d=>{
       const key=norm(d.file||d.id||`${d.soVB}|${d.ngayBH}|${d.trichYeu}`);
@@ -280,7 +308,13 @@ function parseVNDate(v){
 
 function filteredDocs(){
   return State.documents.filter(d=>{
-    if(State.category!=="all"&&classify(d)!==State.category)return false;
+    const c=classify(d);
+    if(State.category==="unknown"){
+      if(c!=="unknown")return false;
+    }else{
+      if(!isPublished(d.status))return false;
+      if(State.category!=="all"&&c!==State.category)return false;
+    }
     if(!matchesTime(d))return false;
     if(State.search){
       const hay=norm(`${d.soVB} ${d.trichYeu} ${d.coQuan} ${d.nguoiKy} ${d.loaiVB}`);
@@ -306,7 +340,11 @@ function render(){
 }
 
 function updateCounts(){
-  const all=State.documents.length, den=State.documents.filter(d=>classify(d)==="den").length, di=State.documents.filter(d=>classify(d)==="di").length, unknown=State.documents.filter(d=>classify(d)==="unknown").length;
+  const published=State.documents.filter(d=>isPublished(d.status));
+  const all=published.length;
+  const den=published.filter(d=>classify(d)==="den").length;
+  const di=published.filter(d=>classify(d)==="di").length;
+  const unknown=State.documents.filter(d=>classify(d)==="unknown").length;
   document.getElementById("count-all").textContent=all;
   document.getElementById("count-den").textContent=den;
   document.getElementById("count-di").textContent=di;
@@ -327,7 +365,7 @@ function renderDesktop(docs){
       <td class="p-3 whitespace-nowrap">${esc(d.ngayBH)}</td>
       <td class="p-3 font-bold text-[#0F4C81] whitespace-nowrap cursor-pointer" onclick="selectDoc('${encodeURIComponent(d.id)}')">${esc(d.soVB)}</td>
       <td class="p-3 max-w-xl cursor-pointer" onclick="selectDoc('${encodeURIComponent(d.id)}')" title="${esc(d.trichYeu)}">${esc(d.trichYeu)}</td>
-      <td class="p-3 text-center">${url?`<a href="${esc(url)}" target="_blank" rel="noopener" class="inline-flex w-8 h-8 items-center justify-center rounded-lg bg-red-50 text-red-600 hover:bg-red-100" title="Xem văn bản"><i class="bi bi-file-earmark-pdf-fill"></i></a>`:`<span class="text-slate-300">—</span>`}</td>
+      <td class="p-3 text-center"><div class="flex items-center justify-center gap-1">${url?`<a href="${esc(url)}" target="_blank" rel="noopener" class="inline-flex w-8 h-8 items-center justify-center rounded-lg bg-red-50 text-red-600 hover:bg-red-100" title="Xem văn bản"><i class="bi bi-file-earmark-pdf-fill"></i></a>`:`<span class="text-slate-300">—</span>`}${classify(d)==="unknown"?`<button onclick="openClassifyModal('${encodeURIComponent(d.id)}')" class="inline-flex w-8 h-8 items-center justify-center rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100" title="Phân loại Đến/Đi"><i class="bi bi-signpost-split-fill"></i></button>`:""}</div></td>
     </tr>`;
   }).join("");
 }
@@ -344,7 +382,7 @@ function renderMobile(docs){
           <div class="flex justify-between gap-2"><span class="font-bold text-[#0F4C81] text-xs">${esc(d.soVB)}</span><span class="text-[11px] text-slate-500">${esc(d.ngayBH)}</span></div>
           <div class="mt-1.5 text-xs font-semibold leading-relaxed">${esc(d.trichYeu)}</div>
         </div>
-        ${url?`<a href="${esc(url)}" target="_blank" rel="noopener" class="w-9 h-9 shrink-0 rounded-lg bg-red-50 text-red-600 flex items-center justify-center"><i class="bi bi-file-earmark-pdf-fill"></i></a>`:""}
+        <div class="flex flex-col gap-1">${url?`<a href="${esc(url)}" target="_blank" rel="noopener" class="w-9 h-9 shrink-0 rounded-lg bg-red-50 text-red-600 flex items-center justify-center"><i class="bi bi-file-earmark-pdf-fill"></i></a>`:""}${classify(d)==="unknown"?`<button onclick="openClassifyModal('${encodeURIComponent(d.id)}')" class="w-9 h-9 shrink-0 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center" title="Phân loại"><i class="bi bi-signpost-split-fill"></i></button>`:""}</div>
       </div>
     </div>`;
   }).join("");
@@ -383,6 +421,53 @@ function downloadSelected(){
   if(docs.length===1){window.open(docs[0].downloadUrl||fileUrl(docs[0].file),"_blank","noopener");return}
   docs.forEach((d,i)=>setTimeout(()=>window.open(d.downloadUrl||fileUrl(d.file),"_blank","noopener"),i*180));
   showToast(`Đang mở ${docs.length} tệp đã chọn để tải.`,"success");
+}
+
+
+function openClassifyModal(encoded){
+  const id=decodeURIComponent(encoded);
+  const d=State.documents.find(x=>x.id===id);
+  if(!d)return;
+  State.classifyDocId=id;
+  const url=fileUrl(d.file);
+  document.getElementById("classifyDocInfo").innerHTML=`
+    <div class="font-extrabold text-[#0F4C81]">${esc(d.soVB||"Chưa xác định số văn bản")}</div>
+    <div class="mt-1 text-slate-700">${esc(d.trichYeu||"Chưa có trích yếu")}</div>
+    <div class="mt-2 text-xs text-slate-500">Ngày ban hành: <b>${esc(d.ngayBH||"—")}</b></div>
+    ${url?`<a href="${esc(url)}" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-red-50 text-red-700 font-bold"><i class="bi bi-file-earmark-pdf-fill"></i>Xem nguyên văn PDF</a>`:""}
+  `;
+  const m=document.getElementById("classifyModal");
+  m.classList.remove("hidden");m.classList.add("flex");
+}
+function closeClassifyModal(){
+  const m=document.getElementById("classifyModal");
+  m.classList.add("hidden");m.classList.remove("flex");
+  State.classifyDocId=null;
+}
+async function submitClassification(direction){
+  const d=State.documents.find(x=>x.id===State.classifyDocId);
+  if(!d)return;
+  const buttons=[document.getElementById("classifyIncomingBtn"),document.getElementById("classifyOutgoingBtn")];
+  buttons.forEach(b=>b.disabled=true);
+  try{
+    const payload={action:"classifyVanBan",id:d.id,fileId:d.file,luongVanBan:direction,username:currentUsername()};
+    const res=await fetch(LEGACY_GATEWAY_URL,{
+      method:"POST",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(payload)
+    });
+    const out=await res.json().catch(()=>({success:false,message:"Phản hồi không hợp lệ"}));
+    if(out.success===false)throw new Error(out.message||out.error||"Không cập nhật được phân loại.");
+    d.direction=direction;
+    closeClassifyModal();
+    showToast(`Đã chuyển sang ${direction}.`,"success");
+    render();
+  }catch(err){
+    console.error("[HVA KhoVB] classify:",err);
+    showToast("Chưa lưu được phân loại: "+err.message,"error");
+  }finally{
+    buttons.forEach(b=>b.disabled=false);
+  }
 }
 
 function clearSearch(){document.getElementById("searchInput").value="";document.getElementById("clearSearch").classList.add("hidden");State.search="";render()}
