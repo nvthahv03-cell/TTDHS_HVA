@@ -255,7 +255,10 @@ const TASK_CACHE_TTL_MS = 30000;
 
 function isMyWorkQuestion(question) {
     const q = normalizeText(question);
-    return /(viec cua toi|nhiem vu cua toi|con viec gi|toi co viec gi|hom nay.*viec|viec.*hom nay|qua han|dang thuc hien|sap den han|sap het han)/.test(q);
+
+    // Các câu hỏi phải đọc trực tiếp dữ liệu "Việc của tôi",
+    // tuyệt đối không đẩy sang OpenAI.
+    return /(viec cua toi|nhiem vu cua toi|con viec gi|toi co viec gi|hom nay.*viec|viec.*hom nay|qua han|dang thuc hien|sap den han|sap het han|viec nao.*uu tien|uu tien.*viec|can uu tien.*xu ly|viec nao.*can xu ly|viec nao.*xu ly truoc|viec.*gan han|gan han.*viec)/.test(q);
 }
 
 function parseHVADeadline(value) {
@@ -324,9 +327,34 @@ async function fetchMyTasks({ force = false } = {}) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000);
     try {
-        const response = await fetch(url, { method: 'GET', cache: 'no-store', signal: controller.signal });
-        if (!response.ok) throw new Error(`HTTP_${response.status}`);
-        const data = await response.json();
+        let data;
+
+        // HVA SECURITY COMPATIBILITY 27/09/2026:
+        // getTaskByUser là protected action. Ưu tiên gateway dùng chung của main.html
+        // để tự gắn sessionToken và xử lý phiên hết hạn thống nhất.
+        if (window.HVAAuthRequest?.get) {
+            const response = await window.HVAAuthRequest.get(url, { signal: controller.signal });
+            if (!response.ok) throw new Error(`HTTP_${response.status}`);
+            data = await response.json();
+        } else {
+            const sessionToken = String(localStorage.getItem('hvaSessionToken') || '').trim();
+            const secureUrl = new URL(url, window.location.href);
+            if (sessionToken) secureUrl.searchParams.set('sessionToken', sessionToken);
+
+            const response = await fetch(secureUrl.toString(), {
+                method: 'GET',
+                cache: 'no-store',
+                signal: controller.signal
+            });
+            if (!response.ok) throw new Error(`HTTP_${response.status}`);
+            data = await response.json();
+        }
+
+        if (data?.success === false && /AUTH_REQUIRED|SESSION_INVALID/.test(String(data?.code || ''))) {
+            const err = new Error(data.code);
+            err.hvaMessage = data.message || 'Phiên đăng nhập không hợp lệ hoặc đã hết hạn.';
+            throw err;
+        }
         if (!Array.isArray(data)) throw new Error('INVALID_TASK_DATA');
         taskCache = { username: p.username, at: Date.now(), data };
         return data;
@@ -400,6 +428,55 @@ async function answerMyWorkFromBackend() {
     }
 }
 
+const HVA_AI_API_URL = HVA_TASK_API_URL;
+
+function isHVAInternalQuestion(question) {
+    const q = normalizeText(question);
+    return /(khao sat|binh chon|thong bao|thoi khoa bieu|tkb|cuoc hop|lich tuan|lich cong tac|lich ca nhan|lich cua toi|tom tat ngay lam viec|van ban|kho van ban|nhiem vu|viec cua toi)/.test(q);
+}
+
+async function askVirtualAssistant(question) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 18000);
+
+    try {
+        const payload = {
+            action: 'askVirtualAssistant',
+            question: String(question || '').trim(),
+            sessionToken: String(localStorage.getItem('hvaSessionToken') || '').trim()
+        };
+
+        let data;
+        if (window.HVAAuthRequest?.postJson) {
+            const response = await window.HVAAuthRequest.postJson(HVA_AI_API_URL, payload, {
+                signal: controller.signal
+            });
+            if (!response.ok) throw new Error(`HTTP_${response.status}`);
+            data = await response.json();
+        } else {
+            const response = await fetch(HVA_AI_API_URL, {
+                method: 'POST',
+                cache: 'no-store',
+                headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+                body: JSON.stringify(payload),
+                signal: controller.signal
+            });
+
+            if (!response.ok) throw new Error(`HTTP_${response.status}`);
+            data = await response.json();
+        }
+        if (!data?.success || !String(data?.answer || '').trim()) {
+            const err = new Error(data?.message || 'AI_UNAVAILABLE');
+            err.hvaMessage = data?.message || '';
+            throw err;
+        }
+
+        return { text: String(data.answer).trim(), actions: [] };
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
 function localAssistantAnswer(question) {
     const p = getProfile();
     const q = normalizeText(question);
@@ -437,11 +514,10 @@ function localAssistantAnswer(question) {
         };
     }
 
-    if (/(hom nay ngay may|ngay hom nay|may gio|gio bay gio)/.test(q)) {
+    if (/(hom nay ngay may|ngay hom nay|hom nay la thu may|thu may|may gio|gio bay gio)/.test(q)) {
         const now = new Date();
-        return {
-            text: `Bây giờ là ${now.toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'})}, ngày ${now.toLocaleDateString('vi-VN')}.`
-        };
+        const thu = ['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][now.getDay()];
+        return { text: `Hôm nay là ${thu}, ngày ${now.toLocaleDateString('vi-VN')}. Bây giờ là ${now.toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'})}.` };
     }
 
     if (/(lam duoc gi|giup duoc gi|chuc nang|tro giup|huong dan)/.test(q)) {
@@ -455,10 +531,15 @@ function localAssistantAnswer(question) {
         };
     }
 
-    return {
-        text: `Thầy/Cô muốn hỏi gì khác thì cứ nói hoặc soạn tin nhắn nhé. Em sẽ hỗ trợ hoặc chuyển đến trợ lý ảo khi phù hợp.`,
-        actions: [{ label: 'Xem gợi ý', action: 'suggest', value: '' }]
-    };
+    if (isHVAInternalQuestion(question)) {
+        return {
+            text: `Nội dung này cần tra cứu từ dữ liệu HVA tương ứng. Nguồn nghiệp vụ này chưa được nối vào Assistant nên em chưa trả lời bằng dữ liệu thật để tránh sai thông tin.`,
+            actions: [{ label: 'Xem gợi ý', action: 'suggest', value: '' }]
+        };
+    }
+
+    // Câu hỏi mở ngoài nghiệp vụ HVA -> chuyển sang trợ lý ảo backend.
+    return { useAI: true };
 }
 
 async function handleQuestion(rawQuestion) {
@@ -476,14 +557,24 @@ async function handleQuestion(rawQuestion) {
     try {
         // V2: câu hỏi về “Việc của tôi” đọc dữ liệu thật từ Backend HVA.
         // Các tác vụ chưa nối dữ liệu vẫn dùng router cục bộ an toàn.
-        const answer = isMyWorkQuestion(question)
-            ? await answerMyWorkFromBackend()
-            : localAssistantAnswer(question);
+        let answer;
+
+        if (isMyWorkQuestion(question)) {
+            answer = await answerMyWorkFromBackend();
+        } else {
+            answer = localAssistantAnswer(question);
+            if (answer?.useAI) {
+                answer = await askVirtualAssistant(question);
+            }
+        }
 
         addBubble('assistant', answer.text, answer.actions || []);
     } catch (error) {
         console.error('[HVA Assistant]', error);
-        addBubble('assistant', 'HVA Assistant đang gặp lỗi xử lý. Vui lòng thử lại.');
+        const msg = error?.name === 'AbortError'
+            ? 'Trợ lý ảo phản hồi hơi lâu. Thầy/Cô vui lòng thử lại.'
+            : (error?.hvaMessage || 'Nguồn dữ liệu trực tuyến của HVA tạm thời chưa phản hồi. Các chức năng điều hướng và hỗ trợ cục bộ vẫn hoạt động.');
+        addBubble('assistant', msg);
     } finally {
         setBusy(false);
         input?.focus();
@@ -506,9 +597,26 @@ function runAction(action, value) {
     }
 
     if (action === 'mywork') {
+        const panel = $('#myWorkPanel');
         const btn = $('#btn-my-work');
-        if (btn) btn.click();
-        else addBubble('assistant', 'Không tìm thấy khu vực “Việc của tôi” trên trang hiện tại.');
+
+        if (!panel || !btn) {
+            addBubble('assistant', 'Không tìm thấy khu vực “Việc của tôi” trên trang hiện tại.');
+            return;
+        }
+
+        // Nút trong Assistant phải MỞ "Việc của tôi", không dùng click giả lập
+        // vì Home có cơ chế auto-hide/capture riêng.
+        if (panel.classList.contains('hidden')) {
+            if (typeof window.toggleMyWorkPanel === 'function') {
+                window.toggleMyWorkPanel();
+            } else {
+                panel.classList.remove('hidden');
+                $('#myWorkChevron')?.classList.add('rotate-180');
+            }
+        }
+
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         return;
     }
 
