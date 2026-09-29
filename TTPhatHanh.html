@@ -604,6 +604,10 @@ window.HVADialog = window.HVADialog || {
 
 window.HVAMeetingAction = {
     _busy: false,
+    // Cuộc họp là nghiệp vụ của WEB_APP_URL CuocHop; không dùng SEARCH_API nhân sự.
+    MEETING_API: 'https://script.google.com/macros/s/AKfycbz7IsfWAfnsOa4SIyMiKEB-qQurwW5FpxuKcT83aeCHXhiAf60sJSc0t4KQXE3N427E/exec',
+    REQUEST_TIMEOUT_MS: 25000,
+
     username() {
         try {
             const u = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
@@ -611,64 +615,130 @@ window.HVAMeetingAction = {
         } catch (_) { return ''; }
     },
     publishId() { return String(new URLSearchParams(location.search).get('publishId') || '').trim(); },
+    sessionToken() {
+        return String(localStorage.getItem('hvaSessionToken') || sessionStorage.getItem('hvaSessionToken') || '').trim();
+    },
     async post(payload) {
-        const response = await fetch(CONFIG.SCRIPT_URL, {
-            method: 'POST', headers: {'Content-Type':'text/plain;charset=utf-8'},
-            body: JSON.stringify({...payload, sessionToken:String(localStorage.getItem('hvaSessionToken')||'').trim()})
-        });
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        const data = await response.json();
-        if (data && ['SESSION_EXPIRED','SESSION_INVALID','AUTH_REQUIRED'].includes(String(data.code||''))) {
-            throw new Error(data.message || 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), this.REQUEST_TIMEOUT_MS);
+        try {
+            // username được gửi để tương thích Web App nghiệp vụ Cuộc họp hiện hành.
+            // Backend bảo mật mới vẫn lấy identity từ session và ghi đè username client.
+            const body = {
+                ...(payload || {}),
+                username: this.username(),
+                sessionToken: this.sessionToken()
+            };
+            const response = await fetch(this.MEETING_API, {
+                method: 'POST',
+                headers: {'Content-Type':'text/plain;charset=utf-8'},
+                body: JSON.stringify(body),
+                signal: controller.signal
+            });
+            if (!response.ok) throw new Error('Máy chủ cuộc họp phản hồi HTTP ' + response.status + '.');
+            const raw = await response.text();
+            let data;
+            try { data = JSON.parse(raw); }
+            catch (_) { throw new Error('Máy chủ cuộc họp trả về dữ liệu không hợp lệ.'); }
+            if (data && ['SESSION_EXPIRED','SESSION_INVALID','AUTH_REQUIRED'].includes(String(data.code || ''))) {
+                throw new Error(data.message || 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+            }
+            return data;
+        } catch (e) {
+            if (e && e.name === 'AbortError') {
+                throw new Error('Máy chủ cuộc họp phản hồi quá lâu. Vui lòng thử lại.');
+            }
+            throw e;
+        } finally {
+            clearTimeout(timer);
         }
-        return data;
     },
     setBusy(kind, busy) {
         this._busy = busy;
-        const ids = kind === 'absence' ? ['hva-meeting-absence-submit'] : ['hva-meeting-confirm-btn'];
-        ids.forEach(id => { const b=document.getElementById(id); if(b) b.disabled=busy; });
-        const b=document.getElementById(ids[0]);
+        const confirmBtn = document.getElementById('hva-meeting-confirm-btn');
+        const absenceBtn = document.getElementById('hva-meeting-absence-submit');
+        if (confirmBtn) confirmBtn.disabled = busy;
+        if (absenceBtn) absenceBtn.disabled = busy;
+        const b = kind === 'absence' ? absenceBtn : confirmBtn;
         if (b) b.innerHTML = busy
-            ? '<i class="bi bi-hourglass-split mr-2"></i>' + (kind==='absence'?'ĐANG GỬI...':'ĐANG XÁC NHẬN...')
-            : (kind==='absence'?'<i class="bi bi-send-check mr-2"></i>GỬI XIN VẮNG':'<i class="bi bi-check2-circle mr-2"></i>XÁC NHẬN THAM DỰ');
+            ? '<i class="bi bi-hourglass-split mr-2"></i>' + (kind === 'absence' ? 'ĐANG GỬI...' : 'ĐANG XÁC NHẬN...')
+            : (kind === 'absence'
+                ? '<i class="bi bi-send-check mr-2"></i>GỬI XIN VẮNG'
+                : '<i class="bi bi-check2-circle mr-2"></i>XÁC NHẬN THAM DỰ');
     },
     confirm(meetingId) {
         if (this._busy) return;
-        if (!meetingId && !this.publishId()) return HVADialog.show({type:'error',title:'KHÔNG THỂ XÁC NHẬN',message:'Không xác định được cuộc họp.'});
-        HVADialog.show({type:'question',title:'XÁC NHẬN THAM DỰ',message:'Thầy/Cô xác nhận sẽ tham dự cuộc họp này?',confirmText:'XÁC NHẬN',cancelText:'HỦY',onConfirm:()=>this.confirmNow(meetingId)});
+        if (!meetingId && !this.publishId()) {
+            return HVADialog.show({type:'error',title:'KHÔNG THỂ XÁC NHẬN',message:'Không xác định được cuộc họp.'});
+        }
+        HVADialog.show({
+            type:'question',
+            title:'XÁC NHẬN THAM DỰ',
+            message:'Thầy/Cô xác nhận sẽ tham dự cuộc họp này?',
+            confirmText:'XÁC NHẬN', cancelText:'HỦY',
+            onConfirm: () => this.confirmNow(meetingId)
+        });
     },
     async confirmNow(meetingId) {
         if (this._busy) return;
         this.setBusy('confirm', true);
         try {
-            const r = await this.post({action:'confirmMeetingAttendance', meetingId:String(meetingId||''), publishId:this.publishId()});
-            if (!r || r.success !== true) throw new Error(r?.message || 'Không thể xác nhận tham dự.');
-            HVADialog.show({type:'success',title:'ĐÃ XÁC NHẬN',message:r.message || 'Đã xác nhận tham dự cuộc họp.',confirmText:'HOÀN TẤT',onConfirm:()=>location.reload()});
-        } catch(e) {
-            console.error('[HVA Meeting] confirm:',e);
-            HVADialog.show({type:'error',title:'XÁC NHẬN CHƯA THÀNH CÔNG',message:e.message || 'Có lỗi khi xác nhận tham dự.'});
-        } finally { this.setBusy('confirm', false); }
+            const r = await this.post({
+                action:'confirmMeetingAttendance',
+                meetingId:String(meetingId || ''),
+                publishId:this.publishId()
+            });
+            if (!r || r.success !== true) throw new Error((r && r.message) || 'Không thể xác nhận tham dự.');
+            HVADialog.show({
+                type:'success', title:'ĐÃ XÁC NHẬN',
+                message:r.message || 'Đã xác nhận tham dự cuộc họp.',
+                confirmText:'HOÀN TẤT', onConfirm:() => location.reload()
+            });
+        } catch (e) {
+            console.error('[HVA Meeting] confirm:', e);
+            HVADialog.show({type:'error',title:'XÁC NHẬN CHƯA THÀNH CÔNG',message:(e && e.message) || 'Có lỗi khi xác nhận tham dự.'});
+        } finally {
+            this.setBusy('confirm', false);
+        }
     },
     showAbsence() {
-        const box=document.getElementById('hva-meeting-absence-box');
+        const box = document.getElementById('hva-meeting-absence-box');
         box?.classList.remove('hidden');
-        setTimeout(()=>{ box?.scrollIntoView({behavior:'smooth',block:'nearest'}); document.getElementById('hva-meeting-absence-reason')?.focus(); },50);
+        setTimeout(() => {
+            box?.scrollIntoView({behavior:'smooth',block:'nearest'});
+            document.getElementById('hva-meeting-absence-reason')?.focus();
+        }, 50);
     },
     hideAbsence() { document.getElementById('hva-meeting-absence-box')?.classList.add('hidden'); },
     async absence(meetingId) {
         if (this._busy) return;
-        const reason=String(document.getElementById('hva-meeting-absence-reason')?.value||'').trim();
-        if (!meetingId && !this.publishId()) return HVADialog.show({type:'error',title:'KHÔNG THỂ GỬI',message:'Không xác định được cuộc họp.'});
-        if (!reason) return HVADialog.show({type:'warning',title:'CHƯA CÓ LÝ DO',message:'Vui lòng nhập lý do xin vắng cuộc họp.'});
-        this.setBusy('absence',true);
+        const reason = String(document.getElementById('hva-meeting-absence-reason')?.value || '').trim();
+        if (!meetingId && !this.publishId()) {
+            return HVADialog.show({type:'error',title:'KHÔNG THỂ GỬI',message:'Không xác định được cuộc họp.'});
+        }
+        if (!reason) {
+            return HVADialog.show({type:'warning',title:'CHƯA CÓ LÝ DO',message:'Vui lòng nhập lý do xin vắng cuộc họp.'});
+        }
+        this.setBusy('absence', true);
         try {
-            const r=await this.post({action:'requestMeetingAbsence',meetingId:String(meetingId||''),publishId:this.publishId(),reason});
-            if (!r || r.success !== true) throw new Error(r?.message || 'Không thể gửi yêu cầu xin vắng.');
-            HVADialog.show({type:'success',title:'ĐÃ GỬI XIN VẮNG',message:r.message || 'Yêu cầu xin vắng đã được gửi.',confirmText:'HOÀN TẤT',onConfirm:()=>location.reload()});
-        } catch(e) {
-            console.error('[HVA Meeting] absence:',e);
-            HVADialog.show({type:'error',title:'GỬI XIN VẮNG CHƯA THÀNH CÔNG',message:e.message || 'Có lỗi khi gửi yêu cầu xin vắng.'});
-        } finally { this.setBusy('absence',false); }
+            const r = await this.post({
+                action:'requestMeetingAbsence',
+                meetingId:String(meetingId || ''),
+                publishId:this.publishId(),
+                reason
+            });
+            if (!r || r.success !== true) throw new Error((r && r.message) || 'Không thể gửi yêu cầu xin vắng.');
+            HVADialog.show({
+                type:'success', title:'ĐÃ GỬI XIN VẮNG',
+                message:r.message || 'Yêu cầu xin vắng đã được gửi.',
+                confirmText:'HOÀN TẤT', onConfirm:() => location.reload()
+            });
+        } catch (e) {
+            console.error('[HVA Meeting] absence:', e);
+            HVADialog.show({type:'error',title:'GỬI XIN VẮNG CHƯA THÀNH CÔNG',message:(e && e.message) || 'Có lỗi khi gửi yêu cầu xin vắng.'});
+        } finally {
+            this.setBusy('absence', false);
+        }
     }
 };
 
