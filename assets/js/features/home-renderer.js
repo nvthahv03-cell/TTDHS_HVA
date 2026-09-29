@@ -2061,19 +2061,19 @@
                         </button>
 
                         <div id="hva-hsg12-items" class="hidden pl-6 pr-1 pb-1 space-y-0.5">
-                            <a href="hsg12-giao-vien.html"
+                            <a href="#" onclick="openHSG12ComingSoon('Giáo viên bồi dưỡng', event); return false;"
                                class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
                                 <i class="bi bi-person-video3 mr-1.5"></i>Giáo viên bồi dưỡng
                             </a>
-                            <a href="hsg12-hoc-sinh.html"
+                            <a href="#" onclick="openHSG12ComingSoon('Danh sách học sinh', event); return false;"
                                class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
                                 <i class="bi bi-people-fill mr-1.5"></i>Danh sách học sinh
                             </a>
-                            <a href="hsg12-ke-hoach.html"
+                            <a href="#" onclick="openHSG12ComingSoon('Kế hoạch bồi dưỡng', event); return false;"
                                class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
                                 <i class="bi bi-journal-text mr-1.5"></i>Kế hoạch bồi dưỡng
                             </a>
-                            <a href="hsg12-thoi-khoa-bieu.html"
+                            <a href="#" onclick="openHSG12ComingSoon('Thời khóa biểu', event); return false;"
                                class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
                                 <i class="bi bi-calendar3 mr-1.5"></i>Thời khóa biểu
                             </a>
@@ -2090,21 +2090,21 @@
                                 <i class="bi bi-box-arrow-up-right ml-auto text-[9px]"></i>
                             </a>
 
-                            <a href="hsg12-kiem-tra.html"
+                            <a href="#" onclick="openHSG12ComingSoon('Kiểm tra - Thi thử', event); return false;"
                                class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
                                 <i class="bi bi-clipboard-check mr-1.5"></i>Kiểm tra - Thi thử
                             </a>
-                            <a href="hsg12-chon-doi-tuyen.html"
+                            <a href="#" onclick="openHSG12ComingSoon('Thi chọn đội tuyển', event); return false;"
                                class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
                                 <i class="bi bi-trophy-fill mr-1.5"></i>Thi chọn đội tuyển
                             </a>
-                            <a href="hsg12-ket-qua.html"
+                            <a href="#" onclick="openHSG12ComingSoon('Kết quả - Thống kê', event); return false;"
                                class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
                                 <i class="bi bi-bar-chart-fill mr-1.5"></i>Kết quả - Thống kê
                             </a>
                         </div>
 
-                        <a href="cac-cuoc-thi.html"
+                        <a href="#" onclick="openHSG12ComingSoon('Các kỳ thi - cuộc thi khác', event); return false;"
                            class="flex items-center gap-2 px-2.5 py-2 mt-1 rounded-lg
                                   text-[11px] font-semibold text-slate-600
                                   hover:bg-white hover:text-orange-600 transition">
@@ -5631,6 +5631,74 @@ function approvalStageLabel_(s){
     setTimeout(bindThiDuaVanBanPanelGuard_, 0);
     setTimeout(bindThiDuaVanBanPanelGuard_, 300);
     setTimeout(bindThiDuaVanBanPanelGuard_, 1200);
+
+    // ======================================================
+    // HSG 12 - MODAL CHỨC NĂNG ĐANG HOÀN THIỆN
+    // Dùng cho các mục chưa triển khai để không điều hướng 404.
+    // Sổ ghi đầu bài vẫn mở WebApp thật, không đi qua hàm này.
+    // ======================================================
+    window.closeHSG12ComingSoon = function(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        document.getElementById('hva-hsg12-coming-soon')?.remove();
+        document.body.classList.remove('overflow-hidden');
+    };
+
+    window.openHSG12ComingSoon = function(moduleName, event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        window.closeHSG12ComingSoon();
+
+        const safeName = String(moduleName || 'Học sinh giỏi 12')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+
+        const html = `
+            <div id="hva-hsg12-coming-soon"
+                 class="fixed inset-0 z-[10000] bg-slate-950/45 backdrop-blur-[2px] flex items-center justify-center p-4">
+                <div class="w-full max-w-[390px] overflow-hidden rounded-[26px] border border-orange-100 bg-white shadow-2xl">
+                    <div class="relative px-5 pt-6 pb-5 text-center bg-gradient-to-br from-orange-50 via-white to-amber-50">
+                        <button type="button"
+                                onclick="closeHSG12ComingSoon(event)"
+                                class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 border border-slate-100 text-slate-400 hover:text-slate-600 hover:bg-slate-50 flex items-center justify-center transition"
+                                aria-label="Đóng">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                        <div class="mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center shadow-lg shadow-orange-200/70">
+                            <i class="bi bi-mortarboard-fill text-[24px]"></i>
+                        </div>
+                        <div class="mt-4 text-[10px] font-extrabold tracking-[0.12em] text-orange-500 uppercase">Học sinh giỏi 12</div>
+                        <div class="mt-1 text-[16px] font-black text-[#123B67] leading-snug">${safeName}</div>
+                    </div>
+                    <div class="px-5 py-5 text-center">
+                        <div class="text-[15px] font-extrabold text-slate-700">Tính năng đang hoàn thiện</div>
+                        <div class="mt-2 text-[11px] leading-relaxed text-slate-500">HVA đang hoàn thiện chức năng này để bảo đảm dữ liệu và quy trình sử dụng được đồng bộ.</div>
+                        <button type="button"
+                                onclick="closeHSG12ComingSoon(event)"
+                                class="mt-5 w-full rounded-xl bg-[#0F4C81] hover:bg-[#123B67] px-4 py-2.5 text-[11px] font-extrabold text-white shadow-sm transition active:scale-[0.98]">
+                            ĐÃ HIỂU
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+
+        document.body.insertAdjacentHTML('beforeend', html);
+        document.body.classList.add('overflow-hidden');
+
+        const modal = document.getElementById('hva-hsg12-coming-soon');
+        modal?.addEventListener('click', function(e) {
+            if (e.target === modal) window.closeHSG12ComingSoon(e);
+        });
+        return false;
+    };
 
     // ======================================================
     // THI ĐUA - KHEN THƯỞNG
