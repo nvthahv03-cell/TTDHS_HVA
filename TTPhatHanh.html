@@ -795,6 +795,207 @@ window.HVAMeetingAction = {
 };
 
 // =================================================================
+// VIEWER: KHẢO SÁT – BÌNH CHỌN
+// Phục hồi luồng người nhận trực tiếp từ bản phát hành.
+// Không thay đổi Viewer Cuộc họp, Backend/Auth hoặc luồng phát hành.
+// =================================================================
+window.HVAKSBCAction = {
+    escape(value) {
+        return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    },
+
+    user() {
+        try { return JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}'); }
+        catch (_) { return {}; }
+    },
+
+    notify(message, kind='info', title='KHẢO SÁT – BÌNH CHỌN') {
+        document.getElementById('hva-ksbc-notice')?.remove();
+        const box = document.createElement('div');
+        box.id = 'hva-ksbc-notice';
+        box.className = 'fixed inset-0 z-[2147483647] bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4';
+        const icon = kind === 'success' ? 'bi-check-circle-fill text-emerald-600' : (kind === 'error' ? 'bi-exclamation-triangle-fill text-red-600' : 'bi-info-circle-fill text-blue-600');
+        box.innerHTML = `<div class="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="p-5 flex gap-3"><i class="bi ${icon} text-2xl"></i><div class="min-w-0"><div class="text-sm font-extrabold text-slate-800">${this.escape(title)}</div><div class="mt-1 text-sm text-slate-600 leading-relaxed whitespace-pre-line">${this.escape(message)}</div></div></div>
+            <div class="px-5 py-3 bg-slate-50 border-t flex justify-end"><button type="button" data-close class="px-5 py-2 rounded-xl bg-[#0F4C81] text-white text-xs font-extrabold">ĐÓNG</button></div></div>`;
+        box.querySelector('[data-close]').onclick = () => box.remove();
+        box.addEventListener('click', e => { if (e.target === box) box.remove(); });
+        document.body.appendChild(box);
+    },
+
+    async submit(item, answers, button) {
+        const user = this.user();
+        const username = String(user.username || user.userName || user.maGV || '').trim();
+        if (!username) return this.notify('Không xác định được tài khoản đang đăng nhập.', 'error', 'CHƯA GỬI ĐƯỢC');
+        if (!item.surveyId) return this.notify('Không xác định được mã khảo sát/bình chọn.', 'error', 'CHƯA GỬI ĐƯỢC');
+
+        const normalHtml = button ? button.innerHTML : '';
+        if (button) {
+            button.disabled = true;
+            button.classList.add('opacity-60','cursor-wait');
+            button.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-2"></i>ĐANG GỬI...';
+        }
+
+        try {
+            const response = await fetch(CONFIG.SCRIPT_URL, {
+                method: 'POST',
+                headers: {'Content-Type':'text/plain;charset=utf-8'},
+                body: JSON.stringify({
+                    action: 'submitSurveyPollResponse',
+                    surveyId: item.surveyId,
+                    username,
+                    fullName: user.hoTen || user.fullName || user.name || '',
+                    answers,
+                    sessionToken: String(localStorage.getItem('hvaSessionToken') || '').trim()
+                })
+            });
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            const text = await response.text();
+            if (/^\s*</.test(text)) throw new Error('Backend trả về dữ liệu không hợp lệ.');
+            const data = JSON.parse(text);
+            if (!data || data.success !== true) throw new Error(data?.message || 'Không gửi được dữ liệu.');
+
+            const area = document.getElementById('hva-ksbc-response-area');
+            if (area) area.innerHTML = `<div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-emerald-800">
+                <div class="font-extrabold"><i class="bi bi-check-circle-fill mr-2"></i>${item.objectType === 'POLL' ? 'ĐÃ GHI NHẬN BÌNH CHỌN' : 'ĐÃ GHI NHẬN KHẢO SÁT'}</div>
+                <div class="mt-1 text-sm font-semibold">Thầy/Cô đã hoàn thành nội dung này.</div>
+            </div>`;
+            this.notify(
+                item.objectType === 'POLL' ? 'Thầy/Cô đã hoàn thành bình chọn.' : 'Thầy/Cô đã hoàn thành khảo sát.',
+                'success',
+                item.objectType === 'POLL' ? 'ĐÃ GHI NHẬN BÌNH CHỌN' : 'ĐÃ GHI NHẬN KHẢO SÁT'
+            );
+        } catch (e) {
+            console.error('[HVA KSBC] submit:', e);
+            if (button) {
+                button.disabled = false;
+                button.classList.remove('opacity-60','cursor-wait');
+                button.innerHTML = normalHtml;
+            }
+            this.notify(e?.message || 'Không gửi được dữ liệu.', 'error', 'CHƯA GỬI ĐƯỢC');
+        }
+    },
+
+    collectAnswers(item) {
+        const form = document.getElementById('hva-ksbc-form');
+        if (!form) return null;
+        const questions = Array.isArray(item.questions) ? item.questions : [];
+        const answers = questions.map(q => {
+            const name = 'q-' + String(q.id || '');
+            const nodes = [...form.querySelectorAll(`[name="${CSS.escape(name)}"]`)];
+            const chosen = nodes
+                .filter(n => n.checked || !['radio','checkbox'].includes(n.type))
+                .map(n => String(n.value || '').trim())
+                .filter(Boolean);
+            return {questionId:q.id || '', question:q.text || '', answer:chosen};
+        });
+        if (answers.some(a => !a.answer.length)) {
+            this.notify('Vui lòng trả lời đầy đủ các câu hỏi trước khi gửi.', 'error', 'CHƯA HOÀN TẤT');
+            return null;
+        }
+        return answers;
+    },
+
+    submitForm(button) {
+        const item = window.HVA_KSBC_CURRENT;
+        if (!item) return;
+        const answers = this.collectAnswers(item);
+        if (!answers) return;
+        this.submit(item, answers, button);
+    },
+
+    submitPoll(button) {
+        const item = window.HVA_KSBC_CURRENT;
+        if (!item) return;
+        const form = document.getElementById('hva-ksbc-form');
+        const q = (item.questions || [])[0] || {};
+        const selected = [...(form?.querySelectorAll('input:checked') || [])].map(x => x.value);
+        if (!selected.length) return this.notify('Vui lòng chọn một phương án.', 'error', 'CHƯA HOÀN TẤT');
+        this.submit(item, [{questionId:q.id || 'Q1', question:q.text || item.title, answer:selected}], button);
+    },
+
+    completeExternal(button) {
+        const item = window.HVA_KSBC_CURRENT;
+        if (!item) return;
+        this.submit(item, [], button);
+    }
+};
+
+ContentViewerRouter.register(
+    ['KhaoSatBinhChon','POLL','SURVEY'],
+    {
+        open({ document: documentState, raw, data }) {
+            const esc = window.HVAKSBCAction.escape.bind(window.HVAKSBCAction);
+            const item = {
+                surveyId: String(data.surveyId || documentState.docId || raw.surveyId || '').trim(),
+                objectType: String(data.objectType || documentState.type || raw.documentType || 'SURVEY').toUpperCase(),
+                surveyType: String(data.surveyType || '').toLowerCase(),
+                title: String(data.title || documentState.title || 'Khảo sát – Bình chọn'),
+                description: String(data.description || documentState.summary || ''),
+                reference: String(data.reference || ''),
+                externalUrl: String(data.externalUrl || data.shareLink || ''),
+                deadlineDate: String(data.deadlineDate || ''),
+                deadlineTime: String(data.deadlineTime || ''),
+                multiPoll: data.multiPoll === true || String(data.multiPoll).toLowerCase() === 'true',
+                questions: Array.isArray(data.questions) ? data.questions : []
+            };
+            window.HVA_KSBC_CURRENT = item;
+
+            const isPoll = item.objectType === 'POLL';
+            const isExternal = item.surveyType === 'external' && /^https?:\/\//i.test(item.externalUrl);
+            const questionHtml = isExternal ? `
+                <div class="rounded-2xl border border-blue-200 bg-blue-50 p-5">
+                    <div class="text-sm font-bold text-slate-800">Khảo sát trên liên kết ngoài</div>
+                    <div class="mt-1 text-xs text-slate-600">Mở liên kết để thực hiện khảo sát. Sau khi hoàn thành, quay lại đây và bấm “ĐÃ HOÀN THÀNH”.</div>
+                    <a href="${esc(item.externalUrl)}" target="_blank" rel="noopener" class="mt-4 inline-flex items-center justify-center w-full px-5 py-3 rounded-xl bg-blue-600 text-white font-extrabold text-sm"><i class="bi bi-box-arrow-up-right mr-2"></i>MỞ KHẢO SÁT</a>
+                </div>` : `
+                <form id="hva-ksbc-form" class="space-y-4">
+                    ${item.questions.map((q,i) => {
+                        const kind = String(q.kind || (isPoll ? 'poll' : 'single')).toLowerCase();
+                        const options = Array.isArray(q.options) ? q.options.filter(x => String(x).trim()) : [];
+                        let field = '';
+                        if (['single','multi','poll'].includes(kind)) {
+                            const inputType = (kind === 'multi' || (isPoll && item.multiPoll)) ? 'checkbox' : 'radio';
+                            field = `<div class="mt-3 space-y-2">${options.map(o => `<label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-blue-50 cursor-pointer"><input type="${inputType}" name="q-${esc(q.id || '')}" value="${esc(o)}"><span class="text-sm font-semibold text-slate-700">${esc(o)}</span></label>`).join('')}</div>`;
+                        } else if (kind === 'scale') {
+                            field = `<select name="q-${esc(q.id || '')}" class="mt-3 w-full border border-slate-300 rounded-xl p-3 bg-white"><option value="">Chọn mức</option>${[1,2,3,4,5].map(n=>`<option value="${n}">${n}</option>`).join('')}</select>`;
+                        } else {
+                            field = `<textarea name="q-${esc(q.id || '')}" rows="3" class="mt-3 w-full border border-slate-300 rounded-xl p-3" placeholder="Nhập câu trả lời..."></textarea>`;
+                        }
+                        return `<div class="rounded-2xl border border-slate-200 bg-white p-4"><div class="text-sm font-extrabold text-slate-800">${i+1}. ${esc(q.text || '')}</div>${field}</div>`;
+                    }).join('')}
+                </form>`;
+
+            let modal = document.getElementById('hva-module-content-viewer');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'hva-module-content-viewer';
+                modal.className = 'fixed inset-0 z-[100000] bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4';
+                document.body.appendChild(modal);
+            }
+
+            const deadline = [item.deadlineDate, item.deadlineTime].filter(Boolean).join(' • ');
+            modal.innerHTML = `<div class="bg-white w-full max-w-2xl max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+                <header class="px-6 py-5 border-b border-slate-200 flex items-start justify-between gap-4 bg-gradient-to-r from-emerald-50 to-cyan-50">
+                    <div><div class="text-xs font-extrabold uppercase tracking-wide ${isPoll?'text-emerald-700':'text-blue-700'}">${isPoll?'BÌNH CHỌN':'KHẢO SÁT'}</div><h2 class="mt-1 text-xl font-extrabold text-slate-900">${esc(item.title)}</h2>${item.description?`<div class="mt-1 text-sm text-slate-600">${esc(item.description)}</div>`:''}</div>
+                    <button type="button" onclick="document.getElementById('hva-module-content-viewer')?.remove()" class="w-10 h-10 shrink-0 rounded-full bg-white/80 hover:bg-white text-slate-600"><i class="bi bi-x-lg"></i></button>
+                </header>
+                <div class="px-6 py-5 overflow-y-auto space-y-4">
+                    ${item.reference?`<div class="text-xs text-slate-600"><b>Căn cứ:</b> ${esc(item.reference)}</div>`:''}
+                    ${deadline?`<div class="text-xs text-slate-600"><b>Hạn:</b> ${esc(deadline)}</div>`:''}
+                    <div id="hva-ksbc-response-area">${questionHtml}</div>
+                </div>
+                <footer class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-wrap justify-end gap-3">
+                    ${isExternal?`<button type="button" onclick="HVAKSBCAction.completeExternal(this)" class="px-6 py-3 rounded-xl bg-emerald-600 text-white font-extrabold">ĐÃ HOÀN THÀNH</button>`:`<button type="button" onclick="${isPoll?'HVAKSBCAction.submitPoll(this)':'HVAKSBCAction.submitForm(this)'}" class="px-6 py-3 rounded-xl ${isPoll?'bg-emerald-600':'bg-blue-600'} text-white font-extrabold">${isPoll?'GỬI BÌNH CHỌN':'GỬI KHẢO SÁT'}</button>`}
+                    <button type="button" onclick="document.getElementById('hva-module-content-viewer')?.remove()" class="px-6 py-3 rounded-xl border border-slate-300 bg-white font-bold text-slate-700">ĐÓNG</button>
+                </footer>
+            </div>`;
+            modal.classList.remove('hidden');
+        }
+    }
+);
+
+// =================================================================
 // VIEWER: CUỘC HỌP
 // Adapter đầu tiên của hệ thống Viewer Router.
 // =================================================================
