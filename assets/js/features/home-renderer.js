@@ -5141,42 +5141,167 @@
         // Giữ ẩn cho đến khi API xác nhận thực sự có nội dung cần xử lý.
     }
 
-    window.loadMeetingAttendanceApprovals = async function(forceRefresh=false){
-        ensureMeetingApprovalPanel_();
-        const panel=document.getElementById('hvaMeetingApprovalPanel');
-        const box=document.getElementById('hvaMeetingApprovalList');
-        const reload=document.getElementById('hvaMeetingApprovalReload');
-        const username=getApprovalUsername_();
-        if(!panel||!box||!username)return;
-        if(reload)reload.classList.add('hidden');
-        try{
-            const r=await fetch(`${MY_TASK_API_URL}?action=getPendingMeetingAttendanceApprovals&username=${encodeURIComponent(username)}&_=${Date.now()}`,{cache:'no-store'});
-            const raw=await r.text();
-            const type=String(r.headers.get('content-type')||'').toLowerCase();
-            if(!r.ok)throw new Error(`HTTP ${r.status}`);
-            if(type.includes('text/html')||/^\s*</.test(raw))throw new Error('BACKEND_NOT_JSON');
-            let d;
-            try{d=JSON.parse(raw);}catch(_){throw new Error('Dữ liệu phản hồi chưa đúng định dạng');}
-            HVA_MEETING_APPROVALS=d&&d.success?d.approvals||[]:[];
-            const issueCount=HVA_MEETING_APPROVALS.reduce((total,a)=>{
-                const s=a&&a.summary?a.summary:{};
-                return total+Number(s.missing||0)+Number(s.late||0)+Number(s.earlyLeave||s.early||0)+Number(s.abnormal||0);
-            },0);
-            const hasWork=HVA_MEETING_APPROVALS.length>0||issueCount>0;
-            const allowed=hasWork&&(canSeeMeetingApprovalPanel_()||HVA_MEETING_APPROVALS.length>0);
-            panel.classList.toggle('hidden',!allowed);
-            if(!allowed)return;
-            renderMeetingAttendanceApprovals_();
-        }catch(e){
-            console.error('[HVA] Không tải được dữ liệu xác nhận:',e);
-            HVA_MEETING_APPROVALS=[];
-            // Lỗi tải dữ liệu không được dựng card 0–0 gây hiểu nhầm trên Home.
-            panel.classList.add('hidden');
-            if(reload)reload.classList.add('hidden');
-        }
-    };
+   window.loadMeetingAttendanceApprovals = async function(forceRefresh=false){
+    ensureMeetingApprovalPanel_();
 
-    function approvalStageLabel_(s){return s==='TO_BO_PHAN'?'TTCM/Trưởng bộ phận':s==='THU_KY'?'THƯ KÝ':s==='CHU_TRI'?'CHỦ TRÌ':s;}
+    const panel =
+        document.getElementById('hvaMeetingApprovalPanel');
+
+    const box =
+        document.getElementById('hvaMeetingApprovalList');
+
+    const reload =
+        document.getElementById('hvaMeetingApprovalReload');
+
+    const username =
+        getApprovalUsername_();
+
+    if(!panel || !box || !username) return;
+
+    if(reload) reload.classList.add('hidden');
+
+    try {
+        const token =
+            String(
+                localStorage.getItem('hvaSessionToken') ||
+                sessionStorage.getItem('hvaSessionToken') ||
+                ''
+            ).trim();
+
+        if(!token){
+            panel.classList.add('hidden');
+            return;
+        }
+
+        const url =
+            `${MY_TASK_API_URL}` +
+            `?action=getPendingMeetingAttendanceApprovals` +
+            `&sessionToken=${encodeURIComponent(token)}` +
+            `&_=${Date.now()}`;
+
+        const r = await fetch(
+            url,
+            {cache:'no-store'}
+        );
+
+        const raw = await r.text();
+
+        const type =
+            String(
+                r.headers.get('content-type') || ''
+            ).toLowerCase();
+
+        if(!r.ok){
+            throw new Error(`HTTP ${r.status}`);
+        }
+
+        if(
+            type.includes('text/html') ||
+            /^\s*</.test(raw)
+        ){
+            throw new Error('BACKEND_NOT_JSON');
+        }
+
+        let d;
+
+        try {
+            d = JSON.parse(raw);
+        } catch(_) {
+            throw new Error(
+                'Dữ liệu phản hồi chưa đúng định dạng'
+            );
+        }
+
+        if(
+            d &&
+            (
+                d.code === 'AUTH_REQUIRED' ||
+                d.code === 'SESSION_INVALID' ||
+                d.code === 'SESSION_EXPIRED'
+            )
+        ){
+            panel.classList.add('hidden');
+            return;
+        }
+
+        HVA_MEETING_APPROVALS =
+            d && d.success
+                ? (d.approvals || [])
+                : [];
+
+        const issueCount =
+            HVA_MEETING_APPROVALS.reduce(
+                (total,a)=>{
+                    const s =
+                        a && a.summary
+                            ? a.summary
+                            : {};
+
+                    return total +
+                        Number(s.missing || 0) +
+                        Number(s.late || 0) +
+                        Number(
+                            s.earlyLeave ||
+                            s.early ||
+                            0
+                        ) +
+                        Number(s.abnormal || 0);
+                },
+                0
+            );
+
+        const hasWork =
+            HVA_MEETING_APPROVALS.length > 0 ||
+            issueCount > 0;
+
+        // Backend đã phân quyền thực tế.
+        // Frontend chỉ hiển thị khi Backend trả đúng việc.
+        panel.classList.toggle(
+            'hidden',
+            !hasWork
+        );
+
+        if(!hasWork) return;
+
+        if(reload){
+            reload.classList.remove('hidden');
+        }
+
+        renderMeetingAttendanceApprovals_();
+
+    } catch(e) {
+        console.error(
+            '[HVA] Không tải được dữ liệu xác nhận:',
+            e
+        );
+
+        HVA_MEETING_APPROVALS = [];
+
+        panel.classList.add('hidden');
+
+        if(reload){
+            reload.classList.add('hidden');
+        }
+    }
+};
+
+function approvalStageLabel_(s){
+    return s === 'TO_BO_PHAN'
+        ? 'TTCM/Trưởng bộ phận'
+        : s === 'THU_KY'
+            ? 'THƯ KÝ'
+            : s === 'BGH'
+                ? 'BAN GIÁM HIỆU'
+                : s;
+}function approvalStageLabel_(s){
+    return s === 'TO_BO_PHAN'
+        ? 'TTCM/Trưởng bộ phận'
+        : s === 'THU_KY'
+            ? 'THƯ KÝ'
+            : s === 'BGH'
+                ? 'BAN GIÁM HIỆU'
+                : s;
+}
 
     function renderMeetingAttendanceApprovals_(){
         const box=document.getElementById('hvaMeetingApprovalList'); if(!box)return;
