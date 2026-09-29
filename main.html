@@ -151,6 +151,7 @@
         <div class="ml-2 w-10 h-10 flex items-center justify-center shrink-0">
             <img src="./assets/brand/HVA_Logo_Transparent.png?v=20260915e"
                  alt="HVA Digital"
+                 onerror="this.onerror=null;this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230F4C81%22/%3E%3Ctext x=%2250%22 y=%2262%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2234%22 font-weight=%22700%22 fill=%22white%22%3EHVA%3C/text%3E%3C/svg%3E'"
                  class="w-10 h-10 object-contain"
                  draggable="false">
         </div>
@@ -251,7 +252,7 @@
 <aside id="hva-main-drawer" class="fixed inset-y-0 left-0 z-[90] w-[86vw] max-w-[310px] bg-white shadow-2xl border-r border-blue-100 flex flex-col" aria-hidden="true">
     <div class="px-4 py-4 bg-gradient-to-r from-[#0F4C81] to-[#1565C0] text-white flex items-center justify-between gap-3">
         <div class="flex items-center gap-3 min-w-0">
-            <div class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0"><img src="./assets/brand/HVA_Logo_Transparent.png?v=20260915e" alt="HVA Digital" class="w-9 h-9 object-contain" draggable="false"></div>
+            <div class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0"><img src="./assets/brand/HVA_Logo_Transparent.png?v=20260915e" alt="HVA Digital" onerror="this.onerror=null;this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230F4C81%22/%3E%3Ctext x=%2250%22 y=%2262%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2234%22 font-weight=%22700%22 fill=%22white%22%3EHVA%3C/text%3E%3C/svg%3E'" class="w-9 h-9 object-contain" draggable="false"></div>
             <div class="min-w-0"><div class="text-[12px] font-extrabold truncate">TRUNG TÂM QUẢN TRỊ SỐ HVA</div><div class="text-[9px] text-blue-100 truncate">Trường THPT Hòa Vang</div></div>
         </div>
         <button id="hva-main-drawer-close" type="button" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center" aria-label="Đóng menu"><i class="bi bi-x-lg"></i></button>
@@ -452,16 +453,15 @@
     <!-- PANEL -->
     <div id="search-panel-box"
          class="w-full sm:max-w-[430px]
-                h-[88dvh] sm:h-auto sm:max-h-[88vh]
+                max-h-[82vh]
                 bg-white
                 rounded-t-[26px] sm:rounded-[26px]
                 shadow-2xl
                 overflow-hidden
-                border border-slate-200
-                flex flex-col">
+                border border-slate-200">
 
         <!-- ================= HEADER ================= -->
-        <div class="shrink-0 px-5 pt-4 pb-3
+        <div class="px-5 pt-4 pb-3
                     bg-gradient-to-r from-blue-50 via-white to-cyan-50
                     border-b border-blue-100">
 
@@ -575,7 +575,7 @@
 
 
         <!-- ================= PHẠM VI TRA CỨU ================= -->
-        <div id="search-panel-scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 pb-8">
+        <div class="p-4">
 
             <div class="text-[10px]
                         font-extrabold
@@ -848,7 +848,7 @@
                 border border-slate-200">
 
         <!-- HEADER -->
-        <div class="shrink-0 px-5 pt-4 pb-3
+        <div class="px-5 pt-4 pb-3
                     bg-gradient-to-r from-blue-50 via-white to-cyan-50
                     border-b border-blue-100">
 
@@ -3983,8 +3983,6 @@ setTimeout(() => {
     let ACTIVE_PERSONNEL_FILTER = null;
     let PERSONNEL_WORKGROUPS_LOADED = false;
     let SEARCH_TIMER = null;
-    const PERSONNEL_QUERY_CACHE = new Map();
-    const PERSONNEL_CACHE_PREFIX = 'HVA_PERSONNEL_V1:';
 
     const panel = document.getElementById('search-panel');
     const panelBox = document.getElementById('search-panel-box');
@@ -4015,28 +4013,69 @@ setTimeout(() => {
         groupBox.insertAdjacentElement('afterend', resultBox);
     }
 
-    /* HVA PERSONNEL DIRECTORY V1 - dùng chung cấu trúc với Cuộc họp */
+    /* HVA QUICK SEARCH - PERSONNEL DIRECTORY V4 - 28/09/2026
+       4 nhánh cấp 1: Chi bộ | Ban Giám hiệu | Tổ/Bộ phận | Nhóm công tác khác */
     const personnelTabs = document.createElement('div');
     personnelTabs.id = 'personnel-search-tabs';
     personnelTabs.className = 'hidden ml-3 mr-1 mb-2 overflow-hidden rounded-2xl border border-violet-100 bg-violet-50/40';
-    const HVA_PERSONNEL_UNITS=[
-      {label:'Tổ Toán – Tin',value:'Toán - Tin'},{label:'Tổ Ngữ văn',value:'Ngữ văn'},{label:'Tổ Ngoại Ngữ',value:'Ngoại Ngữ'},
-      {label:'Tổ Sử - Địa - GDKT&PL',value:'Sử - Địa - GDKT&PL'},{label:'Tổ Vật lí - Công nghệ',value:'Vật lí - Công nghệ'},
-      {label:'Tổ Hóa học',value:'Hóa học'},{label:'Tổ Sinh - GDTC - QPAN',value:'Sinh - GDTC - QPAN'},{label:'Tổ Văn phòng',value:'Văn phòng'}
+
+    const HVA_PERSONNEL_UNITS = [
+        { label: 'Tổ Toán – Tin', value: 'Toán - Tin' },
+        { label: 'Tổ Ngữ văn', value: 'Ngữ văn' },
+        { label: 'Tổ Ngoại Ngữ', value: 'Ngoại Ngữ' },
+        { label: 'Tổ Sử - Địa - GDKT&PL', value: 'Sử - Địa - GDKT&PL' },
+        { label: 'Tổ Vật lí - Công nghệ', value: 'Vật lí - Công nghệ' },
+        { label: 'Tổ Hóa học', value: 'Hóa học' },
+        { label: 'Tổ Sinh - GDTC - QPAN', value: 'Sinh - GDTC - QPAN' },
+        { label: 'Tổ Văn phòng', value: 'Văn phòng' }
     ];
-    personnelTabs.innerHTML=`<div class="px-3 py-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-violet-400">Chọn nhóm nhân sự</div><div class="px-2 pb-2 space-y-1">
-      <button type="button" data-personnel-special="COUNCIL" class="w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left hover:bg-indigo-50"><span class="flex items-center gap-2.5"><i class="bi bi-building-fill text-indigo-600"></i><span class="text-[11px] font-bold text-[#123B67]">Hội đồng</span></span><i class="bi bi-chevron-right text-[10px] text-slate-300"></i></button>
-      <button type="button" data-personnel-category="CHIBO" class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left hover:bg-violet-50"><span class="flex items-center gap-2.5"><i class="bi bi-diagram-3-fill text-violet-500"></i><span class="text-[11px] font-bold text-[#123B67]">Chi bộ</span></span><i class="bi bi-chevron-right text-[10px] text-slate-300"></i></button>
-      <button type="button" data-personnel-category="BGH" class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left hover:bg-blue-50"><span class="flex items-center gap-2.5"><i class="bi bi-person-badge-fill text-blue-600"></i><span class="text-[11px] font-bold text-[#123B67]">Ban Giám hiệu</span></span><i class="bi bi-chevron-right text-[10px] text-slate-300"></i></button>
-      <button type="button" data-personnel-branch="TEAM" class="w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left hover:bg-sky-50"><span class="flex items-center gap-2.5"><i class="bi bi-people-fill text-sky-500"></i><span class="text-[11px] font-bold text-[#123B67]">Tổ/Bộ phận</span></span><i id="personnel-team-chevron" class="bi bi-chevron-right text-[10px] text-slate-300"></i></button>
-      <div id="personnel-team-list" class="hidden ml-4 mt-1 space-y-1 border-l-2 border-sky-100 pl-2">${HVA_PERSONNEL_UNITS.map(unit=>`<button type="button" data-personnel-category="TEAM" data-personnel-unit="${unit.value}" data-personnel-label="${unit.label}" class="personnel-category w-full flex items-center justify-between rounded-lg bg-white px-3 py-2 text-left hover:bg-sky-50"><span class="truncate text-[10.5px] font-semibold text-slate-700">${unit.label}</span><i class="bi bi-chevron-right text-[9px] text-slate-300"></i></button>`).join('')}</div>
-      <button type="button" data-personnel-branch="GVCN" class="w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left hover:bg-orange-50"><span class="flex items-center gap-2.5"><i class="bi bi-person-vcard-fill text-orange-500"></i><span class="text-[11px] font-bold text-[#123B67]">GVCN</span></span><i id="personnel-gvcn-chevron" class="bi bi-chevron-right text-[10px] text-slate-300"></i></button>
-      <div id="personnel-gvcn-list" class="hidden ml-4 mt-1 grid grid-cols-3 gap-1 border-l-2 border-orange-100 pl-2">${['10','11','12'].map(k=>`<button type="button" data-personnel-special="GVCN" data-personnel-grade="${k}" class="rounded-lg bg-white px-2 py-2 text-[10px] font-bold text-slate-700 hover:bg-orange-50">Khối ${k}</button>`).join('')}</div>
-      <button type="button" data-personnel-branch="WORKGROUP" class="w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left hover:bg-amber-50"><span class="flex items-center gap-2.5"><i class="bi bi-grid-fill text-amber-500"></i><span class="text-[11px] font-bold text-[#123B67]">Nhóm công tác khác</span></span><i id="personnel-workgroup-chevron" class="bi bi-chevron-right text-[10px] text-slate-300"></i></button>
-      <div id="personnel-workgroup-list" class="hidden ml-4 mt-1 space-y-1 border-l-2 border-amber-100 pl-2"></div>
-    </div>`;
-    const personnelTypeButton=typeButtons.find(btn=>btn.dataset.searchType==='NHANSU');
-    if(personnelTypeButton)personnelTypeButton.insertAdjacentElement('afterend',personnelTabs);else resultBox.insertAdjacentElement('beforebegin',personnelTabs);
+
+    personnelTabs.innerHTML = `
+        <div class="px-3 py-2 text-[9px] font-extrabold uppercase tracking-[0.08em] text-violet-400">Chọn nhóm nhân sự</div>
+        <div class="px-2 pb-2 space-y-1">
+            <button type="button" data-personnel-category="CHIBO"
+                    class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-violet-100 hover:bg-violet-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-diagram-3-fill text-violet-500"></i><span class="text-[11px] font-bold text-[#123B67]">Chi bộ</span></span>
+                <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
+            </button>
+
+            <button type="button" data-personnel-category="BGH"
+                    class="personnel-category w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-blue-100 hover:bg-blue-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-person-badge-fill text-blue-600"></i><span class="text-[11px] font-bold text-[#123B67]">Ban Giám hiệu</span></span>
+                <i class="bi bi-chevron-right text-[10px] text-slate-300"></i>
+            </button>
+
+            <button type="button" data-personnel-branch="TEAM"
+                    class="w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-sky-100 hover:bg-sky-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-people-fill text-sky-500"></i><span class="text-[11px] font-bold text-[#123B67]">Tổ/Bộ phận</span></span>
+                <i id="personnel-team-chevron" class="bi bi-chevron-right text-[10px] text-slate-300 transition-transform duration-200"></i>
+            </button>
+            <div id="personnel-team-list" class="hidden ml-4 mt-1 space-y-1 border-l-2 border-sky-100 pl-2">
+                ${HVA_PERSONNEL_UNITS.map(unit => `
+                    <button type="button" data-personnel-category="TEAM" data-personnel-unit="${unit.value}" data-personnel-label="${unit.label}"
+                            class="personnel-category w-full flex items-center justify-between rounded-lg bg-white px-3 py-2 text-left border border-transparent hover:border-sky-100 hover:bg-sky-50 transition">
+                        <span class="flex items-center gap-2 min-w-0">
+                            <i class="bi ${unit.value === 'Văn phòng' ? 'bi-building text-emerald-500' : 'bi-people text-sky-500'} text-[11px]"></i>
+                            <span class="truncate text-[10.5px] font-semibold text-slate-700">${unit.label}</span>
+                        </span>
+                        <i class="bi bi-chevron-right text-[9px] text-slate-300"></i>
+                    </button>`).join('')}
+            </div>
+
+            <button type="button" data-personnel-branch="WORKGROUP"
+                    class="w-full flex items-center justify-between rounded-xl bg-white px-3 py-2.5 text-left border border-transparent hover:border-amber-100 hover:bg-amber-50 transition">
+                <span class="flex items-center gap-2.5"><i class="bi bi-grid-fill text-amber-500"></i><span class="text-[11px] font-bold text-[#123B67]">Nhóm công tác khác</span></span>
+                <i id="personnel-workgroup-chevron" class="bi bi-chevron-right text-[10px] text-slate-300 transition-transform duration-200"></i>
+            </button>
+            <div id="personnel-workgroup-list" class="hidden ml-4 mt-1 space-y-1 border-l-2 border-amber-100 pl-2"></div>
+        </div>`;
+
+    const personnelTypeButton = typeButtons.find(btn => btn.dataset.searchType === 'NHANSU');
+    if (personnelTypeButton) {
+        personnelTypeButton.insertAdjacentElement('afterend', personnelTabs);
+    } else {
+        resultBox.insertAdjacentElement('beforebegin', personnelTabs);
+    }
 
     const documentTabs=document.createElement('div');documentTabs.id='document-search-tabs';documentTabs.className='hidden mt-3 space-y-2 rounded-xl bg-slate-50 border border-slate-200 p-2';
     documentTabs.innerHTML=`<div class="grid grid-cols-2 gap-1"><button type="button" data-doc-direction="Văn bản đến" class="rounded-lg bg-white px-2 py-2 text-[10px] font-bold text-[#0F4C81] shadow-sm">Văn bản đến</button><button type="button" data-doc-direction="Văn bản đi" class="rounded-lg bg-white px-2 py-2 text-[10px] font-bold text-[#0F4C81] shadow-sm">Văn bản đi</button></div><div id="document-search-children" class="grid grid-cols-2 gap-1"></div>`;
@@ -4081,10 +4120,6 @@ setTimeout(() => {
         });
     }
 
-    function personnelCacheKey(category,q=''){return PERSONNEL_CACHE_PREFIX+String(category||'')+':'+String(q||'');}
-    function readPersonnelCache(category,q=''){const key=personnelCacheKey(category,q);if(PERSONNEL_QUERY_CACHE.has(key))return PERSONNEL_QUERY_CACHE.get(key);try{const raw=sessionStorage.getItem(key);if(raw){const v=JSON.parse(raw);PERSONNEL_QUERY_CACHE.set(key,v);return v;}}catch(e){}return null;}
-    function writePersonnelCache(category,q,value){const key=personnelCacheKey(category,q);PERSONNEL_QUERY_CACHE.set(key,value);try{sessionStorage.setItem(key,JSON.stringify(value));}catch(e){}return value;}
-
     async function loadPersonnelWorkgroups() {
         const box = document.getElementById('personnel-workgroup-list');
         if (!box) return;
@@ -4102,21 +4137,19 @@ setTimeout(() => {
                 throw new Error('HVA_AUTH_REQUEST_NOT_READY');
             }
 
-            let groups=readPersonnelCache('WORKGROUP_LIST','');
-            if(!groups){
-                const url = SEARCH_API + '?action=getPersonnelWorkgroups&_=' + Date.now();
-                const response = await window.HVAAuthRequest.get(url, { cache:'no-store' });
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                groups=writePersonnelCache('WORKGROUP_LIST','',unwrapArray(await response.json()));
-            }
+            const url = SEARCH_API + '?action=getPersonnelWorkgroups&_=' + Date.now();
+            const response = await window.HVAAuthRequest.get(url, { cache:'no-store' });
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+
+            const data = await response.json();
+            const groups = unwrapArray(data);
 
             if (!groups.length) {
                 box.innerHTML = `<div class="px-3 py-2 text-[10px] text-slate-400">Chưa có nhóm công tác.</div>`;
                 return;
             }
 
-            const visibleGroups=groups.filter(group=>normalizePersonnelText(group.name||'')!=='gvcn');
-            box.innerHTML = visibleGroups.map(group => `
+            box.innerHTML = groups.map(group => `
                 <button type="button" data-workgroup-name="${escapeSearchHtml(group.name || '')}"
                         class="w-full flex items-center justify-between rounded-lg bg-white px-3 py-2 text-left border border-transparent hover:border-amber-100 hover:bg-amber-50 transition">
                     <span class="flex items-center gap-2 min-w-0">
@@ -4137,10 +4170,27 @@ setTimeout(() => {
         }
     }
 
-    function setPersonnelBranchOpen(branch,open){
-      const boxes={TEAM:document.getElementById('personnel-team-list'),GVCN:document.getElementById('personnel-gvcn-list'),WORKGROUP:document.getElementById('personnel-workgroup-list')};
-      const chevs={TEAM:document.getElementById('personnel-team-chevron'),GVCN:document.getElementById('personnel-gvcn-chevron'),WORKGROUP:document.getElementById('personnel-workgroup-chevron')};
-      Object.keys(boxes).forEach(k=>{const yes=k===branch&&open;boxes[k]?.classList.toggle('hidden',!yes);chevs[k]?.classList.toggle('rotate-90',yes);});
+    function setPersonnelBranchOpen(branch, open) {
+        const teamBox = document.getElementById('personnel-team-list');
+        const workBox = document.getElementById('personnel-workgroup-list');
+        const teamChevron = document.getElementById('personnel-team-chevron');
+        const workChevron = document.getElementById('personnel-workgroup-chevron');
+
+        if (branch === 'TEAM') {
+            teamBox?.classList.toggle('hidden', !open);
+            teamChevron?.classList.toggle('rotate-90', open);
+            if (open) {
+                workBox?.classList.add('hidden');
+                workChevron?.classList.remove('rotate-90');
+            }
+        } else if (branch === 'WORKGROUP') {
+            workBox?.classList.toggle('hidden', !open);
+            workChevron?.classList.toggle('rotate-90', open);
+            if (open) {
+                teamBox?.classList.add('hidden');
+                teamChevron?.classList.remove('rotate-90');
+            }
+        }
     }
 
     personnelTabs.addEventListener('click', function (event) {
@@ -4149,13 +4199,6 @@ setTimeout(() => {
             PERSONNEL_WORKGROUPS_LOADED = false;
             loadPersonnelWorkgroups();
             return;
-        }
-
-        const specialButton=event.target.closest('[data-personnel-special]');
-        if(specialButton){
-          const special=specialButton.dataset.personnelSpecial;
-          if(special==='GVCN'){ACTIVE_PERSONNEL_CATEGORY='WORKGROUP';ACTIVE_PERSONNEL_FILTER={field:'grade',value:'GVCN',grade:String(specialButton.dataset.personnelGrade||'')};performSearch();return;}
-          if(special==='COUNCIL'){ACTIVE_PERSONNEL_CATEGORY='COUNCIL';ACTIVE_PERSONNEL_FILTER={field:'council',value:'Hội đồng'};performSearch();return;}
         }
 
         const workgroupButton = event.target.closest('[data-workgroup-name]');
@@ -4177,8 +4220,6 @@ setTimeout(() => {
             if (branch === 'TEAM') {
                 const box = document.getElementById('personnel-team-list');
                 setPersonnelBranchOpen('TEAM', !!box?.classList.contains('hidden'));
-            } else if (branch === 'GVCN') {
-                const box=document.getElementById('personnel-gvcn-list');setPersonnelBranchOpen('GVCN',!!box?.classList.contains('hidden'));
             } else if (branch === 'WORKGROUP') {
                 const box = document.getElementById('personnel-workgroup-list');
                 const willOpen = !!box?.classList.contains('hidden');
@@ -4582,27 +4623,68 @@ setTimeout(() => {
  * Chưa bật Gateway production.
  * ========================================================================== */
 
-async function fetchPersonnelCategory(category,q=''){
-    const cacheQ=String(q||'').trim();const cached=readPersonnelCache(category,cacheQ);if(cached)return cached;
-    const user=getSearchUser();const url=SEARCH_API+'?action=searchNhanSuQuick&q='+encodeURIComponent(cacheQ)+'&username='+encodeURIComponent(user.username||'')+'&category='+encodeURIComponent(category)+'&_='+Date.now();
-    if(!window.HVAAuthRequest||typeof window.HVAAuthRequest.get!=='function')throw new Error('HVA_AUTH_REQUEST_NOT_READY');
-    const response=await window.HVAAuthRequest.get(url,{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);
-    return writePersonnelCache(category,cacheQ,unwrapArray(await response.json()));
-}
-async function searchPersonnel(keyword){
-    const typed=String(keyword||'').trim();let people=[];
-    if(ACTIVE_PERSONNEL_CATEGORY==='COUNCIL'){
-      const chunks=await Promise.all([fetchPersonnelCategory('BGH',''),...HVA_PERSONNEL_UNITS.map(u=>fetchPersonnelCategory('TEAM',u.value))]);
-      const map=new Map();chunks.flat().forEach(p=>{const k=String(p.username||p.maGV||p.hoTen||'').trim();if(k&&!map.has(k))map.set(k,p);});people=[...map.values()];
-    }else if(ACTIVE_PERSONNEL_FILTER?.field==='grade'){
-      people=await fetchPersonnelCategory('WORKGROUP','GVCN');const grade=String(ACTIVE_PERSONNEL_FILTER.grade||'');people=people.filter(p=>String(p.lopChuNhiem||p.lopCN||(p.nhomCongTac||{}).GVCN||'').startsWith(grade+'/'));
-    }else{
-      const structuredUnit=ACTIVE_PERSONNEL_CATEGORY==='TEAM'?String(ACTIVE_PERSONNEL_FILTER?.value||'').trim():'';
-      const structuredWorkgroup=ACTIVE_PERSONNEL_CATEGORY==='WORKGROUP'?String(ACTIVE_PERSONNEL_FILTER?.value||'').trim():'';
-      people=await fetchPersonnelCategory(ACTIVE_PERSONNEL_CATEGORY,structuredUnit||structuredWorkgroup||typed);
+async function searchPersonnel(keyword) {
+    const user = getSearchUser();
+    const structuredUnit = ACTIVE_PERSONNEL_CATEGORY === 'TEAM'
+        ? String(ACTIVE_PERSONNEL_FILTER?.value || '').trim() : '';
+    const structuredWorkgroup = ACTIVE_PERSONNEL_CATEGORY === 'WORKGROUP'
+        ? String(ACTIVE_PERSONNEL_FILTER?.value || '').trim() : '';
+    const apiKeyword = structuredUnit || structuredWorkgroup || String(keyword || '').trim();
+
+    const url = SEARCH_API +
+        '?action=searchNhanSuQuick' +
+        '&q=' + encodeURIComponent(apiKeyword) +
+        '&username=' + encodeURIComponent(user.username || '') +
+        '&category=' + encodeURIComponent(ACTIVE_PERSONNEL_CATEGORY) +
+        '&_=' + Date.now();
+
+    if (!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function') {
+        throw new Error('HVA_AUTH_REQUEST_NOT_READY');
     }
-    if(typed&&(ACTIVE_PERSONNEL_CATEGORY==='COUNCIL'||ACTIVE_PERSONNEL_FILTER?.field==='grade')){const q=normalizePersonnelText(typed);people=people.filter(p=>[p.hoTen,p.username,p.dienThoai,p.chucVu,p.viTriViecLam,p.lopChuNhiem,p.to,...(p.nhomCongTacLabels||[])].map(normalizePersonnelText).join(' ').includes(q));}
-    return people.map((person,index)=>({kind:'NHANSU',id:person.username||('NS_'+index),title:person.hoTen||person.fullName||'Nhân sự',meta:person.lopChuNhiem?'GVCN lớp '+person.lopChuNhiem:(person.personnelCategory==='CHIBO'?'Chi bộ':person.personnelCategory==='BGH'?'Ban Giám hiệu':person.vaiTro||person.chucVu||person.viTriViecLam||'CBQL/GV/NV'),extra:[person.to,person.dienThoai,person.ngaySinh?'Sinh '+person.ngaySinh:'',...(person.nhomCongTacLabels||[])].filter(Boolean).join(' • '),phone:String(person.dienThoai||'').trim(),raw:person}));
+
+    const response = await window.HVAAuthRequest.get(url, { cache:'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+
+    const data = await response.json();
+    let people = unwrapArray(data);
+
+    if (structuredUnit) {
+        const expected = normalizePersonnelText(structuredUnit);
+        people = people.filter(person => normalizePersonnelText(person.to) === expected);
+    }
+
+    if (structuredWorkgroup) {
+        const expectedGroup = normalizePersonnelText(structuredWorkgroup);
+        people = people.filter(person => {
+            const groups = person.nhomCongTac || {};
+            return Object.keys(groups).some(name =>
+                normalizePersonnelText(name) === expectedGroup &&
+                !!String(groups[name] || '').trim()
+            );
+        });
+    }
+
+    const typedKeyword = String(keyword || '').trim();
+    if ((structuredUnit || structuredWorkgroup) && typedKeyword) {
+        const q = normalizePersonnelText(typedKeyword);
+        people = people.filter(person => [
+            person.hoTen, person.username, person.dienThoai, person.chucVu,
+            person.viTriViecLam, person.lopChuNhiem, ...(person.nhomCongTacLabels || [])
+        ].map(normalizePersonnelText).join(' ').includes(q));
+    }
+
+    return people.map((person,index) => ({
+        kind:'NHANSU',
+        id:person.username || ('NS_' + index),
+        title:person.hoTen || person.fullName || 'Nhân sự',
+        meta:person.lopChuNhiem ? 'GVCN lớp ' + person.lopChuNhiem :
+            (person.personnelCategory === 'CHIBO' ? 'Chi bộ' :
+             person.personnelCategory === 'BGH' ? 'Ban Giám hiệu' :
+             person.vaiTro || person.chucVu || person.viTriViecLam || 'CBQL/GV/NV'),
+        extra:[person.to, person.dienThoai, person.ngaySinh ? 'Sinh ' + person.ngaySinh : '', ...(person.nhomCongTacLabels || [])].filter(Boolean).join(' • '),
+        phone:String(person.dienThoai || '').trim(),
+        raw:person
+    }));
 }
 
 
@@ -5679,5 +5761,17 @@ async function searchPersonnel(keyword){
 })();
 </script>
     
+
+<script>
+/* HVA LOGO FALLBACK V1 - chỉ kích hoạt khi asset logo/icon thực sự tải lỗi. */
+(function(){
+ const fallback = 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%230F4C81%22/%3E%3Ctext x=%2250%22 y=%2262%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2234%22 font-weight=%22700%22 fill=%22white%22%3EHVA%3C/text%3E%3C/svg%3E';
+ document.addEventListener('error', function(e){
+   const img=e.target; if(!(img instanceof HTMLImageElement)) return;
+   const key=((img.getAttribute('src')||'')+' '+(img.getAttribute('alt')||'')).toLowerCase();
+   if(key.includes('hva') || key.includes('icon')) { img.onerror=null; img.src=fallback; }
+ }, true);
+})();
+</script>
 </body>
 </html>
