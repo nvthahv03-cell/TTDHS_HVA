@@ -1650,6 +1650,10 @@ window.toggleDashboardMenu = function(menuId, event) {
 };
 
 document.addEventListener('click', function(e) {
+    // HVA HOTFIX 29/09/2026: Tra cuu nhanh tu xu ly click cua chinh no.
+    // Khong de bo bat click toan trang hieu nham ket qua Van ban va chuyen sang KhoVanBan.html.
+    if (e.target.closest('#search-panel')) return;
+
     // 1. Đóng Modal khi bấm nút data-close-modal
     const closeBtn = e.target.closest('[data-close-modal]');
     if (closeBtn) {
@@ -4415,8 +4419,9 @@ setTimeout(() => {
 
     function showLoading() {
 
+        // HVA HOTFIX: khi duyet Nhan su, giu cay nhom de bam nhom xong van thay vi tri dang duyet.
         if (groupBox) {
-            groupBox.classList.add('hidden');
+            groupBox.classList.toggle('hidden', ACTIVE_SEARCH_TYPE !== 'NHANSU');
         }
 
         resultBox.classList.remove('hidden');
