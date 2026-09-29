@@ -336,6 +336,17 @@
             .footer-copy { margin-top:7px !important; font-size:9.5px; }
         }
 
+
+        /* HVA INSTALL SUCCESS */
+        .hva-install-success{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(7,31,59,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+        .hva-install-success.show{display:flex}
+        .hva-install-success-card{width:min(92vw,390px);padding:24px 20px 20px;border-radius:24px;background:rgba(255,255,255,.98);box-shadow:0 24px 70px rgba(7,59,114,.25);text-align:center}
+        .hva-install-success-card img{width:82px;height:82px;object-fit:contain;margin:0 auto 10px}
+        .hva-install-success-card h3{margin:0 0 8px;color:#073B72;font-size:20px;font-weight:800}
+        .hva-install-success-card p{margin:0;color:#475569;font-size:14px;line-height:1.55}
+        .hva-install-success-card .hva-install-note{margin-top:10px;color:#0A66C2;font-weight:700}
+        .hva-install-success-card button{width:100%;min-height:46px;margin-top:18px;border:0;border-radius:12px;color:#fff;font-weight:700;background:linear-gradient(100deg,#075296 0%,#0A68BD 58%,#0B8FD0 100%)}
+
     </style>
 </head>
 <body class="h-full bg-ms-bg text-slate-800 overflow-x-hidden antialiased selection:bg-ms-secondary/20 selection:text-ms-primary">
@@ -474,6 +485,18 @@
         </div>
     </div>
 
+
+    <!-- HVA: thông báo cài ứng dụng thành công -->
+    <div id="hvaInstallSuccess" class="hva-install-success" role="dialog" aria-modal="true" aria-labelledby="hvaInstallSuccessTitle">
+      <div class="hva-install-success-card">
+        <img src="./assets/brand/HVA_Logo_Transparent.png?v=20260915c" alt="HVA">
+        <h3 id="hvaInstallSuccessTitle">Cài đặt HVA thành công!</h3>
+        <p>Chúc mừng Thầy/Cô đã cài đặt thành công ứng dụng <strong>Trung tâm Quản trị số HVA</strong>.</p>
+        <p class="hva-install-note">Thầy/Cô vui lòng thoát trình duyệt, trở về Màn hình chính và bấm vào biểu tượng HVA để bắt đầu trải nghiệm.</p>
+        <button type="button" id="hvaInstallSuccessOk">Đã hiểu</button>
+      </div>
+    </div>
+
     <!-- LOGIC SỬ XỬ LÝ -->
     <script>
        
@@ -487,6 +510,33 @@
         const errorMsg      = document.getElementById("errorMsg");
         const togglePassword = document.getElementById("togglePassword");
         const eyeIcon       = document.getElementById("eyeIcon");
+
+
+        /* HVA INSTALL SUCCESS */
+        const hvaInstallSuccess = document.getElementById("hvaInstallSuccess");
+        const hvaInstallSuccessOk = document.getElementById("hvaInstallSuccessOk");
+        const HVA_INSTALL_ACK = "hvaInstallSuccessAcknowledgedV1";
+
+        function hvaIsStandalone() {
+            return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+        }
+        function hvaShowInstallSuccess() {
+            if (!hvaInstallSuccess || localStorage.getItem(HVA_INSTALL_ACK) === "1") return;
+            hvaInstallSuccess.classList.add("show");
+        }
+        function hvaAcknowledgeInstallSuccess() {
+            localStorage.setItem(HVA_INSTALL_ACK, "1");
+            hvaInstallSuccess?.classList.remove("show");
+        }
+        hvaInstallSuccessOk?.addEventListener("click", hvaAcknowledgeInstallSuccess);
+        window.addEventListener("appinstalled", () => {
+            localStorage.removeItem(HVA_INSTALL_ACK);
+            hvaShowInstallSuccess();
+        });
+        // iOS Safari không phát appinstalled: xác nhận khi HVA được mở từ icon lần đầu.
+        if (hvaIsStandalone()) {
+            window.addEventListener("DOMContentLoaded", () => setTimeout(hvaShowInstallSuccess, 250), { once:true });
+        }
 
         // Toggle show/hide password
         togglePassword.addEventListener("click", () => {
