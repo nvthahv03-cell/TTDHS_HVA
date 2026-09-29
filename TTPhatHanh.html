@@ -580,10 +580,12 @@ window.HVAMeetingAction = {
         const response = await fetch(CONFIG.SCRIPT_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({...(payload||{}),sessionToken:String(localStorage.getItem('hvaSessionToken')||'').trim()})
         });
         if (!response.ok) throw new Error('HTTP ' + response.status);
-        return response.json();
+        const data=await response.json();
+        if(data&&['SESSION_EXPIRED','SESSION_INVALID','AUTH_REQUIRED'].includes(String(data.code||''))) throw new Error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        return data;
     },
 
     async confirm(meetingId) {
@@ -596,6 +598,7 @@ window.HVAMeetingAction = {
             const r = await this.post({
                 action: 'confirmMeetingAttendance',
                 meetingId,
+                publishId:String(new URLSearchParams(location.search).get('publishId')||''),
                 username
             });
             if (!r || r.success !== true) {
@@ -637,6 +640,7 @@ window.HVAMeetingAction = {
             const r = await this.post({
                 action: 'requestMeetingAbsence',
                 meetingId,
+                publishId:String(new URLSearchParams(location.search).get('publishId')||''),
                 username,
                 reason
             });
@@ -1357,7 +1361,8 @@ ContentViewerRouter.register(
                 attachments: state.linkedDocs,
                 issuedAt: new Date().toISOString(),
                 status: 'PUBLISHING',
-                signature: { mode: 'ACCOUNT', signer: user.fullName || state.document.author || '' }
+                signature: { mode: 'ACCOUNT', signer: user.fullName || state.document.author || '' },
+                sessionToken: String(localStorage.getItem('hvaSessionToken') || '').trim()
             };
         },
         postToBackend: async (payload) => {
