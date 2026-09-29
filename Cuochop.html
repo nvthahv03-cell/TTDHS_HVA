@@ -163,7 +163,9 @@ body{font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}::-web
 </div>
 
 <script>
-const WEB_APP_URL='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+const WEB_APP_URL='https://script.google.com/macros/s/AKfycbz7IsfWAfnsOa4SIyMiKEB-qQurwW5FpxuKcT83aeCHXhiAf60sJSc0t4KQXE3N427E/exec';
+// HVA NHAN SU FULL: dung dung SEARCH_API dang PASS cua Kinh lup; khong thay WEB_APP_URL nghiep vu Cuoc hop.
+const PERSONNEL_SEARCH_API='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 let meetingAllToData=[]; const meetingSelectedUsernames=new Set();
 const $=id=>document.getElementById(id);
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -182,7 +184,7 @@ async function hvaPersonnelGet(action, params={}){
   const token=String(localStorage.getItem('hvaSessionToken')||'').trim();
   const expiresAt=Number(localStorage.getItem('hvaSessionExpiresAt')||0);
   if(!token||!expiresAt||expiresAt<=Date.now()) throw Error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-  const u=new URL(WEB_APP_URL);
+  const u=new URL(PERSONNEL_SEARCH_API);
   u.searchParams.set('action',action);
   u.searchParams.set('sessionToken',token);
   u.searchParams.set('_',Date.now());
@@ -202,7 +204,16 @@ async function loadMeetingPersonnel(){
     const [chiBoRaw,bghRaw,teamsRaw,workgroupsRaw]=await Promise.all([
       hvaPersonnelGet('searchNhanSuQuick',{q:'',category:'CHIBO'}),
       hvaPersonnelGet('searchNhanSuQuick',{q:'',category:'BGH'}),
-      fetch(`${WEB_APP_URL}?action=getDanhSachTo&_=${Date.now()}`,{cache:'no-store'}).then(r=>r.json()),
+      Promise.resolve([
+        {tenTo:'Toán - Tin'},
+        {tenTo:'Ngữ văn'},
+        {tenTo:'Ngoại Ngữ'},
+        {tenTo:'Sử - Địa - GDKT&PL'},
+        {tenTo:'Vật lí - Công nghệ'},
+        {tenTo:'Hóa học'},
+        {tenTo:'Sinh - GDTC - QPAN'},
+        {tenTo:'Văn phòng'}
+      ]),
       hvaPersonnelGet('getPersonnelWorkgroups')
     ]);
     const groups=[];
