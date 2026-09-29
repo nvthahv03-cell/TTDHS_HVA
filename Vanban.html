@@ -72,36 +72,12 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;-webkit-tap-h
       <div class="text-xs text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg"><i class="bi bi-calendar3 mr-1"></i><span id="currentDate">--/--/----</span></div>
     </div>
 
-    <button data-category="all" onclick="selectCategory('all')" class="category-btn active w-full mb-3 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-blue-50 transition flex items-center justify-between text-sm font-bold">
-      <span class="flex items-center gap-2"><i class="cat-icon bi bi-collection-fill text-blue-600"></i> TẤT CẢ VĂN BẢN</span>
-      <span id="count-all" class="text-[11px] px-2 py-0.5 rounded-full bg-white border border-slate-200">0</span>
-    </button>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-      <div class="rounded-xl border border-emerald-200 overflow-hidden">
-        <div class="px-3 py-2.5 bg-emerald-50 text-emerald-800 text-xs font-extrabold uppercase tracking-wide flex items-center gap-2">
-          <i class="bi bi-inbox-fill"></i> Văn bản đến
-        </div>
-        <div class="divide-y divide-slate-100">
-          <button data-category="den-trung-uong" onclick="selectCategory('den-trung-uong')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-emerald-50 flex justify-between"><span>01. Văn bản Trung ương</span><span id="count-den-trung-uong">0</span></button>
-          <button data-category="den-da-nang" onclick="selectCategory('den-da-nang')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-emerald-50 flex justify-between"><span>02. Văn bản Thành phố Đà Nẵng</span><span id="count-den-da-nang">0</span></button>
-          <button data-category="den-so" onclick="selectCategory('den-so')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-emerald-50 flex justify-between"><span>03. Sở GD&amp;ĐT Đà Nẵng</span><span id="count-den-so">0</span></button>
-          <button data-category="den-khac" onclick="selectCategory('den-khac')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-emerald-50 flex justify-between"><span>04. Cơ quan khác</span><span id="count-den-khac">0</span></button>
-        </div>
-      </div>
-
-      <div class="rounded-xl border border-teal-200 overflow-hidden">
-        <div class="px-3 py-2.5 bg-teal-50 text-teal-800 text-xs font-extrabold uppercase tracking-wide flex items-center gap-2">
-          <i class="bi bi-send-fill"></i> Văn bản đi
-        </div>
-        <div class="divide-y divide-slate-100">
-          <button data-category="di-cap-tren" onclick="selectCategory('di-cap-tren')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-teal-50 flex justify-between"><span>01. Gửi cấp trên</span><span id="count-di-cap-tren">0</span></button>
-          <button data-category="di-ben-ngoai" onclick="selectCategory('di-ben-ngoai')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-teal-50 flex justify-between"><span>02. Gửi cơ quan bên ngoài</span><span id="count-di-ben-ngoai">0</span></button>
-          <button data-category="di-noi-bo" onclick="selectCategory('di-noi-bo')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-teal-50 flex justify-between"><span>03. Phát hành nội bộ</span><span id="count-di-noi-bo">0</span></button>
-          <button data-category="di-khac" onclick="selectCategory('di-khac')" class="category-btn w-full px-3 py-2.5 text-left text-xs font-semibold hover:bg-teal-50 flex justify-between"><span>04. Văn bản khác</span><span id="count-di-khac">0</span></button>
-        </div>
-      </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <button data-category="all" onclick="selectCategory('all')" class="category-btn active p-4 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 transition flex items-center justify-between text-sm font-extrabold text-[#0F4C81]"><span class="flex items-center gap-2"><i class="cat-icon bi bi-collection-fill text-blue-600"></i> TẤT CẢ VĂN BẢN</span><span id="count-all" class="text-xs px-2.5 py-1 rounded-full bg-white border border-blue-200">0</span></button>
+      <button data-category="den" onclick="selectCategory('den')" class="category-btn p-4 rounded-xl border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 transition flex items-center justify-between text-sm font-extrabold text-emerald-800"><span class="flex items-center gap-2"><i class="cat-icon bi bi-inbox-fill"></i> VĂN BẢN ĐẾN</span><span id="count-den" class="text-xs px-2.5 py-1 rounded-full bg-white border border-emerald-200">0</span></button>
+      <button data-category="di" onclick="selectCategory('di')" class="category-btn p-4 rounded-xl border border-teal-200 bg-teal-50 hover:bg-teal-100 transition flex items-center justify-between text-sm font-extrabold text-teal-800"><span class="flex items-center gap-2"><i class="cat-icon bi bi-send-fill"></i> VĂN BẢN ĐI</span><span id="count-di" class="text-xs px-2.5 py-1 rounded-full bg-white border border-teal-200">0</span></button>
     </div>
+    <div id="unknownNotice" class="hidden mt-3 text-xs rounded-xl border border-amber-200 bg-amber-50 text-amber-800 px-3 py-2"><i class="bi bi-exclamation-triangle-fill mr-1"></i><b id="count-unknown">0</b> văn bản đang chờ phân loại Đến/Đi.</div>
   </section>
 
   <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
@@ -184,17 +160,7 @@ const MAIN_GATEWAY_URL="https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBv
 
 const State={documents:[],category:"all",timeFilter:"all",search:"",selected:new Set(),selectedDocId:null};
 
-const CATEGORY_TITLES={
-  all:"Tất cả văn bản",
-  "den-trung-uong":"Văn bản đến - Trung ương",
-  "den-da-nang":"Văn bản đến - Thành phố Đà Nẵng",
-  "den-so":"Văn bản đến - Sở GD&ĐT Đà Nẵng",
-  "den-khac":"Văn bản đến - Cơ quan khác",
-  "di-cap-tren":"Văn bản đi - Gửi cấp trên",
-  "di-ben-ngoai":"Văn bản đi - Gửi cơ quan bên ngoài",
-  "di-noi-bo":"Văn bản đi - Phát hành nội bộ",
-  "di-khac":"Văn bản đi - Văn bản khác"
-};
+const CATEGORY_TITLES={all:"Tất cả văn bản",den:"Văn bản đến",di:"Văn bản đi",unknown:"Chờ phân loại"};
 
 document.addEventListener("DOMContentLoaded",init);
 
@@ -289,29 +255,9 @@ function setLoading(){
 
 function classify(doc){
   const dir=norm(doc.direction);
-  const cq=norm(doc.coQuan);
-  const scope=norm(`${doc.scope} ${doc.noiNhan}`);
-  const combined=norm(`${doc.direction} ${doc.scope} ${doc.noiNhan}`);
-
-  const incoming=dir.includes("van ban den")||dir.includes("vb den")||dir==="den"||dir.includes("incoming");
-  const outgoing=dir.includes("van ban di")||dir.includes("vb di")||dir==="di"||dir.includes("outgoing")||
-                 combined.includes("gui cap tren")||combined.includes("phat hanh noi bo")||combined.includes("gui co quan");
-
-  if(incoming){
-    if(cq.includes("so giao duc")||cq.includes("sgddt")||cq.includes("so gd&dt"))return"den-so";
-    if(cq.includes("ubnd thanh pho da nang")||cq.includes("thanh pho da nang")||cq.includes("tp da nang"))return"den-da-nang";
-    if(cq.includes("bo giao duc")||cq.includes("bo gd")||cq.includes("chinh phu")||cq.includes("thu tuong")||cq.includes("quoc hoi")||cq.includes("trung uong"))return"den-trung-uong";
-    return"den-khac";
-  }
-
-  if(outgoing){
-    if(combined.includes("noi bo")||scope.includes("can bo")||scope.includes("giao vien")||scope.includes("nhan vien")||scope.includes("to chuyen mon"))return"di-noi-bo";
-    if(combined.includes("cap tren")||scope.includes("so gd")||scope.includes("sgddt")||scope.includes("ubnd")||scope.includes("bo giao duc"))return"di-cap-tren";
-    if(combined.includes("ben ngoai")||combined.includes("co quan ngoai")||scope)return"di-ben-ngoai";
-    return"di-khac";
-  }
-
-  return"den-khac";
+  if(dir.includes("van ban di")||dir==="di"||dir.includes("outgoing"))return "di";
+  if(dir.includes("van ban den")||dir==="den"||dir.includes("incoming"))return "den";
+  return "unknown";
 }
 
 function matchesTime(doc){
@@ -360,10 +306,12 @@ function render(){
 }
 
 function updateCounts(){
-  document.getElementById("count-all").textContent=State.documents.length;
-  ["den-trung-uong","den-da-nang","den-so","den-khac","di-cap-tren","di-ben-ngoai","di-noi-bo","di-khac"].forEach(k=>{
-    const el=document.getElementById(`count-${k}`); if(el)el.textContent=State.documents.filter(d=>classify(d)===k).length;
-  });
+  const all=State.documents.length, den=State.documents.filter(d=>classify(d)==="den").length, di=State.documents.filter(d=>classify(d)==="di").length, unknown=State.documents.filter(d=>classify(d)==="unknown").length;
+  document.getElementById("count-all").textContent=all;
+  document.getElementById("count-den").textContent=den;
+  document.getElementById("count-di").textContent=di;
+  document.getElementById("count-unknown").textContent=unknown;
+  document.getElementById("unknownNotice").classList.toggle("hidden",unknown===0);
 }
 
 function renderDesktop(docs){
