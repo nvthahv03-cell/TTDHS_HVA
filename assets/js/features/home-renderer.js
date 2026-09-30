@@ -2262,7 +2262,7 @@
            overflow-y-auto overscroll-contain
            bg-white dark:bg-slate-900
            rounded-2xl shadow-2xl
-           border border-slate-200 dark:border-slate-800"
+           border border-slate-200 dark:border-slate-800">
 
             <!-- HEADER -->
             <div class="sticky top-0 z-20
@@ -2456,6 +2456,24 @@
                             </span>
 
                         </button>
+
+
+                        <!-- BGH / TTCM / TTVP: TÁC NGHIỆP BAN HÀNH - PHÁT HÀNH -->
+                        <a href="BanHanhPhatHanh.html"
+                           class="w-full flex items-center gap-2.5
+                                  px-3 py-2 rounded-lg
+                                  hover:bg-sky-50
+                                  dark:hover:bg-slate-800 transition text-left">
+
+                            <i class="bi bi-file-earmark-arrow-up-fill
+                                      text-sky-600 w-5 text-center"></i>
+
+                            <span class="text-[11px] font-semibold
+                                         text-slate-700 dark:text-slate-200">
+                                Ban hành - Phát hành
+                            </span>
+
+                        </a>
 
 
                         <button type="button"
