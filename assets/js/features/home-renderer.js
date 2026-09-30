@@ -3736,25 +3736,25 @@
                     return;
                 }
 
+                // KHÓA CỨNG: không cho click, không cho menu mở, đồng thời thể hiện khóa rõ trên Home.
                 card.removeAttribute('data-dropdown-toggle');
-                card.classList.remove('opacity-40', 'opacity-50', 'opacity-60', 'opacity-65', 'grayscale', 'pointer-events-none');
-                card.style.opacity = '1';
-                card.style.filter = 'none';
-                card.style.cursor = 'pointer';
                 card.setAttribute('aria-disabled', 'true');
-                lock?.classList.remove('hidden');
-                lock?.classList.add('flex');
-                dropdown?.classList.add('hidden');
+                card.classList.add('opacity-50', 'grayscale', 'pointer-events-none');
+                card.style.opacity = '0.50';
+                card.style.filter = 'grayscale(0.45)';
+                card.style.cursor = 'not-allowed';
+                card.style.pointerEvents = 'none';
 
-                card.addEventListener('click', function hvaLockedMenuNotice(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    if (typeof showToast === 'function') {
-                        showToast('Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
-                    } else {
-                        alert('Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
-                    }
-                });
+                if (lock) {
+                    lock.classList.remove('hidden');
+                    lock.classList.add('flex');
+                    lock.style.display = 'flex';
+                }
+
+                if (dropdown) {
+                    dropdown.classList.add('hidden');
+                    dropdown.style.display = 'none';
+                }
             }
 
             applyCardPermission(
