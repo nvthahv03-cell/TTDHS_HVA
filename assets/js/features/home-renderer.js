@@ -1,6 +1,6 @@
     import { $ } from '../core/utils.js';
     import { ModalManager } from '../ui/modal.js';
-    import { ModuleManager } from '../modules/module-manager.js';
+    import { ModuleManager } from '../modules/module-manager.js'; 
     import { PWA } from '../services/pwa.js';
 
     export function renderHome() {
