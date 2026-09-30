@@ -5368,13 +5368,24 @@ async function searchPersonnel(keyword){
 
                 performSearch();
 
+            } else if (type === 'NHANSU') {
+
+                /* HVA 30/09/2026: Bấm Nhân sự chỉ mở cây tra cứu,
+                   không bật thông báo "Nhập từ khóa để tra cứu".
+                   Đồng thời nạp trước Chi bộ ở nền để lần chọn đầu nhanh hơn. */
+                input?.focus();
+
+                if (!wasPersonnelOpen) {
+                    setTimeout(() => {
+                        fetchPersonnelCategory('CHIBO', '').catch(error => {
+                            console.debug('[HVA NHÂN SỰ] Prefetch Chi bộ chưa sẵn sàng:', error);
+                        });
+                    }, 0);
+                }
+
             } else {
 
                 input?.focus();
-
-                AppMain?.showToast?.(
-                    'Nhập từ khóa để tra cứu.'
-                );
             }
         });
     });
