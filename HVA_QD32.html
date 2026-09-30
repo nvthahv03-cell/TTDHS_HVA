@@ -27,10 +27,12 @@ main{max-width:1320px;margin:18px auto;padding:0 16px 106px}.steps{display:grid;
 <header class="top no-print"><div class="topin page-header-wrap"><button type="button" class="page-header-back" onclick="goBackToHVA()" aria-label="Quay lại"><i class="bi bi-arrow-left"></i></button><div class="mobile-safe-text" style="flex:1"><div class="brand page-header-title">TRƯỜNG THPT HÒA VANG · THI ĐUA – KHEN THƯỞNG</div><div class="sub page-header-subtitle">Đánh giá – Xếp loại tháng theo QĐ 32/2026/QĐ-UBND · V5</div></div><div class="user"><div class="pill">Tháng 09/2026</div><div class="avatar">NA</div></div></div></header>
 <main id="printArea">
 <div class="steps"><div class="step active">1. Kiểm tra dữ liệu nguồn</div><div class="step">2. Tự đánh giá</div><div class="step">3. Tự nhận xét</div><div class="step">4. Kiểm tra & gửi</div></div>
-<div class="card"><h2>Thông tin hồ sơ <span class="tag auto">Tự động từ CSDL HVA</span></h2><div class="profile"><div class="field"><label>Họ và tên</label><div>Nguyễn Văn A</div></div><div class="field"><label>Tổ/Bộ phận</label><div>Toán – Tin</div></div><div class="field"><label>Chức danh/Chức vụ</label><div>Giáo viên</div></div><div class="field"><label>Nhóm đánh giá áp dụng</label><div>Nhóm 3 · Không quản lý 🔒</div></div></div><div class="hint" style="margin-top:8px">Hệ thống tự phân nhóm theo chức vụ và vị trí việc làm. Cá nhân không tự chọn hoặc thay đổi nhóm; sai thông tin thì gửi yêu cầu cho quản trị nhân sự.</div></div>
+<div class="card"><h2>Thông tin hồ sơ <span class="tag auto">Tự động từ CSDL HVA</span></h2><div class="profile"><div class="field"><label>Họ và tên</label><div id="pName">Đang tải...</div></div><div class="field"><label>Tổ/Bộ phận</label><div id="pDept">—</div></div><div class="field"><label>Chức danh/Chức vụ</label><div id="pRole">—</div></div><div class="field"><label>Nhóm đánh giá áp dụng</label><div id="pGroup">Đang xác định 🔒</div></div></div><div class="hint" style="margin-top:8px">Hệ thống tự phân nhóm theo chức vụ và vị trí việc làm. Cá nhân không tự chọn hoặc thay đổi nhóm; sai thông tin thì gửi yêu cầu cho quản trị nhân sự.</div></div>
 <div class="layout"><section>
-<div class="source-card" id="sourceCard"><div class="source-head"><div><div class="source-title" id="sourceTitle">✓ Báo cáo công việc tháng 09/2026 đã được gửi</div><div class="hint">Nguồn: Nghiệp vụ số → Hành chính → Báo cáo công việc tháng</div></div><span class="tag ok" id="sourceStatus">Đủ điều kiện tự đánh giá</span></div><div class="source-grid"><div class="metric"><label>Số nhiệm vụ</label><b>08</b></div><div class="metric"><label>Hoàn thành</label><b>08/08</b></div><div class="metric"><label>Có minh chứng</label><b>08/08</b></div><div class="metric"><label>Trạng thái</label><b>Đã gửi · 30/09</b></div></div><div class="toolbar"><button class="ghost" id="goReport" onclick="toast('Mở Báo cáo công việc tháng tại Nghiệp vụ số (mô phỏng).')">Xem Báo cáo công việc tháng</button><button class="secondary" onclick="toast('Đã đối chiếu dữ liệu nguồn mới nhất.','good')">↻ Đối chiếu dữ liệu</button></div></div>
-<div class="card"><h2>1. Tự đánh giá theo QĐ32</h2><div class="section-head"><h3>A. Tiêu chí chung</h3><span class="tag auto">Tối đa 30 điểm</span></div><div class="hint">Cá nhân tự chấm; người quản lý trực tiếp kiểm tra, nhận xét và xác nhận.</div>
+<div class="source-card" id="sourceCard"><div class="source-head"><div><div class="source-title" id="sourceTitle">Đang đối chiếu dữ liệu phát hành...</div><div class="hint"><b>Nguồn chuẩn:</b> TTPhatHanh → Báo cáo công việc tháng → 01TKNV → QĐ32</div></div><span class="tag ok" id="sourceStatus">Đủ điều kiện tự đánh giá</span></div><div class="source-grid"><div class="metric"><label>Số nhiệm vụ</label><b id="mTasks">—</b></div><div class="metric"><label>Hoàn thành</label><b id="mDone">—</b></div><div class="metric"><label>Có minh chứng</label><b id="mEvidence">—</b></div><div class="metric"><label>Trạng thái</label><b id="mStatus">Đang tải</b></div></div><div class="toolbar"><button class="ghost" id="goReport" onclick="toast('Mở Báo cáo công việc tháng tại Nghiệp vụ số (mô phỏng).')">Xem Báo cáo công việc tháng</button><button class="secondary" onclick="toast('Đã đối chiếu dữ liệu nguồn mới nhất.','good')">↻ Đối chiếu dữ liệu</button></div></div>
+<div class="card"><div class="section-head"><h2 style="margin:0">01TKNV · Nhiệm vụ trong kỳ đánh giá</h2><span class="tag locked">Nguồn TTPhatHanh</span></div>
+<div class="hint">Chỉ tổng hợp nhiệm vụ đã có dấu vết phát hành chính thức. Cá nhân không nhập lại nhiệm vụ tại màn hình QĐ32.</div>
+<div style="overflow:auto;margin-top:10px"><table><thead><tr><th>STT</th><th>Nhiệm vụ/Công việc</th><th>Nguồn</th><th>Hạn</th><th>Kết quả</th><th>Minh chứng</th><th>Xác nhận</th></tr></thead><tbody id="taskRows"><tr><td colspan="7" class="empty">Đang đồng bộ...</td></tr></tbody></table></div></div><div class="card"><h2>1. Tự đánh giá theo QĐ32</h2><div class="section-head"><h3>A. Tiêu chí chung</h3><span class="tag auto">Tối đa 30 điểm</span></div><div class="hint">Cá nhân tự chấm; người quản lý trực tiếp kiểm tra, nhận xét và xác nhận.</div>
 <div class="score-row"><div><strong>Phẩm chất chính trị, đạo đức, văn hóa công vụ; kỷ luật, kỷ cương</strong></div><input class="common" type="number" min="0" max="10" value="10" step=".5" oninput="recalc()"><div class="scorebox">10<small>điểm tối đa</small></div></div>
 <div class="score-row"><div><strong>Năng lực chuyên môn, trách nhiệm và phối hợp thực hiện nhiệm vụ</strong></div><input class="common" type="number" min="0" max="10" value="9" step=".5" oninput="recalc()"><div class="scorebox">10<small>điểm tối đa</small></div></div>
 <div class="score-row"><div><strong>Đổi mới, sáng tạo; chủ động và dám chịu trách nhiệm</strong></div><input class="common" type="number" min="0" max="10" value="8" step=".5" oninput="recalc()"><div class="scorebox">10<small>điểm tối đa</small></div></div>
@@ -46,20 +48,95 @@ main{max-width:1320px;margin:18px auto;padding:0 16px 106px}.steps{display:grid;
 </section><aside><div class="card summary"><h2>Kết quả tự đánh giá</h2><div class="bigscore" id="officialScore">0.0</div><div class="hint">Tổng điểm chính thức A + B / 100</div><div class="classify" id="classification">Đang kiểm tra dữ liệu</div><div class="parts" id="parts"></div><div class="progress"><span id="progressBar"></span></div><div class="parts" id="completeText"></div><div class="notice"><b>Điểm cộng/trừ:</b> hiển thị riêng và là căn cứ xem xét khi quyết định mức xếp loại; không tự động nhập vào tổng điểm A + B.</div><div class="checklist" id="checklist"></div><div class="toolbar"><button class="secondary" style="flex:1" onclick="saveDraft()">Lưu nháp</button><button id="sideSubmit" class="success" style="flex:1" onclick="submitEval()">Gửi tự đánh giá</button></div><div class="audit">Sau khi gửi, hồ sơ bị khóa. Mọi thao tác trả lại, sửa hoặc xác nhận đều lưu người thực hiện, thời gian và lý do.</div></div></aside></div></main>
 <div class="footer no-print"><div class="footerin"><div><b>HVA · Thi đua – Khen thưởng · V5</b><div class="note">Mục B liên thông từ Báo cáo công việc tháng đã gửi.</div></div><div class="actions"><button class="secondary" onclick="toast('Mở bản biểu mẫu in (mô phỏng).')">Xem biểu mẫu</button><button class="primary" id="footerSubmit" onclick="submitEval()">Kiểm tra & gửi duyệt</button></div></div></div><div class="toast" id="toast"></div>
 <script>
-const $=id=>document.getElementById(id);const clamp=(v,min,max)=>Math.max(min,Math.min(max,Number(v)||0));
-function goBackToHVA(){if(window.history.length>1){window.history.back()}else{window.location.assign('main.html')}}
-const REPORT={month:'09/2026',submitted:true,tasks:8,evidence:8,qty:100,quality:95,progress:100};
+const $=id=>document.getElementById(id);
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,Number(v)||0));
+const API_URL='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+const MONTH=new Date().toISOString().slice(0,7);
+let REPORT={month:MONTH,submitted:false,tasks:0,evidence:0,qty:0,quality:0,progress:0,items:[],report:{},loaded:false};
+let PROFILE={};
+
+function goBackToHVA(){if(window.history.length>1)window.history.back();else window.location.assign('main.html')}
+function getUser(){try{return JSON.parse(sessionStorage.getItem('user')||localStorage.getItem('user')||'{}')}catch(e){return{}}}
+function sessionToken(){return sessionStorage.getItem('hvaSessionToken')||localStorage.getItem('hvaSessionToken')||sessionStorage.getItem('sessionToken')||localStorage.getItem('sessionToken')||''}
+function username(){const u=getUser();return String(u.username||u.userName||u.maGV||'').trim()}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+async function apiGet(action,params={}){
+  const q=new URLSearchParams({action,...params,_:Date.now()});
+  const token=sessionToken(); if(token)q.set('sessionToken',token);
+  if(window.HVAAuthRequest?.get){const d=await window.HVAAuthRequest.get(action,params);if(d?.success===false)throw new Error(d.message||'Không tải được dữ liệu.');return d}
+  const r=await fetch(API_URL+'?'+q,{cache:'no-store'}); const d=await r.json();
+  if(d?.success===false)throw new Error(d.message||'Không tải được dữ liệu.'); return d
+}
+function roleGroup(report){
+ const raw=[report.personGroup,report.chucVu,PROFILE.vaiTro,PROFILE.chucVu,PROFILE.viTriViecLam].filter(Boolean).join(' ').toLowerCase();
+ if(/cbql|hiệu trưởng|phó hiệu trưởng|hieu truong|pho hieu truong/.test(raw))return 'CBQL/LĐQL';
+ if(/nhân viên|nhan vien|văn thư|kế toán|thư viện|thiết bị|y tế|bảo vệ|tạp vụ/.test(raw))return 'NV · Mẫu 03';
+ return 'GV · Mẫu 03';
+}
+function scoreBand(rate,max){
+ rate=Number(rate)||0;
+ if(max===20){if(rate>=100)return 20;if(rate>=90)return 15;if(rate>=80)return 10;if(rate>=70)return 7;if(rate>=60)return 5;return 0}
+ if(max===30){if(rate>=95)return 30;if(rate>=90)return 25;if(rate>=80)return 20;if(rate>=70)return 15;if(rate>=60)return 10;if(rate>=50)return 5;return 0}
+ return 0
+}
+function BScore(){if(!REPORT.submitted)return 0;return scoreBand(REPORT.qty,20)+scoreBand(REPORT.progress,20)+scoreBand(REPORT.quality,30)}
 function checks(){return[
-{text:'Đã xác định đúng nhóm đánh giá từ CSDL nhân sự',ok:true},
-{text:'Mục A đã chấm đầy đủ, đúng giới hạn điểm',ok:[...document.querySelectorAll('.common')].every(x=>x.value!==''&&Number(x.value)>=0&&Number(x.value)<=10)},
-{text:'Báo cáo công việc tháng đã được lập và gửi',ok:REPORT.submitted},
-{text:'Mục B đã nhận đủ dữ liệu từ Báo cáo công việc tháng',ok:[REPORT.qty,REPORT.quality,REPORT.progress].every(Number.isFinite)},
-{text:'Điểm cộng/trừ đã có nguồn và trạng thái xác nhận',ok:true},
-{text:'Đã nhập đầy đủ nội dung tự nhận xét bắt buộc',ok:[$('strength'),$('weakness'),$('solution')].every(x=>x.value.trim().length>=3)}]}
-function renderReportState(){const ready=REPORT.submitted;$('sourceCard').style.borderColor=ready?'#bbf7d0':'#fed7aa';$('sourceCard').style.background=ready?'#f0fdf4':'#fff7ed';$('sourceTitle').textContent=ready?`✓ Báo cáo công việc tháng ${REPORT.month} đã được gửi`:`! Chưa hoàn thành Báo cáo công việc tháng ${REPORT.month}`;$('sourceTitle').style.color=ready?'#166534':'#9a3412';$('sourceStatus').className='tag '+(ready?'ok':'pending');$('sourceStatus').textContent=ready?'Đủ điều kiện tự đánh giá':'Chưa đủ điều kiện';$('goReport').textContent=ready?'Xem Báo cáo công việc tháng':'Đi đến Báo cáo công việc tháng'}
-function recalc(){renderReportState();const A=[...document.querySelectorAll('.common')].reduce((s,x)=>s+clamp(x.value,0,10),0),B=REPORT.submitted?((REPORT.qty+REPORT.quality+REPORT.progress)/3)*.7:0,score=A+B;$('qty').value=REPORT.submitted?REPORT.qty.toFixed(0):'—';$('qualityTotal').value=REPORT.submitted?REPORT.quality.toFixed(0):'—';$('progressTotal').value=REPORT.submitted?REPORT.progress.toFixed(0):'—';$('officialScore').textContent=REPORT.submitted?score.toFixed(1):'—';$('parts').textContent=REPORT.submitted?`A: ${A.toFixed(1)} · B: ${B.toFixed(1)} · Cộng: 2 · Trừ: 0`:`A: ${A.toFixed(1)} · B: Chưa có dữ liệu`;let cls=REPORT.submitted?(score<50?'Dự kiến: Không hoàn thành nhiệm vụ':score<70?'Dự kiến: Hoàn thành nhiệm vụ':score<90?'Dự kiến: Hoàn thành tốt nhiệm vụ':'Dự kiến: Hoàn thành xuất sắc nhiệm vụ'):'Chưa đủ điều kiện xếp loại';$('classification').textContent=cls;const cs=checks(),done=cs.filter(x=>x.ok).length,pct=Math.round(done/cs.length*100);$('progressBar').style.width=pct+'%';$('completeText').textContent=`Mức độ hoàn thiện hồ sơ: ${pct}%`;$('checklist').innerHTML=cs.map(x=>`<div class="check"><span class="ico ${x.ok?'y':'n'}">${x.ok?'✓':'!'}</span><span>${x.text}</span></div>`).join('');const ready=cs.every(x=>x.ok);$('sideSubmit').disabled=!ready;$('footerSubmit').disabled=!ready;$('footerSubmit').textContent=ready?'Gửi tự đánh giá':'Kiểm tra hồ sơ ('+done+'/'+cs.length+')'}
+ {text:'Đã xác định đúng nhóm đánh giá từ CSDL nhân sự',ok:!!$('pGroup').textContent&&!$('pGroup').textContent.includes('Đang')},
+ {text:'Mục A đã chấm đầy đủ, đúng giới hạn điểm',ok:[...document.querySelectorAll('.common')].every(x=>x.value!==''&&Number(x.value)>=0&&Number(x.value)<=10)},
+ {text:'Báo cáo công việc tháng đã được gửi',ok:REPORT.submitted},
+ {text:'01TKNV có nguồn phát hành chính thức từ TTPhatHanh',ok:REPORT.items.length>0&&REPORT.items.every(x=>x.publishId||x.sourceId)},
+ {text:'Mục B đã nhận dữ liệu từ Báo cáo tháng',ok:REPORT.loaded},
+ {text:'Đã nhập đầy đủ nội dung tự nhận xét bắt buộc',ok:[$('strength'),$('weakness'),$('solution')].every(x=>x.value.trim().length>=3)}
+]}
+function renderProfile(){
+ const r=REPORT.report||{},u=getUser(); PROFILE=u;
+ $('pName').textContent=r.hoTen||u.fullName||u.hoTen||username()||'—';
+ $('pDept').textContent=r.toBoPhan||u.department||u.to||'—';
+ $('pRole').textContent=r.chucVu||u.position||u.vaiTro||u.chucVu||'—';
+ $('pGroup').textContent=roleGroup(r)+' 🔒';
+ document.querySelector('.avatar').textContent=String($('pName').textContent||'HVA').split(/\s+/).slice(-1)[0].slice(0,2).toUpperCase();
+ document.querySelector('.pill').textContent='Tháng '+MONTH.slice(5,7)+'/'+MONTH.slice(0,4);
+}
+function renderTasks(){
+ const rows=REPORT.items||[];
+ $('taskRows').innerHTML=rows.length?rows.map((x,i)=>`<tr><td>${i+1}</td><td><div class="task-title">${esc(x.title||'')}</div><div class="task-meta">${esc(x.target||'')}</div></td><td>${esc(x.assignedBy||x.sourceType||'TTPhatHanh')}<div class="task-meta">${esc(x.publishId||x.sourceId||'')}</div></td><td>${esc(x.deadline||'—')}</td><td>${esc(x.result||x.taskStatus||'—')}</td><td>${x.evidenceUrl?'<span class="tag ok">Có</span>':'<span class="tag pending">Chưa có</span>'}</td><td>${esc(x.verificationStatus||'Chờ xác nhận')}</td></tr>`).join(''):'<tr><td colspan="7"><div class="empty">Chưa có nhiệm vụ phát hành thuộc kỳ đánh giá.</div></td></tr>'
+}
+function renderReportState(){
+ const ready=REPORT.submitted;
+ $('sourceCard').style.borderColor=ready?'#bbf7d0':'#fed7aa';$('sourceCard').style.background=ready?'#f0fdf4':'#fff7ed';
+ $('sourceTitle').textContent=ready?`✓ Báo cáo công việc tháng ${MONTH.slice(5,7)}/${MONTH.slice(0,4)} đã gửi · nguồn TTPhatHanh`:`! Báo cáo tháng ${MONTH.slice(5,7)}/${MONTH.slice(0,4)} chưa gửi/chưa có`;
+ $('sourceTitle').style.color=ready?'#166534':'#9a3412';$('sourceStatus').className='tag '+(ready?'ok':'pending');$('sourceStatus').textContent=ready?'Đủ dữ liệu nguồn':'Chưa đủ dữ liệu';
+ $('mTasks').textContent=REPORT.tasks; $('mDone').textContent=(REPORT.report.completedTasks??0)+'/'+REPORT.tasks; $('mEvidence').textContent=REPORT.evidence+'/'+REPORT.tasks; $('mStatus').textContent=REPORT.report.status||'—';
+ $('goReport').textContent=ready?'Xem Báo cáo công việc tháng':'Đi đến Báo cáo công việc tháng'
+}
+function recalc(){
+ renderReportState();
+ const A=[...document.querySelectorAll('.common')].reduce((sum,x)=>sum+clamp(x.value,0,10),0),B=BScore(),score=A+B;
+ $('qty').value=REPORT.loaded?REPORT.qty.toFixed(0):'—';$('qualityTotal').value=REPORT.loaded?REPORT.quality.toFixed(0):'—';$('progressTotal').value=REPORT.loaded?REPORT.progress.toFixed(0):'—';
+ $('officialScore').textContent=REPORT.submitted?score.toFixed(1):'—';$('parts').textContent=REPORT.submitted?`A: ${A.toFixed(1)} · B: ${B.toFixed(1)} / 70`:`A: ${A.toFixed(1)} · B: Chưa có dữ liệu`;
+ let cls='Chưa đủ điều kiện xếp loại';
+ if(REPORT.submitted){if(score<50)cls='Dự kiến: Không hoàn thành nhiệm vụ';else if(score<70)cls='Dự kiến: Hoàn thành nhiệm vụ';else if(score<90)cls='Dự kiến: Hoàn thành tốt nhiệm vụ';else cls='Đạt ngưỡng điểm HTXSNV · cần kiểm tra điều kiện kèm theo'}
+ $('classification').textContent=cls;
+ const cs=checks(),done=cs.filter(x=>x.ok).length,pct=Math.round(done/cs.length*100);$('progressBar').style.width=pct+'%';$('completeText').textContent=`Mức độ hoàn thiện hồ sơ: ${pct}%`; $('checklist').innerHTML=cs.map(x=>`<div class="check"><span class="ico ${x.ok?'y':'n'}">${x.ok?'✓':'!'}</span><span>${x.text}</span></div>`).join('');
+ const ok=cs.every(x=>x.ok);$('sideSubmit').disabled=!ok;$('footerSubmit').disabled=!ok;$('footerSubmit').textContent=ok?'Gửi tự đánh giá':'Kiểm tra hồ sơ ('+done+'/'+cs.length+')'
+}
+async function loadQD32(){
+ try{
+   const u=username(); if(!u)throw new Error('Không xác định được tài khoản đăng nhập HVA.');
+   const d=await apiGet('getMonthlyWorkReport',{username:u,month:MONTH});
+   REPORT.report=d.report||{};REPORT.items=Array.isArray(d.items)?d.items:[];
+   REPORT.submitted=String(REPORT.report.status||'').toUpperCase()==='ĐÃ GỬI';
+   REPORT.tasks=Number(REPORT.report.totalTasks??REPORT.items.length)||REPORT.items.length;
+   REPORT.evidence=REPORT.items.filter(x=>x.evidenceUrl).length;
+   REPORT.qty=Number(REPORT.report.quantityRate??0);REPORT.progress=Number(REPORT.report.progressRate??0);REPORT.quality=Number(REPORT.report.qualityRate??0);REPORT.loaded=true;
+   renderProfile();renderTasks();recalc();
+   toast(`Đã đồng bộ ${REPORT.items.length} nhiệm vụ từ nguồn TTPhatHanh.`, 'good')
+ }catch(e){REPORT.loaded=false;renderProfile();renderTasks();recalc();toast(e.message||String(e),'error')}
+}
+function openMonthlyReport(){window.location.assign('BaoCaoCongViecThang.html')}
 let toastTimer;function toast(msg,type=''){const x=$('toast');x.textContent=msg;x.className='toast show '+type;clearTimeout(toastTimer);toastTimer=setTimeout(()=>x.className='toast',3200)}
-function saveDraft(){toast('Đã lưu nháp. Hồ sơ chưa được gửi duyệt.','good')}
-function submitEval(){const missing=checks().filter(x=>!x.ok);if(missing.length){toast('Chưa thể gửi: '+missing.map(x=>x.text).join('; ')+'.','error');return}toast('Hồ sơ đã đủ điều kiện và sẵn sàng gửi người quản lý trực tiếp.','good')}
-recalc();
+function saveDraft(){toast('Bản diễn: dữ liệu nguồn đã đồng bộ. Chưa ghi QĐ32 vào Backend production.','good')}
+function submitEval(){const missing=checks().filter(x=>!x.ok);if(missing.length){toast('Chưa thể gửi: '+missing.map(x=>x.text).join('; ')+'.','error');return}toast('Hồ sơ đã đủ điều kiện để chuyển người quản lý trực tiếp. Bản diễn chưa ghi production.','good')}
+document.querySelectorAll('.common').forEach(x=>x.addEventListener('input',recalc));
+renderProfile();renderTasks();recalc();loadQD32();
 </script></body></html>
