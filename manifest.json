@@ -2,7 +2,7 @@
   "name": "Trung tâm Quản trị số HVA – Trường THPT Hòa Vang",
   "short_name": "HVA Digital",
   "description": "Nền tảng số tích hợp quản trị, điều hành, nghiệp vụ và hoạt động giáo dục Trường THPT Hòa Vang",
-  "start_url": "./main.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#F5FAFF",
