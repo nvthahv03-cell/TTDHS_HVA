@@ -22,17 +22,174 @@ tailwind.config={theme:{extend:{colors:{brand:{50:'#f0f7ff',100:'#e0effe',200:'#
 main{max-width:1320px;margin:18px auto;padding:0 16px 106px}.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:14px}.step{border:1px solid var(--line);background:#fff;border-radius:13px;padding:10px 12px;font-size:12px;font-weight:750;color:#64748b}.step.active{border-color:#93c5fd;background:#eff6ff;color:#1d4ed8}.layout{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(320px,.72fr);gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:17px;box-shadow:0 2px 8px rgba(15,23,42,.035);margin-bottom:15px}h2{font-size:17px;margin:0 0 11px}h3{font-size:14px;margin:0 0 9px}.hint{font-size:12px;line-height:1.5;color:var(--muted)}.profile{display:grid;grid-template-columns:1.65fr 1fr 1fr 1fr;gap:9px}.field{border:1px solid #e2e8f0;background:#f8fafc;border-radius:11px;padding:9px 11px}.field label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.04em;font-weight:850;color:#64748b;margin-bottom:4px}.field div{font-size:13px;font-weight:750}.tag{display:inline-flex;align-items:center;padding:4px 7px;border-radius:999px;font-size:10px;font-weight:850;vertical-align:middle}.auto{background:#e0f2fe;color:#075985}.ok{background:#dcfce7;color:#166534}.pending{background:#fff7ed;color:#9a3412}.locked{background:#eef2ff;color:#3730a3}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:11px 0}button{border:0;border-radius:10px;padding:9px 12px;font-weight:780;cursor:pointer}.primary{background:var(--blue);color:#fff}.secondary{background:#e8edf4;color:#334155}.success{background:var(--green);color:#fff}.ghost{background:#fff;border:1px solid var(--line);color:#334155}button:disabled{opacity:.48;cursor:not-allowed}table{width:100%;border-collapse:collapse;font-size:11px}th,td{padding:8px 6px;text-align:left;vertical-align:top;border-bottom:1px solid #e8edf4}th{font-size:9px;text-transform:uppercase;letter-spacing:.03em;color:#64748b;background:#f8fafc;white-space:nowrap}select,input,textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:7px;background:#fff;color:#172033}.task-title{font-size:12px;font-weight:730;line-height:1.4}.task-meta{font-size:10px;color:#64748b;margin-top:4px}.mini-btn{padding:6px 7px;font-size:10px}.score-row{display:grid;grid-template-columns:1fr 110px 105px;gap:9px;align-items:center;padding:9px 0;border-bottom:1px dashed #e2e8f0}.score-row strong{font-size:12px}.scorebox{text-align:right;font-size:18px;font-weight:850}.scorebox small{display:block;font-size:9px;color:#64748b}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:15px;margin-bottom:5px}.readonly{background:#f1f5f9;color:#475569}.adjust{display:grid;grid-template-columns:76px 1fr 92px;gap:8px;padding:9px 0;border-bottom:1px solid #e8edf4;align-items:start}.adjust b{font-size:12px}.adjust .detail{font-size:11px;line-height:1.45}.adjust .source{font-size:9px;color:#64748b;margin-top:3px}.empty{border:1px dashed #cbd5e1;border-radius:10px;padding:11px;text-align:center;color:#64748b;font-size:11px}.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.review-grid .full{grid-column:1/-1}textarea{min-height:76px;resize:vertical}.required:after{content:" *";color:#dc2626}.summary{position:sticky;top:80px}.bigscore{font-size:50px;font-weight:920;line-height:1;color:var(--blue)}.classify{font-size:15px;font-weight:850;margin-top:8px}.parts{font-size:11px;color:#64748b;margin-top:6px}.progress{height:7px;border-radius:99px;background:#e2e8f0;overflow:hidden;margin:12px 0 5px}.progress span{display:block;height:100%;background:var(--blue2);width:72%;transition:.25s}.checklist{margin-top:13px}.check{display:grid;grid-template-columns:20px 1fr;gap:7px;padding:7px 0;border-bottom:1px solid #edf1f6;font-size:11px;line-height:1.4}.ico{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:900}.ico.y{background:#dcfce7;color:#166534}.ico.n{background:#fee2e2;color:#991b1b}.notice{padding:10px 11px;border:1px solid #fed7aa;background:#fff7ed;color:#9a3412;border-radius:11px;font-size:11px;line-height:1.45;margin-top:11px}.audit{font-size:10px;line-height:1.5;color:#64748b;margin-top:10px}.footer{position:fixed;bottom:0;left:0;right:0;z-index:25;background:#fff;border-top:1px solid var(--line)}.footerin{max-width:1320px;margin:auto;padding:11px 17px;display:flex;justify-content:space-between;align-items:center;gap:12px}.actions{display:flex;gap:8px}.note{font-size:10px;color:#64748b}.toast{position:fixed;right:18px;bottom:82px;z-index:50;max-width:360px;padding:12px 14px;border-radius:11px;color:#fff;background:#0f172a;box-shadow:0 10px 28px #0003;font-size:12px;display:none}.toast.show{display:block}.toast.error{background:#991b1b}.toast.good{background:#166534}
 .steps{grid-template-columns:repeat(4,1fr)}.source-card{border:1px solid #bbf7d0;background:#f0fdf4;border-radius:15px;padding:14px;margin-bottom:15px}.source-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.source-title{font-size:14px;font-weight:850;color:#166534}.source-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.metric{background:#fff;border:1px solid #dcfce7;border-radius:10px;padding:9px}.metric label{display:block;color:#64748b;font-size:9px;text-transform:uppercase;font-weight:800}.metric b{display:block;font-size:15px;margin-top:3px}
 @media(max-width:950px){.layout{grid-template-columns:1fr}.summary{position:static}.profile{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr}.review-grid{grid-template-columns:1fr}.review-grid .full{grid-column:auto}.source-grid{grid-template-columns:1fr 1fr}}@media(max-width:640px){.page-header-wrap{padding-left:12px!important;padding-right:12px!important}.page-header-title{font-size:15px!important;line-height:1.2!important;letter-spacing:-.01em!important;white-space:normal;overflow-wrap:break-word}.page-header-subtitle{font-size:9px!important;line-height:1.25!important;letter-spacing:.04em!important;white-space:normal}.page-header-back{width:36px!important;height:36px!important;min-width:36px!important;flex-shrink:0}.profile{grid-template-columns:1fr}.user .pill{display:none}.footerin{align-items:flex-start}.footerin>div:first-child{display:none}.actions{width:100%}.actions button{flex:1}.score-row{grid-template-columns:1fr 78px}.scorebox{display:none}.adjust{grid-template-columns:64px 1fr}.adjust>span:last-child{grid-column:2}.card{padding:13px}.source-head{display:block}.source-head .tag{margin-top:8px}}@media print{body *{visibility:hidden}#printArea,#printArea *{visibility:visible}#printArea{position:absolute;left:0;top:0;width:100%;margin:0;padding:20px}.no-print{display:none!important}}
-</style></head>
+</style>
+<style id="hva-ui-polish-30092026">
+/* HVA QĐ32 · UI polish — compact, professional, presentation-ready */
+body{font-size:13px}
+.card{padding:15px 16px;border-radius:15px}
+h2{font-size:16px;font-weight:750;letter-spacing:-.01em}
+h3{font-size:13px;font-weight:750}
+.hint{font-size:10.5px!important;line-height:1.4!important;color:#718096!important}
+.field{padding:8px 10px}
+.field label{font-size:8.5px!important;letter-spacing:.045em}
+.field div{font-size:12.5px!important}
+.tag{font-size:9px!important;padding:3px 7px!important}
+.source-title{font-size:13px!important}
+.metric{padding:8px 9px}
+.metric label{font-size:8px!important}
+.metric b{font-size:13px!important}
+.section-head{margin-top:13px;margin-bottom:4px}
+.score-row{padding:7px 0}
+.score-row strong{font-size:11px!important}
+.scorebox{font-size:15px!important}
+.scorebox small{font-size:8px!important}
+table{font-size:10.5px}
+th{font-size:8px!important;padding:7px 6px}
+td{padding:7px 6px}
+.task-title{font-size:11px!important}
+.task-meta,.source{font-size:8.5px!important}
+.adjust{padding:7px 0}
+.adjust b{font-size:10.5px!important}
+.adjust .detail{font-size:10.5px!important}
+.adjust .source{font-size:8.5px!important}
+
+/* Inputs: entered text is readable; hints stay visually secondary */
+input,select,textarea{
+  font-size:12px!important;
+  line-height:1.35!important;
+  border-radius:8px!important;
+  border-color:#cbd5e1!important;
+}
+input,select{padding:6px 8px!important}
+textarea{
+  padding:8px 9px!important;
+  min-height:64px!important;
+  color:#1e293b!important;
+}
+textarea::placeholder,input::placeholder{
+  font-size:10.5px!important;
+  font-weight:400!important;
+  color:#a0aec0!important;
+  opacity:1!important;
+}
+.review-grid{gap:9px}
+.review-grid label.hint{font-size:9.5px!important;font-weight:600;color:#64748b!important}
+.review-grid textarea{min-height:64px!important}
+.review-grid .full textarea{min-height:58px!important}
+
+/* Buttons must look like controls, not text in boxes */
+button{
+  font-size:10.5px!important;
+  line-height:1.15!important;
+  padding:7px 10px!important;
+  border-radius:8px!important;
+  min-height:30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  white-space:nowrap;
+}
+button.ghost{
+  border:1px solid #cbd5e1!important;
+  background:#fff!important;
+  color:#334155!important;
+}
+button.ghost:hover{background:#f8fafc!important;border-color:#94a3b8!important}
+button.secondary{background:#e8eef5!important;color:#334155!important}
+button.primary{background:#0f4c81!important;color:#fff!important}
+button.success{background:#159b74!important;color:#fff!important}
+.toolbar{gap:6px;margin:9px 0}
+
+/* Right summary: reduce explanatory text and improve hierarchy */
+.summary{padding:15px!important}
+.summary h2{font-size:15px!important}
+.bigscore{font-size:40px!important}
+.classify{font-size:13px!important}
+.parts,.completeText{font-size:9.5px!important}
+.notice{
+  font-size:9.5px!important;
+  line-height:1.4!important;
+  padding:8px 9px!important;
+  margin-top:9px!important;
+}
+.check{font-size:9.5px!important;padding:6px 0!important}
+.ico{width:16px!important;height:16px!important;font-size:9px!important}
+.audit{font-size:8.5px!important;line-height:1.4!important}
+
+/* Header/steps/footer */
+.brand{font-size:14px!important}
+.sub{font-size:10px!important}
+.steps{gap:8px}
+.step{font-size:10.5px!important;padding:9px 11px!important}
+.footerin{padding:8px 17px!important}
+.footerin b{font-size:11px!important}
+.note{font-size:8.5px!important}
+.footer .actions button{min-height:29px!important}
+
+/* Less visual noise from long instructional prose */
+#sourceCard .hint,.card>.hint{max-width:980px}
+@media(max-width:640px){
+  body{font-size:12px}
+  .hint{font-size:10px!important}
+  textarea::placeholder,input::placeholder{font-size:10px!important}
+  button{font-size:10px!important;padding:7px 8px!important}
+  .card{padding:12px!important}
+}
+</style>
+
+<style id="hva-qc-hoavang-foundation">
+.enginebar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.engine{background:#fff;border:1px solid #dbe4ef;border-radius:14px;padding:10px 12px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(15,76,129,.04)}
+.engine.active{border-color:#93c5fd;background:linear-gradient(135deg,#f8fbff,#eff6ff)}
+.engine-icon{width:40px;height:40px;border-radius:11px;background:#0f4c81;color:#fff;display:grid;place-items:center;font-size:10px;font-weight:800}
+.engine-icon.hv{background:linear-gradient(135deg,#0f766e,#16a085)}
+.engine b{display:block;font-size:11.5px;color:#172033}
+.engine small{display:block;font-size:9px;color:#718096;margin-top:2px}
+.engine-state{font-size:8.5px;font-weight:800;padding:4px 7px;border-radius:999px;white-space:nowrap}
+.engine-state.live{background:#dcfce7;color:#166534}
+.engine-state.draft{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+
+.hv-card{border-color:#bfe3da!important;background:linear-gradient(180deg,#fff 0%,#fbfffd 100%)}
+.hv-head{align-items:center}
+.hv-draft{background:#fff7ed!important;color:#9a3412!important;border:1px solid #fed7aa}
+.hv-rule{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f0fdfa;border:1px solid #ccfbf1;border-radius:11px;padding:9px 11px;margin:10px 0}
+.hv-formula{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:10px;color:#475569}
+.hv-formula>b:first-of-type{font-size:18px;color:#0f766e}
+.hv-formula i{font-style:normal;font-size:9px;color:#64748b}
+.hv-formula strong{font-size:13px;color:#94a3b8}
+.hv-formula .plus{font-size:10px;color:#15803d;background:#dcfce7;padding:4px 7px;border-radius:7px}
+.hv-formula .minus{font-size:10px;color:#b45309;background:#ffedd5;padding:4px 7px;border-radius:7px}
+.hv-separate{font-size:9px;color:#64748b;white-space:nowrap}
+.hv-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:10px}
+.hv-panel{border:1px solid #e2e8f0;border-radius:11px;background:#fff;padding:10px}
+.hv-panel-title{font-size:10px;font-weight:800;color:#334155;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hv-criteria{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.hv-criterion{display:flex;align-items:center;justify-content:space-between;gap:7px;background:#f8fafc;border:1px solid #edf2f7;border-radius:8px;padding:7px 8px}
+.hv-criterion span{font-size:9.5px;color:#334155}
+.hv-criterion b{font-size:10px;color:#0f766e;white-space:nowrap}
+.hv-adjust-row{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #edf2f7}
+.hv-adjust-row:last-of-type{border-bottom:0}
+.hv-adjust-row .dot{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-weight:900;font-size:12px}
+.plusdot{background:#dcfce7;color:#15803d}.minusdot{background:#ffedd5;color:#b45309}
+.hv-adjust-row b{display:block;font-size:10px;color:#334155}.hv-adjust-row small{display:block;font-size:8.5px;color:#718096;margin-top:1px}
+.hv-adjust-row>strong{font-size:15px;color:#94a3b8}
+.hv-footnote{font-size:8.5px;color:#64748b;background:#f8fafc;border-radius:7px;padding:6px 7px;margin-top:6px}
+.hv-dataflow{margin-top:9px;display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;font-size:9px;color:#64748b}
+.hv-dataflow span{padding:4px 7px;border-radius:7px;background:#f1f5f9;font-weight:700}.hv-dataflow .blue{background:#dbeafe;color:#1d4ed8}.hv-dataflow .green{background:#dcfce7;color:#15803d}.hv-dataflow em{font-style:normal;color:#94a3b8}
+@media(max-width:800px){.enginebar,.hv-grid{grid-template-columns:1fr}.hv-separate{white-space:normal}.hv-criteria{grid-template-columns:1fr}}
+</style>
+</head>
 <body>
 <header class="top no-print"><div class="topin page-header-wrap"><button type="button" class="page-header-back" onclick="goBackToHVA()" aria-label="Quay lại"><i class="bi bi-arrow-left"></i></button><div class="mobile-safe-text" style="flex:1"><div class="brand page-header-title">TRƯỜNG THPT HÒA VANG · THI ĐUA – KHEN THƯỞNG</div><div class="sub page-header-subtitle">Đánh giá – Xếp loại tháng theo QĐ 32/2026/QĐ-UBND · V5</div></div><div class="user"><div class="pill">Tháng 09/2026</div><div class="avatar">NA</div></div></div></header>
 <main id="printArea">
 <div class="steps"><div class="step active">1. Kiểm tra dữ liệu nguồn</div><div class="step">2. Tự đánh giá</div><div class="step">3. Tự nhận xét</div><div class="step">4. Kiểm tra & gửi</div></div>
-<div class="card"><h2>Thông tin hồ sơ <span class="tag auto">Tự động từ CSDL HVA</span></h2><div class="profile"><div class="field"><label>Họ và tên</label><div id="pName">Đang tải...</div></div><div class="field"><label>Tổ/Bộ phận</label><div id="pDept">—</div></div><div class="field"><label>Chức danh/Chức vụ</label><div id="pRole">—</div></div><div class="field"><label>Nhóm đánh giá áp dụng</label><div id="pGroup">Đang xác định 🔒</div></div></div><div class="hint" style="margin-top:8px">Hệ thống tự phân nhóm theo chức vụ và vị trí việc làm. Cá nhân không tự chọn hoặc thay đổi nhóm; sai thông tin thì gửi yêu cầu cho quản trị nhân sự.</div></div>
+<div class="card"><h2>Thông tin hồ sơ <span class="tag auto">Tự động từ CSDL HVA</span></h2><div class="profile"><div class="field"><label>Họ và tên</label><div id="pName">Đang tải...</div></div><div class="field"><label>Tổ/Bộ phận</label><div id="pDept">—</div></div><div class="field"><label>Chức danh/Chức vụ</label><div id="pRole">—</div></div><div class="field"><label>Nhóm đánh giá áp dụng</label><div id="pGroup">Đang xác định 🔒</div></div></div><div class="hint" style="margin-top:8px">Nhóm đánh giá được xác định tự động từ CSDL nhân sự.</div></div>
 <div class="layout"><section>
 <div class="source-card" id="sourceCard"><div class="source-head"><div><div class="source-title" id="sourceTitle">Đang đối chiếu dữ liệu phát hành...</div><div class="hint"><b>Nguồn chuẩn:</b> TTPhatHanh → Báo cáo công việc tháng → 01TKNV → QĐ32</div></div><span class="tag ok" id="sourceStatus">Đủ điều kiện tự đánh giá</span></div><div class="source-grid"><div class="metric"><label>Số nhiệm vụ</label><b id="mTasks">—</b></div><div class="metric"><label>Hoàn thành</label><b id="mDone">—</b></div><div class="metric"><label>Có minh chứng</label><b id="mEvidence">—</b></div><div class="metric"><label>Trạng thái</label><b id="mStatus">Đang tải</b></div></div><div class="toolbar"><button class="ghost" id="goReport" onclick="toast('Mở Báo cáo công việc tháng tại Nghiệp vụ số (mô phỏng).')">Xem Báo cáo công việc tháng</button><button class="secondary" onclick="toast('Đã đối chiếu dữ liệu nguồn mới nhất.','good')">↻ Đối chiếu dữ liệu</button></div></div>
 <div class="card"><div class="section-head"><h2 style="margin:0">01TKNV · Nhiệm vụ trong kỳ đánh giá</h2><span class="tag locked">Nguồn TTPhatHanh</span></div>
-<div class="hint">Chỉ tổng hợp nhiệm vụ đã có dấu vết phát hành chính thức. Cá nhân không nhập lại nhiệm vụ tại màn hình QĐ32.</div>
-<div style="overflow:auto;margin-top:10px"><table><thead><tr><th>STT</th><th>Nhiệm vụ/Công việc</th><th>Nguồn</th><th>Hạn</th><th>Kết quả</th><th>Minh chứng</th><th>Xác nhận</th></tr></thead><tbody id="taskRows"><tr><td colspan="7" class="empty">Đang đồng bộ...</td></tr></tbody></table></div></div><div class="card"><h2>1. Tự đánh giá theo QĐ32</h2><div class="section-head"><h3>A. Tiêu chí chung</h3><span class="tag auto">Tối đa 30 điểm</span></div><div class="hint">Cá nhân tự chấm; người quản lý trực tiếp kiểm tra, nhận xét và xác nhận.</div>
+<div class="hint">01TKNV tự tổng hợp từ nhiệm vụ đã phát hành chính thức.</div>
+<div style="overflow:auto;margin-top:10px"><table><thead><tr><th>STT</th><th>Nhiệm vụ/Công việc</th><th>Nguồn</th><th>Hạn</th><th>Kết quả</th><th>Minh chứng</th><th>Xác nhận</th></tr></thead><tbody id="taskRows"><tr><td colspan="7" class="empty">Đang đồng bộ...</td></tr></tbody></table></div></div><div class="card"><h2>1. Tự đánh giá theo QĐ32</h2><div class="section-head"><h3>A. Tiêu chí chung</h3><span class="tag auto">Tối đa 30 điểm</span></div><div class="hint">Cá nhân tự chấm · Người quản lý kiểm tra, xác nhận.</div>
 <div class="score-row"><div><strong>Phẩm chất chính trị, đạo đức, văn hóa công vụ; kỷ luật, kỷ cương</strong></div><input class="common" type="number" min="0" max="10" value="10" step=".5" oninput="recalc()"><div class="scorebox">10<small>điểm tối đa</small></div></div>
 <div class="score-row"><div><strong>Năng lực chuyên môn, trách nhiệm và phối hợp thực hiện nhiệm vụ</strong></div><input class="common" type="number" min="0" max="10" value="9" step=".5" oninput="recalc()"><div class="scorebox">10<small>điểm tối đa</small></div></div>
 <div class="score-row"><div><strong>Đổi mới, sáng tạo; chủ động và dám chịu trách nhiệm</strong></div><input class="common" type="number" min="0" max="10" value="8" step=".5" oninput="recalc()"><div class="scorebox">10<small>điểm tối đa</small></div></div>
@@ -40,12 +197,45 @@ main{max-width:1320px;margin:18px auto;padding:0 16px 106px}.steps{display:grid;
 <div class="score-row"><div><strong>Tỷ lệ số lượng công việc/sản phẩm hoàn thành</strong></div><input id="qty" class="readonly" value="100" readonly><div class="scorebox">%<small>từ báo cáo tháng</small></div></div>
 <div class="score-row"><div><strong>Tỷ lệ công việc/sản phẩm bảo đảm chất lượng</strong></div><input id="qualityTotal" class="readonly" value="95" readonly><div class="scorebox">%<small>từ báo cáo tháng</small></div></div>
 <div class="score-row"><div><strong>Tỷ lệ công việc/sản phẩm bảo đảm tiến độ</strong></div><input id="progressTotal" class="readonly" value="100" readonly><div class="scorebox">%<small>từ báo cáo tháng</small></div></div>
-<div class="section-head"><h3>C. Điểm cộng / Điểm trừ</h3><span class="tag pending">Hiển thị riêng</span></div><div class="hint">Cá nhân không tự nhập điểm. Dữ liệu phải có nguồn, minh chứng và người có thẩm quyền xác nhận.</div>
+<div class="section-head"><h3>C. Điểm cộng / Điểm trừ</h3><span class="tag pending">Hiển thị riêng</span></div><div class="hint">Điểm có nguồn, minh chứng và xác nhận.</div>
 <div class="adjust"><b class="tag ok">+ 2 điểm</b><div class="detail"><b>Hoàn thành nhiệm vụ đột xuất vượt yêu cầu</b><div class="source">Nguồn: Giao việc HVA · Xác nhận: TTCM · 08/09/2026</div></div><span class="tag ok">Đã xác nhận</span></div>
 <div class="adjust"><b class="tag pending">− 0 điểm</b><div class="detail"><b>Không có nội dung bị trừ điểm</b><div class="source">Tổng hợp từ giao việc, hồ sơ chuyên môn và kết luận kiểm tra</div></div><span class="tag auto">Tự động</span></div>
 <div class="toolbar"><button class="ghost" onclick="toast('Mở danh sách nguồn và minh chứng điểm cộng/trừ (mô phỏng).')">Xem chi tiết nguồn điểm</button><button class="ghost" onclick="toast('Đã mở biểu mẫu giải trình (mô phỏng).')">Gửi giải trình</button></div></div>
-<div class="card"><h2>2. Tự nhận xét</h2><div class="hint" style="margin-bottom:10px">Có thể lưu nháp khi chưa hoàn thành; ba nội dung dưới đây bắt buộc trước khi gửi tự đánh giá.</div><div class="review-grid"><div><label class="hint required">Ưu điểm, kết quả nổi bật</label><textarea id="strength" oninput="recalc()" placeholder="Nêu ngắn gọn kết quả nổi bật, ưu điểm..."></textarea></div><div><label class="hint required">Hạn chế, khuyết điểm</label><textarea id="weakness" oninput="recalc()" placeholder="Nếu không có, ghi rõ: Không có."></textarea></div><div class="full"><label class="hint required">Nguyên nhân và biện pháp khắc phục</label><textarea id="solution" oninput="recalc()" placeholder="Nêu nguyên nhân và hướng khắc phục; nếu không có hạn chế, ghi rõ: Không có."></textarea></div><div class="full"><label class="hint">Cá nhân tự đề xuất mức xếp loại</label><select id="selfClass"><option>Hoàn thành xuất sắc nhiệm vụ</option><option>Hoàn thành tốt nhiệm vụ</option><option>Hoàn thành nhiệm vụ</option><option>Không hoàn thành nhiệm vụ</option></select></div></div></div>
-</section><aside><div class="card summary"><h2>Kết quả tự đánh giá</h2><div class="bigscore" id="officialScore">0.0</div><div class="hint">Tổng điểm chính thức A + B / 100</div><div class="classify" id="classification">Đang kiểm tra dữ liệu</div><div class="parts" id="parts"></div><div class="progress"><span id="progressBar"></span></div><div class="parts" id="completeText"></div><div class="notice"><b>Điểm cộng/trừ:</b> hiển thị riêng và là căn cứ xem xét khi quyết định mức xếp loại; không tự động nhập vào tổng điểm A + B.</div><div class="checklist" id="checklist"></div><div class="toolbar"><button class="secondary" style="flex:1" onclick="saveDraft()">Lưu nháp</button><button id="sideSubmit" class="success" style="flex:1" onclick="submitEval()">Gửi tự đánh giá</button></div><div class="audit">Sau khi gửi, hồ sơ bị khóa. Mọi thao tác trả lại, sửa hoặc xác nhận đều lưu người thực hiện, thời gian và lý do.</div></div></aside></div></main>
+
+<div class="card hv-card" id="hvaCompetition">
+  <div class="section-head hv-head">
+    <div>
+      <h2 style="margin:0">Thi đua – Khen thưởng Hòa Vang</h2>
+      <div class="hint">Engine độc lập với QĐ32 · dùng chung nhiệm vụ, kết quả và minh chứng từ HVA.</div>
+    </div>
+    <span class="tag hv-draft">QUY CHẾ DỰ THẢO</span>
+  </div>
+
+  <div class="hv-rule">
+    <div class="hv-formula"><span>Điểm thi đua</span><b>100</b><i>điểm cơ bản</i><strong>+</strong><b class="plus">Điểm cộng</b><strong>−</strong><b class="minus">Điểm trừ</b></div>
+    <div class="hv-separate">Không cộng vào tổng điểm A + B của QĐ32.</div>
+  </div>
+
+  <div class="hv-grid">
+    <div class="hv-panel">
+      <div class="hv-panel-title">Bộ tiêu chí áp dụng <span id="hvRoleBadge" class="tag locked">Tự nhận diện</span></div>
+      <div id="hvCriteria" class="hv-criteria"></div>
+    </div>
+    <div class="hv-panel">
+      <div class="hv-panel-title">Điểm cộng / điểm trừ theo Quy chế đơn vị</div>
+      <div class="hv-adjust-row"><span class="dot plusdot">+</span><div><b>Điểm cộng</b><small>Thành tích vượt mức, nổi bật hoặc đóng góp đặc biệt.</small></div><strong>—</strong></div>
+      <div class="hv-adjust-row"><span class="dot minusdot">−</span><div><b>Điểm trừ</b><small>Vi phạm, hạn chế hoặc thiếu sót có căn cứ và xác nhận.</small></div><strong>—</strong></div>
+      <div class="hv-footnote">Chiều nay cấu hình chi tiết mức điểm, điều/mục, minh chứng và thẩm quyền xác nhận.</div>
+    </div>
+  </div>
+
+  <div class="hv-dataflow">
+    <span>TTPhatHanh</span><b>→</b><span>Dữ liệu & minh chứng</span><b>→</b>
+    <span class="blue">QĐ32</span><em>+</em><span class="green">Thi đua Hòa Vang</span>
+  </div>
+</div>
+<div class="card"><h2>2. Tự nhận xét</h2><div class="hint" style="margin-bottom:10px">Ba nội dung có dấu * bắt buộc trước khi gửi.</div><div class="review-grid"><div><label class="hint required">Ưu điểm, kết quả nổi bật</label><textarea id="strength" oninput="recalc()" placeholder="Nhập ưu điểm, kết quả nổi bật…"></textarea></div><div><label class="hint required">Hạn chế, khuyết điểm</label><textarea id="weakness" oninput="recalc()" placeholder="Nhập hạn chế; nếu không có, ghi “Không có”."></textarea></div><div class="full"><label class="hint required">Nguyên nhân và biện pháp khắc phục</label><textarea id="solution" oninput="recalc()" placeholder="Nhập nguyên nhân và biện pháp khắc phục…"></textarea></div><div class="full"><label class="hint">Cá nhân tự đề xuất mức xếp loại</label><select id="selfClass"><option>Hoàn thành xuất sắc nhiệm vụ</option><option>Hoàn thành tốt nhiệm vụ</option><option>Hoàn thành nhiệm vụ</option><option>Không hoàn thành nhiệm vụ</option></select></div></div></div>
+</section><aside><div class="card summary"><h2>Kết quả tự đánh giá</h2><div class="bigscore" id="officialScore">0.0</div><div class="hint">Tổng điểm chính thức A + B / 100</div><div class="classify" id="classification">Đang kiểm tra dữ liệu</div><div class="parts" id="parts"></div><div class="progress"><span id="progressBar"></span></div><div class="parts" id="completeText"></div><div class="notice"><b>Điểm cộng/trừ:</b> hiển thị riêng và là căn cứ xem xét khi quyết định mức xếp loại; không tự động nhập vào tổng điểm A + B.</div><div class="checklist" id="checklist"></div><div class="toolbar"><button class="secondary" style="flex:1" onclick="saveDraft()">Lưu nháp</button><button id="sideSubmit" class="success" style="flex:1" onclick="submitEval()">Gửi tự đánh giá</button></div><div class="audit">Sau khi gửi, hồ sơ được khóa và lưu nhật ký xử lý.</div></div></aside></div></main>
 <div class="footer no-print"><div class="footerin"><div><b>HVA · Thi đua – Khen thưởng · V5</b><div class="note">Mục B liên thông từ Báo cáo công việc tháng đã gửi.</div></div><div class="actions"><button class="secondary" onclick="toast('Mở bản biểu mẫu in (mô phỏng).')">Xem biểu mẫu</button><button class="primary" id="footerSubmit" onclick="submitEval()">Kiểm tra & gửi duyệt</button></div></div></div><div class="toast" id="toast"></div>
 <script>
 const $=id=>document.getElementById(id);
@@ -120,6 +310,26 @@ function recalc(){
  const cs=checks(),done=cs.filter(x=>x.ok).length,pct=Math.round(done/cs.length*100);$('progressBar').style.width=pct+'%';$('completeText').textContent=`Mức độ hoàn thiện hồ sơ: ${pct}%`; $('checklist').innerHTML=cs.map(x=>`<div class="check"><span class="ico ${x.ok?'y':'n'}">${x.ok?'✓':'!'}</span><span>${x.text}</span></div>`).join('');
  const ok=cs.every(x=>x.ok);$('sideSubmit').disabled=!ok;$('footerSubmit').disabled=!ok;$('footerSubmit').textContent=ok?'Gửi tự đánh giá':'Kiểm tra hồ sơ ('+done+'/'+cs.length+')'
 }
+
+function renderHVACompetition(){
+ const group=roleGroup(REPORT.report||{});
+ const badge=$('hvRoleBadge'); const box=$('hvCriteria');
+ if(!badge||!box)return;
+ let title='Giáo viên', criteria=[
+   ['Giảng dạy','25'],['Chất lượng giáo dục','20'],['Hồ sơ · quy chế CM','15'],
+   ['Kiểm tra · đánh giá','10'],['Bồi dưỡng · đổi mới','10'],['Hoạt động nhà trường','10'],
+   ['Đạo đức · kỷ luật · phối hợp','10']
+ ];
+ if(group.startsWith('NV')){
+   title='Nhân viên';
+   criteria=[['Nhiệm vụ theo vị trí việc làm','—'],['Chất lượng · tiến độ','—'],['Hồ sơ · tài sản · dữ liệu','—'],['Phối hợp','—'],['Kỷ luật','—'],['CCHC · chuyển đổi số','—']];
+ }else if(group.startsWith('CBQL')){
+   title='CBQL/LĐQL';
+   criteria=[['Kết quả lĩnh vực phụ trách','—'],['Quản trị · điều hành','—'],['Tiến độ · chất lượng nhiệm vụ','—'],['Phối hợp · trách nhiệm','—'],['Đổi mới · chuyển đổi số','—'],['Kỷ luật · nêu gương','—']];
+ }
+ badge.textContent=title;
+ box.innerHTML=criteria.map(x=>`<div class="hv-criterion"><span>${x[0]}</span><b>${x[1]==='—'?'Theo QC':x[1]+'đ'}</b></div>`).join('');
+}
 async function loadQD32(){
  try{
    const u=username(); if(!u)throw new Error('Không xác định được tài khoản đăng nhập HVA.');
@@ -129,14 +339,14 @@ async function loadQD32(){
    REPORT.tasks=Number(REPORT.report.totalTasks??REPORT.items.length)||REPORT.items.length;
    REPORT.evidence=REPORT.items.filter(x=>x.evidenceUrl).length;
    REPORT.qty=Number(REPORT.report.quantityRate??0);REPORT.progress=Number(REPORT.report.progressRate??0);REPORT.quality=Number(REPORT.report.qualityRate??0);REPORT.loaded=true;
-   renderProfile();renderTasks();recalc();
+   renderProfile();renderTasks();renderHVACompetition();recalc();
    toast(`Đã đồng bộ ${REPORT.items.length} nhiệm vụ từ nguồn TTPhatHanh.`, 'good')
- }catch(e){REPORT.loaded=false;renderProfile();renderTasks();recalc();toast(e.message||String(e),'error')}
+ }catch(e){REPORT.loaded=false;renderProfile();renderTasks();renderHVACompetition();recalc();toast(e.message||String(e),'error')}
 }
 function openMonthlyReport(){window.location.assign('BaoCaoCongViecThang.html')}
 let toastTimer;function toast(msg,type=''){const x=$('toast');x.textContent=msg;x.className='toast show '+type;clearTimeout(toastTimer);toastTimer=setTimeout(()=>x.className='toast',3200)}
 function saveDraft(){toast('Bản diễn: dữ liệu nguồn đã đồng bộ. Chưa ghi QĐ32 vào Backend production.','good')}
 function submitEval(){const missing=checks().filter(x=>!x.ok);if(missing.length){toast('Chưa thể gửi: '+missing.map(x=>x.text).join('; ')+'.','error');return}toast('Hồ sơ đã đủ điều kiện để chuyển người quản lý trực tiếp. Bản diễn chưa ghi production.','good')}
 document.querySelectorAll('.common').forEach(x=>x.addEventListener('input',recalc));
-renderProfile();renderTasks();recalc();loadQD32();
+renderProfile();renderTasks();renderHVACompetition();recalc();loadQD32();
 </script></body></html>
