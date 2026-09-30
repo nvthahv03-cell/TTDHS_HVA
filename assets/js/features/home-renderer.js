@@ -3405,27 +3405,19 @@
                 user = {};
             }
 
-            const role = String(
-                user.role ||
-                user.vaiTro ||
-                user.VAITRO ||
-                ''
-            ).toUpperCase();
+            // HVA RBAC LOCK 30/09/2026:
+            // Khu quản trị trong KẾT NỐI SỐ chỉ dành cho BGH.
+            // Không suy quyền từ ADMIN/QUYEN và tuyệt đối không dùng includes('HT').
+            const permissionText = [
+                user.chucVu, user.viTriViecLam, user.position,
+                user.vaiTro, user.role
+            ].filter(Boolean).join(' ')
+             .normalize('NFD')
+             .replace(/[\u0300-\u036f]/g, '')
+             .replace(/Đ/g, 'D').replace(/đ/g, 'd')
+             .toUpperCase();
 
-            const permission = String(
-                user.permission ||
-                user.quyen ||
-                user.QUYEN ||
-                ''
-            ).toUpperCase();
-
-            const allowed =
-                role.includes('ADMIN') ||
-                role.includes('HT') ||
-                role.includes('PHT') ||
-                permission.includes('ADMIN') ||
-                permission.includes('QUAN_TRI') ||
-                permission.includes('QUẢN TRỊ');
+            const allowed = /(^|\b)(BAN GIAM HIEU|HIEU TRUONG|PHO HIEU TRUONG|BGH|PHT)(\b|$)/.test(permissionText);
 
             const adminArea =
                 document.getElementById('digitalAdminArea');
@@ -3520,10 +3512,15 @@
         function hvaDriveAdminAllowed_() {
             let user = {};
             try { user = JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}'); } catch (_) {}
-            const role = String(user.role || user.vaiTro || user.VAITRO || '').toUpperCase();
-            const permission = String(user.permission || user.quyen || user.QUYEN || '').toUpperCase();
-            return role.includes('ADMIN') || role.includes('HT') || role.includes('PHT') ||
-                   permission.includes('ADMIN') || permission.includes('QUAN_TRI') || permission.includes('QUẢN TRỊ');
+            const permissionText = [
+                user.chucVu, user.viTriViecLam, user.position,
+                user.vaiTro, user.role
+            ].filter(Boolean).join(' ')
+             .normalize('NFD')
+             .replace(/[\u0300-\u036f]/g, '')
+             .replace(/Đ/g, 'D').replace(/đ/g, 'd')
+             .toUpperCase();
+            return /(^|\b)(BAN GIAM HIEU|HIEU TRUONG|PHO HIEU TRUONG|BGH|PHT)(\b|$)/.test(permissionText);
         }
 
         window.openHVADriveNavigator = async function(event) {
@@ -3687,41 +3684,39 @@
         setTimeout(hvaLoadMaintenanceState_, 1200);
 
         function setupHVAMainMenuPermission() {
-            // Dùng đúng nguồn tài khoản mà toàn hệ thống HVA đang dùng.
-            // Có tài khoản được lưu ở localStorage (không chỉ sessionStorage),
-            // nên đọc riêng sessionStorage sẽ nhận {} và khóa nhầm cả BGH.
             const user = getCurrentHVAUser();
 
-            // Quét TOÀN BỘ hồ sơ đăng nhập, kể cả các trường lồng nhau.
-            // Trước đây chỉ Object.values() cấp 1 nên nếu chức vụ/quyền nằm trong
-            // object con thì BGH bị nhận thành GV thường và bị khóa nhầm.
-            const rawProfile = JSON.stringify(user || {})
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/Đ/g, 'D').replace(/đ/g, 'd')
-                .toUpperCase();
+            // HVA RBAC LOCK 30/09/2026
+            // Chỉ đọc các trường chức vụ/vai trò thực sự; KHÔNG quét toàn bộ JSON.
+            // QUẢN TRỊ: chỉ BGH.
+            // ĐIỀU HÀNH SỐ: BGH (full), 08 Tổ trưởng, Bí thư Đoàn.
+            // Tổ phó và GV/NV khác: không có.
+            const permissionText = [
+                user.chucVu,
+                user.viTriViecLam,
+                user.position,
+                user.vaiTro,
+                user.role
+            ].filter(Boolean).join(' ')
+             .normalize('NFD')
+             .replace(/[\u0300-\u036f]/g, '')
+             .replace(/Đ/g, 'D').replace(/đ/g, 'd')
+             .toUpperCase();
 
-            const hasAny = (...keys) => keys.some(k => rawProfile.includes(k));
+            const isBGH =
+                /(^|\b)(BAN GIAM HIEU|HIEU TRUONG|PHO HIEU TRUONG|BGH|PHT)(\b|$)/.test(permissionText);
 
-            const isAdmin = hasAny('ADMIN', 'QUAN TRI HE THONG', 'QUAN_TRI');
-            const isBGH = hasAny(
-                'PHO HIEU TRUONG', 'PHT',
-                'HIEU TRUONG',
-                'BAN GIAM HIEU', 'BGH'
-            );
-            const isTTCM = hasAny(
-                'TTCM',
-                'TO TRUONG CHUYEN MON',
-                'TO TRUONG CM'
-            );
-            const isTTVP = hasAny(
-                'TTVP',
-                'TO TRUONG VAN PHONG',
-                'TO TRUONG VP'
-            );
+            // Tổ trưởng: TTCM / Tổ trưởng chuyên môn / Tổ trưởng văn phòng.
+            // CỐ Ý không nhận TPCM, Tổ phó CM, Tổ phó.
+            const isToTruong =
+                /(^|\b)(TTCM|TTVP|TO TRUONG CHUYEN MON|TO TRUONG CM|TO TRUONG VAN PHONG|TO TRUONG VP|TO TRUONG)(\b|$)/.test(permissionText) &&
+                !/(^|\b)(TPCM|TO PHO|TO PHO CHUYEN MON|TO PHO CM)(\b|$)/.test(permissionText);
 
-            const canOpenDieuHanhSo = isAdmin || isBGH || isTTCM || isTTVP;
-            const canOpenQuanTri = isAdmin || isBGH;
+            const isBiThuDoan =
+                /(^|\b)(BI THU DOAN|BI THU DOAN TRUONG|BI THU DTN|BT DOAN)(\b|$)/.test(permissionText);
+
+            const canOpenDieuHanhSo = isBGH || isToTruong || isBiThuDoan;
+            const canOpenQuanTri = isBGH;
 
             function applyCardPermission(cardId, lockId, dropdownId, allowed) {
                 const card = document.getElementById(cardId);
@@ -3741,9 +3736,7 @@
                     return;
                 }
 
-                // Khóa UX nhưng vẫn cho bấm để giải thích lý do bị khóa.
                 card.removeAttribute('data-dropdown-toggle');
-                // Giữ nguyên màu card; chỉ báo khóa bằng ổ khóa vàng ở góc phải.
                 card.classList.remove('opacity-40', 'opacity-50', 'opacity-60', 'opacity-65', 'grayscale', 'pointer-events-none');
                 card.style.opacity = '1';
                 card.style.filter = 'none';
