@@ -511,6 +511,31 @@
         const togglePassword = document.getElementById("togglePassword");
         const eyeIcon       = document.getElementById("eyeIcon");
 
+        /* HVA LOGIN UX V2 - nhớ tài khoản trên Safari/PWA iPhone */
+        const HVA_LAST_USERNAME = "hvaLastUsername";
+
+        function hvaRememberUsername(value) {
+            const v = String(value || "").trim();
+            if (v) localStorage.setItem(HVA_LAST_USERNAME, v);
+        }
+
+        function hvaRestoreUsername() {
+            let saved = localStorage.getItem(HVA_LAST_USERNAME) || "";
+            if (!saved) {
+                try {
+                    const u = JSON.parse(localStorage.getItem("user") || "{}");
+                    saved = u.username || u.userName || u.taiKhoan || "";
+                } catch (_) {}
+            }
+            if (saved) {
+                usernameInput.value = saved;
+                passwordInput.focus();
+                return true;
+            }
+            usernameInput.focus();
+            return false;
+        }
+
 
         /* HVA INSTALL SUCCESS */
         const hvaInstallSuccess = document.getElementById("hvaInstallSuccess");
@@ -569,10 +594,10 @@
 
             // Không để giao diện treo vô thời hạn nếu Apps Script/mạng gặp sự cố.
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 20000);
+            const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-            try {
-                const response = await fetch(WEB_APP_URL, {
+            async function loginRequest() {
+                return fetch(WEB_APP_URL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "text/plain;charset=UTF-8"
@@ -585,6 +610,18 @@
                     cache: "no-store",
                     signal: controller.signal
                 });
+            }
+
+            try {
+                let response;
+                try {
+                    response = await loginRequest();
+                } catch (firstError) {
+                    // Chỉ retry 1 lần với lỗi mạng thoáng qua; không retry khi đã hết timeout.
+                    if (firstError?.name === "AbortError") throw firstError;
+                    await new Promise(resolve => setTimeout(resolve, 250));
+                    response = await loginRequest();
+                }
 
                 if (!response.ok) {
                     throw new Error("HTTP_" + response.status);
@@ -600,18 +637,9 @@
                     return;
                 }
 
-                // Lưu đúng đối tượng user backend trả về.
-                // Các trường giới tính/VTVL/chức vụ/tổ-bộ phận tiếp tục được giữ nguyên
-                // để HVA Assistant xưng hô và phân quyền chính xác.
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify(result.user)
-                );
-
                 /*
-                 * HVA SECURITY SESSION V1 - 25/09/2026
-                 * AuthService V2 trả sessionToken + expiresAt.
-                 * Lưu riêng khỏi object user để chuẩn bị Gateway Security.
+                 * HVA SECURITY SESSION V2 - commit phiên theo kiểu atomic:
+                 * chỉ lưu user khi backend đã trả đủ session hợp lệ.
                  */
                 if (!result.sessionToken || !result.expiresAt) {
                     localStorage.removeItem("hvaSessionToken");
@@ -620,8 +648,12 @@
                     return;
                 }
 
+                localStorage.setItem("user", JSON.stringify(result.user));
                 localStorage.setItem("hvaSessionToken", String(result.sessionToken));
                 localStorage.setItem("hvaSessionExpiresAt", String(result.expiresAt));
+
+                // PWA/Safari iPhone không phải lúc nào cũng autofill: HVA tự nhớ tài khoản.
+                hvaRememberUsername(username);
 
                 /*
                  * HVA LOGIN FAST 15/09/2026
@@ -676,8 +708,12 @@
             }
         }
 
-        // Tự động focus ô tài khoản
-        usernameInput.focus();
+        // Nhớ tên tài khoản độc lập với cơ chế autofill của Safari/PWA.
+        usernameInput.addEventListener("change", () => hvaRememberUsername(usernameInput.value));
+        usernameInput.addEventListener("blur", () => hvaRememberUsername(usernameInput.value));
+
+        // Mở từ icon iPhone: tự điền tài khoản đã dùng gần nhất, chỉ yêu cầu nhập 4 số mật khẩu.
+        hvaRestoreUsername();
     </script>
 </body>
 </html>
