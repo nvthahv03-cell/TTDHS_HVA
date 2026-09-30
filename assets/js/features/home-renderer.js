@@ -5579,10 +5579,11 @@ function approvalStageLabel_(s){
         loadMyMeetings();
     }, 900);
 
-    setTimeout(() => {
-        ensureMeetingApprovalPanel_();
-        loadMeetingAttendanceApprovals();
-    }, 6500);
+    // HVA STABLE 30/09/2026:
+    // Tạm KHÔNG tự nạp khối XÁC NHẬN & GIẢI TRÌNH khi vừa mở Home.
+    // Lý do: dữ liệu tồn/kiểm thử trong nguồn họp đang làm panel tự xuất hiện lại.
+    // Không xóa dữ liệu, không sửa nghiệp vụ QR, không ảnh hưởng các menu khác.
+    // Khi ổn định nguồn dữ liệu, có thể bật lại bằng lời gọi loadMeetingAttendanceApprovals().
 
 
     // ======================================================
