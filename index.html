@@ -613,15 +613,10 @@
             }
 
             try {
-                let response;
-                try {
-                    response = await loginRequest();
-                } catch (firstError) {
-                    // Chỉ retry 1 lần với lỗi mạng thoáng qua; không retry khi đã hết timeout.
-                    if (firstError?.name === "AbortError") throw firstError;
-                    await new Promise(resolve => setTimeout(resolve, 250));
-                    response = await loginRequest();
-                }
+                // Chỉ gửi DUY NHẤT 01 request đăng nhập.
+                // Không tự retry POST login: tránh tạo phiên kép và tránh request thứ hai
+                // khi redirect của Google Apps Script gặp lỗi mạng/404 tạm thời.
+                const response = await loginRequest();
 
                 if (!response.ok) {
                     throw new Error("HTTP_" + response.status);
