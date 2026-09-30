@@ -1,6 +1,56 @@
 <!DOCTYPE html>
 <html lang="vi" class="h-full scroll-smooth">
 <head>
+    <!-- HVA iOS SESSION BRIDGE 30/09/2026
+         Đồng bộ hồ sơ Login (localStorage) sang sessionStorage TRƯỚC khi app.js/HomeRenderer chạy.
+         Mục tiêu: Safari/PWA iPhone không dùng nhầm user cũ/rỗng trong sessionStorage. -->
+    <script>
+    (function () {
+        'use strict';
+
+        function hvaSyncIOSSessionUser() {
+            try {
+                var raw = localStorage.getItem('user');
+                if (!raw) {
+                    sessionStorage.removeItem('user');
+                    return false;
+                }
+
+                var user = JSON.parse(raw);
+                if (!user || typeof user !== 'object') {
+                    sessionStorage.removeItem('user');
+                    return false;
+                }
+
+                var username = String(
+                    user.username || user.userName || user.maGV || user.taiKhoan || ''
+                ).trim();
+
+                if (!username) {
+                    sessionStorage.removeItem('user');
+                    return false;
+                }
+
+                /* localStorage là nguồn chuẩn do index.html vừa ghi sau khi Auth thành công. */
+                sessionStorage.setItem('user', JSON.stringify(user));
+                return true;
+            } catch (error) {
+                console.warn('[HVA iOS Session Bridge]', error);
+                try { sessionStorage.removeItem('user'); } catch (_) {}
+                return false;
+            }
+        }
+
+        window.HVASyncSessionUser = hvaSyncIOSSessionUser;
+        hvaSyncIOSSessionUser();
+
+        /* iOS có thể phục hồi PWA từ BFCache mà không reload toàn trang. */
+        window.addEventListener('pageshow', function () {
+            hvaSyncIOSSessionUser();
+        });
+    })();
+    </script>
+
     <!-- Đặt script hứng PWA lên đầu tiên -->
     <script>
       window.deferredPrompt = window.deferredPrompt || null;
