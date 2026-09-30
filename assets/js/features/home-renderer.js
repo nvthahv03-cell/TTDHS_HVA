@@ -2287,7 +2287,7 @@
                                     font-extrabold tracking-wide
                                     text-[#0F4C81]
                                     dark:text-cyan-300">
-                            TT QUẢN TRỊ SỐ HVA
+                            ĐIỀU HÀNH SỐ 
                         </div>
 
                         <div class="text-[9px]
