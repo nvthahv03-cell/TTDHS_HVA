@@ -2229,7 +2229,7 @@
                 <h3 class="text-xs font-extrabold
                            tracking-tight text-white mb-0.5
                            whitespace-nowrap">
-                    TT QUẢN TRỊ SỐ HVA
+                    ĐIỀU HÀNH SỐ 
                 </h3>
 
                 <i class="bi bi-chevron-up
