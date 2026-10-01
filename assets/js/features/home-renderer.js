@@ -6113,11 +6113,15 @@ function approvalStageLabel_(s){
         const ids = { BGH:'dhRoleBGH', TCM:'dhRoleTCM', TVP:'dhRoleTVP', DOAN:'dhRoleDOAN' };
         const labels = { BGH:'Ban Giám hiệu', TCM:'Tổ chuyên môn', TVP:'Tổ Văn phòng', DOAN:'Đoàn Thanh niên' };
         const btn = document.getElementById(ids[role]);
-        if (!btn || btn.dataset.allowed !== '1') {
-            const msg = 'Tài khoản chưa được cấp quyền vào ' + (labels[role] || 'chức năng này') + '.';
-            if (typeof showToast === 'function') showToast(msg); else alert(msg);
-            return;
-        }
+       if (!btn || btn.dataset.allowed !== '1') {
+    // Đóng menu Điều hành số trước khi hiện thông báo
+    const dropdown = document.getElementById('dieuhanhso-dropdown');
+    if (dropdown) dropdown.classList.add('hidden');
+
+    const msg = 'Tài khoản chưa được cấp quyền vào ' + (labels[role] || 'chức năng này') + '.';
+    if (typeof showToast === 'function') showToast(msg); else alert(msg);
+    return;
+}
         if (role === 'TCM') {
             window.openHVATCMMenu?.(event);
             return;
