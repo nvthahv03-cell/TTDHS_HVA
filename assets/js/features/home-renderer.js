@@ -6129,7 +6129,12 @@ function approvalStageLabel_(s){
     function showHVADieuHanhView(viewId) {
         ['dhRoleView','dhTCMView','dhTCMPlanView'].forEach(function(id) {
             const el = document.getElementById(id);
-            if (el) el.classList.toggle('hidden', id !== viewId);
+            if (!el) return;
+            const active = id === viewId;
+            el.classList.toggle('hidden', !active);
+            // Ép ẩn tuyệt đối màn trước để không còn lộ phía sau màn đang mở.
+            el.style.display = active ? '' : 'none';
+            el.setAttribute('aria-hidden', active ? 'false' : 'true');
         });
         const dropdown = document.getElementById('dieuhanhso-dropdown');
         if (dropdown) dropdown.scrollTop = 0;
