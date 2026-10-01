@@ -11,8 +11,7 @@
 
     <style>
       /* HVA Responsive Home V4 14/09/2026 - tiếp nhận khảo sát/bình chọn. */
-      #hva-main-modules {<!-- MÀN 2: TỔ CHUYÊN MÔN -->
-<div id="dhTCMView" class="hidden">
+      #hva-main-modules {
         display: grid;
         grid-template-columns: minmax(0, 1fr) 78px minmax(0, 1fr);
         gap: .65rem;
@@ -2201,7 +2200,79 @@
 
     
 
-            <!-- MÀN 2: TỔ CHUYÊN MÔN -->
+            
+            <!-- MÀN 2: BAN GIÁM HIỆU -->
+            <div id="dhBGHView" class="hidden">
+                <div class="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
+                    <button type="button" class="dh-tcm-back" onclick="window.backHVADieuHanhRoles?.(event)">
+                        <i class="bi bi-arrow-left"></i> Quay lại Điều hành số
+                    </button>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-700 to-cyan-500 text-white flex items-center justify-center shadow-sm">
+                            <i class="bi bi-building-check text-base"></i>
+                        </div>
+                        <div>
+                            <div class="text-[17px] font-black tracking-wide text-[#0F4C81] dark:text-cyan-300">BAN GIÁM HIỆU</div>
+                            <div class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Chỉ đạo • Phê duyệt • Phát hành • Theo dõi cấp trường</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 space-y-2.5">
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVABGHFeature?.('KEHOACH',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-calendar2-check-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">KẾ HOẠCH</span><span class="dh-tcm-desc">Kế hoạch nhà trường • Kế hoạch tổ CM • Kế hoạch bộ phận • Mẫu biểu</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVABGHFeature?.('CONGVIEC',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-list-check"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">CÔNG VIỆC</span><span class="dh-tcm-desc">Giao việc • Theo dõi tiến độ • Kết quả • Việc quá hạn</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVABGHFeature?.('TRINHDUYET',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-inbox-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">HỒ SƠ TRÌNH DUYỆT</span><span class="dh-tcm-desc">Chờ xử lý • Yêu cầu bổ sung • Đã duyệt • Từ chối/Trả lại</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVABGHFeature?.('PHATHANH',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-send-check-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">PHÁT HÀNH</span><span class="dh-tcm-desc">Hồ sơ đã duyệt • Công bố • Thu hồi/thay thế • Lịch sử phiên bản</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVABGHFeature?.('HOP',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-people-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">HỌP &amp; ĐIỀU HÀNH</span><span class="dh-tcm-desc">HĐSP • Liên tịch • Hội ý BGH • Nội dung • Kết luận • Theo dõi sau họp</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVABGHFeature?.('CHUYENMON',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-mortarboard-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">CHUYÊN MÔN</span><span class="dh-tcm-desc">Tiến độ dạy học • Kiểm tra đánh giá • Bồi dưỡng HSG • Phụ đạo • Hoạt động chuyên môn</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVABGHFeature?.('BAOCAO',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-file-earmark-bar-graph-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">BÁO CÁO</span><span class="dh-tcm-desc">Báo cáo nhanh • Tuần • Tháng • Học kỳ • Năm học • Đột xuất</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVABGHFeature?.('GIAMSAT',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-graph-up-arrow"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">THEO DÕI – GIÁM SÁT</span><span class="dh-tcm-desc">Nhiệm vụ các tổ/bộ phận • Hạn xử lý • Cảnh báo • Việc tồn</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVABGHFeature?.('LICH',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-calendar-week-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">LỊCH ĐIỀU HÀNH</span><span class="dh-tcm-desc">Lịch công tác • Lịch trường • Lịch BGH • Mốc công việc</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVABGHFeature?.('CHIDAO',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-megaphone-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">THÔNG BÁO – CHỈ ĐẠO</span><span class="dh-tcm-desc">Thông báo nội bộ • Chỉ đạo thực hiện • Xác nhận đã nhận/đã thực hiện</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                </div>
+                <div class="px-4 pb-3 text-[9.5px] font-semibold text-slate-400 text-center">HVA • Điều hành Ban Giám hiệu</div>
+            </div>
+
+<!-- MÀN 2: TỔ CHUYÊN MÔN -->
             <div id="dhTCMView" class="hidden">
                 <div class="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
                     <button type="button" class="dh-tcm-back" onclick="window.backHVADieuHanhRoles?.(event)">
@@ -6136,7 +6207,7 @@ function approvalStageLabel_(s){
     };
 
     function showHVADieuHanhView(viewId) {
-        ['dhRoleView','dhTCMView','dhTCMPlanView'].forEach(function(id) {
+        ['dhRoleView','dhBGHView','dhTCMView','dhTCMPlanView'].forEach(function(id) {
             const el = document.getElementById(id);
             if (!el) return;
             const isActive = id === viewId;
@@ -6148,7 +6219,20 @@ function approvalStageLabel_(s){
         if (dropdown) dropdown.scrollTop = 0;
     }
 
-    window.openHVATCMMenu = function(event) {
+    
+window.openHVABGHFeature = function(feature, event) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    const labels = {
+        KEHOACH:'Kế hoạch', CONGVIEC:'Công việc', TRINHDUYET:'Hồ sơ trình duyệt',
+        PHATHANH:'Phát hành', HOP:'Họp & Điều hành', CHUYENMON:'Chuyên môn',
+        BAOCAO:'Báo cáo', GIAMSAT:'Theo dõi – Giám sát', LICH:'Lịch điều hành',
+        CHIDAO:'Thông báo – Chỉ đạo'
+    };
+    const msg = (labels[feature] || 'Chức năng') + ' đang được hoàn thiện.';
+    if (typeof showToast === 'function') showToast(msg); else alert(msg);
+};
+
+window.openHVATCMMenu = function(event) {
         if (event) { event.preventDefault(); event.stopPropagation(); }
         const btn = document.getElementById('dhRoleTCM');
         if (!btn || btn.dataset.allowed !== '1') {
