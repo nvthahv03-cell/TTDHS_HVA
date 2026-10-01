@@ -2068,7 +2068,7 @@
 
 <!-- ====================================================== -->
 <!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ - 4 CỬA THEO ĐƠN VỊ          -->
-<!-- BỔ SUNG: MENU TỔ CHUYÊN MÔN + MENU KẾ HOẠCH           -->
+<!-- BỔ SUNG: MENU TỔ CHUYÊN MÔN + MENU KẾ HOẠCH - NO SCRIPT -->
 <!-- ====================================================== -->
 <style>
     #dieuhanhso-dropdown .dh-role-item {
@@ -2226,7 +2226,7 @@
 
                 <!-- TCM: GIỮ NGUYÊN PHÂN QUYỀN; CHỈ MỞ MENU CON KHI KHÔNG BỊ KHÓA -->
                 <button id="dhRoleTCM" type="button" class="dh-role-item"
-                        onclick="window.openHVATCMMenu?.(event)">
+                        onclick="event.stopPropagation(); if(this.classList.contains('dh-role-locked')){ window.openHVADieuHanhRole?.('TCM',event); }else{ document.getElementById('dhRoleView')?.classList.add('hidden'); document.getElementById('dhTCMPlanView')?.classList.add('hidden'); document.getElementById('dhTCMView')?.classList.remove('hidden'); document.getElementById('dieuhanhso-dropdown').scrollTop=0; }">
                     <span class="dh-role-icon"><i class="bi bi-people-fill"></i></span>
                     <span class="min-w-0 flex-1">
                         <span class="dh-role-title">TỔ CHUYÊN MÔN</span>
@@ -2264,7 +2264,7 @@
         <!-- ===== MÀN 2: MENU TỔ CHUYÊN MÔN ===== -->
         <div id="dhTCMView" class="hidden">
             <div class="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
-                <button type="button" class="dh-back-btn" onclick="window.backHVADieuHanhRoles?.(event)">
+                <button type="button" class="dh-back-btn" onclick="event.stopPropagation(); document.getElementById('dhTCMView')?.classList.add('hidden'); document.getElementById('dhTCMPlanView')?.classList.add('hidden'); document.getElementById('dhRoleView')?.classList.remove('hidden'); document.getElementById('dieuhanhso-dropdown').scrollTop=0;">
                     <i class="bi bi-arrow-left"></i>
                     Quay lại Điều hành số
                 </button>
@@ -2281,7 +2281,7 @@
             </div>
 
             <div class="p-3 space-y-2.5">
-                <button type="button" class="dh-sub-item" onclick="window.openHVATCMPlanMenu?.(event)">
+                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); document.getElementById('dhTCMView')?.classList.add('hidden'); document.getElementById('dhRoleView')?.classList.add('hidden'); document.getElementById('dhTCMPlanView')?.classList.remove('hidden'); document.getElementById('dieuhanhso-dropdown').scrollTop=0;">
                     <span class="dh-sub-icon"><i class="bi bi-calendar2-check-fill"></i></span>
                     <span class="min-w-0 flex-1">
                         <span class="dh-sub-title">KẾ HOẠCH</span>
@@ -2290,7 +2290,7 @@
                     <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
                 </button>
 
-                <button type="button" class="dh-sub-item" onclick="window.openHVATCMFeature?.('CONGVIEC', event)">
+                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Công việc đang được hoàn thiện.')">
                     <span class="dh-sub-icon"><i class="bi bi-list-check"></i></span>
                     <span class="min-w-0 flex-1">
                         <span class="dh-sub-title">CÔNG VIỆC</span>
@@ -2299,7 +2299,7 @@
                     <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
                 </button>
 
-                <button type="button" class="dh-sub-item" onclick="window.openHVATCMFeature?.('HOPTO', event)">
+                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Họp tổ đang được hoàn thiện.')">
                     <span class="dh-sub-icon"><i class="bi bi-people"></i></span>
                     <span class="min-w-0 flex-1">
                         <span class="dh-sub-title">HỌP TỔ</span>
@@ -2308,7 +2308,7 @@
                     <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
                 </button>
 
-                <button type="button" class="dh-sub-item" onclick="window.openHVATCMFeature?.('THEODOI', event)">
+                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Theo dõi đang được hoàn thiện.')">
                     <span class="dh-sub-icon"><i class="bi bi-graph-up-arrow"></i></span>
                     <span class="min-w-0 flex-1">
                         <span class="dh-sub-title">THEO DÕI</span>
@@ -2317,7 +2317,7 @@
                     <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
                 </button>
 
-                <button type="button" class="dh-sub-item" onclick="window.openHVATCMFeature?.('BAOCAO', event)">
+                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Báo cáo đang được hoàn thiện.')">
                     <span class="dh-sub-icon"><i class="bi bi-file-earmark-bar-graph-fill"></i></span>
                     <span class="min-w-0 flex-1">
                         <span class="dh-sub-title">BÁO CÁO</span>
@@ -2335,7 +2335,7 @@
         <!-- ===== MÀN 3: KẾ HOẠCH TỔ CHUYÊN MÔN ===== -->
         <div id="dhTCMPlanView" class="hidden">
             <div class="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
-                <button type="button" class="dh-back-btn" onclick="window.backHVATCMMenu?.(event)">
+                <button type="button" class="dh-back-btn" onclick="event.stopPropagation(); document.getElementById('dhTCMPlanView')?.classList.add('hidden'); document.getElementById('dhRoleView')?.classList.add('hidden'); document.getElementById('dhTCMView')?.classList.remove('hidden'); document.getElementById('dieuhanhso-dropdown').scrollTop=0;">
                     <i class="bi bi-arrow-left"></i>
                     Quay lại Tổ chuyên môn
                 </button>
@@ -2352,7 +2352,7 @@
             </div>
 
             <div class="p-3 space-y-2.5">
-                <button type="button" class="dh-sub-item" onclick="window.openHVATCMPlanFeature?.('MAUKH', event)">
+                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Mẫu kế hoạch đang được hoàn thiện.')">
                     <span class="dh-sub-icon"><i class="bi bi-file-earmark-word-fill"></i></span>
                     <span class="min-w-0 flex-1">
                         <span class="dh-sub-title">MẪU KẾ HOẠCH</span>
@@ -2361,7 +2361,7 @@
                     <span class="dh-sub-arrow"><i class="bi bi-download"></i></span>
                 </button>
 
-                <button type="button" class="dh-sub-item" onclick="window.openHVATCMPlanFeature?.('NOPBGH', event)">
+                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Nộp BGH đang được hoàn thiện.')">
                     <span class="dh-sub-icon"><i class="bi bi-cloud-arrow-up-fill"></i></span>
                     <span class="min-w-0 flex-1">
                         <span class="dh-sub-title">NỘP BGH</span>
@@ -2370,7 +2370,7 @@
                     <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
                 </button>
 
-                <button type="button" class="dh-sub-item" onclick="window.openHVATCMPlanFeature?.('BANDADUYET', event)">
+                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Bản đã duyệt đang được hoàn thiện.')">
                     <span class="dh-sub-icon"><i class="bi bi-patch-check-fill"></i></span>
                     <span class="min-w-0 flex-1">
                         <span class="dh-sub-title">BẢN ĐÃ DUYỆT</span>
@@ -2387,7 +2387,8 @@
     </div>
 </div>
 
-<script>
+<!-- ================= HẾT ĐIỀU HÀNH SỐ ================= -->
+
 /* =========================================================
    MENU TỔ CHUYÊN MÔN
    - Không thay cơ chế phân quyền 4 cửa hiện có.
