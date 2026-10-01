@@ -6126,10 +6126,14 @@ function approvalStageLabel_(s){
         if (typeof showToast === 'function') showToast(msg); else alert(msg);
     };
 
-    function showHVADieuHanhView(viewId) {
+   function showHVADieuHanhView(viewId) {
         ['dhRoleView','dhTCMView','dhTCMPlanView'].forEach(function(id) {
             const el = document.getElementById(id);
-            if (el) el.classList.toggle('hidden', id !== viewId);
+            if (!el) return;
+            const isActive = id === viewId;
+            el.classList.toggle('hidden', !isActive);
+            el.style.display = isActive ? 'block' : 'none';
+            el.setAttribute('aria-hidden', isActive ? 'false' : 'true');
         });
         const dropdown = document.getElementById('dieuhanhso-dropdown');
         if (dropdown) dropdown.scrollTop = 0;
@@ -6174,6 +6178,7 @@ function approvalStageLabel_(s){
         const msg = (labels[feature] || 'Chức năng') + ' đang được hoàn thiện.';
         if (typeof showToast === 'function') showToast(msg); else alert(msg);
     };
+
 
     // =====================================================
     // NGHIỆP VỤ SỐ → HÀNH CHÍNH
