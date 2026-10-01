@@ -2066,141 +2066,102 @@
 
     <!-- ====================================================== -->
 
-<!-- ====================================================== -->
-<!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ - 4 CỬA THEO ĐƠN VỊ          -->
-<!-- BỔ SUNG: MENU TỔ CHUYÊN MÔN + MENU KẾ HOẠCH - NO SCRIPT -->
-<!-- ====================================================== -->
-<style>
-    #dieuhanhso-dropdown .dh-role-item {
-        width: 100%; display: flex; align-items: center; gap: .8rem;
-        padding: .9rem 1rem; border: 1px solid #e2e8f0; border-radius: .9rem;
-        background: #fff; color: #0f172a; text-align: left;
-        transition: background-color .16s ease, border-color .16s ease, transform .16s ease, box-shadow .16s ease;
-    }
-    #dieuhanhso-dropdown .dh-role-item:hover:not(.dh-role-locked) {
-        background: #f0fdfa; border-color: #5eead4; transform: translateY(-1px);
-        box-shadow: 0 5px 14px rgba(13,148,136,.10);
-    }
-    #dieuhanhso-dropdown .dh-role-icon {
-        width: 2.55rem; height: 2.55rem; flex: 0 0 2.55rem; border-radius: .8rem;
-        display: flex; align-items: center; justify-content: center;
-        background: linear-gradient(135deg,#0f766e,#0891b2); color: #fff; font-size: 18px;
-    }
-    #dieuhanhso-dropdown .dh-role-title {
-        display:block; font-size:14px; line-height:1.15rem; font-weight:900;
-        color:#0f4c81; letter-spacing:.01em;
-    }
-    #dieuhanhso-dropdown .dh-role-desc {
-        display:block; margin-top:.15rem; font-size:10px; line-height:1rem;
-        font-weight:600; color:#64748b;
-    }
-    #dieuhanhso-dropdown .dh-role-state {
-        margin-left:auto; flex:0 0 auto; width:1.8rem; height:1.8rem; border-radius:999px;
-        display:flex; align-items:center; justify-content:center;
-        background:#ecfdf5; color:#047857; font-size:12px;
-    }
-    #dieuhanhso-dropdown .dh-role-locked {
-        cursor:pointer; background:#f8fafc; border-color:#e2e8f0;
-    }
-    #dieuhanhso-dropdown .dh-role-locked .dh-role-icon {
-        background:#cbd5e1; color:#475569;
-    }
-    #dieuhanhso-dropdown .dh-role-locked .dh-role-title { color:#64748b; }
-    #dieuhanhso-dropdown .dh-role-locked .dh-role-state {
-        background:#fef3c7; color:#92400e;
-    }
 
-    /* ===== MENU CON CỦA TỔ CHUYÊN MÔN ===== */
-    #dhTCMView .dh-back-btn,
-    #dhTCMPlanView .dh-back-btn {
-        border:0; background:transparent; color:#0f766e; font-size:11px;
-        font-weight:800; display:flex; align-items:center; gap:.35rem;
-        padding:.2rem 0; cursor:pointer;
-    }
-    #dhTCMView .dh-sub-item,
-    #dhTCMPlanView .dh-sub-item {
-        width:100%; display:flex; align-items:center; gap:.85rem;
-        padding:1rem; border:1px solid #dbe5ef; border-radius:1rem;
-        background:#fff; text-align:left; color:#0f172a;
-        transition:all .16s ease;
-    }
-    #dhTCMView .dh-sub-item:hover,
-    #dhTCMPlanView .dh-sub-item:hover {
-        background:#f0fdfa; border-color:#5eead4; transform:translateY(-1px);
-        box-shadow:0 5px 14px rgba(13,148,136,.10);
-    }
-    #dhTCMView .dh-sub-icon,
-    #dhTCMPlanView .dh-sub-icon {
-        width:2.75rem; height:2.75rem; flex:0 0 2.75rem; border-radius:.9rem;
-        display:flex; align-items:center; justify-content:center;
-        background:linear-gradient(135deg,#0f766e,#0891b2);
-        color:#fff; font-size:19px;
-    }
-    #dhTCMView .dh-sub-title,
-    #dhTCMPlanView .dh-sub-title {
-        display:block; color:#0f4c81; font-size:15px; line-height:1.15rem;
-        font-weight:900; letter-spacing:.01em;
-    }
-    #dhTCMView .dh-sub-desc,
-    #dhTCMPlanView .dh-sub-desc {
-        display:block; margin-top:.2rem; color:#64748b;
-        font-size:10.5px; line-height:1rem; font-weight:600;
-    }
-    #dhTCMView .dh-sub-arrow,
-    #dhTCMPlanView .dh-sub-arrow {
-        margin-left:auto; width:1.9rem; height:1.9rem; flex:0 0 1.9rem;
-        border-radius:999px; display:flex; align-items:center; justify-content:center;
-        background:#ecfdf5; color:#047857; font-size:12px;
-    }
+        <!-- ====================================================== -->
+    <!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ - 4 CỬA THEO ĐƠN VỊ          -->
+    <!-- ====================================================== -->
+    <style>
+        #dieuhanhso-dropdown .dh-role-item {
+            width: 100%; display: flex; align-items: center; gap: .8rem;
+            padding: .9rem 1rem; border: 1px solid #e2e8f0; border-radius: .9rem;
+            background: #fff; color: #0f172a; text-align: left;
+            transition: background-color .16s ease, border-color .16s ease, transform .16s ease, box-shadow .16s ease;
+        }
+        #dieuhanhso-dropdown .dh-role-item:hover:not(.dh-role-locked) {
+            background: #f0fdfa; border-color: #5eead4; transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(13,148,136,.10);
+        }
+        #dieuhanhso-dropdown .dh-role-icon {
+            width: 2.55rem; height: 2.55rem; flex: 0 0 2.55rem; border-radius: .8rem;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg,#0f766e,#0891b2); color: #fff; font-size: 18px;
+        }
+        #dieuhanhso-dropdown .dh-role-title {
+            display:block; font-size: 14px; line-height: 1.15rem; font-weight: 900; color:#0f4c81; letter-spacing:.01em;
+        }
+        #dieuhanhso-dropdown .dh-role-desc {
+            display:block; margin-top:.15rem; font-size:10px; line-height:1rem; font-weight:600; color:#64748b;
+        }
+        #dieuhanhso-dropdown .dh-role-state {
+            margin-left:auto; flex:0 0 auto; width:1.8rem; height:1.8rem; border-radius:999px;
+            display:flex; align-items:center; justify-content:center; background:#ecfdf5; color:#047857; font-size:12px;
+        }
+        #dieuhanhso-dropdown .dh-role-locked { cursor:pointer; background:#f8fafc; border-color:#e2e8f0; }
+        #dieuhanhso-dropdown .dh-role-locked .dh-role-icon { background:#cbd5e1; color:#475569; }
+        #dieuhanhso-dropdown .dh-role-locked .dh-role-title { color:#64748b; }
+        #dieuhanhso-dropdown .dh-role-locked .dh-role-state { background:#fef3c7; color:#92400e; }
+        .dark #dieuhanhso-dropdown .dh-role-item { background:#0f172a; border-color:#334155; color:#e2e8f0; }
+        .dark #dieuhanhso-dropdown .dh-role-title { color:#bae6fd; }
+        .dark #dieuhanhso-dropdown .dh-role-desc { color:#94a3b8; }
+        @media (min-width:640px) {
+            #dieuhanhso-dropdown .dh-role-title { font-size:15px; }
+            #dieuhanhso-dropdown .dh-role-desc { font-size:10.5px; }
+        }
 
-    .dark #dieuhanhso-dropdown .dh-role-item,
-    .dark #dhTCMView .dh-sub-item,
-    .dark #dhTCMPlanView .dh-sub-item {
-        background:#0f172a; border-color:#334155; color:#e2e8f0;
-    }
-    .dark #dieuhanhso-dropdown .dh-role-title,
-    .dark #dhTCMView .dh-sub-title,
-    .dark #dhTCMPlanView .dh-sub-title { color:#bae6fd; }
-    .dark #dieuhanhso-dropdown .dh-role-desc,
-    .dark #dhTCMView .dh-sub-desc,
-    .dark #dhTCMPlanView .dh-sub-desc { color:#94a3b8; }
-
-    @media (min-width:640px) {
-        #dieuhanhso-dropdown .dh-role-title { font-size:15px; }
-        #dieuhanhso-dropdown .dh-role-desc { font-size:10.5px; }
-        #dhTCMView .dh-sub-title,
-        #dhTCMPlanView .dh-sub-title { font-size:16px; }
-    }
-</style>
-
-<div class="relative">
-    <div id="hvaDieuHanhSoCard" data-dropdown-toggle="dieuhanhso-dropdown"
-         class="group relative rounded-2xl bg-gradient-to-br from-teal-700 via-emerald-700 to-cyan-700 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-visible border border-teal-400/40 active:scale-[0.98]">
-        <div id="hvaDieuHanhSoLock"
-             class="hidden absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-amber-300/95 border border-amber-100/90 shadow-md items-center justify-center pointer-events-none"
-             title="Chưa được cấp quyền">
-            <i class="bi bi-lock-fill text-amber-900 text-[12px]"></i>
+        /* TỔ CHUYÊN MÔN - menu cấp 2 */
+        #dieuhanhso-dropdown .dh-tcm-item {
+            width:100%; display:flex; align-items:center; gap:.8rem;
+            padding:.9rem 1rem; border:1px solid #e2e8f0; border-radius:.9rem;
+            background:#fff; color:#0f172a; text-align:left;
+            transition:background-color .16s ease,border-color .16s ease,transform .16s ease,box-shadow .16s ease;
+        }
+        #dieuhanhso-dropdown .dh-tcm-item:hover {
+            background:#f0fdfa; border-color:#5eead4; transform:translateY(-1px);
+            box-shadow:0 5px 14px rgba(13,148,136,.10);
+        }
+        #dieuhanhso-dropdown .dh-tcm-icon {
+            width:2.55rem; height:2.55rem; flex:0 0 2.55rem; border-radius:.8rem;
+            display:flex; align-items:center; justify-content:center;
+            background:linear-gradient(135deg,#0f766e,#0891b2); color:#fff; font-size:18px;
+        }
+        #dieuhanhso-dropdown .dh-tcm-title {
+            display:block; font-size:15px; line-height:1.15rem; font-weight:900; color:#0f4c81;
+        }
+        #dieuhanhso-dropdown .dh-tcm-desc {
+            display:block; margin-top:.15rem; font-size:10.5px; line-height:1rem; font-weight:600; color:#64748b;
+        }
+        #dieuhanhso-dropdown .dh-tcm-state {
+            margin-left:auto; flex:0 0 auto; width:1.8rem; height:1.8rem; border-radius:999px;
+            display:flex; align-items:center; justify-content:center; background:#ecfdf5; color:#047857; font-size:12px;
+        }
+        #dieuhanhso-dropdown .dh-tcm-back {
+            border:0; background:transparent; color:#0f766e; font-size:11px; font-weight:800;
+            display:flex; align-items:center; gap:.35rem; padding:0 0 .45rem; cursor:pointer;
+        }
+        .dark #dieuhanhso-dropdown .dh-tcm-item { background:#0f172a; border-color:#334155; color:#e2e8f0; }
+        .dark #dieuhanhso-dropdown .dh-tcm-title { color:#bae6fd; }
+        .dark #dieuhanhso-dropdown .dh-tcm-desc { color:#94a3b8; }
+    </style>
+    <div class="relative">
+        <div id="hvaDieuHanhSoCard" data-dropdown-toggle="dieuhanhso-dropdown"
+             class="group relative rounded-2xl bg-gradient-to-br from-teal-700 via-emerald-700 to-cyan-700 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-visible border border-teal-400/40 active:scale-[0.98]">
+            <div id="hvaDieuHanhSoLock" class="hidden absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-amber-300/95 border border-amber-100/90 shadow-md items-center justify-center pointer-events-none" title="Chưa được cấp quyền">
+                <i class="bi bi-lock-fill text-amber-900 text-[12px]"></i>
+            </div>
+            <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500 pointer-events-none"></div>
+            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
+                <i class="bi bi-diagram-3-fill text-white text-lg"></i>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+                <h3 class="text-sm font-black tracking-tight text-white mb-0.5 whitespace-nowrap">ĐIỀU HÀNH SỐ</h3>
+                <i class="bi bi-chevron-up text-xs text-teal-100 transition-transform duration-300" data-dropdown-arrow></i>
+            </div>
+            <p class="text-[10px] text-teal-50 font-semibold">Điều hành theo đơn vị • Đúng phân quyền</p>
         </div>
 
-        <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500 pointer-events-none"></div>
-
-        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
-            <i class="bi bi-diagram-3-fill text-white text-lg"></i>
-        </div>
-
-        <div class="flex items-center justify-between gap-2">
-            <h3 class="text-sm font-black tracking-tight text-white mb-0.5 whitespace-nowrap">ĐIỀU HÀNH SỐ</h3>
-            <i class="bi bi-chevron-up text-xs text-teal-100 transition-transform duration-300" data-dropdown-arrow></i>
-        </div>
-
-        <p class="text-[10px] text-teal-50 font-semibold">Điều hành theo đơn vị • Đúng phân quyền</p>
-    </div>
-
-    <div id="dieuhanhso-dropdown" data-dropdown-menu
-         class="hidden fixed sm:absolute left-3 right-3 sm:left-0 sm:right-auto sm:translate-x-0 bottom-20 sm:bottom-[calc(100%+0.6rem)] z-[999] w-auto sm:w-[390px] max-h-[76vh] overflow-y-auto overscroll-contain bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800">
-
-        <!-- ===== MÀN 1: 4 CỬA ĐIỀU HÀNH SỐ ===== -->
-        <div id="dhRoleView">
+        <div id="dieuhanhso-dropdown" data-dropdown-menu
+             class="hidden fixed sm:absolute left-3 right-3 sm:left-0 sm:right-auto sm:translate-x-0 bottom-20 sm:bottom-[calc(100%+0.6rem)] z-[999] w-auto sm:w-[390px] max-h-[76vh] overflow-y-auto overscroll-contain bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div id="dhRoleView">
             <div class="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white flex items-center justify-center shadow-sm">
@@ -2212,283 +2173,109 @@
                     </div>
                 </div>
             </div>
-
             <div class="p-3 space-y-2.5">
-                <button id="dhRoleBGH" type="button" class="dh-role-item"
-                        onclick="window.openHVADieuHanhRole?.('BGH', event)">
+                <button id="dhRoleBGH" type="button" class="dh-role-item" onclick="window.openHVADieuHanhRole?.('BGH', event)">
                     <span class="dh-role-icon"><i class="bi bi-building-check"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-role-title">BAN GIÁM HIỆU</span>
-                        <span class="dh-role-desc">Điều hành, phê duyệt và phát hành cấp trường</span>
-                    </span>
+                    <span class="min-w-0 flex-1"><span class="dh-role-title">BAN GIÁM HIỆU</span><span class="dh-role-desc">Điều hành, phê duyệt và phát hành cấp trường</span></span>
                     <span class="dh-role-state"><i class="bi bi-chevron-right"></i></span>
                 </button>
-
-                <!-- TCM: GIỮ NGUYÊN PHÂN QUYỀN; CHỈ MỞ MENU CON KHI KHÔNG BỊ KHÓA -->
-                <button id="dhRoleTCM" type="button" class="dh-role-item"
-                        onclick="event.stopPropagation(); if(this.classList.contains('dh-role-locked')){ window.openHVADieuHanhRole?.('TCM',event); }else{ document.getElementById('dhRoleView')?.classList.add('hidden'); document.getElementById('dhTCMPlanView')?.classList.add('hidden'); document.getElementById('dhTCMView')?.classList.remove('hidden'); document.getElementById('dieuhanhso-dropdown').scrollTop=0; }">
+                <button id="dhRoleTCM" type="button" class="dh-role-item" onclick="window.openHVADieuHanhRole?.('TCM', event)">
                     <span class="dh-role-icon"><i class="bi bi-people-fill"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-role-title">TỔ CHUYÊN MÔN</span>
-                        <span class="dh-role-desc">Kế hoạch, công việc, họp tổ, theo dõi và báo cáo</span>
-                    </span>
+                    <span class="min-w-0 flex-1"><span class="dh-role-title">TỔ CHUYÊN MÔN</span><span class="dh-role-desc">Kế hoạch, công việc, họp tổ, theo dõi và báo cáo</span></span>
                     <span class="dh-role-state"><i class="bi bi-chevron-right"></i></span>
                 </button>
-
-                <button id="dhRoleTVP" type="button" class="dh-role-item"
-                        onclick="window.openHVADieuHanhRole?.('TVP', event)">
+                <button id="dhRoleTVP" type="button" class="dh-role-item" onclick="window.openHVADieuHanhRole?.('TVP', event)">
                     <span class="dh-role-icon"><i class="bi bi-folder2-open"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-role-title">TỔ VĂN PHÒNG</span>
-                        <span class="dh-role-desc">Điều hành kế hoạch và công việc Tổ Văn phòng</span>
-                    </span>
+                    <span class="min-w-0 flex-1"><span class="dh-role-title">TỔ VĂN PHÒNG</span><span class="dh-role-desc">Điều hành kế hoạch và công việc Tổ Văn phòng</span></span>
                     <span class="dh-role-state"><i class="bi bi-chevron-right"></i></span>
                 </button>
-
-                <button id="dhRoleDOAN" type="button" class="dh-role-item"
-                        onclick="window.openHVADieuHanhRole?.('DOAN', event)">
+                <button id="dhRoleDOAN" type="button" class="dh-role-item" onclick="window.openHVADieuHanhRole?.('DOAN', event)">
                     <span class="dh-role-icon"><i class="bi bi-stars"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-role-title">ĐOÀN THANH NIÊN</span>
-                        <span class="dh-role-desc">Điều hành hoạt động, phong trào và công tác Đoàn</span>
-                    </span>
+                    <span class="min-w-0 flex-1"><span class="dh-role-title">ĐOÀN THANH NIÊN</span><span class="dh-role-desc">Điều hành hoạt động, phong trào và công tác Đoàn</span></span>
                     <span class="dh-role-state"><i class="bi bi-chevron-right"></i></span>
                 </button>
             </div>
-
-            <div class="px-4 pb-3 text-[9.5px] font-semibold text-slate-400 text-center">
-                HVA • Điều hành đúng vai trò, đúng phạm vi
+            <div class="px-4 pb-3 text-[9.5px] font-semibold text-slate-400 text-center">HVA • Điều hành đúng vai trò, đúng phạm vi</div>
             </div>
-        </div>
 
-        <!-- ===== MÀN 2: MENU TỔ CHUYÊN MÔN ===== -->
-        <div id="dhTCMView" class="hidden">
-            <div class="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
-                <button type="button" class="dh-back-btn" onclick="event.stopPropagation(); document.getElementById('dhTCMView')?.classList.add('hidden'); document.getElementById('dhTCMPlanView')?.classList.add('hidden'); document.getElementById('dhRoleView')?.classList.remove('hidden'); document.getElementById('dieuhanhso-dropdown').scrollTop=0;">
-                    <i class="bi bi-arrow-left"></i>
-                    Quay lại Điều hành số
-                </button>
-
-                <div class="flex items-center gap-3 mt-2">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white flex items-center justify-center shadow-sm">
-                        <i class="bi bi-people-fill text-lg"></i>
-                    </div>
-                    <div>
-                        <div class="text-[17px] font-black tracking-wide text-[#0F4C81] dark:text-cyan-300">TỔ CHUYÊN MÔN</div>
-                        <div class="text-[10.5px] text-slate-500 dark:text-slate-400 font-semibold">Điều hành hoạt động của tổ chuyên môn</div>
+            <!-- MÀN 2: TỔ CHUYÊN MÔN -->
+            <div id="dhTCMView" class="hidden">
+                <div class="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
+                    <button type="button" class="dh-tcm-back" onclick="window.backHVADieuHanhRoles?.(event)">
+                        <i class="bi bi-arrow-left"></i> Quay lại Điều hành số
+                    </button>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white flex items-center justify-center shadow-sm">
+                            <i class="bi bi-people-fill text-base"></i>
+                        </div>
+                        <div>
+                            <div class="text-[17px] font-black tracking-wide text-[#0F4C81] dark:text-cyan-300">TỔ CHUYÊN MÔN</div>
+                            <div class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Điều hành hoạt động của tổ chuyên môn</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="p-3 space-y-2.5">
-                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); document.getElementById('dhTCMView')?.classList.add('hidden'); document.getElementById('dhRoleView')?.classList.add('hidden'); document.getElementById('dhTCMPlanView')?.classList.remove('hidden'); document.getElementById('dieuhanhso-dropdown').scrollTop=0;">
-                    <span class="dh-sub-icon"><i class="bi bi-calendar2-check-fill"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-sub-title">KẾ HOẠCH</span>
-                        <span class="dh-sub-desc">Mẫu kế hoạch • Nộp BGH • Bản đã duyệt</span>
-                    </span>
-                    <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
-                </button>
-
-                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Công việc đang được hoàn thiện.')">
-                    <span class="dh-sub-icon"><i class="bi bi-list-check"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-sub-title">CÔNG VIỆC</span>
-                        <span class="dh-sub-desc">Giao việc • Theo dõi tiến độ • Kết quả thực hiện</span>
-                    </span>
-                    <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
-                </button>
-
-                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Họp tổ đang được hoàn thiện.')">
-                    <span class="dh-sub-icon"><i class="bi bi-people"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-sub-title">HỌP TỔ</span>
-                        <span class="dh-sub-desc">Lịch họp • Nội dung • Biên bản</span>
-                    </span>
-                    <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
-                </button>
-
-                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Theo dõi đang được hoàn thiện.')">
-                    <span class="dh-sub-icon"><i class="bi bi-graph-up-arrow"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-sub-title">THEO DÕI</span>
-                        <span class="dh-sub-desc">Tiến độ chuyên môn • Nhiệm vụ của tổ</span>
-                    </span>
-                    <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
-                </button>
-
-                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Báo cáo đang được hoàn thiện.')">
-                    <span class="dh-sub-icon"><i class="bi bi-file-earmark-bar-graph-fill"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-sub-title">BÁO CÁO</span>
-                        <span class="dh-sub-desc">Báo cáo định kỳ • Báo cáo đột xuất • Lịch sử</span>
-                    </span>
-                    <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
-                </button>
-            </div>
-
-            <div class="px-4 pb-3 text-[9.5px] font-semibold text-slate-400 text-center">
-                HVA • Điều hành Tổ chuyên môn
-            </div>
-        </div>
-
-        <!-- ===== MÀN 3: KẾ HOẠCH TỔ CHUYÊN MÔN ===== -->
-        <div id="dhTCMPlanView" class="hidden">
-            <div class="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
-                <button type="button" class="dh-back-btn" onclick="event.stopPropagation(); document.getElementById('dhTCMPlanView')?.classList.add('hidden'); document.getElementById('dhRoleView')?.classList.add('hidden'); document.getElementById('dhTCMView')?.classList.remove('hidden'); document.getElementById('dieuhanhso-dropdown').scrollTop=0;">
-                    <i class="bi bi-arrow-left"></i>
-                    Quay lại Tổ chuyên môn
-                </button>
-
-                <div class="flex items-center gap-3 mt-2">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white flex items-center justify-center shadow-sm">
-                        <i class="bi bi-calendar2-check-fill text-lg"></i>
-                    </div>
-                    <div>
-                        <div class="text-[17px] font-black tracking-wide text-[#0F4C81] dark:text-cyan-300">KẾ HOẠCH</div>
-                        <div class="text-[10.5px] text-slate-500 dark:text-slate-400 font-semibold">Kế hoạch của Tổ chuyên môn</div>
-                    </div>
+                <div class="p-3 space-y-2.5">
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVATCMPlanMenu?.(event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-calendar2-check-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">KẾ HOẠCH</span><span class="dh-tcm-desc">Mẫu kế hoạch • Nộp BGH • Bản đã duyệt</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVATCMFeature?.('CONGVIEC',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-list-check"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">CÔNG VIỆC</span><span class="dh-tcm-desc">Giao việc • Theo dõi tiến độ • Kết quả</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVATCMFeature?.('HOPTO',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-people"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">HỌP TỔ</span><span class="dh-tcm-desc">Lịch họp • Nội dung • Biên bản</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVATCMFeature?.('THEODOI',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-graph-up-arrow"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">THEO DÕI</span><span class="dh-tcm-desc">Tiến độ chuyên môn • Nhiệm vụ của tổ</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVATCMFeature?.('BAOCAO',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-file-earmark-bar-graph-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">BÁO CÁO</span><span class="dh-tcm-desc">Định kỳ • Đột xuất • Lịch sử</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
                 </div>
+                <div class="px-4 pb-3 text-[9.5px] font-semibold text-slate-400 text-center">HVA • Điều hành Tổ chuyên môn</div>
             </div>
 
-            <div class="p-3 space-y-2.5">
-                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Mẫu kế hoạch đang được hoàn thiện.')">
-                    <span class="dh-sub-icon"><i class="bi bi-file-earmark-word-fill"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-sub-title">MẪU KẾ HOẠCH</span>
-                        <span class="dh-sub-desc">Tải mẫu kế hoạch chuẩn của nhà trường</span>
-                    </span>
-                    <span class="dh-sub-arrow"><i class="bi bi-download"></i></span>
-                </button>
-
-                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Nộp BGH đang được hoàn thiện.')">
-                    <span class="dh-sub-icon"><i class="bi bi-cloud-arrow-up-fill"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-sub-title">NỘP BGH</span>
-                        <span class="dh-sub-desc">Trình kế hoạch và các tệp kèm theo để BGH xử lý</span>
-                    </span>
-                    <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
-                </button>
-
-                <button type="button" class="dh-sub-item" onclick="event.stopPropagation(); alert('Bản đã duyệt đang được hoàn thiện.')">
-                    <span class="dh-sub-icon"><i class="bi bi-patch-check-fill"></i></span>
-                    <span class="min-w-0 flex-1">
-                        <span class="dh-sub-title">BẢN ĐÃ DUYỆT</span>
-                        <span class="dh-sub-desc">Xem và tải bản kế hoạch đã được BGH phát hành</span>
-                    </span>
-                    <span class="dh-sub-arrow"><i class="bi bi-chevron-right"></i></span>
-                </button>
+            <!-- MÀN 3: KẾ HOẠCH -->
+            <div id="dhTCMPlanView" class="hidden">
+                <div class="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
+                    <button type="button" class="dh-tcm-back" onclick="window.backHVATCMMenu?.(event)">
+                        <i class="bi bi-arrow-left"></i> Quay lại Tổ chuyên môn
+                    </button>
+                    <div class="text-[17px] font-black tracking-wide text-[#0F4C81] dark:text-cyan-300">KẾ HOẠCH</div>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Kế hoạch của Tổ chuyên môn</div>
+                </div>
+                <div class="p-3 space-y-2.5">
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVATCMPlanFeature?.('MAUKH',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-file-earmark-word-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">MẪU KẾ HOẠCH</span><span class="dh-tcm-desc">Tải mẫu kế hoạch chuẩn của nhà trường</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-download"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVATCMPlanFeature?.('NOPBGH',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-cloud-arrow-up-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">NỘP BGH</span><span class="dh-tcm-desc">Trình kế hoạch và các tệp kèm theo</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                    <button type="button" class="dh-tcm-item" onclick="window.openHVATCMPlanFeature?.('BANDADUYET',event)">
+                        <span class="dh-tcm-icon"><i class="bi bi-patch-check-fill"></i></span>
+                        <span class="min-w-0 flex-1"><span class="dh-tcm-title">BẢN ĐÃ DUYỆT</span><span class="dh-tcm-desc">Xem và tải bản kế hoạch đã được BGH phát hành</span></span>
+                        <span class="dh-tcm-state"><i class="bi bi-chevron-right"></i></span>
+                    </button>
+                </div>
+                <div class="px-4 pb-3 text-[9.5px] font-semibold text-slate-400 text-center">HVA • Kế hoạch Tổ chuyên môn</div>
             </div>
 
-            <div class="px-4 pb-3 text-[9.5px] font-semibold text-slate-400 text-center">
-                HVA • Kế hoạch Tổ chuyên môn
-            </div>
         </div>
     </div>
-</div>
-
-<!-- ================= HẾT ĐIỀU HÀNH SỐ ================= -->
-
-/* =========================================================
-   MENU TỔ CHUYÊN MÔN
-   - Không thay cơ chế phân quyền 4 cửa hiện có.
-   - Nếu TCM đang bị khóa: chuyển lại handler cũ để xử lý khóa.
-   - Nếu TCM được mở: chỉ đổi màn hình bên trong dropdown.
-   ========================================================= */
-(function () {
-    function getViews() {
-        return {
-            role: document.getElementById('dhRoleView'),
-            tcm: document.getElementById('dhTCMView'),
-            plan: document.getElementById('dhTCMPlanView')
-        };
-    }
-
-    function showOnly(name) {
-        const v = getViews();
-        Object.values(v).forEach(el => el?.classList.add('hidden'));
-        v[name]?.classList.remove('hidden');
-
-        const dd = document.getElementById('dieuhanhso-dropdown');
-        if (dd) dd.scrollTop = 0;
-    }
-
-    window.openHVATCMMenu = function (event) {
-        event?.preventDefault?.();
-        event?.stopPropagation?.();
-
-        const btn = document.getElementById('dhRoleTCM');
-
-        /* QUAN TRỌNG: không vượt qua phân quyền đang có */
-        if (btn?.classList.contains('dh-role-locked')) {
-            window.openHVADieuHanhRole?.('TCM', event);
-            return;
-        }
-
-        showOnly('tcm');
-    };
-
-    window.backHVADieuHanhRoles = function (event) {
-        event?.preventDefault?.();
-        event?.stopPropagation?.();
-        showOnly('role');
-    };
-
-    window.openHVATCMPlanMenu = function (event) {
-        event?.preventDefault?.();
-        event?.stopPropagation?.();
-        showOnly('plan');
-    };
-
-    window.backHVATCMMenu = function (event) {
-        event?.preventDefault?.();
-        event?.stopPropagation?.();
-        showOnly('tcm');
-    };
-
-    /*
-      Các chức năng dưới đây CHƯA nối Backend.
-      Có thể thay từng handler khi làm từng module thật.
-    */
-    window.openHVATCMFeature = window.openHVATCMFeature || function (feature, event) {
-        event?.preventDefault?.();
-        event?.stopPropagation?.();
-
-        const names = {
-            CONGVIEC: 'Công việc',
-            HOPTO: 'Họp tổ',
-            THEODOI: 'Theo dõi',
-            BAOCAO: 'Báo cáo'
-        };
-        alert((names[feature] || 'Chức năng') + ' đang được hoàn thiện.');
-    };
-
-    window.openHVATCMPlanFeature = window.openHVATCMPlanFeature || function (feature, event) {
-        event?.preventDefault?.();
-        event?.stopPropagation?.();
-
-        const names = {
-            MAUKH: 'Mẫu kế hoạch',
-            NOPBGH: 'Nộp BGH',
-            BANDADUYET: 'Bản đã duyệt'
-        };
-        alert((names[feature] || 'Chức năng') + ' đang được hoàn thiện.');
-    };
-
-    /*
-      Mỗi lần mở lại card Điều hành số, đưa menu về màn 4 cửa.
-      Không can thiệp cơ chế đóng/mở dropdown hiện hữu.
-    */
-    const card = document.getElementById('hvaDieuHanhSoCard');
-    if (card && !card.dataset.tcmMenuResetBound) {
-        card.dataset.tcmMenuResetBound = '1';
-        card.addEventListener('click', function () {
-            showOnly('role');
-        });
-    }
-})();
-</script>
-<!-- ================= HẾT ĐIỀU HÀNH SỐ ================= -->
+    <!-- ================= HẾT ĐIỀU HÀNH SỐ ================= -->
 
     <!-- TÁC VỤ NHANH Ở GIỮA: BÌNH CHỌN -->
     <button type="button"
@@ -6331,7 +6118,60 @@ function approvalStageLabel_(s){
             if (typeof showToast === 'function') showToast(msg); else alert(msg);
             return;
         }
+        if (role === 'TCM') {
+            window.openHVATCMMenu?.(event);
+            return;
+        }
         const msg = (labels[role] || 'Chức năng') + ': giao diện nghiệp vụ sẽ được triển khai ở bước tiếp theo.';
+        if (typeof showToast === 'function') showToast(msg); else alert(msg);
+    };
+
+    function showHVADieuHanhView(viewId) {
+        ['dhRoleView','dhTCMView','dhTCMPlanView'].forEach(function(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('hidden', id !== viewId);
+        });
+        const dropdown = document.getElementById('dieuhanhso-dropdown');
+        if (dropdown) dropdown.scrollTop = 0;
+    }
+
+    window.openHVATCMMenu = function(event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+        const btn = document.getElementById('dhRoleTCM');
+        if (!btn || btn.dataset.allowed !== '1') {
+            if (typeof showToast === 'function') showToast('Tài khoản chưa được cấp quyền vào Tổ chuyên môn.');
+            else alert('Tài khoản chưa được cấp quyền vào Tổ chuyên môn.');
+            return;
+        }
+        showHVADieuHanhView('dhTCMView');
+    };
+
+    window.backHVADieuHanhRoles = function(event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+        showHVADieuHanhView('dhRoleView');
+    };
+
+    window.openHVATCMPlanMenu = function(event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+        showHVADieuHanhView('dhTCMPlanView');
+    };
+
+    window.backHVATCMMenu = function(event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+        showHVADieuHanhView('dhTCMView');
+    };
+
+    window.openHVATCMFeature = function(feature, event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+        const labels = { CONGVIEC:'Công việc', HOPTO:'Họp tổ', THEODOI:'Theo dõi', BAOCAO:'Báo cáo' };
+        const msg = (labels[feature] || 'Chức năng') + ' đang được hoàn thiện.';
+        if (typeof showToast === 'function') showToast(msg); else alert(msg);
+    };
+
+    window.openHVATCMPlanFeature = function(feature, event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+        const labels = { MAUKH:'Mẫu kế hoạch', NOPBGH:'Nộp BGH', BANDADUYET:'Bản đã duyệt' };
+        const msg = (labels[feature] || 'Chức năng') + ' đang được hoàn thiện.';
         if (typeof showToast === 'function') showToast(msg); else alert(msg);
     };
 
