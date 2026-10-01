@@ -2571,9 +2571,9 @@
                             <span>Bồi dưỡng học sinh giỏi</span>
                         </button>
 
-                        <button type="button" class="dh-menu-item">
+                        <button onclick="event.preventDefault(); event.stopPropagation(); window.location.href='DieuHanhTo.html';" type="button" class="dh-menu-item">
                             <i class="bi bi-journal-bookmark-fill"></i>
-                            <span>Kế hoạch giáo dục</span>
+                            <span>Điều hành tổ</span>
                         </button>
 
                         <button type="button" class="dh-menu-item">
