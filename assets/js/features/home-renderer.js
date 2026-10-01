@@ -3631,11 +3631,23 @@
         const badge = document.getElementById('hva-home-poll-badge'), label = document.getElementById('hva-home-poll-label');
         if (!username) { if(label) label.textContent='0 bình chọn mới'; return; }
         try {
-            const response = await fetch(`${MY_TASK_API_URL}?action=getSurveyPollsByUser&username=${encodeURIComponent(username)}&_=${Date.now()}`, {cache:'no-store'});
+            const url = `${MY_TASK_API_URL}?action=getSurveyPollsByUser&username=${encodeURIComponent(username)}&_=${Date.now()}`;
+            const response = window.HVAAuthRequest?.get
+                ? await window.HVAAuthRequest.get(url, {cache:'no-store'})
+                : await fetch(url, {cache:'no-store'});
+
             const raw = await response.text();
             if (!response.ok || /^\s*</.test(raw)) throw new Error('Backend chưa hỗ trợ API khảo sát – bình chọn');
-            const data = JSON.parse(raw); HVA_SURVEY_POLL_ITEMS = data.success && Array.isArray(data.items) ? data.items : [];
-            const pollCount = Number(data.pollCount)||0, surveyCount=Number(data.surveyCount)||0, total=pollCount+surveyCount;
+
+            const data = JSON.parse(raw);
+            HVA_SURVEY_POLL_ITEMS = data.success && Array.isArray(data.items) ? data.items : [];
+
+            // Không phụ thuộc pollCount/surveyCount của Backend:
+            // đếm trực tiếp từ items đang chờ để badge luôn khớp dữ liệu thực nhận.
+            const pendingItems = HVA_SURVEY_POLL_ITEMS.filter(item => item.status !== 'ĐÃ HOÀN THÀNH' && !item.expired);
+            const pollCount = pendingItems.filter(item => String(item.objectType || '').toUpperCase() === 'POLL').length;
+            const surveyCount = pendingItems.filter(item => String(item.objectType || '').toUpperCase() === 'SURVEY').length;
+            const total = pendingItems.length;
             if(badge){badge.textContent=String(total);badge.classList.remove('hidden');}
             if (label) {
         label.textContent =
@@ -3673,7 +3685,10 @@
 
     async function submitHVASurveyAnswers_(item,answers) {
         const user=getCurrentHVAUser();
-        const response=await fetch(MY_TASK_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'submitSurveyPollResponse',surveyId:item.surveyId,username:user.username||user.userName||user.maGV||'',fullName:user.hoTen||user.fullName||user.name||'',answers:answers})});
+        const payload={action:'submitSurveyPollResponse',surveyId:item.surveyId,username:user.username||user.userName||user.maGV||'',fullName:user.hoTen||user.fullName||user.name||'',answers:answers};
+        const response=window.HVAAuthRequest?.post
+            ? await window.HVAAuthRequest.post(MY_TASK_API_URL,payload)
+            : await fetch(MY_TASK_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
         const data=JSON.parse(await response.text());
         if(!data.success)return showHVAAppNotice_(data.message||'Không gửi được dữ liệu.',{kind:'error',title:'CHƯA HOÀN TẤT'});
         showHVAAppNotice_(item.objectType==='POLL' ? 'Thầy/cô đã hoàn thành bình chọn đúng thời hạn.\nChúc thầy/cô một ngày làm việc hiệu quả và hạnh phúc.' : 'Thầy/cô đã hoàn thành khảo sát đúng thời hạn.\nChúc thầy/cô một ngày làm việc hiệu quả và hạnh phúc.', {kind:'success',title:item.objectType==='POLL'?'ĐÃ GHI NHẬN BÌNH CHỌN':'ĐÃ GHI NHẬN KHẢO SÁT'});
