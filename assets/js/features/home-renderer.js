@@ -1978,7 +1978,7 @@
                     <div id="hscm-sub-items" class="hidden ml-5 mr-1 mt-1 mb-2 pl-4 py-1 border-l-2 border-blue-200 dark:border-blue-800 space-y-0.5">
                         <div class="px-3 pt-2 pb-1 text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Kế hoạch - Hồ sơ</div>
                         <a href="#" onclick="openHSG12ComingSoon('Phân công chuyên môn', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Phân công chuyên môn</a>
-                        <a href="#" onclick="openHSG12ComingSoon('Kế hoạch tổ chuyên môn', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch tổ chuyên môn</a>
+                        <a href="DieuHanhTo.html" onclick="event.stopPropagation();" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch tổ chuyên môn</a>
                         <a href="#" onclick="openHSG12ComingSoon('Kế hoạch cá nhân', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch cá nhân</a>
                         <a href="#" onclick="openHSG12ComingSoon('Kế hoạch bài dạy', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch bài dạy</a>
                         <a href="#" onclick="openHSG12ComingSoon('Kế hoạch thực hành / phòng bộ môn', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch thực hành / phòng bộ môn</a>
@@ -2571,8 +2571,9 @@
                             <span>Bồi dưỡng học sinh giỏi</span>
                         </button>
 
-                        <button onclick="event.preventDefault(); event.stopPropagation(); window.location.href='DieuHanhTo.html';" type="button" class="dh-menu-item">
-                            <i class="bi bi-journal-bookmark-fill"></i>
+                        <button type="button" class="dh-menu-item"
+                                onclick="event.preventDefault(); event.stopPropagation(); window.location.href='DieuHanhTo.html';">
+                            <i class="bi bi-diagram-3-fill"></i>
                             <span>Điều hành tổ</span>
                         </button>
 
