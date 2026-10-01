@@ -610,7 +610,7 @@
                 <!-- VĂN BẢN -->
                 <button type="button"
                         data-search-type="VANBAN"
-                        class="search-type-item 
+                        class="search-type-item hidden
                                w-full flex items-center justify-between
                                px-3 py-2.5 rounded-xl
                                hover:bg-blue-50
@@ -4079,12 +4079,41 @@ setTimeout(() => {
         resultBox.insertAdjacentElement('beforebegin', personnelTabs);
     }
 
-    const documentTabs=document.createElement('div');documentTabs.id='document-search-tabs';documentTabs.className='hidden mt-3 space-y-2 rounded-xl bg-slate-50 border border-slate-200 p-2';
-    documentTabs.innerHTML=`<div class="grid grid-cols-2 gap-1"><button type="button" data-doc-direction="Văn bản đến" class="rounded-lg bg-white px-2 py-2 text-[10px] font-bold text-[#0F4C81] shadow-sm">Văn bản đến</button><button type="button" data-doc-direction="Văn bản đi" class="rounded-lg bg-white px-2 py-2 text-[10px] font-bold text-[#0F4C81] shadow-sm">Văn bản đi</button></div><div id="document-search-children" class="grid grid-cols-2 gap-1"></div>`;
-    resultBox.insertAdjacentElement('beforebegin',documentTabs);
-    const docChildren=documentTabs.querySelector('#document-search-children'),DOC_CHILDREN={'Văn bản đến':['Trung ương','Bộ GD','Sở GD','Phường','Khác'],'Văn bản đi':['Quyết định','Kế hoạch','Thông báo','Báo cáo','Khác']};
-    function showDocumentChildren(direction){docChildren.innerHTML=(DOC_CHILDREN[direction]||[]).map(x=>`<button type="button" data-doc-keyword="${x}" class="rounded-lg px-2 py-2 text-[10px] font-semibold text-slate-600 hover:bg-blue-50 border border-slate-200 bg-white">${x}</button>`).join('');}
-    documentTabs.addEventListener('click',e=>{const d=e.target.closest('[data-doc-direction]');if(d){showDocumentChildren(d.dataset.docDirection);return;}const k=e.target.closest('[data-doc-keyword]');if(k&&input){input.value=k.dataset.docKeyword||'';input.focus();performSearch();}});
+    // HVA 01/10/2026: đồng bộ Tra cứu nhanh với Kho văn bản số hiện hành.
+    let ACTIVE_DOCUMENT_DIRECTION = 'ALL';
+
+    const documentTabs = document.createElement('div');
+    documentTabs.id = 'document-search-tabs';
+    documentTabs.className = 'hidden mt-3 rounded-xl bg-slate-50 border border-slate-200 p-2';
+    documentTabs.innerHTML = `
+        <div class="grid grid-cols-3 gap-1">
+            <button type="button" data-doc-direction="ALL"
+                    class="rounded-lg bg-blue-50 border border-blue-200 px-2 py-2 text-[9.5px] font-bold text-[#0F4C81]">Tất cả văn bản</button>
+            <button type="button" data-doc-direction="Văn bản đến"
+                    class="rounded-lg bg-white border border-slate-200 px-2 py-2 text-[9.5px] font-bold text-emerald-700">Văn bản đến</button>
+            <button type="button" data-doc-direction="Văn bản đi"
+                    class="rounded-lg bg-white border border-slate-200 px-2 py-2 text-[9.5px] font-bold text-teal-700">Văn bản đi</button>
+        </div>`;
+    resultBox.insertAdjacentElement('beforebegin', documentTabs);
+
+    function updateDocumentTabs() {
+        documentTabs.querySelectorAll('[data-doc-direction]').forEach(btn => {
+            const active = btn.dataset.docDirection === ACTIVE_DOCUMENT_DIRECTION;
+            btn.classList.toggle('bg-blue-50', active);
+            btn.classList.toggle('border-blue-200', active);
+            btn.classList.toggle('shadow-sm', active);
+            btn.classList.toggle('bg-white', !active);
+        });
+    }
+
+    documentTabs.addEventListener('click', e => {
+        const btn = e.target.closest('[data-doc-direction]');
+        if (!btn) return;
+        ACTIVE_DOCUMENT_DIRECTION = btn.dataset.docDirection || 'ALL';
+        updateDocumentTabs();
+        input?.focus();
+        if (input?.value.trim()) performSearch();
+    });
 
     function escapeSearchHtml(value) {
         return String(value ?? '')
@@ -4598,6 +4627,15 @@ setTimeout(() => {
                 date:
                     doc.ngayBanHanh ||
                     doc.NgayBanHanh ||
+                    '',
+
+                direction:
+                    doc.luongVanBan ||
+                    doc.LuongVanBan ||
+                    doc.phanLoai ||
+                    doc.PhanLoai ||
+                    doc.nhomVanBan ||
+                    doc.NhomVanBan ||
                     '',
 
                 url: fileUrl
@@ -5278,6 +5316,17 @@ async function searchPersonnel(keyword) {
             // Duyệt Nhân sự theo cây: giữ nguyên luồng đã PASS.
             if (ACTIVE_SEARCH_TYPE === 'NHANSU') {
                 results = await searchPersonnel(keyword);
+            } else if (ACTIVE_SEARCH_TYPE === 'VANBAN') {
+                // Văn bản: dùng nguồn searchVanBan của Kho văn bản số.
+                results = await searchDocuments(keyword);
+
+                if (ACTIVE_DOCUMENT_DIRECTION !== 'ALL') {
+                    const wanted = normalizePersonnelText(ACTIVE_DOCUMENT_DIRECTION);
+                    results = results.filter(item => {
+                        const direction = normalizePersonnelText(item.direction || '');
+                        return direction === wanted || direction.includes(wanted);
+                    });
+                }
             } else {
                 // Tìm từ ô chính: quét hợp nhất toàn HVA theo quyền tài khoản.
                 results = await searchHVA(keyword);
@@ -5367,7 +5416,10 @@ async function searchPersonnel(keyword) {
                     updatePersonnelTabs();
                 }
             } else if (type === 'VANBAN') {
-                personnelTabs.classList.add('hidden'); documentTabs.classList.remove('hidden'); showDocumentChildren('Văn bản đến');
+                personnelTabs.classList.add('hidden');
+                documentTabs.classList.remove('hidden');
+                ACTIVE_DOCUMENT_DIRECTION = 'ALL';
+                updateDocumentTabs();
             } else {
                 personnelTabs.classList.add('hidden'); documentTabs.classList.add('hidden');
             }
