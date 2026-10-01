@@ -3740,10 +3740,10 @@
                 card.removeAttribute('data-dropdown-toggle');
                 card.setAttribute('aria-disabled', 'true');
                 card.classList.add('opacity-50', 'grayscale', 'pointer-events-none');
-                card.style.opacity = '0.50';
-                card.style.filter = 'grayscale(0.45)';
-                card.style.cursor = 'not-allowed';
-                card.style.pointerEvents = 'none';
+                card.style.opacity = '1';
+                card.style.filter = 'none';
+                card.style.cursor = 'pointer';
+                card.style.pointerEvents = 'auto';
 
                 if (lock) {
                     lock.classList.remove('hidden');
