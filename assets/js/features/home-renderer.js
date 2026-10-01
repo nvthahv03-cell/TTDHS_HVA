@@ -3736,25 +3736,119 @@
                     return;
                 }
 
-                // KHÓA CỨNG: không cho click, không cho menu mở, đồng thời thể hiện khóa rõ trên Home.
-                card.removeAttribute('data-dropdown-toggle');
-                card.setAttribute('aria-disabled', 'true');
-                card.classList.add('opacity-50', 'grayscale', 'pointer-events-none');
-                card.style.opacity = '1';
-                card.style.filter = 'none';
-                card.style.cursor = 'pointer';
-                card.style.pointerEvents = 'auto';
+              // KHÓA QUYỀN:
+// - Giữ nguyên 100% màu/gradient của card.
+// - Chỉ hiện ổ khóa.
+// - Vẫn cho click để báo lý do.
+// - Tuyệt đối không mở dropdown.
+card.removeAttribute('data-dropdown-toggle');
+card.setAttribute('aria-disabled', 'true');
 
-                if (lock) {
-                    lock.classList.remove('hidden');
-                    lock.classList.add('flex');
-                    lock.style.display = 'flex';
-                }
+// XÓA toàn bộ trạng thái làm mờ/xám trước đây
+card.classList.remove(
+    'opacity-40',
+    'opacity-50',
+    'opacity-60',
+    'opacity-65',
+    'grayscale',
+    'pointer-events-none'
+);
 
-                if (dropdown) {
-                    dropdown.classList.add('hidden');
-                    dropdown.style.display = 'none';
-                }
+card.style.opacity = '1';
+card.style.filter = 'none';
+card.style.cursor = 'pointer';
+card.style.pointerEvents = 'auto';
+
+// Hiện ổ khóa
+if (lock) {
+    lock.classList.remove('hidden');
+    lock.classList.add('flex');
+    lock.style.display = 'flex';
+}
+
+// Dropdown luôn đóng
+if (dropdown) {
+    dropdown.classList.add('hidden');
+    dropdown.style.display = 'none';
+}
+
+// Click card bị khóa
+card.addEventListener('click', function hvaLockedMenuNotice(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Lấy đúng tài khoản HVA đang đăng nhập
+    const currentUser =
+        (typeof getCurrentHVAUser === 'function')
+            ? (getCurrentHVAUser() || {})
+            : {};
+
+    // Chuẩn hóa chuỗi để nhận diện
+    const normalizeHVA = (value) =>
+        String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/Đ/g, 'D')
+            .replace(/đ/g, 'd')
+            .trim()
+            .toUpperCase();
+
+    // Đọc nhóm/vị trí nhân sự từ chính hồ sơ đăng nhập
+    const staffText = normalizeHVA([
+        currentUser.nhom,
+        currentUser.nhomNhanSu,
+        currentUser.loaiNhanSu,
+        currentUser.doiTuong,
+        currentUser.viTriViecLam,
+        currentUser.chucVu,
+        currentUser.position,
+        currentUser.vaiTro,
+        currentUser.role
+    ].filter(Boolean).join(' '));
+
+    // Đọc giới tính từ hồ sơ đăng nhập
+    const genderText = normalizeHVA(
+        currentUser.gioiTinh ||
+        currentUser.gender ||
+        currentUser.sex ||
+        ''
+    );
+
+    const isFemale =
+        genderText === 'NU' ||
+        genderText === 'FEMALE' ||
+        genderText === 'F';
+
+    const isStaff =
+        staffText.includes('NHAN VIEN') ||
+        staffText.includes('NHANVIEN') ||
+        /(^|\s)NV(\s|$)/.test(staffText);
+
+    // CBQL/GV: Thầy/Cô
+    // NV: Anh/Chị
+    let xungHo;
+
+    if (isStaff) {
+        xungHo = isFemale ? 'Chị' : 'Anh';
+    } else {
+        xungHo = isFemale ? 'Cô' : 'Thầy';
+    }
+
+    const message =
+        `${xungHo} chưa được cấp quyền cho tác vụ này.`;
+
+    // Ưu tiên popup hệ thống HVA
+    if (typeof showHVAAppNotice_ === 'function') {
+        showHVAAppNotice_(message, {
+            kind: 'info',
+            title: 'THÔNG BÁO HỆ THỐNG'
+        });
+    } else if (typeof showToast === 'function') {
+        showToast(message);
+    } else {
+        alert(message);
+    }
+});
             }
 
             applyCardPermission(
