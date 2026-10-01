@@ -1,6 +1,6 @@
     import { $ } from '../core/utils.js';
     import { ModalManager } from '../ui/modal.js';
-    import { ModuleManager } from '../modules/module-manager.js'; 
+    import { ModuleManager } from '../modules/module-manager.js';
     import { PWA } from '../services/pwa.js';
 
     export function renderHome() {
@@ -1679,7 +1679,7 @@
     </button>
 
 
-   <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
+     <!-- TRỤ CỘT 2: NGHIỆP VỤ SỐ -->
     <div class="relative">
 
         <!-- CARD NGHIỆP VỤ SỐ -->
@@ -1929,7 +1929,7 @@
                             Tập huấn
                         </a>
 
-                        <a href="#" onclick="openHSG12ComingSoon('Sinh hoạt chuyên môn', event); return false;"
+                        <a href="baocao-shcm.html"
                            class="block px-3 py-2.5 rounded-lg
                                   text-[13px] font-medium
                                   text-slate-700 dark:text-slate-300
@@ -1938,7 +1938,7 @@
                             Sinh hoạt chuyên môn
                         </a>
 
-                        <a href="#" onclick="openHSG12ComingSoon('Bồi dưỡng thường xuyên', event); return false;"
+                        <a href="baocao-bdtx.html"
                            class="block px-3 py-2.5 rounded-lg
                                   text-[13px] font-medium
                                   text-slate-700 dark:text-slate-300
@@ -1947,7 +1947,7 @@
                             Bồi dưỡng thường xuyên
                         </a>
 
-                        <a href="#" onclick="openHSG12ComingSoon('Bồi dưỡng chuyên môn - Khác', event); return false;"
+                        <a href="baocao-khac.html"
                            class="block px-3 py-2.5 rounded-lg
                                   text-[13px] font-medium
                                   text-slate-700 dark:text-slate-300
@@ -1977,22 +1977,22 @@
 
                     <div id="hscm-sub-items" class="hidden ml-5 mr-1 mt-1 mb-2 pl-4 py-1 border-l-2 border-blue-200 dark:border-blue-800 space-y-0.5">
                         <div class="px-3 pt-2 pb-1 text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Kế hoạch - Hồ sơ</div>
-                        <a href="#" onclick="openHSG12ComingSoon('Phân công chuyên môn', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Phân công chuyên môn</a>
-                        <a href="DieuHanhTo.html" onclick="event.stopPropagation();" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch tổ chuyên môn</a>
-                        <a href="#" onclick="openHSG12ComingSoon('Kế hoạch cá nhân', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch cá nhân</a>
-                        <a href="#" onclick="openHSG12ComingSoon('Kế hoạch bài dạy', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch bài dạy</a>
-                        <a href="#" onclick="openHSG12ComingSoon('Kế hoạch thực hành / phòng bộ môn', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch thực hành / phòng bộ môn</a>
-                        <a href="#" onclick="openHSG12ComingSoon('Hồ sơ chuyên môn khác', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Hồ sơ chuyên môn khác</a>
+                        <a href="phancong-chuyenmon.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Phân công chuyên môn</a>
+                        <a href="kehoach-tochuyenmon.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch tổ chuyên môn</a>
+                        <a href="kehoach-canhan.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch cá nhân</a>
+                        <a href="kehoach-baidday.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch bài dạy</a>
+                        <a href="kehoach-thuchanh-phongbomon.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Kế hoạch thực hành / phòng bộ môn</a>
+                        <a href="hoso-chuyenmon-khac.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Hồ sơ chuyên môn khác</a>
                         <div class="px-3 pt-3 pb-1 text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Báo cáo</div>
-                        <a href="#" onclick="openHSG12ComingSoon('Báo cáo công tác tháng', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo công tác tháng</a>
-                        <a href="#" onclick="openHSG12ComingSoon('Báo cáo định kỳ', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo định kỳ</a>
-                        <a href="#" onclick="openHSG12ComingSoon('Báo cáo theo yêu cầu', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo theo yêu cầu</a>
-                        <a href="#" onclick="openHSG12ComingSoon('Lịch sử báo cáo', event); return false;" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Lịch sử báo cáo</a>
+                        <a href="baocao-congtac-thang.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo công tác tháng</a>
+                        <a href="baocao-dinhky.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo định kỳ</a>
+                        <a href="baocao-theoyeucau.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Báo cáo theo yêu cầu</a>
+                        <a href="lichsu-baocao.html" class="block px-3 py-2 rounded-lg text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-slate-800 transition">Lịch sử báo cáo</a>
                     </div>
                 </div>
 
                 <!-- 5. HOẠT ĐỘNG GIÁO DỤC -->
-                <a href="#" onclick="openHSG12ComingSoon('Hoạt động giáo dục', event); return false;"
+                <a href="hoatdong-giaoduc.html"
                    class="flex items-center gap-3 px-3 py-3 rounded-xl
                           text-[14px] font-bold
                           text-[#123B67] dark:text-slate-100
@@ -2015,107 +2015,30 @@
                 </a>
 
                 <!-- 6. THI - CUỘC THI -->
-                <!-- HVA 29/09/2026: chỉ mở rộng menu Nghiệp vụ số; không tác động các vùng Home khác -->
-                <div class="rounded-xl">
-                    <button type="button"
-                            onclick="toggleHVANghiepVuThiMenu(event)"
-                            class="w-full flex items-center gap-3 px-3 py-3 rounded-xl
-                                   text-[14px] font-bold text-left
-                                   text-[#123B67] dark:text-slate-100
-                                   hover:bg-blue-50 dark:hover:bg-slate-800 transition">
+                <a href="cac-cuoc-thi.html"
+                   class="flex items-center gap-3 px-3 py-3 rounded-xl
+                          text-[14px] font-bold
+                          text-[#123B67] dark:text-slate-100
+                          hover:bg-blue-50 dark:hover:bg-slate-800 transition">
 
-                        <div class="w-10 h-10 rounded-xl
-                                    bg-orange-50 dark:bg-orange-950/30
-                                    border border-orange-100 dark:border-orange-900
-                                    flex items-center justify-center
-                                    text-orange-500 shrink-0">
-                            <i class="bi bi-award-fill text-lg"></i>
-                        </div>
-
-                        <div class="text-left flex-1 min-w-0">
-                            <div class="leading-tight">Thi - Cuộc thi</div>
-                            <div class="text-[10px] font-medium text-slate-400 mt-1">
-                                HSG • KHKT • Đăng ký • Kết quả
-                            </div>
-                        </div>
-
-                        <i id="hva-thicuoc-thi-arrow"
-                           class="bi bi-chevron-right text-[11px] text-slate-400 transition-transform duration-200"></i>
-                    </button>
-
-                    <div id="hva-thicuoc-thi-items"
-                         class="hidden ml-[52px] mr-2 mb-2 rounded-xl border border-orange-100
-                                bg-orange-50/40 dark:bg-slate-900/30 dark:border-slate-700 p-1.5">
-
-                        <!-- HỌC SINH GIỎI 12 -->
-                        <button type="button"
-                                onclick="toggleHVAHSG12Menu(event)"
-                                class="w-full flex items-center justify-between gap-2 px-2.5 py-2
-                                       rounded-lg text-left hover:bg-white dark:hover:bg-slate-800 transition">
-                            <span class="flex items-center gap-2 text-[12px] font-bold text-slate-700 dark:text-slate-200">
-                                <i class="bi bi-mortarboard-fill text-orange-500"></i>
-                                Học sinh giỏi 12
-                            </span>
-                            <i id="hva-hsg12-arrow"
-                               class="bi bi-chevron-right text-[10px] text-slate-400 transition-transform duration-200"></i>
-                        </button>
-
-                        <div id="hva-hsg12-items" class="hidden pl-6 pr-1 pb-1 space-y-0.5">
-                            <a href="#" onclick="openHSG12ComingSoon('Giáo viên bồi dưỡng', event); return false;"
-                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
-                                <i class="bi bi-person-video3 mr-1.5"></i>Giáo viên bồi dưỡng
-                            </a>
-                            <a href="#" onclick="openHSG12ComingSoon('Danh sách học sinh', event); return false;"
-                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
-                                <i class="bi bi-people-fill mr-1.5"></i>Danh sách học sinh
-                            </a>
-                            <a href="#" onclick="openHSG12ComingSoon('Kế hoạch bồi dưỡng', event); return false;"
-                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
-                                <i class="bi bi-journal-text mr-1.5"></i>Kế hoạch bồi dưỡng
-                            </a>
-                            <a href="#" onclick="openHSG12ComingSoon('Thời khóa biểu', event); return false;"
-                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
-                                <i class="bi bi-calendar3 mr-1.5"></i>Thời khóa biểu
-                            </a>
-
-                            <!-- DEMO THẬT: mở WebApp Sổ ghi đầu bài BD HSG 12 đang vận hành -->
-                            <a href="https://tinyurl.com/hva-bdhsg12"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="flex items-center gap-2 px-2 py-2 rounded-lg
-                                      bg-orange-500 text-white hover:bg-orange-600
-                                      shadow-sm transition font-extrabold text-[11px]">
-                                <i class="bi bi-journal-check"></i>
-                                <span>Sổ ghi đầu bài</span>
-                                <i class="bi bi-box-arrow-up-right ml-auto text-[9px]"></i>
-                            </a>
-
-                            <a href="#" onclick="openHSG12ComingSoon('Kiểm tra - Thi thử', event); return false;"
-                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
-                                <i class="bi bi-clipboard-check mr-1.5"></i>Kiểm tra - Thi thử
-                            </a>
-                            <a href="#" onclick="openHSG12ComingSoon('Thi chọn đội tuyển', event); return false;"
-                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
-                                <i class="bi bi-trophy-fill mr-1.5"></i>Thi chọn đội tuyển
-                            </a>
-                            <a href="#" onclick="openHSG12ComingSoon('Kết quả - Thống kê', event); return false;"
-                               class="block px-2 py-1.5 rounded-lg text-[11px] font-medium text-slate-600 hover:bg-white hover:text-orange-600 transition">
-                                <i class="bi bi-bar-chart-fill mr-1.5"></i>Kết quả - Thống kê
-                            </a>
-                        </div>
-
-                        <a href="#" onclick="openHSG12ComingSoon('Các kỳ thi - cuộc thi khác', event); return false;"
-                           class="flex items-center gap-2 px-2.5 py-2 mt-1 rounded-lg
-                                  text-[11px] font-semibold text-slate-600
-                                  hover:bg-white hover:text-orange-600 transition">
-                            <i class="bi bi-grid-fill text-orange-400"></i>
-                            Các kỳ thi - cuộc thi khác
-                        </a>
+                    <div class="w-10 h-10 rounded-xl
+                                bg-orange-50 dark:bg-orange-950/30
+                                border border-orange-100 dark:border-orange-900
+                                flex items-center justify-center
+                                text-orange-500 shrink-0">
+                        <i class="bi bi-award-fill text-lg"></i>
                     </div>
-                </div>
+
+                    <div class="text-left">
+                        <div class="leading-tight">Thi - Cuộc thi</div>
+                        <div class="text-[10px] font-medium text-slate-400 mt-1">
+                            HSG • KHKT • Đăng ký • Kết quả
+                        </div>
+                    </div>
+                </a>
 
                 <!-- 7. CHUYỂN ĐỔI SỐ -->
-                <a href="#" onclick="openHSG12ComingSoon('Chuyển đổi số', event); return false;"
+                <a href="chuyen-doi-so.html"
                    class="flex items-center gap-3 px-3 py-3 rounded-xl
                           text-[14px] font-bold
                           text-[#123B67] dark:text-slate-100
@@ -2145,716 +2068,100 @@
 
 
         <!-- ====================================================== -->
-    <!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ                               -->
+    <!-- TRỤ CỘT 3: ĐIỀU HÀNH SỐ - 4 CỬA THEO ĐƠN VỊ          -->
     <!-- ====================================================== -->
     <style>
-        #dieuhanhso-dropdown .dh-menu-item {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 0.625rem;
-            padding: 0.55rem 0.7rem;
-            border: 1px solid transparent;
-            border-radius: 0.65rem;
-            background: transparent;
-            color: #334155;
-            font-size: 11px;
-            font-weight: 600;
-            line-height: 1.25rem;
-            text-align: left;
-            transition: background-color .16s ease, border-color .16s ease, color .16s ease;
+        #dieuhanhso-dropdown .dh-role-item {
+            width: 100%; display: flex; align-items: center; gap: .8rem;
+            padding: .9rem 1rem; border: 1px solid #e2e8f0; border-radius: .9rem;
+            background: #fff; color: #0f172a; text-align: left;
+            transition: background-color .16s ease, border-color .16s ease, transform .16s ease, box-shadow .16s ease;
         }
-        #dieuhanhso-dropdown .dh-menu-item i {
-            width: 1.25rem;
-            flex: 0 0 1.25rem;
-            color: #2563EB;
-            font-size: 13px;
-            text-align: center;
+        #dieuhanhso-dropdown .dh-role-item:hover:not(.dh-role-locked) {
+            background: #f0fdfa; border-color: #5eead4; transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(13,148,136,.10);
         }
-        #dieuhanhso-dropdown .dh-menu-item span {
-            min-width: 0;
-            flex: 1 1 auto;
+        #dieuhanhso-dropdown .dh-role-icon {
+            width: 2.55rem; height: 2.55rem; flex: 0 0 2.55rem; border-radius: .8rem;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg,#0f766e,#0891b2); color: #fff; font-size: 18px;
         }
-        #dieuhanhso-dropdown .dh-menu-item:hover {
-            background: #EFF6FF;
-            border-color: #DBEAFE;
-            color: #1D4ED8;
+        #dieuhanhso-dropdown .dh-role-title {
+            display:block; font-size: 14px; line-height: 1.15rem; font-weight: 900; color:#0f4c81; letter-spacing:.01em;
         }
-        .dark #dieuhanhso-dropdown .dh-menu-item {
-            color: #CBD5E1;
+        #dieuhanhso-dropdown .dh-role-desc {
+            display:block; margin-top:.15rem; font-size:10px; line-height:1rem; font-weight:600; color:#64748b;
         }
-        .dark #dieuhanhso-dropdown .dh-menu-item:hover {
-            background: #1E293B;
-            border-color: #334155;
-            color: #BFDBFE;
+        #dieuhanhso-dropdown .dh-role-state {
+            margin-left:auto; flex:0 0 auto; width:1.8rem; height:1.8rem; border-radius:999px;
+            display:flex; align-items:center; justify-content:center; background:#ecfdf5; color:#047857; font-size:12px;
+        }
+        #dieuhanhso-dropdown .dh-role-locked { cursor:pointer; background:#f8fafc; border-color:#e2e8f0; }
+        #dieuhanhso-dropdown .dh-role-locked .dh-role-icon { background:#cbd5e1; color:#475569; }
+        #dieuhanhso-dropdown .dh-role-locked .dh-role-title { color:#64748b; }
+        #dieuhanhso-dropdown .dh-role-locked .dh-role-state { background:#fef3c7; color:#92400e; }
+        .dark #dieuhanhso-dropdown .dh-role-item { background:#0f172a; border-color:#334155; color:#e2e8f0; }
+        .dark #dieuhanhso-dropdown .dh-role-title { color:#bae6fd; }
+        .dark #dieuhanhso-dropdown .dh-role-desc { color:#94a3b8; }
+        @media (min-width:640px) {
+            #dieuhanhso-dropdown .dh-role-title { font-size:15px; }
+            #dieuhanhso-dropdown .dh-role-desc { font-size:10.5px; }
         }
     </style>
     <div class="relative">
-
-        <!-- CARD ĐIỀU HÀNH SỐ -->
         <div id="hvaDieuHanhSoCard" data-dropdown-toggle="dieuhanhso-dropdown"
-             class="group relative rounded-2xl
-                    bg-gradient-to-br from-teal-700 via-emerald-700 to-cyan-700
-                    text-white p-3.5
-                    shadow-md hover:shadow-xl
-                    transition-all duration-300
-                    cursor-pointer overflow-visible
-                    border border-teal-400/40
-                    active:scale-[0.98]">
-
+             class="group relative rounded-2xl bg-gradient-to-br from-teal-700 via-emerald-700 to-cyan-700 text-white p-3.5 shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-visible border border-teal-400/40 active:scale-[0.98]">
             <div id="hvaDieuHanhSoLock" class="hidden absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-amber-300/95 border border-amber-100/90 shadow-md items-center justify-center pointer-events-none" title="Chưa được cấp quyền">
                 <i class="bi bi-lock-fill text-amber-900 text-[12px]"></i>
             </div>
-
-            <div class="absolute top-0 right-0
-                        w-20 h-20 bg-white/20 rounded-full blur-xl
-                        group-hover:scale-150
-                        transition-all duration-500
-                        pointer-events-none">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-500 pointer-events-none"></div>
+            <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner mb-3 group-hover:scale-110 transition-transform duration-300 border border-white/30">
+                <i class="bi bi-diagram-3-fill text-white text-lg"></i>
             </div>
-
-            <div class="w-10 h-10 rounded-xl
-                        bg-white/20 backdrop-blur-md
-                        flex items-center justify-center
-                        shadow-inner mb-3
-                        group-hover:scale-110
-                        transition-transform duration-300
-                        border border-white/30">
-
-                <i class="bi bi-cpu-fill text-white text-lg"></i>
-            </div>
-
             <div class="flex items-center justify-between gap-2">
-
-                <h3 class="text-xs font-extrabold
-                           tracking-tight text-white mb-0.5
-                           whitespace-nowrap">
-                    ĐIỀU HÀNH SỐ 
-                </h3>
-
-                <i class="bi bi-chevron-up
-                          text-xs text-teal-100
-                          transition-transform duration-300"
-                   data-dropdown-arrow>
-                </i>
-
+                <h3 class="text-sm font-black tracking-tight text-white mb-0.5 whitespace-nowrap">ĐIỀU HÀNH SỐ</h3>
+                <i class="bi bi-chevron-up text-xs text-teal-100 transition-transform duration-300" data-dropdown-arrow></i>
             </div>
-
-            <p class="text-[10px] text-teal-50 font-medium">
-                Quản lý • Điều phối • Theo dõi
-            </p>
-
+            <p class="text-[10px] text-teal-50 font-semibold">Điều hành theo đơn vị • Đúng phân quyền</p>
         </div>
 
-
-        <!-- ================================================== -->
-        <!-- DROP-UP: TRUNG TÂM ĐIỀU HÀNH SỐ                   -->
-        <!-- ================================================== -->
-        <div id="dieuhanhso-dropdown"
-             data-dropdown-menu
-             class="hidden fixed sm:absolute
-           left-3 right-3
-           sm:left-0 sm:right-auto sm:translate-x-0
-           bottom-20 sm:bottom-[calc(100%+0.6rem)]
-           z-[999]
-           w-auto sm:w-[370px]
-           max-h-[76vh]
-           overflow-y-auto overscroll-contain
-           bg-white dark:bg-slate-900
-           rounded-2xl shadow-2xl
-           border border-slate-200 dark:border-slate-800">
-
-            <!-- HEADER -->
-            <div class="sticky top-0 z-20
-                        bg-white/95 dark:bg-slate-900/95
-                        backdrop-blur-md
-                        border-b border-slate-200 dark:border-slate-800
-                        px-4 py-3">
-
-                <div class="flex items-center gap-2.5">
-
-                    <div class="w-8 h-8 rounded-lg
-                                bg-gradient-to-br from-teal-600 to-cyan-500
-                                text-white
-                                flex items-center justify-center
-                                shadow-sm">
-
-                        <i class="bi bi-command text-sm"></i>
+        <div id="dieuhanhso-dropdown" data-dropdown-menu
+             class="hidden fixed sm:absolute left-3 right-3 sm:left-0 sm:right-auto sm:translate-x-0 bottom-20 sm:bottom-[calc(100%+0.6rem)] z-[999] w-auto sm:w-[390px] max-h-[76vh] overflow-y-auto overscroll-contain bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div class="sticky top-0 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3.5">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white flex items-center justify-center shadow-sm">
+                        <i class="bi bi-diagram-3-fill text-base"></i>
                     </div>
-
                     <div>
-                        <div class="text-[13px]
-                                    font-extrabold tracking-wide
-                                    text-[#0F4C81]
-                                    dark:text-cyan-300">
-                            ĐIỀU HÀNH SỐ 
-                        </div>
-
-                        <div class="text-[9px]
-                                    text-slate-400 font-medium">
-                            Quản lý • Điều phối • Phát hành • Theo dõi
-                        </div>
+                        <div class="text-[15px] font-black tracking-wide text-[#0F4C81] dark:text-cyan-300">ĐIỀU HÀNH SỐ</div>
+                        <div class="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">Chọn đơn vị để thực hiện chức năng điều hành</div>
                     </div>
-
                 </div>
-
             </div>
-
-
-            <!-- NỘI DUNG -->
-            <div class="p-3 space-y-1">
-
-
-                <!-- ========================================== -->
-                <!-- 01. ĐIỀU HÀNH - PHÁT HÀNH                 -->
-                <!-- ========================================== -->
-                <div class="rounded-xl border border-teal-100
-                            dark:border-slate-700 overflow-hidden">
-
-                    <button type="button"
-                            onclick="event.stopPropagation();
-                                     window.toggleHVADieuHanhSection('dh-chung-items','dh-chung-arrow');"
-                            class="w-full flex items-center justify-between
-                                   px-3 py-2.5
-                                   bg-teal-50/70 dark:bg-slate-800
-                                   hover:bg-teal-100
-                                   transition text-left">
-
-                        <div class="flex items-center gap-2.5">
-
-                            <div class="w-8 h-8 rounded-lg
-                                        bg-teal-100
-                                        text-teal-700
-                                        flex items-center justify-center">
-                                <i class="bi bi-grid-1x2-fill"></i>
-                            </div>
-
-                            <div>
-                                <div class="text-[11px] font-extrabold
-                                            text-[#123B67]
-                                            dark:text-slate-100">
-                                    ĐIỀU HÀNH - PHÁT HÀNH
-                                </div>
-
-                                <div class="text-[8.5px] text-slate-400 mt-0.5">
-                                    Nhiệm vụ • Lịch • Họp • Thông báo • Phát hành
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <i id="dh-chung-arrow"
-                           class="bi bi-chevron-right
-                                  text-[10px] text-slate-400
-                                  transition-transform">
-                        </i>
-
-                    </button>
-
-
-                    <div id="dh-chung-items"
-                         class="hidden p-1.5 bg-white dark:bg-slate-900 space-y-0.5">
-
-                        <!-- GIỮ NGUYÊN MODULE ĐÃ CHẠY -->
-                        <a href="Giaonhanviec.html"
-                           class="flex items-center gap-2.5
-                                  px-3 py-2 rounded-lg
-                                  hover:bg-teal-50
-                                  dark:hover:bg-slate-800 transition">
-
-                            <i class="bi bi-clipboard-check-fill
-                                      text-teal-600 w-5 text-center"></i>
-
-                            <span class="text-[11px] font-semibold
-                                         text-slate-700 dark:text-slate-200">
-                                Giao nhiệm vụ
-                            </span>
-
-                        </a>
-
-
-                        <!-- GIỮ NGUYÊN MODULE ĐÃ CHẠY -->
-                        <a href="Lichcongtac.html"
-                           class="flex items-center gap-2.5
-                                  px-3 py-2 rounded-lg
-                                  hover:bg-teal-50
-                                  dark:hover:bg-slate-800 transition">
-
-                            <i class="bi bi-calendar3
-                                      text-blue-600 w-5 text-center"></i>
-
-                            <span class="text-[11px] font-semibold
-                                         text-slate-700 dark:text-slate-200">
-                                Lịch công tác
-                            </span>
-
-                        </a>
-
-
-                        <a href="Cuochop.html"
-       class="w-full flex items-center gap-2.5
-              px-3 py-2 rounded-lg
-              hover:bg-violet-50
-              dark:hover:bg-slate-800 transition">
-
-        <i class="bi bi-people-fill
-                  text-violet-600 w-5 text-center"></i>
-
-        <span class="text-[11px] font-semibold
-                     text-slate-700 dark:text-slate-200">
-            Cuộc họp
-        </span>
-
-    </a>
-
-
-                       <a href="Thongbao.html"
-            class="w-full flex items-center gap-2.5
-                   px-3 py-2 rounded-lg
-                   hover:bg-amber-50
-                   dark:hover:bg-slate-800 transition text-left">
-
-        <i class="bi bi-megaphone-fill
-                  text-amber-500 w-5 text-center"></i>
-
-        <span class="text-[11px] font-semibold
-                     text-slate-700 dark:text-slate-200">
-            Thông báo
-        </span>
-
-    </a>
-
-
-                       <a href="KhaosatBinhchon.html"
-       class="w-full flex items-center gap-2.5
-              px-3 py-2 rounded-lg
-              hover:bg-indigo-50
-              dark:hover:bg-slate-800 transition text-left">
-
-        <i class="bi bi-ui-checks-grid
-                  text-indigo-600 w-5 text-center"></i>
-
-        <span class="text-[11px] font-semibold
-                     text-slate-700 dark:text-slate-200">
-            Khảo sát - Bình chọn
-        </span>
-
-    </a>
-    <button type="button"
-                                onclick="event.preventDefault(); event.stopPropagation(); window.location.href='TTPhatHanh_v1_beta.html';"
-                                class="w-full flex items-center gap-2.5
-                                       px-3 py-2 rounded-lg
-                                       hover:bg-cyan-50
-                                       dark:hover:bg-slate-800 transition text-left">
-
-                            <i class="bi bi-send-check-fill
-                                      text-cyan-600 w-5 text-center"></i>
-
-                            <span class="text-[11px] font-semibold
-                                         text-slate-700 dark:text-slate-200">
-                                Trung tâm phát hành
-                            </span>
-
-                        </button>
-
-
-                        <!-- BGH / TTCM / TTVP: TÁC NGHIỆP BAN HÀNH - PHÁT HÀNH -->
-                        <a href="BanHanhPhatHanh.html"
-                           class="w-full flex items-center gap-2.5
-                                  px-3 py-2 rounded-lg
-                                  hover:bg-sky-50
-                                  dark:hover:bg-slate-800 transition text-left">
-
-                            <i class="bi bi-file-earmark-arrow-up-fill
-                                      text-sky-600 w-5 text-center"></i>
-
-                            <span class="text-[11px] font-semibold
-                                         text-slate-700 dark:text-slate-200">
-                                Ban hành - Phát hành
-                            </span>
-
-                        </a>
-
-
-                        <button type="button"
-                                class="w-full flex items-center gap-2.5
-                                       px-3 py-2 rounded-lg
-                                       hover:bg-emerald-50
-                                       dark:hover:bg-slate-800 transition text-left">
-
-                            <i class="bi bi-graph-up-arrow
-                                      text-emerald-600 w-5 text-center"></i>
-
-                            <span class="text-[11px] font-semibold
-                                         text-slate-700 dark:text-slate-200">
-                                Theo dõi điều hành
-                            </span>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ========================================== -->
-                <!-- 02. CHUYÊN MÔN - GIÁO DỤC                  -->
-                <!-- ========================================== -->
-                <div class="rounded-xl border border-blue-100
-                            dark:border-slate-700 overflow-hidden">
-
-                    <button type="button"
-                            onclick="event.stopPropagation();
-                                     window.toggleHVADieuHanhSection('dh-chuyenmon-items','dh-chuyenmon-arrow');"
-                            class="w-full flex items-center justify-between
-                                   px-3 py-2.5
-                                   hover:bg-blue-50
-                                   dark:hover:bg-slate-800
-                                   transition text-left">
-
-                        <div class="flex items-center gap-2.5">
-
-                            <div class="w-8 h-8 rounded-lg
-                                        bg-blue-100 text-blue-700
-                                        flex items-center justify-center">
-                                <i class="bi bi-mortarboard-fill"></i>
-                            </div>
-
-                            <div>
-                                <div class="text-[11px] font-extrabold
-                                            text-[#123B67]
-                                            dark:text-slate-100">
-                                    CHUYÊN MÔN - GIÁO DỤC
-                                </div>
-
-                                <div class="text-[8.5px] text-slate-400 mt-0.5">
-                                    Phân công • TKB • Kiểm tra • HSG
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <i id="dh-chuyenmon-arrow"
-                           class="bi bi-chevron-right text-[10px]
-                                  text-slate-400 transition-transform">
-                        </i>
-
-                    </button>
-
-
-                    <div id="dh-chuyenmon-items"
-                         class="hidden p-1.5 bg-white dark:bg-slate-900
-                                grid grid-cols-1 gap-0.5">
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-person-workspace"></i>
-                            <span>Phân công chuyên môn</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-table"></i>
-                            <span>Thời khóa biểu</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-file-earmark-check"></i>
-                            <span>Kiểm tra - Đánh giá</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-pencil-square"></i>
-                            <span>Thi thử tốt nghiệp THPT</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-award-fill"></i>
-                            <span>Bồi dưỡng học sinh giỏi</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item"
-                                onclick="event.preventDefault(); event.stopPropagation(); window.location.href='DieuHanhTo.html';">
-                            <i class="bi bi-diagram-3-fill"></i>
-                            <span>Điều hành tổ</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-person-video3"></i>
-                            <span>Bồi dưỡng chuyên môn</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-activity"></i>
-                            <span>Hoạt động giáo dục</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-trophy-fill"></i>
-                            <span>Các cuộc thi</span>
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ========================================== -->
-                <!-- 03. HỌC SINH - PHONG TRÀO                 -->
-                <!-- ========================================== -->
-                <div class="rounded-xl border border-rose-100
-                            dark:border-slate-700 overflow-hidden">
-
-                    <button type="button"
-                            onclick="event.stopPropagation();
-                                     window.toggleHVADieuHanhSection('dh-phongtrao-items','dh-phongtrao-arrow');"
-                            class="w-full flex items-center justify-between
-                                   px-3 py-2.5
-                                   hover:bg-rose-50
-                                   dark:hover:bg-slate-800 transition text-left">
-
-                        <div class="flex items-center gap-2.5">
-
-                            <div class="w-8 h-8 rounded-lg
-                                        bg-rose-100 text-rose-600
-                                        flex items-center justify-center">
-                                <i class="bi bi-stars"></i>
-                            </div>
-
-                            <div>
-                                <div class="text-[11px] font-extrabold
-                                            text-[#123B67] dark:text-slate-100">
-                                    HỌC SINH - PHONG TRÀO
-                                </div>
-
-                                <div class="text-[8.5px] text-slate-400 mt-0.5">
-                                    Chủ nhiệm • Đoàn • Sự kiện
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <i id="dh-phongtrao-arrow"
-                           class="bi bi-chevron-right text-[10px]
-                                  text-slate-400 transition-transform">
-                        </i>
-
-                    </button>
-
-                    <div id="dh-phongtrao-items"
-                         class="hidden p-1.5 bg-white dark:bg-slate-900">
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-person-vcard-fill"></i>
-                            <span>Công tác học sinh - Chủ nhiệm</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-people"></i>
-                            <span>Đoàn Thanh niên</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-calendar-event"></i>
-                            <span>Sự kiện - Lễ hội</span>
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ========================================== -->
-                <!-- 04. KIỂM TRA - CHẤT LƯỢNG                  -->
-                <!-- ========================================== -->
-                <div class="rounded-xl border border-amber-100
-                            dark:border-slate-700 overflow-hidden">
-
-                    <button type="button"
-                            onclick="event.stopPropagation();
-                                     window.toggleHVADieuHanhSection('dh-chatluong-items','dh-chatluong-arrow');"
-                            class="w-full flex items-center justify-between
-                                   px-3 py-2.5
-                                   hover:bg-amber-50
-                                   dark:hover:bg-slate-800 transition text-left">
-
-                        <div class="flex items-center gap-2.5">
-
-                            <div class="w-8 h-8 rounded-lg
-                                        bg-amber-100 text-amber-600
-                                        flex items-center justify-center">
-                                <i class="bi bi-shield-check"></i>
-                            </div>
-
-                            <div>
-                                <div class="text-[11px] font-extrabold
-                                            text-[#123B67] dark:text-slate-100">
-                                    KIỂM TRA - CHẤT LƯỢNG
-                                </div>
-
-                                <div class="text-[8.5px] text-slate-400 mt-0.5">
-                                    Kiểm tra • Thanh tra • Kiểm định
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <i id="dh-chatluong-arrow"
-                           class="bi bi-chevron-right text-[10px]
-                                  text-slate-400 transition-transform">
-                        </i>
-
-                    </button>
-
-                    <div id="dh-chatluong-items"
-                         class="hidden p-1.5 bg-white dark:bg-slate-900">
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-search"></i>
-                            <span>Kiểm tra nội bộ</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-people-fill"></i>
-                            <span>Thanh tra nhân dân</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-patch-check-fill"></i>
-                            <span>Kiểm định chất lượng - Tự đánh giá</span>
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ========================================== -->
-                <!-- 05. PHỐI HỢP - CỘNG ĐỒNG                  -->
-                <!-- ========================================== -->
-                <div class="rounded-xl border border-violet-100
-                            dark:border-slate-700 overflow-hidden">
-
-                    <button type="button"
-                            onclick="event.stopPropagation();
-                                     window.toggleHVADieuHanhSection('dh-congdong-items','dh-congdong-arrow');"
-                            class="w-full flex items-center justify-between
-                                   px-3 py-2.5
-                                   hover:bg-violet-50
-                                   dark:hover:bg-slate-800 transition text-left">
-
-                        <div class="flex items-center gap-2.5">
-
-                            <div class="w-8 h-8 rounded-lg
-                                        bg-violet-100 text-violet-600
-                                        flex items-center justify-center">
-                                <i class="bi bi-people-fill"></i>
-                            </div>
-
-                            <div>
-                                <div class="text-[11px] font-extrabold
-                                            text-[#123B67] dark:text-slate-100">
-                                    PHỐI HỢP - CỘNG ĐỒNG
-                                </div>
-
-                                <div class="text-[8.5px] text-slate-400 mt-0.5">
-                                    Hợp tác • Cha mẹ học sinh
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <i id="dh-congdong-arrow"
-                           class="bi bi-chevron-right text-[10px]
-                                  text-slate-400 transition-transform">
-                        </i>
-
-                    </button>
-
-                    <div id="dh-congdong-items"
-                         class="hidden p-1.5 bg-white dark:bg-slate-900">
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-globe2"></i>
-                            <span>Quan hệ - Hợp tác</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-house-heart-fill"></i>
-                            <span>Ban đại diện CMHS</span>
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ========================================== --> 
-                <!-- 06. QUẢN LÝ - HỖ TRỢ                      -->
-                <!-- ========================================== -->
-                <div class="rounded-xl border border-slate-200
-                            dark:border-slate-700 overflow-hidden">
-
-                    <button type="button"
-                            onclick="event.stopPropagation();
-                                     window.toggleHVADieuHanhSection('dh-hotro-items','dh-hotro-arrow');"
-                            class="w-full flex items-center justify-between
-                                   px-3 py-2.5
-                                   hover:bg-slate-50
-                                   dark:hover:bg-slate-800 transition text-left">
-
-                        <div class="flex items-center gap-2.5">
-
-                            <div class="w-8 h-8 rounded-lg
-                                        bg-slate-100 text-slate-600
-                                        flex items-center justify-center">
-                                <i class="bi bi-sliders"></i>
-                            </div>
-
-                            <div>
-                                <div class="text-[11px] font-extrabold
-                                            text-[#123B67] dark:text-slate-100">
-                                    QUẢN LÝ - HỖ TRỢ
-                                </div>
-
-                                <div class="text-[8.5px] text-slate-400 mt-0.5">
-                                    Chuyển đổi số • Hành chính • Báo cáo
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <i id="dh-hotro-arrow"
-                           class="bi bi-chevron-right text-[10px]
-                                  text-slate-400 transition-transform">
-                        </i>
-
-                    </button>
-
-                    <div id="dh-hotro-items"
-                         class="hidden p-1.5 bg-white dark:bg-slate-900">
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-laptop"></i>
-                            <span>Chuyển đổi số</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-building"></i>
-                            <span>Hành chính</span>
-                        </button>
-
-                        <button type="button" class="dh-menu-item">
-                            <i class="bi bi-bar-chart-fill"></i>
-                            <span>Báo cáo - Thống kê</span>
-                        </button>
-
-                    </div>
-
-                </div>
-
+            <div class="p-3 space-y-2.5">
+                <button id="dhRoleBGH" type="button" class="dh-role-item" onclick="window.openHVADieuHanhRole?.('BGH', event)">
+                    <span class="dh-role-icon"><i class="bi bi-building-check"></i></span>
+                    <span class="min-w-0 flex-1"><span class="dh-role-title">BAN GIÁM HIỆU</span><span class="dh-role-desc">Điều hành, phê duyệt và phát hành cấp trường</span></span>
+                    <span class="dh-role-state"><i class="bi bi-chevron-right"></i></span>
+                </button>
+                <button id="dhRoleTCM" type="button" class="dh-role-item" onclick="window.openHVADieuHanhRole?.('TCM', event)">
+                    <span class="dh-role-icon"><i class="bi bi-people-fill"></i></span>
+                    <span class="min-w-0 flex-1"><span class="dh-role-title">TỔ CHUYÊN MÔN</span><span class="dh-role-desc">Kế hoạch, công việc, họp tổ, theo dõi và báo cáo</span></span>
+                    <span class="dh-role-state"><i class="bi bi-chevron-right"></i></span>
+                </button>
+                <button id="dhRoleTVP" type="button" class="dh-role-item" onclick="window.openHVADieuHanhRole?.('TVP', event)">
+                    <span class="dh-role-icon"><i class="bi bi-folder2-open"></i></span>
+                    <span class="min-w-0 flex-1"><span class="dh-role-title">TỔ VĂN PHÒNG</span><span class="dh-role-desc">Điều hành kế hoạch và công việc Tổ Văn phòng</span></span>
+                    <span class="dh-role-state"><i class="bi bi-chevron-right"></i></span>
+                </button>
+                <button id="dhRoleDOAN" type="button" class="dh-role-item" onclick="window.openHVADieuHanhRole?.('DOAN', event)">
+                    <span class="dh-role-icon"><i class="bi bi-stars"></i></span>
+                    <span class="min-w-0 flex-1"><span class="dh-role-title">ĐOÀN THANH NIÊN</span><span class="dh-role-desc">Điều hành hoạt động, phong trào và công tác Đoàn</span></span>
+                    <span class="dh-role-state"><i class="bi bi-chevron-right"></i></span>
+                </button>
             </div>
-
+            <div class="px-4 pb-3 text-[9.5px] font-semibold text-slate-400 text-center">HVA • Điều hành đúng vai trò, đúng phạm vi</div>
         </div>
-
     </div>
     <!-- ================= HẾT ĐIỀU HÀNH SỐ ================= -->
 
@@ -3406,19 +2713,27 @@
                 user = {};
             }
 
-            // HVA RBAC LOCK 30/09/2026:
-            // Khu quản trị trong KẾT NỐI SỐ chỉ dành cho BGH.
-            // Không suy quyền từ ADMIN/QUYEN và tuyệt đối không dùng includes('HT').
-            const permissionText = [
-                user.chucVu, user.viTriViecLam, user.position,
-                user.vaiTro, user.role
-            ].filter(Boolean).join(' ')
-             .normalize('NFD')
-             .replace(/[\u0300-\u036f]/g, '')
-             .replace(/Đ/g, 'D').replace(/đ/g, 'd')
-             .toUpperCase();
+            const role = String(
+                user.role ||
+                user.vaiTro ||
+                user.VAITRO ||
+                ''
+            ).toUpperCase();
 
-            const allowed = /(^|\b)(BAN GIAM HIEU|HIEU TRUONG|PHO HIEU TRUONG|BGH|PHT)(\b|$)/.test(permissionText);
+            const permission = String(
+                user.permission ||
+                user.quyen ||
+                user.QUYEN ||
+                ''
+            ).toUpperCase();
+
+            const allowed =
+                role.includes('ADMIN') ||
+                role.includes('HT') ||
+                role.includes('PHT') ||
+                permission.includes('ADMIN') ||
+                permission.includes('QUAN_TRI') ||
+                permission.includes('QUẢN TRỊ');
 
             const adminArea =
                 document.getElementById('digitalAdminArea');
@@ -3513,15 +2828,10 @@
         function hvaDriveAdminAllowed_() {
             let user = {};
             try { user = JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}'); } catch (_) {}
-            const permissionText = [
-                user.chucVu, user.viTriViecLam, user.position,
-                user.vaiTro, user.role
-            ].filter(Boolean).join(' ')
-             .normalize('NFD')
-             .replace(/[\u0300-\u036f]/g, '')
-             .replace(/Đ/g, 'D').replace(/đ/g, 'd')
-             .toUpperCase();
-            return /(^|\b)(BAN GIAM HIEU|HIEU TRUONG|PHO HIEU TRUONG|BGH|PHT)(\b|$)/.test(permissionText);
+            const role = String(user.role || user.vaiTro || user.VAITRO || '').toUpperCase();
+            const permission = String(user.permission || user.quyen || user.QUYEN || '').toUpperCase();
+            return role.includes('ADMIN') || role.includes('HT') || role.includes('PHT') ||
+                   permission.includes('ADMIN') || permission.includes('QUAN_TRI') || permission.includes('QUẢN TRỊ');
         }
 
         window.openHVADriveNavigator = async function(event) {
@@ -3685,39 +2995,47 @@
         setTimeout(hvaLoadMaintenanceState_, 1200);
 
         function setupHVAMainMenuPermission() {
+            // Dùng đúng nguồn tài khoản mà toàn hệ thống HVA đang dùng.
+            // Có tài khoản được lưu ở localStorage (không chỉ sessionStorage),
+            // nên đọc riêng sessionStorage sẽ nhận {} và khóa nhầm cả BGH.
             const user = getCurrentHVAUser();
 
-            // HVA RBAC LOCK 30/09/2026
-            // Chỉ đọc các trường chức vụ/vai trò thực sự; KHÔNG quét toàn bộ JSON.
-            // QUẢN TRỊ: chỉ BGH.
-            // ĐIỀU HÀNH SỐ: BGH (full), 08 Tổ trưởng, Bí thư Đoàn.
-            // Tổ phó và GV/NV khác: không có.
-            const permissionText = [
-                user.chucVu,
-                user.viTriViecLam,
-                user.position,
-                user.vaiTro,
-                user.role
-            ].filter(Boolean).join(' ')
-             .normalize('NFD')
-             .replace(/[\u0300-\u036f]/g, '')
-             .replace(/Đ/g, 'D').replace(/đ/g, 'd')
-             .toUpperCase();
+            // Quét TOÀN BỘ hồ sơ đăng nhập, kể cả các trường lồng nhau.
+            // Trước đây chỉ Object.values() cấp 1 nên nếu chức vụ/quyền nằm trong
+            // object con thì BGH bị nhận thành GV thường và bị khóa nhầm.
+            const rawProfile = JSON.stringify(user || {})
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/Đ/g, 'D').replace(/đ/g, 'd')
+                .toUpperCase();
 
-            const isBGH =
-                /(^|\b)(BAN GIAM HIEU|HIEU TRUONG|PHO HIEU TRUONG|BGH|PHT)(\b|$)/.test(permissionText);
+            const hasAny = (...keys) => keys.some(k => rawProfile.includes(k));
 
-            // Tổ trưởng: TTCM / Tổ trưởng chuyên môn / Tổ trưởng văn phòng.
-            // CỐ Ý không nhận TPCM, Tổ phó CM, Tổ phó.
-            const isToTruong =
-                /(^|\b)(TTCM|TTVP|TO TRUONG CHUYEN MON|TO TRUONG CM|TO TRUONG VAN PHONG|TO TRUONG VP|TO TRUONG)(\b|$)/.test(permissionText) &&
-                !/(^|\b)(TPCM|TO PHO|TO PHO CHUYEN MON|TO PHO CM)(\b|$)/.test(permissionText);
+            const isAdmin = hasAny('ADMIN', 'QUAN TRI HE THONG', 'QUAN_TRI');
+            const isBGH = hasAny(
+                'PHO HIEU TRUONG', 'PHT',
+                'HIEU TRUONG',
+                'BAN GIAM HIEU', 'BGH'
+            );
+            const isTTCM = hasAny(
+                'TTCM',
+                'TO TRUONG CHUYEN MON',
+                'TO TRUONG CM'
+            );
+            const isTTVP = hasAny(
+                'TTVP',
+                'TO TRUONG VAN PHONG',
+                'TO TRUONG VP'
+            );
+            const isBTDoan = hasAny(
+                'BI THU DOAN',
+                'BI THU DOAN TRUONG',
+                'BT DOAN',
+                'BTDOAN'
+            );
 
-            const isBiThuDoan =
-                /(^|\b)(BI THU DOAN|BI THU DOAN TRUONG|BI THU DTN|BT DOAN)(\b|$)/.test(permissionText);
-
-            const canOpenDieuHanhSo = isBGH || isToTruong || isBiThuDoan;
-            const canOpenQuanTri = isBGH;
+            const canOpenDieuHanhSo = isAdmin || isBGH || isTTCM || isTTVP || isBTDoan;
+            const canOpenQuanTri = isAdmin || isBGH;
 
             function applyCardPermission(cardId, lockId, dropdownId, allowed) {
                 const card = document.getElementById(cardId);
@@ -3737,120 +3055,54 @@
                     return;
                 }
 
-              // KHÓA QUYỀN:
-// - Giữ nguyên 100% màu/gradient của card.
-// - Chỉ hiện ổ khóa.
-// - Vẫn cho click để báo lý do.
-// - Tuyệt đối không mở dropdown.
-card.removeAttribute('data-dropdown-toggle');
-card.setAttribute('aria-disabled', 'true');
+                // Khóa UX nhưng vẫn cho bấm để giải thích lý do bị khóa.
+                card.removeAttribute('data-dropdown-toggle');
+                // Giữ nguyên màu card; chỉ báo khóa bằng ổ khóa vàng ở góc phải.
+                card.classList.remove('opacity-40', 'opacity-50', 'opacity-60', 'opacity-65', 'grayscale', 'pointer-events-none');
+                card.style.opacity = '1';
+                card.style.filter = 'none';
+                card.style.cursor = 'pointer';
+                card.setAttribute('aria-disabled', 'true');
+                lock?.classList.remove('hidden');
+                lock?.classList.add('flex');
+                dropdown?.classList.add('hidden');
 
-// XÓA toàn bộ trạng thái làm mờ/xám trước đây
-card.classList.remove(
-    'opacity-40',
-    'opacity-50',
-    'opacity-60',
-    'opacity-65',
-    'grayscale',
-    'pointer-events-none'
-);
-
-card.style.opacity = '1';
-card.style.filter = 'none';
-card.style.cursor = 'pointer';
-card.style.pointerEvents = 'auto';
-
-// Hiện ổ khóa
-if (lock) {
-    lock.classList.remove('hidden');
-    lock.classList.add('flex');
-    lock.style.display = 'flex';
-}
-
-// Dropdown luôn đóng
-if (dropdown) {
-    dropdown.classList.add('hidden');
-    dropdown.style.display = 'none';
-}
-
-// Click card bị khóa
-card.addEventListener('click', function hvaLockedMenuNotice(event) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    // Lấy đúng tài khoản HVA đang đăng nhập
-    const currentUser =
-        (typeof getCurrentHVAUser === 'function')
-            ? (getCurrentHVAUser() || {})
-            : {};
-
-    // Chuẩn hóa chuỗi để nhận diện
-    const normalizeHVA = (value) =>
-        String(value || '')
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/Đ/g, 'D')
-            .replace(/đ/g, 'd')
-            .trim()
-            .toUpperCase();
-
-    // Đọc nhóm/vị trí nhân sự từ chính hồ sơ đăng nhập
-    const staffText = normalizeHVA([
-        currentUser.nhom,
-        currentUser.nhomNhanSu,
-        currentUser.loaiNhanSu,
-        currentUser.doiTuong,
-        currentUser.viTriViecLam,
-        currentUser.chucVu,
-        currentUser.position,
-        currentUser.vaiTro,
-        currentUser.role
-    ].filter(Boolean).join(' '));
-
-    // Đọc giới tính từ hồ sơ đăng nhập
-    const genderText = normalizeHVA(
-        currentUser.gioiTinh ||
-        currentUser.gender ||
-        currentUser.sex ||
-        ''
-    );
-
-    const isFemale =
-        genderText === 'NU' ||
-        genderText === 'FEMALE' ||
-        genderText === 'F';
-
-    const isStaff =
-        staffText.includes('NHAN VIEN') ||
-        staffText.includes('NHANVIEN') ||
-        /(^|\s)NV(\s|$)/.test(staffText);
-
-    // CBQL/GV: Thầy/Cô
-    // NV: Anh/Chị
-    let xungHo;
-
-    if (isStaff) {
-        xungHo = isFemale ? 'Chị' : 'Anh';
-    } else {
-        xungHo = isFemale ? 'Cô' : 'Thầy';
-    }
-
-    const message =
-        `${xungHo} chưa được cấp quyền cho tác vụ này.`;
-
-    // Ưu tiên popup hệ thống HVA
-    if (typeof showHVAAppNotice_ === 'function') {
-        showHVAAppNotice_(message, {
-            kind: 'info',
-            title: 'THÔNG BÁO HỆ THỐNG'
-        });
-    } else if (typeof showToast === 'function') {
-        showToast(message);
-    } else {
-        alert(message);
-    }
-});
+                card.addEventListener('click', function hvaLockedMenuNotice(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (typeof showToast === 'function') {
+                        showToast('Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
+                    } else {
+                        alert('Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
+                    }
+                });
             }
+
+            // Phân quyền 4 cửa bên trong Điều hành số.
+            // BGH/ADMIN: mở cả 4; các đầu mối khác chỉ mở đúng đơn vị phụ trách.
+            const dieuHanhRoleAccess = {
+                BGH:  isAdmin || isBGH,
+                TCM:  isAdmin || isBGH || isTTCM,
+                TVP:  isAdmin || isBGH || isTTVP,
+                DOAN: isAdmin || isBGH || isBTDoan
+            };
+
+            function applyDieuHanhRolePermission(buttonId, allowed) {
+                const btn = document.getElementById(buttonId);
+                if (!btn) return;
+                btn.dataset.allowed = allowed ? '1' : '0';
+                btn.classList.toggle('dh-role-locked', !allowed);
+                btn.setAttribute('aria-disabled', allowed ? 'false' : 'true');
+                const state = btn.querySelector('.dh-role-state');
+                if (state) state.innerHTML = allowed
+                    ? '<i class="bi bi-chevron-right"></i>'
+                    : '<i class="bi bi-lock-fill"></i>';
+            }
+
+            applyDieuHanhRolePermission('dhRoleBGH', dieuHanhRoleAccess.BGH);
+            applyDieuHanhRolePermission('dhRoleTCM', dieuHanhRoleAccess.TCM);
+            applyDieuHanhRolePermission('dhRoleTVP', dieuHanhRoleAccess.TVP);
+            applyDieuHanhRolePermission('dhRoleDOAN', dieuHanhRoleAccess.DOAN);
 
             applyCardPermission(
                 'hvaDieuHanhSoCard',
@@ -3880,7 +3132,7 @@ card.addEventListener('click', function hvaLockedMenuNotice(event) {
     // LOGIC MENU XỔ DOWN / UP
     // ==========================================
     function initMenuLogic() {
-        window.toggleDashboardMenu = function(menuId, event) { 
+        window.toggleDashboardMenu = function(menuId, event) {
             if (event) event.stopPropagation();
             const targetMenu = document.getElementById(menuId);
             if (!targetMenu) return;
@@ -4122,7 +3374,7 @@ card.addEventListener('click', function hvaLockedMenuNotice(event) {
         const color = kind === 'success' ? 'emerald' : kind === 'error' ? 'rose' : 'blue';
         let modal = document.getElementById('hvaAppNoticeModal');
         if (!modal) { modal = document.createElement('div'); modal.id = 'hvaAppNoticeModal'; modal.className = 'hidden fixed inset-0 z-[160] bg-slate-950/55 backdrop-blur-sm p-4 items-center justify-center'; document.body.appendChild(modal); }
-        modal.innerHTML = `<div class="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl border border-${color}-100"><div class="bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white flex items-center gap-3"><span class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center"><i class="bi bi-cpu-fill text-xl"></i></span><div><div class="text-[13px] font-black">${hvaKsbcEsc_(title)}</div><div class="text-[9px] text-blue-100">TRUNG TÂM QUẢN TRỊ SỐ HVA</div></div></div><div class="px-5 py-5 text-center"><div class="mx-auto w-14 h-14 rounded-full bg-${color}-50 text-${color}-600 flex items-center justify-center"><i class="bi ${icon} text-3xl"></i></div><div class="mt-4 text-[13px] leading-6 font-bold text-slate-700 whitespace-pre-line">${hvaKsbcEsc_(message)}</div><button type="button" class="mt-5 w-full rounded-xl bg-[#0F4C81] py-3 text-[11px] font-extrabold text-white">ĐÃ HIỂU</button></div></div>`;
+        modal.innerHTML = `<div class="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl border border-${color}-100"><div class="bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white flex items-center gap-3"><span class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center"><i class="bi bi-cpu-fill text-xl"></i></span><div><div class="text-[13px] font-black">${hvaKsbcEsc_(title)}</div><div class="text-[9px] text-blue-100">Trung tâm Điều hành số HVA</div></div></div><div class="px-5 py-5 text-center"><div class="mx-auto w-14 h-14 rounded-full bg-${color}-50 text-${color}-600 flex items-center justify-center"><i class="bi ${icon} text-3xl"></i></div><div class="mt-4 text-[13px] leading-6 font-bold text-slate-700 whitespace-pre-line">${hvaKsbcEsc_(message)}</div><button type="button" class="mt-5 w-full rounded-xl bg-[#0F4C81] py-3 text-[11px] font-extrabold text-white">ĐÃ HIỂU</button></div></div>`;
         const close = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
         modal.querySelector('button')?.addEventListener('click', close, {once:true}); modal.onclick = e => { if (e.target === modal) close(); };
         modal.classList.remove('hidden'); modal.classList.add('flex');
@@ -5667,11 +4919,10 @@ function approvalStageLabel_(s){
         loadMyMeetings();
     }, 900);
 
-    // HVA STABLE 30/09/2026:
-    // Tạm KHÔNG tự nạp khối XÁC NHẬN & GIẢI TRÌNH khi vừa mở Home.
-    // Lý do: dữ liệu tồn/kiểm thử trong nguồn họp đang làm panel tự xuất hiện lại.
-    // Không xóa dữ liệu, không sửa nghiệp vụ QR, không ảnh hưởng các menu khác.
-    // Khi ổn định nguồn dữ liệu, có thể bật lại bằng lời gọi loadMeetingAttendanceApprovals().
+    setTimeout(() => {
+        ensureMeetingApprovalPanel_();
+        loadMeetingAttendanceApprovals();
+    }, 6500);
 
 
     // ======================================================
@@ -5738,74 +4989,6 @@ function approvalStageLabel_(s){
     setTimeout(bindThiDuaVanBanPanelGuard_, 0);
     setTimeout(bindThiDuaVanBanPanelGuard_, 300);
     setTimeout(bindThiDuaVanBanPanelGuard_, 1200);
-
-    // ======================================================
-    // HSG 12 - MODAL CHỨC NĂNG ĐANG HOÀN THIỆN
-    // Dùng cho các mục chưa triển khai để không điều hướng 404.
-    // Sổ ghi đầu bài vẫn mở WebApp thật, không đi qua hàm này.
-    // ======================================================
-    window.closeHSG12ComingSoon = function(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        document.getElementById('hva-hsg12-coming-soon')?.remove();
-        document.body.classList.remove('overflow-hidden');
-    };
-
-    window.openHSG12ComingSoon = function(moduleName, event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        window.closeHSG12ComingSoon();
-
-        const safeName = String(moduleName || 'Học sinh giỏi 12')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-
-        const html = `
-            <div id="hva-hsg12-coming-soon"
-                 class="fixed inset-0 z-[10000] bg-slate-950/45 backdrop-blur-[2px] flex items-center justify-center p-4">
-                <div class="w-full max-w-[390px] overflow-hidden rounded-[26px] border border-orange-100 bg-white shadow-2xl">
-                    <div class="relative px-5 pt-6 pb-5 text-center bg-gradient-to-br from-orange-50 via-white to-amber-50">
-                        <button type="button"
-                                onclick="closeHSG12ComingSoon(event)"
-                                class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 border border-slate-100 text-slate-400 hover:text-slate-600 hover:bg-slate-50 flex items-center justify-center transition"
-                                aria-label="Đóng">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                        <div class="mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center shadow-lg shadow-orange-200/70">
-                            <i class="bi bi-mortarboard-fill text-[24px]"></i>
-                        </div>
-                        <div class="mt-4 text-[10px] font-extrabold tracking-[0.12em] text-orange-500 uppercase">Học sinh giỏi 12</div>
-                        <div class="mt-1 text-[16px] font-black text-[#123B67] leading-snug">${safeName}</div>
-                    </div>
-                    <div class="px-5 py-5 text-center">
-                        <div class="text-[15px] font-extrabold text-slate-700">Tính năng đang hoàn thiện</div>
-                        <div class="mt-2 text-[11px] leading-relaxed text-slate-500">HVA đang hoàn thiện chức năng này để bảo đảm dữ liệu và quy trình sử dụng được đồng bộ.</div>
-                        <button type="button"
-                                onclick="closeHSG12ComingSoon(event)"
-                                class="mt-5 w-full rounded-xl bg-[#0F4C81] hover:bg-[#123B67] px-4 py-2.5 text-[11px] font-extrabold text-white shadow-sm transition active:scale-[0.98]">
-                            ĐÃ HIỂU
-                        </button>
-                    </div>
-                </div>
-            </div>`;
-
-        document.body.insertAdjacentHTML('beforeend', html);
-        document.body.classList.add('overflow-hidden');
-
-        const modal = document.getElementById('hva-hsg12-coming-soon');
-        modal?.addEventListener('click', function(e) {
-            if (e.target === modal) window.closeHSG12ComingSoon(e);
-        });
-        return false;
-    };
 
     // ======================================================
     // THI ĐUA - KHEN THƯỞNG
@@ -6810,70 +5993,21 @@ function approvalStageLabel_(s){
     });
 
     // =====================================================
-    // ĐIỀU HÀNH SỐ
-    // Chỉ mở một nhóm chức năng tại một thời điểm.
+    // ĐIỀU HÀNH SỐ - 4 CỬA THEO ĐƠN VỊ
+    // Giai đoạn này chỉ chốt giao diện + phân quyền; chưa nối module con.
     // =====================================================
-    window.toggleHVADieuHanhSection = function(itemsId, arrowId) {
-        const target = document.getElementById(itemsId);
-        if (!target) return;
-        const willOpen = target.classList.contains('hidden');
-        [
-            ['dh-chung-items', 'dh-chung-arrow'],
-            ['dh-chuyenmon-items', 'dh-chuyenmon-arrow'],
-            ['dh-phongtrao-items', 'dh-phongtrao-arrow'],
-            ['dh-chatluong-items', 'dh-chatluong-arrow'],
-            ['dh-congdong-items', 'dh-congdong-arrow'],
-            ['dh-hotro-items', 'dh-hotro-arrow']
-        ].forEach(function(pair) {
-            const items = document.getElementById(pair[0]);
-            const arrow = document.getElementById(pair[1]);
-            if (items) items.classList.add('hidden');
-            if (arrow) arrow.classList.remove('rotate-90');
-        });
-        if (willOpen) {
-            target.classList.remove('hidden');
-            const arrow = document.getElementById(arrowId);
-            if (arrow) arrow.classList.add('rotate-90');
+    window.openHVADieuHanhRole = function(role, event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+        const ids = { BGH:'dhRoleBGH', TCM:'dhRoleTCM', TVP:'dhRoleTVP', DOAN:'dhRoleDOAN' };
+        const labels = { BGH:'Ban Giám hiệu', TCM:'Tổ chuyên môn', TVP:'Tổ Văn phòng', DOAN:'Đoàn Thanh niên' };
+        const btn = document.getElementById(ids[role]);
+        if (!btn || btn.dataset.allowed !== '1') {
+            const msg = 'Tài khoản chưa được cấp quyền vào ' + (labels[role] || 'chức năng này') + '.';
+            if (typeof showToast === 'function') showToast(msg); else alert(msg);
+            return;
         }
-    };
-
-    // =====================================================
-    // NGHIỆP VỤ SỐ → THI - CUỘC THI → HỌC SINH GIỎI 12
-    // Chỉ điều khiển 2 menu mới; không tác động các chức năng Home hiện hữu.
-    // =====================================================
-    window.toggleHVANghiepVuThiMenu = function(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        const items = document.getElementById('hva-thicuoc-thi-items');
-        const arrow = document.getElementById('hva-thicuoc-thi-arrow');
-        if (!items) return;
-
-        const open = items.classList.contains('hidden');
-        items.classList.toggle('hidden', !open);
-        if (arrow) arrow.classList.toggle('rotate-90', open);
-
-        if (!open) {
-            const hsgItems = document.getElementById('hva-hsg12-items');
-            const hsgArrow = document.getElementById('hva-hsg12-arrow');
-            if (hsgItems) hsgItems.classList.add('hidden');
-            if (hsgArrow) hsgArrow.classList.remove('rotate-90');
-        }
-    };
-
-    window.toggleHVAHSG12Menu = function(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        const items = document.getElementById('hva-hsg12-items');
-        const arrow = document.getElementById('hva-hsg12-arrow');
-        if (!items) return;
-
-        const open = items.classList.contains('hidden');
-        items.classList.toggle('hidden', !open);
-        if (arrow) arrow.classList.toggle('rotate-90', open);
+        const msg = (labels[role] || 'Chức năng') + ': giao diện nghiệp vụ sẽ được triển khai ở bước tiếp theo.';
+        if (typeof showToast === 'function') showToast(msg); else alert(msg);
     };
 
     // =====================================================
