@@ -6198,6 +6198,10 @@ function approvalStageLabel_(s){
     if (typeof showToast === 'function') showToast(msg); else alert(msg);
     return;
 }
+        if (role === 'BGH') {
+            showHVADieuHanhView('dhBGHView');
+            return;
+        }
         if (role === 'TCM') {
             window.openHVATCMMenu?.(event);
             return;
@@ -6209,11 +6213,7 @@ function approvalStageLabel_(s){
     function showHVADieuHanhView(viewId) {
         ['dhRoleView','dhBGHView','dhTCMView','dhTCMPlanView'].forEach(function(id) {
             const el = document.getElementById(id);
-            if (!el) return;
-            const isActive = id === viewId;
-            el.classList.toggle('hidden', !isActive);
-            el.style.display = isActive ? 'block' : 'none';
-            el.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+            if (el) el.classList.toggle('hidden', id !== viewId);
         });
         const dropdown = document.getElementById('dieuhanhso-dropdown');
         if (dropdown) dropdown.scrollTop = 0;
