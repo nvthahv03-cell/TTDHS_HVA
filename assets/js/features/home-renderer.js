@@ -3785,7 +3785,7 @@
     // LOGIC MENU XỔ DOWN / UP
     // ==========================================
     function initMenuLogic() {
-        window.toggleDashboardMenu = function(menuId, event) {
+        window.toggleDashboardMenu = function(menuId, event) { 
             if (event) event.stopPropagation();
             const targetMenu = document.getElementById(menuId);
             if (!targetMenu) return;
