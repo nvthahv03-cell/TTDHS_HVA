@@ -197,6 +197,7 @@
 
     <button id="btn-quick-search"
             type="button"
+            onclick="event.preventDefault(); event.stopPropagation(); const p=document.getElementById('search-panel'); if(p){p.classList.remove('hidden'); setTimeout(()=>document.getElementById('global-search-input')?.focus(),80);}"
             aria-label="Tìm nhanh"
             title="Tra cứu nhanh bằng chữ hoặc giọng nói"
             class="relative h-10 w-10 sm:w-auto sm:px-3 rounded-xl bg-white border border-slate-200 shadow-sm
