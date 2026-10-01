@@ -3685,10 +3685,9 @@
 
     async function submitHVASurveyAnswers_(item,answers) {
         const user=getCurrentHVAUser();
-        const payload={action:'submitSurveyPollResponse',surveyId:item.surveyId,username:user.username||user.userName||user.maGV||'',fullName:user.hoTen||user.fullName||user.name||'',answers:answers};
-        const response=window.HVAAuthRequest?.post
-            ? await window.HVAAuthRequest.post(MY_TASK_API_URL,payload)
-            : await fetch(MY_TASK_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+        const sessionToken=String(localStorage.getItem('hvaSessionToken')||'').trim();
+        const payload={action:'submitSurveyPollResponse',surveyId:item.surveyId,username:user.username||user.userName||user.maGV||'',fullName:user.hoTen||user.fullName||user.name||'',answers:answers,sessionToken:sessionToken};
+        const response=await fetch(MY_TASK_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
         const data=JSON.parse(await response.text());
         if(!data.success)return showHVAAppNotice_(data.message||'Không gửi được dữ liệu.',{kind:'error',title:'CHƯA HOÀN TẤT'});
         showHVAAppNotice_(item.objectType==='POLL' ? 'Thầy/cô đã hoàn thành bình chọn đúng thời hạn.\nChúc thầy/cô một ngày làm việc hiệu quả và hạnh phúc.' : 'Thầy/cô đã hoàn thành khảo sát đúng thời hạn.\nChúc thầy/cô một ngày làm việc hiệu quả và hạnh phúc.', {kind:'success',title:item.objectType==='POLL'?'ĐÃ GHI NHẬN BÌNH CHỌN':'ĐÃ GHI NHẬN KHẢO SÁT'});
