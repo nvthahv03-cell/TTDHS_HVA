@@ -4556,91 +4556,159 @@ setTimeout(() => {
     ===================================================== */
 
     async function searchDocuments(keyword) {
+        // HVA 01/10/2026:
+        // Tra cứu nhanh Văn bản dùng CHÍNH CÙNG NGUỒN với Kho văn bản số.
+        const LEGACY_KHO_VB_API =
+            'https://script.google.com/macros/s/AKfycbxFDN6m_2qIpa8kLfylsd0VE30SZntuIXf8SdA0UB-iAYuIK4weyuwvCU69n6jdUAP6/exec';
 
-        const url =
-            SEARCH_API +
-            '?action=searchVanBan' +
-            '&q=' + encodeURIComponent(keyword) +
-            '&_=' + Date.now();
+        const q = normalizePersonnelText(keyword);
 
-        const response = await fetch(url, {
-            cache: 'no-store'
-        });
+        let username = '';
+        try {
+            const currentUser = JSON.parse(
+                sessionStorage.getItem('user') ||
+                localStorage.getItem('user') ||
+                '{}'
+            );
+            username = String(currentUser?.username || '').trim();
+        } catch (_) {}
 
-        if (!response.ok) {
-            throw new Error('HTTP ' + response.status);
-        }
+        const legacyRequest = fetch(
+            LEGACY_KHO_VB_API + '?action=searchVanBan&_=' + Date.now(),
+            { cache: 'no-store' }
+        )
+        .then(async response => response.ok ? await response.json() : [])
+        .catch(() => []);
 
-        const data = await response.json();
+        const publishedRequest = username
+            ? fetch(
+                SEARCH_API +
+                '?action=getPublishedDocumentsByUser' +
+                '&username=' + encodeURIComponent(username) +
+                '&_=' + Date.now(),
+                { cache: 'no-store' }
+              )
+              .then(async response => response.ok ? await response.json() : ({ documents: [] }))
+              .catch(() => ({ documents: [] }))
+            : Promise.resolve({ documents: [] });
 
-        return unwrapArray(data).map((doc, index) => {
+        const [legacyResult, publishedResult] =
+            await Promise.all([legacyRequest, publishedRequest]);
 
+        const legacyRaw = Array.isArray(legacyResult)
+            ? legacyResult
+            : (legacyResult?.data || legacyResult?.result || []);
+
+        const publishedRaw = Array.isArray(publishedResult)
+            ? publishedResult
+            : (publishedResult?.documents ||
+               publishedResult?.data ||
+               publishedResult?.result ||
+               []);
+
+        const rawDocs = [...publishedRaw, ...legacyRaw];
+
+        const seen = new Set();
+        const docs = rawDocs.filter(doc => {
             const rawFile =
-                doc.fileID ||
-                doc.FileID ||
-                doc.fileId ||
-                doc.fileUrl ||
-                doc.FileUrl ||
-                doc.url ||
-                doc.link ||
-                '';
+                doc.fileID || doc.FileID || doc.fileId ||
+                doc.fileUrl || doc.FileUrl ||
+                doc.url || doc.Url ||
+                doc.link || doc.Link || '';
 
-            let fileUrl = '';
+            const id =
+                doc.id || doc.ID ||
+                doc.maVanBan || doc.MaVanBan || '';
 
-            if (rawFile) {
+            const soVB =
+                doc.soVanBan || doc.SoVanBan ||
+                doc.soVB || doc.SoVB || '';
 
-                fileUrl = String(rawFile).startsWith('http')
-                    ? String(rawFile)
-                    : 'https://drive.google.com/file/d/' +
-                      encodeURIComponent(rawFile) +
-                      '/view';
-            }
+            const ngayBH =
+                doc.ngayBanHanh || doc.NgayBanHanh ||
+                doc.ngayBH || doc.NgayBH || '';
 
-            return {
-                kind: 'VANBAN',
+            const trichYeu =
+                doc.trichYeu || doc.TrichYeu ||
+                doc.tenVanBan || doc.TenVanBan || '';
 
-                id:
-                    doc.id ||
-                    doc.ID ||
-                    ('VB_' + index),
+            const key = normalizePersonnelText(
+                rawFile || id || `${soVB}|${ngayBH}|${trichYeu}`
+            );
 
-                title:
-                    doc.displayTitle ||
-                    doc.trichYeu ||
-                    doc.TrichYeu ||
-                    doc.tenVanBan ||
-                    doc.TenVanBan ||
-                    doc.fileName ||
-                    'Văn bản',
-
-                meta:
-                    doc.soVanBan ||
-                    doc.SoVanBan ||
-                    doc.soVB ||
-                    'Văn bản',
-
-                extra:
-                    doc.coQuan ||
-                    doc.CoQuan ||
-                    '',
-
-                date:
-                    doc.ngayBanHanh ||
-                    doc.NgayBanHanh ||
-                    '',
-
-                direction:
-                    doc.luongVanBan ||
-                    doc.LuongVanBan ||
-                    doc.phanLoai ||
-                    doc.PhanLoai ||
-                    doc.nhomVanBan ||
-                    doc.NhomVanBan ||
-                    '',
-
-                url: fileUrl
-            };
+            if (!key || seen.has(key)) return false;
+            seen.add(key);
+            return true;
         });
+
+        return docs
+            .map((doc, index) => {
+                const rawFile =
+                    doc.fileID || doc.FileID || doc.fileId ||
+                    doc.fileUrl || doc.FileUrl ||
+                    doc.url || doc.Url ||
+                    doc.link || doc.Link || '';
+
+                let fileUrl = '';
+                if (rawFile) {
+                    fileUrl = String(rawFile).startsWith('http')
+                        ? String(rawFile)
+                        : 'https://drive.google.com/file/d/' +
+                          encodeURIComponent(rawFile) +
+                          '/view?usp=sharing';
+                }
+
+                const soVB =
+                    doc.soVanBan || doc.SoVanBan ||
+                    doc.soVB || doc.SoVB || '';
+
+                const trichYeu =
+                    doc.trichYeu || doc.TrichYeu ||
+                    doc.tenVanBan || doc.TenVanBan ||
+                    doc.fileName || 'Văn bản';
+
+                const coQuan =
+                    doc.coQuan || doc.CoQuan ||
+                    doc.coQuanBanHanh || doc.CoQuanBanHanh ||
+                    doc.donViBanHanh || doc.DonViBanHanh || '';
+
+                const nguoiKy =
+                    doc.nguoiKy || doc.NguoiKy || '';
+
+                const loaiVB =
+                    doc.loaiVanBan || doc.LoaiVanBan ||
+                    doc.loaiVB || doc.LoaiVB || '';
+
+                const direction =
+                    doc.luongVanBan || doc.LuongVanBan ||
+                    doc.phanLoai || doc.PhanLoai ||
+                    doc.nhomVanBan || doc.NhomVanBan ||
+                    doc.moduleKey || doc.ModuleKey || '';
+
+                const haystack = normalizePersonnelText(
+                    `${soVB} ${trichYeu} ${coQuan} ${nguoiKy} ${loaiVB}`
+                );
+
+                return {
+                    kind: 'VANBAN',
+                    id:
+                        doc.id || doc.ID ||
+                        doc.maVanBan || doc.MaVanBan ||
+                        ('VB_' + index),
+                    title: trichYeu,
+                    meta: soVB || 'Văn bản',
+                    extra: coQuan,
+                    date:
+                        doc.ngayBanHanh || doc.NgayBanHanh ||
+                        doc.ngayBH || doc.NgayBH || '',
+                    direction: direction,
+                    url: fileUrl,
+                    _haystack: haystack
+                };
+            })
+            // Tìm đúng như Kho: số VB + trích yếu + cơ quan + người ký + loại VB.
+            .filter(item => !q || item._haystack.includes(q))
+            .map(({ _haystack, ...item }) => item);
     }
 
 
