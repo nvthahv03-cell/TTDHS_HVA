@@ -6126,7 +6126,7 @@ function approvalStageLabel_(s){
         if (typeof showToast === 'function') showToast(msg); else alert(msg);
     };
 
-   function showHVADieuHanhView(viewId) {
+    function showHVADieuHanhView(viewId) {
         ['dhRoleView','dhTCMView','dhTCMPlanView'].forEach(function(id) {
             const el = document.getElementById(id);
             if (!el) return;
@@ -6178,7 +6178,6 @@ function approvalStageLabel_(s){
         const msg = (labels[feature] || 'Chức năng') + ' đang được hoàn thiện.';
         if (typeof showToast === 'function') showToast(msg); else alert(msg);
     };
-
 
     // =====================================================
     // NGHIỆP VỤ SỐ → HÀNH CHÍNH
