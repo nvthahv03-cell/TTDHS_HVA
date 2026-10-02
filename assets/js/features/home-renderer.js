@@ -3,14 +3,18 @@
     import { ModuleManager } from '../modules/module-manager.js';
     import { PWA } from '../services/pwa.js';
 
+    const HVA_HOME_VERSION = 'V.10.41.02.10.26';
+
     export function renderHome() {
         const container = $('#home-view');
         if (!container) return;
 
+        console.info(`[HVA VERSION] ${HVA_HOME_VERSION}`);
+
         container.innerHTML = `
 
     <style>
-      /* HVA Responsive Home V4 14/09/2026 - tiếp nhận khảo sát/bình chọn. */
+      /* HVA HOME V.10.41.02.10.26 - BASE V.10.40.02.10.26 - HIỂN THỊ + LOG PHIÊN BẢN. */
       #hva-main-modules {
         display: grid;
         grid-template-columns: minmax(0, 1fr) 78px minmax(0, 1fr);
@@ -1189,6 +1193,14 @@
             Năm học 2026–2027
         </span>
 
+        <span class="mx-1.5 text-blue-300">•</span>
+
+        <span id="hva-home-version"
+              class="font-bold text-slate-400 text-[9px]"
+              title="Phiên bản HVA đang chạy">
+            HVA · V.10.41.02.10.26
+        </span>
+
     </div>
 
 
@@ -1830,11 +1842,11 @@
                             <i class="bi bi-building-check text-emerald-600"></i>
                             <span>Báo cáo hành chính – Xin phép – Công vụ</span>
                         </a>
-                        <button type="button" onclick="event.stopPropagation(); alert('Nghiệp vụ Kê khai đang được hoàn thiện.');"
+                        <button type="button" onclick="event.stopPropagation(); window.hvaAlert('Nghiệp vụ Kê khai đang được hoàn thiện.');"
                                 class="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition text-left">
                             <i class="bi bi-ui-checks-grid"></i><span>Kê khai</span>
                         </button>
-                        <button type="button" onclick="event.stopPropagation(); alert('Nghiệp vụ Hồ sơ cá nhân đang được hoàn thiện.');"
+                        <button type="button" onclick="event.stopPropagation(); window.hvaAlert('Nghiệp vụ Hồ sơ cá nhân đang được hoàn thiện.');"
                                 class="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition text-left">
                             <i class="bi bi-person-vcard"></i><span>Hồ sơ cá nhân</span>
                         </button>
@@ -3033,7 +3045,7 @@
 
         window.openHVADriveNavigator = async function(event) {
             if (event) { event.preventDefault(); event.stopPropagation(); }
-            if (!hvaDriveAdminAllowed_()) { alert('Chức năng này chỉ dành cho BGH/Admin.'); return; }
+            if (!hvaDriveAdminAllowed_()) { window.hvaAlert('Chức năng này chỉ dành cho BGH/Admin.'); return; }
             document.querySelectorAll('[data-dropdown-menu]').forEach(x => x.classList.add('hidden'));
             const modal = document.getElementById('hvaDriveNavigatorModal');
             if (!modal) return;
@@ -3270,7 +3282,7 @@
                     if (typeof showToast === 'function') {
                         showToast('Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
                     } else {
-                        alert('Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
+                        window.hvaAlert('Chức năng này chưa được cấp quyền cho tài khoản của Thầy/Cô.');
                     }
                 });
             }
@@ -3401,7 +3413,7 @@
         if (document.getElementById('pwa-custom-popup')) return;
 
         const popupHtml = `
-        <div id="pwa-custom-popup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
+        <div id="pwa-custom-popup" class="fixed inset-0 z-[12000] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
             <div class="w-full max-w-xs bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 p-6 text-center">
                 
                 <!-- ANDROID -->
@@ -3563,15 +3575,15 @@
         }[char]));
     }
 
-    // Popup thống nhất của TT Điều hành số HVA, thay hộp thoại mặc định của trình duyệt.
+    // Popup thống nhất của TRUNG TÂM QUẢN TRỊ SỐ HVA - TRƯỜNG THPT HÒA VANG.
     function showHVAAppNotice_(message, options = {}) {
         const kind = options.kind || 'info';
         const title = options.title || 'THÔNG BÁO HỆ THỐNG';
         const icon = kind === 'success' ? 'bi-check-circle-fill' : kind === 'error' ? 'bi-exclamation-triangle-fill' : 'bi-info-circle-fill';
         const color = kind === 'success' ? 'emerald' : kind === 'error' ? 'rose' : 'blue';
         let modal = document.getElementById('hvaAppNoticeModal');
-        if (!modal) { modal = document.createElement('div'); modal.id = 'hvaAppNoticeModal'; modal.className = 'hidden fixed inset-0 z-[160] bg-slate-950/55 backdrop-blur-sm p-4 items-center justify-center'; document.body.appendChild(modal); }
-        modal.innerHTML = `<div class="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl border border-${color}-100"><div class="bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white flex items-center gap-3"><span class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center"><i class="bi bi-cpu-fill text-xl"></i></span><div><div class="text-[13px] font-black">${hvaKsbcEsc_(title)}</div><div class="text-[9px] text-blue-100">Trung tâm Điều hành số HVA</div></div></div><div class="px-5 py-5 text-center"><div class="mx-auto w-14 h-14 rounded-full bg-${color}-50 text-${color}-600 flex items-center justify-center"><i class="bi ${icon} text-3xl"></i></div><div class="mt-4 text-[13px] leading-6 font-bold text-slate-700 whitespace-pre-line">${hvaKsbcEsc_(message)}</div><button type="button" class="mt-5 w-full rounded-xl bg-[#0F4C81] py-3 text-[11px] font-extrabold text-white">ĐÃ HIỂU</button></div></div>`;
+        if (!modal) { modal = document.createElement('div'); modal.id = 'hvaAppNoticeModal'; modal.className = 'hidden fixed inset-0 z-[13000] bg-slate-950/55 backdrop-blur-sm p-4 items-center justify-center'; document.body.appendChild(modal); }
+        modal.innerHTML = `<div class="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl border border-${color}-100"><div class="bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white flex items-center gap-3"><span class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center"><i class="bi bi-cpu-fill text-xl"></i></span><div><div class="text-[13px] font-black">${hvaKsbcEsc_(title)}</div><div class="text-[9px] text-blue-100 font-bold">TRUNG TÂM QUẢN TRỊ SỐ HVA</div><div class="text-[8.5px] text-blue-100/90">TRƯỜNG THPT HÒA VANG</div></div></div><div class="px-5 py-5 text-center"><div class="mx-auto w-14 h-14 rounded-full bg-${color}-50 text-${color}-600 flex items-center justify-center"><i class="bi ${icon} text-3xl"></i></div><div class="mt-4 text-[13px] leading-6 font-bold text-slate-700 whitespace-pre-line">${hvaKsbcEsc_(message)}</div><button type="button" class="mt-5 w-full rounded-xl bg-[#0F4C81] py-3 text-[11px] font-extrabold text-white">ĐÃ HIỂU</button></div></div>`;
         const close = () => {
     modal.remove();
 };
@@ -3580,11 +3592,50 @@
     }
     window.hvaNotify = showHVAAppNotice_;
 
+    // HVA UI DIALOG CORE - dùng chung, không dùng hộp thoại native của trình duyệt.
+    window.hvaAlert = function(message, options = {}) {
+        showHVAAppNotice_(String(message == null ? '' : message), options);
+    };
+
+    window.hvaConfirm = function(message, options = {}) {
+        return new Promise(resolve => {
+            document.getElementById('hvaAppConfirmModal')?.remove();
+            const title = options.title || 'XÁC NHẬN';
+            const modal = document.createElement('div');
+            modal.id = 'hvaAppConfirmModal';
+            modal.className = 'fixed inset-0 z-[13100] bg-slate-950/55 backdrop-blur-sm p-4 flex items-center justify-center';
+            modal.innerHTML = `<div class="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl border border-blue-100"><div class="bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white flex items-center gap-3"><span class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center"><i class="bi bi-cpu-fill text-xl"></i></span><div><div class="text-[13px] font-black">${hvaKsbcEsc_(title)}</div><div class="text-[9px] text-blue-100 font-bold">TRUNG TÂM QUẢN TRỊ SỐ HVA</div><div class="text-[8.5px] text-blue-100/90">TRƯỜNG THPT HÒA VANG</div></div></div><div class="px-5 py-5"><div class="text-[13px] leading-6 font-bold text-slate-700 whitespace-pre-line text-center">${hvaKsbcEsc_(message)}</div><div class="mt-5 grid grid-cols-2 gap-2"><button type="button" data-no class="rounded-xl bg-slate-100 py-3 text-[11px] font-extrabold text-slate-600">HỦY</button><button type="button" data-yes class="rounded-xl bg-[#0F4C81] py-3 text-[11px] font-extrabold text-white">XÁC NHẬN</button></div></div></div>`;
+            const done = value => { modal.remove(); resolve(value); };
+            modal.querySelector('[data-no]')?.addEventListener('click', () => done(false), {once:true});
+            modal.querySelector('[data-yes]')?.addEventListener('click', () => done(true), {once:true});
+            modal.addEventListener('click', e => { if (e.target === modal) done(false); });
+            document.body.appendChild(modal);
+        });
+    };
+
+    window.hvaPrompt = function(message, defaultValue = '', options = {}) {
+        return new Promise(resolve => {
+            document.getElementById('hvaAppPromptModal')?.remove();
+            const title = options.title || 'NHẬP THÔNG TIN';
+            const modal = document.createElement('div');
+            modal.id = 'hvaAppPromptModal';
+            modal.className = 'fixed inset-0 z-[13100] bg-slate-950/55 backdrop-blur-sm p-4 flex items-center justify-center';
+            modal.innerHTML = `<div class="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl border border-blue-100"><div class="bg-gradient-to-r from-[#0F4C81] to-[#1687D9] px-5 py-4 text-white flex items-center gap-3"><span class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center"><i class="bi bi-cpu-fill text-xl"></i></span><div><div class="text-[13px] font-black">${hvaKsbcEsc_(title)}</div><div class="text-[9px] text-blue-100 font-bold">TRUNG TÂM QUẢN TRỊ SỐ HVA</div><div class="text-[8.5px] text-blue-100/90">TRƯỜNG THPT HÒA VANG</div></div></div><div class="px-5 py-5"><div class="text-[12px] leading-5 font-bold text-slate-700 whitespace-pre-line">${hvaKsbcEsc_(message)}</div><textarea data-input rows="4" class="mt-3 w-full rounded-xl border border-slate-200 p-3 text-[12px] outline-none focus:border-blue-400">${hvaKsbcEsc_(defaultValue)}</textarea><div class="mt-4 grid grid-cols-2 gap-2"><button type="button" data-no class="rounded-xl bg-slate-100 py-3 text-[11px] font-extrabold text-slate-600">HỦY</button><button type="button" data-yes class="rounded-xl bg-[#0F4C81] py-3 text-[11px] font-extrabold text-white">ĐỒNG Ý</button></div></div></div>`;
+            const input = modal.querySelector('[data-input]');
+            const done = value => { modal.remove(); resolve(value); };
+            modal.querySelector('[data-no]')?.addEventListener('click', () => done(null), {once:true});
+            modal.querySelector('[data-yes]')?.addEventListener('click', () => done(input ? input.value : ''), {once:true});
+            modal.addEventListener('click', e => { if (e.target === modal) done(null); });
+            document.body.appendChild(modal);
+            setTimeout(() => input?.focus(), 0);
+        });
+    };
+
     function ensureHVASurveyPollModal_() {
         if (document.getElementById('hvaSurveyPollModal')) return;
         const modal = document.createElement('div');
         modal.id = 'hvaSurveyPollModal';
-        modal.className = 'hidden fixed inset-0 z-[120] bg-slate-950/60 backdrop-blur-sm p-2 sm:p-4 items-center justify-center';
+        modal.className = 'hidden fixed inset-0 z-[12000] bg-slate-950/60 backdrop-blur-sm p-2 sm:p-4 items-center justify-center';
         modal.innerHTML = `<div class="bg-white w-full max-w-2xl max-h-[92vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
           <header class="px-4 py-3 bg-gradient-to-r from-emerald-600 to-green-500 text-white flex items-center justify-between">
             <div><b class="text-sm">KHẢO SÁT – BÌNH CHỌN</b><div class="text-[9px] text-emerald-50">Nội dung được gửi đến Thầy/Cô</div></div>
@@ -3665,13 +3716,13 @@
     window.submitHVASurveyPoll = async function(surveyId) {
         const item=HVA_SURVEY_POLL_ITEMS.find(x=>String(x.surveyId)===String(surveyId)), card=document.querySelector(`[data-ksbc-id="${CSS.escape(String(surveyId))}"]`);
         if(!item||!card)return; const q=(item.questions||[])[0];
-        const selected=[...card.querySelectorAll('input:checked')].map(x=>x.value); if(!selected.length)return alert('Vui lòng chọn một phương án.');
+        const selected=[...card.querySelectorAll('input:checked')].map(x=>x.value); if(!selected.length)return window.hvaAlert('Vui lòng chọn một phương án.');
         await submitHVASurveyAnswers_(item,[{questionId:q?.id||'Q1',question:q?.text||item.title,answer:selected}]);
     };
 
-    window.openHVASurveyForm = function(surveyId) {
+    window.openHVASurveyForm = async function(surveyId) {
         const item=HVA_SURVEY_POLL_ITEMS.find(x=>String(x.surveyId)===String(surveyId)); if(!item)return;
-        if(item.surveyType==='external' && item.externalUrl){window.open(item.externalUrl,'_blank','noopener'); if(confirm('Thầy/Cô đã hoàn thành khảo sát trên liên kết vừa mở?')) submitHVASurveyAnswers_(item,[]); return;}
+        if(item.surveyType==='external' && item.externalUrl){window.open(item.externalUrl,'_blank','noopener'); if(await window.hvaConfirm('Thầy/Cô đã hoàn thành khảo sát trên liên kết vừa mở?', {title:'XÁC NHẬN KHẢO SÁT'})) await submitHVASurveyAnswers_(item,[]); return;}
         const card=document.querySelector(`[data-ksbc-id="${CSS.escape(String(surveyId))}"]`), questions=Array.isArray(item.questions)?item.questions:[];
         card.querySelector('.p-3, .p-4').innerHTML += `<form class="mt-3 space-y-3" data-ksbc-form>${questions.map((q,i)=>`<div><b class="text-[11px]">${i+1}. ${hvaKsbcEsc_(q.text)}</b>${['single','multi'].includes(q.kind)?`<div class="mt-2 space-y-1">${(q.options||[]).filter(Boolean).map(o=>`<label class="flex gap-2 p-2 border rounded-lg"><input type="${q.kind==='multi'?'checkbox':'radio'}" name="q-${hvaKsbcEsc_(q.id)}" value="${hvaKsbcEsc_(o)}">${hvaKsbcEsc_(o)}</label>`).join('')}</div>`:q.kind==='scale'?`<select name="q-${hvaKsbcEsc_(q.id)}" class="mt-2 w-full border rounded-xl p-2"><option value="">Chọn mức</option>${[1,2,3,4,5].map(n=>`<option>${n}</option>`).join('')}</select>`:`<textarea name="q-${hvaKsbcEsc_(q.id)}" class="mt-2 w-full border rounded-xl p-2" rows="3"></textarea>`}</div>`).join('')}<button type="button" class="w-full py-3 rounded-xl bg-blue-600 text-white text-[11px] font-extrabold" onclick="window.submitHVAInternalSurvey('${hvaKsbcEsc_(surveyId)}')">GỬI KHẢO SÁT</button></form>`;
         card.querySelector('button[onclick^="window.openHVASurveyForm"]')?.remove();
@@ -3680,7 +3731,7 @@
     window.submitHVAInternalSurvey = async function(surveyId) {
         const item=HVA_SURVEY_POLL_ITEMS.find(x=>String(x.surveyId)===String(surveyId)), card=document.querySelector(`[data-ksbc-id="${CSS.escape(String(surveyId))}"]`), form=card?.querySelector('[data-ksbc-form]'); if(!item||!form)return;
         const answers=(item.questions||[]).map(q=>{const nodes=[...form.querySelectorAll(`[name="q-${CSS.escape(String(q.id))}"]`)];const chosen=nodes.filter(n=>n.checked||!['radio','checkbox'].includes(n.type)).map(n=>n.value).filter(Boolean);return{questionId:q.id,question:q.text,answer:chosen};});
-        if(answers.some(a=>!a.answer.length))return alert('Vui lòng trả lời đầy đủ các câu hỏi.'); await submitHVASurveyAnswers_(item,answers);
+        if(answers.some(a=>!a.answer.length))return window.hvaAlert('Vui lòng trả lời đầy đủ các câu hỏi.'); await submitHVASurveyAnswers_(item,answers);
     };
 
     async function submitHVASurveyAnswers_(item,answers) {
@@ -4086,7 +4137,7 @@
             String(item.meetingId || '') === String(meetingId || '')
         );
         if (!meeting) {
-            alert('Không tìm thấy dữ liệu cuộc họp.');
+            window.hvaAlert('Không tìm thấy dữ liệu cuộc họp.');
             return;
         }
 
@@ -4209,7 +4260,7 @@
 
     window.registerMeetingSpeak = async function(meetingId) {
         const username = getCurrentHVAUser();
-        if (!username) return alert('Không xác định được tài khoản đang đăng nhập.');
+        if (!username) return window.hvaAlert('Không xác định được tài khoản đang đăng nhập.');
         try {
             const response = await fetch(MY_TASK_API_URL, {
                 method: 'POST',
@@ -4217,10 +4268,10 @@
                 body: JSON.stringify({action:'registerMeetingSpeak', meetingId, username})
             });
             const result = await response.json();
-            if (!result || result.success !== true) return alert((result && result.message) || 'Không đăng ký được phát biểu.');
-            alert(result.message || 'Đã đăng ký phát biểu.');
+            if (!result || result.success !== true) return window.hvaAlert((result && result.message) || 'Không đăng ký được phát biểu.');
+            window.hvaAlert(result.message || 'Đã đăng ký phát biểu.');
         } catch (e) {
-            alert('Có lỗi khi đăng ký phát biểu: ' + e.message);
+            window.hvaAlert('Có lỗi khi đăng ký phát biểu: ' + e.message);
         }
     };
 
@@ -4252,24 +4303,13 @@
     }
 
     window.hvaMeetingConfirmDialog = function(message) {
-        return new Promise(resolve => {
-            document.getElementById('hva-meeting-confirm-dialog')?.remove();
-            const el = document.createElement('div');
-            el.id = 'hva-meeting-confirm-dialog';
-            el.className = 'fixed inset-0 z-[10060] bg-slate-950/45 flex items-center justify-center p-4';
-            el.innerHTML = `<div class="w-full max-w-sm rounded-2xl bg-white shadow-2xl p-5"><div class="text-sm font-black text-slate-800">XÁC NHẬN CUỘC HỌP</div><div class="mt-2 text-xs text-slate-600">${escapeMyWorkHtml(message || '')}</div><div class="mt-5 grid grid-cols-2 gap-2"><button data-no class="h-10 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold">HỦY</button><button data-yes class="h-10 rounded-xl bg-[#0F4C81] text-white text-xs font-black">XÁC NHẬN</button></div></div>`;
-            const done = v => { el.remove(); resolve(v); };
-            el.querySelector('[data-no]')?.addEventListener('click', () => done(false));
-            el.querySelector('[data-yes]')?.addEventListener('click', () => done(true));
-            el.addEventListener('click', e => { if (e.target === el) done(false); });
-            document.body.appendChild(el);
-        });
+        return window.hvaConfirm(message, { title:'XÁC NHẬN CUỘC HỌP' });
     };
 
     window.confirmMyMeetingAttendance = async function(meetingId) {
         const user = getCurrentHVAUser();
         const username = user.username || user.userName || user.maGV || '';
-        if (!username) return alert('Không xác định được tài khoản người dùng.');
+        if (!username) return window.hvaAlert('Không xác định được tài khoản người dùng.');
         if (!(await window.hvaMeetingConfirmDialog?.('Xác nhận tham dự cuộc họp này?'))) return;
 
         try {
@@ -4279,15 +4319,15 @@
                 username: username
             });
             if (!result || result.success !== true) {
-                alert((result && result.message) || 'Không thể xác nhận tham dự.');
+                window.hvaAlert((result && result.message) || 'Không thể xác nhận tham dự.');
                 return;
             }
-            alert(result.message || 'Đã xác nhận tham dự cuộc họp.');
+            window.hvaAlert(result.message || 'Đã xác nhận tham dự cuộc họp.');
             closeMyMeetingDetail();
             await loadMyMeetings();
         } catch (error) {
             console.error('[HVA] Lỗi xác nhận tham dự:', error);
-            alert('Có lỗi khi xác nhận tham dự.');
+            window.hvaAlert('Có lỗi khi xác nhận tham dự.');
         }
     };
 
@@ -4296,8 +4336,8 @@
         const username = user.username || user.userName || user.maGV || '';
         const input = document.getElementById('myMeetingAbsenceReason');
         const reason = input ? input.value.trim() : '';
-        if (!username) return alert('Không xác định được tài khoản người dùng.');
-        if (!reason) return alert('Vui lòng nhập lý do xin vắng.');
+        if (!username) return window.hvaAlert('Không xác định được tài khoản người dùng.');
+        if (!reason) return window.hvaAlert('Vui lòng nhập lý do xin vắng.');
 
         try {
             const result = await postMyMeetingAction({
@@ -4307,15 +4347,15 @@
                 reason: reason
             });
             if (!result || result.success !== true) {
-                alert((result && result.message) || 'Không thể gửi yêu cầu xin vắng.');
+                window.hvaAlert((result && result.message) || 'Không thể gửi yêu cầu xin vắng.');
                 return;
             }
-            alert(result.message || 'Đã gửi yêu cầu xin vắng.');
+            window.hvaAlert(result.message || 'Đã gửi yêu cầu xin vắng.');
             closeMyMeetingDetail();
             await loadMyMeetings();
         } catch (error) {
             console.error('[HVA] Lỗi gửi xin vắng:', error);
-            alert('Có lỗi khi gửi yêu cầu xin vắng.');
+            window.hvaAlert('Có lỗi khi gửi yêu cầu xin vắng.');
         }
     };
 
@@ -4384,13 +4424,13 @@
 
     window.openMeetingQrScanner = async function(meetingId, scanMode = 'IN') {
         const meeting = HVA_MY_MEETINGS.find(item => String(item.meetingId || '') === String(meetingId || ''));
-        if (!meeting) return alert('Không tìm thấy cuộc họp.');
-        if (meeting.attendanceEnabled !== true) return alert('Cuộc họp này không bật điểm danh QR.');
+        if (!meeting) return window.hvaAlert('Không tìm thấy cuộc họp.');
+        if (meeting.attendanceEnabled !== true) return window.hvaAlert('Cuộc họp này không bật điểm danh QR.');
         scanMode = String(scanMode || 'IN').toUpperCase();
-        if (scanMode === 'IN' && meeting.checkIn === true) return alert('Thầy/Cô đã điểm danh vào cuộc họp này.');
-        if (scanMode === 'OUT' && meeting.checkOut === true) return alert('Thầy/Cô đã ghi nhận QR ra cuộc họp này.');
+        if (scanMode === 'IN' && meeting.checkIn === true) return window.hvaAlert('Thầy/Cô đã điểm danh vào cuộc họp này.');
+        if (scanMode === 'OUT' && meeting.checkOut === true) return window.hvaAlert('Thầy/Cô đã ghi nhận QR ra cuộc họp này.');
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            return alert('Thiết bị/trình duyệt này không hỗ trợ mở camera trong ứng dụng.');
+            return window.hvaAlert('Thiết bị/trình duyệt này không hỗ trợ mở camera trong ứng dụng.');
         }
 
         closeMeetingQrScanner();
@@ -4506,7 +4546,7 @@
         const username = user.username || user.userName || user.maGV || '';
         if (!username) {
             closeMeetingQrScanner();
-            return alert('Không xác định được tài khoản đang đăng nhập.');
+            return window.hvaAlert('Không xác định được tài khoản đang đăng nhập.');
         }
 
         stopMeetingQrCamera();
@@ -4531,7 +4571,7 @@
                 closeMeetingQrScanner();
                 closeMyMeetingDetail();
                 await loadMyMeetings();
-                alert(result.message || 'Điểm danh thành công.');
+                window.hvaAlert(result.message || 'Điểm danh thành công.');
             }, 700);
         } catch (error) {
             console.error('[HVA] Lỗi điểm danh QR:', error);
@@ -4996,7 +5036,7 @@ function approvalStageLabel_(s){
 
     window.openMeetingAttendanceApproval=function(id){
         const a=HVA_MEETING_APPROVALS.find(x=>String(x.id)===String(id));
-        if(!a)return alert('Không tìm thấy lượt xác nhận.');
+        if(!a)return window.hvaAlert('Không tìm thấy lượt xác nhận.');
 
         HVA_MEETING_EXPLANATIONS={};
         const parts=a.participants||[], s=a.summary||{};
@@ -5047,15 +5087,16 @@ function approvalStageLabel_(s){
         document.body.insertAdjacentHTML('beforeend',html);
     };
 
-    window.openMeetingExplanation=function(approvalId,username){
+    window.openMeetingExplanation=async function(approvalId,username){
         const a=HVA_MEETING_APPROVALS.find(x=>String(x.id)===String(approvalId));
         const p=a&&(a.participants||[]).find(x=>String(x.username)===String(username));
         if(!p)return;
 
         const old=(HVA_MEETING_EXPLANATIONS[username]&&HVA_MEETING_EXPLANATIONS[username].content)||'';
-        const content=prompt(
+        const content=await window.hvaPrompt(
           `${p.hoTen||username}\nHVA: ${p.systemStatus||''}\n\nNhập nội dung giải trình (không thay đổi dữ liệu QR):`,
-          old
+          old,
+          {title:'GIẢI TRÌNH ĐIỂM DANH'}
         );
         if(content===null)return;
 
@@ -5081,14 +5122,14 @@ function approvalStageLabel_(s){
 
     window.submitMeetingAttendanceApproval=async function(id){
         const a=HVA_MEETING_APPROVALS.find(x=>String(x.id)===String(id));
-        if(!a)return alert('Không tìm thấy lượt xác nhận.');
+        if(!a)return window.hvaAlert('Không tìm thấy lượt xác nhận.');
 
         const exps=Object.values(HVA_MEETING_EXPLANATIONS);
         const s=a.summary||{};
         const msg=`Xác nhận dữ liệu HVA ghi nhận cho ${s.total||0} thành viên?`+
           (exps.length?`\nCó ${exps.length} giải trình kèm theo.`:'');
 
-        if(!confirm(msg))return;
+        if(!(await window.hvaConfirm(msg, {title:'XÁC NHẬN DỮ LIỆU'})))return;
 
         const btn=document.getElementById('hvaConfirmApprovalBtn');
         if(btn){btn.disabled=true;btn.innerHTML='ĐANG XÁC NHẬN...';btn.classList.add('opacity-70');}
@@ -5109,10 +5150,10 @@ function approvalStageLabel_(s){
           if(!d||d.success!==true)throw new Error((d&&d.message)||'Không xác nhận được.');
 
           document.getElementById('hvaApprovalModal')?.remove();
-          alert((d.message||'Đã xác nhận.')+(d.explanations?` Có ${d.explanations} giải trình.`:''));
+          window.hvaAlert((d.message||'Đã xác nhận.')+(d.explanations?` Có ${d.explanations} giải trình.`:''));
           await loadMeetingAttendanceApprovals();
         }catch(e){
-          alert('Lỗi xác nhận: '+e.message);
+          window.hvaAlert('Lỗi xác nhận: '+e.message);
           if(btn){btn.disabled=false;btn.innerHTML='✓ XÁC NHẬN DỮ LIỆU HỆ THỐNG';btn.classList.remove('opacity-70');}
         }
     };
@@ -5315,11 +5356,11 @@ function approvalStageLabel_(s){
               <button type="button" onclick="event.preventDefault(); event.stopImmediatePropagation(); document.getElementById('hva-thidua-khbc-modal')?.remove(); document.body.classList.remove('overflow-hidden'); return false;" class="w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="p-4 space-y-3">
-              <button type="button" onclick="event.preventDefault(); event.stopPropagation(); alert('Kế hoạch tháng của tổ sẽ tự động hiển thị tại đây sau khi TTCM phát hành.');" class="w-full p-4 rounded-2xl border border-blue-100 bg-blue-50/60 hover:bg-blue-50 text-left flex items-center gap-3 transition">
+              <button type="button" onclick="event.preventDefault(); event.stopPropagation(); window.hvaAlert('Kế hoạch tháng của tổ sẽ tự động hiển thị tại đây sau khi TTCM phát hành.');" class="w-full p-4 rounded-2xl border border-blue-100 bg-blue-50/60 hover:bg-blue-50 text-left flex items-center gap-3 transition">
                 <div class="w-11 h-11 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0"><i class="bi bi-file-earmark-pdf-fill"></i></div>
                 <div class="min-w-0 flex-1"><div class="text-[12px] font-extrabold text-[#123B67]">KẾ HOẠCH CÔNG VIỆC THÁNG CỦA TỔ</div><div class="text-[9.5px] text-slate-500 mt-1">Xem • Tải kế hoạch đã được TTCM phát hành</div></div><i class="bi bi-chevron-right text-slate-400"></i>
               </button>
-              <button type="button" onclick="event.preventDefault(); event.stopPropagation(); alert('Chức năng Báo cáo thực hiện kế hoạch tháng sẽ được nối sau khi luồng phát hành kế hoạch tháng hoàn tất.');" class="w-full p-4 rounded-2xl border border-cyan-100 bg-cyan-50/60 hover:bg-cyan-50 text-left flex items-center gap-3 transition">
+              <button type="button" onclick="event.preventDefault(); event.stopPropagation(); window.hvaAlert('Chức năng Báo cáo thực hiện kế hoạch tháng sẽ được nối sau khi luồng phát hành kế hoạch tháng hoàn tất.');" class="w-full p-4 rounded-2xl border border-cyan-100 bg-cyan-50/60 hover:bg-cyan-50 text-left flex items-center gap-3 transition">
                 <div class="w-11 h-11 rounded-xl bg-cyan-600 text-white flex items-center justify-center shrink-0"><i class="bi bi-clipboard2-check-fill"></i></div>
                 <div class="min-w-0 flex-1"><div class="text-[12px] font-extrabold text-[#123B67]">BÁO CÁO THỰC HIỆN KẾ HOẠCH THÁNG</div><div class="text-[9.5px] text-slate-500 mt-1">Kết quả • Tiến độ • Minh chứng • Ghi chú</div></div><i class="bi bi-chevron-right text-slate-400"></i>
               </button>
@@ -5634,7 +5675,7 @@ function approvalStageLabel_(s){
     window.openHVAReminderModal = async function(event) {
         if (event) { event.preventDefault(); event.stopPropagation(); }
         if (!isHVAReminderManager()) {
-            alert('Tài khoản chưa được cấp quyền sử dụng tác vụ Nhắc nhở công vụ.');
+            window.hvaAlert('Tài khoản chưa được cấp quyền sử dụng tác vụ Nhắc nhở công vụ.');
             return;
         }
         const modal = document.getElementById('hva-reminder-modal');
@@ -6220,7 +6261,7 @@ function approvalStageLabel_(s){
     if (dropdown) dropdown.classList.add('hidden');
 
     const msg = 'Tài khoản chưa được cấp quyền vào ' + (labels[role] || 'chức năng này') + '.';
-    if (typeof showToast === 'function') showToast(msg); else alert(msg);
+    if (typeof showToast === 'function') showToast(msg); else window.hvaAlert(msg);
     return;
 }
         if (role === 'BGH') {
@@ -6232,7 +6273,7 @@ function approvalStageLabel_(s){
             return;
         }
         const msg = (labels[role] || 'Chức năng') + ': giao diện nghiệp vụ sẽ được triển khai ở bước tiếp theo.';
-        if (typeof showToast === 'function') showToast(msg); else alert(msg);
+        if (typeof showToast === 'function') showToast(msg); else window.hvaAlert(msg);
     };
 
     function showHVADieuHanhView(viewId) {
@@ -6292,7 +6333,7 @@ window.openHVABGHFeature = function(feature, event) {
         if (!modal) {
             modal = document.createElement('div');
             modal.id = 'hvaBGHReuseMenu';
-            modal.className = 'hidden fixed inset-0 z-[170] bg-slate-950/45 backdrop-blur-sm p-4 items-center justify-center';
+            modal.className = 'hidden fixed inset-0 z-[12000] bg-slate-950/45 backdrop-blur-sm p-4 items-center justify-center';
             document.body.appendChild(modal);
         }
         modal.innerHTML = `
@@ -6335,7 +6376,7 @@ window.openHVABGHFeature = function(feature, event) {
         GIAMSAT:'Theo dõi – Giám sát'
     };
     const msg = (labels[feature] || 'Chức năng') + ' đang được hoàn thiện.';
-    if (typeof showToast === 'function') showToast(msg); else alert(msg);
+    if (typeof showToast === 'function') showToast(msg); else window.hvaAlert(msg);
 };
 
 window.openHVATCMMenu = function(event) {
@@ -6343,7 +6384,7 @@ window.openHVATCMMenu = function(event) {
         const btn = document.getElementById('dhRoleTCM');
         if (!btn || btn.dataset.allowed !== '1') {
             if (typeof showToast === 'function') showToast('Tài khoản chưa được cấp quyền vào Tổ chuyên môn.');
-            else alert('Tài khoản chưa được cấp quyền vào Tổ chuyên môn.');
+            else window.hvaAlert('Tài khoản chưa được cấp quyền vào Tổ chuyên môn.');
             return;
         }
         showHVADieuHanhView('dhTCMView');
@@ -6368,14 +6409,14 @@ window.openHVATCMMenu = function(event) {
         if (event) { event.preventDefault(); event.stopPropagation(); }
         const labels = { CONGVIEC:'Công việc', HOPTO:'Họp tổ', THEODOI:'Theo dõi', BAOCAO:'Báo cáo' };
         const msg = (labels[feature] || 'Chức năng') + ' đang được hoàn thiện.';
-        if (typeof showToast === 'function') showToast(msg); else alert(msg);
+        if (typeof showToast === 'function') showToast(msg); else window.hvaAlert(msg);
     };
 
     window.openHVATCMPlanFeature = function(feature, event) {
         if (event) { event.preventDefault(); event.stopPropagation(); }
         const labels = { MAUKH:'Mẫu kế hoạch', NOPBGH:'Nộp BGH', BANDADUYET:'Bản đã duyệt' };
         const msg = (labels[feature] || 'Chức năng') + ' đang được hoàn thiện.';
-        if (typeof showToast === 'function') showToast(msg); else alert(msg);
+        if (typeof showToast === 'function') showToast(msg); else window.hvaAlert(msg);
     };
 
     // =====================================================
