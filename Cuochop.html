@@ -755,49 +755,6 @@ function updateMeetingSelectionUI() {
 
 
   
-function meetingGroupSection(title,icon,groups,kw,sectionKey=''){
-  if(!groups.length)return '';
-  const rows=groups.map(g=>{
-    const mm=g.members.filter(m=>[m.hoTen,m.username,m.chucVu,m.tenTo].some(v=>String(v||'').toLowerCase().includes(kw)));
-    const matchG=String(g.tenTo).toLowerCase().includes(kw);
-    if(kw&&!matchG&&!mm.length)return '';
-    const show=kw&&!matchG?mm:g.members;
-    const all=g.members.length&&g.members.every(m=>meetingSelectedUsernames.has(m.username));
-    const id='mg_'+Math.abs(hashMeetingGroup(g.groupKey));
-    return `<div class="rounded-xl border border-slate-200 bg-white overflow-hidden"><div class="px-3 py-2.5 flex items-center justify-between gap-2"><button type="button" onclick="$('${id}').classList.toggle('hidden')" class="flex-1 text-left text-[11px] font-bold text-[#0F4C81]"><i class="bi bi-chevron-right mr-2 text-slate-400"></i>${esc(g.tenTo)} <span class="text-slate-400">${g.members.length}</span></button><label class="text-[9px] font-semibold bg-white border rounded-lg px-2 py-1"><input type="checkbox" ${all?'checked':''} onchange="toggleMeetingWholeGroup('${encodeURIComponent(g.groupKey)}',this.checked)"> Chọn nhóm</label></div><div id="${id}" class="${kw?'':'hidden'} p-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5 border-t bg-blue-50/20">${show.map(m=>`<label class="flex items-center gap-2 p-2 rounded-lg border ${meetingSelectedUsernames.has(m.username)?'border-blue-300 bg-blue-50':'border-slate-200 bg-white'}"><input type="checkbox" ${meetingSelectedUsernames.has(m.username)?'checked':''} onchange="toggleMeetingUser('${esc(m.username)}',this.checked)"><div class="min-w-0"><div class="text-[10px] font-bold truncate">${esc(m.hoTen)}</div><div class="text-[9px] text-slate-400 truncate">${m.lopChuNhiem?'GVCN '+esc(m.lopChuNhiem)+' · ':''}${esc(m.chucVu)}${m.tenTo?' · '+esc(m.tenTo):''}</div></div></label>`).join('')}</div></div>`;
-  }).join('');
-  if(!rows)return '';
-  const sectionUsers=[...new Set(groups.flatMap(g=>g.members.map(m=>m.username)).filter(Boolean))];
-  const sectionAll=sectionUsers.length&&sectionUsers.every(u=>meetingSelectedUsernames.has(u));
-  const sectionAction=sectionKey?`<label class="text-[9px] normal-case font-semibold bg-white border rounded-lg px-2 py-1"><input type="checkbox" ${sectionAll?'checked':''} onchange="toggleMeetingSection('${encodeURIComponent(sectionKey)}',this.checked)"> Chọn ${esc(title)}</label>`:'';
-  return `<div class="rounded-xl border border-slate-200 overflow-hidden"><div class="px-3 py-2 bg-slate-50 flex items-center justify-between gap-2"><div class="text-[10px] font-extrabold uppercase text-slate-700"><i class="bi ${icon} mr-1.5"></i>${title}</div>${sectionAction}</div><div class="p-2 space-y-1.5">${rows}</div></div>`;
-}
-function hashMeetingGroup(s){let h=0;for(const ch of String(s||''))h=((h<<5)-h)+ch.charCodeAt(0)|0;return h;}
-function renderMeetingPersonnel(keyword=''){
-  const c=$('meetingPersonnelContainer'),kw=String(keyword||'').trim().toLowerCase();
-  const root=meetingAllToData.filter(g=>g.kind==='ROOT');
-  const council=meetingAllToData.filter(g=>g.kind==='COUNCIL');
-  const teams=meetingAllToData.filter(g=>g.kind==='TEAM');
-  const gvcn=meetingAllToData.filter(g=>g.kind==='GVCN');
-  const work=meetingAllToData.filter(g=>g.kind==='WORKGROUP');
-  c.innerHTML=[meetingGroupSection('Hội đồng','bi-building-fill',council,kw,'COUNCIL'),meetingGroupSection('Nhân sự chung','bi-people-fill',root,kw),meetingGroupSection('Tổ/Bộ phận','bi-people',teams,kw),meetingGroupSection('GVCN','bi-person-badge-fill',gvcn,kw),meetingGroupSection('Nhóm công tác khác','bi-grid-fill',work,kw)].join('')||'<div class="p-5 text-center text-xs text-slate-400">Không tìm thấy nhân sự phù hợp.</div>';
-  updateMeetingSelectionUI();
-}
-function toggleMeetingWholeGroup(encodedKey,on){const key=decodeURIComponent(encodedKey);const g=meetingAllToData.find(x=>x.groupKey===key);if(!g)return;g.members.forEach(m=>on?meetingSelectedUsernames.add(m.username):meetingSelectedUsernames.delete(m.username));renderMeetingPersonnel($('meetingSearchNhanSu').value);}
-function toggleMeetingSection(encodedKey,on){const key=decodeURIComponent(encodedKey);const groups=key==='COUNCIL'?meetingAllToData.filter(g=>g.kind==='COUNCIL'):[];groups.forEach(g=>g.members.forEach(m=>on?meetingSelectedUsernames.add(m.username):meetingSelectedUsernames.delete(m.username)));renderMeetingPersonnel($('meetingSearchNhanSu').value);}
-function toggleMeetingUser(u,on){on?meetingSelectedUsernames.add(u):meetingSelectedUsernames.delete(u);const search=$('meetingSearchNhanSu');if(search)search.value='';renderMeetingPersonnel('');}
-function filterMeetingNhanSu(v){renderMeetingPersonnel(v)}
-function removeAllMeetingSelections(){meetingSelectedUsernames.clear();renderMeetingPersonnel($('meetingSearchNhanSu').value);}
-function selectedPeople(){const map=new Map();meetingAllToData.forEach(g=>g.members.forEach(m=>{if(meetingSelectedUsernames.has(m.username)&&!map.has(m.username))map.set(m.username,m)}));return [...map.values()];}
-function updateMeetingSelectionUI(){
-  const c=$('meetingSelectedChips');c.innerHTML='';let groups=0;
-  if(!meetingSelectedUsernames.size)c.innerHTML='<span class="text-[10px] text-slate-400 italic">Chưa chọn người tham dự...</span>';
-  const covered=new Set();
-  meetingAllToData.forEach(g=>{const full=g.members.length&&g.members.every(m=>meetingSelectedUsernames.has(m.username));if(full){groups++;g.members.forEach(m=>covered.add(m.username));const s=document.createElement('span');s.className='chip bg-indigo-50 text-indigo-700';s.textContent=`${g.tenTo} (${g.members.length})`;c.appendChild(s);}});
-  selectedPeople().forEach(m=>{if(covered.has(m.username))return;const s=document.createElement('span');s.className='chip bg-blue-50 text-[#0F4C81]';s.textContent=m.hoTen;c.appendChild(s);});
-  $('meetingStatTo').textContent=`${groups} nhóm`;$('meetingStatNguoi').textContent=`${meetingSelectedUsernames.size} người`;
-}
-
 function getMeetingOperatorUser(){try{return JSON.parse(sessionStorage.getItem('user')||localStorage.getItem('user')||'{}')}catch(e){return{}}}
 function getMeetingOperatorUsername(){const u=getMeetingOperatorUser();return String(u.username||u.userName||u.maGV||'').trim()}
 let managedMeetingData=[]; let currentQrInfo=null;
