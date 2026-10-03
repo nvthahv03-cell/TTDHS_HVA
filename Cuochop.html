@@ -193,7 +193,7 @@ function resetMeetingForm(){if(!confirm('Xóa dữ liệu đang nhập?'))return
  * - getPersonnelWorkgroups: lấy danh mục nhóm công tác.
  * - Có cache Memory + sessionStorage.
  * - Chống trùng nhân sự theo username.
- * - Nhóm HỘI ĐỒNG = BGH + toàn bộ Tổ/Bộ phận.
+ * - Nhóm HỘI ĐỒNG = BGH + 07 Tổ chuyên môn + Tổ Văn phòng.
  * - Hội đồng chỉ là nhóm tổng hợp động, KHÔNG tạo danh sách riêng.
  *
  * BASE tham chiếu: Bộ chọn nhân sự của Cuộc họp.
@@ -617,7 +617,7 @@ async function loadMeetingPersonnel() {
     /* =====================================================
      * 7. HỘI ĐỒNG – FULL NHÂN SỰ HVA
      *
-     * Hội đồng = BGH + tất cả Tổ/Bộ phận.
+     * Hội đồng = BGH + 07 Tổ chuyên môn + Tổ Văn phòng.
      *
      * KHÔNG tạo danh sách Hội đồng riêng.
      * KHÔNG nhập nhân sự Hội đồng bằng tay.
