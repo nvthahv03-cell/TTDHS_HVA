@@ -184,311 +184,56 @@ function closePreview(){$('previewModal').classList.add('hidden');$('previewModa
 function resetMeetingForm(){if(!confirm('Xóa dữ liệu đang nhập?'))return;$('meetingForm').reset();meetingSelectedUsernames.clear();handleMeetingType();toggleOtherPlace();toggleQrTimes();renderMeetingPersonnel();}
 
 /* =========================================================
- * HVA PERSONNEL BASE
- * HÀM NHÂN SỰ HVA – BASE CHUẨN
+ * HVA PERSONNEL – CUỘC HỌP
+ * CHỐT 03/10/2026
  *
- * Nguyên tắc:
- * - Một nguồn nhân sự dùng chung toàn HVA.
- * - searchNhanSuQuick: lấy nhân sự.
- * - getPersonnelWorkgroups: lấy danh mục nhóm công tác.
- * - Có cache Memory + sessionStorage.
- * - Chống trùng nhân sự theo username.
- * - Nhóm HỘI ĐỒNG = BGH + 07 Tổ chuyên môn + Tổ Văn phòng.
- * - Hội đồng chỉ là nhóm tổng hợp động, KHÔNG tạo danh sách riêng.
- *
- * BASE tham chiếu: Bộ chọn nhân sự của Cuộc họp.
- * ========================================================= */
-
-
-/* =========================================================
- * 1. GỌI API NHÂN SỰ HVA
- * ========================================================= */
-
-async function hvaPersonnelGet(action, params = {}) {
-  const token = String(
-    localStorage.getItem('hvaSessionToken') || ''
-  ).trim();
-
-  const expiresAt = Number(
-    localStorage.getItem('hvaSessionExpiresAt') || 0
-  );
-
-  if (!token || !expiresAt || expiresAt <= Date.now()) {
-    throw Error(
-      'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.'
-    );
-  }
-
-  const u = new URL(PERSONNEL_SEARCH_API);
-
-  u.searchParams.set('action', action);
-  u.searchParams.set('sessionToken', token);
-  u.searchParams.set('_', Date.now());
-
-  Object.entries(params || {}).forEach(([k, v]) => {
-    u.searchParams.set(k, String(v ?? ''));
-  });
-
-  const r = await fetch(u.toString(), {
-    cache: 'no-store'
-  });
-
-  if (!r.ok) {
-    throw Error('HTTP ' + r.status);
-  }
-
-  const data = await r.json();
-
-  if (data && data.success === false) {
-    throw Error(
-      data.message || 'Không tải được dữ liệu nhân sự.'
-    );
-  }
-
-  return data;
-}
-
-
-/* =========================================================
- * 2. CHUẨN HÓA DỮ LIỆU API THÀNH ARRAY
- * ========================================================= */
-
-function hvaPersonnelArray(data) {
-  return Array.isArray(data)
-    ? data
-    : Array.isArray(data && data.data)
-      ? data.data
-      : Array.isArray(data && data.results)
-        ? data.results
-        : [];
-}
-
-
-/* =========================================================
- * 3. CHUẨN HÓA MỘT NHÂN SỰ
- * ========================================================= */
-
-function mapMeetingPerson(m, groupLabel) {
-  const groups = m.nhomCongTac || {};
-
-  const lop = String(
-    m.lopChuNhiem ||
-    m.lopCN ||
-    groups.GVCN ||
-    groups['GVCN'] ||
-    ''
-  ).trim();
-
-  return {
-    username: String(
-      m.username ||
-      m.maGV ||
-      m.hoTen ||
-      ''
-    ).trim(),
-
-    hoTen:
-      m.hoTen ||
-      m.fullName ||
-      '',
-
-    chucVu:
-      m.chucVu ||
-      m.vaiTro ||
-      m.viTriViecLam ||
-      'Giáo viên',
-
-    tenTo:
-      m.to ||
-      m.toBoPhan ||
-      '',
-
-    lopChuNhiem: lop,
-
-    groupLabel: groupLabel || ''
-  };
-}
-
-
-/* =========================================================
- * 4. CACHE NHÂN SỰ
- * ========================================================= */
-
-const HVA_PERSONNEL_CACHE_PREFIX = 'HVA_PERSONNEL_V1:';
-
-const meetingPersonnelMemory = new Map();
-
-
-function meetingPersonnelCacheKey(action, params = {}) {
-  return action === 'getPersonnelWorkgroups'
-    ? HVA_PERSONNEL_CACHE_PREFIX + 'WORKGROUP_LIST:'
-    : HVA_PERSONNEL_CACHE_PREFIX +
-        String(params.category || '') +
-        ':' +
-        String(params.q || '');
-}
-
-
-function getMeetingPersonnelCache(action, params = {}) {
-  const key = meetingPersonnelCacheKey(action, params);
-
-  if (meetingPersonnelMemory.has(key)) {
-    return meetingPersonnelMemory.get(key);
-  }
-
-  try {
-    const raw = sessionStorage.getItem(key);
-
-    if (raw) {
-      const value = JSON.parse(raw);
-
-      meetingPersonnelMemory.set(key, value);
-
-      return value;
-    }
-  } catch (e) {}
-
-  return null;
-}
-
-
-function setMeetingPersonnelCache(action, params, value) {
-  const key = meetingPersonnelCacheKey(action, params);
-
-  meetingPersonnelMemory.set(key, value);
-
-  try {
-    sessionStorage.setItem(
-      key,
-      JSON.stringify(value)
-    );
-  } catch (e) {}
-
-  return value;
-}
-
-
-async function hvaPersonnelGetCached(
-  action,
-  params = {}
-) {
-  const hit = getMeetingPersonnelCache(
-    action,
-    params
-  );
-
-  if (hit !== null) {
-    return hit;
-  }
-
-  return setMeetingPersonnelCache(
-    action,
-    params,
-    await hvaPersonnelGet(action, params)
-  );
-}
-
-
-/* =========================================================
- * 5. TẢI TOÀN BỘ DANH BẠ NHÂN SỰ HVA
+ * HỘI ĐỒNG = BGH + 07 Tổ chuyên môn + Tổ Văn phòng.
+ * Hội đồng là nhóm tổng hợp động, không xổ danh sách.
+ * Chi bộ / BGH / Hội đồng có trình bày riêng.
+ * Các tổ/bộ phận và nhóm công tác vẫn có thể xổ thành viên.
  * ========================================================= */
 
 async function loadMeetingPersonnel() {
-
   const c = $('meetingPersonnelContainer');
 
   c.innerHTML =
-    '<div class="py-5 text-center text-xs text-slate-400">' +
+    '<div class="py-5 text-center text-sm text-slate-400">' +
       '<i class="bi bi-arrow-repeat animate-spin mr-1"></i>' +
       'Đang đồng bộ Nhân sự HVA...' +
     '</div>';
 
   try {
-
-    /* -----------------------------------------------------
-     * DANH SÁCH TỔ/BỘ PHẬN
-     * Giữ nguyên BASE hiện đang chạy của Cuộc họp.
-     * ----------------------------------------------------- */
-
+    // TÊN CHUẨN THEO NGUỒN NHÂN SỰ HVA.
+    // label = tên hiển thị; query = tên dùng để truy xuất searchNhanSuQuick.
     const teams = [
-      'Toán - Tin',
-      'Ngữ văn',
-      'Ngoại Ngữ',
-      'Sử - Địa - GDKT&PL',
-      'Vật lí - Công nghệ',
-      'Hóa học',
-      'Sinh - GDTC - QPAN',
-      'Văn phòng'
+      { label: 'Toán - Tin',                 query: 'Toán - Tin' },
+      { label: 'Ngữ văn',                    query: 'Ngữ văn' },
+      { label: 'Tiếng Anh',                  query: 'Tiếng Anh' },
+      { label: 'Lịch sử - Địa lí - GDKT&PL', query: 'Lịch sử - Địa lí - GDKT&PL' },
+      { label: 'Vật lí - Công nghệ',         query: 'Vật lí - Công nghệ' },
+      { label: 'Hóa học',                    query: 'Hóa học' },
+      { label: 'Sinh - GDTC - QPAN',         query: 'Sinh - GDTC - QPAN' },
+      { label: 'Văn phòng',                  query: 'Văn phòng' }
     ];
 
-
-    /* -----------------------------------------------------
-     * LẤY CHI BỘ + BGH + DANH MỤC NHÓM CÔNG TÁC
-     * ----------------------------------------------------- */
-
-    const [
-      chiBoRaw,
-      bghRaw,
-      workgroupsRaw
-    ] = await Promise.all([
-
-      hvaPersonnelGetCached(
-        'searchNhanSuQuick',
-        {
-          q: '',
-          category: 'CHIBO'
-        }
-      ),
-
-      hvaPersonnelGetCached(
-        'searchNhanSuQuick',
-        {
-          q: '',
-          category: 'BGH'
-        }
-      ),
-
-      hvaPersonnelGetCached(
-        'getPersonnelWorkgroups',
-        {}
-      )
-
+    const [chiBoRaw, bghRaw, workgroupsRaw] = await Promise.all([
+      hvaPersonnelGetCached('searchNhanSuQuick', { q: '', category: 'CHIBO' }),
+      hvaPersonnelGetCached('searchNhanSuQuick', { q: '', category: 'BGH' }),
+      hvaPersonnelGetCached('getPersonnelWorkgroups', {})
     ]);
 
+    const workgroups = hvaPersonnelArray(workgroupsRaw);
 
-    const workgroups =
-      hvaPersonnelArray(workgroupsRaw);
-
-
-    /* -----------------------------------------------------
-     * LẤY NHÂN SỰ THEO TỪNG TỔ/BỘ PHẬN
-     * ----------------------------------------------------- */
-
-    const teamJobs = teams.map(name =>
-      hvaPersonnelGetCached(
-        'searchNhanSuQuick',
-        {
-          q: name,
-          category: 'TEAM'
-        }
-      )
-      .then(raw => ({
-        name,
-        raw
-      }))
-      .catch(() => ({
-        name,
-        raw: []
-      }))
+    const teamJobs = teams.map(t =>
+      hvaPersonnelGetCached('searchNhanSuQuick', {
+        q: t.query,
+        category: 'TEAM'
+      })
+      .then(raw => ({ name: t.label, raw }))
+      .catch(() => ({ name: t.label, raw: [] }))
     );
 
-
-    /* -----------------------------------------------------
-     * LẤY NHÂN SỰ THEO CÁC NHÓM CÔNG TÁC
-     * ----------------------------------------------------- */
-
     const workJobs = workgroups.map(x => {
-
       const name = String(
         (x && x.name) ||
         (x && x.label) ||
@@ -496,77 +241,31 @@ async function loadMeetingPersonnel() {
         ''
       ).trim();
 
-      return hvaPersonnelGetCached(
-        'searchNhanSuQuick',
-        {
-          q: name,
-          category: 'WORKGROUP'
-        }
-      )
-      .then(raw => ({
-        name,
-        raw
-      }))
-      .catch(() => ({
-        name,
-        raw: []
-      }));
-
+      return hvaPersonnelGetCached('searchNhanSuQuick', {
+        q: name,
+        category: 'WORKGROUP'
+      })
+      .then(raw => ({ name, raw }))
+      .catch(() => ({ name, raw: [] }));
     });
 
-
-    const [
-      teamResults,
-      workResults
-    ] = await Promise.all([
-
+    const [teamResults, workResults] = await Promise.all([
       Promise.all(teamJobs),
-
       Promise.all(workJobs)
-
     ]);
-
-
-    /* =====================================================
-     * 6. TẠO CÁC NHÓM NHÂN SỰ
-     * ===================================================== */
 
     const groups = [];
 
-
-    /*
-     * pushGroup:
-     * - Chuẩn hóa dữ liệu.
-     * - Loại nhân sự không có username.
-     * - Chống trùng theo username trong từng nhóm.
-     */
-
-    const pushGroup = (
-      groupKey,
-      tenTo,
-      kind,
-      members
-    ) => {
-
+    const pushGroup = (groupKey, tenTo, kind, members) => {
       const seen = new Set();
 
       const clean = hvaPersonnelArray(members)
-
-        .map(m =>
-          mapMeetingPerson(
-            m,
-            tenTo
-          )
-        )
-
-        .filter(m =>
-          m.username &&
-          !seen.has(m.username) &&
-          (
-            seen.add(m.username),
-            true
-          )
-        );
+        .map(m => mapMeetingPerson(m, tenTo))
+        .filter(m => {
+          if (!m.username || seen.has(m.username)) return false;
+          seen.add(m.username);
+          return true;
+        });
 
       groups.push({
         groupKey,
@@ -574,215 +273,487 @@ async function loadMeetingPersonnel() {
         kind,
         members: clean
       });
-
     };
 
+    // 1. Nhóm đặc biệt
+    pushGroup('CHIBO', 'Chi bộ', 'ROOT', chiBoRaw);
+    pushGroup('BGH', 'Ban Giám hiệu', 'ROOT', bghRaw);
 
-    /* -----------------------------------------------------
-     * NHÓM GỐC
-     * ----------------------------------------------------- */
-
-    pushGroup(
-      'CHIBO',
-      'Chi bộ',
-      'ROOT',
-      chiBoRaw
-    );
-
-
-    pushGroup(
-      'BGH',
-      'Ban Giám hiệu',
-      'ROOT',
-      bghRaw
-    );
-
-
-    /* -----------------------------------------------------
-     * CÁC TỔ/BỘ PHẬN
-     * ----------------------------------------------------- */
-
+    // 2. 07 Tổ chuyên môn + Tổ Văn phòng
     teamResults.forEach(x => {
-
       pushGroup(
         'TEAM:' + x.name,
         x.name,
         'TEAM',
         x.raw
       );
-
     });
 
-
-    /* =====================================================
-     * 7. HỘI ĐỒNG – FULL NHÂN SỰ HVA
-     *
-     * Hội đồng = BGH + 07 Tổ chuyên môn + Tổ Văn phòng.
-     *
-     * KHÔNG tạo danh sách Hội đồng riêng.
-     * KHÔNG nhập nhân sự Hội đồng bằng tay.
-     *
-     * pushGroup() tự chống trùng theo username.
-     * ===================================================== */
-
-    const councilMembers = [];
+    // 3. HỘI ĐỒNG = BGH + 07 TCM + VP
+    // Chống trùng toàn Hội đồng theo username.
+    const councilMap = new Map();
 
     groups
-      .filter(g =>
-        g.groupKey === 'BGH' ||
-        g.kind === 'TEAM'
-      )
+      .filter(g => g.groupKey === 'BGH' || g.kind === 'TEAM')
       .forEach(g => {
-
-        councilMembers.push(
-          ...g.members
-        );
-
+        g.members.forEach(m => {
+          if (m.username && !councilMap.has(m.username)) {
+            councilMap.set(m.username, m);
+          }
+        });
       });
-
 
     pushGroup(
       'COUNCIL:ALL',
       'Hội đồng',
       'COUNCIL',
-      councilMembers
+      [...councilMap.values()]
     );
 
-
-    /* =====================================================
-     * 8. NHÓM CÔNG TÁC
-     * ===================================================== */
-
-    workResults.forEach(({
-      name,
-      raw
-    }) => {
-
+    // 4. Nhóm công tác
+    workResults.forEach(({ name, raw }) => {
       if (!name) return;
 
+      if (name.toUpperCase() === 'GVCN') {
+        const mapped = hvaPersonnelArray(raw)
+          .map(m => mapMeetingPerson(m, 'GVCN'));
 
-      /* ---------------------------------------------------
-       * GVCN: TÁCH THEO KHỐI 10 – 11 – 12
-       * --------------------------------------------------- */
-
-      if (
-        name.toUpperCase() === 'GVCN'
-      ) {
-
-        const mapped =
-          hvaPersonnelArray(raw)
-            .map(m =>
-              mapMeetingPerson(
-                m,
-                'GVCN'
-              )
+        ['10', '11', '12'].forEach(khoi => {
+          const members = mapped
+            .filter(m =>
+              String(m.lopChuNhiem || '').startsWith(khoi + '/')
+            )
+            .sort((a, b) =>
+              (Number(String(a.lopChuNhiem).split('/')[1]) || 999) -
+              (Number(String(b.lopChuNhiem).split('/')[1]) || 999) ||
+              String(a.hoTen).localeCompare(String(b.hoTen), 'vi')
             );
 
-
-        ['10', '11', '12']
-          .forEach(khoi => {
-
-            const members = mapped
-
-              .filter(m =>
-                String(
-                  m.lopChuNhiem || ''
-                )
-                .startsWith(
-                  khoi + '/'
-                )
-              )
-
-              .sort((a, b) =>
-
-                (
-                  Number(
-                    String(
-                      a.lopChuNhiem
-                    )
-                    .split('/')[1]
-                  ) || 999
-                )
-
-                -
-
-                (
-                  Number(
-                    String(
-                      b.lopChuNhiem
-                    )
-                    .split('/')[1]
-                  ) || 999
-                )
-
-                ||
-
-                String(a.hoTen)
-                  .localeCompare(
-                    String(b.hoTen),
-                    'vi'
-                  )
-
-              );
-
-
-            pushGroup(
-              'GVCN:' + khoi,
-              'GVCN khối ' + khoi,
-              'GVCN',
-              members
-            );
-
-          });
-
-      }
-
-      /* ---------------------------------------------------
-       * CÁC NHÓM CÔNG TÁC KHÁC
-       * --------------------------------------------------- */
-
-      else {
-
+          pushGroup(
+            'GVCN:' + khoi,
+            'GVCN khối ' + khoi,
+            'GVCN',
+            members
+          );
+        });
+      } else {
         pushGroup(
           'WORKGROUP:' + name,
           name,
           'WORKGROUP',
           raw
         );
-
       }
-
     });
 
-
-    /* =====================================================
-     * 9. GÁN DỮ LIỆU + RENDER
-     * ===================================================== */
-
     meetingAllToData = groups;
-
     renderMeetingPersonnel();
 
-  }
-
-  catch (e) {
-
+  } catch (e) {
     c.innerHTML =
-      `<div class="p-5 text-center text-xs text-red-500 font-bold">
-        ${esc(
-          e.message ||
-          'Không tải được Nhân sự HVA'
-        )}
+      `<div class="p-5 text-center text-sm text-red-500 font-bold">
+        ${esc(e.message || 'Không tải được Nhân sự HVA')}
         <br>
         <button
+          type="button"
           onclick="loadMeetingPersonnel()"
-          class="mt-2 text-[#0F4C81]">
+          class="mt-3 px-3 py-2 rounded-lg border border-blue-200 text-[#0F4C81]">
           Thử lại
         </button>
       </div>`;
-
   }
 }
+
+
+/* =========================================================
+ * RENDER NHÂN SỰ
+ * ========================================================= */
+
+function hashMeetingGroup(s) {
+  let h = 0;
+  for (const ch of String(s || '')) {
+    h = ((h << 5) - h) + ch.charCodeAt(0) | 0;
+  }
+  return h;
+}
+
+function meetingPersonRows(g, show) {
+  return show.map(m => `
+    <label class="flex items-center gap-3 px-3 py-2.5 rounded-xl border ${
+      meetingSelectedUsernames.has(m.username)
+        ? 'border-blue-300 bg-blue-50'
+        : 'border-slate-200 bg-white'
+    }">
+      <input
+        type="checkbox"
+        class="shrink-0 w-5 h-5 accent-[#0F4C81]"
+        ${meetingSelectedUsernames.has(m.username) ? 'checked' : ''}
+        onchange="toggleMeetingUser('${esc(m.username)}',this.checked)">
+      <div class="min-w-0 flex-1">
+        <div class="text-[13px] font-extrabold text-slate-800 truncate">
+          ${esc(m.hoTen)}
+        </div>
+        <div class="text-[10px] sm:text-[11px] text-slate-500 truncate mt-0.5">
+          ${m.lopChuNhiem ? 'GVCN ' + esc(m.lopChuNhiem) + ' · ' : ''}
+          ${esc(m.chucVu)}
+          ${m.tenTo ? ' · ' + esc(m.tenTo) : ''}
+        </div>
+      </div>
+    </label>
+  `).join('');
+}
+
+function meetingNormalGroupRow(g, kw) {
+  const mm = g.members.filter(m =>
+    [m.hoTen, m.username, m.chucVu, m.tenTo]
+      .some(v => String(v || '').toLowerCase().includes(kw))
+  );
+
+  const matchG = String(g.tenTo || '').toLowerCase().includes(kw);
+
+  if (kw && !matchG && !mm.length) return '';
+
+  const show = kw && !matchG ? mm : g.members;
+  const all = g.members.length > 0 &&
+    g.members.every(m => meetingSelectedUsernames.has(m.username));
+
+  const id = 'mg_' + Math.abs(hashMeetingGroup(g.groupKey));
+
+  return `
+    <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+      <div class="min-h-[58px] px-3 sm:px-4 py-2.5 flex items-center gap-3">
+
+        <button
+          type="button"
+          onclick="$('${id}').classList.toggle('hidden')"
+          class="min-w-0 flex-1 flex items-center gap-2 text-left">
+
+          <i class="bi bi-chevron-right shrink-0 text-slate-400 text-[13px]"></i>
+
+          <span class="min-w-0 flex-1">
+            <span class="text-[14px] sm:text-[15px] font-extrabold text-[#0F4C81]">
+              ${esc(g.tenTo)}
+            </span>
+            <span class="ml-1 text-[12px] sm:text-[13px] font-bold text-slate-500">
+              (${g.members.length} người)
+            </span>
+          </span>
+        </button>
+
+        <label
+          class="shrink-0 min-w-[112px] h-9 px-2.5 rounded-xl border border-slate-200
+                 bg-white flex items-center justify-center gap-2
+                 text-[11px] font-bold text-slate-700 cursor-pointer">
+          <input
+            type="checkbox"
+            class="m-0 shrink-0 w-5 h-5 accent-[#0F4C81]"
+            ${all ? 'checked' : ''}
+            onchange="toggleMeetingWholeGroup('${encodeURIComponent(g.groupKey)}',this.checked)">
+          <span>Chọn nhóm</span>
+        </label>
+      </div>
+
+      <div
+        id="${id}"
+        class="${kw ? '' : 'hidden'} p-2 sm:p-3 grid grid-cols-1 sm:grid-cols-2 gap-2 border-t border-slate-100 bg-slate-50/60">
+        ${meetingPersonRows(g, show)}
+      </div>
+    </div>
+  `;
+}
+
+function meetingSpecialCard(g, type, kw) {
+  const titleMatch = String(g.tenTo || '').toLowerCase().includes(kw);
+  const memberMatch = g.members.some(m =>
+    [m.hoTen, m.username, m.chucVu, m.tenTo]
+      .some(v => String(v || '').toLowerCase().includes(kw))
+  );
+
+  if (kw && !titleMatch && !memberMatch) return '';
+
+  const all = g.members.length > 0 &&
+    g.members.every(m => meetingSelectedUsernames.has(m.username));
+
+  const config = {
+    COUNCIL: {
+      wrap: 'border-violet-200 bg-gradient-to-r from-violet-50 to-purple-50',
+      iconBox: 'bg-violet-100 text-violet-700',
+      icon: 'bi-people-fill',
+      title: 'text-violet-800',
+      subtitle: 'BGH + 07 Tổ chuyên môn + Tổ Văn phòng',
+      check: 'accent-violet-600',
+      button: 'border-violet-200 text-violet-800 bg-white'
+    },
+    CHIBO: {
+      wrap: 'border-red-200 bg-gradient-to-r from-red-50 to-rose-50',
+      iconBox: 'bg-red-100 text-red-600',
+      icon: 'bi-circle-fill',
+      title: 'text-red-700',
+      subtitle: 'Chi bộ',
+      check: 'accent-red-600',
+      button: 'border-red-200 text-red-700 bg-white'
+    },
+    BGH: {
+      wrap: 'border-blue-200 bg-gradient-to-r from-blue-50 to-sky-50',
+      iconBox: 'bg-blue-100 text-blue-700',
+      icon: 'bi-person-badge-fill',
+      title: 'text-blue-800',
+      subtitle: 'Ban Giám hiệu',
+      check: 'accent-blue-600',
+      button: 'border-blue-200 text-blue-800 bg-white'
+    }
+  }[type];
+
+  const buttonText = type === 'COUNCIL' ? 'Chọn Hội đồng' : 'Chọn nhóm';
+
+  return `
+    <div class="rounded-2xl border ${config.wrap} shadow-sm overflow-hidden">
+      <div class="px-3 sm:px-4 py-3 flex items-center gap-3">
+
+        <div class="shrink-0 w-10 h-10 rounded-xl ${config.iconBox}
+                    flex items-center justify-center shadow-sm">
+          <i class="bi ${config.icon} text-[17px]"></i>
+        </div>
+
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span class="text-[14px] sm:text-[15px] font-black uppercase tracking-wide ${config.title}">
+              ${esc(g.tenTo)}
+            </span>
+            <span class="text-[12px] sm:text-[13px] font-extrabold text-slate-600">
+              (${g.members.length} người)
+            </span>
+          </div>
+          <div class="mt-0.5 text-[10px] sm:text-[11px] font-semibold text-slate-500">
+            ${config.subtitle}
+          </div>
+        </div>
+
+        <label
+          class="shrink-0 min-w-[118px] h-9 px-2.5 rounded-xl border
+                 ${config.button}
+                 flex items-center justify-center gap-2
+                 text-[11px] font-bold cursor-pointer">
+          <input
+            type="checkbox"
+            class="m-0 shrink-0 w-5 h-5 ${config.check}"
+            ${all ? 'checked' : ''}
+            onchange="toggleMeetingWholeGroup('${encodeURIComponent(g.groupKey)}',this.checked)">
+          <span>${buttonText}</span>
+        </label>
+      </div>
+    </div>
+  `;
+}
+
+function meetingSection(title, icon, groups, kw) {
+  if (!groups.length) return '';
+
+  const rows = groups
+    .map(g => meetingNormalGroupRow(g, kw))
+    .join('');
+
+  if (!rows) return '';
+
+  return `
+    <div class="rounded-2xl border border-slate-200 overflow-hidden bg-white">
+      <div class="px-3 sm:px-4 py-2.5 bg-slate-100 border-b border-slate-200">
+        <div class="text-[12px] sm:text-[13px] font-black uppercase tracking-wide text-slate-700">
+          <i class="bi ${icon} mr-1.5"></i>${esc(title)}
+        </div>
+      </div>
+      <div class="p-2 sm:p-3 space-y-2">
+        ${rows}
+      </div>
+    </div>
+  `;
+}
+
+function renderMeetingPersonnel(keyword = '') {
+  const c = $('meetingPersonnelContainer');
+  const kw = String(keyword || '').trim().toLowerCase();
+
+  const council = meetingAllToData.find(g => g.kind === 'COUNCIL');
+  const chiBo = meetingAllToData.find(g => g.groupKey === 'CHIBO');
+  const bgh = meetingAllToData.find(g => g.groupKey === 'BGH');
+
+  const teams = meetingAllToData.filter(g => g.kind === 'TEAM');
+  const gvcn = meetingAllToData.filter(g => g.kind === 'GVCN');
+  const work = meetingAllToData.filter(g => g.kind === 'WORKGROUP');
+
+  const html = [
+    council ? meetingSpecialCard(council, 'COUNCIL', kw) : '',
+    chiBo ? meetingSpecialCard(chiBo, 'CHIBO', kw) : '',
+    bgh ? meetingSpecialCard(bgh, 'BGH', kw) : '',
+    meetingSection('Tổ / Bộ phận', 'bi-grid-3x3-gap-fill', teams, kw),
+    meetingSection('GVCN', 'bi-person-badge-fill', gvcn, kw),
+    meetingSection('Nhóm công tác khác', 'bi-collection-fill', work, kw)
+  ].join('');
+
+  c.innerHTML = html ||
+    '<div class="p-6 text-center text-sm text-slate-400">Không tìm thấy nhân sự phù hợp.</div>';
+
+  updateMeetingSelectionUI();
+}
+
+
+/* =========================================================
+ * CHỌN / BỎ CHỌN
+ * ========================================================= */
+
+function toggleMeetingWholeGroup(encodedKey, on) {
+  const key = decodeURIComponent(encodedKey);
+  const g = meetingAllToData.find(x => x.groupKey === key);
+  if (!g) return;
+
+  g.members.forEach(m => {
+    if (on) meetingSelectedUsernames.add(m.username);
+    else meetingSelectedUsernames.delete(m.username);
+  });
+
+  renderMeetingPersonnel($('meetingSearchNhanSu').value);
+}
+
+// Giữ để tương thích code cũ nếu nơi khác còn gọi.
+function toggleMeetingSection(encodedKey, on) {
+  const key = decodeURIComponent(encodedKey);
+
+  if (key === 'COUNCIL') {
+    const g = meetingAllToData.find(x => x.groupKey === 'COUNCIL:ALL');
+    if (g) {
+      g.members.forEach(m => {
+        if (on) meetingSelectedUsernames.add(m.username);
+        else meetingSelectedUsernames.delete(m.username);
+      });
+    }
+  }
+
+  renderMeetingPersonnel($('meetingSearchNhanSu').value);
+}
+
+function toggleMeetingUser(u, on) {
+  if (on) meetingSelectedUsernames.add(u);
+  else meetingSelectedUsernames.delete(u);
+
+  const search = $('meetingSearchNhanSu');
+  if (search) search.value = '';
+
+  renderMeetingPersonnel('');
+}
+
+function filterMeetingNhanSu(v) {
+  renderMeetingPersonnel(v);
+}
+
+function removeAllMeetingSelections() {
+  meetingSelectedUsernames.clear();
+  renderMeetingPersonnel($('meetingSearchNhanSu').value);
+}
+
+function selectedPeople() {
+  const map = new Map();
+
+  meetingAllToData.forEach(g => {
+    g.members.forEach(m => {
+      if (
+        meetingSelectedUsernames.has(m.username) &&
+        !map.has(m.username)
+      ) {
+        map.set(m.username, m);
+      }
+    });
+  });
+
+  return [...map.values()];
+}
+
+function updateMeetingSelectionUI() {
+  const c = $('meetingSelectedChips');
+  c.innerHTML = '';
+
+  if (!meetingSelectedUsernames.size) {
+    c.innerHTML =
+      '<span class="text-[11px] text-slate-400 italic">Chưa chọn người tham dự...</span>';
+  } else {
+    // Nếu toàn Hội đồng đã được chọn, ưu tiên chỉ hiện 1 chip Hội đồng.
+    const council = meetingAllToData.find(g => g.groupKey === 'COUNCIL:ALL');
+    const councilFull = council &&
+      council.members.length > 0 &&
+      council.members.every(m => meetingSelectedUsernames.has(m.username));
+
+    const covered = new Set();
+
+    if (councilFull) {
+      council.members.forEach(m => covered.add(m.username));
+
+      const s = document.createElement('span');
+      s.className =
+        'chip bg-violet-100 text-violet-800 border border-violet-200 font-bold';
+      s.textContent = `Hội đồng (${council.members.length} người)`;
+      c.appendChild(s);
+    } else {
+      // Chỉ đếm các nhóm thực tế, không đếm chồng Hội đồng + tổ thành nhiều nhóm.
+      const selectableGroups = meetingAllToData.filter(g =>
+        g.groupKey === 'CHIBO' ||
+        g.groupKey === 'BGH' ||
+        g.kind === 'TEAM' ||
+        g.kind === 'GVCN' ||
+        g.kind === 'WORKGROUP'
+      );
+
+      selectableGroups.forEach(g => {
+        const full = g.members.length > 0 &&
+          g.members.every(m => meetingSelectedUsernames.has(m.username));
+
+        if (!full) return;
+
+        // Không tạo chip trùng cho người đã được một nhóm đầy đủ trước đó bao phủ.
+        const hasNew = g.members.some(m => !covered.has(m.username));
+        if (!hasNew) return;
+
+        g.members.forEach(m => covered.add(m.username));
+
+        const s = document.createElement('span');
+        s.className = 'chip bg-indigo-50 text-indigo-700';
+        s.textContent = `${g.tenTo} (${g.members.length})`;
+        c.appendChild(s);
+      });
+
+      selectedPeople().forEach(m => {
+        if (covered.has(m.username)) return;
+
+        const s = document.createElement('span');
+        s.className = 'chip bg-blue-50 text-[#0F4C81]';
+        s.textContent = m.hoTen;
+        c.appendChild(s);
+      });
+    }
+  }
+
+  // Số nhóm: nếu chọn đủ Hội đồng thì tính 1 nhóm Hội đồng.
+  let groups = 0;
+  const council = meetingAllToData.find(g => g.groupKey === 'COUNCIL:ALL');
+  const councilFull = council &&
+    council.members.length > 0 &&
+    council.members.every(m => meetingSelectedUsernames.has(m.username));
+
+  if (councilFull) {
+    groups = 1;
+  } else {
+    groups = meetingAllToData
+      .filter(g => g.kind !== 'COUNCIL')
+      .filter(g =>
+        g.members.length > 0 &&
+        g.members.every(m => meetingSelectedUsernames.has(m.username))
+      )
+      .length;
+  }
+
+  $('meetingStatTo').textContent = `${groups} nhóm`;
+  $('meetingStatNguoi').textContent = `${meetingSelectedUsernames.size} người`;
+}
+
+
   
 function meetingGroupSection(title,icon,groups,kw,sectionKey=''){
   if(!groups.length)return '';
