@@ -117,18 +117,59 @@
   width:11px;height:11px;border-radius:50%;background:#19e98a;
   box-shadow:0 0 0 5px rgba(25,233,138,.12),0 0 13px rgba(25,233,138,.82);
 }
-.hva-pro-icon{
-  position:relative;width:43px;height:43px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;background:transparent;border:1px solid transparent;
+.hva-meeting-history{position:relative}
+.hva-meeting-history-btn{
+  height:42px;min-width:190px;padding:0 14px 0 16px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  border-radius:11px;color:#fff;
+  background:rgba(2,77,119,.40);
+  border:1.5px solid rgba(163,232,255,.62);
+  box-shadow:inset 0 0 18px rgba(30,216,255,.07),0 5px 15px rgba(0,40,84,.14);
+  font-size:12px;font-weight:800;letter-spacing:.01em;
+  transition:background .14s ease,border-color .14s ease,transform .14s ease;
 }
-.hva-pro-icon:hover{background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.13)}
-.hva-pro-icon i{font-size:24px}
-.hva-pro-apps i{font-size:26px}
-.hva-pro-badge{
-  position:absolute;right:0;top:-1px;min-width:19px;height:19px;padding:0 5px;
-  border-radius:10px;display:flex;align-items:center;justify-content:center;
-  background:#ff2828;color:#fff;border:2px solid #0786ba;font-size:10px;font-weight:900;
+.hva-meeting-history-btn:hover{
+  background:rgba(4,94,145,.58);border-color:rgba(202,244,255,.90)
+}
+.hva-meeting-history-btn:active{transform:translateY(1px)}
+.hva-meeting-history-btn i{font-size:14px;-webkit-text-stroke:.3px currentColor}
+
+.hva-meeting-history-menu{
+  display:none;position:absolute;right:0;top:calc(100% + 10px);
+  width:390px;max-width:min(390px,calc(100vw - 28px));
+  overflow:hidden;border-radius:14px;
+  background:#fff;color:#16324a;
+  border:1px solid #d9e7f2;
+  box-shadow:0 18px 45px rgba(1,34,67,.24);
+  z-index:80;
+}
+.hva-meeting-history.is-open .hva-meeting-history-menu{display:block}
+.hva-meeting-history-head{
+  padding:12px 15px;border-bottom:1px solid #e6eef5;
+  background:#f6fbff;color:#075cad;font-size:12px;font-weight:800;
+}
+.hva-meeting-history-list{max-height:330px;overflow:auto}
+.hva-meeting-history-empty{
+  padding:20px 16px;text-align:center;color:#64748b;font-size:12px;font-weight:600;
+}
+.hva-meeting-history-item{
+  width:100%;display:grid;grid-template-columns:26px minmax(0,1fr);
+  gap:9px;padding:11px 14px;text-align:left;background:#fff;
+  border:0;border-bottom:1px solid #edf2f7;color:#16324a;
+}
+.hva-meeting-history-item:last-child{border-bottom:0}
+.hva-meeting-history-item:hover{background:#f4faff}
+.hva-meeting-history-no{
+  width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  background:#e8f4ff;color:#075cad;font-size:11px;font-weight:900;
+}
+.hva-meeting-history-name{
+  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:12px;font-weight:800;color:#123b60;
+}
+.hva-meeting-history-meta{
+  margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 12px;
+  color:#64748b;font-size:10.5px;font-weight:600;
 }
 .hva-pro-divider-right{height:52px;margin:0 3px}
 
@@ -180,12 +221,16 @@
   .hva-pro-tools{gap:3px}
   .hva-pro-online{height:31px;padding:0 9px;font-size:9px}
   .hva-pro-online-dot{width:8px;height:8px}
-  .hva-pro-icon,.hva-pro-divider-right,.hva-pro-user{display:none}
+  .hva-pro-divider-right,.hva-pro-user{display:none}
+  .hva-meeting-history-btn{height:31px;min-width:132px;padding:0 9px;font-size:9px;gap:6px}
+  .hva-meeting-history-menu{right:0;width:340px}
   .hva-pro-header::after{right:-105px;opacity:.12}
 }
 @media(max-width:470px){
   .hva-pro-online{width:31px;padding:0;justify-content:center}
   .hva-pro-online span:last-child{display:none}
+  .hva-meeting-history-btn{min-width:31px;width:31px;padding:0}
+  .hva-meeting-history-btn .hva-meeting-history-label{display:none}
 }
 </style>
 </head>
@@ -222,14 +267,31 @@
         <span>TRỰC TUYẾN</span>
       </div>
 
-      <button type="button" class="hva-pro-icon" aria-label="Thông báo" title="Thông báo">
-        <i class="bi bi-bell"></i>
-        <span class="hva-pro-badge" id="hvaHeaderNotificationCount">3</span>
-      </button>
+      <div class="hva-meeting-history" id="hvaMeetingHistory">
+        <button type="button"
+                class="hva-meeting-history-btn"
+                id="hvaMeetingHistoryBtn"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-controls="hvaMeetingHistoryMenu">
+          <span class="hva-meeting-history-label">
+            ĐÃ TẠO <span id="hvaMeetingCreatedCount">0</span> CUỘC HỌP
+          </span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
 
-      <button type="button" class="hva-pro-icon hva-pro-apps" aria-label="Ứng dụng HVA" title="Ứng dụng HVA">
-        <i class="bi bi-grid-3x3-gap-fill"></i>
-      </button>
+        <div class="hva-meeting-history-menu"
+             id="hvaMeetingHistoryMenu"
+             role="menu"
+             aria-label="Danh sách cuộc họp đã tạo">
+          <div class="hva-meeting-history-head">CÁC CUỘC HỌP ĐÃ TẠO</div>
+          <div class="hva-meeting-history-list" id="hvaMeetingHistoryList">
+            <div class="hva-meeting-history-empty">
+              Danh sách cuộc họp sẽ được nạp từ dữ liệu hệ thống.
+            </div>
+          </div>
+        </div>
+      </div>
 
       <span class="hva-pro-divider hva-pro-divider-right" aria-hidden="true"></span>
 
