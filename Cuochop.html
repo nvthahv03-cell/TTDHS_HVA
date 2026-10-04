@@ -190,288 +190,278 @@ function previewMeeting(){if(!validateMeeting())return;const d=collectMeeting();
 function closePreview(){$('previewModal').classList.add('hidden');$('previewModal').classList.remove('flex');}
 function resetMeetingForm(){if(!confirm('Xóa dữ liệu đang nhập?'))return;$('meetingForm').reset();meetingSelectedUsernames.clear();handleMeetingType();handleMeetingTitle();toggleOtherPlace();toggleQrTimes();renderMeetingPersonnel();}
 
-/* =========================================================
- * HVA PERSONNEL CORE V1 – DÙNG CHUNG TOÀN HVA
- *
- * Auth: dùng HVAAuthRequest của HVA, KHÔNG tự đọc token/session.
- * Nguồn: searchNhanSuQuick + getPersonnelWorkgroups.
- * Chống trùng: username (fallback maGV nếu nguồn thiếu username).
- * Hội đồng = BGH + 07 Tổ chuyên môn + Tổ Văn phòng.
- * ========================================================= */
+/* HVA PERSONNEL - PATCH TỐI THIỂU 04/10/2026
+ * Chỉ thay khối Nhân sự hiện tại bằng đoạn này.
+ * KHÔNG sửa HTML/CSS/giao diện Cuộc họp.
+ * Sửa: chờ HVAAuthRequest + đúng mapping 2 tổ.
+ */
 
-function hvaPersonnelText(v){ return String(v ?? '').trim(); }
-
-function hvaPersonnelArray(data){
-  return Array.isArray(data) ? data
-    : Array.isArray(data && data.data) ? data.data
-    : Array.isArray(data && data.results) ? data.results
-    : Array.isArray(data && data.items) ? data.items
-    : [];
-}
-
-function hvaPersonnelCurrentUser(){
-  try{
-    if(typeof getSearchUser === 'function') return getSearchUser() || {};
-  }catch(e){}
-  try{
-    return JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}') || {};
-  }catch(e){ return {}; }
+async function hvaPersonnelWaitForAuth(timeoutMs=5000){
+  const started=Date.now();
+  while(Date.now()-started<timeoutMs){
+    if(window.HVAAuthRequest&&typeof window.HVAAuthRequest.get==='function'){
+      return window.HVAAuthRequest;
+    }
+    await new Promise(resolve=>setTimeout(resolve,100));
+  }
+  throw Error('HVA_AUTH_REQUEST_NOT_READY');
 }
 
 async function hvaPersonnelGet(action, params={}){
-  if(!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function'){
-    throw Error('HVA_AUTH_REQUEST_NOT_READY');
-  }
+  const auth=await hvaPersonnelWaitForAuth();
 
-  const user = hvaPersonnelCurrentUser();
-  const u = new URL(PERSONNEL_SEARCH_API);
+  let user={};
+  try{
+    if(typeof getSearchUser==='function') user=getSearchUser()||{};
+    else user=JSON.parse(sessionStorage.getItem('user')||localStorage.getItem('user')||'{}')||{};
+  }catch(e){}
 
-  u.searchParams.set('action', hvaPersonnelText(action));
-  if(user.username || user.userName || user.maGV){
-    u.searchParams.set('username', hvaPersonnelText(user.username || user.userName || user.maGV));
-  }
+  const u=new URL(PERSONNEL_SEARCH_API);
+  u.searchParams.set('action',String(action||'').trim());
 
-  Object.entries(params || {}).forEach(([k,v])=>{
-    if(v !== undefined && v !== null) u.searchParams.set(k, hvaPersonnelText(v));
+  const username=String(user.username||user.userName||user.maGV||'').trim();
+  if(username)u.searchParams.set('username',username);
+
+  Object.entries(params||{}).forEach(([k,v])=>{
+    if(v!==undefined&&v!==null)u.searchParams.set(k,String(v).trim());
   });
-  u.searchParams.set('_', Date.now());
 
-  const r = await window.HVAAuthRequest.get(u.toString(), {cache:'no-store'});
-  if(!r.ok) throw Error('HTTP ' + r.status);
+  u.searchParams.set('_',Date.now());
 
-  const data = await r.json();
-  if(data && data.success === false){
-    throw Error(data.message || 'Không tải được dữ liệu nhân sự.');
-  }
+  const r=await auth.get(u.toString(),{cache:'no-store'});
+  if(!r.ok)throw Error('HTTP '+r.status);
+
+  const data=await r.json();
+  if(data&&data.success===false)throw Error(data.message||'Không tải được dữ liệu nhân sự.');
   return data;
 }
-
-function normalizeHvaPerson(m, groupLabel=''){
-  m = m || {};
-  const groups = (m.nhomCongTac && typeof m.nhomCongTac === 'object') ? m.nhomCongTac : {};
-  const lop = hvaPersonnelText(m.lopChuNhiem || m.lopCN || groups.GVCN || '');
-
+function hvaPersonnelArray(data){
+  return Array.isArray(data)?data:(Array.isArray(data&&data.data)?data.data:(Array.isArray(data&&data.results)?data.results:[]));
+}
+function mapMeetingPerson(m,groupLabel){
+  const groups=m.nhomCongTac||{};
+  const lop=String(m.lopChuNhiem||m.lopCN||groups.GVCN||groups['GVCN']||'').trim();
   return {
-    username: hvaPersonnelText(m.username),
-    maGV: hvaPersonnelText(m.maGV || m.maNhanSu || m.id),
-    hoTen: hvaPersonnelText(m.hoTen || m.fullName || m.name),
-    chucVu: hvaPersonnelText(m.chucVu || m.vaiTro || m.viTriViecLam || 'Giáo viên'),
-    viTriViecLam: hvaPersonnelText(m.viTriViecLam),
-    tenTo: hvaPersonnelText(m.to || m.toBoPhan || m.tenTo),
-    lopChuNhiem: lop,
-    nhomCongTac: m.nhomCongTac || {},
-    dienThoai: hvaPersonnelText(m.dienThoai || m.soDienThoai || m.phone),
-    ngaySinh: hvaPersonnelText(m.ngaySinh || m.birthDate),
-    groupLabel: hvaPersonnelText(groupLabel),
-    raw: m
+    username:String(m.username||m.maGV||m.hoTen||'').trim(),
+    hoTen:m.hoTen||m.fullName||'',
+    chucVu:m.chucVu||m.vaiTro||m.viTriViecLam||'Giáo viên',
+    tenTo:m.to||m.toBoPhan||'',
+    lopChuNhiem:lop,
+    groupLabel:groupLabel||''
   };
 }
-
-/* Tương thích render Cuộc họp hiện tại. */
-function mapMeetingPerson(m, groupLabel){ return normalizeHvaPerson(m, groupLabel); }
-
-function hvaPersonnelIdentity(m){
-  const u = hvaPersonnelText(m && m.username).toLowerCase();
-  if(u) return 'U:' + u;
-  const ma = hvaPersonnelText(m && m.maGV).toLowerCase();
-  if(ma) return 'M:' + ma;
-  return '';
-}
-
-function hvaPersonnelDedupe(members, groupLabel=''){
-  const map = new Map();
-  hvaPersonnelArray(members).forEach(raw=>{
-    const p = raw && raw.raw !== undefined ? raw : normalizeHvaPerson(raw, groupLabel);
-    const key = hvaPersonnelIdentity(p);
-    if(!key || map.has(key)) return;
-    /* Các module hiện tại chọn theo username; nếu nguồn cũ chỉ có maGV thì dùng maGV làm ID kỹ thuật. */
-    if(!p.username) p.username = p.maGV;
-    map.set(key, p);
-  });
-  return [...map.values()];
-}
-
 const HVA_PERSONNEL_CACHE_PREFIX='HVA_PERSONNEL_V1:';
 const meetingPersonnelMemory=new Map();
-
 function meetingPersonnelCacheKey(action,params={}){
-  const normalized={};
-  Object.keys(params||{}).sort().forEach(k=>normalized[k]=hvaPersonnelText(params[k]));
-  return HVA_PERSONNEL_CACHE_PREFIX + hvaPersonnelText(action).toUpperCase() + ':' + JSON.stringify(normalized);
+  return action==='getPersonnelWorkgroups'
+    ? HVA_PERSONNEL_CACHE_PREFIX+'WORKGROUP_LIST:'
+    : HVA_PERSONNEL_CACHE_PREFIX+String(params.category||'')+':'+String(params.q||'');
 }
-
 function getMeetingPersonnelCache(action,params={}){
   const key=meetingPersonnelCacheKey(action,params);
-  if(meetingPersonnelMemory.has(key)) return meetingPersonnelMemory.get(key);
+  if(meetingPersonnelMemory.has(key))return meetingPersonnelMemory.get(key);
   try{
     const raw=sessionStorage.getItem(key);
-    if(raw!==null){
-      const value=JSON.parse(raw);
-      meetingPersonnelMemory.set(key,value);
-      return value;
-    }
+    if(raw){const value=JSON.parse(raw);meetingPersonnelMemory.set(key,value);return value;}
   }catch(e){}
   return null;
 }
-
 function setMeetingPersonnelCache(action,params,value){
   const key=meetingPersonnelCacheKey(action,params);
   meetingPersonnelMemory.set(key,value);
-  try{ sessionStorage.setItem(key,JSON.stringify(value)); }catch(e){}
+  try{sessionStorage.setItem(key,JSON.stringify(value));}catch(e){}
   return value;
 }
-
 async function hvaPersonnelGetCached(action,params={}){
   const hit=getMeetingPersonnelCache(action,params);
-  if(hit!==null) return hit;
+  if(hit!==null)return hit;
   return setMeetingPersonnelCache(action,params,await hvaPersonnelGet(action,params));
 }
 
-async function hvaPersonnelSearch(category,q=''){
-  return hvaPersonnelArray(await hvaPersonnelGetCached('searchNhanSuQuick',{
-    q:hvaPersonnelText(q),
-    category:hvaPersonnelText(category)
-  }));
-}
+/* =========================================================
+ * HVA PERSONNEL – CUỘC HỌP
+ * CHỐT 03/10/2026
+ *
+ * HỘI ĐỒNG = BGH + 07 Tổ chuyên môn + Tổ Văn phòng.
+ * Hội đồng là nhóm tổng hợp động, không xổ danh sách.
+ * Chi bộ / BGH / Hội đồng có trình bày riêng.
+ * Các tổ/bộ phận và nhóm công tác vẫn có thể xổ thành viên.
+ * ========================================================= */
 
-/*
- * Ưu tiên danh mục dùng chung HVA_PERSONNEL_UNITS nếu BASE chính đã nạp.
- * Fallback giữ ĐÚNG danh mục đang có trong file Cuộc họp này để không phá giao diện/chức năng.
- */
-function hvaPersonnelUnits(){
-  if(Array.isArray(window.HVA_PERSONNEL_UNITS) && window.HVA_PERSONNEL_UNITS.length){
-    return window.HVA_PERSONNEL_UNITS.map(x=>{
-      if(typeof x==='string') return {label:hvaPersonnelText(x),query:hvaPersonnelText(x)};
-      return {
-        label:hvaPersonnelText(x.label || x.name || x.value),
-        query:hvaPersonnelText(x.value || x.name || x.label)
-      };
-    }).filter(x=>x.query);
-  }
 
-  return [
-    { label:'Toán - Tin',                 query:'Toán - Tin' },
-    { label:'Ngữ văn',                    query:'Ngữ văn' },
-    { label:'Tiếng Anh',                   query:'Ngoại Ngữ' },
-    { label:'Lịch sử - Địa lí - GDKT&PL',  query:'Sử - Địa - GD KT&PL' },
-    { label:'Vật lí - Công nghệ',         query:'Vật lí - Công nghệ' },
-    { label:'Hóa học',                    query:'Hóa học' },
-    { label:'Sinh - GDTC - QPAN',         query:'Sinh - GDTC - QPAN' },
-    { label:'Văn phòng',                  query:'Văn phòng' }
-  ];
-}
+async function loadMeetingPersonnel() {
+  const c = $('meetingPersonnelContainer');
 
-async function hvaPersonnelWorkgroupList(){
-  const raw=await hvaPersonnelGetCached('getPersonnelWorkgroups',{});
-  return hvaPersonnelArray(raw).map(x=>{
-    if(typeof x==='string') return {name:hvaPersonnelText(x)};
-    return {...x,name:hvaPersonnelText(x.name || x.label || x.value)};
-  }).filter(x=>x.name);
-}
-
-function hvaPersonnelMakeGroup(groupKey,tenTo,kind,members){
-  return {
-    groupKey:hvaPersonnelText(groupKey),
-    tenTo:hvaPersonnelText(tenTo),
-    kind:hvaPersonnelText(kind),
-    members:hvaPersonnelDedupe(members,tenTo)
-  };
-}
-
-async function hvaPersonnelBuildGroups(){
-  const units=hvaPersonnelUnits();
-
-  const [chiBoRaw,bghRaw,workgroups]=await Promise.all([
-    hvaPersonnelSearch('CHIBO',''),
-    hvaPersonnelSearch('BGH',''),
-    hvaPersonnelWorkgroupList()
-  ]);
-
-  const teamResults=await Promise.all(units.map(async unit=>{
-    try{
-      return {name:unit.label,raw:await hvaPersonnelSearch('TEAM',unit.query)};
-    }catch(e){
-      console.warn('[HVA Personnel] TEAM',unit.query,e);
-      return {name:unit.label,raw:[]};
-    }
-  }));
-
-  const workResults=await Promise.all(workgroups.map(async group=>{
-    try{
-      return {name:group.name,raw:await hvaPersonnelSearch('WORKGROUP',group.name)};
-    }catch(e){
-      console.warn('[HVA Personnel] WORKGROUP',group.name,e);
-      return {name:group.name,raw:[]};
-    }
-  }));
-
-  const groups=[];
-  groups.push(hvaPersonnelMakeGroup('CHIBO','Chi bộ','ROOT',chiBoRaw));
-  groups.push(hvaPersonnelMakeGroup('BGH','Ban Giám hiệu','ROOT',bghRaw));
-
-  teamResults.forEach(x=>{
-    groups.push(hvaPersonnelMakeGroup('TEAM:'+x.name,x.name,'TEAM',x.raw));
-  });
-
-  const councilMembers=[];
-  groups.filter(g=>g.groupKey==='BGH'||g.kind==='TEAM')
-    .forEach(g=>councilMembers.push(...g.members));
-
-  /* Hội đồng là nhóm tổng hợp động, không có danh sách riêng. */
-  groups.push(hvaPersonnelMakeGroup('COUNCIL:ALL','Hội đồng','COUNCIL',councilMembers));
-
-  workResults.forEach(({name,raw})=>{
-    if(!name) return;
-
-    if(name.toUpperCase()==='GVCN'){
-      const mapped=hvaPersonnelDedupe(raw,'GVCN');
-
-      ['10','11','12'].forEach(khoi=>{
-        const members=mapped
-          .filter(m=>hvaPersonnelText(m.lopChuNhiem).startsWith(khoi+'/'))
-          .sort((a,b)=>{
-            const na=Number(hvaPersonnelText(a.lopChuNhiem).split('/')[1])||999;
-            const nb=Number(hvaPersonnelText(b.lopChuNhiem).split('/')[1])||999;
-            return na-nb || hvaPersonnelText(a.hoTen).localeCompare(hvaPersonnelText(b.hoTen),'vi');
-          });
-
-        groups.push(hvaPersonnelMakeGroup('GVCN:'+khoi,'GVCN khối '+khoi,'GVCN',members));
-      });
-    }else{
-      groups.push(hvaPersonnelMakeGroup('WORKGROUP:'+name,name,'WORKGROUP',raw));
-    }
-  });
-
-  return groups;
-}
-
-/* Adapter Cuộc họp: chỉ nối CORE vào UI hiện có; KHÔNG sửa giao diện. */
-async function loadMeetingPersonnel(){
-  const c=$('meetingPersonnelContainer');
-  if(!c) return;
-
-  c.innerHTML=
-    '<div class="py-5 text-center text-sm text-slate-400">'+
-      '<i class="bi bi-arrow-repeat animate-spin mr-1"></i>'+
-      'Đang đồng bộ Nhân sự HVA...'+
+  c.innerHTML =
+    '<div class="py-5 text-center text-sm text-slate-400">' +
+      '<i class="bi bi-arrow-repeat animate-spin mr-1"></i>' +
+      'Đang đồng bộ Nhân sự HVA...' +
     '</div>';
 
-  try{
-    meetingAllToData=await hvaPersonnelBuildGroups();
+  try {
+    // TÊN CHUẨN THEO NGUỒN NHÂN SỰ HVA.
+    // label = tên hiển thị; query = tên dùng để truy xuất searchNhanSuQuick.
+    const teams = [
+      { label: 'Toán - Tin',                 query: 'Toán - Tin' },
+      { label: 'Ngữ văn',                    query: 'Ngữ văn' },
+      { label: 'Tiếng Anh',                  query: 'Ngoại Ngữ' },
+      { label: 'Lịch sử - Địa lí - GDKT&PL', query: 'Sử - Địa - GD KT&PL' },
+      { label: 'Vật lí - Công nghệ',         query: 'Vật lí - Công nghệ' },
+      { label: 'Hóa học',                    query: 'Hóa học' },
+      { label: 'Sinh - GDTC - QPAN',         query: 'Sinh - GDTC - QPAN' },
+      { label: 'Văn phòng',                  query: 'Văn phòng' }
+    ];
+
+    const [chiBoRaw, bghRaw, workgroupsRaw] = await Promise.all([
+      hvaPersonnelGetCached('searchNhanSuQuick', { q: '', category: 'CHIBO' }),
+      hvaPersonnelGetCached('searchNhanSuQuick', { q: '', category: 'BGH' }),
+      hvaPersonnelGetCached('getPersonnelWorkgroups', {})
+    ]);
+
+    const workgroups = hvaPersonnelArray(workgroupsRaw);
+
+    const teamJobs = teams.map(t =>
+      hvaPersonnelGetCached('searchNhanSuQuick', {
+        q: t.query,
+        category: 'TEAM'
+      })
+      .then(raw => ({ name: t.label, raw }))
+      .catch(() => ({ name: t.label, raw: [] }))
+    );
+
+    const workJobs = workgroups.map(x => {
+      const name = String(
+        (x && x.name) ||
+        (x && x.label) ||
+        x ||
+        ''
+      ).trim();
+
+      return hvaPersonnelGetCached('searchNhanSuQuick', {
+        q: name,
+        category: 'WORKGROUP'
+      })
+      .then(raw => ({ name, raw }))
+      .catch(() => ({ name, raw: [] }));
+    });
+
+    const [teamResults, workResults] = await Promise.all([
+      Promise.all(teamJobs),
+      Promise.all(workJobs)
+    ]);
+
+    const groups = [];
+
+    const pushGroup = (groupKey, tenTo, kind, members) => {
+      const seen = new Set();
+
+      const clean = hvaPersonnelArray(members)
+        .map(m => mapMeetingPerson(m, tenTo))
+        .filter(m => {
+          if (!m.username || seen.has(m.username)) return false;
+          seen.add(m.username);
+          return true;
+        });
+
+      groups.push({
+        groupKey,
+        tenTo,
+        kind,
+        members: clean
+      });
+    };
+
+    // 1. Nhóm đặc biệt
+    pushGroup('CHIBO', 'Chi bộ', 'ROOT', chiBoRaw);
+    pushGroup('BGH', 'Ban Giám hiệu', 'ROOT', bghRaw);
+
+    // 2. 07 Tổ chuyên môn + Tổ Văn phòng
+    teamResults.forEach(x => {
+      pushGroup(
+        'TEAM:' + x.name,
+        x.name,
+        'TEAM',
+        x.raw
+      );
+    });
+
+    // 3. HỘI ĐỒNG = BGH + 07 TCM + VP
+    // Chống trùng toàn Hội đồng theo username.
+    const councilMap = new Map();
+
+    groups
+      .filter(g => g.groupKey === 'BGH' || g.kind === 'TEAM')
+      .forEach(g => {
+        g.members.forEach(m => {
+          if (m.username && !councilMap.has(m.username)) {
+            councilMap.set(m.username, m);
+          }
+        });
+      });
+
+    pushGroup(
+      'COUNCIL:ALL',
+      'Hội đồng',
+      'COUNCIL',
+      [...councilMap.values()]
+    );
+
+    // 4. Nhóm công tác
+    workResults.forEach(({ name, raw }) => {
+      if (!name) return;
+
+      if (name.toUpperCase() === 'GVCN') {
+        const mapped = hvaPersonnelArray(raw)
+          .map(m => mapMeetingPerson(m, 'GVCN'));
+
+        ['10', '11', '12'].forEach(khoi => {
+          const members = mapped
+            .filter(m =>
+              String(m.lopChuNhiem || '').startsWith(khoi + '/')
+            )
+            .sort((a, b) =>
+              (Number(String(a.lopChuNhiem).split('/')[1]) || 999) -
+              (Number(String(b.lopChuNhiem).split('/')[1]) || 999) ||
+              String(a.hoTen).localeCompare(String(b.hoTen), 'vi')
+            );
+
+          pushGroup(
+            'GVCN:' + khoi,
+            'GVCN khối ' + khoi,
+            'GVCN',
+            members
+          );
+        });
+      } else {
+        pushGroup(
+          'WORKGROUP:' + name,
+          name,
+          'WORKGROUP',
+          raw
+        );
+      }
+    });
+
+    meetingAllToData = groups;
     renderMeetingPersonnel();
-  }catch(e){
-    console.error('[HVA Personnel]',e);
-    let msg=e && e.message ? e.message : 'Không tải được Nhân sự HVA';
-    if(msg==='HVA_AUTH_REQUEST_NOT_READY') msg='Hệ thống xác thực HVA chưa sẵn sàng.';
-    c.innerHTML=
-      '<div class="p-5 text-center text-sm text-red-500 font-bold">'+
-        esc(msg)+'<br>'+
-        '<button type="button" onclick="loadMeetingPersonnel()" '+
-        'class="mt-3 px-3 py-2 rounded-lg border border-blue-200 text-[#0F4C81]">'+
-        'Thử lại</button>'+
-      '</div>';
+
+  } catch (e) {
+    c.innerHTML =
+      `<div class="p-5 text-center text-sm text-red-500 font-bold">
+        ${esc(e.message || 'Không tải được Nhân sự HVA')}
+        <br>
+        <button
+          type="button"
+          onclick="loadMeetingPersonnel()"
+          class="mt-3 px-3 py-2 rounded-lg border border-blue-200 text-[#0F4C81]">
+          Thử lại
+        </button>
+      </div>`;
   }
 }
+
+
+
 
 
 /* =========================================================
