@@ -305,7 +305,7 @@ async function loadMeetingPersonnel() {
       { label: 'Toán - Tin',                 query: 'Toán - Tin' },
       { label: 'Ngữ văn',                    query: 'Ngữ văn' },
       { label: 'Tiếng Anh',                  query: 'Ngoại Ngữ' },
-      { label:'Lịch sử - Địa lí - GDKT&PL', query:'Sử Địa' },
+      { label: 'Lịch sử - Địa lí - GDKT&PL', query: 'Sử - Địa - GD KT&PL' },
       { label: 'Vật lí - Công nghệ',         query: 'Vật lí - Công nghệ' },
       { label: 'Hóa học',                    query: 'Hóa học' },
       { label: 'Sinh - GDTC - QPAN',         query: 'Sinh - GDTC - QPAN' },
@@ -321,9 +321,10 @@ async function loadMeetingPersonnel() {
     const workgroups = hvaPersonnelArray(workgroupsRaw);
 
     const teamJobs = teams.map(t =>
-      hvaPersonnelGetCached('searchNhanSuQuick', {
-        q: t.query,
-        category: 'TEAM'
+      // Tổ/Bộ phận là dữ liệu cấu trúc: lấy trực tiếp theo đúng trường Tổ/Bộ phận,
+      // không dùng tìm kiếm từ khóa searchNhanSuQuick để suy ra thành viên tổ.
+      hvaPersonnelGetCached('getNhanSuTheoTo', {
+        to: t.query
       })
       .then(raw => ({ name: t.label, raw }))
       .catch(() => ({ name: t.label, raw: [] }))
@@ -459,6 +460,9 @@ async function loadMeetingPersonnel() {
       </div>`;
   }
 }
+
+
+
 
 
 
