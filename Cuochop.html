@@ -14,17 +14,30 @@ body{font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent}::-web
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-800">
 <header class="hva-digital-header sticky top-0 z-40 shadow-lg">
-  <div class="max-w-4xl mx-auto px-3 sm:px-4 py-3 flex items-center gap-3">
-    <button onclick="location.href='main.html'" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 text-white"><i class="bi bi-arrow-left"></i></button>
-    <div class="min-w-0 flex-1">
-      <div class="text-white/75 text-[9px] font-bold uppercase tracking-wider">SỞ GD&amp;ĐT TP ĐÀ NẴNG - THPT HÒA VANG</div>
-      <div class="hva-digital-title text-white text-base sm:text-lg font-black">QUẢN LÝ CUỘC HỌP</div>
+  <div class="hva-header-inner">
+    <button type="button" onclick="location.href='main.html'" class="hva-back-btn" aria-label="Quay lại trang chủ">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+
+    <img src="./assets/brand/HVA_Logo_Transparent.png?v=20260915e"
+         alt="HVA Digital"
+         class="hva-header-logo"
+         draggable="false">
+
+    <div class="hva-brand-block">
+      <div class="hva-brand-kicker">TRUNG TÂM QUẢN TRỊ SỐ HVA</div>
+      <div class="hva-brand-school">TRƯỜNG THPT HÒA VANG</div>
+      <div class="hva-brand-slogan">Quản trị thông minh <span>•</span> Giáo dục sáng tạo</div>
     </div>
-    <span class="hidden sm:inline-flex text-[10px] font-bold text-white/90 bg-white/10 border border-white/20 rounded-full px-3 py-1.5">HVA Meeting</span>
+
+    <div class="hva-header-status">
+      <span class="hva-online-dot"></span><span>TRỰC TUYẾN</span>
+    </div>
   </div>
 </header>
 
 <main class="max-w-6xl mx-auto p-3 sm:p-4 space-y-4 pb-24">
+  <div class="hva-module-heading">TẠO VÀ QUẢN LÝ CUỘC HỌP</div>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
     <section class="hero-card hero-create">
       <div class="hero-icon"><i class="bi bi-people-fill"></i></div>
@@ -746,10 +759,29 @@ async function sendBreakMessage(){const eligible=interactionParticipants.filter(
 window.addEventListener('DOMContentLoaded',()=>{const d=new Date();$('meetingDate').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;handleMeetingType();handleMeetingTitle();loadMeetingPersonnel();const box=$('managedMeetings');if(box)box.innerHTML='<div class="text-[10px] text-slate-500">Điều hành QR sẽ hiển thị sau khi cuộc họp được phát hành.</div>';});
 </script>
 <style>
-:root{--hva:#0F4C81;--hva-dark:#083B6B;--line:#94a3b8;--text:#1e293b}
-.hva-digital-header{background:linear-gradient(115deg,#083B6B 0%,#0F4C81 46%,#087EA4 100%);position:sticky;overflow:hidden}.hva-digital-header:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.05) 38%,rgba(255,255,255,.22) 50%,rgba(255,255,255,.04) 62%,transparent 100%);transform:translateX(-65%);animation:hvaShine 7s ease-in-out infinite}.hva-digital-title{text-shadow:0 1px 0 rgba(255,255,255,.18),0 6px 18px rgba(0,25,65,.28)}@keyframes hvaShine{0%,62%{transform:translateX(-70%)}82%,100%{transform:translateX(70%)}}
+:root{--hva:#0F4C81;--hva-dark:#083B6B;--hva-bright:#0b84c6;--hva-cyan:#12b7c9;--line:#94a3b8;--text:#1e293b}
+.hva-digital-header{background:linear-gradient(112deg,#0b477d 0%,#0c6fa7 52%,#12a8bb 100%);position:sticky;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.22)}
+.hva-digital-header:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;background-image:radial-gradient(circle at 72% 28%,rgba(255,255,255,.8) 0 1px,transparent 2px),linear-gradient(120deg,transparent 0 55%,rgba(117,233,255,.28) 55.2% 55.6%,transparent 55.8% 100%),linear-gradient(65deg,transparent 0 69%,rgba(117,233,255,.22) 69.2% 69.5%,transparent 69.7% 100%);background-size:110px 70px,260px 160px,310px 190px}
+.hva-digital-header:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.03) 38%,rgba(255,255,255,.17) 50%,rgba(255,255,255,.03) 62%,transparent 100%);transform:translateX(-65%);animation:hvaShine 7s ease-in-out infinite}
+.hva-header-inner{position:relative;z-index:1;max-width:1180px;margin:0 auto;min-height:96px;padding:10px 16px;display:grid;grid-template-columns:54px 72px minmax(0,1fr) auto;align-items:center;gap:14px}
+.hva-back-btn{width:50px;height:50px;border-radius:15px;background:linear-gradient(145deg,rgba(16,105,172,.96),rgba(12,82,145,.96));border:2px solid rgba(92,195,255,.38);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 7px 16px rgba(1,39,82,.2);transition:.14s}
+.hva-back-btn i{font-size:27px;font-weight:900;-webkit-text-stroke:1.4px currentColor}
+.hva-back-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}.hva-back-btn:active{transform:translateY(2px)}
+.hva-header-logo{width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,34,80,.24))}
+.hva-brand-block{min-width:0;text-align:center;color:#fff;line-height:1.12;justify-self:start;min-width:min(560px,100%)}
+.hva-brand-kicker{font-size:12px;font-weight:800;letter-spacing:.16em;color:rgba(230,245,255,.9);white-space:nowrap}
+.hva-brand-school{margin-top:5px;font-size:25px;font-weight:900;letter-spacing:.01em;text-shadow:0 2px 10px rgba(0,34,80,.22);white-space:nowrap}
+.hva-brand-slogan{margin-top:5px;font-size:13px;font-weight:650;color:rgba(237,248,255,.9);white-space:nowrap}.hva-brand-slogan span{padding:0 5px}
+.hva-header-status{height:38px;padding:0 15px;border-radius:19px;border:1.5px solid rgba(112,246,239,.78);background:rgba(3,79,116,.35);color:#fff;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:900;white-space:nowrap;box-shadow:inset 0 0 18px rgba(26,224,224,.08)}
+.hva-online-dot{width:10px;height:10px;border-radius:50%;background:#20e68a;box-shadow:0 0 0 4px rgba(32,230,138,.13),0 0 12px rgba(32,230,138,.7)}
+.hva-module-heading{text-align:center;color:#0F4C81;font-size:15px;font-weight:900;letter-spacing:.045em;text-transform:uppercase;padding-top:1px}
+@keyframes hvaShine{0%,62%{transform:translateX(-70%)}82%,100%{transform:translateX(70%)}}
 .hero-card{min-height:112px;border-radius:18px;padding:18px;display:flex;align-items:center;gap:14px;border:2px solid;box-shadow:0 8px 22px rgba(15,76,129,.12)}.hero-create{color:white;border-color:#0b5b91;background:linear-gradient(125deg,#0F4C81,#1679a8)}.hero-qr{border-color:#c4b5fd;background:linear-gradient(125deg,#f5f3ff,#ede9fe)}.hero-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);flex:none}.hero-icon-qr{background:#fff;color:#6d28d9;border-color:#ddd6fe}.hero-title{font-size:17px;font-weight:900;letter-spacing:.02em}.hero-note{font-size:12.5px;font-weight:650;margin-top:4px;line-height:1.4}
 .panel-card{background:white;border:2px solid #cbd5e1;border-radius:18px;box-shadow:0 4px 14px rgba(15,23,42,.06)}.section-title{display:flex;align-items:center;gap:9px;margin-bottom:2px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.035em;color:#334155}.section-title i{width:30px;height:30px;border-radius:9px;background:#eaf3fb;color:#0F4C81;display:flex;align-items:center;justify-content:center;font-size:14px}.lbl{display:block;font-size:13px;font-weight:800;color:#0F4C81;margin-bottom:6px}.lbl b{color:#dc2626}.field{width:100%;height:44px;border-radius:11px;border:1.7px solid #94a3b8;background:#fff;padding:0 12px;font-size:14px;font-weight:600;color:#1e293b;outline:none;transition:.15s}.field::placeholder{color:#64748b;font-weight:500;opacity:1}.field:focus{border-color:#0F4C81;box-shadow:0 0 0 3px rgba(15,76,129,.12)}.textarea-field{height:82px;padding:12px;line-height:1.5}.textarea-field::placeholder{line-height:56px}.badge{font-size:11.5px;font-weight:800;padding:5px 9px;border-radius:9px;border:1px solid #cbd5e1}.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:72px;padding:12px 14px;border:1.7px solid #94a3b8;border-radius:12px;cursor:pointer;background:#fff}.toggle-row b{display:block;font-size:13.5px;color:#334155;font-weight:850}.toggle-row small{display:block;font-size:11.5px;color:#64748b;font-weight:550;margin-top:3px;line-height:1.35}.chip{display:inline-flex;align-items:center;padding:6px 9px;border-radius:9px;border:1px solid #bfdbfe;font-size:11.5px;font-weight:750}.action-panel{background:#fff;border:2px solid #94a3b8;border-radius:18px;box-shadow:0 8px 22px rgba(15,23,42,.11)}.raised-btn{height:48px;border-radius:12px;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;border:1px solid rgba(0,0,0,.08);box-shadow:0 6px 0 rgba(15,23,42,.16),0 10px 18px rgba(15,23,42,.12);transform:translateY(0);transition:.12s}.raised-btn:hover{filter:brightness(1.04);transform:translateY(-1px)}.raised-btn:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(15,23,42,.18),0 4px 8px rgba(15,23,42,.10)}.raised-red{background:linear-gradient(#ef4444,#dc2626)}.raised-blue{background:linear-gradient(#1674b8,#0F4C81)}.raised-green{background:linear-gradient(#22c55e,#15803d)}.raised-violet{background:linear-gradient(#8b5cf6,#6d28d9)}.raised-btn.compact{height:40px;min-width:110px;font-size:11.5px;box-shadow:0 4px 0 rgba(76,29,149,.22),0 7px 14px rgba(76,29,149,.14)}.draft-btn{margin-top:13px;width:100%;height:42px;border-radius:11px;border:1.5px solid #94a3b8;background:#f8fafc;color:#475569;font-size:12px;font-weight:850;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 3px 8px rgba(15,23,42,.06)}
-@media(max-width:640px){.hero-card{min-height:96px;padding:14px}.hero-title{font-size:15px}.hero-note{font-size:11.5px}.hero-icon{width:44px;height:44px}.raised-btn.compact{min-width:96px}.section-title{font-size:12.5px}.lbl{font-size:12.5px}.field{font-size:13.5px}.textarea-field::placeholder{line-height:1.5}.toggle-row small{font-size:11px}}
+
+/* HVA UI STANDARD — SELECT / DROPDOWN */
+select.field{appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:58px!important;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='44' viewBox='0 0 54 44'%3E%3Crect x='0' y='0' width='54' height='44' rx='10' fill='%23156fc1'/%3E%3Cpath d='M18 17.5L27 26.5L36 17.5' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right center;background-size:54px 100%;cursor:pointer}
+select.field:hover{border-color:#4f8fc4}select.field:focus{border-color:#0F4C81;box-shadow:0 0 0 3px rgba(15,76,129,.12)}
+@media(max-width:640px){.hva-header-inner{min-height:82px;padding:8px 10px;grid-template-columns:44px 54px minmax(0,1fr);gap:8px}.hva-back-btn{width:42px;height:42px;border-radius:13px}.hva-back-btn i{font-size:23px}.hva-header-logo{width:52px;height:52px}.hva-brand-block{min-width:0;width:100%;justify-self:stretch}.hva-brand-kicker{font-size:8px;letter-spacing:.09em;white-space:normal}.hva-brand-school{font-size:16px;white-space:normal;margin-top:3px}.hva-brand-slogan{font-size:9px;white-space:normal;margin-top:3px}.hva-header-status{display:none}.hva-module-heading{font-size:13px}.hero-card{min-height:96px;padding:14px}.hero-title{font-size:15px}.hero-note{font-size:11.5px}.hero-icon{width:44px;height:44px}.raised-btn.compact{min-width:96px}.section-title{font-size:12.5px}.lbl{font-size:12.5px}.field{font-size:13.5px}.textarea-field::placeholder{line-height:1.5}.toggle-row small{font-size:11px}}
 </style>
 </body></html>
