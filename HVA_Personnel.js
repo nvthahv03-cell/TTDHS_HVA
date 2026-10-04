@@ -33,38 +33,92 @@ function hvaPersonnelCurrentUser(){
   }catch(e){ return {}; }
 }
 
-async function hvaPersonnelWaitForAuth(timeoutMs=5000){
-  const started=Date.now();
-  while(Date.now()-started<timeoutMs){
-    if(window.HVAAuthRequest && typeof window.HVAAuthRequest.get==='function'){
-      return window.HVAAuthRequest;
-    }
-    await new Promise(resolve=>setTimeout(resolve,100));
+function hvaPersonnelEnsureAuth(){
+  if(global.HVAAuthRequest && typeof global.HVAAuthRequest.get==='function'){
+    return global.HVAAuthRequest;
   }
-  throw Error('HVA_AUTH_REQUEST_NOT_READY');
+
+  /* Fallback dùng ĐÚNG cơ chế HVA AUTH REQUEST đang PASS trong main.html.
+     Chỉ khởi tạo khi trang con (Cuochop/Giaonhanviec/...) chưa nạp helper toàn cục. */
+  const TOKEN_KEY='hvaSessionToken';
+  const EXPIRES_KEY='hvaSessionExpiresAt';
+
+  function getSessionToken(){
+    return String(localStorage.getItem(TOKEN_KEY)||'').trim();
+  }
+  function getSessionExpiresAt(){
+    const n=Number(String(localStorage.getItem(EXPIRES_KEY)||'').trim());
+    return Number.isFinite(n)?n:0;
+  }
+  function getSessionState(){
+    const token=getSessionToken(), expiresAt=getSessionExpiresAt(), now=Date.now();
+    return {
+      hasToken:!!token,
+      tokenLength:token.length,
+      expiresAt,
+      expired:!!expiresAt&&expiresAt<=now,
+      validLocal:!!token&&!!expiresAt&&expiresAt>now
+    };
+  }
+  function requireLocalSession(){
+    const state=getSessionState();
+    if(!state.hasToken){
+      const e=new Error('AUTH_REQUIRED'); e.code='AUTH_REQUIRED'; throw e;
+    }
+    if(!state.expiresAt||state.expired){
+      const e=new Error('SESSION_EXPIRED'); e.code='SESSION_EXPIRED'; throw e;
+    }
+    return getSessionToken();
+  }
+  function withAuthQuery(url){
+    const u=new URL(url,global.location.href);
+    u.searchParams.set('sessionToken',requireLocalSession());
+    return u.toString();
+  }
+  function withAuthBody(payload){
+    const src=payload&&typeof payload==='object'?payload:{};
+    return Object.assign({},src,{sessionToken:requireLocalSession()});
+  }
+  async function authGet(url,options){
+    return fetch(withAuthQuery(url),Object.assign({},options||{},{method:'GET'}));
+  }
+  async function authPostJson(url,payload,options){
+    const opts=Object.assign({},options||{});
+    opts.method='POST';
+    opts.headers=Object.assign({},opts.headers||{}, {'Content-Type':'text/plain;charset=utf-8'});
+    opts.body=JSON.stringify(withAuthBody(payload));
+    return fetch(url,opts);
+  }
+
+  global.HVAAuthRequest=Object.freeze({
+    getSessionState,withAuthQuery,withAuthBody,get:authGet,postJson:authPostJson
+  });
+  return global.HVAAuthRequest;
 }
 
 async function hvaPersonnelGet(action, params={}){
-  const auth=await hvaPersonnelWaitForAuth();
-  const user = hvaPersonnelCurrentUser();
-  const u = new URL(PERSONNEL_SEARCH_API);
+  const auth=hvaPersonnelEnsureAuth();
+  const user=hvaPersonnelCurrentUser();
+  const api=global.PERSONNEL_SEARCH_API ||
+    'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+  const u=new URL(api);
 
-  u.searchParams.set('action', hvaPersonnelText(action));
-  if(user.username || user.userName || user.maGV){
-    u.searchParams.set('username', hvaPersonnelText(user.username || user.userName || user.maGV));
+  u.searchParams.set('action',hvaPersonnelText(action));
+  if(user.username||user.userName||user.maGV){
+    u.searchParams.set('username',hvaPersonnelText(user.username||user.userName||user.maGV));
   }
-
-  Object.entries(params || {}).forEach(([k,v])=>{
-    if(v !== undefined && v !== null) u.searchParams.set(k, hvaPersonnelText(v));
+  Object.entries(params||{}).forEach(([k,v])=>{
+    if(v!==undefined&&v!==null) u.searchParams.set(k,hvaPersonnelText(v));
   });
-  u.searchParams.set('_', Date.now());
+  u.searchParams.set('_',Date.now());
 
-  const r = await auth.get(u.toString(), {cache:'no-store'});
-  if(!r.ok) throw Error('HTTP ' + r.status);
-
-  const data = await r.json();
-  if(data && data.success === false){
-    throw Error(data.message || 'Không tải được dữ liệu nhân sự.');
+  const r=await auth.get(u.toString(),{cache:'no-store'});
+  if(!r.ok) throw Error('HTTP '+r.status);
+  const data=await r.json();
+  if(data&&data.success===false){
+    const e=new Error(data.message||data.code||'Không tải được dữ liệu nhân sự.');
+    e.code=data.code||'PERSONNEL_API_ERROR';
+    throw e;
   }
   return data;
 }
@@ -172,11 +226,12 @@ function hvaPersonnelUnits(){
     }).filter(x=>x.query);
   }
 
+  /* query = ĐÚNG giá trị cột Tổ/Bộ phận trong nguồn nhân sự. */
   return [
     { label:'Toán - Tin',                 query:'Toán - Tin' },
     { label:'Ngữ văn',                    query:'Ngữ văn' },
-    { label:'Tiếng Anh',                  query:'Tiếng Anh' },
-    { label:'Lịch sử - Địa lí - GDKT&PL', query:'Lịch sử - Địa lí - GDKT&PL' },
+    { label:'Tiếng Anh',                  query:'Ngoại Ngữ' },
+    { label:'Lịch sử - Địa lí - GDKT&PL', query:'Sử - Địa - GD KT&PL' },
     { label:'Vật lí - Công nghệ',         query:'Vật lí - Công nghệ' },
     { label:'Hóa học',                    query:'Hóa học' },
     { label:'Sinh - GDTC - QPAN',         query:'Sinh - GDTC - QPAN' },
@@ -221,30 +276,20 @@ function hvaPersonnelUnitKey(v){
 }
 
 async function hvaPersonnelBuildGroups(){
-  const units=[
-    {label:'Toán - Tin',key:'MATH_IT'},
-    {label:'Ngữ văn',key:'LITERATURE'},
-    {label:'Tiếng Anh',key:'ENGLISH'},
-    {label:'Lịch sử - Địa lí - GDKT&PL',key:'HISTORY_GEO'},
-    {label:'Vật lí - Công nghệ',key:'PHYSICS_TECH'},
-    {label:'Hóa học',key:'CHEMISTRY'},
-    {label:'Sinh - GDTC - QPAN',key:'BIO_PE_DEF'},
-    {label:'Văn phòng',key:'OFFICE'}
-  ];
+  const units=hvaPersonnelUnits();
 
-  const [chiBoRaw,bghRaw,workgroups,allTeamRaw]=await Promise.all([
+  /* Mỗi tổ dùng CÙNG MỘT hàm searchNhanSuQuick('TEAM', query).
+     Không dùng '*' và không có logic riêng cho bất kỳ tổ nào. */
+  const [chiBoRaw,bghRaw,workgroups,teamResults]=await Promise.all([
     hvaPersonnelSearch('CHIBO',''),
     hvaPersonnelSearch('BGH',''),
     hvaPersonnelWorkgroupList(),
-    /* '*' là truy vấn không sinh term tìm kiếm: lấy toàn bộ TEAM một lần rồi nhóm theo trường Tổ/Bộ phận. */
-    hvaPersonnelSearch('TEAM','*')
+    Promise.all(units.map(async unit=>({
+      name:unit.label,
+      query:unit.query,
+      raw:await hvaPersonnelSearch('TEAM',unit.query)
+    })))
   ]);
-
-  const allTeam=hvaPersonnelArray(allTeamRaw);
-  const teamResults=units.map(unit=>({
-    name:unit.label,
-    raw:allTeam.filter(p=>hvaPersonnelUnitKey(p.to || p.toBoPhan || p.tenTo)===unit.key)
-  }));
 
   const workResults=await Promise.all(workgroups.map(async group=>{
     try{
@@ -278,7 +323,7 @@ async function hvaPersonnelBuildGroups(){
           .sort((a,b)=>{
             const na=Number(hvaPersonnelText(a.lopChuNhiem).split('/')[1])||999;
             const nb=Number(hvaPersonnelText(b.lopChuNhiem).split('/')[1])||999;
-            return na-nb || hvaPersonnelText(a.hoTen).localeCompare(hvaPersonnelText(b.hoTen),'vi');
+            return na-nb||hvaPersonnelText(a.hoTen).localeCompare(hvaPersonnelText(b.hoTen),'vi');
           });
         groups.push(hvaPersonnelMakeGroup('GVCN:'+khoi,'GVCN khối '+khoi,'GVCN',members));
       });
@@ -286,6 +331,7 @@ async function hvaPersonnelBuildGroups(){
       groups.push(hvaPersonnelMakeGroup('WORKGROUP:'+name,name,'WORKGROUP',raw));
     }
   });
+
   return groups;
 }
 
@@ -295,6 +341,7 @@ global.HVAPersonnel = Object.freeze({
   text: hvaPersonnelText,
   array: hvaPersonnelArray,
   currentUser: hvaPersonnelCurrentUser,
+  ensureAuth: hvaPersonnelEnsureAuth,
   get: hvaPersonnelGet,
   normalize: normalizeHvaPerson,
   identity: hvaPersonnelIdentity,
