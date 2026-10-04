@@ -248,6 +248,17 @@
   .hva-create-user{width:100%;margin-left:0;padding:9px 0 0;border-left:0;border-top:1px solid rgba(255,255,255,.25)}
 }
 
+
+/* Nút × trên từng người/nhóm đã chọn */
+.chip-remove{
+  width:18px;height:18px;flex:0 0 18px;border:0;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0;margin:0 -2px 0 1px;
+  background:rgba(15,76,129,.10);color:#0F4C81;
+  font-size:16px;font-weight:900;line-height:1;cursor:pointer;
+}
+.chip-remove:hover{background:#fee2e2;color:#dc2626}
+
 </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-800">
@@ -727,6 +738,14 @@ function renderMeetingPersonnel(keyword = '') {
   const c = $('meetingPersonnelContainer');
   const kw = String(keyword || '').trim().toLowerCase();
 
+  // Giữ nguyên các tổ/nhóm đang mở khi check/bỏ check một GV.
+  // Trước đây render lại làm nhóm vừa mở bị đóng nên thầy thấy "danh sách biến mất".
+  const openedGroupIds = new Set(
+    [...c.querySelectorAll('[id^="mg_"]')]
+      .filter(el => !el.classList.contains('hidden'))
+      .map(el => el.id)
+  );
+
   const council = meetingAllToData.find(g => g.kind === 'COUNCIL');
   const chiBo = meetingAllToData.find(g => g.groupKey === 'CHIBO');
   const bgh = meetingAllToData.find(g => g.groupKey === 'BGH');
@@ -746,6 +765,12 @@ function renderMeetingPersonnel(keyword = '') {
 
   c.innerHTML = html ||
     '<div class="p-6 text-center text-sm text-slate-400">Không tìm thấy nhân sự phù hợp.</div>';
+
+  // Mở lại đúng các tổ/nhóm đang mở trước khi render.
+  openedGroupIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('hidden');
+  });
 
   updateMeetingSelectionUI();
 }
@@ -804,6 +829,18 @@ function removeAllMeetingSelections() {
   renderMeetingPersonnel($('meetingSearchNhanSu').value);
 }
 
+function removeMeetingSelectedUser(username) {
+  meetingSelectedUsernames.delete(String(username || ''));
+  renderMeetingPersonnel($('meetingSearchNhanSu').value);
+}
+
+function removeMeetingSelectedGroup(encodedKey) {
+  const key = decodeURIComponent(encodedKey || '');
+  const g = meetingAllToData.find(x => x.groupKey === key);
+  if (g) g.members.forEach(m => meetingSelectedUsernames.delete(m.username));
+  renderMeetingPersonnel($('meetingSearchNhanSu').value);
+}
+
 function selectedPeople() {
   const map = new Map();
 
@@ -842,8 +879,13 @@ function updateMeetingSelectionUI() {
 
       const s = document.createElement('span');
       s.className =
-        'chip bg-violet-100 text-violet-800 border border-violet-200 font-bold';
-      s.textContent = `Hội đồng (${council.members.length} người)`;
+        'chip bg-violet-100 text-violet-800 border border-violet-200 font-bold inline-flex items-center gap-2';
+      s.innerHTML =
+        `<span>Hội đồng (${council.members.length} người)</span>` +
+        `<button type="button" class="chip-remove" title="Bỏ Hội đồng" aria-label="Bỏ Hội đồng">×</button>`;
+      s.querySelector('button').onclick = function(){
+        removeMeetingSelectedGroup(encodeURIComponent(council.groupKey));
+      };
       c.appendChild(s);
     } else {
       // Chỉ đếm các nhóm thực tế, không đếm chồng Hội đồng + tổ thành nhiều nhóm.
@@ -868,8 +910,13 @@ function updateMeetingSelectionUI() {
         g.members.forEach(m => covered.add(m.username));
 
         const s = document.createElement('span');
-        s.className = 'chip bg-indigo-50 text-indigo-700';
-        s.textContent = `${g.tenTo} (${g.members.length})`;
+        s.className = 'chip bg-indigo-50 text-indigo-700 inline-flex items-center gap-2';
+        s.innerHTML =
+          `<span>${esc(g.tenTo)} (${g.members.length})</span>` +
+          `<button type="button" class="chip-remove" title="Bỏ nhóm" aria-label="Bỏ nhóm">×</button>`;
+        s.querySelector('button').onclick = function(){
+          removeMeetingSelectedGroup(encodeURIComponent(g.groupKey));
+        };
         c.appendChild(s);
       });
 
@@ -877,8 +924,13 @@ function updateMeetingSelectionUI() {
         if (covered.has(m.username)) return;
 
         const s = document.createElement('span');
-        s.className = 'chip bg-blue-50 text-[#0F4C81]';
-        s.textContent = m.hoTen;
+        s.className = 'chip bg-blue-50 text-[#0F4C81] inline-flex items-center gap-2';
+        s.innerHTML =
+          `<span>${esc(m.hoTen)}</span>` +
+          `<button type="button" class="chip-remove" title="Bỏ ${esc(m.hoTen)}" aria-label="Bỏ ${esc(m.hoTen)}">×</button>`;
+        s.querySelector('button').onclick = function(){
+          removeMeetingSelectedUser(m.username);
+        };
         c.appendChild(s);
       });
     }
