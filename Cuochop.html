@@ -259,49 +259,6 @@
 }
 .chip-remove:hover{background:#fee2e2;color:#dc2626}
 
-
-/* ===== HVA PREVIEW MEETING SHEET — isolated, do not affect PASS regions ===== */
-.hva-preview-shell{background:#eef5fb}
-.hva-preview-window{background:#fff;border-radius:20px;box-shadow:0 24px 70px rgba(2,43,84,.30);width:100%;max-width:760px;max-height:94vh;overflow:hidden;border:1px solid #d6e5f1}
-.hva-preview-topbar{height:54px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(100deg,#073b78,#075cad 60%,#078fc0);color:#fff}
-.hva-preview-topbar-title{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:900;letter-spacing:.02em}
-.hva-preview-close{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.24);color:#fff}
-.hva-preview-scroll{max-height:calc(94vh - 54px);overflow:auto;padding:14px}
-.hva-preview-paper{max-width:690px;margin:0 auto;background:#fff;border:1px solid #d7e2ec;border-radius:14px;box-shadow:0 8px 24px rgba(15,76,129,.08);overflow:hidden}
-.hva-preview-letterhead{padding:18px 22px 13px;text-align:center;border-bottom:3px double #0F4C81}
-.hva-preview-system{font-size:10px;font-weight:800;letter-spacing:.09em;color:#64748b;text-transform:uppercase}
-.hva-preview-school{margin-top:3px;font-size:13px;font-weight:950;color:#0F4C81;text-transform:uppercase}
-.hva-preview-docname{margin-top:15px;font-size:19px;font-weight:950;color:#0b3f70;text-transform:uppercase;line-height:1.25}
-.hva-preview-subtitle{margin-top:5px;font-size:11px;font-weight:750;color:#64748b}
-.hva-preview-status{display:inline-flex;margin-top:9px;padding:5px 10px;border-radius:999px;background:#e8f4ff;color:#075cad;border:1px solid #b9d9ee;font-size:10px;font-weight:900}
-.hva-preview-body{padding:17px 22px 20px}
-.hva-preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px 14px}
-.hva-preview-field{min-width:0;padding:9px 10px;border-radius:10px;background:#f8fbfe;border:1px solid #e2ebf3}
-.hva-preview-field.full{grid-column:1/-1}
-.hva-preview-label{display:block;margin-bottom:3px;color:#64748b;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.04em}
-.hva-preview-value{color:#173b5c;font-size:11.5px;font-weight:750;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
-.hva-preview-section{margin-top:15px}
-.hva-preview-section-title{display:flex;align-items:center;gap:7px;margin-bottom:7px;color:#0F4C81;font-size:11px;font-weight:950;text-transform:uppercase}
-.hva-preview-section-title:after{content:"";height:1px;flex:1;background:#dbe7f0}
-.hva-preview-content{padding:11px 12px;border-left:3px solid #0F4C81;background:#f8fbfe;border-radius:0 10px 10px 0;color:#334e68;font-size:11.5px;line-height:1.55;white-space:pre-wrap}
-.hva-preview-participants{display:flex;flex-wrap:wrap;gap:6px}
-.hva-preview-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;background:#edf6ff;border:1px solid #cfe4f5;color:#164f7c;font-size:10px;font-weight:800}
-.hva-preview-note{margin-top:14px;padding:9px 11px;border-radius:10px;background:#fff8e8;border:1px solid #f7dfa2;color:#7a5510;font-size:10.5px;line-height:1.45}
-.hva-preview-footer{padding:11px 22px 15px;border-top:1px dashed #ccdbe7;text-align:center;color:#7890a5;font-size:9px;font-weight:700}
-@media(max-width:600px){
-  #previewModal{padding:7px}
-  .hva-preview-window{max-height:96vh;border-radius:15px}
-  .hva-preview-scroll{max-height:calc(96vh - 50px);padding:8px}
-  .hva-preview-topbar{height:50px;padding:0 11px}
-  .hva-preview-paper{border-radius:11px}
-  .hva-preview-letterhead{padding:14px 12px 11px}
-  .hva-preview-docname{font-size:16px;margin-top:11px}
-  .hva-preview-body{padding:12px}
-  .hva-preview-grid{grid-template-columns:1fr;gap:7px}
-  .hva-preview-field.full{grid-column:auto}
-  .hva-preview-footer{padding:9px 12px 12px}
-}
-
 </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-800">
@@ -504,16 +461,11 @@
  </div>
 </div>
 
-<div id="previewModal" class="hidden fixed inset-0 z-[100] hva-preview-shell/95 backdrop-blur-sm p-3 items-center justify-center">
-  <div class="hva-preview-window">
-    <div class="hva-preview-topbar">
-      <div class="hva-preview-topbar-title"><i class="bi bi-file-earmark-text-fill"></i><span>XEM TRƯỚC CUỘC HỌP</span></div>
-      <button type="button" onclick="closePreview()" class="hva-preview-close" aria-label="Đóng xem trước"><i class="bi bi-x-lg"></i></button>
-    </div>
-    <div class="hva-preview-scroll">
-      <div id="previewBody"></div>
-    </div>
-  </div>
+<div id="previewModal" class="hidden fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm p-3 items-center justify-center">
+ <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+  <div class="sticky top-0 bg-white border-b px-4 py-3 flex justify-between items-center"><b class="text-[#0F4C81] text-sm">XEM TRƯỚC CUỘC HỌP</b><button onclick="closePreview()" class="w-8 h-8 rounded-lg bg-slate-100"><i class="bi bi-x-lg"></i></button></div>
+  <div id="previewBody" class="p-5 text-sm"></div>
+ </div>
 </div>
 
 <script src="HVA_Personnel.js"></script>
@@ -533,77 +485,7 @@ function collectMeeting(){const type=$('meetingType').value;return {sourceModule
 function validateMeeting(){if(!$('meetingForm').reportValidity())return false;if($('meetingTitle').value==='Khác'&&!$('customMeetingTitle').value.trim()){alert('Vui lòng nhập tiêu đề cuộc họp.');$('customMeetingTitle').focus();return false;}if(meetingSelectedUsernames.size===0){alert('Vui lòng chọn thành phần tham dự.');return false;}if($('meetingPlace').value==='Khác'&&!$('otherPlace').value.trim()){alert('Vui lòng nhập địa điểm khác.');return false;}if($('enableQr').checked&&(!$('qrOpen').value||!$('qrClose').value)){alert('Vui lòng chọn thời gian mở và đóng điểm danh QR.');return false;}return true;}
 function saveDraft(e){e.preventDefault();localStorage.setItem('HVA_MEETING_DRAFT',JSON.stringify(collectMeeting()));alert('Đã lưu nháp cuộc họp trên thiết bị.');}
 function goToPublishing(){if(!validateMeeting())return;const d=collectMeeting();const current={source:'CuocHop',sourceModule:'CuocHop',moduleSource:'CuocHop',docId:'HOP-DRAFT-'+Date.now(),type:'MEETING',title:d.title,summary:d.content,recipients:d.recipients.map(x=>x.username),recipientDetails:d.recipients,data:d,destinations:['ThongBao','ViecCuaToi'],workflow:d.workflow,createdAt:new Date().toISOString()};localStorage.setItem('TTDHS_CURRENT_DOC',JSON.stringify(current));location.href='TTPhatHanh.html';}
-function previewMeeting(){
-  if(!validateMeeting())return;
-  const d=collectMeeting();
-  const dateText=(()=>{
-    if(!d.date)return '—';
-    const p=String(d.date).split('-');
-    return p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : d.date;
-  })();
-  const timeText=`${d.startTime||'—'}${d.endTime?' - '+d.endTime:''}`;
-  const people=(d.recipients||[]);
-  const peopleHtml=people.length
-    ? people.map((x,i)=>`<span class="hva-preview-chip"><i class="bi bi-person-check-fill"></i>${esc(x.hoTen||x.name||x.username||('Thành viên '+(i+1)))}</span>`).join('')
-    : '<span class="text-slate-400 text-[11px]">Chưa có thành phần.</span>';
-  const qrText=d.attendance&&d.attendance.enabled
-    ? `Có · ${esc(d.attendance.openTime||'—')} - ${esc(d.attendance.closeTime||'—')}`
-    : 'Không';
-  const docHtml=d.documentUrl
-    ? `<a href="${esc(d.documentUrl)}" target="_blank" rel="noopener" class="text-blue-700 underline break-all">${esc(d.documentUrl)}</a>`
-    : '—';
-
-  $('previewBody').innerHTML=`
-    <article class="hva-preview-paper">
-      <div class="hva-preview-letterhead">
-        <div class="hva-preview-system">TRUNG TÂM QUẢN TRỊ SỐ HVA</div>
-        <div class="hva-preview-school">TRƯỜNG THPT HÒA VANG</div>
-        <div class="hva-preview-docname">${esc(d.title||'CUỘC HỌP')}</div>
-        <div class="hva-preview-subtitle">${esc(d.meetingType||'Cuộc họp')}</div>
-        <div class="hva-preview-status"><i class="bi bi-eye-fill mr-1"></i> BẢN XEM TRƯỚC · CHƯA PHÁT HÀNH</div>
-      </div>
-
-      <div class="hva-preview-body">
-        <div class="hva-preview-grid">
-          <div class="hva-preview-field"><span class="hva-preview-label">Ngày họp</span><div class="hva-preview-value">${esc(dateText)}</div></div>
-          <div class="hva-preview-field"><span class="hva-preview-label">Thời gian</span><div class="hva-preview-value">${esc(timeText)}</div></div>
-          <div class="hva-preview-field full"><span class="hva-preview-label">Địa điểm</span><div class="hva-preview-value">${esc(d.place||'—')}</div></div>
-          <div class="hva-preview-field"><span class="hva-preview-label">Chủ trì</span><div class="hva-preview-value">${esc(d.chairperson||'—')}</div></div>
-          <div class="hva-preview-field"><span class="hva-preview-label">Thư ký</span><div class="hva-preview-value">${esc(d.secretary||'—')}</div></div>
-        </div>
-
-        <div class="hva-preview-section">
-          <div class="hva-preview-section-title"><i class="bi bi-card-text"></i>Nội dung / Chương trình</div>
-          <div class="hva-preview-content">${esc(d.content||'—')}</div>
-        </div>
-
-        <div class="hva-preview-section">
-          <div class="hva-preview-section-title"><i class="bi bi-people-fill"></i>Thành phần tham dự · ${people.length} người</div>
-          <div class="hva-preview-participants">${peopleHtml}</div>
-        </div>
-
-        <div class="hva-preview-section">
-          <div class="hva-preview-section-title"><i class="bi bi-check2-square"></i>Xác nhận - Điểm danh</div>
-          <div class="hva-preview-grid">
-            <div class="hva-preview-field"><span class="hva-preview-label">Xác nhận tham dự</span><div class="hva-preview-value">${d.requireConfirmation?'Có':'Không'}</div></div>
-            <div class="hva-preview-field"><span class="hva-preview-label">Điểm danh QR</span><div class="hva-preview-value">${qrText}</div></div>
-          </div>
-        </div>
-
-        <div class="hva-preview-section">
-          <div class="hva-preview-section-title"><i class="bi bi-paperclip"></i>Tài liệu cuộc họp</div>
-          <div class="hva-preview-field"><div class="hva-preview-value">${docHtml}</div></div>
-        </div>
-
-        ${d.note?`<div class="hva-preview-note"><b>Yêu cầu chuẩn bị / Ghi chú:</b><br>${esc(d.note)}</div>`:''}
-      </div>
-
-      <div class="hva-preview-footer">Phiếu xem trước được tạo từ Trung tâm Quản trị số HVA · Dữ liệu chỉ chính thức sau TT Phát hành</div>
-    </article>`;
-
-  $('previewModal').classList.remove('hidden');
-  $('previewModal').classList.add('flex');
-}
+function previewMeeting(){if(!validateMeeting())return;const d=collectMeeting();$('previewBody').innerHTML=`<div class="text-center mb-5"><div class="font-extrabold text-[#0F4C81] text-lg">${esc(d.title)}</div><div class="text-xs text-slate-500 mt-1">${esc(d.meetingType)}</div></div><div class="space-y-2 text-xs"><p><b>Thời gian:</b> ${esc(d.date)} • ${esc(d.startTime)}${d.endTime?' - '+esc(d.endTime):''}</p><p><b>Địa điểm:</b> ${esc(d.place)}</p><p><b>Chủ trì:</b> ${esc(d.chairperson||'—')}</p><p><b>Thư ký:</b> ${esc(d.secretary||'—')}</p><p><b>Thành phần:</b> ${d.recipients.length} người</p><p><b>Nội dung:</b><br>${esc(d.content||'—')}</p><p><b>Xác nhận tham dự:</b> ${d.requireConfirmation?'Có':'Không'}</p><p><b>Điểm danh QR:</b> ${d.attendance.enabled?'Có • '+esc(d.attendance.openTime)+' - '+esc(d.attendance.closeTime):'Không'}</p></div>`;$('previewModal').classList.remove('hidden');$('previewModal').classList.add('flex');}
 function closePreview(){$('previewModal').classList.add('hidden');$('previewModal').classList.remove('flex');}
 function resetMeetingForm(){if(!confirm('Xóa dữ liệu đang nhập?'))return;$('meetingForm').reset();meetingSelectedUsernames.clear();handleMeetingType();handleMeetingTitle();toggleOtherPlace();toggleQrTimes();renderMeetingPersonnel();}
 
@@ -1093,7 +975,83 @@ function syncMeetingUserCard(){
 }
 function getMeetingOperatorUsername(){const u=getMeetingOperatorUser();return String(u.username||u.userName||u.maGV||'').trim()}
 let managedMeetingData=[]; let currentQrInfo=null;
-async function loadManagedMeetings(){const box=$('managedMeetings'),username=getMeetingOperatorUsername();if(!box)return;if(!username){box.innerHTML='<div class="text-red-500 font-bold">Không xác định được tài khoản đang đăng nhập.</div>';return}box.innerHTML='Đang tải cuộc họp đã phát hành...';try{const r=await fetch(`${WEB_APP_URL}?action=getManagedMeetings&username=${encodeURIComponent(username)}`);const d=await r.json();if(!d||d.success!==true)throw Error((d&&d.message)||'Không tải được cuộc họp');managedMeetingData=Array.isArray(d.meetings)?d.meetings:[];renderManagedMeetings()}catch(e){box.innerHTML=`<div class="text-red-500 font-bold">${esc(e.message)}</div>`}}
+async function loadManagedMeetings(){
+  const box=$('managedMeetings'),username=getMeetingOperatorUsername();
+  if(!username){
+    if(box)box.innerHTML='<div class="text-red-500 font-bold">Không xác định được tài khoản đang đăng nhập.</div>';
+    updateMeetingHistorySummary([]);
+    return;
+  }
+  if(box)box.innerHTML='Đang tải cuộc họp đã phát hành...';
+  try{
+    const r=await fetch(`${WEB_APP_URL}?action=getManagedMeetings&username=${encodeURIComponent(username)}`);
+    const d=await r.json();
+    if(!d||d.success!==true)throw Error((d&&d.message)||'Không tải được cuộc họp');
+    managedMeetingData=Array.isArray(d.meetings)?d.meetings:[];
+    updateMeetingHistorySummary(managedMeetingData);
+    if(box)renderManagedMeetings();
+  }catch(e){
+    if(box)box.innerHTML=`<div class="text-red-500 font-bold">${esc(e.message)}</div>`;
+    updateMeetingHistorySummary([]);
+  }
+}
+
+function updateMeetingHistorySummary(meetings){
+  const list=Array.isArray(meetings)?meetings:[];
+  const countEl=$('hvaMeetingCreatedCount');
+  const historyList=$('hvaMeetingHistoryList');
+  if(countEl)countEl.textContent=String(list.length);
+  if(!historyList)return;
+
+  if(!list.length){
+    historyList.innerHTML='<div class="hva-meeting-history-empty">Chưa có cuộc họp nào đã phát hành.</div>';
+    return;
+  }
+
+  historyList.innerHTML=list.map((m,i)=>`
+    <button type="button" class="hva-meeting-history-item" onclick="openManagedMeetingFromHistory('${esc(m.meetingId||'')}')">
+      <span class="hva-meeting-history-no">${i+1}</span>
+      <span class="min-w-0">
+        <span class="hva-meeting-history-name">${esc(m.title||m.meetingType||'Cuộc họp')}</span>
+        <span class="hva-meeting-history-meta">
+          <span>${esc(m.meetingType||'Cuộc họp')}</span>
+          <span>${esc(m.date||'')}</span>
+          <span>${esc(m.startTime||'')}</span>
+          <span>${esc(m.meetingStatus||'ĐÃ PHÁT HÀNH')}</span>
+        </span>
+      </span>
+    </button>`).join('');
+}
+
+function openManagedMeetingFromHistory(meetingId){
+  const m=managedMeetingData.find(x=>String(x.meetingId||'')===String(meetingId||''));
+  if(!m)return;
+  const lines=[
+    m.title||'Cuộc họp',
+    [m.date,m.startTime].filter(Boolean).join(' • '),
+    m.place||'',
+    m.meetingStatus||'ĐÃ PHÁT HÀNH'
+  ].filter(Boolean);
+  alert(lines.join('\n'));
+}
+
+function initMeetingHistoryControls(){
+  const wrap=$('hvaMeetingHistory');
+  const menu=$('hvaMeetingHistoryMenu');
+  const historyBtn=$('hvaMeetingHistoryBtn');
+  const countBtn=$('hvaMeetingCountBtn');
+  if(!wrap||!menu)return;
+
+  const toggle=()=>{
+    const open=!wrap.classList.contains('is-open');
+    wrap.classList.toggle('is-open',open);
+    if(historyBtn)historyBtn.setAttribute('aria-expanded',String(open));
+    if(countBtn)countBtn.setAttribute('aria-expanded',String(open));
+  };
+  if(historyBtn)historyBtn.addEventListener('click',toggle);
+  if(countBtn)countBtn.addEventListener('click',toggle);
+}
+
 function parseMeetingLocalDateTime(dateText, timeText) {
     const d = String(dateText || '').trim();
     const t = String(timeText || '').trim();
@@ -1209,7 +1167,7 @@ async function sendMeetingInteraction(){if(!interactionSelectedUsername)return a
 async function loadInteractionLog(){const u=getMeetingOperatorUsername();const r=await fetch(`${WEB_APP_URL}?action=getMeetingInteractionsForManager&meetingId=${encodeURIComponent(interactionMeetingId)}&username=${encodeURIComponent(u)}`);const d=await r.json();const a=d&&d.success?d.interactions||[]:[];$('interactionLog').innerHTML=a.slice(0,20).map(x=>`<div class="rounded-lg border p-2 ${x.type==='SPEAK_REQUEST'?'bg-amber-50':'bg-slate-50'}"><b>${esc(x.recipientName||'')}</b> • ${esc(x.time||'')}<div>${esc(x.content||'')}</div>${x.coordinate?`<div class="text-violet-600">Phối hợp: ${esc(x.coordinateName||'TTCM/Trưởng bộ phận')}</div>`:''}</div>`).join('')||'<div class="text-slate-400">Chưa có tương tác.</div>'}
 async function sendBreakMessage(){const eligible=interactionParticipants.filter(p=>p.checkIn===true&&p.checkOut!==true);if(!eligible.length)return alert('Không có thành viên đã điểm danh vào.');if(!confirm(`Gửi thông báo tiếp tục họp đến ${eligible.length} thành viên?`))return;let ok=0;for(const p of eligible){try{const r=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'sendMeetingInteraction',meetingId:interactionMeetingId,username:getMeetingOperatorUsername(),targetUsername:p.username,type:'RETURN_ALL',content:'Kính mời Thầy/Cô trở lại vị trí. Cuộc họp sẽ tiếp tục.',voiceText:'Kính mời quý thầy cô trở lại vị trí. Cuộc họp sẽ tiếp tục.',coordinate:false})});const d=await r.json();if(d&&d.success)ok++}catch(e){}}speakVietnamese('Kính mời quý thầy cô trở lại vị trí. Cuộc họp sẽ tiếp tục.');alert(`Đã gửi ${ok}/${eligible.length} thành viên.`);await loadInteractionLog()}
 
-window.addEventListener('DOMContentLoaded',()=>{const d=new Date();$('meetingDate').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;handleMeetingType();handleMeetingTitle();loadMeetingPersonnel();const box=$('managedMeetings');if(box)box.innerHTML='<div class="text-[10px] text-slate-500">Điều hành QR sẽ hiển thị sau khi cuộc họp được phát hành.</div>';});
+window.addEventListener('DOMContentLoaded',()=>{const d=new Date();$('meetingDate').value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;handleMeetingType();handleMeetingTitle();loadMeetingPersonnel();const box=$('managedMeetings');if(box)box.innerHTML='<div class="text-[10px] text-slate-500">Điều hành QR sẽ hiển thị sau khi cuộc họp được phát hành.</div>';initMeetingHistoryControls();loadManagedMeetings();});
 
 document.addEventListener('DOMContentLoaded',function(){
   try{syncMeetingUserCard()}catch(e){console.warn('[HVA User Card]',e)}
