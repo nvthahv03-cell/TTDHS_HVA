@@ -167,12 +167,14 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 (function(global){
   'use strict';
 
+  const DTHT_BACKEND_URL='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+
   function backendUrl(){
+    if(String(global.HVA_API_URL||'').trim()) return String(global.HVA_API_URL).trim();
     if(typeof global.PERSONNEL_SEARCH_API!=='undefined' && String(global.PERSONNEL_SEARCH_API||'').trim()){
       return String(global.PERSONNEL_SEARCH_API).trim();
     }
-    if(String(global.HVA_API_URL||'').trim()) return String(global.HVA_API_URL).trim();
-    throw new Error('Chưa xác định URL backend HVA.');
+    return DTHT_BACKEND_URL;
   }
 
   async function auth(){
@@ -290,7 +292,7 @@ async function onTeacherSelect(){
   if(!state.teacher){$('participation').classList.add('hidden');return}
   $('teacherInfo').innerHTML=`<b>${esc(state.teacher.name)}</b> · ${esc(state.teacher.team)}${state.teacher.subject?' · Môn: '+esc(state.teacher.subject):''}`;
   $('fullName').value=state.teacher.name||'';$('assignedSubject').value=state.teacher.subject||'';
-  $('participation').classList.remove('hidden');setStep(2);await loadData();
+  $('participation').classList.remove('hidden');setStep(2);
 }
 function setParticipate(v){
   state.participates=v;$('yesBtn').classList.toggle('on',v===true);$('noBtn').classList.toggle('on',v===false);
@@ -331,7 +333,7 @@ async function loadData(){
     const data=await window.HVA_API.dtht.getInitial('');
     state.allTeachers=Array.isArray(data.teachers)?data.teachers:[];
     state.reports=Array.isArray(data.reports)?data.reports:[];
-    $('apiStatus').textContent=`Đã kết nối HVA · ${state.allTeachers.length} nhân sự có khóa định danh.`;
+    $('apiStatus').textContent=`Đã kết nối HVA · ${state.allTeachers.length} giáo viên thuộc 07 tổ chuyên môn.`;
   }catch(e){
     state.allTeachers=[];
     state.reports=[];
@@ -340,9 +342,11 @@ async function loadData(){
   renderHistory();
 }
 initTeams();
-loadData();
-$('team').value=TEAMS[0];
-onTeamSelect();
+(async function initDTHT(){
+  await loadData();
+  $('team').value=TEAMS[0];
+  await onTeamSelect();
+})();
 </script>
 </body>
 </html>
