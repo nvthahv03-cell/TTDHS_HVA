@@ -329,13 +329,21 @@ async function dthtStandaloneLogin(){
   if(!u||!p){msg.textContent='Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.';return;}
   msg.style.color='#075cad'; msg.textContent='Đang xác thực tài khoản HVA...';
   try{
+    const form=new URLSearchParams();
+    form.set('action','login');
+    form.set('username',u);
+    form.set('password',p);
     const r=await fetch(DTHT_STANDALONE_BACKEND,{
       method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8','Accept':'application/json'},
-      body:JSON.stringify({action:'login',username:u,password:p}),
-      cache:'no-store',redirect:'follow'
+      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8','Accept':'text/plain,application/json'},
+      body:form.toString(),
+      cache:'no-store',
+      redirect:'follow'
     });
-    const data=await r.json();
+    const raw=await r.text();
+    let data;
+    try{ data=JSON.parse(raw); }
+    catch(_){ throw new Error('Backend HVA chưa trả dữ liệu đăng nhập hợp lệ.'); }
     if(!data||data.success!==true||!data.sessionToken||!data.user) throw new Error((data&&data.message)||'Đăng nhập không thành công.');
     localStorage.setItem('hvaSessionToken',String(data.sessionToken));
     localStorage.setItem('hvaSessionExpiresAt',String(data.expiresAt||''));
@@ -345,7 +353,11 @@ async function dthtStandaloneLogin(){
     await loadData();
     bindCurrentTeacher();
   }catch(e){
-    msg.style.color='#be123c'; msg.textContent=e.message||String(e);
+    msg.style.color='#be123c';
+    const m=String(e&&e.message||e||'');
+    msg.textContent=/Failed to fetch|NetworkError|Load failed/i.test(m)
+      ? 'Không kết nối được máy chủ HVA. Vui lòng mở bằng link Web đã triển khai, không mở trực tiếp file trên thiết bị.'
+      : m;
   }
 }
 function bindCurrentTeacher(){
