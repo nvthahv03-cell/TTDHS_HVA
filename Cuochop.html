@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi" class="bg-slate-50">
 <head>
@@ -117,18 +118,43 @@
   width:11px;height:11px;border-radius:50%;background:#19e98a;
   box-shadow:0 0 0 5px rgba(25,233,138,.12),0 0 13px rgba(25,233,138,.82);
 }
-.hva-meeting-history{position:relative;margin-top:10px;border:1.5px solid #b9d9ee;border-radius:14px;background:#eaf6ff;overflow:hidden;box-shadow:0 5px 15px rgba(15,76,129,.06)}
-.hva-meeting-history-btn{
-  width:100%;min-height:46px;padding:10px 14px;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  border-radius:0;color:#0F4C81;
-  background:#eaf6ff;border:0;
-  font-size:12px;font-weight:900;letter-spacing:.01em;text-align:left;
-  transition:background .14s ease;
+.hva-meeting-history{
+  position:relative;margin-top:10px;
+  border:1.5px solid #b9d9ee;border-radius:14px;
+  background:#eaf6ff;overflow:hidden;
+  box-shadow:0 5px 15px rgba(15,76,129,.06)
 }
-.hva-meeting-history-btn:hover{background:#dff1fd}
-.hva-meeting-history-btn:active{transform:translateY(1px)}
-.hva-meeting-history-btn i{font-size:14px;-webkit-text-stroke:.3px currentColor}
+.hva-meeting-history-actions{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:stretch;
+  background:#eaf6ff;
+}
+.hva-meeting-history-btn,
+.hva-meeting-count-btn{
+  min-height:46px;padding:10px 14px;
+  display:flex;align-items:center;gap:9px;
+  color:#0F4C81;background:#eaf6ff;border:0;
+  font-size:12px;font-weight:900;letter-spacing:.01em;
+  transition:background .14s ease,transform .14s ease;
+}
+.hva-meeting-history-btn{
+  justify-content:flex-start;text-align:left;
+  border-right:1px solid #c7e0f1;
+}
+.hva-meeting-count-btn{
+  justify-content:center;text-align:center;white-space:nowrap;
+}
+.hva-meeting-history-btn:hover,
+.hva-meeting-count-btn:hover{background:#dff1fd}
+.hva-meeting-history-btn:active,
+.hva-meeting-count-btn:active{transform:translateY(1px)}
+.hva-meeting-history-btn i,
+.hva-meeting-count-btn i{
+  font-size:14px;-webkit-text-stroke:.3px currentColor;
+  transition:transform .16s ease
+}
+.hva-meeting-history.is-open .hva-meeting-count-btn i{transform:rotate(180deg)}
 
 .hva-meeting-history-menu{
   display:none;position:static;width:100%;overflow:hidden;
@@ -162,6 +188,15 @@
   margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 12px;
   color:#64748b;font-size:10.5px;font-weight:600;
 }
+@media(max-width:470px){
+  .hva-meeting-history-actions{grid-template-columns:1fr 1fr}
+  .hva-meeting-history-btn,
+  .hva-meeting-count-btn{
+    min-height:42px;padding:8px 9px;font-size:10px
+  }
+  .hva-meeting-count-btn{white-space:normal}
+}
+
 .hva-pro-divider-right{height:52px;margin:0 3px}
 
 .hva-pro-user{
@@ -215,8 +250,14 @@
   .hva-pro-header::after{right:-105px;opacity:.12}
 }
 @media(max-width:470px){
-  .hva-pro-online{width:31px;padding:0;justify-content:center}
-  .hva-pro-online span:last-child{display:none}
+  .hva-pro-online{
+    width:auto;
+    min-width:92px;
+    padding:0 10px;
+    justify-content:center;
+    gap:7px;
+  }
+  .hva-pro-online span:last-child{display:inline}
 }
 
 /* ===== USER TRONG CARD TẠO CUỘC HỌP ===== */
@@ -292,7 +333,6 @@
 
   </div>
 </header>
-
 
 <main class="max-w-6xl mx-auto p-3 sm:p-4 space-y-4 pb-24">
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
