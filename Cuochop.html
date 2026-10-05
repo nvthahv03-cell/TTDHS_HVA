@@ -317,9 +317,8 @@
             <span><i class="bi bi-clock-history mr-2"></i>LỊCH SỬ CUỘC HỌP</span>
           </button>
           <button type="button" class="hva-meeting-count-btn" id="hvaMeetingCountBtn"
-                  aria-haspopup="true" aria-expanded="false" aria-controls="hvaMeetingHistoryMenu">
+                  aria-label="Số cuộc họp đã tạo">
             <span>ĐÃ TẠO <span id="hvaMeetingCreatedCount" class="hva-meeting-count-number">0</span> CUỘC HỌP</span>
-            <i class="bi bi-chevron-down"></i>
           </button>
         </div>
         <div class="hva-meeting-history-menu" id="hvaMeetingHistoryMenu"
@@ -470,7 +469,7 @@
 
 <script src="HVA_Personnel.js"></script>
 <script>
-const WEB_APP_URL='https://script.google.com/macros/s/AKfycbz7IsfWAfnsOa4SIyMiKEB-qQurwW5FpxuKcT83aeCHXhiAf60sJSc0t4KQXE3N427E/exec';
+const WEB_APP_URL='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 // HVA NHAN SU FULL: dung dung SEARCH_API dang PASS cua Kinh lup; khong thay WEB_APP_URL nghiep vu Cuoc hop.
 const PERSONNEL_SEARCH_API='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 let meetingAllToData=[]; const meetingSelectedUsernames=new Set();
@@ -975,18 +974,43 @@ function syncMeetingUserCard(){
 }
 function getMeetingOperatorUsername(){const u=getMeetingOperatorUser();return String(u.username||u.userName||u.maGV||'').trim()}
 let managedMeetingData=[]; let currentQrInfo=null;
+function getMeetingSessionToken(){
+  return String(
+    localStorage.getItem('hvaSessionToken') ||
+    sessionStorage.getItem('hvaSessionToken') ||
+    ''
+  ).trim();
+}
+
 async function loadManagedMeetings(){
-  const box=$('managedMeetings'),username=getMeetingOperatorUsername();
+  const box=$('managedMeetings');
+  const username=getMeetingOperatorUsername();
+  const sessionToken=getMeetingSessionToken();
+
   if(!username){
     if(box)box.innerHTML='<div class="text-red-500 font-bold">Không xác định được tài khoản đang đăng nhập.</div>';
     updateMeetingHistorySummary([]);
     return;
   }
+  if(!sessionToken){
+    if(box)box.innerHTML='<div class="text-red-500 font-bold">Phiên đăng nhập HVA không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.</div>';
+    updateMeetingHistorySummary([]);
+    return;
+  }
+
   if(box)box.innerHTML='Đang tải cuộc họp đã phát hành...';
   try{
-    const r=await fetch(`${WEB_APP_URL}?action=getManagedMeetings&username=${encodeURIComponent(username)}`);
+    const url = `${WEB_APP_URL}?action=getManagedMeetings&username=${encodeURIComponent(username)}&sessionToken=${encodeURIComponent(sessionToken)}`;
+    const r=await fetch(url,{cache:'no-store'});
     const d=await r.json();
-    if(!d||d.success!==true)throw Error((d&&d.message)||'Không tải được cuộc họp');
+
+    if(!d||d.success!==true){
+      if(d && (d.code==='AUTH_REQUIRED'||d.code==='SESSION_INVALID')){
+        throw Error('Phiên đăng nhập HVA không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.');
+      }
+      throw Error((d&&d.message)||'Không tải được cuộc họp');
+    }
+
     managedMeetingData=Array.isArray(d.meetings)?d.meetings:[];
     updateMeetingHistorySummary(managedMeetingData);
     if(box)renderManagedMeetings();
@@ -1040,16 +1064,21 @@ function initMeetingHistoryControls(){
   const menu=$('hvaMeetingHistoryMenu');
   const historyBtn=$('hvaMeetingHistoryBtn');
   const countBtn=$('hvaMeetingCountBtn');
-  if(!wrap||!menu)return;
+  if(!wrap||!menu||!historyBtn)return;
 
-  const toggle=()=>{
+  // "ĐÃ TẠO x CUỘC HỌP" chỉ là chỉ báo số lượng.
+  if(countBtn){
+    countBtn.removeAttribute('aria-haspopup');
+    countBtn.removeAttribute('aria-controls');
+    countBtn.removeAttribute('aria-expanded');
+    countBtn.style.cursor='default';
+  }
+
+  historyBtn.addEventListener('click',()=>{
     const open=!wrap.classList.contains('is-open');
     wrap.classList.toggle('is-open',open);
-    if(historyBtn)historyBtn.setAttribute('aria-expanded',String(open));
-    if(countBtn)countBtn.setAttribute('aria-expanded',String(open));
-  };
-  if(historyBtn)historyBtn.addEventListener('click',toggle);
-  if(countBtn)countBtn.addEventListener('click',toggle);
+    historyBtn.setAttribute('aria-expanded',String(open));
+  });
 }
 
 function parseMeetingLocalDateTime(dateText, timeText) {
