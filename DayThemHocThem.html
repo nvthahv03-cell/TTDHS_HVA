@@ -63,9 +63,38 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 .teacher-picker .field label{padding-left:2px}
 .teacher-picker select{padding-left:16px}
 @media(max-width:720px){.teacher-picker{padding:0 6px}}
+
+/* ===== DTHT STANDALONE AUTH V1 ===== */
+.dtht-auth{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#073b78,#075cad 52%,#08abc5);display:flex;align-items:center;justify-content:center;padding:18px}
+.dtht-auth.hidden{display:none!important}
+.dtht-auth-box{width:min(430px,100%);background:#fff;border-radius:20px;padding:24px;box-shadow:0 24px 70px rgba(0,31,72,.32)}
+.dtht-auth-title{font-size:20px;font-weight:900;color:#075cad;text-align:center}
+.dtht-auth-sub{font-size:12px;color:#607487;text-align:center;margin:6px 0 18px}
+.dtht-auth-box input{margin-bottom:11px}
+.dtht-auth-btn{width:100%;height:44px;border:0;border-radius:11px;background:#075cad;color:#fff;font-weight:900;cursor:pointer}
+.dtht-auth-msg{min-height:20px;margin-top:10px;text-align:center;font-size:12px;font-weight:700;color:#be123c}
+.dtht-self-note{margin-top:8px;font-size:11px;color:#075cad;font-weight:700}
+
 </style>
 </head>
 <body>
+
+<div id="dthtAuth" class="dtht-auth hidden">
+  <div class="dtht-auth-box">
+    <div class="dtht-auth-title">KÊ KHAI DẠY THÊM – HỌC THÊM</div>
+    <div class="dtht-auth-sub">Trường THPT Hòa Vang · Đăng nhập bằng tài khoản HVA</div>
+    <label>Tên đăng nhập</label>
+    <input id="dthtLoginUser" autocomplete="username" placeholder="Tên đăng nhập HVA">
+    <label>Mật khẩu</label>
+    <input id="dthtLoginPass" type="password" autocomplete="current-password" placeholder="Mật khẩu HVA"
+           onkeydown="if(event.key==='Enter') dthtStandaloneLogin()">
+    <button type="button" class="dtht-auth-btn" onclick="dthtStandaloneLogin()">
+      <i class="bi bi-box-arrow-in-right"></i> ĐĂNG NHẬP
+    </button>
+    <div id="dthtAuthMsg" class="dtht-auth-msg"></div>
+  </div>
+</div>
+
 <header class="hva-pro-header">
   <div class="hva-pro-header-inner">
     <button type="button" class="hva-pro-back" onclick="goBackHVA()" aria-label="Quay lại trang chủ HVA" title="Quay lại"><i class="bi bi-arrow-left"></i></button>
@@ -184,8 +213,10 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
   function authToken(){
     const me=currentUser();
     return String(
-      me.token || me.authToken || me.sessionToken ||
-      sessionStorage.getItem('token') || localStorage.getItem('token') || ''
+      localStorage.getItem('hvaSessionToken') ||
+      sessionStorage.getItem('hvaSessionToken') ||
+      me.sessionToken || me.token || me.authToken ||
+      ''
     ).trim();
   }
 
@@ -204,6 +235,8 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     const me=currentUser();
     const username=me.username||me.userName||me.maGV||'';
     if(username) u.searchParams.set('username',username);
+    const token=authToken();
+    if(token) u.searchParams.set('sessionToken',token);
     Object.entries(params||{}).forEach(([k,v])=>{if(v!==undefined&&v!==null)u.searchParams.set(k,String(v));});
     u.searchParams.set('_',Date.now());
 
@@ -213,7 +246,6 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     }
 
     const headers={'Accept':'application/json'};
-    const token=authToken();
     if(token) headers['Authorization']='Bearer '+token;
     const r=await fetch(u.toString(),{method:'GET',headers,cache:'no-store',credentials:'include',redirect:'follow'});
     return await parseResponse(r);
@@ -221,7 +253,12 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
   async function post(action,payload={}){
     const me=currentUser();
-    const body=Object.assign({},payload,{action,username:me.username||me.userName||me.maGV||''});
+    const token=authToken();
+    const body=Object.assign({},payload,{
+      action,
+      username:me.username||me.userName||me.maGV||'',
+      sessionToken:token
+    });
 
     if(global.HVAAuthRequest){
       if(typeof global.HVAAuthRequest.postJson==='function'){
@@ -235,7 +272,6 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     }
 
     const headers={'Content-Type':'text/plain;charset=utf-8','Accept':'application/json'};
-    const token=authToken();
     if(token) headers['Authorization']='Bearer '+token;
     const r=await fetch(backendUrl(),{
       method:'POST',headers,body:JSON.stringify(body),
@@ -252,6 +288,71 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 })(window);
 </script>
 <script>
+const DTHT_STANDALONE_BACKEND='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+
+function dthtSessionToken(){
+  return String(localStorage.getItem('hvaSessionToken')||sessionStorage.getItem('hvaSessionToken')||'').trim();
+}
+function dthtCurrentUser(){
+  try{return JSON.parse(localStorage.getItem('user')||sessionStorage.getItem('user')||'{}')||{};}catch(e){return {};}
+}
+function dthtShowLogin(message){
+  const box=document.getElementById('dthtAuth');
+  const msg=document.getElementById('dthtAuthMsg');
+  if(msg) msg.textContent=message||'';
+  if(box) box.classList.remove('hidden');
+}
+function dthtHideLogin(){
+  const box=document.getElementById('dthtAuth');
+  if(box) box.classList.add('hidden');
+}
+async function dthtStandaloneLogin(){
+  const u=(document.getElementById('dthtLoginUser').value||'').trim();
+  const p=(document.getElementById('dthtLoginPass').value||'').trim();
+  const msg=document.getElementById('dthtAuthMsg');
+  if(!u||!p){msg.textContent='Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.';return;}
+  msg.style.color='#075cad'; msg.textContent='Đang xác thực tài khoản HVA...';
+  try{
+    const r=await fetch(DTHT_STANDALONE_BACKEND,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8','Accept':'application/json'},
+      body:JSON.stringify({action:'login',username:u,password:p}),
+      cache:'no-store',redirect:'follow'
+    });
+    const data=await r.json();
+    if(!data||data.success!==true||!data.sessionToken||!data.user) throw new Error((data&&data.message)||'Đăng nhập không thành công.');
+    localStorage.setItem('hvaSessionToken',String(data.sessionToken));
+    localStorage.setItem('hvaSessionExpiresAt',String(data.expiresAt||''));
+    localStorage.setItem('user',JSON.stringify(data.user));
+    document.getElementById('dthtLoginPass').value='';
+    dthtHideLogin();
+    await loadData();
+    bindCurrentTeacher();
+  }catch(e){
+    msg.style.color='#be123c'; msg.textContent=e.message||String(e);
+  }
+}
+function bindCurrentTeacher(){
+  const me=dthtCurrentUser();
+  const username=String(me.username||me.userName||me.maGV||'').trim().toLowerCase();
+  if(!username) return false;
+  const teacher=(state.allTeachers||[]).find(x=>String(x.key||'').trim().toLowerCase()===username);
+  if(!teacher){
+    $('apiStatus').textContent='Tài khoản HVA hiện tại không nằm trong danh sách giáo viên kê khai DTHT.';
+    return false;
+  }
+  state.team=teacher.team;
+  state.teacher=teacher;
+  $('team').value=teacher.team;
+  onTeamSelect().then(()=>{
+    $('teacher').value=teacher.key;
+    onTeacherSelect();
+    $('team').disabled=true;
+    $('teacher').disabled=true;
+    $('teacherInfo').innerHTML=`<b>${esc(teacher.name)}</b> · ${esc(teacher.team)}<div class="dtht-self-note">Hồ sơ được ràng buộc với tài khoản HVA đang đăng nhập.</div>`;
+  });
+  return true;
+}
 const TEAM_UNITS=[
  {label:'Toán - Tin',query:'Toán - Tin'},
  {label:'Ngữ văn',query:'Ngữ văn'},
@@ -349,7 +450,9 @@ async function loadData(){
   try{
     const fn=window.HVA_API?.dtht?.getInitial;
     if(typeof fn!=='function') throw new Error('DTHT_API_NOT_READY');
-    const data=await fn('');
+    const me=dthtCurrentUser();
+    const teacherKey=String(me.username||me.userName||me.maGV||'').trim();
+    const data=await fn(teacherKey);
     state.allTeachers=Array.isArray(data&&data.teachers)?data.teachers:[];
     state.reports=Array.isArray(data&&data.reports)?data.reports:[];
     $('apiStatus').textContent=state.allTeachers.length
@@ -364,9 +467,16 @@ async function loadData(){
 }
 initTeams();
 (async function initDTHT(){
-  await loadData();
-  $('team').value='';
-  onTeamSelect();
+  if(!dthtSessionToken()){
+    dthtShowLogin('');
+    return;
+  }
+  try{
+    await loadData();
+    bindCurrentTeacher();
+  }catch(e){
+    dthtShowLogin('Phiên HVA không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.');
+  }
 })();
 </script>
 </body>
