@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HVA - Quản lý dạy thêm, học thêm</title>
-<!-- DTHT HVA UI v2.0 | Direct Personnel Sheet via Backend + DTHT -->
+<!-- DTHT HVA UI v1.6 | Backend HVA + Personnel source + Sheet DTHT -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -27,8 +27,8 @@
 .card{background:#fff;border:1px solid #dce8f1;border-radius:18px;padding:22px;box-shadow:0 6px 20px rgba(15,76,129,.06);margin-top:14px}.card h2{font-size:18px;color:#123b60;margin:0 0 6px}.muted{color:#6b7f91;font-size:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}.field.full{grid-column:1/-1}.lbl,label{display:block;font-size:12px;font-weight:800;color:#36556e;margin:0 0 6px}
 .lbl b,label b,.required-star{color:#dc2626;font-weight:900}
 select,input,textarea{
-  width:100%;height:42px;border:1.5px solid #9db2c9;border-radius:12px;
-  padding:0 14px;background:#fff;font:500 13px Inter,Arial;color:#183249;outline:none;
+  width:100%;height:42px;border:1.8px solid #075cad;border-radius:10px;
+  padding:0 14px;background:#fff;font:600 13px Inter,Arial,sans-serif;color:#163a5f;outline:none;transition:border-color .18s ease,box-shadow .18s ease;
 }
 select{
   appearance:none;-webkit-appearance:none;-moz-appearance:none;
@@ -45,25 +45,24 @@ select{
   background-size:8px 8px,8px 8px,52px 100%;
   background-repeat:no-repeat;
 }
-select:hover{border-color:#6d94bd}
+select:hover,input:hover,textarea:hover{border-color:#064b91}
 select:focus,input:focus,textarea:focus{
-  border-color:#5f86b2;box-shadow:0 0 0 2px rgba(26,111,190,.10)
+  border-color:#064b91;box-shadow:0 0 0 3px rgba(7,92,173,.12)
 }
 select::-ms-expand{display:none}
 textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
-.teamstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:12px}.teamBtn{border:1px solid #cfe0ec;background:#f6fbff;color:#1b567f;border-radius:10px;padding:9px 5px;font-size:10.5px;font-weight:800;cursor:pointer;min-height:46px}.teamBtn.on{background:#075cad;color:white;border-color:#075cad}
 .choice{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.choice button{min-height:92px;border:1.5px solid #cfe0ec;border-radius:14px;background:#fbfdff;text-align:left;padding:15px;cursor:pointer;color:#294c67}.choice button.on{border-color:#1493d1;background:#edf8ff;box-shadow:0 0 0 3px rgba(20,147,209,.08)}.choice strong{display:block;font-size:14px;margin-bottom:5px}.choice small{color:#6d8191}
 .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.btn{border:0;border-radius:10px;padding:11px 16px;font:800 12px Inter;cursor:pointer}.primary{background:#075cad;color:#fff}.secondary{background:#eaf4fb;color:#075cad;border:1px solid #cce1ef}.danger{background:#fff1f2;color:#be123c;border:1px solid #fecdd3}.btn:disabled{opacity:.5;cursor:not-allowed}
-.hidden{display:none!important}.status{margin-top:12px;padding:10px 12px;border-radius:10px;background:#f5f9fc;color:#5c7285;font-size:12px}.preview{font-family:"Times New Roman",serif;color:#000;max-width:800px;margin:0 auto}.preview .top{display:grid;grid-template-columns:1fr 1fr;gap:30px;text-align:center;font-size:13.5px}.preview .top b{display:block}.preview .under{display:inline-block;border-bottom:1px solid #000;padding-bottom:3px}.preview h2{text-align:center;font-size:18px;margin:24px 0 18px}.preview p{font-size:14px;line-height:1.55;margin:8px 0}.preview .indent{margin-left:26px}.sign{width:46%;margin-left:auto;text-align:center;margin-top:24px;min-height:130px}.sign .name{margin-top:80px;font-weight:bold}
+.hidden{display:none!important}.status{margin-top:12px;padding:11px 14px;border:1.5px solid #075cad;border-radius:9px;background:#f4f9fe;color:#16466f;font-size:12.5px;font-weight:600;line-height:1.45;box-shadow:0 2px 7px rgba(7,92,173,.05)}.preview{font-family:"Times New Roman",serif;color:#000;max-width:800px;margin:0 auto}.preview .top{display:grid;grid-template-columns:1fr 1fr;gap:30px;text-align:center;font-size:13.5px}.preview .top b{display:block}.preview .under{display:inline-block;border-bottom:1px solid #000;padding-bottom:3px}.preview h2{text-align:center;font-size:18px;margin:24px 0 18px}.preview p{font-size:14px;line-height:1.55;margin:8px 0}.preview .indent{margin-left:26px}.sign{width:46%;margin-left:auto;text-align:center;margin-top:24px;min-height:130px}.sign .name{margin-top:80px;font-weight:bold}
 .history{width:100%;border-collapse:collapse;margin-top:14px;font-size:12px}.history th,.history td{border-bottom:1px solid #e4edf4;padding:10px 8px;text-align:left}.history th{background:#f4f9fd;color:#36556e}
-@media(max-width:1080px){.hva-pro-header-inner{grid-template-columns:50px minmax(430px,1fr) auto;padding:11px 16px;gap:13px}.hva-pro-kicker{font-size:11px}.hva-pro-school{font-size:24px}.hva-pro-slogan{font-size:12px}.teamstrip{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:720px){.hva-pro-header{margin:6px 6px 0;border-radius:13px;min-height:78px}.hva-pro-header-inner{min-height:76px;padding:7px 9px;grid-template-columns:37px minmax(0,1fr) auto;gap:7px}.hva-pro-back{width:36px;height:36px;border-radius:10px}.hva-pro-back i{font-size:18px}.hva-pro-divider{height:42px}.hva-pro-kicker{font-size:7px;letter-spacing:.08em;white-space:normal}.hva-pro-school{font-size:14px;margin-top:3px;white-space:normal}.hva-pro-slogan{font-size:8px;margin-top:4px;white-space:normal}.hva-pro-online{height:31px;padding:0 9px;font-size:9px}.shell{margin-top:10px;padding:0 8px}.hero{align-items:flex-start;flex-direction:column;padding:16px}.hero h1{font-size:19px}.steps{grid-template-columns:1fr 1fr}.grid,.choice{grid-template-columns:1fr}.teamstrip{grid-template-columns:1fr 1fr}.card{padding:16px}.legal{white-space:normal}.preview .top{gap:10px;font-size:11px}.preview p{font-size:12px}}
+@media(max-width:1080px){.hva-pro-header-inner{grid-template-columns:50px minmax(430px,1fr) auto;padding:11px 16px;gap:13px}.hva-pro-kicker{font-size:11px}.hva-pro-school{font-size:24px}.hva-pro-slogan{font-size:12px}}
+@media(max-width:720px){.hva-pro-header{margin:6px 6px 0;border-radius:13px;min-height:78px}.hva-pro-header-inner{min-height:76px;padding:7px 9px;grid-template-columns:37px minmax(0,1fr) auto;gap:7px}.hva-pro-back{width:36px;height:36px;border-radius:10px}.hva-pro-back i{font-size:18px}.hva-pro-divider{height:42px}.hva-pro-kicker{font-size:7px;letter-spacing:.08em;white-space:normal}.hva-pro-school{font-size:14px;margin-top:3px;white-space:normal}.hva-pro-slogan{font-size:8px;margin-top:4px;white-space:normal}.hva-pro-online{height:31px;padding:0 9px;font-size:9px}.shell{margin-top:10px;padding:0 8px}.hero{align-items:flex-start;flex-direction:column;padding:16px}.hero h1{font-size:19px}.steps{grid-template-columns:1fr 1fr}.grid,.choice{grid-template-columns:1fr}.card{padding:16px}.legal{white-space:normal}.preview .top{gap:10px;font-size:11px}.preview p{font-size:12px}}
 @media print{@page{size:A4 portrait;margin:18mm}body{background:#fff}.hva-pro-header,.hero,.steps,#declareCard,#historyCard,.previewActions{display:none!important}.shell{max-width:none;margin:0;padding:0}.card{border:0;box-shadow:none;padding:0}.preview{max-width:none}.preview p{font-size:14px}}
 
-#declareCard .grid{padding-left:14px;padding-right:14px}
-#declareCard .field label{padding-left:2px}
-#declareCard select{padding-left:16px}
-@media(max-width:720px){#declareCard .grid{padding-left:6px;padding-right:6px}}
+.teacher-picker{padding:0 14px}
+.teacher-picker .field label{padding-left:2px}
+.teacher-picker select{padding-left:16px}
+@media(max-width:720px){.teacher-picker{padding:0 6px}}
 </style>
 </head>
 <body>
@@ -90,15 +89,14 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
 
   <section class="card" id="declareCard">
     <h2>1. Chọn giáo viên kê khai</h2>
-    <p class="muted">Danh sách giáo viên được lấy từ dữ liệu nhân sự HVA và chia theo 07 tổ chuyên môn.</p>
+    <p class="muted">Chọn tổ chuyên môn, sau đó chọn giáo viên để thực hiện kê khai.</p>
 
-    <div class="teamstrip" id="teamStrip"></div>
-    <div class="grid">
+    <div class="grid teacher-picker">
       <div class="field"><label for="team">Tổ chuyên môn <b>*</b></label><select id="team" onchange="onTeamSelect()"></select></div>
       <div class="field"><label for="teacher">Giáo viên <b>*</b></label><select id="teacher" onchange="onTeacherSelect()"><option value="">Chọn tổ trước</option></select></div>
     </div>
 
-    <div id="teacherInfo" class="status">Chọn tổ và giáo viên để bắt đầu kê khai.</div>
+    <div id="teacherInfo" class="status">Vui lòng chọn tổ chuyên môn để tải danh sách giáo viên.</div>
 
     <div id="participation" class="hidden">
       <h2 style="margin-top:22px">2. Xác nhận tình trạng dạy thêm ngoài nhà trường</h2>
@@ -177,61 +175,93 @@ textarea{height:auto;min-height:82px;padding:11px 14px;resize:vertical}
     return DTHT_BACKEND_URL;
   }
 
-  async function auth(){
-    if(global.HVAAuthRequest && typeof global.HVAAuthRequest.get==='function') return global.HVAAuthRequest;
-    throw new Error('HVA_AUTH_REQUEST_NOT_READY');
-  }
-
   function currentUser(){
-    try{
-      if(typeof global.getSearchUser==='function') return global.getSearchUser()||{};
-    }catch(e){}
-    try{
-      return JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}') || {};
-    }catch(e){ return {}; }
+    try{ if(typeof global.getSearchUser==='function') return global.getSearchUser()||{}; }catch(e){}
+    try{ return JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}') || {}; }
+    catch(e){ return {}; }
   }
 
-  async function get(action, params={}){
-    const a=await auth(), u=new URL(backendUrl());
+  function authToken(){
+    const me=currentUser();
+    return String(
+      me.token || me.authToken || me.sessionToken ||
+      sessionStorage.getItem('token') || localStorage.getItem('token') || ''
+    ).trim();
+  }
+
+  async function parseResponse(r){
+    let data=null;
+    try{ data=await r.json(); }
+    catch(e){ throw new Error('Backend HVA không trả JSON hợp lệ.'); }
+    if(!r.ok) throw new Error((data&&data.message)||('HTTP '+r.status));
+    if(data && data.success===false) throw new Error(data.message||data.code||'Yêu cầu DTHT không thành công.');
+    return data;
+  }
+
+  async function get(action,params={}){
+    const u=new URL(backendUrl());
     u.searchParams.set('action',action);
     const me=currentUser();
-    if(me.username||me.userName||me.maGV) u.searchParams.set('username',me.username||me.userName||me.maGV);
-    Object.entries(params||{}).forEach(([k,v])=>{ if(v!==undefined&&v!==null) u.searchParams.set(k,String(v)); });
+    const username=me.username||me.userName||me.maGV||'';
+    if(username) u.searchParams.set('username',username);
+    Object.entries(params||{}).forEach(([k,v])=>{if(v!==undefined&&v!==null)u.searchParams.set(k,String(v));});
     u.searchParams.set('_',Date.now());
-    const r=await a.get(u.toString(),{cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const data=await r.json();
-    if(data && data.success===false) throw new Error(data.message||'Không tải được dữ liệu DTHT.');
-    return data;
+
+    if(global.HVAAuthRequest && typeof global.HVAAuthRequest.get==='function'){
+      const r=await global.HVAAuthRequest.get(u.toString(),{cache:'no-store'});
+      return await parseResponse(r);
+    }
+
+    const headers={'Accept':'application/json'};
+    const token=authToken();
+    if(token) headers['Authorization']='Bearer '+token;
+    const r=await fetch(u.toString(),{method:'GET',headers,cache:'no-store',credentials:'include',redirect:'follow'});
+    return await parseResponse(r);
   }
 
   async function post(action,payload={}){
-    const a=await auth();
     const me=currentUser();
     const body=Object.assign({},payload,{action,username:me.username||me.userName||me.maGV||''});
-    const r=typeof a.postJson==='function'
-      ? await a.postJson(backendUrl(),body,{cache:'no-store'})
-      : (typeof a.post==='function'
-          ? await a.post(backendUrl(),body,{cache:'no-store'})
-          : (()=>{throw new Error('HVAAuthRequest POST chưa sẵn sàng.');})());
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const data=await r.json();
-    if(data && data.success===false) throw new Error(data.message||'Không ghi được dữ liệu DTHT.');
-    return data;
+
+    if(global.HVAAuthRequest){
+      if(typeof global.HVAAuthRequest.postJson==='function'){
+        const r=await global.HVAAuthRequest.postJson(backendUrl(),body,{cache:'no-store'});
+        return await parseResponse(r);
+      }
+      if(typeof global.HVAAuthRequest.post==='function'){
+        const r=await global.HVAAuthRequest.post(backendUrl(),body,{cache:'no-store'});
+        return await parseResponse(r);
+      }
+    }
+
+    const headers={'Content-Type':'text/plain;charset=utf-8','Accept':'application/json'};
+    const token=authToken();
+    if(token) headers['Authorization']='Bearer '+token;
+    const r=await fetch(backendUrl(),{
+      method:'POST',headers,body:JSON.stringify(body),
+      cache:'no-store',credentials:'include',redirect:'follow'
+    });
+    return await parseResponse(r);
   }
 
   global.HVA_API=global.HVA_API||{};
   global.HVA_API.dtht={
-    getInitial: async teacherKey=> await get('getDTHTInitial',teacherKey?{teacherKey}:{}),
-    submitReport: async payload=> await post('submitDTHTReport',payload)
+    getInitial: async teacherKey=>await get('getDTHTInitial',teacherKey?{teacherKey}:{}),
+    submitReport: async payload=>await post('submitDTHTReport',payload)
   };
 })(window);
 </script>
 <script>
-const TEAMS=[
- 'Toán - Tin','Ngữ văn','Tiếng Anh','Lịch sử - Địa lí - GDKT&PL',
- 'Vật lí - Công nghệ','Hóa học','Sinh - GDTC - QPAN'
+const TEAM_UNITS=[
+ {label:'Toán - Tin',query:'Toán - Tin'},
+ {label:'Ngữ văn',query:'Ngữ văn'},
+ {label:'Tiếng Anh',query:'Ngoại Ngữ'},
+ {label:'Lịch sử - Địa lí - GDKT&PL',query:'Sử - Địa - GD KT&PL'},
+ {label:'Vật lí - Công nghệ',query:'Vật lí - Công nghệ'},
+ {label:'Hóa học',query:'Hóa học'},
+ {label:'Sinh - GDTC - QPAN',query:'Sinh - GDTC - QPAN'}
 ];
+const TEAMS=TEAM_UNITS.map(x=>x.label);
 let state={allTeachers:[],teachers:[],reports:[],team:'',teacher:null,participates:null};
 
 const $=id=>document.getElementById(id);
@@ -239,53 +269,40 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 function goBackHVA(){ if(history.length>1) history.back(); else location.href='main.html'; }
 function setStep(n){for(let i=1;i<=4;i++)$('s'+i).classList.toggle('on',i<=n)}
 function norm(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().replace(/[^a-z0-9]/g,'')}
-function teamKey(v){
-  const n=norm(v);
-  const aliases={
-    'ngoai ngu':'tieng anh','ngoaingu':'tienganh',
-    'su dia gd kt pl':'lich su dia li gdktpl','sudiagdktpl':'lichsudialigdktpl',
-    'su dia gdkt&pl':'lich su dia li gdktpl'
-  };
-  return norm(aliases[n]||v);
-}
-function teamMatch(a,b){return teamKey(a)===teamKey(b)}
+function teamMatch(a,b){return norm(a)===norm(b)}
 
 function initTeams(){
   $('team').innerHTML='<option value="">Chọn tổ chuyên môn</option>'+TEAMS.map(t=>`<option>${esc(t)}</option>`).join('');
-  $('teamStrip').innerHTML=TEAMS.map((t,i)=>`<button type="button" class="teamBtn" data-team="${esc(t)}" onclick="pickTeam(${i})">${esc(t)}</button>`).join('');
 }
-function pickTeam(i){$('team').value=TEAMS[i];onTeamSelect()}
 async function onTeamSelect(){
   state.team=$('team').value;
-  document.querySelectorAll('.teamBtn').forEach(b=>b.classList.toggle('on',teamMatch(b.dataset.team,state.team)));
   state.teacher=null;
   $('participation').classList.add('hidden');
   $('reportForm').classList.add('hidden');
   $('noActions').classList.add('hidden');
   $('teacher').innerHTML='<option value="">'+(state.team?'Chọn giáo viên':'Chọn tổ trước')+'</option>';
+  $('teacherInfo').textContent=state.team?'Đang lọc danh sách giáo viên...':'Vui lòng chọn tổ chuyên môn để tải danh sách giáo viên.';
   setStep(1);
-  if(!state.team){
-    $('teacherInfo').textContent='Chọn tổ và giáo viên để bắt đầu kê khai.';
-    return;
-  }
+  if(!state.team) return;
 
   const list=(state.allTeachers||[])
-    .filter(t=>teamMatch(t.team,state.team))
-    .map(t=>({
-      key:String(t.key||'').trim(),
-      name:String(t.name||'').trim(),
-      team:String(t.team||'').trim(),
-      raw:t
+    .filter(x=>teamMatch(x.team,state.team))
+    .map(x=>({
+      key:String(x.key||x.username||x.maGV||'').trim(),
+      name:String(x.name||x.hoTen||'').trim(),
+      team:String(x.team||state.team).trim(),
+      subject:String(x.subject||'').trim(),
+      raw:x
     }))
-    .filter(t=>t.key&&t.name)
+    .filter(x=>x.key&&x.name)
     .sort((a,b)=>a.name.localeCompare(b.name,'vi'));
 
   state.teachers=list;
   $('teacher').innerHTML='<option value="">Chọn giáo viên</option>'+
-    list.map(t=>`<option value="${esc(t.key)}">${esc(t.name)}</option>`).join('');
+    list.map(x=>`<option value="${esc(x.key)}">${esc(x.name)}</option>`).join('');
   $('teacherInfo').textContent=list.length
     ? `Đã tải ${list.length} giáo viên · ${state.team}.`
-    : `Không tìm thấy giáo viên thuộc tổ ${state.team} trong Du_lieu_NhanSu_HVA.`;
+    : `Chưa tìm thấy giáo viên của tổ ${state.team} trong dữ liệu nhân sự HVA.`;
 }
 async function onTeacherSelect(){
   const key=$('teacher').value;state.teacher=state.teachers.find(x=>String(x.key)===key)||null;
@@ -317,12 +334,12 @@ async function callAPI(method,...args){
 }
 async function submitReport(){
  try{setStep(4);$('apiStatus').textContent='Đang gửi hồ sơ...';const r=await callAPI('submitReport',payload());$('apiStatus').textContent='Đã lưu hồ sơ DTHT vào dữ liệu HVA.';await loadData();alert('Đã xác nhận và gửi báo cáo.');}
- catch(e){$('apiStatus').textContent=e.message;alert('Bản HTML hiện chưa nối backend HVA. Giao diện và dữ liệu gửi đã sẵn sàng.');}
+ catch(e){$('apiStatus').textContent='Lỗi gửi hồ sơ: '+(e.message||e);alert('Không gửi được hồ sơ: '+(e.message||e));}
 }
 async function submitNoTutor(){
  const p=payload();
  try{$('apiStatus').textContent='Đang gửi xác nhận...';await callAPI('submitReport',p);$('apiStatus').textContent='Đã ghi nhận: Không tham gia DTHT ngoài nhà trường.';await loadData();}
- catch(e){$('apiStatus').textContent=e.message;alert('Bản HTML hiện chưa nối backend HVA.');}
+ catch(e){$('apiStatus').textContent='Lỗi gửi xác nhận: '+(e.message||e);alert('Không gửi được xác nhận: '+(e.message||e));}
 }
 function renderHistory(){
  const rows=state.reports||[];$('historyRows').innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.teacherName)}</td><td>${esc(x.team)}</td><td>${x.participates?'Có tham gia':'Không tham gia'}</td><td>${esc(x.version||1)}</td><td>${esc(x.updatedAt||'')}</td><td>${x.participates?'<button class="btn secondary" onclick="viewReport(\''+esc(x.id)+'\')">Xem</button>':'—'}</td></tr>`).join(''):'<tr><td colspan="6">Chưa có hồ sơ kê khai.</td></tr>';
@@ -330,22 +347,26 @@ function renderHistory(){
 function viewReport(id){alert('Điểm nối HVA: mở hồ sơ '+id)}
 async function loadData(){
   try{
-    const data=await window.HVA_API.dtht.getInitial('');
-    state.allTeachers=Array.isArray(data.teachers)?data.teachers:[];
-    state.reports=Array.isArray(data.reports)?data.reports:[];
-    $('apiStatus').textContent=`Đã kết nối HVA · ${state.allTeachers.length} giáo viên thuộc 07 tổ chuyên môn.`;
+    const fn=window.HVA_API?.dtht?.getInitial;
+    if(typeof fn!=='function') throw new Error('DTHT_API_NOT_READY');
+    const data=await fn('');
+    state.allTeachers=Array.isArray(data&&data.teachers)?data.teachers:[];
+    state.reports=Array.isArray(data&&data.reports)?data.reports:[];
+    $('apiStatus').textContent=state.allTeachers.length
+      ? `Đã kết nối HVA · ${state.allTeachers.length} giáo viên.`
+      : 'Đã kết nối HVA nhưng chưa nhận được danh sách giáo viên.';
   }catch(e){
     state.allTeachers=[];
     state.reports=[];
-    $('apiStatus').textContent='Lỗi tải dữ liệu: '+(e.message||e);
+    $('apiStatus').textContent='Chưa tải được dữ liệu HVA: '+(e&&e.message?e.message:'Lỗi không xác định');
   }
   renderHistory();
 }
 initTeams();
 (async function initDTHT(){
   await loadData();
-  $('team').value=TEAMS[0];
-  await onTeamSelect();
+  $('team').value='';
+  onTeamSelect();
 })();
 </script>
 </body>
