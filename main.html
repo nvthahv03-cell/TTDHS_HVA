@@ -453,7 +453,7 @@
     <!-- PANEL -->
     <div id="search-panel-box"
          class="w-full sm:max-w-[430px]
-                max-h-[82vh]
+                max-h-[72vh]
                 bg-white
                 rounded-t-[26px] sm:rounded-[26px]
                 shadow-2xl
@@ -1359,6 +1359,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
     <script src="services/api.js"></script>
+    <!-- HVA: CORE nhân sự dùng chung cho Kính lúp -->
+    <script src="HVA_Personnel.js?v=20261005"></script>
     <script type="module" src="assets/js/core/app.js?v=20260915-final"></script>
 
     <!-- LOGIC BẢO TRÌ & ĐỒNG BỘ TOÀN CỤC -->
@@ -4154,32 +4156,21 @@ setTimeout(() => {
     async function loadPersonnelWorkgroups() {
         const box = document.getElementById('personnel-workgroup-list');
         if (!box) return;
-
         box.classList.remove('hidden');
-        const chevron = document.getElementById('personnel-workgroup-chevron');
-        chevron?.classList.add('rotate-90');
-
+        document.getElementById('personnel-workgroup-chevron')?.classList.add('rotate-90');
         if (PERSONNEL_WORKGROUPS_LOADED) return;
 
         box.innerHTML = `<div class="px-3 py-2 text-[10px] text-slate-400"><i class="bi bi-arrow-repeat animate-spin mr-1"></i>Đang tải danh mục nhóm...</div>`;
 
         try {
-            if (!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function') {
-                throw new Error('HVA_AUTH_REQUEST_NOT_READY');
+            if (!window.HVAPersonnel || typeof window.HVAPersonnel.workgroupList !== 'function') {
+                throw new Error('HVA_PERSONNEL_CORE_NOT_READY');
             }
-
-            const url = SEARCH_API + '?action=getPersonnelWorkgroups&_=' + Date.now();
-            const response = await window.HVAAuthRequest.get(url, { cache:'no-store' });
-            if (!response.ok) throw new Error('HTTP ' + response.status);
-
-            const data = await response.json();
-            const groups = unwrapArray(data);
-
+            const groups = await window.HVAPersonnel.workgroupList();
             if (!groups.length) {
                 box.innerHTML = `<div class="px-3 py-2 text-[10px] text-slate-400">Chưa có nhóm công tác.</div>`;
                 return;
             }
-
             box.innerHTML = groups.map(group => `
                 <button type="button" data-workgroup-name="${escapeSearchHtml(group.name || '')}"
                         class="w-full flex items-center justify-between rounded-lg bg-white px-3 py-2 text-left border border-transparent hover:border-amber-100 hover:bg-amber-50 transition">
@@ -4188,15 +4179,14 @@ setTimeout(() => {
                         <span class="truncate text-[10.5px] font-semibold text-slate-700">${escapeSearchHtml(group.name || '')}</span>
                     </span>
                     <span class="ml-2 flex items-center gap-2 shrink-0">
-                        <span class="text-[9px] font-bold text-slate-400">${Number(group.memberCount || 0)}</span>
+                        <span class="text-[9px] font-bold text-slate-400">${Number(group.memberCount || group.count || 0)}</span>
                         <i class="bi bi-chevron-right text-[9px] text-slate-300"></i>
                     </span>
                 </button>`).join('');
-
             PERSONNEL_WORKGROUPS_LOADED = true;
             updatePersonnelTabs();
         } catch (error) {
-            console.error('loadPersonnelWorkgroups error:', error);
+            console.error('[HVA KÍNH LÚP] loadPersonnelWorkgroups:', error);
             box.innerHTML = `<button type="button" data-retry-workgroups="1" class="w-full rounded-lg bg-rose-50 px-3 py-2 text-left text-[10px] font-semibold text-rose-600">Không tải được danh mục nhóm · Bấm để thử lại</button>`;
         }
     }
@@ -4732,69 +4722,75 @@ setTimeout(() => {
  * ========================================================================== */
 
 async function searchPersonnel(keyword) {
-    const user = getSearchUser();
+    if (!window.HVAPersonnel ||
+        typeof window.HVAPersonnel.search !== 'function' ||
+        typeof window.HVAPersonnel.normalize !== 'function') {
+        throw new Error('HVA_PERSONNEL_CORE_NOT_READY');
+    }
+
     const structuredUnit = ACTIVE_PERSONNEL_CATEGORY === 'TEAM'
         ? String(ACTIVE_PERSONNEL_FILTER?.value || '').trim() : '';
     const structuredWorkgroup = ACTIVE_PERSONNEL_CATEGORY === 'WORKGROUP'
         ? String(ACTIVE_PERSONNEL_FILTER?.value || '').trim() : '';
     const apiKeyword = structuredUnit || structuredWorkgroup || String(keyword || '').trim();
 
-    const url = SEARCH_API +
-        '?action=searchNhanSuQuick' +
-        '&q=' + encodeURIComponent(apiKeyword) +
-        '&username=' + encodeURIComponent(user.username || '') +
-        '&category=' + encodeURIComponent(ACTIVE_PERSONNEL_CATEGORY) +
-        '&_=' + Date.now();
-
-    if (!window.HVAAuthRequest || typeof window.HVAAuthRequest.get !== 'function') {
-        throw new Error('HVA_AUTH_REQUEST_NOT_READY');
-    }
-
-    const response = await window.HVAAuthRequest.get(url, { cache:'no-store' });
-    if (!response.ok) throw new Error('HTTP ' + response.status);
-
-    const data = await response.json();
-    let people = unwrapArray(data);
+    const rawPeople = await window.HVAPersonnel.search(ACTIVE_PERSONNEL_CATEGORY, apiKeyword);
+    let people = rawPeople.map(person => window.HVAPersonnel.normalize(person));
 
     if (structuredUnit) {
         const expected = normalizePersonnelText(structuredUnit);
-        people = people.filter(person => normalizePersonnelText(person.to) === expected);
+        people = people.filter(person => normalizePersonnelText(person.tenTo) === expected);
     }
 
     if (structuredWorkgroup) {
         const expectedGroup = normalizePersonnelText(structuredWorkgroup);
-        people = people.filter(person => {
-            const groups = person.nhomCongTac || {};
-            return Object.keys(groups).some(name =>
-                normalizePersonnelText(name) === expectedGroup &&
-                !!String(groups[name] || '').trim()
-            );
-        });
+        people = people.filter(person => Object.keys(person.nhomCongTac || {}).some(name =>
+            normalizePersonnelText(name) === expectedGroup &&
+            !!String(person.nhomCongTac[name] || '').trim()
+        ));
     }
 
     const typedKeyword = String(keyword || '').trim();
     if ((structuredUnit || structuredWorkgroup) && typedKeyword) {
         const q = normalizePersonnelText(typedKeyword);
-        people = people.filter(person => [
-            person.hoTen, person.username, person.dienThoai, person.chucVu,
-            person.viTriViecLam, person.lopChuNhiem, ...(person.nhomCongTacLabels || [])
-        ].map(normalizePersonnelText).join(' ').includes(q));
+        people = people.filter(person => {
+            const raw = person.raw || {};
+            const taskText = [raw.nhiemVu, raw.nhiemVuKiemNhiem, raw.kiemNhiem, raw.nhiemVuKhac, raw.phanCong, raw.chucDanhKiemNhiem]
+                .flatMap(v => Array.isArray(v) ? v : [v]).filter(Boolean);
+            return [person.hoTen, person.username, person.dienThoai, person.chucVu,
+                    person.viTriViecLam, person.tenTo, person.lopChuNhiem,
+                    ...Object.keys(person.nhomCongTac || {}), ...taskText]
+                .map(normalizePersonnelText).join(' ').includes(q);
+        });
     }
 
-    return people.map((person,index) => ({
-        kind:'NHANSU',
-        id:person.username || ('NS_' + index),
-        title:person.hoTen || person.fullName || 'Nhân sự',
-        meta:person.lopChuNhiem ? 'GVCN lớp ' + person.lopChuNhiem :
-            (person.personnelCategory === 'CHIBO' ? 'Chi bộ' :
-             person.personnelCategory === 'BGH' ? 'Ban Giám hiệu' :
-             person.vaiTro || person.chucVu || person.viTriViecLam || 'CBQL/GV/NV'),
-        extra:[person.to, person.dienThoai, person.ngaySinh ? 'Sinh ' + person.ngaySinh : '', ...(person.nhomCongTacLabels || [])].filter(Boolean).join(' • '),
-        phone:String(person.dienThoai || '').trim(),
-        raw:person
-    }));
-}
+    return window.HVAPersonnel.dedupe(people).map((person,index) => {
+        const raw = person.raw || {};
+        const groupLabels = Object.keys(person.nhomCongTac || {})
+            .filter(name => !!String(person.nhomCongTac[name] || '').trim());
+        const taskValues = [raw.nhiemVu, raw.nhiemVuKiemNhiem, raw.kiemNhiem, raw.nhiemVuKhac, raw.phanCong, raw.chucDanhKiemNhiem]
+            .flatMap(v => Array.isArray(v) ? v : [v])
+            .map(v => String(v || '').trim()).filter(Boolean);
+        const duties = [...new Set([...taskValues, ...groupLabels])];
 
+        return {
+            kind:'NHANSU',
+            id:person.username || person.maGV || ('NS_' + index),
+            title:person.hoTen || 'Nhân sự',
+            meta:person.lopChuNhiem ? 'GVCN lớp ' + person.lopChuNhiem :
+                (ACTIVE_PERSONNEL_CATEGORY === 'CHIBO' ? 'Chi bộ' :
+                 ACTIVE_PERSONNEL_CATEGORY === 'BGH' ? 'Ban Giám hiệu' :
+                 person.chucVu || person.viTriViecLam || 'CBQL/GV/NV'),
+            extra:[person.tenTo, person.dienThoai,
+                   person.ngaySinh ? 'Sinh ' + person.ngaySinh : '',
+                   ...duties.slice(0,2)].filter(Boolean).join(' • '),
+            phone:String(person.dienThoai || '').trim(),
+            birthDate:String(person.ngaySinh || '').trim(),
+            duties,
+            raw:person
+        };
+    });
+}
 
 
     /* =====================================================
@@ -5182,9 +5178,7 @@ async function searchPersonnel(keyword) {
 
     function showPersonnelDetail(item) {
         const person = item.raw || {};
-        const workGroups = Array.isArray(person.nhomCongTacLabels)
-            ? person.nhomCongTacLabels.join(' • ')
-            : Object.keys(person.nhomCongTac || {}).join(' • ');
+        const duties = Array.isArray(item.duties) ? item.duties : [];
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 z-[1200] flex items-center justify-center bg-slate-950/55 backdrop-blur-sm p-4';
         modal.innerHTML = `
@@ -5199,16 +5193,24 @@ async function searchPersonnel(keyword) {
                 <div class="space-y-3 px-5 py-5 text-slate-700">
                     <div class="text-center text-[17px] font-black text-[#123B67]">${escapeHTML(item.title)}</div>
                     <div class="rounded-2xl bg-slate-50 p-4 text-[12px] leading-6">
-                        <div><span class="font-bold text-slate-500">Vị trí/Vai trò:</span> ${escapeHTML(person.viTriViecLam || person.chucVu || person.vaiTro || item.meta || 'CBQL/GV/NV')}</div>
-                        ${person.to ? `<div><span class="font-bold text-slate-500">Tổ/Bộ phận:</span> ${escapeHTML(person.to)}</div>` : ''}
+                        <div><span class="font-bold text-slate-500">Vị trí/Vai trò:</span> ${escapeHTML(person.viTriViecLam || person.chucVu || item.meta || 'CBQL/GV/NV')}</div>
+                        ${person.tenTo ? `<div><span class="font-bold text-slate-500">Tổ/Bộ phận:</span> ${escapeHTML(person.tenTo)}</div>` : ''}
                         ${person.lopChuNhiem ? `<div><span class="font-bold text-slate-500">GVCN lớp:</span> ${escapeHTML(person.lopChuNhiem)}</div>` : ''}
                         ${person.ngaySinh ? `<div><span class="font-bold text-slate-500">Ngày sinh:</span> ${escapeHTML(person.ngaySinh)}</div>` : ''}
-                        ${item.phone ? `<div><span class="font-bold text-slate-500">Điện thoại:</span> <span class="font-bold text-[#0F4C81]">${escapeHTML(item.phone)}</span></div>` : ''}
-                        ${workGroups ? `<div><span class="font-bold text-slate-500">Nhóm công tác:</span> ${escapeHTML(workGroups)}</div>` : ''}
+                        ${item.phone ? `<div><span class="font-bold text-slate-500">Điện thoại:</span> <span class="font-black text-[#0F4C81]">${escapeHTML(item.phone)}</span></div>` : ''}
                     </div>
+                    ${duties.length ? `
+                    <div class="rounded-2xl border border-violet-100 bg-violet-50/50 p-4">
+                        <div class="mb-2 text-[10px] font-black uppercase tracking-[0.08em] text-violet-500">Nhiệm vụ / Kiêm nhiệm</div>
+                        <div class="space-y-1.5">${duties.map(x => `
+                            <div class="flex items-start gap-2 text-[11px] leading-5 text-slate-700">
+                                <i class="bi bi-check-circle-fill mt-[2px] text-violet-500"></i><span>${escapeHTML(x)}</span>
+                            </div>`).join('')}</div>
+                    </div>` : ''}
                     <div class="grid ${item.phone ? 'grid-cols-2' : 'grid-cols-1'} gap-2">
-                        ${item.phone ? `<a href="tel:${escapeHTML(item.phone.replace(/\s+/g,''))}" class="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-[11px] font-extrabold text-white"><i class="bi bi-telephone-fill"></i> GỌI ĐIỆN</a>
-                        <button type="button" data-copy-phone class="flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-[11px] font-extrabold text-white"><i class="bi bi-copy"></i> SAO CHÉP SỐ</button>` : ''}
+                        ${item.phone ? `
+                        <a href="tel:${escapeHTML(item.phone.replace(/[^\d+]/g,''))}" class="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-3 text-[11px] font-extrabold text-white"><i class="bi bi-telephone-fill"></i> GỌI</a>
+                        <button type="button" data-copy-phone class="flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-[11px] font-extrabold text-white"><i class="bi bi-copy"></i> CHÉP SỐ</button>` : ''}
                     </div>
                 </div>
             </div>`;
@@ -5218,8 +5220,14 @@ async function searchPersonnel(keyword) {
         modal.querySelector('[data-copy-phone]')?.addEventListener('click', async function () {
             try {
                 await navigator.clipboard.writeText(item.phone);
-                this.innerHTML = '<i class="bi bi-check-lg"></i> ĐÃ SAO CHÉP';
+                const old = this.innerHTML;
+                this.innerHTML = '<i class="bi bi-check-lg"></i> ĐÃ CHÉP';
                 this.classList.replace('bg-blue-600', 'bg-emerald-600');
+                setTimeout(() => {
+                    if (!this.isConnected) return;
+                    this.innerHTML = old;
+                    this.classList.replace('bg-emerald-600', 'bg-blue-600');
+                }, 1600);
             } catch (error) {
                 window.hvaNotify?.('Số điện thoại: ' + item.phone, {kind:'info', title:'THÔNG TIN LIÊN HỆ'});
             }
