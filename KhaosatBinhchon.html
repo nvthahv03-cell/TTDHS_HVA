@@ -1,550 +1,1204 @@
-/**
- * ==============================================================================
- * TRUNG TÂM QUẢN TRỊ SỐ HVA - TRƯỜNG THPT HÒA VANG
- * BACKEND CHUYÊN BIỆT: ĐIỀU HÀNH SỐ (TTDHS ENGINE v3.0)
- * TÍCH HỢP HOÀN CHỈNH: HVA_PERSONNEL.JS, QUÉT CCCD CỘT D & TỔ CÔNG TÁC S -> AD
- * ==============================================================================
- */
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>HVA - Khảo sát & Bình chọn</title>
 
-const TTDHS_CONFIG = {
-  SPREADSHEET_ID: "19zyS6na6VaTiTImj9Bh11ot6f75TmBBpECAMxiObJcA",
-  SHEET_NHAN_SU: "Du_lieu_NhanSu_THPT_HOA_VANG",
-  SHEET_PHAT_HANH: "TTDHS_PHAT_HANH",
-  SHEET_PHAN_HOI: "TTDHS_PHAN_HOI"
-};
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-// ==============================================================================
-// 1. ROUTER TRUNG TÂM ĐIỀU HÀNH SỐ (doGet & doPost)
-// ==============================================================================
-function doGet(e) {
-  try {
-    const params = (e && e.parameter) ? e.parameter : {};
-    const action = String(params.action || "").trim();
+  <style>
+    :root {
+      --hva-h-navy: #073b78;
+      --hva-h-blue: #075cad;
+      --hva-h-cyan: #08abc5;
+      --hva-h-white: #f8fdff;
+      --hva-h-line: rgba(190, 238, 255, .58);
+      --ink: #183249;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, Arial, sans-serif; background: #f5f8fb; color: var(--ink); -webkit-tap-highlight-color: transparent; }
+    
+    /* HEADER CHUẨN THƯƠNG HIỆU TTĐHS_HVA */
+    .hva-pro-header {
+      position: sticky; top: 0; z-index: 40; margin: 12px 14px 0; min-height: 126px; border-radius: 16px;
+      overflow: hidden; isolation: isolate; color: var(--hva-h-white);
+      background: radial-gradient(circle at 82% 34%, rgba(41, 245, 255, .55), transparent 22%),
+                  radial-gradient(circle at 60% 118%, rgba(0, 220, 255, .55), transparent 34%),
+                  linear-gradient(108deg, #063b80 0%, #0758b5 27%, #057fd7 53%, #03aee2 77%, #08d1dc 100%);
+      border: 1px solid rgba(148, 245, 255, .52);
+      box-shadow: 0 14px 34px rgba(2, 73, 130, .24), inset 0 1px 0 rgba(255, 255, 255, .24);
+    }
+    .hva-pro-header::before {
+      content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none; opacity: .92;
+      background: radial-gradient(circle at 46% 24%, #a7fbff 0 1.5px, transparent 2.6px),
+                  radial-gradient(circle at 53% 72%, #79f5ff 0 1.6px, transparent 2.7px),
+                  radial-gradient(circle at 61% 20%, #b7fdff 0 1.5px, transparent 2.6px),
+                  radial-gradient(circle at 70% 67%, #75f4ff 0 1.6px, transparent 2.7px),
+                  linear-gradient(60deg, transparent 49.3%, rgba(119, 244, 255, .52) 50%, transparent 50.7%) 42% 0/112px 80px;
+    }
+    .hva-pro-header::after {
+      content: ""; position: absolute; z-index: -1; width: 280px; height: 280px; right: -30px; top: -74px;
+      border-radius: 50%; pointer-events: none; opacity: .52; border: 1px solid rgba(173, 252, 255, .95);
+      background: repeating-radial-gradient(circle, transparent 0 20px, rgba(155, 248, 255, .46) 21px 22px);
+    }
+    .hva-pro-header-inner {
+      min-height: 124px; max-width: 1460px; margin: 0 auto; padding: 13px 24px;
+      display: grid; grid-template-columns: 58px minmax(570px, 1fr) auto; align-items: center; gap: 20px;
+    }
+    .hva-pro-back {
+      width: 54px; height: 54px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      color: #eaf8ff; background: linear-gradient(145deg, rgba(16, 112, 187, .95), rgba(7, 73, 141, .95));
+      border: 1.5px solid rgba(79, 192, 255, .50); box-shadow: 0 6px 16px rgba(0, 36, 78, .20); cursor: pointer;
+    }
+    .hva-pro-back i { font-size: 24px; }
+    .hva-pro-brand { min-width: 0; display: flex; align-items: center; }
+    .hva-pro-divider { width: 1px; height: 70px; flex: 0 0 1px; background: linear-gradient(transparent, var(--hva-h-line) 16%, var(--hva-h-line) 84%, transparent); }
+    .hva-pro-brandtext { min-width: 0; width: min(620px, 100%); text-align: center; line-height: 1.06; }
+    .hva-pro-kicker { font-size: 14px; font-weight: 800; letter-spacing: .17em; color: rgba(226, 244, 255, .90); white-space: nowrap; }
+    .hva-pro-school { margin-top: 7px; font-size: 30px; font-weight: 800; letter-spacing: -.025em; color: #fff; white-space: nowrap; text-shadow: 0 2px 10px rgba(0, 31, 72, .28); }
+    .hva-pro-slogan { margin-top: 8px; font-size: 15px; font-weight: 600; color: rgba(235, 248, 255, .90); white-space: nowrap; }
+    .hva-pro-slogan b { font-weight: 800; padding: 0 5px; color: #d9f7ff; }
+    .hva-pro-tools { display: flex; align-items: center; justify-content: flex-end; gap: 9px; white-space: nowrap; }
+    .hva-pro-online-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .hva-pro-online {
+      height: 42px; padding: 0 17px; display: flex; align-items: center; gap: 10px; border-radius: 22px;
+      border: 1.5px solid rgba(83, 246, 237, .88); background: rgba(2, 77, 119, .40); font-size: 12px; font-weight: 800;
+    }
+    .hva-pro-online-dot { position: relative; display: inline-block; width: 10px; height: 10px; background-color: #22c55e; border-radius: 50%; flex-shrink: 0; }
+    .hva-pro-online-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background-color: #22c55e; animation: dotPulse 1.6s infinite ease-out; }
+    @keyframes dotPulse { 0% { transform: scale(1); opacity: .95; } 100% { transform: scale(3.2); opacity: 0; } }
+    .hva-pro-version {
+      display: inline-flex; align-items: center; justify-content: center; background: #ffffff; color: #003366;
+      font-weight: 900; font-size: 10.5px; padding: 1px 6px; border-radius: 6px; line-height: 1.2; margin-left: 2px;
+    }
 
-    // --- TUYẾN 1: TƯƠNG THÍCH VỚI HVA_PERSONNEL.JS ---
-    if (action === "searchNhanSuQuick") {
-      return dhsSearchNhanSuQuick_(params);
+    /* FORM & COMPONENT STYLES */
+    .shell { max-width: 1080px; margin: 18px auto 60px; padding: 0 14px; }
+    .card { background: #fff; border: 1px solid #dce8f1; border-radius: 18px; padding: 22px; box-shadow: 0 6px 20px rgba(15, 76, 129, .06); }
+    .field {
+      width: 100%; min-height: 44px; border: 1.6px solid #b8ccdf; border-radius: 12px; background: #fff;
+      color: #17324b; padding: 10px 14px; font-size: 13px; font-weight: 600; outline: none; transition: .18s;
     }
-    if (action === "getPersonnelWorkgroups") {
-      return dhsGetPersonnelWorkgroups_();
+    .field:focus { border-color: #075cad; box-shadow: 0 0 0 3px rgba(7, 92, 173, .12); background: #fcfeff; }
+    .lbl { display: block; font-size: 12px; font-weight: 800; color: #284b69; margin-bottom: 7px; }
+    .type-card { transition: .18s; border: 1.5px solid #dbe7f0; border-radius: 14px; background: #fff; cursor: pointer; }
+    .type-card:hover { border-color: #8fc5ee; transform: translateY(-1px); box-shadow: 0 8px 18px rgba(15, 93, 151, .08); }
+    .type-card.active { border-color: #075cad; background: #edf8ff; box-shadow: 0 0 0 2px rgba(7, 92, 173, .12); }
+    
+    /* GIAO DIỆN BÌNH CHỌN KIỂU ZALO */
+    .zalo-poll-option {
+      position: relative; overflow: hidden; border: 1.5px solid #dbe7f0; border-radius: 14px;
+      padding: 14px 16px; background: #fff; cursor: pointer; transition: .18s;
     }
-    if (action === "getDanhSachTo") {
-      return dhsGetDanhSachTo_();
-    }
-    if (action === "getNhanSuTheoTo") {
-      return dhsGetNhanSuTheoTo_(params);
+    .zalo-poll-option:hover { border-color: #075cad; }
+    .zalo-poll-option.selected { border-color: #075cad; background: #f0f7ff; }
+    .zalo-poll-bar {
+      position: absolute; top: 0; left: 0; bottom: 0; background: rgba(7, 92, 173, .12);
+      transition: width .4s cubic-bezier(.4, 0, .2, 1); pointer-events: none;
     }
 
-    // --- TUYẾN 2: LẤY CHI TIẾT BẢN PHÁT HÀNH (KHẢO SÁT, HỌP, NHIỆM VỤ) ---
-    if (action === "getPublicationDetailV3" || action === "getSurveyConfig") {
-      return dhsGetPublicationDetail_(params);
+    @media (max-width: 1080px) {
+      .hva-pro-header-inner { grid-template-columns: 50px minmax(430px, 1fr) auto; padding: 11px 16px; gap: 13px; }
+      .hva-pro-kicker { font-size: 11px; } .hva-pro-school { font-size: 24px; } .hva-pro-slogan { font-size: 12px; }
     }
-
-    // --- TUYẾN 3: BÁO CÁO THỐNG KÊ TIẾN ĐỘ ---
-    if (action === "getPublicationMetrics" || action === "getSurveyReport") {
-      return dhsGetPublicationMetrics_(params);
+    @media (max-width: 720px) {
+      .hva-pro-header { margin: 6px 6px 0; border-radius: 13px; min-height: 78px; }
+      .hva-pro-header-inner { min-height: 76px; padding: 7px 9px; grid-template-columns: 37px minmax(0, 1fr) auto; gap: 7px; }
+      .hva-pro-back { width: 36px; height: 36px; border-radius: 10px; }
+      .hva-pro-back i { font-size: 18px; } .hva-pro-divider { height: 42px; }
+      .hva-pro-kicker { font-size: 7px; letter-spacing: .08em; } .hva-pro-school { font-size: 14px; margin-top: 3px; }
+      .hva-pro-slogan { font-size: 8px; margin-top: 4px; } .hva-pro-online { height: 31px; padding: 0 9px; font-size: 9px; }
+      .hva-pro-version { font-size: 7.5px; } .shell { padding: 0 6px; margin-top: 10px; } .card { padding: 16px; }
     }
+  </style>
 
-    return dhsJSON_({ success: false, message: "Action GET không hợp lệ: " + action });
-  } catch (err) {
-    return dhsJSON_({ success: false, message: err.toString() });
+  <!-- ============================================================================== -->
+  <!-- NHÚNG NGUYÊN VẸN BỘ LÕI CHUẨN: HVA_PERSONNEL.JS CORE V1 -->
+  <!-- ============================================================================== -->
+  <script>
+  (function(global){
+  'use strict';
+
+  function hvaPersonnelText(v){ return String(v ?? '').trim(); }
+
+  function hvaPersonnelArray(data){
+    return Array.isArray(data) ? data
+      : Array.isArray(data && data.data) ? data.data
+      : Array.isArray(data && data.results) ? data.results
+      : Array.isArray(data && data.items) ? data.items
+      : [];
   }
-}
 
-function doPost(e) {
-  try {
-    let payload = {};
-    if (e && e.postData && e.postData.contents) {
-      try { payload = JSON.parse(e.postData.contents); } catch (_) { payload = e.parameter || {}; }
-    } else if (e && e.parameter) {
-      payload = e.parameter;
-    }
-
-    const action = String(payload.action || "").trim();
-
-    // 1. BGH / TTCM kích hoạt phát hành văn bản, khảo sát, nhiệm vụ
-    if (action === "publishDocument" || action === "publishDocuments") {
-      return dhsPublishDocument_(payload);
-    }
-
-    // 2. Giáo viên gửi kết quả: Khảo sát, Bình chọn Zalo, Báo cáo số liệu
-    if (action === "submitSurveyPollResponse" || action === "submitSurveyResponse") {
-      return dhsSubmitResponse_(payload);
-    }
-
-    // 3. Giáo viên xác nhận cuộc họp / Xin vắng
-    if (action === "confirmMeetingAttendance" || action === "requestMeetingAbsence") {
-      return dhsProcessMeetingAction_(payload);
-    }
-
-    return dhsJSON_({ success: false, message: "Action POST không hợp lệ: " + action });
-  } catch (err) {
-    return dhsJSON_({ success: false, message: err.toString() });
+  function hvaPersonnelCurrentUser(){
+    try{
+      if(typeof getSearchUser === 'function') return getSearchUser() || {};
+    }catch(e){}
+    try{
+      return JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}') || {};
+    }catch(e){ return {}; }
   }
-}
 
-// ==============================================================================
-// 2. HỆ THỐNG TIỆN ÍCH DÙNG CHUNG
-// ==============================================================================
-function dhsJSON_(data) {
-  return ContentService.createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function dhsGetSheet_(sheetName) {
-  const ss = SpreadsheetApp.openById(TTDHS_CONFIG.SPREADSHEET_ID);
-  let sheet = ss.getSheetByName(sheetName);
-  if (!sheet) {
-    sheet = ss.insertSheet(sheetName);
-    if (sheetName === TTDHS_CONFIG.SHEET_PHAT_HANH) {
-      sheet.appendRow([
-        "Thời gian phát hành", "Mã phát hành", "Mã tài liệu", "Module nguồn", "Loại", 
-        "Tiêu đề", "Người phát hành", "Thời hạn", "Điểm đến", "Số người nhận", "Chi tiết Payload (JSON)"
-      ]);
-    } else if (sheetName === TTDHS_CONFIG.SHEET_PHAN_HOI) {
-      sheet.appendRow([
-        "Thời gian phản hồi", "Mã phát hành", "Mã tài liệu", "Tên đăng nhập", "Họ và tên", 
-        "Tổ bộ phận", "Trạng thái", "Nội dung phản hồi (JSON)"
-      ]);
+  function hvaPersonnelEnsureAuth(){
+    if(global.HVAAuthRequest && typeof global.HVAAuthRequest.get==='function'){
+      return global.HVAAuthRequest;
     }
-  }
-  return sheet;
-}
 
-// ==============================================================================
-// 3. TƯƠNG THÍCH CHUẨN XÁC VỚI HVA_PERSONNEL.JS CORE (CỘT D & CỘT S -> AD)
-// ==============================================================================
-function dhsGetPersonnelWorkgroups_() {
-  return dhsJSON_([
-    { name: "Chi bộ", key: "CHIBO" },
-    { name: "Hội đồng", key: "HOIDONG" },
-    { name: "Ban TTND", key: "TTND" },
-    { name: "GVCN", key: "GVCN" },
-    { name: "Liên tịch", key: "LIENTICH" },
-    { name: "Liên tịch mở rộng", key: "LIENTICH_MORONG" },
-    { name: "HĐ Thi đua - Khen thưởng", key: "THIDUA" },
-    { name: "HĐ Kỷ luật", key: "KYLUAT" },
-    { name: "BD HSG 12", key: "BD_HSG12" },
-    { name: "Tổ công tác CĐS", key: "CDS" },
-    { name: "Tổ phụ trách CSDL ngành", key: "CSDL_NGANH" }
-  ]);
-}
+    const TOKEN_KEY='hvaSessionToken';
+    const EXPIRES_KEY='hvaSessionExpiresAt';
 
-function dhsSearchNhanSuQuick_(params) {
-  const category = String(params.category || "").trim().toUpperCase();
-  const q = String(params.q || "").trim().toLowerCase();
-
-  const ss = SpreadsheetApp.openById(TTDHS_CONFIG.SPREADSHEET_ID);
-  const sh = ss.getSheetByName(TTDHS_CONFIG.SHEET_NHAN_SU);
-  if (!sh) return dhsJSON_({ success: true, data: [] });
-
-  const lastRow = sh.getLastRow();
-  const lastCol = Math.max(30, sh.getLastColumn()); // Quét đủ đến cột AD (index 29)
-  if (lastRow < 7) return dhsJSON_({ success: true, data: [] });
-
-  const data = sh.getRange(7, 1, lastRow - 6, lastCol).getDisplayValues();
-  const results = [];
-
-  for (let r = 0; r < data.length; r++) {
-    const row = data[r];
-    const maGV = String(row[1] || "").trim();         // Cột B: Mã nhân sự
-    const hoTen = String(row[2] || "").trim();        // Cột C: Họ tên
-    const cccd = String(row[3] || "").trim();         // Cột D: CCCD
-    const chucVu = String(row[9] || "").trim();       // Cột J: Vị trí việc làm
-    const toBoPhan = String(row[12] || "").trim();    // Cột M: Tổ
-    const monDay = String(row[13] || "").trim();      // Cột N: Môn
-    const username = String(row[14] || "").trim();    // Cột O: Username
-
-    // CÁC CỘT TỔ CÔNG TÁC PHÍA SAU (S -> AD)
-    const quyenHT       = String(row[18] || "").trim(); // Cột S: Quyền hệ thống
-    const chiBoVal      = String(row[19] || "").trim(); // Cột T: Chi bộ
-    const hoiDongVal    = String(row[20] || "").trim(); // Cột U: Hội đồng
-    const ttndVal       = String(row[21] || "").trim(); // Cột V: Ban TTND
-    let lopCN           = String(row[22] || "").trim(); // Cột W: GVCN
-    const lienTichVal   = String(row[23] || "").trim(); // Cột X: Liên tịch
-    const ltMoRongVal   = String(row[24] || "").trim(); // Cột Y: Liên tịch mở rộng
-    const thiDuaVal     = String(row[25] || "").trim(); // Cột Z: HĐ Thi đua - Khen thưởng
-    const kyLuatVal     = String(row[26] || "").trim(); // Cột AA: HĐ Kỷ luật
-    const bdHSG12Val    = String(row[27] || "").trim(); // Cột AB: BD HSG 12
-    const cdsVal        = String(row[28] || "").trim(); // Cột AC: Tổ công tác CĐS
-    const csdlVal       = String(row[29] || "").trim(); // Cột AD: Tổ phụ trách CSDL ngành
-
-    if (!hoTen) continue;
-
-    // Chuẩn hóa định dạng lớp GVCN
-    if (lopCN.startsWith("Date(")) {
-      const m = lopCN.match(/Date\((\d+),(\d+),(\d+)\)/);
-      if (m) {
-        const mon = parseInt(m[2], 10) + 1;
-        const day = parseInt(m[3], 10);
-        lopCN = (day >= 10 && day <= 12) ? (day + "/" + mon) : (mon + "/" + day);
+    function getSessionToken(){
+      return String(localStorage.getItem(TOKEN_KEY)||'').trim();
+    }
+    function getSessionExpiresAt(){
+      const n=Number(String(localStorage.getItem(EXPIRES_KEY)||'').trim());
+      return Number.isFinite(n)?n:0;
+    }
+    function getSessionState(){
+      const token=getSessionToken(), expiresAt=getSessionExpiresAt(), now=Date.now();
+      return {
+        hasToken:!!token,
+        tokenLength:token.length,
+        expiresAt,
+        expired:!!expiresAt&&expiresAt<=now,
+        validLocal:!!token&&!!expiresAt&&expiresAt>now
+      };
+    }
+    function requireLocalSession(){
+      const state=getSessionState();
+      if(!state.hasToken){
+        const e=new Error('AUTH_REQUIRED'); e.code='AUTH_REQUIRED'; throw e;
       }
-    }
-    lopCN = lopCN.replace(/\s+/g, "");
-
-    const nhomCongTac = {};
-    if (chiBoVal) nhomCongTac["Chi bộ"] = chiBoVal;
-    if (hoiDongVal) nhomCongTac["Hội đồng"] = hoiDongVal;
-    if (ttndVal) nhomCongTac["Ban TTND"] = ttndVal;
-    if (lopCN) nhomCongTac["GVCN"] = "GVCN " + lopCN;
-    if (lienTichVal) nhomCongTac["Liên tịch"] = lienTichVal;
-    if (ltMoRongVal) nhomCongTac["Liên tịch mở rộng"] = ltMoRongVal;
-    if (thiDuaVal) nhomCongTac["Thi đua"] = thiDuaVal;
-    if (kyLuatVal) nhomCongTac["Kỷ luật"] = kyLuatVal;
-    if (bdHSG12Val) nhomCongTac["BD HSG 12"] = bdHSG12Val;
-    if (cdsVal) nhomCongTac["Tổ CĐS"] = cdsVal;
-    if (csdlVal) nhomCongTac["CSDL ngành"] = csdlVal;
-
-    const person = {
-      username: username || maGV,
-      maGV: maGV,
-      hoTen: hoTen,
-      cccd: cccd,
-      chucVu: chucVu || "Giáo viên",
-      viTriViecLam: chucVu || "Giáo viên",
-      to: toBoPhan,
-      toBoPhan: toBoPhan,
-      tenTo: toBoPhan,
-      monDay: monDay,
-      lopChuNhiem: lopCN,
-      nhomCongTac: nhomCongTac
-    };
-
-    let isMatch = false;
-
-    if (category === "BGH") {
-      isMatch = toBoPhan.toLowerCase().includes("ban giám hiệu") || 
-                toBoPhan.toLowerCase() === "bgh" || 
-                chucVu.toLowerCase().includes("hiệu trưởng");
-    } else if (category === "CHIBO") {
-      isMatch = Boolean(chiBoVal) || chucVu.toLowerCase().includes("bí thư") || toBoPhan.toLowerCase().includes("chi bộ");
-    } else if (category === "TEAM") {
-      const targetTeam = q.toLowerCase();
-      const currentTeam = toBoPhan.toLowerCase();
-      isMatch = currentTeam === targetTeam || currentTeam.includes(targetTeam) || targetTeam.includes(currentTeam);
-    } else if (category === "WORKGROUP") {
-      if (q.toUpperCase() === "GVCN") {
-        isMatch = Boolean(lopCN && /^1[012]\/\d{1,2}$/.test(lopCN));
-      } else if (q.includes("liên tịch mở rộng") || q === "lientich_morong") {
-        isMatch = Boolean(ltMoRongVal);
-      } else if (q.includes("liên tịch") || q === "lientich") {
-        isMatch = Boolean(lienTichVal);
-      } else if (q.includes("thi đua") || q === "thidua") {
-        isMatch = Boolean(thiDuaVal);
-      } else if (q.includes("kỷ luật") || q === "kyluat") {
-        isMatch = Boolean(kyLuatVal);
-      } else if (q.includes("hsg") || q.includes("bd_hsg12")) {
-        isMatch = Boolean(bdHSG12Val);
-      } else if (q.includes("cđs") || q === "cds") {
-        isMatch = Boolean(cdsVal);
-      } else if (q.includes("csdl") || q === "csdl_nganh") {
-        isMatch = Boolean(csdlVal);
-      } else if (q.includes("ttnd") || q.includes("thanh tra")) {
-        isMatch = Boolean(ttndVal);
-      } else if (q.includes("hội đồng") || q === "hoidong") {
-        isMatch = Boolean(hoiDongVal);
-      } else {
-        isMatch = Object.values(nhomCongTac).some(v => v.toLowerCase().includes(q));
+      if(!state.expiresAt||state.expired){
+        const e=new Error('SESSION_EXPIRED'); e.code='SESSION_EXPIRED'; throw e;
       }
-    } else {
-      isMatch = !q || hoTen.toLowerCase().includes(q) || username.toLowerCase().includes(q) || toBoPhan.toLowerCase().includes(q);
+      return getSessionToken();
+    }
+    function withAuthQuery(url){
+      const u=new URL(url,global.location.href);
+      u.searchParams.set('sessionToken',requireLocalSession());
+      return u.toString();
+    }
+    function withAuthBody(payload){
+      const src=payload&&typeof payload==='object'?payload:{};
+      return Object.assign({},src,{sessionToken:requireLocalSession()});
+    }
+    async function authGet(url,options){
+      return fetch(withAuthQuery(url),Object.assign({},options||{},{method:'GET'}));
+    }
+    async function authPostJson(url,payload,options){
+      const opts=Object.assign({},options||{});
+      opts.method='POST';
+      opts.headers=Object.assign({},opts.headers||{}, {'Content-Type':'text/plain;charset=utf-8'});
+      opts.body=JSON.stringify(withAuthBody(payload));
+      return fetch(url,opts);
     }
 
-    if (isMatch) results.push(person);
-  }
-
-  return dhsJSON_({ success: true, data: results, results: results });
-}
-
-function dhsGetDanhSachTo_() {
-  const ss = SpreadsheetApp.openById(TTDHS_CONFIG.SPREADSHEET_ID);
-  const sh = ss.getSheetByName(TTDHS_CONFIG.SHEET_NHAN_SU);
-  if (!sh) return dhsJSON_([]);
-
-  const lastRow = sh.getLastRow();
-  if (lastRow < 7) return dhsJSON_([]);
-
-  const teams = sh.getRange(7, 13, lastRow - 6, 1).getDisplayValues(); // Cột M: Tổ bộ phận
-  const set = new Set();
-  teams.forEach(t => {
-    const val = String(t[0] || "").trim();
-    if (val) set.add(val);
-  });
-
-  const res = Array.from(set).map(t => ({ tenTo: t, label: t }));
-  return dhsJSON_(res);
-}
-
-function dhsGetNhanSuTheoTo_(params) {
-  const toTarget = String(params.to || "").trim().toLowerCase();
-  const ss = SpreadsheetApp.openById(TTDHS_CONFIG.SPREADSHEET_ID);
-  const sh = ss.getSheetByName(TTDHS_CONFIG.SHEET_NHAN_SU);
-  if (!sh) return dhsJSON_([]);
-
-  const lastRow = sh.getLastRow();
-  if (lastRow < 7) return dhsJSON_([]);
-
-  const data = sh.getRange(7, 1, lastRow - 6, 15).getDisplayValues();
-  const list = [];
-
-  for (let r = 0; r < data.length; r++) {
-    const to = String(data[r][12] || "").trim();
-    if (!toTarget || to.toLowerCase() === toTarget) {
-      list.push({
-        maGV: String(data[r][1] || "").trim(),
-        hoTen: String(data[r][2] || "").trim(),
-        cccd: String(data[r][3] || "").trim(),
-        chucVu: String(data[r][9] || "Giáo viên").trim(),
-        to: to,
-        tenTo: to,
-        monDay: String(data[r][13] || "").trim(),
-        username: String(data[r][14] || "").trim()
-      });
-    }
-  }
-
-  return dhsJSON_(list);
-}
-
-// ==============================================================================
-// 4. KÍCH HOẠT PHÁT HÀNH TẬP TRUNG (TTPhatHanh.html)
-// ==============================================================================
-function dhsPublishDocument_(payload) {
-  const publishId = String(payload.publishId || payload.batchPublishId || ("PH-" + Utilities.formatDate(new Date(), "GMT+7", "yyyyMMdd-HHmmss"))).trim();
-  const moduleSource = String(payload.moduleSource || "DieuHanhSo").trim();
-  const document = payload.document || {};
-  const docId = String(document.docId || payload.docId || "").trim();
-  const title = String(document.title || payload.title || "Tài liệu phát hành").trim();
-  const type = String(payload.documentType || document.type || "THONG_BAO").trim();
-  
-  const sender = payload.sender || {};
-  const senderName = String(sender.fullName || sender.username || "Ban Giám hiệu").trim();
-  
-  const rawData = payload.data || (payload.documents && payload.documents[0] && payload.documents[0].data) || {};
-  const deadline = [rawData.deadlineDate, rawData.deadlineTime].filter(Boolean).join(" ");
-  
-  const destinations = Array.isArray(payload.destinations) ? payload.destinations.map(d => d.name || d.id || d).join(", ") : "";
-  const recipients = Array.isArray(payload.recipients) ? payload.recipients : [];
-  
-  const sheet = dhsGetSheet_(TTDHS_CONFIG.SHEET_PHAT_HANH);
-  const now = Utilities.formatDate(new Date(), "Asia/Ho_Chi_Minh", "dd/MM/yyyy HH:mm:ss");
-
-  const row = [
-    now,
-    publishId,
-    docId,
-    moduleSource,
-    type,
-    title,
-    senderName,
-    deadline,
-    destinations,
-    recipients.length,
-    JSON.stringify(payload)
-  ];
-
-  sheet.appendRow(row);
-
-  return dhsJSON_({
-    success: true,
-    message: "Kích hoạt phát hành số thành công.",
-    publishId: publishId,
-    documentCount: Array.isArray(payload.documents) ? payload.documents.length : 1
-  });
-}
-
-// ==============================================================================
-// 5. LẤY CHI TIẾT BẢN PHÁT HÀNH & CÂU HỎI
-// ==============================================================================
-function dhsGetPublicationDetail_(params) {
-  const publishId = String(params.publishId || params.id || "").trim();
-  const username = String(params.username || "").trim().toLowerCase();
-  
-  if (!publishId) {
-    return dhsJSON_({ success: false, message: "Thiếu mã phát hành." });
-  }
-
-  const sheetPH = dhsGetSheet_(TTDHS_CONFIG.SHEET_PHAT_HANH);
-  const lastRowPH = sheetPH.getLastRow();
-  let foundPayload = null;
-
-  if (lastRowPH >= 2) {
-    const data = sheetPH.getRange(2, 2, lastRowPH - 1, 10).getValues();
-    for (let i = data.length - 1; i >= 0; i--) {
-      const pId = String(data[i][0] || "").trim();
-      const dId = String(data[i][1] || "").trim();
-      if (pId === publishId || dId === publishId) {
-        try { foundPayload = JSON.parse(data[i][9]); } catch (_) {}
-        break;
-      }
-    }
-  }
-
-  if (!foundPayload) {
-    return dhsJSON_({ success: false, message: "Không tìm thấy nội dung phát hành với mã: " + publishId });
-  }
-
-  let userResponse = null;
-  if (username) {
-    const sheetResp = dhsGetSheet_(TTDHS_CONFIG.SHEET_PHAN_HOI);
-    const lastRowResp = sheetResp.getLastRow();
-    if (lastRowResp >= 2) {
-      const dataResp = sheetResp.getRange(2, 2, lastRowResp - 1, 7).getValues();
-      for (let j = dataResp.length - 1; j >= 0; j--) {
-        const rPubId = String(dataResp[j][0] || "").trim();
-        const rDocId = String(dataResp[j][1] || "").trim();
-        const rUser = String(dataResp[j][2] || "").trim().toLowerCase();
-        if ((rPubId === publishId || rDocId === publishId) && rUser === username) {
-          try {
-            userResponse = {
-              updatedAt: dataResp[j][0],
-              status: dataResp[j][5],
-              answers: JSON.parse(dataResp[j][6])
-            };
-          } catch (_) {}
-          break;
-        }
-      }
-    }
-  }
-
-  return dhsJSON_({
-    success: true,
-    publishId: publishId,
-    payload: foundPayload,
-    document: foundPayload.document || {},
-    sender: foundPayload.sender || {},
-    myResponse: userResponse
-  });
-}
-
-// ==============================================================================
-// 6. TIẾP NHẬN PHẢN HỒI (KHẢO SÁT, BÌNH CHỌN, BÁO CÁO)
-// ==============================================================================
-function dhsSubmitResponse_(payload) {
-  const username = String(payload.username || "").trim().toLowerCase();
-  const publishId = String(payload.publishId || payload.surveyId || "").trim();
-  const status = String(payload.status || "ĐÃ HOÀN THÀNH").trim();
-
-  if (!username || !publishId) {
-    return dhsJSON_({ success: false, message: "Thiếu thông tin tài khoản hoặc mã phát hành." });
-  }
-
-  const sheet = dhsGetSheet_(TTDHS_CONFIG.SHEET_PHAN_HOI);
-  const lock = LockService.getScriptLock();
-  if (!lock.tryLock(15000)) {
-    return dhsJSON_({ success: false, message: "Máy chủ đang xử lý dữ liệu khác, vui lòng thử lại sau giây lát." });
-  }
-
-  try {
-    const lastRow = sheet.getLastRow();
-    let rowFound = 0;
-
-    if (lastRow >= 2) {
-      const data = sheet.getRange(2, 2, lastRow - 1, 3).getValues();
-      for (let i = 0; i < data.length; i++) {
-        const rPubId = String(data[i][0] || "").trim();
-        const rDocId = String(data[i][1] || "").trim();
-        const rUser = String(data[i][2] || "").trim().toLowerCase();
-        if ((rPubId === publishId || rDocId === publishId) && rUser === username) {
-          rowFound = i + 2;
-          break;
-        }
-      }
-    }
-
-    const now = Utilities.formatDate(new Date(), "Asia/Ho_Chi_Minh", "dd/MM/yyyy HH:mm:ss");
-    const fullName = String(payload.fullName || payload.hoTen || username).trim();
-    const team = String(payload.department || payload.toBoPhan || "").trim();
-    const answersStr = JSON.stringify(payload.answers || payload.data || {});
-
-    const row = [
-      now,
-      publishId,
-      String(payload.docId || publishId),
-      username,
-      fullName,
-      team,
-      status,
-      answersStr
-    ];
-
-    if (rowFound > 0) {
-      sheet.getRange(rowFound, 1, 1, row.length).setValues([row]);
-    } else {
-      sheet.appendRow(row);
-    }
-
-    return dhsJSON_({
-      success: true,
-      message: "Ghi nhận phản hồi thành công.",
-      updatedAt: now,
-      status: status
+    global.HVAAuthRequest=Object.freeze({
+      getSessionState,withAuthQuery,withAuthBody,get:authGet,postJson:authPostJson
     });
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-// ==============================================================================
-// 7. XÁC NHẬN THAM DỰ CUỘC HỌP / XIN VẮNG
-// ==============================================================================
-function dhsProcessMeetingAction_(payload) {
-  const action = String(payload.action || "").trim();
-  const username = String(payload.username || "").trim().toLowerCase();
-  const meetingId = String(payload.meetingId || payload.publishId || "").trim();
-
-  if (!username || !meetingId) {
-    return dhsJSON_({ success: false, message: "Thiếu thông tin cuộc họp hoặc tài khoản." });
+    return global.HVAAuthRequest;
   }
 
-  const isAbsence = action === "requestMeetingAbsence";
-  const status = isAbsence ? "XIN VẮNG" : "THAM DỰ";
-  const detail = isAbsence ? { reason: String(payload.reason || "").trim() } : { confirmed: true };
+  async function hvaPersonnelGet(action, params={}){
+    const auth=hvaPersonnelEnsureAuth();
+    const user=hvaPersonnelCurrentUser();
+    const api=global.PERSONNEL_SEARCH_API ||
+      (typeof getHvaGatewayUrl === 'function' ? getHvaGatewayUrl() : '') ||
+      'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+    const u=new URL(api);
 
-  return dhsSubmitResponse_({
-    username: username,
-    publishId: meetingId,
-    docId: meetingId,
-    fullName: String(payload.fullName || username),
-    status: status,
-    answers: detail
-  });
-}
+    u.searchParams.set('action',hvaPersonnelText(action));
+    if(user.username||user.userName||user.maGV){
+      u.searchParams.set('username',hvaPersonnelText(user.username||user.userName||user.maGV));
+    }
+    Object.entries(params||{}).forEach(([k,v])=>{
+      if(v!==undefined&&v!==null) u.searchParams.set(k,hvaPersonnelText(v));
+    });
+    u.searchParams.set('_',Date.now());
 
-// ==============================================================================
-// 8. THỐNG KÊ TIẾN ĐỘ THỰC HIỆN CẤP TRƯỜNG
-// ==============================================================================
-function dhsGetPublicationMetrics_(params) {
-  const publishId = String(params.publishId || params.id || "").trim();
-  if (!publishId) return dhsJSON_({ success: false, message: "Thiếu mã phát hành." });
+    const r=await auth.get(u.toString(),{cache:'no-store'});
+    if(!r.ok) throw Error('HTTP '+r.status);
+    const data=await r.json();
+    if(data&&data.success===false){
+      const e=new Error(data.message||data.code||'Không tải được dữ liệu nhân sự.');
+      e.code=data.code||'PERSONNEL_API_ERROR';
+      throw e;
+    }
+    return data;
+  }
 
-  const sheetResp = dhsGetSheet_(TTDHS_CONFIG.SHEET_PHAN_HOI);
-  const lastRow = sheetResp.getLastRow();
-  const responses = [];
+  function normalizeHvaPerson(m, groupLabel=''){
+    m = m || {};
+    const groups = (m.nhomCongTac && typeof m.nhomCongTac === 'object') ? m.nhomCongTac : {};
+    const lop = hvaPersonnelText(m.lopChuNhiem || m.lopCN || groups.GVCN || '');
 
-  if (lastRow >= 2) {
-    const data = sheetResp.getRange(2, 1, lastRow - 1, 8).getValues();
-    for (let i = 0; i < data.length; i++) {
-      const pId = String(data[i][1] || "").trim();
-      const dId = String(data[i][2] || "").trim();
-      if (pId === publishId || dId === publishId) {
-        responses.push({
-          time: data[i][0],
-          username: data[i][3],
-          fullName: data[i][4],
-          team: data[i][5],
-          status: data[i][6],
-          answers: data[i][7]
+    return {
+      username: hvaPersonnelText(m.username),
+      maGV: hvaPersonnelText(m.maGV || m.maNhanSu || m.id),
+      hoTen: hvaPersonnelText(m.hoTen || m.fullName || m.name),
+      cccd: hvaPersonnelText(m.cccd),
+      chucVu: hvaPersonnelText(m.chucVu || m.vaiTro || m.viTriViecLam || 'Giáo viên'),
+      viTriViecLam: hvaPersonnelText(m.viTriViecLam),
+      tenTo: hvaPersonnelText(m.to || m.toBoPhan || m.tenTo),
+      lopChuNhiem: lop,
+      nhomCongTac: m.nhomCongTac || {},
+      dienThoai: hvaPersonnelText(m.dienThoai || m.soDienThoai || m.phone),
+      ngaySinh: hvaPersonnelText(m.ngaySinh || m.birthDate),
+      groupLabel: hvaPersonnelText(groupLabel),
+      raw: m
+    };
+  }
+
+  function mapMeetingPerson(m, groupLabel){ return normalizeHvaPerson(m, groupLabel); }
+
+  function hvaPersonnelIdentity(m){
+    const u = hvaPersonnelText(m && m.username).toLowerCase();
+    if(u) return 'U:' + u;
+    const ma = hvaPersonnelText(m && m.maGV).toLowerCase();
+    if(ma) return 'M:' + ma;
+    return '';
+  }
+
+  function hvaPersonnelDedupe(members, groupLabel=''){
+    const map = new Map();
+    hvaPersonnelArray(members).forEach(raw=>{
+      const p = raw && raw.raw !== undefined ? raw : normalizeHvaPerson(raw, groupLabel);
+      const key = hvaPersonnelIdentity(p);
+      if(!key || map.has(key)) return;
+      if(!p.username) p.username = p.maGV;
+      map.set(key, p);
+    });
+    return [...map.values()];
+  }
+
+  const HVA_PERSONNEL_CACHE_PREFIX='HVA_PERSONNEL_V3:';
+  const meetingPersonnelMemory=new Map();
+
+  function meetingPersonnelCacheKey(action,params={}){
+    const normalized={};
+    Object.keys(params||{}).sort().forEach(k=>normalized[k]=hvaPersonnelText(params[k]));
+    return HVA_PERSONNEL_CACHE_PREFIX + hvaPersonnelText(action).toUpperCase() + ':' + JSON.stringify(normalized);
+  }
+
+  function getMeetingPersonnelCache(action,params={}){
+    const key=meetingPersonnelCacheKey(action,params);
+    if(meetingPersonnelMemory.has(key)) return meetingPersonnelMemory.get(key);
+    try{
+      const raw=sessionStorage.getItem(key);
+      if(raw!==null){
+        const value=JSON.parse(raw);
+        meetingPersonnelMemory.set(key,value);
+        return value;
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function setMeetingPersonnelCache(action,params,value){
+    const key=meetingPersonnelCacheKey(action,params);
+    meetingPersonnelMemory.set(key,value);
+    try{ sessionStorage.setItem(key,JSON.stringify(value)); }catch(e){}
+    return value;
+  }
+
+  async function hvaPersonnelGetCached(action,params={}){
+    const hit=getMeetingPersonnelCache(action,params);
+    if(hit!==null) return hit;
+    return setMeetingPersonnelCache(action,params,await hvaPersonnelGet(action,params));
+  }
+
+  async function hvaPersonnelSearch(category,q=''){
+    return hvaPersonnelArray(await hvaPersonnelGetCached('searchNhanSuQuick',{
+      q:hvaPersonnelText(q),
+      category:hvaPersonnelText(category)
+    }));
+  }
+
+  function hvaPersonnelUnits(){
+    if(Array.isArray(window.HVA_PERSONNEL_UNITS) && window.HVA_PERSONNEL_UNITS.length){
+      return window.HVA_PERSONNEL_UNITS.map(x=>{
+        if(typeof x==='string') return {label:hvaPersonnelText(x),query:hvaPersonnelText(x)};
+        return {
+          label:hvaPersonnelText(x.label || x.name || x.value),
+          query:hvaPersonnelText(x.value || x.name || x.label)
+        };
+      }).filter(x=>x.query);
+    }
+
+    return [
+      { label:'Toán - Tin',                 query:'Toán - Tin' },
+      { label:'Ngữ văn',                    query:'Ngữ văn' },
+      { label:'Tiếng Anh',                  query:'Ngoại Ngữ' },
+      { label:'Lịch sử - Địa lí - GDKT&PL', query:'Sử - Địa - GD KT&PL' },
+      { label:'Vật lí - Công nghệ',         query:'Vật lí - Công nghệ' },
+      { label:'Hóa học',                    query:'Hóa học' },
+      { label:'Sinh - GDTC - QPAN',         query:'Sinh - GDTC - QPAN' },
+      { label:'Văn phòng',                  query:'Văn phòng' }
+    ];
+  }
+
+  async function hvaPersonnelWorkgroupList(){
+    const raw=await hvaPersonnelGetCached('getPersonnelWorkgroups',{});
+    return hvaPersonnelArray(raw).map(x=>{
+      if(typeof x==='string') return {name:hvaPersonnelText(x)};
+      return {...x,name:hvaPersonnelText(x.name || x.label || x.value)};
+    }).filter(x=>x.name);
+  }
+
+  function hvaPersonnelMakeGroup(groupKey,tenTo,kind,members){
+    return {
+      groupKey:hvaPersonnelText(groupKey),
+      tenTo:hvaPersonnelText(tenTo),
+      kind:hvaPersonnelText(kind),
+      members:hvaPersonnelDedupe(members,tenTo)
+    };
+  }
+
+  function hvaPersonnelNormUnit(v){
+    return hvaPersonnelText(v).toLowerCase().normalize('NFD')
+      .replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d')
+      .replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
+  }
+
+  function hvaPersonnelUnitKey(v){
+    const n=hvaPersonnelNormUnit(v);
+    if(n==='ngoai ngu' || n==='tieng anh') return 'ENGLISH';
+    if(n.includes('su') && n.includes('dia') && (n.includes('kt') || n.includes('giao duc kinh te'))) return 'HISTORY_GEO';
+    if(n==='toan tin') return 'MATH_IT';
+    if(n==='ngu van') return 'LITERATURE';
+    if(n==='vat li cong nghe') return 'PHYSICS_TECH';
+    if(n==='hoa hoc') return 'CHEMISTRY';
+    if(n.includes('sinh') && n.includes('gdtc') && (n.includes('qpan') || n.includes('qp an'))) return 'BIO_PE_DEF';
+    if(n==='van phong') return 'OFFICE';
+    return n;
+  }
+
+  async function hvaPersonnelBuildGroups(){
+    const units=hvaPersonnelUnits();
+
+    const [chiBoRaw,bghRaw,workgroups,teamResults]=await Promise.all([
+      hvaPersonnelSearch('CHIBO',''),
+      hvaPersonnelSearch('BGH',''),
+      hvaPersonnelWorkgroupList(),
+      Promise.all(units.map(async unit=>({
+        name:unit.label,
+        query:unit.query,
+        raw:await hvaPersonnelSearch('TEAM',unit.query)
+      })))
+    ]);
+
+    const workResults=await Promise.all(workgroups.map(async group=>{
+      try{
+        return {name:group.name,raw:await hvaPersonnelSearch('WORKGROUP',group.name)};
+      }catch(e){
+        console.warn('[HVA Personnel] WORKGROUP',group.name,e);
+        return {name:group.name,raw:[]};
+      }
+    }));
+
+    const groups=[];
+    groups.push(hvaPersonnelMakeGroup('CHIBO','Chi bộ','ROOT',chiBoRaw));
+    groups.push(hvaPersonnelMakeGroup('BGH','Ban Giám hiệu','ROOT',bghRaw));
+
+    teamResults.forEach(x=>{
+      groups.push(hvaPersonnelMakeGroup('TEAM:'+x.name,x.name,'TEAM',x.raw));
+    });
+
+    const councilMembers=[];
+    groups.filter(g=>g.groupKey==='BGH'||g.kind==='TEAM')
+      .forEach(g=>councilMembers.push(...g.members));
+    groups.push(hvaPersonnelMakeGroup('COUNCIL:ALL','Hội đồng','COUNCIL',councilMembers));
+
+    workResults.forEach(({name,raw})=>{
+      if(!name) return;
+      if(name.toUpperCase()==='GVCN'){
+        const mapped=hvaPersonnelDedupe(raw,'GVCN');
+        ['10','11','12'].forEach(khoi=>{
+          const members=mapped
+            .filter(m=>hvaPersonnelText(m.lopChuNhiem).startsWith(khoi+'/'))
+            .sort((a,b)=>{
+              const na=Number(hvaPersonnelText(a.lopChuNhiem).split('/')[1])||999;
+              const nb=Number(hvaPersonnelText(b.lopChuNhiem).split('/')[1])||999;
+              return na-nb||hvaPersonnelText(a.hoTen).localeCompare(hvaPersonnelText(b.hoTen),'vi');
+            });
+          groups.push(hvaPersonnelMakeGroup('GVCN:'+khoi,'GVCN khối '+khoi,'GVCN',members));
         });
+      }else{
+        groups.push(hvaPersonnelMakeGroup('WORKGROUP:'+name,name,'WORKGROUP',raw));
+      }
+    });
+
+    return groups;
+  }
+
+  global.HVAPersonnel = Object.freeze({
+    text: hvaPersonnelText,
+    array: hvaPersonnelArray,
+    currentUser: hvaPersonnelCurrentUser,
+    ensureAuth: hvaPersonnelEnsureAuth,
+    get: hvaPersonnelGet,
+    normalize: normalizeHvaPerson,
+    identity: hvaPersonnelIdentity,
+    dedupe: hvaPersonnelDedupe,
+    search: hvaPersonnelSearch,
+    units: hvaPersonnelUnits,
+    workgroupList: hvaPersonnelWorkgroupList,
+    makeGroup: hvaPersonnelMakeGroup,
+    normUnit: hvaPersonnelNormUnit,
+    unitKey: hvaPersonnelUnitKey,
+    buildGroups: hvaPersonnelBuildGroups
+  });
+
+  })(window);
+  </script>
+</head>
+
+<body>
+
+  <!-- HEADER CHUẨN THƯƠNG HIỆU TTĐHS_HVA -->
+  <header class="hva-pro-header">
+    <div class="hva-pro-header-inner">
+      <button type="button" class="hva-pro-back" onclick="location.href='main.html'" aria-label="Trang chủ HVA" title="Trang chủ">
+        <i class="bi bi-house-door"></i>
+      </button>
+      <div class="hva-pro-brand">
+        <span class="hva-pro-divider" aria-hidden="true"></span>
+        <div class="hva-pro-brandtext">
+          <div class="hva-pro-kicker">TRUNG TÂM QUẢN TRỊ SỐ HVA</div>
+          <div class="hva-pro-school">Trường THPT Hòa Vang</div>
+          <div class="hva-pro-slogan">Quản trị thông minh <b>•</b> Giáo dục sáng tạo</div>
+        </div>
+      </div>
+      <div class="hva-pro-tools">
+        <div class="hva-pro-online-wrap">
+          <div class="hva-pro-online" title="Hệ thống trực tuyến">
+            <span class="hva-pro-online-dot"></span>
+            <span>TRỰC TUYẾN</span>
+            <span class="hva-pro-version">PORTAL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+
+    <!-- ============================================================================== -->
+    <!-- PHẦN 1: GIAO DIỆN PHÍA GIÁO VIÊN: THỰC HIỆN KHẢO SÁT / BÌNH CHỌN (TỰ SINH ĐỘNG) -->
+    <!-- ============================================================================== -->
+    <div id="viewRespondent" class="hidden space-y-4">
+      
+      <!-- Card Định danh người thực hiện -->
+      <div class="card p-5 bg-gradient-to-r from-blue-50/70 to-slate-50 border-blue-200">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-[#075cad] text-white flex items-center justify-center text-xl shadow-md">
+              <i class="bi bi-person-check-fill"></i>
+            </div>
+            <div>
+              <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">NGƯỜI THỰC HIỆN KHẢO SÁT</div>
+              <div id="gvName" class="text-lg font-black text-[#073b78] leading-tight">Đang nhận diện...</div>
+              <div class="text-xs font-semibold text-slate-600 mt-1">
+                Tổ: <span id="gvTeam" class="font-bold text-slate-800">—</span> | 
+                Chức vụ: <span id="gvRole" class="font-bold text-slate-800">—</span>
+              </div>
+            </div>
+          </div>
+          <div class="sm:text-right">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              <i class="bi bi-shield-check"></i> ĐÃ XÁC THỰC HVA
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Thông tin khảo sát & Căn cứ -->
+      <div class="card space-y-3">
+        <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-3">
+          <span id="surveyTypeBadge" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-100 text-[#075cad]">
+            KHẢO SÁT NỘI BỘ
+          </span>
+          <span id="surveyStatusBadge" class="text-xs font-extrabold px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+            ⏳ Chưa thực hiện
+          </span>
+        </div>
+
+        <h1 id="surveyTitle" class="text-xl sm:text-2xl font-black text-slate-900 leading-snug">
+          Đang tải nội dung khảo sát...
+        </h1>
+
+        <div id="surveyRefBox" class="hidden text-xs font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <i class="bi bi-file-earmark-text text-[#075cad] mr-1.5"></i><b>Căn cứ:</b> <span id="surveyReference"></span>
+        </div>
+
+        <p id="surveyDesc" class="text-sm font-medium text-slate-600 leading-relaxed whitespace-pre-line"></p>
+
+        <div class="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-500 pt-2 border-t border-slate-100">
+          <div><i class="bi bi-person-fill text-slate-400 mr-1"></i>Người phát hành: <b id="surveyAuthor" class="text-slate-700">HVA</b></div>
+          <div><i class="bi bi-clock-fill text-amber-500 mr-1"></i>Hạn thực hiện: <b id="surveyDeadline" class="text-slate-700">—</b></div>
+        </div>
+      </div>
+
+      <!-- Khung Tự sinh danh sách câu hỏi động (Radio, Checkbox, Input, Textarea, Zalo Poll) -->
+      <form id="formSurveyQuestions" class="space-y-4" onsubmit="event.preventDefault();"></form>
+
+      <!-- Nhãn trạng thái đã gửi & Cụm nút thao tác -->
+      <div class="card space-y-4">
+        <div id="boxSubmittedAck" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800">
+          <div class="flex items-center gap-3">
+            <i class="bi bi-check-circle-fill text-2xl text-emerald-600"></i>
+            <div>
+              <div class="font-black text-sm" id="submittedTimeText">Đã gửi khảo sát thành công.</div>
+              <div class="text-xs font-medium text-emerald-700 mt-0.5">Dữ liệu đã được hệ thống ghi nhận vào máy chủ HVA.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-end gap-3 pt-2" id="actionSurveyButtons">
+          <button type="button" id="btnSaveDraft" onclick="submitSurvey(true)" class="px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-extrabold transition">
+            <i class="bi bi-bookmark mr-1.5"></i>LƯU NHÁP
+          </button>
+          <button type="button" id="btnSubmitSurvey" onclick="submitSurvey(false)" class="px-7 py-3 rounded-xl bg-[#075cad] hover:bg-[#064b91] text-white text-xs font-black shadow-lg shadow-blue-500/20 transition">
+            <i class="bi bi-send-check-fill mr-1.5"></i>GỬI KHẢO SÁT
+          </button>
+          <button type="button" id="btnReviewSurvey" onclick="toggleReviewMode(true)" class="hidden px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-extrabold transition">
+            <i class="bi bi-eye-fill mr-1.5"></i>XEM LẠI CÂU TRẢ LỜI
+          </button>
+          <button type="button" id="btnEditSurvey" onclick="toggleReviewMode(false)" class="hidden px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold transition">
+            <i class="bi bi-pencil-square mr-1.5"></i>CHỈNH SỬA CÂU TRẢ LỜI
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================================== -->
+    <!-- PHẦN 2: GIAO DIỆN TẠO KHẢO SÁT DÀNH CHO BGH & TTCM (CHUYỂN TTPHATHANH.HTML) -->
+    <!-- ============================================================================== -->
+    <div id="viewCreator" class="space-y-4">
+      
+      <!-- Khối chọn loại nghiệp vụ -->
+      <section class="card overflow-hidden">
+        <div class="px-4 py-3 border-b bg-white/70 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-extrabold text-[#075cad] uppercase"><i class="bi bi-grid-1x2-fill mr-1.5"></i>Chọn loại cần tạo</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Chọn nhanh một nghiệp vụ để BGH / TTCM phát hành</div>
+          </div>
+          <span id="modeBadge" class="px-3 py-1 rounded-full text-[10px] font-black bg-blue-50 text-[#075cad]">KHẢO SÁT CỦA TRƯỜNG</span>
+        </div>
+
+        <div class="p-3 grid grid-cols-1 sm:grid-cols-4 gap-2.5" id="typeSelector">
+          <div class="type-card active p-3" data-mode="internal" onclick="setMode('internal')">
+            <div class="w-9 h-9 rounded-xl bg-blue-50 text-[#075cad] flex items-center justify-center mb-2"><i class="bi bi-ui-checks-grid text-lg"></i></div>
+            <div class="font-extrabold text-xs text-slate-800">Khảo sát của Trường</div>
+            <div class="text-[10px] text-slate-500 mt-1">HVA tự tạo phiếu, sinh mã và link tự động.</div>
+          </div>
+
+          <div class="type-card p-3" data-mode="poll" onclick="setMode('poll')">
+            <div class="w-9 h-9 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center mb-2"><i class="bi bi-check2-square text-lg"></i></div>
+            <div class="font-extrabold text-xs text-slate-800">Bình chọn nhanh</div>
+            <div class="text-[10px] text-slate-500 mt-1">Tạo bình chọn nhanh kiểu Zalo, thanh % trực quan.</div>
+          </div>
+
+          <div class="type-card p-3" data-mode="external" onclick="setMode('external')">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2"><i class="bi bi-link-45deg text-xl"></i></div>
+            <div class="font-extrabold text-xs text-slate-800">Khảo sát từ Link</div>
+            <div class="text-[10px] text-slate-500 mt-1">Triển khai link khảo sát của Sở và theo dõi tiến độ.</div>
+          </div>
+
+          <div class="type-card p-3" data-mode="report" onclick="setMode('report')">
+            <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-2"><i class="bi bi-table text-lg"></i></div>
+            <div class="font-extrabold text-xs text-slate-800">Báo cáo số liệu</div>
+            <div class="text-[10px] text-slate-500 mt-1">Thu thập số liệu chuyên môn theo cấu trúc cột.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Khối soạn nhanh -->
+      <section class="card space-y-3">
+        <div class="text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
+          <i class="bi bi-lightning-charge-fill text-amber-500"></i>Soạn nhanh nội dung
+        </div>
+        <textarea id="quickText" rows="3" class="field resize-y" placeholder="Ví dụ: Khảo sát nhu cầu tập huấn AI. 1. Thầy/Cô có nhu cầu tham gia không? Có/Không. 2. Nội dung quan tâm: Soạn bài; Kiểm tra đánh giá. Chọn nhiều."></textarea>
+        <div class="flex justify-end">
+          <button type="button" onclick="applyQuick()" class="h-9 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold transition">
+            <i class="bi bi-magic mr-1"></i>TẠO PHIẾU NHANH
+          </button>
+        </div>
+      </section>
+
+      <!-- Nội dung khảo sát -->
+      <section class="card space-y-4">
+        <div>
+          <label class="lbl" id="titleLabel">Tiêu đề khảo sát *</label>
+          <input id="title" class="field" placeholder="Ví dụ: Khảo sát thực trạng Đề án tiếng Anh năm học 2026-2027">
+        </div>
+
+        <div id="fieldReference">
+          <label class="lbl">Căn cứ / Văn bản liên quan (tùy chọn)</label>
+          <input id="referenceText" class="field" placeholder="Ví dụ: Công văn số 5492/SGDĐT-GDTrH&HSSV">
+        </div>
+
+        <div id="externalUrlBox" class="hidden">
+          <label class="lbl">Link khảo sát bên ngoài *</label>
+          <input id="externalUrl" type="url" class="field" placeholder="https://forms.gle/...">
+        </div>
+
+        <div>
+          <label class="lbl">Mô tả / Yêu cầu thực hiện</label>
+          <textarea id="description" rows="3" class="field resize-y" placeholder="Nêu ngắn gọn mục đích, yêu cầu thực hiện đối với giáo viên..."></textarea>
+        </div>
+      </section>
+
+      <!-- Danh sách câu hỏi (Builder) -->
+      <section id="builderSection" class="card space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <div id="builderTitle" class="text-xs font-extrabold text-slate-800 uppercase">Câu hỏi khảo sát</div>
+            <div id="builderSub" class="text-[11px] text-slate-500">Tự động dựng giao diện cho người trả lời</div>
+          </div>
+          <button type="button" onclick="addQuestion()" class="h-9 px-3 rounded-xl bg-[#075cad] hover:bg-[#064b91] text-white text-xs font-extrabold transition">
+            <i class="bi bi-plus-lg mr-1"></i>THÊM CÂU HỎI
+          </button>
+        </div>
+        <div id="questionList" class="space-y-3"></div>
+      </section>
+
+      <!-- Thời hạn & Thiết lập -->
+      <section class="card space-y-3">
+        <div class="text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
+          <i class="bi bi-clock text-amber-500"></i>Thời hạn & Thiết lập nâng cao
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div><label class="lbl">Hạn hoàn thành (Ngày)</label><input id="deadlineDate" type="date" class="field"></div>
+          <div><label class="lbl">Giờ chốt</label><input id="deadlineTime" type="time" class="field" value="17:00"></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+          <label class="flex items-center justify-between p-3 rounded-xl border bg-white cursor-pointer">
+            <span><b class="block text-xs text-slate-800">Cho phép sửa câu trả lời</b><small class="text-[10px] text-slate-500">Người trả lời có thể cập nhật trước thời hạn</small></span>
+            <input id="allowEdit" type="checkbox" checked class="w-5 h-5 accent-[#075cad]">
+          </label>
+          <label class="flex items-center justify-between p-3 rounded-xl border bg-white cursor-pointer">
+            <span><b class="block text-xs text-slate-800">Khảo sát ẩn danh</b><small class="text-[10px] text-slate-500">Không hiện tên người trả lời ở bảng kết quả</small></span>
+            <input id="anonymous" type="checkbox" class="w-5 h-5 accent-[#075cad]">
+          </label>
+        </div>
+      </section>
+
+      <!-- Chọn Người nhận từ Nhân sự HVA -->
+      <section class="card space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-extrabold uppercase text-slate-700"><i class="bi bi-people-fill mr-1.5 text-[#075cad]"></i>Đối tượng tiếp nhận khảo sát</div>
+          <span id="recipientCount" class="px-2.5 py-1 rounded-full text-[10px] font-black bg-blue-50 text-[#075cad]">0 người</span>
+        </div>
+        <input id="peopleSearch" oninput="renderPersonnel()" class="field" placeholder="Tìm nhanh giáo viên, tổ bộ phận...">
+        <div id="personnelBox" class="max-h-64 overflow-y-auto space-y-2 pr-1"></div>
+      </section>
+
+      <!-- Nút chuyển phát hành -->
+      <section class="card bg-slate-900 text-white p-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div>
+            <div class="text-sm font-black text-emerald-400"><i class="bi bi-send-check-fill mr-1.5"></i>HOÀN TẤT & PHÁT HÀNH</div>
+            <div class="text-xs text-slate-400 mt-0.5">Dữ liệu phiếu sẽ được chuyển thẳng qua TT Phát Hành để BGH / TTCM ký duyệt.</div>
+          </div>
+          <button type="button" onclick="goPublishing()" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white text-xs font-black uppercase tracking-wider shadow-lg transition">
+            <i class="bi bi-send-fill mr-2"></i>CHUYỂN TT PHÁT HÀNH
+          </button>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- ============================================================================== -->
+  <!-- TOÀN BỘ LOGIC CONTROLLER JAVASCRIPT ĐIỀU HÀNH -->
+  <!-- ============================================================================== -->
+  <script>
+    // Lấy URL Web App linh hoạt từ hệ thống dùng chung (không hardcode)
+    function getHvaGatewayUrl() {
+      return String(
+        window.HVA_API_URL || 
+        window.PERSONNEL_SEARCH_API || 
+        localStorage.getItem('hva_gateway_url') || 
+        'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec'
+      ).trim();
+    }
+
+    let currentMode = 'internal';
+    let questions = [];
+    let qSeq = 0;
+    let hvaGroups = [];
+    let selectedRecipients = new Set();
+    let currentSurveyData = null;
+    let userPreviousResponse = null;
+
+    const $ = id => document.getElementById(id);
+    const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    function currentUser() {
+      try { return JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}'); }
+      catch (_) { return {}; }
+    }
+
+    // ==============================================================================
+    // 1. ĐIỀU HƯỚNG VIEW: TẠO PHIẾU vs LÀM PHIẾU
+    // ==============================================================================
+    window.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isRespondView = urlParams.get('view') === 'respond' || Boolean(urlParams.get('id') || urlParams.get('publishId'));
+
+      if (isRespondView) {
+        $('viewCreator').classList.add('hidden');
+        $('viewRespondent').classList.remove('hidden');
+        await initRespondentView();
+      } else {
+        $('viewCreator').classList.remove('hidden');
+        $('viewRespondent').classList.add('hidden');
+        initCreatorView();
+      }
+    });
+
+    // ==============================================================================
+    // 2. KHỐI GIAO DIỆN PHÍA GIÁO VIÊN (LÀM KHẢO SÁT)
+    // ==============================================================================
+    async function initRespondentView() {
+      const me = currentUser();
+      const username = String(me.username || me.userName || me.maGV || '').trim();
+      
+      $('gvName').textContent = me.hoTen || me.fullName || me.name || username || 'Giáo viên HVA';
+      $('gvTeam').textContent = me.toBoPhan || me.tenTo || me.to || 'Hội đồng';
+      $('gvRole').textContent = me.chucVu || me.viTriViecLam || 'Giáo viên';
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
+
+      if (!publishId) {
+        $('surveyTitle').textContent = 'Không tìm thấy mã khảo sát trên đường dẫn!';
+        return;
+      }
+
+      try {
+        const u = new URL(getHvaGatewayUrl());
+        u.searchParams.set('action', 'getPublicationDetailV3');
+        u.searchParams.set('publishId', publishId);
+        u.searchParams.set('username', username);
+
+        const res = await fetch(u.toString(), { cache: 'no-store' });
+        const json = await res.json();
+
+        if (!json || json.success !== true) {
+          throw new Error(json?.message || 'Không thể tải nội dung khảo sát.');
+        }
+
+        currentSurveyData = json.payload || {};
+        userPreviousResponse = json.myResponse || null;
+
+        renderSurveyToRespondent(currentSurveyData, userPreviousResponse);
+      } catch (err) {
+        console.error(err);
+        $('surveyTitle').textContent = 'Lỗi kết nối: ' + err.message;
       }
     }
-  }
 
-  return dhsJSON_({
-    success: true,
-    publishId: publishId,
-    totalResponses: responses.length,
-    responses: responses
-  });
-}
+    function renderSurveyToRespondent(survey, myResp) {
+      const data = survey.data || survey;
+      const doc = survey.document || {};
+
+      $('surveyTitle').textContent = data.title || doc.title || 'Phiếu khảo sát';
+      $('surveyDesc').textContent = data.description || doc.summary || '';
+      $('surveyAuthor').textContent = survey.sender?.fullName || doc.author || 'BGH / TTCM';
+      
+      const deadline = [data.deadlineDate, data.deadlineTime].filter(Boolean).join(' • ');
+      $('surveyDeadline').textContent = deadline || 'Không giới hạn';
+
+      if (data.reference) {
+        $('surveyRefBox').classList.remove('hidden');
+        $('surveyReference').textContent = data.reference;
+      }
+
+      const isPoll = (data.objectType === 'POLL' || survey.documentType === 'POLL');
+      $('surveyTypeBadge').textContent = isPoll ? 'BÌNH CHỌN NHANH' : 'KHẢO SÁT CHUYÊN MÔN';
+
+      const qList = Array.isArray(data.questions) ? data.questions : [];
+      const formBox = $('formSurveyQuestions');
+      formBox.innerHTML = '';
+
+      qList.forEach((q, idx) => {
+        const qCard = document.createElement('div');
+        qCard.className = 'card space-y-3';
+
+        const qTitle = document.createElement('div');
+        qTitle.className = 'font-black text-sm text-slate-800 leading-snug';
+        qTitle.innerHTML = `<span class="text-[#075cad] mr-1.5">Câu ${idx + 1}:</span> ${esc(q.text)}`;
+        qCard.appendChild(qTitle);
+
+        const kind = String(q.kind || (isPoll ? 'poll' : 'single')).toLowerCase();
+        const options = Array.isArray(q.options) ? q.options.filter(x => String(x).trim()) : [];
+        const oldAnswers = myResp?.answers?.find(a => String(a.questionId) === String(q.id))?.answer || [];
+
+        if (isPoll || kind === 'poll') {
+          const pollBox = document.createElement('div');
+          pollBox.className = 'space-y-2 mt-2';
+
+          options.forEach(opt => {
+            const isChecked = oldAnswers.includes(opt);
+            const optDiv = document.createElement('div');
+            optDiv.className = `zalo-poll-option flex items-center justify-between ${isChecked ? 'selected' : ''}`;
+            optDiv.innerHTML = `
+              <div class="zalo-poll-bar" style="width: ${isChecked ? '100%' : '0%'}"></div>
+              <div class="flex items-center gap-2.5 z-10">
+                <input type="${data.multiPoll ? 'checkbox' : 'radio'}" name="q_${q.id}" value="${esc(opt)}" ${isChecked ? 'checked' : ''} class="w-4 h-4 accent-[#075cad]">
+                <span class="text-xs font-bold text-slate-800">${esc(opt)}</span>
+              </div>
+            `;
+            optDiv.onclick = (e) => {
+              if (e.target.tagName !== 'INPUT') {
+                const inp = optDiv.querySelector('input');
+                inp.checked = !inp.checked;
+              }
+              optDiv.classList.toggle('selected', optDiv.querySelector('input').checked);
+            };
+            pollBox.appendChild(optDiv);
+          });
+          qCard.appendChild(pollBox);
+        } else if (kind === 'single' || kind === 'multi') {
+          const optBox = document.createElement('div');
+          optBox.className = 'space-y-2 mt-2';
+          options.forEach(opt => {
+            const isChecked = oldAnswers.includes(opt);
+            const label = document.createElement('label');
+            label.className = 'flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition';
+            label.innerHTML = `
+              <input type="${kind === 'single' ? 'radio' : 'checkbox'}" name="q_${q.id}" value="${esc(opt)}" ${isChecked ? 'checked' : ''} class="w-4 h-4 accent-[#075cad]">
+              <span class="text-xs font-semibold text-slate-700">${esc(opt)}</span>
+            `;
+            optBox.appendChild(label);
+          });
+          qCard.appendChild(optBox);
+        } else if (kind === 'text') {
+          const oldVal = oldAnswers[0] || '';
+          const txt = document.createElement('textarea');
+          txt.name = `q_${q.id}`;
+          txt.rows = 3;
+          txt.className = 'field resize-y';
+          txt.placeholder = 'Nhập câu trả lời của Thầy/Cô tại đây...';
+          txt.value = oldVal;
+          qCard.appendChild(txt);
+        }
+
+        formBox.appendChild(qCard);
+      });
+
+      if (myResp && myResp.status) {
+        $('surveyStatusBadge').className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800';$('surveyStatusBadge').textContent = '✓ ' + myResp.status;
+        $('boxSubmittedAck').classList.remove('hidden');$('submittedTimeText').textContent = `Đã gửi khảo sát lúc: ${myResp.updatedAt || 'trước đây'}`;
+        toggleReviewMode(true);
+      }
+    }
+
+    function toggleReviewMode(isReadOnly) {
+      const inputs = $('formSurveyQuestions').querySelectorAll('input, textarea, select');
+      inputs.forEach(el => el.disabled = isReadOnly);
+
+      $('btnSaveDraft').classList.toggle('hidden', isReadOnly);
+      $('btnSubmitSurvey').classList.toggle('hidden', isReadOnly);$('btnReviewSurvey').classList.toggle('hidden', !isReadOnly);
+      
+      const allowEdit = currentSurveyData?.data?.allowEdit !== false;
+      $('btnEditSurvey').classList.toggle('hidden', !isReadOnly || !allowEdit);
+    }
+
+    async function submitSurvey(isDraft) {
+      const me = currentUser();
+      const username = String(me.username || me.userName || me.maGV || '').trim();
+      if (!username) return alert('Không xác định được phiên đăng nhập của Thầy/Cô.');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
+
+      const form = $('formSurveyQuestions');
+      const qList = currentSurveyData?.data?.questions || [];
+      const answers = [];
+
+      for (let q of qList) {
+        const nodes = [...form.querySelectorAll(`[name="q_${q.id}"]`)];
+        let chosen = [];
+        if (q.kind === 'text') {
+          const val = nodes[0]?.value.trim();
+          if (val) chosen.push(val);
+        } else {
+          chosen = nodes.filter(n => n.checked).map(n => n.value.trim());
+        }
+
+        if (!isDraft && q.required && !chosen.length) {
+          alert(`Vui lòng hoàn thành câu hỏi: "${q.text}"`);
+          return;
+        }
+        answers.push({ questionId: q.id, question: q.text, answer: chosen });
+      }
+
+      const btn = $('btnSubmitSurvey');
+      const oldHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-1"></i>ĐANG GỬI...';
+
+      try {
+        const payload = {
+          action: 'submitSurveyPollResponse',
+          publishId: publishId,
+          surveyId: publishId,
+          username: username,
+          fullName: me.hoTen || me.fullName || username,
+          department: me.toBoPhan || me.tenTo || '',
+          status: isDraft ? 'LƯU NHÁP' : 'ĐÃ HOÀN THÀNH',
+          answers: answers
+        };
+
+        const r = await fetch(getHvaGatewayUrl(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const res = await r.json();
+
+        if (!res || res.success !== true) throw new Error(res?.message || 'Không gửi được phản hồi.');
+
+        alert(isDraft ? 'Đã lưu nháp câu trả lời.' : 'Gửi khảo sát thành công!');
+        location.reload();
+      } catch (err) {
+        console.error(err);
+        alert('Lỗi: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = oldHtml;
+      }
+    }
+
+    // ==============================================================================
+    // 3. KHỐI GIAO DIỆN PHÍA QUẢN TRỊ (TẠO PHIẾU KHẢO SÁT)
+    // ==============================================================================
+    function initCreatorView() {
+      const d = new Date();
+      d.setDate(d.getDate() + 2);
+      $('deadlineDate').value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      addQuestion('single');
+      loadPersonnelViaCore();
+    }
+
+    function setMode(m) {
+      currentMode = m;
+      document.querySelectorAll('.type-card').forEach(x => x.classList.toggle('active', x.dataset.mode === m));
+      const names = { internal: 'KHẢO SÁT CỦA TRƯỜNG', poll: 'BÌNH CHỌN NHANH', external: 'KHẢO SÁT TỪ LINK', report: 'BÁO CÁO SỐ LIỆU' };
+      $('modeBadge').textContent = names[m];$('externalUrlBox').classList.toggle('hidden', m !== 'external');
+      $('builderSection').classList.toggle('hidden', m === 'external');$('titleLabel').textContent = m === 'poll' ? 'Câu hỏi bình chọn *' : 'Tiêu đề khảo sát *';
+      $('title').placeholder = m === 'poll' ? 'Ví dụ: Thầy/Cô đồng ý phương án tổ chức nào?' : 'Ví dụ: Khảo sát thực trạng Đề án tiếng Anh';
+
+      if (m === 'poll' && (!questions.length || questions[0]?.kind !== 'poll')) {
+        questions = [];
+        addQuestion('poll');
+      } else if (m === 'internal' && (!questions.length || questions[0]?.kind === 'poll')) {
+        questions = [];
+        addQuestion('single');
+      }
+      renderQuestions();
+    }
+
+    function addQuestion(kind) {
+      if (currentMode === 'poll') {
+        if (questions.length) return alert('Bình chọn nhanh chỉ có 1 câu hỏi.');
+        kind = 'poll';
+      }
+      questions.push({ id: ++qSeq, kind: kind || 'single', text: '', options: ['Đồng ý', 'Không đồng ý'], required: true });
+      renderQuestions();
+    }
+
+    function removeQuestion(id) {
+      questions = questions.filter(q => q.id !== id);
+      renderQuestions();
+    }
+
+    function renderQuestions() {
+      const box = $('questionList');
+      if (!questions.length) {
+        box.innerHTML = '<div class="py-4 text-center text-xs text-slate-400">Chưa có câu hỏi nào.</div>';
+        return;
+      }
+      box.innerHTML = questions.map((q, idx) => `
+        <div class="rounded-xl border border-slate-200 p-3.5 bg-slate-50/50 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-blue-100 text-[#075cad] flex items-center justify-center text-xs font-black">${idx + 1}</span>
+            <input class="field flex-1" value="${esc(q.text)}" oninput="questions[${idx}].text = this.value" placeholder="Nội dung câu hỏi...">
+            ${currentMode !== 'poll' ? `<button onclick="removeQuestion(${q.id})" class="text-rose-500 hover:text-rose-700 p-2"><i class="bi bi-trash3"></i></button>` : ''}
+          </div>
+          ${currentMode !== 'poll' ? `
+          <div class="flex items-center gap-3">
+            <select class="field !min-h-[38px] !py-1 text-xs" onchange="questions[${idx}].kind = this.value; renderQuestions()">
+              <option value="single" ${q.kind === 'single' ? 'selected' : ''}>Một lựa chọn (Radio)</option>
+              <option value="multi" ${q.kind === 'multi' ? 'selected' : ''}>Nhiều lựa chọn (Checkbox)</option>
+              <option value="text" ${q.kind === 'text' ? 'selected' : ''}>Tự luận / Trả lời ngắn</option>
+            </select>
+            <label class="flex items-center gap-1.5 text-xs font-bold text-slate-700 cursor-pointer">
+              <input type="checkbox" ${q.required ? 'checked' : ''} onchange="questions[${idx}].required = this.checked" class="w-4 h-4 accent-[#075cad]"> Bắt buộc
+            </label>
+          </div>` : ''}
+          ${['single', 'multi', 'poll'].includes(q.kind) ? `
+          <div class="space-y-1.5 pt-1">
+            ${q.options.map((o, oIdx) => `
+              <div class="flex items-center gap-2">
+                <span class="text-slate-400 text-xs">${q.kind === 'multi' ? '□' : '○'}</span>
+                <input class="field !min-h-[34px] !py-1 text-xs" value="${esc(o)}" oninput="questions[${idx}].options[${oIdx}] = this.value" placeholder="Phương án ${oIdx + 1}">
+                ${q.options.length > 2 ? `<button onclick="questions[${idx}].options.splice(${oIdx}, 1); renderQuestions()" class="text-slate-400 hover:text-rose-500"><i class="bi bi-x-lg"></i></button>` : ''}
+              </div>
+            `).join('')}
+            <button onclick="questions[${idx}].options.push(''); renderQuestions()" class="text-xs font-bold text-[#075cad] mt-1"><i class="bi bi-plus-circle mr-1"></i>Thêm phương án</button>
+          </div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function applyQuick() {
+      const raw = $('quickText').value.trim();
+      if (!raw) return alert('Vui lòng nhập nội dung soạn nhanh.');
+      const lines = raw.split(/\n|(?=\d+\.)/).map(x => x.trim()).filter(Boolean);
+      if (!$('title').value.trim())$('title').value = lines[0].replace(/^\d+\.\s*/, '');
+      
+      const qLines = lines.filter(x => /^\d+\./.test(x));
+      if (qLines.length) {
+        questions = [];
+        qSeq = 0;
+        qLines.forEach(l => {
+          const body = l.replace(/^\d+\.\s*/, '').trim();
+          const parts = body.split(/[:?]/);
+          const qText = (parts[0] + (body.includes('?') ? '?' : '')).trim();
+          const tail = parts.slice(1).join(':').trim();
+          let opts = tail.split(/[;\/]/).map(x => x.replace(/\b(chọn nhiều|chọn một)\b/ig, '').trim()).filter(Boolean);
+          if (opts.length < 2) opts = ['Đồng ý', 'Không đồng ý'];
+          const kind = /chọn nhiều/i.test(body) ? 'multi' : 'single';
+          questions.push({ id: ++qSeq, kind, text: qText, options: opts, required: true });
+        });
+        renderQuestions();
+      }
+    }
+
+    // NẠP NHÂN SỰ CHUẨN XÁC QUA HVA_PERSONNEL CORE V1
+    async function loadPersonnelViaCore() {
+      const box = $('personnelBox');
+      box.innerHTML = '<div class="text-xs text-slate-500 p-2"><i class="bi bi-arrow-repeat animate-spin mr-1.5"></i>Đang nạp dữ liệu nhân sự qua HVA Personnel Core...</div>';
+
+      try {
+        hvaGroups = await window.HVAPersonnel.buildGroups();
+        renderPersonnel();
+      } catch (err) {
+        console.error('Lỗi buildGroups:', err);
+        box.innerHTML = `<div class="text-xs text-rose-600 p-2 font-bold">Không thể tải nhân sự: ${err.message}</div>`;
+      }
+    }
+
+    function renderPersonnel() {
+      const q = ($('peopleSearch')?.value || '').trim().toLowerCase();
+      const box = $('personnelBox');
+
+      const filteredGroups = hvaGroups.map(g => {
+        const members = (g.members || []).filter(m => {
+          if (!q) return true;
+          return `${m.hoTen} ${m.tenTo} ${m.chucVu} ${m.username}`.toLowerCase().includes(q);
+        });
+        return { ...g, filteredMembers: members };
+      }).filter(g => g.filteredMembers.length > 0);
+
+      if (!filteredGroups.length) {
+        box.innerHTML = '<div class="text-xs text-slate-400 p-2">Không tìm thấy nhóm hoặc giáo viên phù hợp.</div>';
+        return;
+      }
+
+      box.innerHTML = filteredGroups.map((g, gIdx) => {
+        const ms = g.filteredMembers;
+        const allSelected = ms.length > 0 && ms.every(m => selectedRecipients.has(m.username));
+        return `
+          <div class="rounded-xl border border-slate-200 overflow-hidden bg-white">
+            <div class="p-2.5 bg-slate-50 flex items-center justify-between">
+              <span class="text-xs font-black text-[#075cad]">${esc(g.tenTo)} <span class="font-normal text-slate-500">(${ms.length})</span></span>
+              <button type="button" onclick="toggleGroupCore(${gIdx})" class="text-[10px] font-bold text-blue-600 hover:underline">
+                ${allSelected ? 'Bỏ chọn' : 'Chọn cả nhóm'}
+              </button>
+            </div>
+            <div class="p-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              ${ms.map(m => `
+                <label class="flex items-center gap-2 p-1.5 rounded-lg hover:bg-slate-50 cursor-pointer text-xs">
+                  <input type="checkbox" ${selectedRecipients.has(m.username) ? 'checked' : ''} onchange="togglePerson('${esc(m.username)}', this.checked)" class="w-3.5 h-3.5 accent-[#075cad]">
+                  <span class="truncate"><b>${esc(m.hoTen)}</b> <span class="text-slate-400 text-[10px]">(${esc(m.chucVu || 'Giáo viên')})</span></span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      $('recipientCount').textContent = `${selectedRecipients.size} người`;
+    }
+
+    function togglePerson(username, on) {
+      if (on) selectedRecipients.add(username);
+      else selectedRecipients.delete(username);
+      renderPersonnel();
+    }
+
+    function toggleGroupCore(gIdx) {
+      const g = hvaGroups[gIdx];
+      if (!g) return;
+      const ms = g.members || [];
+      const allSelected = ms.every(m => selectedRecipients.has(m.username));
+      ms.forEach(m => allSelected ? selectedRecipients.delete(m.username) : selectedRecipients.add(m.username));
+      renderPersonnel();
+    }
+
+    // CHUYỂN TOÀN BỘ SANG TTPHATHANH.HTML (KHÔNG LƯU BACKEND TRỰC TIẾP TẠI ĐÂY)
+    function goPublishing() {
+      const title = $('title').value.trim();
+      if (!title) return alert('Vui lòng nhập tiêu đề khảo sát.');
+      if (!selectedRecipients.size) return alert('Vui lòng chọn ít nhất một người nhận.');
+
+      const d = new Date();
+      const stamp = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${String(Date.now()).slice(-6)}`;
+      const docId = (currentMode === 'poll' ? 'BC-' : 'KS-') + stamp;
+
+      const user = currentUser();
+      const allMembersMap = new Map();
+      hvaGroups.forEach(g => (g.members || []).forEach(m => allMembersMap.set(m.username, m)));
+
+      const recipientList = [...selectedRecipients].map(u => allMembersMap.get(u) || { username: u, hoTen: u });
+
+      const payload = {
+        sourceModule: 'KhaoSatBinhChon',
+        docId: docId,
+        title: title,
+        summary: $('description').value.trim() || title,
+        author: user.fullName || user.hoTen || 'Ban Giám hiệu',
+        documentType: currentMode === 'poll' ? 'POLL' : 'SURVEY',
+        recipients: recipientList,
+        destinations: ['KhaoSatBinhChon'],
+        data: {
+          surveyId: docId,
+          objectType: currentMode === 'poll' ? 'POLL' : 'SURVEY',
+          title: title,
+          description: $('description').value.trim(),
+          reference: $('referenceText').value.trim(),
+          externalUrl: $('externalUrl').value.trim(),
+          deadlineDate: $('deadlineDate').value,
+          deadlineTime: $('deadlineTime').value,
+          allowEdit: $('allowEdit').checked,
+          anonymous: $('anonymous').checked,
+          questions: questions
+        }
+      };
+
+      // Đóng gói chuyển qua TTPhatHanh
+      localStorage.setItem('TTDHS_CURRENT_DOC', JSON.stringify(payload));
+      location.href = 'TTPhatHanh.html';
+    }
+  </script>
+</body>
+</html>
