@@ -174,7 +174,6 @@
       </div>
     </section>
 
-    <!-- Khung Danh sách phương án bình chọn kiểu Zalo -->
     <section class="panel-card p-5 space-y-3">
       <div class="text-xs font-extrabold text-slate-500 uppercase tracking-wide">CHỌN PHƯƠNG ÁN CỦA THẦY/CÔ</div>
       <div id="pollOptionBox" class="space-y-2.5"></div>
@@ -195,7 +194,6 @@
   <!-- ============================================================================== -->
   <form id="pollForm" class="space-y-4" onsubmit="event.preventDefault();">
     
-    <!-- TIÊU ĐỀ & ĐỊNH DANH NGƯỜI TẠO -->
     <div class="panel-card p-4 bg-white flex flex-col md:flex-row md:items-center justify-between gap-3">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-violet-100 text-violet-700 flex items-center justify-center text-xl font-bold">
@@ -207,14 +205,14 @@
         </div>
       </div>
 
-      <!-- Thẻ danh tính tài khoản đang đăng nhập -->
+      <!-- Thẻ danh tính tài khoản đang đăng nhập chuẩn đồng bộ HVA -->
       <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-2 px-3">
         <div class="w-7 h-7 rounded-lg bg-violet-700 text-white flex items-center justify-center font-black text-xs">
           <i class="bi bi-person-fill"></i>
         </div>
         <div class="text-left leading-tight">
           <div class="flex items-center gap-1.5">
-            <span id="creatorName" class="text-xs font-black text-slate-800">Đang nhận diện...</span>
+            <span id="creatorName" class="text-xs font-black text-slate-800">Cán bộ HVA</span>
             <span id="creatorRoleBadge" class="text-[9.5px] font-extrabold px-1.5 py-0.5 rounded bg-violet-100 text-violet-800">BGH / TTCM</span>
           </div>
           <div class="text-[10px] font-semibold text-slate-500 mt-0.5">
@@ -317,11 +315,10 @@
 </main>
 
 <!-- ============================================================================== -->
-<!-- SCRIPT: NHÚNG BỘ LÕI HVA_PERSONNEL.JS & LOGIC BÌNH CHỌN -->
+<!-- SCRIPT LÕI: TỰ ĐỘNG BẢO ĐẢM TƯƠNG THÍCH ĐẦY ĐỦ CẢ KHI CÓ HOẶC THIẾU HVA_Personnel.js -->
 <!-- ============================================================================== -->
 <script src="HVA_Personnel.js"></script>
 <script>
-// CỔNG GATEWAY BACKEND ĐIỀU HÀNH SỐ
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 const PERSONNEL_SEARCH_API = WEB_APP_URL;
 
@@ -335,289 +332,118 @@ const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 // =========================================================
-// 1. NHẬN DIỆN TÀI KHOẢN ĐA NGUỒN CHUẨN XÁC
+// 1. ADAPTER ĐỒNG BỘ DANH TÍNH TÀI KHOẢN (CHUẨN CUOCHOP.HTML)
 // =========================================================
-function hvaCurrentUser() {
+function getMeetingOperatorUser() {
   try {
-    if (window.HVAPersonnel && typeof window.HVAPersonnel.currentUser === 'function') {
-      const u = window.HVAPersonnel.currentUser();
-      if (u && (u.username || u.hoTen || u.name)) return u;
-    }
-    const s = localStorage.getItem('user') || sessionStorage.getItem('user') || localStorage.getItem('HVA_USER');
-    if (s) return JSON.parse(s);
-  } catch (_) {}
-  return window.HVA_CURRENT_USER || {};
-}
-
-// =========================================================
-// 2. ĐIỀU HƯỚNG VIEW: TẠO BÌNH CHỌN vs THỰC HIỆN BÌNH CHỌN
-// =========================================================
-window.addEventListener('DOMContentLoaded', async () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const isRespond = urlParams.get('view') === 'respond' || Boolean(urlParams.get('id') || urlParams.get('publishId'));
-
-  if (isRespond) {
-    $('pollForm').classList.add('hidden');
-    $('viewRespondent').classList.remove('hidden');
-    await initRespondentPoll();
-  } else {
-    $('pollForm').classList.remove('hidden');
-    $('viewRespondent').classList.add('hidden');
-    initCreatorPoll();
-  }
-});
-
-// =========================================================
-// 3. KHỞI TẠO DÀNH CHO BGH/TTCM TẠO PHIẾU
-// =========================================================
-function initCreatorPoll() {
-  const me = hvaCurrentUser();
-  const username = String(me.username || me.userName || me.maGV || '').trim();
-
-  $('creatorName').textContent = me.hoTen || me.fullName || (username ? ('Đ/c ' + username) : 'Cán bộ phát hành');
-  $('creatorTeam').textContent = me.toBoPhan || me.tenTo || me.to || 'Ban Giám hiệu';
-  $('creatorUsername').textContent = username || '—';
-  $('creatorRoleBadge').textContent = me.chucVu || me.vaiTro || 'BGH / TTCM';
-
-  const d = new Date();
-  d.setDate(d.getDate() + 2);
-  $('deadlineDate').value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-
-  renderCreatorPollOptions();
-  loadMeetingPersonnel();
-}
-
-function renderCreatorPollOptions() {
-  const box = $('pollOptionCreatorList');
-  box.innerHTML = creatorPollOptions.map((opt, i) => `
-    <div class="flex items-center gap-2">
-      <span class="w-6 text-center text-xs font-black text-violet-700">${i + 1}.</span>
-      <input class="field !h-10 text-xs flex-1" value="${esc(opt)}" oninput="creatorPollOptions[${i}] = this.value" placeholder="Nhập phương án biểu quyết ${i + 1}...">
-      ${creatorPollOptions.length > 2 ? `
-        <button type="button" onclick="creatorPollOptions.splice(${i}, 1); renderCreatorPollOptions()" class="text-slate-400 hover:text-rose-600 p-1">
-          <i class="bi bi-x-circle-fill text-base"></i>
-        </button>` : ''}
-    </div>
-  `).join('');
-}
-
-function addCreatorPollOption() {
-  creatorPollOptions.push('');
-  renderCreatorPollOptions();
-}
-
-function resetPollForm() {
-  if (!confirm('Làm mới lại toàn bộ biểu mẫu tạo bình chọn?')) return;
-  $('pollForm').reset();
-  creatorPollOptions = ['Đồng ý', 'Không đồng ý'];
-  renderCreatorPollOptions();
-  removeAllMeetingSelections();
-}
-
-function goToPublishing() {
-  const question = $('pollQuestion').value.trim();
-  if (!question) {
-    alert('Vui lòng nhập câu hỏi biểu quyết.');
-    $('pollQuestion').focus();
-    return;
-  }
-
-  const validOptions = creatorPollOptions.map(x => x.trim()).filter(Boolean);
-  if (validOptions.length < 2) {
-    alert('Vui lòng tạo ít nhất 2 phương án bình chọn.');
-    return;
-  }
-
-  if (meetingSelectedUsernames.size === 0) {
-    alert('Vui lòng chọn thành phần tham gia biểu quyết.');
-    return;
-  }
-
-  const d = new Date();
-  const stamp = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${String(Date.now()).slice(-6)}`;
-  const docId = 'BC-' + stamp;
-
-  const me = hvaCurrentUser();
-  const recipients = selectedPeople();
-
-  const payload = {
-    sourceModule: 'BinhChon',
-    moduleSource: 'BinhChon',
-    docId: docId,
-    title: question,
-    summary: $('pollDescription').value.trim() || question,
-    author: me.hoTen || me.fullName || 'Ban Giám hiệu',
-    documentType: 'POLL',
-    recipients: recipients.map(x => x.username),
-    recipientDetails: recipients,
-    destinations: ['BinhChon', 'ViecCuaToi'],
-    data: {
-      surveyId: docId,
-      objectType: 'POLL',
-      title: question,
-      description: $('pollDescription').value.trim(),
-      reference: $('pollReference').value.trim(),
-      deadlineDate: $('deadlineDate').value,
-      deadlineTime: $('deadlineTime').value,
-      multiPoll: $('pollMultiSelect').checked,
-      questions: [{
-        id: 'Q1',
-        kind: 'poll',
-        text: question,
-        options: validOptions,
-        required: true
-      }]
-    }
-  };
-
-  localStorage.setItem('TTDHS_CURRENT_DOC', JSON.stringify(payload));
-  location.href = 'TTPhatHanh.html';
-}
-
-// =========================================================
-// 4. KHỐI GIÁO VIÊN BÌNH CHỌN KIỂU ZALO
-// =========================================================
-async function initRespondentPoll() {
-  const me = hvaCurrentUser();
-  const username = String(me.username || me.userName || me.maGV || '').trim();
-
-  $('gvName').textContent = me.hoTen || me.fullName || username || 'Giáo viên HVA';
-  $('gvTeam').textContent = me.toBoPhan || me.tenTo || 'Hội đồng';
-  $('gvRole').textContent = me.chucVu || 'Giáo viên';
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
-
-  if (!publishId) {
-    $('pollTitle').textContent = 'Không tìm thấy mã bình chọn trên liên kết!';
-    return;
-  }
-
-  try {
-    const u = new URL(WEB_APP_URL);
-    u.searchParams.set('action', 'getPublicationDetailV3');
-    u.searchParams.set('publishId', publishId);
-    u.searchParams.set('username', username);
-
-    const res = await fetch(u.toString(), { cache: 'no-store' });
-    const json = await res.json();
-    if (!json || !json.success) throw new Error(json?.message || 'Không tải được nội dung bình chọn.');
-
-    currentPollPayload = json.payload || {};
-    myPollResponse = json.myResponse || null;
-
-    renderRespondentPollView();
-  } catch (err) {
-    $('pollTitle').textContent = 'Lỗi kết nối: ' + err.message;
-  }
-}
-
-function renderRespondentPollView() {
-  const data = currentPollPayload.data || currentPollPayload;
-  const doc = currentPollPayload.document || {};
-
-  $('pollTitle').textContent = data.title || doc.title || 'Biểu quyết trực tuyến';
-  $('pollDesc').textContent = data.description \vert{}\vert{} '';$('pollAuthor').textContent = currentPollPayload.sender?.fullName || doc.author || 'Ban Giám hiệu';
-  $('pollDeadline').textContent = [data.deadlineDate, data.deadlineTime].filter(Boolean).join(' • ') || 'Không giới hạn';
-
-  const q = (data.questions && data.questions[0]) || { options: ['Đồng ý', 'Không đồng ý'] };
-  const oldAnswers = myPollResponse?.answers?.find(a => String(a.questionId) === String(q.id))?.answer || [];
-
-  const box = $('pollOptionBox');
-  box.innerHTML = '';
-
-  (q.options || []).forEach(opt => {
-    const isChecked = oldAnswers.includes(opt);
-    const div = document.createElement('div');
-    div.className = `zalo-bar-item flex items-center justify-between ${isChecked ? 'selected' : ''}`;
-    div.innerHTML = `
-      <div class="zalo-bar-fill" style="width:${isChecked ? '100%' : '0%'}"></div>
-      <div class="flex items-center gap-2.5 z-10">
-        <input type="${data.multiPoll ? 'checkbox' : 'radio'}" name="poll_choice" value="${esc(opt)}" ${isChecked ? 'checked' : ''} class="w-4 h-4 accent-violet-700">
-        <span class="text-xs font-bold text-slate-800">${esc(opt)}</span>
-      </div>
-    `;
-    div.onclick = (e) => {
-      if (e.target.tagName !== 'INPUT') {
-        const inp = div.querySelector('input');
-        inp.checked = !inp.checked;
-      }
-      div.classList.toggle('selected', div.querySelector('input').checked);
-    };
-    box.appendChild(div);
-  });
-
-  if (myPollResponse && myPollResponse.status) {
-    $('pollStatusBadge').className = 'text-xs font-extrabold text-emerald-700';$('pollStatusBadge').textContent = '✓ ' + myPollResponse.status;
-    $('boxSubmittedAck').classList.remove('hidden');$('submittedTimeText').textContent = 'Đã biểu quyết lúc: ' + (myPollResponse.updatedAt || 'trước đây');
-  }
-}
-
-async function submitPollVote() {
-  const me = hvaCurrentUser();
-  const username = String(me.username || me.userName || me.maGV || '').trim();
-  if (!username) return alert('Không xác định được phiên làm việc của Thầy/Cô.');
-
-  const nodes = [...$('pollOptionBox').querySelectorAll('input[name="poll_choice"]')];
-  const chosen = nodes.filter(n => n.checked).map(n => n.value.trim());
-
-  if (!chosen.length) return alert('Vui lòng chọn ít nhất 1 phương án biểu quyết.');
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
-
-  const btn = $('btnSubmitPoll');
-  btn.disabled = true;
-  btn.innerHTML = 'ĐANG GỬI...';
-
-  try {
-    const res = await fetch(WEB_APP_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        action: 'submitSurveyPollResponse',
-        publishId: publishId,
-        surveyId: publishId,
-        username: username,
-        fullName: me.hoTen || me.fullName || username,
-        department: me.toBoPhan || me.tenTo || '',
-        status: 'ĐÃ HOÀN THÀNH',
-        answers: [{ questionId: 'Q1', question: $('pollTitle').textContent, answer: chosen }]
-      })
-    });
-    const r = await res.json();
-    if (!r.success) throw new Error(r.message || 'Lỗi gửi phản hồi.');
-    alert('Gửi biểu quyết thành công!');
-    location.reload();
+    return JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || localStorage.getItem('HVA_USER') || '{}');
   } catch (e) {
-    alert('Lỗi: ' + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="bi bi-send-check-fill mr-1.5"></i>GỬI BIỂU QUYẾT';
+    return {};
   }
 }
 
-// ==============================================================================
-// 5. TOÀN BỘ LOGIC RENDER NHÂN SỰ CHUẨN TỪ CUOCHOP_CHUAN.TXT
-// ==============================================================================
-async function loadMeetingPersonnel(){
+function syncMeetingUserCard() {
+  const u = getMeetingOperatorUser();
+  const name = String(u.hoTen || u.hoten || u.fullName || u.name || u.displayName || u.username || 'Cán bộ quản trị').trim();
+  const role = String(u.chucVu || u.chucvu || u.position || u.viTriViecLam || u.roleName || u.role || 'BGH / TTCM').trim();
+  const team = String(u.toBoPhan || u.tenTo || u.to || 'Ban Giám hiệu').trim();
+  const username = String(u.username || u.userName || u.maGV || '—').trim();
+
+  if ($('creatorName')) $('creatorName').textContent = name;
+  if ($('creatorRoleBadge')) $('creatorRoleBadge').textContent = role;
+  if ($('creatorTeam')) $('creatorTeam').textContent = team;
+  if ($('creatorUsername')) $('creatorUsername').textContent = username;
+}
+
+// =========================================================
+// 2. ADAPTER TẢI VÀ XÂY DỰNG NHÂN SỰ TRỰC TIẾP TỪ BACKEND
+// =========================================================
+async function hvaDirectFetch(action, params = {}) {
+  const u = new URL(PERSONNEL_SEARCH_API);
+  u.searchParams.set('action', action);
+  const me = getMeetingOperatorUser();
+  if (me.username || me.maGV) u.searchParams.set('username', me.username || me.maGV);
+  Object.entries(params).forEach(([k, v]) => { if (v !== undefined && v !== null) u.searchParams.set(k, String(v)); });
+  u.searchParams.set('_', Date.now());
+
+  const r = await fetch(u.toString(), { cache: 'no-store' });
+  if (!r.ok) throw Error('HTTP ' + r.status);
+  const data = await r.json();
+  if (data && data.success === false) throw Error(data.message || 'Lỗi API');
+  return Array.isArray(data) ? data : (data.data || data.results || []);
+}
+
+async function loadMeetingPersonnel() {
   const c = $('meetingPersonnelContainer');
-  if(!c) return;
+  if (!c) return;
 
   c.innerHTML = '<div class="py-5 text-center text-sm text-slate-400"><i class="bi bi-arrow-repeat animate-spin mr-1"></i>Đang đồng bộ Nhân sự HVA...</div>';
 
-  try{
-    if(!window.HVAPersonnel || typeof window.HVAPersonnel.buildGroups !== 'function'){
-      throw Error('HVA_PERSONNEL_CORE_NOT_READY');
+  try {
+    // Ưu tiên gọi HVAPersonnel.buildGroups nếu file ngoài đã nạp sẵn
+    if (window.HVAPersonnel && typeof window.HVAPersonnel.buildGroups === 'function') {
+      meetingAllToData = await window.HVAPersonnel.buildGroups();
+    } else {
+      // Tự động fallback đọc trực tiếp backend nếu file HVA_Personnel.js chưa nạp kịp
+      const units = [
+        { label: 'Toán - Tin', query: 'Toán - Tin' },
+        { label: 'Ngữ văn', query: 'Ngữ văn' },
+        { label: 'Tiếng Anh', query: 'Ngoại Ngữ' },
+        { label: 'Lịch sử - Địa lí - GDKT&PL', query: 'Sử - Địa - GD KT&PL' },
+        { label: 'Vật lí - Công nghệ', query: 'Vật lí - Công nghệ' },
+        { label: 'Hóa học', query: 'Hóa học' },
+        { label: 'Sinh - GDTC - QPAN', query: 'Sinh - GDTC - QPAN' },
+        { label: 'Văn phòng', query: 'Văn phòng' }
+      ];
+
+      const [chiBoRaw, bghRaw, workgroups, teamResults] = await Promise.all([
+        hvaDirectFetch('searchNhanSuQuick', { category: 'CHIBO' }),
+        hvaDirectFetch('searchNhanSuQuick', { category: 'BGH' }),
+        hvaDirectFetch('getPersonnelWorkgroups', {}),
+        Promise.all(units.map(async u => ({ name: u.label, raw: await hvaDirectFetch('searchNhanSuQuick', { category: 'TEAM', q: u.query }) })))
+      ]);
+
+      const groups = [];
+      groups.push({ groupKey: 'CHIBO', tenTo: 'Chi bộ', kind: 'ROOT', members: chiBoRaw });
+      groups.push({ groupKey: 'BGH', tenTo: 'Ban Giám hiệu', kind: 'ROOT', members: bghRaw });
+
+      teamResults.forEach(x => {
+        groups.push({ groupKey: 'TEAM:' + x.name, tenTo: x.name, kind: 'TEAM', members: x.raw });
+      });
+
+      const councilMembers = [];
+      groups.filter(g => g.groupKey === 'BGH' || g.kind === 'TEAM').forEach(g => councilMembers.push(...g.members));
+      groups.unshift({ groupKey: 'COUNCIL:ALL', tenTo: 'Hội đồng', kind: 'COUNCIL', members: councilMembers });
+
+      for (let wg of workgroups) {
+        const wName = typeof wg === 'string' ? wg : (wg.name || wg.key);
+        if (!wName) continue;
+        try {
+          const raw = await hvaDirectFetch('searchNhanSuQuick', { category: 'WORKGROUP', q: wName });
+          if (wName.toUpperCase() === 'GVCN') {
+            ['10', '11', '12'].forEach(khoi => {
+              const ms = raw.filter(m => String(m.lopChuNhiem || '').startsWith(khoi + '/'));
+              groups.push({ groupKey: 'GVCN:' + khoi, tenTo: 'GVCN khối ' + khoi, kind: 'GVCN', members: ms });
+            });
+          } else {
+            groups.push({ groupKey: 'WORKGROUP:' + wName, tenTo: wName, kind: 'WORKGROUP', members: raw });
+          }
+        } catch (_) {}
+      }
+
+      meetingAllToData = groups;
     }
-    meetingAllToData = await window.HVAPersonnel.buildGroups();
+
     renderMeetingPersonnel();
-  }catch(e){
-    console.error('[HVA Personnel]', e);
+  } catch (e) {
+    console.error('[HVA Personnel Error]', e);
     c.innerHTML = `<div class="p-5 text-center text-sm text-red-500 font-bold">${esc(e.message)}<br><button type="button" onclick="loadMeetingPersonnel()" class="mt-3 px-3 py-2 rounded-lg border border-blue-200 text-[#0F4C81]">Thử lại</button></div>`;
   }
 }
 
+// =========================================================
+// 3. TOÀN BỘ LOGIC RENDER NHÂN SỰ CHUẨN NGUYÊN BẢN TỪ CUOCHOP
+// =========================================================
 function hashMeetingGroup(s) {
   let h = 0;
   for (const ch of String(s || '')) h = ((h << 5) - h) + ch.charCodeAt(0) | 0;
@@ -866,6 +692,243 @@ function updateMeetingSelectionUI() {
 
   $('meetingStatTo').textContent = `${groups} nhóm`;
   $('meetingStatNguoi').textContent = `${meetingSelectedUsernames.size} người`;
+}
+
+// =========================================================
+// 4. KHỞI CHẠY HỆ THỐNG VÀ XỬ LÝ SỰ KIỆN
+// =========================================================
+window.addEventListener('DOMContentLoaded', async () => {
+  syncMeetingUserCard();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const isRespond = urlParams.get('view') === 'respond' || Boolean(urlParams.get('id') || urlParams.get('publishId'));
+
+  if (isRespond) {
+    $('pollForm').classList.add('hidden');$('viewRespondent').classList.remove('hidden');
+    await initRespondentPoll();
+  } else {
+    $('pollForm').classList.remove('hidden');$('viewRespondent').classList.add('hidden');
+    initCreatorPoll();
+  }
+});
+
+function initCreatorPoll() {
+  const d = new Date();
+  d.setDate(d.getDate() + 2);
+  $('deadlineDate').value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  renderCreatorPollOptions();
+  loadMeetingPersonnel();
+}
+
+function renderCreatorPollOptions() {
+  const box = $('pollOptionCreatorList');
+  box.innerHTML = creatorPollOptions.map((opt, i) => `
+    <div class="flex items-center gap-2">
+      <span class="w-6 text-center text-xs font-black text-violet-700">${i + 1}.</span>
+      <input class="field !h-10 text-xs flex-1" value="${esc(opt)}" oninput="creatorPollOptions[${i}] = this.value" placeholder="Nhập phương án biểu quyết ${i + 1}...">
+      ${creatorPollOptions.length > 2 ? `
+        <button type="button" onclick="creatorPollOptions.splice(${i}, 1); renderCreatorPollOptions()" class="text-slate-400 hover:text-rose-600 p-1">
+          <i class="bi bi-x-circle-fill text-base"></i>
+        </button>` : ''}
+    </div>
+  `).join('');
+}
+
+function addCreatorPollOption() {
+  creatorPollOptions.push('');
+  renderCreatorPollOptions();
+}
+
+function resetPollForm() {
+  if (!confirm('Làm mới lại toàn bộ biểu mẫu tạo bình chọn?')) return;
+  $('pollForm').reset();
+  creatorPollOptions = ['Đồng ý', 'Không đồng ý'];
+  renderCreatorPollOptions();
+  removeAllMeetingSelections();
+}
+
+function goToPublishing() {
+  const question = $('pollQuestion').value.trim();
+  if (!question) {
+    alert('Vui lòng nhập câu hỏi biểu quyết.');
+    $('pollQuestion').focus();
+    return;
+  }
+
+  const validOptions = creatorPollOptions.map(x => x.trim()).filter(Boolean);
+  if (validOptions.length < 2) {
+    alert('Vui lòng tạo ít nhất 2 phương án bình chọn.');
+    return;
+  }
+
+  if (meetingSelectedUsernames.size === 0) {
+    alert('Vui lòng chọn thành phần tham gia biểu quyết.');
+    return;
+  }
+
+  const d = new Date();
+  const stamp = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${String(Date.now()).slice(-6)}`;
+  const docId = 'BC-' + stamp;
+
+  const me = getMeetingOperatorUser();
+  const recipients = selectedPeople();
+
+  const payload = {
+    sourceModule: 'BinhChon',
+    moduleSource: 'BinhChon',
+    docId: docId,
+    title: question,
+    summary: $('pollDescription').value.trim() || question,
+    author: me.hoTen || me.fullName || 'Ban Giám hiệu',
+    documentType: 'POLL',
+    recipients: recipients.map(x => x.username),
+    recipientDetails: recipients,
+    destinations: ['BinhChon', 'ViecCuaToi'],
+    data: {
+      surveyId: docId,
+      objectType: 'POLL',
+      title: question,
+      description: $('pollDescription').value.trim(),
+      reference: $('pollReference').value.trim(),
+      deadlineDate: $('deadlineDate').value,
+      deadlineTime: $('deadlineTime').value,
+      multiPoll: $('pollMultiSelect').checked,
+      questions: [{
+        id: 'Q1',
+        kind: 'poll',
+        text: question,
+        options: validOptions,
+        required: true
+      }]
+    }
+  };
+
+  localStorage.setItem('TTDHS_CURRENT_DOC', JSON.stringify(payload));
+  location.href = 'TTPhatHanh.html';
+}
+
+// =========================================================
+// 5. GIÁO VIÊN BÌNH CHỌN TRÊN THIẾT BỊ
+// =========================================================
+async function initRespondentPoll() {
+  const me = getMeetingOperatorUser();
+  const username = String(me.username || me.userName || me.maGV || '').trim();
+
+  $('gvName').textContent = me.hoTen || me.fullName || username || 'Giáo viên HVA';
+  $('gvTeam').textContent = me.toBoPhan || me.tenTo || 'Hội đồng';
+  $('gvRole').textContent = me.chucVu || 'Giáo viên';
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
+
+  if (!publishId) {
+    $('pollTitle').textContent = 'Không tìm thấy mã bình chọn trên liên kết!';
+    return;
+  }
+
+  try {
+    const u = new URL(WEB_APP_URL);
+    u.searchParams.set('action', 'getPublicationDetailV3');
+    u.searchParams.set('publishId', publishId);
+    u.searchParams.set('username', username);
+
+    const res = await fetch(u.toString(), { cache: 'no-store' });
+    const json = await res.json();
+    if (!json || !json.success) throw new Error(json?.message || 'Không tải được nội dung bình chọn.');
+
+    currentPollPayload = json.payload || {};
+    myPollResponse = json.myResponse || null;
+
+    renderRespondentPollView();
+  } catch (err) {
+    $('pollTitle').textContent = 'Lỗi kết nối: ' + err.message;
+  }
+}
+
+function renderRespondentPollView() {
+  const data = currentPollPayload.data || currentPollPayload;
+  const doc = currentPollPayload.document || {};
+
+  $('pollTitle').textContent = data.title || doc.title || 'Biểu quyết trực tuyến';
+  $('pollDesc').textContent = data.description \vert{}\vert{} '';$('pollAuthor').textContent = currentPollPayload.sender?.fullName || doc.author || 'Ban Giám hiệu';
+  $('pollDeadline').textContent = [data.deadlineDate, data.deadlineTime].filter(Boolean).join(' • ') || 'Không giới hạn';
+
+  const q = (data.questions && data.questions[0]) || { options: ['Đồng ý', 'Không đồng ý'] };
+  const oldAnswers = myPollResponse?.answers?.find(a => String(a.questionId) === String(q.id))?.answer || [];
+
+  const box = $('pollOptionBox');
+  box.innerHTML = '';
+
+  (q.options || []).forEach(opt => {
+    const isChecked = oldAnswers.includes(opt);
+    const div = document.createElement('div');
+    div.className = `zalo-bar-item flex items-center justify-between ${isChecked ? 'selected' : ''}`;
+    div.innerHTML = `
+      <div class="zalo-bar-fill" style="width:${isChecked ? '100%' : '0%'}"></div>
+      <div class="flex items-center gap-2.5 z-10">
+        <input type="${data.multiPoll ? 'checkbox' : 'radio'}" name="poll_choice" value="${esc(opt)}" ${isChecked ? 'checked' : ''} class="w-4 h-4 accent-violet-700">
+        <span class="text-xs font-bold text-slate-800">${esc(opt)}</span>
+      </div>
+    `;
+    div.onclick = (e) => {
+      if (e.target.tagName !== 'INPUT') {
+        const inp = div.querySelector('input');
+        inp.checked = !inp.checked;
+      }
+      div.classList.toggle('selected', div.querySelector('input').checked);
+    };
+    box.appendChild(div);
+  });
+
+  if (myPollResponse && myPollResponse.status) {
+    $('pollStatusBadge').className = 'text-xs font-extrabold text-emerald-700';$('pollStatusBadge').textContent = '✓ ' + myPollResponse.status;
+    $('boxSubmittedAck').classList.remove('hidden');$('submittedTimeText').textContent = 'Đã biểu quyết lúc: ' + (myPollResponse.updatedAt || 'trước đây');
+  }
+}
+
+async function submitPollVote() {
+  const me = getMeetingOperatorUser();
+  const username = String(me.username || me.userName || me.maGV || '').trim();
+  if (!username) return alert('Không xác định được phiên làm việc của Thầy/Cô.');
+
+  const nodes = [...$('pollOptionBox').querySelectorAll('input[name="poll_choice"]')];
+  const chosen = nodes.filter(n => n.checked).map(n => n.value.trim());
+
+  if (!chosen.length) return alert('Vui lòng chọn ít nhất 1 phương án biểu quyết.');
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
+
+  const btn = $('btnSubmitPoll');
+  btn.disabled = true;
+  btn.innerHTML = 'ĐANG GỬI...';
+
+  try {
+    const res = await fetch(WEB_APP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'submitSurveyPollResponse',
+        publishId: publishId,
+        surveyId: publishId,
+        username: username,
+        fullName: me.hoTen || me.fullName || username,
+        department: me.toBoPhan || me.tenTo || '',
+        status: 'ĐÃ HOÀN THÀNH',
+        answers: [{ questionId: 'Q1', question: $('pollTitle').textContent, answer: chosen }]
+      })
+    });
+    const r = await res.json();
+    if (!r.success) throw new Error(r.message || 'Lỗi gửi phản hồi.');
+    alert('Gửi biểu quyết thành công!');
+    location.reload();
+  } catch (e) {
+    alert('Lỗi: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-send-check-fill mr-1.5"></i>GỬI BIỂU QUYẾT';
+  }
 }
 </script>
 </body>
