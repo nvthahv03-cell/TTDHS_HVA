@@ -1,998 +1,872 @@
 <!DOCTYPE html>
-<html lang="vi" class="h-full bg-slate-100">
+<html lang="vi" class="bg-slate-50">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>HVA - Khảo sát & Bình chọn</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TTĐHS HVA - Bình chọn nhanh</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root{
+  --hva-h-navy:#073b78;
+  --hva-h-blue:#075cad;
+  --hva-h-cyan:#08abc5;
+  --hva-h-white:#f8fdff;
+  --hva-h-line:rgba(190,238,255,.58);
+}
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+/* HEADER CHUẨN THƯƠNG HIỆU TTĐHS_HVA */
+.hva-pro-header{
+  position:sticky;top:0;z-index:40;margin:12px 14px 0;min-height:126px;border-radius:16px;
+  overflow:hidden;isolation:isolate;color:var(--hva-h-white);
+  background:
+    radial-gradient(circle at 82% 34%,rgba(24,225,255,.26),transparent 22%),
+    radial-gradient(circle at 55% 110%,rgba(0,200,255,.36),transparent 31%),
+    linear-gradient(108deg,var(--hva-h-navy) 0%,#064b96 29%,var(--hva-h-blue) 53%,#078fc0 77%,var(--hva-h-cyan) 100%);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 10px 28px rgba(3,43,84,.18),inset 0 1px 0 rgba(255,255,255,.12);
+}
+.hva-pro-header::before{
+  content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.55;
+  background:
+    radial-gradient(circle at 48% 25%,#67f4ff 0 1px,transparent 2px),
+    radial-gradient(circle at 56% 70%,#3fe2ff 0 1.2px,transparent 2.2px),
+    radial-gradient(circle at 64% 22%,#72f5ff 0 1.1px,transparent 2px),
+    radial-gradient(circle at 72% 68%,#45e6ff 0 1.2px,transparent 2.2px),
+    linear-gradient(60deg,transparent 49.5%,rgba(91,228,255,.30) 50%,transparent 50.5%) 44% 0/118px 82px;
+}
+.hva-pro-header::after{
+  content:"";position:absolute;z-index:-1;width:245px;height:245px;right:-22px;top:-58px;
+  border-radius:50%;pointer-events:none;opacity:.20;border:1px solid rgba(129,239,255,.72);
+  background:repeating-radial-gradient(circle,transparent 0 21px,rgba(128,238,255,.28) 22px 23px);
+}
+.hva-pro-header-inner{
+  min-height:124px;max-width:1460px;margin:0 auto;padding:13px 24px;
+  display:grid;grid-template-columns:58px minmax(570px,1fr) auto;align-items:center;gap:20px;
+}
+.hva-pro-back{
+  width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  color:#eaf8ff;background:linear-gradient(145deg,rgba(16,112,187,.95),rgba(7,73,141,.95));
+  border:1.5px solid rgba(79,192,255,.50);box-shadow:0 6px 16px rgba(0,36,78,.20);cursor:pointer;
+}
+.hva-pro-back i{font-size:27px;line-height:1}
+.hva-pro-brand{min-width:0;display:flex;align-items:center}
+.hva-pro-divider{width:1px;height:70px;flex:0 0 1px;background:linear-gradient(transparent,var(--hva-h-line) 16%,var(--hva-h-line) 84%,transparent)}
+.hva-pro-brandtext{min-width:0;width:min(620px,100%);text-align:center;line-height:1.06}
+.hva-pro-kicker{font-size:14px;font-weight:800;letter-spacing:.17em;color:rgba(226,244,255,.90);white-space:nowrap}
+.hva-pro-school{margin-top:7px;font-size:30px;font-weight:800;letter-spacing:-.025em;color:#fff;white-space:nowrap;text-shadow:0 2px 10px rgba(0,31,72,.28)}
+.hva-pro-slogan{margin-top:8px;font-size:15px;font-weight:600;color:rgba(235,248,255,.90);white-space:nowrap}
+.hva-pro-slogan b{font-weight:800;padding:0 5px;color:#d9f7ff}
+.hva-pro-tools{display:flex;align-items:center;justify-content:flex-end;gap:9px;white-space:nowrap}
+.hva-pro-online{
+  height:42px;padding:0 17px;display:flex;align-items:center;gap:10px;border-radius:22px;
+  border:1.5px solid rgba(83,246,237,.88);background:rgba(2,77,119,.40);font-size:12px;font-weight:800;
+}
+.hva-pro-online-dot{width:11px;height:11px;border-radius:50%;background:#19e98a;box-shadow:0 0 0 5px rgba(25,233,138,.12),0 0 13px rgba(25,233,138,.82)}
 
-  <style>
-    :root {
-      --hva-h-navy: #073b78;
-      --hva-h-blue: #075cad;
-      --hva-h-cyan: #08abc5;
-      --hva-h-white: #f8fdff;
-      --hva-h-line: rgba(190, 238, 255, .58);
-      --ink: #183249;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Inter, Arial, sans-serif; background: #f1f5f9; color: var(--ink); }
+/* CẤU TRÚC PANEL & FORM */
+.panel-card{background:white;border:2px solid #cbd5e1;border-radius:18px;box-shadow:0 4px 14px rgba(15,23,42,.06)}
+.section-title{display:flex;align-items:center;gap:9px;margin-bottom:2px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.035em;color:#334155}
+.section-title i{width:30px;height:30px;border-radius:9px;background:#eaf3fb;color:#0F4C81;display:flex;align-items:center;justify-content:center;font-size:14px}
+.lbl{display:block;font-size:13px;font-weight:800;color:#0F4C81;margin-bottom:6px}
+.lbl b{color:#dc2626}
+.field{width:100%;height:44px;border-radius:11px;border:1.7px solid #94a3b8;background:#fff;padding:0 12px;font-size:14px;font-weight:600;color:#1e293b;outline:none;transition:.15s}
+.field:focus{border-color:#0F4C81;box-shadow:0 0 0 3px rgba(15,76,129,.12)}
+.textarea-field{height:82px;padding:10px 12px;line-height:1.5}
+.badge{font-size:11.5px;font-weight:800;padding:5px 9px;border-radius:9px;border:1px solid #cbd5e1}
+.chip{display:inline-flex;align-items:center;padding:6px 9px;border-radius:9px;border:1px solid #bfdbfe;font-size:11.5px;font-weight:750}
+.chip-remove{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:rgba(15,76,129,.10);color:#0F4C81;cursor:pointer}
+.chip-remove:hover{background:#fee2e2;color:#dc2626}
 
-    /* HEADER CHUẨN THƯƠNG HIỆU TTĐHS_HVA */
-    .hva-pro-header {
-      position: sticky; top: 0; z-index: 40; margin: 12px 14px 0; min-height: 126px; border-radius: 16px;
-      overflow: hidden; isolation: isolate; color: var(--hva-h-white);
-      background: radial-gradient(circle at 82% 34%, rgba(41, 245, 255, .55), transparent 22%),
-                  radial-gradient(circle at 60% 118%, rgba(0, 220, 255, .55), transparent 34%),
-                  linear-gradient(108deg, #063b80 0%, #0758b5 27%, #057fd7 53%, #03aee2 77%, #08d1dc 100%);
-      border: 1px solid rgba(148, 245, 255, .52);
-      box-shadow: 0 14px 34px rgba(2, 73, 130, .24), inset 0 1px 0 rgba(255, 255, 255, .24);
-    }
-    .hva-pro-header::before {
-      content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none; opacity: .92;
-      background: radial-gradient(circle at 46% 24%, #a7fbff 0 1.5px, transparent 2.6px),
-                  radial-gradient(circle at 53% 72%, #79f5ff 0 1.6px, transparent 2.7px),
-                  radial-gradient(circle at 61% 20%, #b7fdff 0 1.5px, transparent 2.6px),
-                  radial-gradient(circle at 70% 67%, #75f4ff 0 1.6px, transparent 2.7px),
-                  linear-gradient(60deg, transparent 49.3%, rgba(119, 244, 255, .52) 50%, transparent 50.7%) 42% 0/112px 80px;
-    }
-    .hva-pro-header::after {
-      content: ""; position: absolute; z-index: -1; width: 280px; height: 280px; right: -30px; top: -74px;
-      border-radius: 50%; pointer-events: none; opacity: .52; border: 1px solid rgba(173, 252, 255, .95);
-      background: repeating-radial-gradient(circle, transparent 0 20px, rgba(155, 248, 255, .46) 21px 22px);
-    }
-    .hva-pro-header-inner {
-      min-height: 124px; max-width: 1460px; margin: 0 auto; padding: 13px 24px;
-      display: grid; grid-template-columns: 58px minmax(570px, 1fr) auto; align-items: center; gap: 20px;
-    }
-    .hva-pro-back {
-      width: 54px; height: 54px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
-      color: #eaf8ff; background: linear-gradient(145deg, rgba(16, 112, 187, .95), rgba(7, 73, 141, .95));
-      border: 1.5px solid rgba(79, 192, 255, .50); box-shadow: 0 6px 16px rgba(0, 36, 78, .20); cursor: pointer;
-    }
-    .hva-pro-back i { font-size: 24px; }
-    .hva-pro-brand { min-width: 0; display: flex; align-items: center; }
-    .hva-pro-divider { width: 1px; height: 70px; flex: 0 0 1px; background: linear-gradient(transparent, var(--hva-h-line) 16%, var(--hva-h-line) 84%, transparent); }
-    .hva-pro-brandtext { min-width: 0; width: min(620px, 100%); text-align: center; line-height: 1.06; }
-    .hva-pro-kicker { font-size: 14px; font-weight: 800; letter-spacing: .17em; color: rgba(226, 244, 255, .90); white-space: nowrap; }
-    .hva-pro-school { margin-top: 7px; font-size: 30px; font-weight: 800; letter-spacing: -.025em; color: #fff; white-space: nowrap; text-shadow: 0 2px 10px rgba(0, 31, 72, .28); }
-    .hva-pro-slogan { margin-top: 8px; font-size: 15px; font-weight: 600; color: rgba(235, 248, 255, .90); white-space: nowrap; }
-    .hva-pro-slogan b { font-weight: 800; padding: 0 5px; color: #d9f7ff; }
-    .hva-pro-tools { display: flex; align-items: center; justify-content: flex-end; gap: 9px; white-space: nowrap; }
-    .hva-pro-online-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .hva-pro-online {
-      height: 42px; padding: 0 17px; display: flex; align-items: center; gap: 10px; border-radius: 22px;
-      border: 1.5px solid rgba(83, 246, 237, .88); background: rgba(2, 77, 119, .40); font-size: 12px; font-weight: 800;
-    }
-    .hva-pro-online-dot { position: relative; display: inline-block; width: 10px; height: 10px; background-color: #22c55e; border-radius: 50%; flex-shrink: 0; }
-    .hva-pro-online-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background-color: #22c55e; animation: dotPulse 1.6s infinite ease-out; }
-    @keyframes dotPulse { 0% { transform: scale(1); opacity: .95; } 100% { transform: scale(3.2); opacity: 0; } }
-    .hva-pro-version {
-      display: inline-flex; align-items: center; justify-content: center; background: #ffffff; color: #003366;
-      font-weight: 900; font-size: 10.5px; padding: 1px 6px; border-radius: 6px; line-height: 1.2; margin-left: 2px;
-    }
+/* NÚT THAO TÁC NỔI */
+.raised-btn{height:48px;border-radius:12px;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;border:1px solid rgba(0,0,0,.08);box-shadow:0 6px 0 rgba(15,23,42,.16),0 10px 18px rgba(15,23,42,.12);transition:.12s;cursor:pointer}
+.raised-btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.raised-btn:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(15,23,42,.18)}
+.raised-red{background:linear-gradient(#ef4444,#dc2626)}
+.raised-blue{background:linear-gradient(#1674b8,#0F4C81)}
+.raised-green{background:linear-gradient(#22c55e,#15803d)}
 
-    /* CARD VÀ FORM TIÊU CHUẨN */
-    .shell { max-width: 1140px; margin: 16px auto 60px; padding: 0 14px; }
-    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 22px; box-shadow: 0 4px 16px rgba(15, 76, 129, .04); }
-    .field {
-      width: 100%; min-height: 42px; border: 1.5px solid #cbd5e1; border-radius: 12px; background: #fff;
-      color: #0f172a; padding: 8px 14px; font-size: 13px; font-weight: 600; outline: none; transition: .15s;
-    }
-    .field:focus { border-color: #075cad; box-shadow: 0 0 0 3px rgba(7, 92, 173, .12); }
-    .lbl { display: block; font-size: 12px; font-weight: 800; color: #334155; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.02em; }
-    
-    .type-tab-btn {
-      transition: all .2s cubic-bezier(.4, 0, .2, 1);
-      border: 2px solid transparent;
-      border-radius: 16px;
-      cursor: pointer;
-    }
-    .type-tab-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
-    .type-tab-btn.active {
-      background: #eff6ff;
-      border-color: #075cad;
-      box-shadow: 0 4px 14px rgba(7, 92, 173, .12);
-    }
+/* BÌNH CHỌN % ZALO */
+.zalo-bar-item{
+  position:relative;overflow:hidden;border:1.5px solid #cbd5e1;border-radius:14px;
+  padding:14px 16px;background:#fff;cursor:pointer;transition:.15s;
+}
+.zalo-bar-item:hover{border-color:#075cad}
+.zalo-bar-item.selected{border-color:#075cad;background:#eff6ff}
+.zalo-bar-fill{position:absolute;top:0;left:0;bottom:0;background:rgba(7,92,173,.12);transition:width .4s ease;pointer-events:none}
 
-    /* THANH BÌNH CHỌN % ZALO */
-    .zalo-bar-item {
-      position: relative; overflow: hidden; border: 1.5px solid #cbd5e1; border-radius: 14px;
-      padding: 12px 16px; background: #fff; cursor: pointer; transition: .15s;
-    }
-    .zalo-bar-item:hover { border-color: #075cad; }
-    .zalo-bar-item.selected { border-color: #075cad; background: #eff6ff; }
-    .zalo-bar-fill {
-      position: absolute; top: 0; left: 0; bottom: 0; background: rgba(7, 92, 173, .12);
-      transition: width .35s ease; pointer-events: none;
-    }
-
-    @media (max-width: 1080px) {
-      .hva-pro-header-inner { grid-template-columns: 50px minmax(430px, 1fr) auto; padding: 11px 16px; gap: 13px; }
-      .hva-pro-kicker { font-size: 11px; } .hva-pro-school { font-size: 24px; } .hva-pro-slogan { font-size: 12px; }
-    }
-    @media (max-width: 720px) {
-      .hva-pro-header { margin: 6px 6px 0; border-radius: 13px; min-height: 78px; }
-      .hva-pro-header-inner { min-height: 76px; padding: 7px 9px; grid-template-columns: 37px minmax(0, 1fr) auto; gap: 7px; }
-      .hva-pro-back { width: 36px; height: 36px; border-radius: 10px; }
-      .hva-pro-back i { font-size: 18px; } .hva-pro-divider { height: 42px; }
-      .hva-pro-kicker { font-size: 7px; letter-spacing: .08em; } .hva-pro-school { font-size: 14px; margin-top: 3px; }
-      .hva-pro-slogan { font-size: 8px; margin-top: 4px; } .hva-pro-online { height: 31px; padding: 0 9px; font-size: 9px; }
-      .hva-pro-version { font-size: 7.5px; } .shell { padding: 0 6px; margin-top: 10px; } .card { padding: 16px; border-radius: 16px; }
-    }
-  </style>
-
-  <!-- ============================================================================== -->
-  <!-- NHÚNG BỘ LÕI HVA_PERSONNEL.JS CORE V1 (QUÉT ĐỦ CCCD VÀ CÁC CỘT TỔ CÔNG TÁC) -->
-  <!-- ============================================================================== -->
-  <script>
-  (function(global){
-  'use strict';
-
-  function hvaPersonnelText(v){ return String(v ?? '').trim(); }
-  function hvaPersonnelArray(data){
-    return Array.isArray(data) ? data
-      : Array.isArray(data && data.data) ? data.data
-      : Array.isArray(data && data.results) ? data.results
-      : Array.isArray(data && data.items) ? data.items
-      : [];
-  }
-
-  function hvaPersonnelCurrentUser(){
-    try {
-      const uStr = localStorage.getItem('user') || sessionStorage.getItem('user') || localStorage.getItem('HVA_USER');
-      if (uStr) return JSON.parse(uStr);
-    } catch (_) {}
-    return global.HVA_CURRENT_USER || {};
-  }
-
-  function hvaPersonnelEnsureAuth(){
-    if (global.HVAAuthRequest && typeof global.HVAAuthRequest.get === 'function') return global.HVAAuthRequest;
-    return {
-      get: async (url, opts) => fetch(url, opts),
-      postJson: async (url, payload, opts) => fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      })
-    };
-  }
-
-  async function hvaPersonnelGet(action, params={}){
-    const auth = hvaPersonnelEnsureAuth();
-    const user = hvaPersonnelCurrentUser();
-    const api = global.PERSONNEL_SEARCH_API ||
-      (typeof getHvaGatewayUrl === 'function' ? getHvaGatewayUrl() : '') ||
-      'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
-    
-    const u = new URL(api);
-    u.searchParams.set('action', hvaPersonnelText(action));
-    if (user.username || user.userName || user.maGV) {
-      u.searchParams.set('username', hvaPersonnelText(user.username || user.userName || user.maGV));
-    }
-    Object.entries(params || {}).forEach(([k, v]) => {
-      if (v !== undefined && v !== null) u.searchParams.set(k, hvaPersonnelText(v));
-    });
-    u.searchParams.set('_', Date.now());
-
-    const r = await auth.get(u.toString(), { cache: 'no-store' });
-    if (!r.ok) throw Error('HTTP ' + r.status);
-    return await r.json();
-  }
-
-  function normalizeHvaPerson(m, groupLabel=''){
-    m = m || {};
-    const groups = (m.nhomCongTac && typeof m.nhomCongTac === 'object') ? m.nhomCongTac : {};
-    const lop = hvaPersonnelText(m.lopChuNhiem || m.lopCN || groups.GVCN || '');
-
-    return {
-      username: hvaPersonnelText(m.username),
-      maGV: hvaPersonnelText(m.maGV || m.maNhanSu || m.id),
-      hoTen: hvaPersonnelText(m.hoTen || m.fullName || m.name),
-      cccd: hvaPersonnelText(m.cccd),
-      chucVu: hvaPersonnelText(m.chucVu || m.vaiTro || m.viTriViecLam || 'Giáo viên'),
-      viTriViecLam: hvaPersonnelText(m.viTriViecLam),
-      tenTo: hvaPersonnelText(m.to || m.toBoPhan || m.tenTo),
-      lopChuNhiem: lop,
-      nhomCongTac: groups,
-      dienThoai: hvaPersonnelText(m.dienThoai || m.soDienThoai || m.phone),
-      groupLabel: hvaPersonnelText(groupLabel),
-      raw: m
-    };
-  }
-
-  function hvaPersonnelDedupe(members, groupLabel=''){
-    const map = new Map();
-    hvaPersonnelArray(members).forEach(raw => {
-      const p = normalizeHvaPerson(raw, groupLabel);
-      const key = p.username ? ('U:' + p.username.toLowerCase()) : ('M:' + p.maGV.toLowerCase());
-      if (!key || map.has(key)) return;
-      if (!p.username) p.username = p.maGV;
-      map.set(key, p);
-    });
-    return [...map.values()];
-  }
-
-  function hvaPersonnelUnits(){
-    return [
-      { label: 'Toán - Tin', query: 'Toán - Tin' },
-      { label: 'Ngữ văn', query: 'Ngữ văn' },
-      { label: 'Tiếng Anh', query: 'Ngoại Ngữ' },
-      { label: 'Sử - Địa - GDKT&PL', query: 'Sử - Địa - GD KT&PL' },
-      { label: 'Vật lí - Công nghệ', query: 'Vật lí - Công nghệ' },
-      { label: 'Hóa học', query: 'Hóa học' },
-      { label: 'Sinh - GDTC - QPAN', query: 'Sinh - GDTC - QPAN' },
-      { label: 'Văn phòng', query: 'Văn phòng' }
-    ];
-  }
-
-  async function hvaPersonnelBuildGroups(){
-    const units = hvaPersonnelUnits();
-    const [bghRaw, workgroups, teamResults] = await Promise.all([
-      hvaPersonnelGet('searchNhanSuQuick', { category: 'BGH', q: '' }),
-      hvaPersonnelGet('getPersonnelWorkgroups', {}),
-      Promise.all(units.map(async u => ({
-        name: u.label,
-        raw: await hvaPersonnelGet('searchNhanSuQuick', { category: 'TEAM', q: u.query })
-      })))
-    ]);
-
-    const groups = [];
-    groups.push({
-      groupKey: 'BGH',
-      tenTo: 'Ban Giám hiệu',
-      members: hvaPersonnelDedupe(hvaPersonnelArray(bghRaw), 'Ban Giám hiệu')
-    });
-
-    teamResults.forEach(x => {
-      groups.push({
-        groupKey: 'TEAM:' + x.name,
-        tenTo: x.name,
-        members: hvaPersonnelDedupe(hvaPersonnelArray(x.raw), x.name)
-      });
-    });
-
-    const wList = hvaPersonnelArray(workgroups);
-    for (let wg of wList) {
-      const wName = typeof wg === 'string' ? wg : (wg.name || wg.key);
-      if (!wName) continue;
-      try {
-        const rawW = await hvaPersonnelGet('searchNhanSuQuick', { category: 'WORKGROUP', q: wName });
-        const listW = hvaPersonnelDedupe(hvaPersonnelArray(rawW), wName);
-        if (listW.length) {
-          groups.push({
-            groupKey: 'WORKGROUP:' + wName,
-            tenTo: 'Nhóm ' + wName,
-            members: listW
-          });
-        }
-      } catch (_) {}
-    }
-
-    return groups;
-  }
-
-  global.HVAPersonnel = Object.freeze({
-    currentUser: hvaPersonnelCurrentUser,
-    buildGroups: hvaPersonnelBuildGroups
-  });
-
-  })(window);
-  </script>
+@media(max-width:1080px){
+  .hva-pro-header-inner{grid-template-columns:50px minmax(430px,1fr) auto;padding:11px 16px;gap:13px}
+  .hva-pro-kicker{font-size:11px}.hva-pro-school{font-size:24px}.hva-pro-slogan{font-size:12px}
+}
+@media(max-width:720px){
+  .hva-pro-header{margin:6px 6px 0;border-radius:13px;min-height:78px}
+  .hva-pro-header-inner{min-height:76px;padding:7px 9px;grid-template-columns:37px minmax(0,1fr) auto;gap:7px}
+  .hva-pro-back{width:36px;height:36px;border-radius:10px}.hva-pro-back i{font-size:18px}
+  .hva-pro-divider{height:42px}.hva-pro-kicker{font-size:7px}.hva-pro-school{font-size:14px}.hva-pro-slogan{font-size:8px}
+  .hva-pro-online{height:31px;padding:0 9px;font-size:9px}
+}
+</style>
 </head>
+<body class="min-h-screen bg-slate-50 text-slate-800">
 
-<body>
+<!-- HEADER CHUẨN THƯƠNG HIỆU HVA -->
+<header class="hva-pro-header">
+  <div class="hva-pro-header-inner">
+    <button type="button" class="hva-pro-back" onclick="location.href='main.html'" title="Trang chủ HVA">
+      <i class="bi bi-house-door"></i>
+    </button>
+    <div class="hva-pro-brand">
+      <span class="hva-pro-divider" aria-hidden="true"></span>
+      <div class="hva-pro-brandtext">
+        <div class="hva-pro-kicker">TRUNG TÂM QUẢN TRỊ SỐ HVA</div>
+        <div class="hva-pro-school">Trường THPT Hòa Vang</div>
+        <div class="hva-pro-slogan">Quản trị thông minh <b>•</b> Giáo dục sáng tạo</div>
+      </div>
+    </div>
+    <div class="hva-pro-tools">
+      <div class="hva-pro-online">
+        <span class="hva-pro-online-dot"></span>
+        <span>TRỰC TUYẾN</span>
+      </div>
+    </div>
+  </div>
+</header>
 
-  <!-- HEADER HỆ THỐNG -->
-  <header class="hva-pro-header">
-    <div class="hva-pro-header-inner">
-      <button type="button" class="hva-pro-back" onclick="location.href='main.html'" title="Trang chủ HVA">
-        <i class="bi bi-house-door"></i>
+<main class="max-w-6xl mx-auto p-3 sm:p-4 space-y-4 pb-24">
+
+  <!-- ============================================================================== -->
+  <!-- PHÂN HỆ 1: GIÁO VIÊN THỰC HIỆN BÌNH CHỌN KIỂU ZALO (?view=respond) -->
+  <!-- ============================================================================== -->
+  <div id="viewRespondent" class="hidden space-y-4">
+    <section class="panel-card p-5 bg-gradient-to-r from-violet-50/80 to-slate-50 border-violet-200">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-violet-700 text-white flex items-center justify-center text-xl shadow-md">
+            <i class="bi bi-person-check-fill"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">GIÁO VIÊN BIỂU QUYẾT</div>
+            <div id="gvName" class="text-lg font-black text-violet-950 leading-tight">Đang nhận diện...</div>
+            <div class="text-xs font-semibold text-slate-600 mt-0.5">
+              Tổ: <span id="gvTeam" class="font-bold text-slate-800">—</span> | 
+              Chức vụ: <span id="gvRole" class="font-bold text-slate-800">—</span>
+            </div>
+          </div>
+        </div>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300 w-fit">
+          <i class="bi bi-shield-check"></i> ĐÃ XÁC THỰC HVA
+        </span>
+      </div>
+    </section>
+
+    <section class="panel-card p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-violet-100 text-violet-700">BÌNH CHỌN NHANH</span>
+        <span id="pollStatusBadge" class="text-xs font-extrabold text-slate-500">⏳ Chưa bình chọn</span>
+      </div>
+      <h1 id="pollTitle" class="text-xl sm:text-2xl font-black text-slate-900 leading-snug">Đang nạp câu hỏi biểu quyết...</h1>
+      <p id="pollDesc" class="text-sm font-medium text-slate-600 leading-relaxed whitespace-pre-line"></p>
+      <div class="text-xs font-semibold text-slate-500 pt-2 border-t border-slate-100 flex flex-wrap gap-4">
+        <div>Chủ trì phát hành: <b id="pollAuthor" class="text-slate-700">BGH / TTCM</b></div>
+        <div>Hạn chốt: <b id="pollDeadline" class="text-slate-700">—</b></div>
+      </div>
+    </section>
+
+    <!-- Khung Danh sách phương án bình chọn kiểu Zalo -->
+    <section class="panel-card p-5 space-y-3">
+      <div class="text-xs font-extrabold text-slate-500 uppercase tracking-wide">CHỌN PHƯƠNG ÁN CỦA THẦY/CÔ</div>
+      <div id="pollOptionBox" class="space-y-2.5"></div>
+    </section>
+
+    <div class="panel-card p-4 flex flex-wrap items-center justify-between gap-3">
+      <div id="boxSubmittedAck" class="hidden text-xs font-bold text-emerald-700 flex items-center gap-1.5">
+        <i class="bi bi-check-circle-fill text-emerald-600 text-base"></i> <span id="submittedTimeText">Đã biểu quyết</span>
+      </div>
+      <button type="button" id="btnSubmitPoll" onclick="submitPollVote()" class="ml-auto px-8 py-3 rounded-xl bg-violet-700 hover:bg-violet-800 text-white text-xs font-black shadow-lg shadow-violet-500/20 transition">
+        <i class="bi bi-send-check-fill mr-1.5"></i>GỬI BIỂU QUYẾT
       </button>
-      <div class="hva-pro-brand">
-        <span class="hva-pro-divider" aria-hidden="true"></span>
-        <div class="hva-pro-brandtext">
-          <div class="hva-pro-kicker">TRUNG TÂM QUẢN TRỊ SỐ HVA</div>
-          <div class="hva-pro-school">Trường THPT Hòa Vang</div>
-          <div class="hva-pro-slogan">Quản trị thông minh <b>•</b> Giáo dục sáng tạo</div>
+    </div>
+  </div>
+
+  <!-- ============================================================================== -->
+  <!-- PHÂN HỆ 2: BGH / TTCM TẠO PHIẾU BÌNH CHỌN NHANH -->
+  <!-- ============================================================================== -->
+  <form id="pollForm" class="space-y-4" onsubmit="event.preventDefault();">
+    
+    <!-- TIÊU ĐỀ & ĐỊNH DANH NGƯỜI TẠO -->
+    <div class="panel-card p-4 bg-white flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-violet-100 text-violet-700 flex items-center justify-center text-xl font-bold">
+          <i class="bi bi-pie-chart-fill"></i>
+        </div>
+        <div>
+          <div class="text-xs font-black text-violet-900 uppercase tracking-wide">TẠO BÌNH CHỌN NHANH</div>
+          <div class="text-[11px] text-slate-500">Biểu quyết theo thời gian thực kiểu Zalo, hiển thị thanh % tiến độ trực quan</div>
         </div>
       </div>
-      <div class="hva-pro-tools">
-        <div class="hva-pro-online-wrap">
-          <div class="hva-pro-online">
-            <span class="hva-pro-online-dot"></span>
-            <span>TRỰC TUYẾN</span>
-            <span class="hva-pro-version">PORTAL</span>
+
+      <!-- Thẻ danh tính tài khoản đang đăng nhập -->
+      <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-2 px-3">
+        <div class="w-7 h-7 rounded-lg bg-violet-700 text-white flex items-center justify-center font-black text-xs">
+          <i class="bi bi-person-fill"></i>
+        </div>
+        <div class="text-left leading-tight">
+          <div class="flex items-center gap-1.5">
+            <span id="creatorName" class="text-xs font-black text-slate-800">Đang nhận diện...</span>
+            <span id="creatorRoleBadge" class="text-[9.5px] font-extrabold px-1.5 py-0.5 rounded bg-violet-100 text-violet-800">BGH / TTCM</span>
+          </div>
+          <div class="text-[10px] font-semibold text-slate-500 mt-0.5">
+            Tổ: <span id="creatorTeam" class="font-bold text-slate-700">—</span> | 
+            TK: <span id="creatorUsername" class="font-mono text-slate-700">—</span>
           </div>
         </div>
       </div>
     </div>
-  </header>
 
-  <main class="shell">
-
-    <!-- ============================================================================== -->
-    <!-- PHẦN 1: MÀN HÌNH GIÁO VIÊN LÀM BÀI (?view=respond HOẶC CÓ ID) -->
-    <!-- ============================================================================== -->
-    <div id="viewRespondent" class="hidden space-y-4">
-      <div class="card p-5 bg-gradient-to-r from-blue-50/80 to-slate-50 border-blue-200">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-[#075cad] text-white flex items-center justify-center text-xl shadow-md">
-              <i class="bi bi-person-badge-fill"></i>
-            </div>
-            <div>
-              <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">GIÁO VIÊN THỰC HIỆN</div>
-              <div id="gvName" class="text-base sm:text-lg font-black text-[#073b78] leading-tight">Đang tải...</div>
-              <div class="text-xs font-semibold text-slate-600 mt-0.5">
-                Tổ: <span id="gvTeam" class="font-bold text-slate-800">—</span> | 
-                Chức vụ: <span id="gvRole" class="font-bold text-slate-800">—</span>
-              </div>
-            </div>
-          </div>
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300 w-fit">
-            <i class="bi bi-shield-check"></i> HỆ THỐNG XÁC THỰC
-          </span>
-        </div>
-      </div>
-
-      <div class="card space-y-3">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-          <span id="surveyTypeBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-blue-100 text-[#075cad]">KHẢO SÁT</span>
-          <span id="surveyStatusBadge" class="text-xs font-extrabold text-slate-500">⏳ Chưa thực hiện</span>
-        </div>
-        <h1 id="surveyTitle" class="text-xl sm:text-2xl font-black text-slate-900 leading-snug">Đang nạp dữ liệu...</h1>
-        <p id="surveyDesc" class="text-sm text-slate-600 leading-relaxed whitespace-pre-line"></p>
-        <div class="text-xs font-semibold text-slate-500 pt-2 border-t border-slate-100 flex flex-wrap gap-4">
-          <div>Người phát hành: <b id="surveyAuthor" class="text-slate-700">HVA</b></div>
-          <div>Hạn chót: <b id="surveyDeadline" class="text-slate-700">—</b></div>
-        </div>
-      </div>
-
-      <form id="formSurveyQuestions" class="space-y-4" onsubmit="event.preventDefault();"></form>
-
-      <div class="card flex flex-wrap items-center justify-between gap-3">
-        <div id="boxSubmittedAck" class="hidden text-xs font-bold text-emerald-700 flex items-center gap-1.5">
-          <i class="bi bi-check-circle-fill text-emerald-600 text-base"></i> <span id="submittedTimeText">Đã gửi</span>
-        </div>
-        <div class="flex items-center gap-2 ml-auto">
-          <button type="button" id="btnSaveDraft" onclick="submitSurvey(true)" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
-            LƯU NHÁP
-          </button>
-          <button type="button" id="btnSubmitSurvey" onclick="submitSurvey(false)" class="px-6 py-2.5 rounded-xl bg-[#075cad] hover:bg-[#064b91] text-white text-xs font-black shadow-md transition">
-            GỬI KẾT QUẢ
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ============================================================================== -->
-    <!-- PHẦN 2: MÀN HÌNH BGH / TTCM TẠO PHIẾU PHÁT HÀNH -->
-    <!-- ============================================================================== -->
-    <div id="viewCreator" class="space-y-4">
+    <!-- NỘI DUNG VÀ CÁC PHƯƠNG ÁN BIỂU QUYẾT -->
+    <section class="panel-card p-4 sm:p-5 space-y-4">
+      <div class="section-title"><i class="bi bi-question-circle-fill"></i><span>Nội dung bình chọn</span></div>
       
-      <!-- THANH ĐIỀU HƯỚNG TỔNG QUAN -->
-      <div class="card p-4 bg-white flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div class="text-xs font-black text-[#075cad] uppercase tracking-wide flex items-center gap-2">
-            <i class="bi bi-diagram-3-fill text-base"></i> ĐIỀU HÀNH PHÁT HÀNH SỐ
-          </div>
-          <div class="text-xs text-slate-500 mt-0.5">Soạn nội dung, chọn phương thức và điều phối đến đúng đối tượng</div>
-        </div>
+      <div>
+        <label class="lbl">Câu hỏi biểu quyết <b>*</b></label>
+        <input id="pollQuestion" required class="field" placeholder="Ví dụ: Thầy/Cô đồng ý phương án tổ chức Hoạt động trải nghiệm nào dưới đây?">
+      </div>
 
-        <!-- THẺ ĐỊNH DANH CÁN BỘ PHÁT HÀNH -->
-        <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-2.5 px-3.5">
-          <div class="w-8 h-8 rounded-lg bg-[#075cad] text-white flex items-center justify-center font-black text-sm">
-            <i class="bi bi-person-fill"></i>
-          </div>
-          <div class="text-left leading-tight">
-            <div class="flex items-center gap-2">
-              <span id="creatorName" class="text-xs font-black text-slate-800">Cán bộ HVA</span>
-              <span id="creatorRoleBadge" class="text-[9.5px] font-extrabold px-1.5 py-0.5 rounded bg-blue-100 text-[#075cad]">BGH / TTCM</span>
-            </div>
-            <div class="text-[10px] font-semibold text-slate-500 mt-1">
-              Tổ: <span id="creatorTeam" class="font-bold text-slate-700">—</span> | 
-              TK: <span id="creatorUsername" class="font-mono text-slate-700">—</span>
-            </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label class="lbl">Căn cứ / Kế hoạch liên quan</label>
+          <input id="pollReference" class="field" placeholder="Ví dụ: Kế hoạch số 45/KH-THPTHV">
+        </div>
+        <div>
+          <label class="lbl">Hạn chốt biểu quyết <b>*</b></label>
+          <div class="grid grid-cols-2 gap-2">
+            <input id="deadlineDate" type="date" required class="field">
+            <input id="deadlineTime" type="time" required class="field" value="17:00">
           </div>
         </div>
       </div>
 
-      <!-- 4 TAB NGHIỆP VỤ (BẤM VÀO ĐÂU ĐỔI FORM ĐẾN ĐÓ) -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div class="type-tab-btn active p-4 border bg-white flex items-start gap-3" data-mode="internal" onclick="setMode('internal')">
-          <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#075cad] flex items-center justify-center shrink-0 text-xl font-bold">
-            <i class="bi bi-ui-checks"></i>
-          </div>
-          <div>
-            <div class="font-black text-xs text-slate-800">Khảo sát Trường</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">Tạo câu hỏi trắc nghiệm & tự luận</div>
-          </div>
-        </div>
-
-        <div class="type-tab-btn p-4 border bg-white flex items-start gap-3" data-mode="poll" onclick="setMode('poll')">
-          <div class="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center shrink-0 text-xl font-bold">
-            <i class="bi bi-pie-chart-fill"></i>
-          </div>
-          <div>
-            <div class="font-black text-xs text-slate-800">Bình chọn nhanh</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">Biểu quyết Zalo thanh %</div>
-          </div>
-        </div>
-
-        <div class="type-tab-btn p-4 border bg-white flex items-start gap-3" data-mode="external" onclick="setMode('external')">
-          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 text-xl font-bold">
-            <i class="bi bi-link-45deg"></i>
-          </div>
-          <div>
-            <div class="font-black text-xs text-slate-800">Khảo sát từ Link</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">Triển khai & đôn đốc link Sở</div>
-          </div>
-        </div>
-
-        <div class="type-tab-btn p-4 border bg-white flex items-start gap-3" data-mode="report" onclick="setMode('report')">
-          <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 text-xl font-bold">
-            <i class="bi bi-table"></i>
-          </div>
-          <div>
-            <div class="font-black text-xs text-slate-800">Báo cáo số liệu</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">Thu thập chỉ tiêu theo cột</div>
-          </div>
-        </div>
+      <div>
+        <label class="lbl">Mô tả / Hướng dẫn thêm</label>
+        <textarea id="pollDescription" rows="2" class="field textarea-field resize-y" placeholder="Ghi chú thêm về các phương án để giáo viên nắm rõ..."></textarea>
       </div>
 
-      <!-- FORM NHẬP LIỆU CHÍNH (ĐỘC BẢN THEO TỪNG CHẾ ĐỘ) -->
-      <div class="card space-y-4">
-        <div>
-          <label class="lbl" id="titleLabel">Tiêu đề phát hành *</label>
-          <input id="title" class="field" placeholder="Nhập tiêu đề...">
-        </div>
-
-        <!-- RIÊNG CHO LINK SỞ -->
-        <div id="boxExternalUrl" class="hidden p-4 rounded-xl bg-emerald-50/70 border border-emerald-300 space-y-1.5">
-          <label class="lbl !text-emerald-900 !mb-0 flex items-center gap-1.5">
-            <i class="bi bi-link-45deg text-lg text-emerald-700"></i> Đường dẫn khảo sát ngoài (Google Form / Portal Sở) *
+      <!-- KHỐI SOẠN PHƯƠNG ÁN LỰA CHỌN -->
+      <div class="pt-2 border-t border-slate-100 space-y-3">
+        <div class="flex items-center justify-between">
+          <label class="lbl !mb-0">Danh sách các phương án bình chọn <b>*</b></label>
+          <label class="flex items-center gap-1.5 text-xs font-bold text-violet-900 cursor-pointer">
+            <input type="checkbox" id="pollMultiSelect" class="w-4 h-4 accent-violet-700"> Cho phép chọn nhiều phương án
           </label>
-          <input id="externalUrl" type="url" class="field !border-emerald-300" placeholder="https://forms.gle/... hoặc liên kết trực tuyến">
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div>
-            <label class="lbl">Căn cứ công văn / Kế hoạch</label>
-            <input id="referenceText" class="field" placeholder="Ví dụ: Công văn số 123/SGDĐT">
-          </div>
-          <div>
-            <label class="lbl">Hạn hoàn thành</label>
-            <div class="grid grid-cols-2 gap-2">
-              <input id="deadlineDate" type="date" class="field">
-              <input id="deadlineTime" type="time" class="field" value="17:00">
-            </div>
-          </div>
-        </div>
+        <div id="pollOptionCreatorList" class="space-y-2"></div>
 
-        <div>
-          <label class="lbl">Mô tả / Yêu cầu thực hiện</label>
-          <textarea id="description" rows="2" class="field resize-y" placeholder="Hướng dẫn cụ thể đối với giáo viên tiếp nhận..."></textarea>
-        </div>
-
-        <!-- RIÊNG CHO BÌNH CHỌN (POLL) -->
-        <div id="boxPollContent" class="hidden space-y-3 pt-2 border-t">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-black text-violet-800 uppercase">Danh sách phương án biểu quyết</span>
-            <label class="flex items-center gap-1.5 text-xs font-bold text-slate-700 cursor-pointer">
-              <input type="checkbox" id="pollMulti" class="w-4 h-4 accent-violet-600"> Cho phép chọn nhiều
-            </label>
-          </div>
-          <div id="pollOptionList" class="space-y-2"></div>
-          <button type="button" onclick="addPollOption()" class="text-xs font-bold text-violet-700 flex items-center gap-1">
-            <i class="bi bi-plus-circle-fill"></i> Thêm phương án
-          </button>
-        </div>
-
-        <!-- RIÊNG CHO BÁO CÁO CỘT SỐ LIỆU -->
-        <div id="boxReportContent" class="hidden space-y-3 pt-2 border-t">
-          <div class="text-xs font-black text-amber-800 uppercase">Danh mục các cột số liệu cần kê khai</div>
-          <div id="reportColumnList" class="space-y-2"></div>
-          <button type="button" onclick="addReportColumn()" class="text-xs font-bold text-amber-700 flex items-center gap-1">
-            <i class="bi bi-plus-circle-fill"></i> Thêm cột số liệu
-          </button>
-        </div>
-
-        <!-- RIÊNG CHO KHẢO SÁT NỘI BỘ (BUILDER) -->
-        <div id="boxInternalContent" class="space-y-3 pt-2 border-t">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-black text-[#075cad] uppercase">Danh sách câu hỏi khảo sát</span>
-            <button type="button" onclick="addQuestion()" class="h-8 px-3 rounded-lg bg-[#075cad] text-white text-xs font-bold">
-              <i class="bi bi-plus-lg mr-1"></i>Thêm câu hỏi
-            </button>
-          </div>
-          <div id="questionList" class="space-y-3"></div>
-        </div>
-      </div>
-
-      <!-- KHỐI CHỌN NGƯỜI NHẬN NHÂN SỰ -->
-      <div class="card space-y-3">
-        <div class="flex items-center justify-between border-b pb-2">
-          <div class="text-xs font-black uppercase text-slate-700 flex items-center gap-1.5">
-            <i class="bi bi-people-fill text-[#075cad]"></i> ĐỐI TƯỢNG TIẾP NHẬN PHÁT HÀNH
-          </div>
-          <span id="recipientCount" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-[#075cad]">0 người đã chọn</span>
-        </div>
-        <input id="peopleSearch" oninput="renderPersonnel()" class="field" placeholder="Gõ tìm nhanh theo tên, tổ, chức vụ...">
-        <div id="personnelBox" class="max-h-60 overflow-y-auto space-y-2 pr-1"></div>
-      </div>
-
-      <!-- THANH ĐIỀU PHỐI VÀ CHUYỂN TT PHÁT HÀNH -->
-      <div class="card bg-slate-900 text-white p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div>
-          <div class="text-sm font-black text-emerald-400 flex items-center gap-1.5">
-            <i class="bi bi-send-check-fill"></i> HOÀN TẤT & ĐIỀU PHỐI
-          </div>
-          <div class="text-xs text-slate-400 mt-0.5">Dữ liệu sẽ chuyển sang TT Phát Hành để Ban Giám hiệu ký duyệt.</div>
-        </div>
-        <button type="button" onclick="goPublishing()" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white text-xs font-black tracking-wide uppercase shadow-lg transition">
-          <i class="bi bi-arrow-right-circle-fill mr-1.5"></i>CHUYỂN TT PHÁT HÀNH
+        <button type="button" onclick="addCreatorPollOption()" class="text-xs font-bold text-violet-700 hover:text-violet-900 flex items-center gap-1 pt-1">
+          <i class="bi bi-plus-circle-fill"></i> Thêm phương án biểu quyết
         </button>
       </div>
+    </section>
 
+    <!-- ============================================================================== -->
+    <!-- KHỐI CHỌN NHÂN SỰ CHUẨN NGUYÊN BẢN TỪ CUOCHOP_CHUAN.TXT -->
+    <!-- ============================================================================== -->
+    <section class="panel-card overflow-hidden">
+      <div class="px-4 sm:px-5 py-4 border-b-2 border-slate-200 flex items-center justify-between gap-3">
+        <div class="section-title !mb-0"><i class="bi bi-people-fill"></i><span>Thành phần tham gia biểu quyết</span></div>
+        <div class="flex gap-2">
+          <span id="meetingStatTo" class="badge bg-indigo-50 text-indigo-800">0 nhóm</span>
+          <span id="meetingStatNguoi" class="badge bg-blue-50 text-[#0F4C81]">0 người</span>
+        </div>
+      </div>
+      <div class="p-4 sm:p-5 space-y-3">
+        <div class="relative">
+          <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+          <input id="meetingSearchNhanSu" oninput="filterMeetingNhanSu(this.value)" class="field pl-10" style="padding-left:2.75rem!important" placeholder="Tìm tổ hoặc giáo viên...">
+        </div>
+        <div id="meetingPersonnelContainer" class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+          <div class="py-6 text-center text-sm font-semibold text-slate-500">Đang tải danh sách nhân sự...</div>
+        </div>
+        <div class="border-t-2 border-slate-200 pt-3">
+          <div class="flex justify-between mb-2">
+            <span class="text-[12px] font-black text-[#0F4C81] uppercase">Đã chọn</span>
+            <button type="button" onclick="removeAllMeetingSelections()" class="text-[12px] font-extrabold text-red-600 hover:text-red-700">Xóa toàn bộ</button>
+          </div>
+          <div id="meetingSelectedChips" class="flex flex-wrap gap-2">
+            <span class="text-[12px] font-medium text-slate-500 italic">Chưa chọn người tham dự...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NÚT ĐIỀU PHỐI VÀ CHUYỂN TT PHÁT HÀNH -->
+    <section class="panel-card p-4 sm:p-5 bg-white">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button type="button" onclick="resetPollForm()" class="raised-btn raised-red">
+          <i class="bi bi-x-circle-fill"></i> LÀM LẠI
+        </button>
+        <button type="button" onclick="goToPublishing()" class="raised-btn raised-green">
+          <i class="bi bi-send-fill"></i> CHUYỂN TT PHÁT HÀNH
+        </button>
+      </div>
+    </section>
+
+  </form>
+</main>
+
+<!-- ============================================================================== -->
+<!-- SCRIPT: NHÚNG BỘ LÕI HVA_PERSONNEL.JS & LOGIC BÌNH CHỌN -->
+<!-- ============================================================================== -->
+<script src="HVA_Personnel.js"></script>
+<script>
+// CỔNG GATEWAY BACKEND ĐIỀU HÀNH SỐ
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+const PERSONNEL_SEARCH_API = WEB_APP_URL;
+
+let meetingAllToData = [];
+const meetingSelectedUsernames = new Set();
+let creatorPollOptions = ['Đồng ý', 'Không đồng ý'];
+let currentPollPayload = null;
+let myPollResponse = null;
+
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+// =========================================================
+// 1. NHẬN DIỆN TÀI KHOẢN ĐA NGUỒN CHUẨN XÁC
+// =========================================================
+function hvaCurrentUser() {
+  try {
+    if (window.HVAPersonnel && typeof window.HVAPersonnel.currentUser === 'function') {
+      const u = window.HVAPersonnel.currentUser();
+      if (u && (u.username || u.hoTen || u.name)) return u;
+    }
+    const s = localStorage.getItem('user') || sessionStorage.getItem('user') || localStorage.getItem('HVA_USER');
+    if (s) return JSON.parse(s);
+  } catch (_) {}
+  return window.HVA_CURRENT_USER || {};
+}
+
+// =========================================================
+// 2. ĐIỀU HƯỚNG VIEW: TẠO BÌNH CHỌN vs THỰC HIỆN BÌNH CHỌN
+// =========================================================
+window.addEventListener('DOMContentLoaded', async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const isRespond = urlParams.get('view') === 'respond' || Boolean(urlParams.get('id') || urlParams.get('publishId'));
+
+  if (isRespond) {
+    $('pollForm').classList.add('hidden');
+    $('viewRespondent').classList.remove('hidden');
+    await initRespondentPoll();
+  } else {
+    $('pollForm').classList.remove('hidden');
+    $('viewRespondent').classList.add('hidden');
+    initCreatorPoll();
+  }
+});
+
+// =========================================================
+// 3. KHỞI TẠO DÀNH CHO BGH/TTCM TẠO PHIẾU
+// =========================================================
+function initCreatorPoll() {
+  const me = hvaCurrentUser();
+  const username = String(me.username || me.userName || me.maGV || '').trim();
+
+  $('creatorName').textContent = me.hoTen || me.fullName || (username ? ('Đ/c ' + username) : 'Cán bộ phát hành');
+  $('creatorTeam').textContent = me.toBoPhan || me.tenTo || me.to || 'Ban Giám hiệu';
+  $('creatorUsername').textContent = username || '—';
+  $('creatorRoleBadge').textContent = me.chucVu || me.vaiTro || 'BGH / TTCM';
+
+  const d = new Date();
+  d.setDate(d.getDate() + 2);
+  $('deadlineDate').value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  renderCreatorPollOptions();
+  loadMeetingPersonnel();
+}
+
+function renderCreatorPollOptions() {
+  const box = $('pollOptionCreatorList');
+  box.innerHTML = creatorPollOptions.map((opt, i) => `
+    <div class="flex items-center gap-2">
+      <span class="w-6 text-center text-xs font-black text-violet-700">${i + 1}.</span>
+      <input class="field !h-10 text-xs flex-1" value="${esc(opt)}" oninput="creatorPollOptions[${i}] = this.value" placeholder="Nhập phương án biểu quyết ${i + 1}...">
+      ${creatorPollOptions.length > 2 ? `
+        <button type="button" onclick="creatorPollOptions.splice(${i}, 1); renderCreatorPollOptions()" class="text-slate-400 hover:text-rose-600 p-1">
+          <i class="bi bi-x-circle-fill text-base"></i>
+        </button>` : ''}
     </div>
+  `).join('');
+}
 
-  </main>
+function addCreatorPollOption() {
+  creatorPollOptions.push('');
+  renderCreatorPollOptions();
+}
 
-  <!-- ============================================================================== -->
-  <!-- CONTROLLER SCRIPT (ĐIỀU KHIỂN ĐỘC LẬP & TỐI ƯU GIAO DIỆN) -->
-  <!-- ============================================================================== -->
-  <script>
-    function getHvaGatewayUrl() {
-      return String(
-        window.HVA_API_URL || 
-        window.PERSONNEL_SEARCH_API || 
-        localStorage.getItem('hva_gateway_url') || 
-        'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec'
-      ).trim();
+function resetPollForm() {
+  if (!confirm('Làm mới lại toàn bộ biểu mẫu tạo bình chọn?')) return;
+  $('pollForm').reset();
+  creatorPollOptions = ['Đồng ý', 'Không đồng ý'];
+  renderCreatorPollOptions();
+  removeAllMeetingSelections();
+}
+
+function goToPublishing() {
+  const question = $('pollQuestion').value.trim();
+  if (!question) {
+    alert('Vui lòng nhập câu hỏi biểu quyết.');
+    $('pollQuestion').focus();
+    return;
+  }
+
+  const validOptions = creatorPollOptions.map(x => x.trim()).filter(Boolean);
+  if (validOptions.length < 2) {
+    alert('Vui lòng tạo ít nhất 2 phương án bình chọn.');
+    return;
+  }
+
+  if (meetingSelectedUsernames.size === 0) {
+    alert('Vui lòng chọn thành phần tham gia biểu quyết.');
+    return;
+  }
+
+  const d = new Date();
+  const stamp = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${String(Date.now()).slice(-6)}`;
+  const docId = 'BC-' + stamp;
+
+  const me = hvaCurrentUser();
+  const recipients = selectedPeople();
+
+  const payload = {
+    sourceModule: 'BinhChon',
+    moduleSource: 'BinhChon',
+    docId: docId,
+    title: question,
+    summary: $('pollDescription').value.trim() || question,
+    author: me.hoTen || me.fullName || 'Ban Giám hiệu',
+    documentType: 'POLL',
+    recipients: recipients.map(x => x.username),
+    recipientDetails: recipients,
+    destinations: ['BinhChon', 'ViecCuaToi'],
+    data: {
+      surveyId: docId,
+      objectType: 'POLL',
+      title: question,
+      description: $('pollDescription').value.trim(),
+      reference: $('pollReference').value.trim(),
+      deadlineDate: $('deadlineDate').value,
+      deadlineTime: $('deadlineTime').value,
+      multiPoll: $('pollMultiSelect').checked,
+      questions: [{
+        id: 'Q1',
+        kind: 'poll',
+        text: question,
+        options: validOptions,
+        required: true
+      }]
     }
+  };
 
-    let currentMode = 'internal';
-    let questions = [];
-    let pollOptions = ['Đồng ý', 'Không đồng ý'];
-    let reportColumns = ['Số tiết dạy thực hiện', 'Số học sinh tham gia'];
-    let qSeq = 0;
-    let hvaGroups = [];
-    let selectedRecipients = new Set();
-    let currentSurveyData = null;
-    let userPreviousResponse = null;
+  localStorage.setItem('TTDHS_CURRENT_DOC', JSON.stringify(payload));
+  location.href = 'TTPhatHanh.html';
+}
 
-    const $ = id => document.getElementById(id);
-    const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// =========================================================
+// 4. KHỐI GIÁO VIÊN BÌNH CHỌN KIỂU ZALO
+// =========================================================
+async function initRespondentPoll() {
+  const me = hvaCurrentUser();
+  const username = String(me.username || me.userName || me.maGV || '').trim();
 
-    // Nhận diện tài khoản đa nguồn
-    function currentUser() {
-      try {
-        if (window.HVAPersonnel && typeof window.HVAPersonnel.currentUser === 'function') {
-          const u = window.HVAPersonnel.currentUser();
-          if (u && (u.username || u.hoTen || u.name)) return u;
-        }
-        const s = localStorage.getItem('user') || sessionStorage.getItem('user') || localStorage.getItem('HVA_USER');
-        if (s) return JSON.parse(s);
-      } catch (_) {}
-      return window.HVA_CURRENT_USER || {};
+  $('gvName').textContent = me.hoTen || me.fullName || username || 'Giáo viên HVA';
+  $('gvTeam').textContent = me.toBoPhan || me.tenTo || 'Hội đồng';
+  $('gvRole').textContent = me.chucVu || 'Giáo viên';
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
+
+  if (!publishId) {
+    $('pollTitle').textContent = 'Không tìm thấy mã bình chọn trên liên kết!';
+    return;
+  }
+
+  try {
+    const u = new URL(WEB_APP_URL);
+    u.searchParams.set('action', 'getPublicationDetailV3');
+    u.searchParams.set('publishId', publishId);
+    u.searchParams.set('username', username);
+
+    const res = await fetch(u.toString(), { cache: 'no-store' });
+    const json = await res.json();
+    if (!json || !json.success) throw new Error(json?.message || 'Không tải được nội dung bình chọn.');
+
+    currentPollPayload = json.payload || {};
+    myPollResponse = json.myResponse || null;
+
+    renderRespondentPollView();
+  } catch (err) {
+    $('pollTitle').textContent = 'Lỗi kết nối: ' + err.message;
+  }
+}
+
+function renderRespondentPollView() {
+  const data = currentPollPayload.data || currentPollPayload;
+  const doc = currentPollPayload.document || {};
+
+  $('pollTitle').textContent = data.title || doc.title || 'Biểu quyết trực tuyến';
+  $('pollDesc').textContent = data.description \vert{}\vert{} '';$('pollAuthor').textContent = currentPollPayload.sender?.fullName || doc.author || 'Ban Giám hiệu';
+  $('pollDeadline').textContent = [data.deadlineDate, data.deadlineTime].filter(Boolean).join(' • ') || 'Không giới hạn';
+
+  const q = (data.questions && data.questions[0]) || { options: ['Đồng ý', 'Không đồng ý'] };
+  const oldAnswers = myPollResponse?.answers?.find(a => String(a.questionId) === String(q.id))?.answer || [];
+
+  const box = $('pollOptionBox');
+  box.innerHTML = '';
+
+  (q.options || []).forEach(opt => {
+    const isChecked = oldAnswers.includes(opt);
+    const div = document.createElement('div');
+    div.className = `zalo-bar-item flex items-center justify-between ${isChecked ? 'selected' : ''}`;
+    div.innerHTML = `
+      <div class="zalo-bar-fill" style="width:${isChecked ? '100%' : '0%'}"></div>
+      <div class="flex items-center gap-2.5 z-10">
+        <input type="${data.multiPoll ? 'checkbox' : 'radio'}" name="poll_choice" value="${esc(opt)}" ${isChecked ? 'checked' : ''} class="w-4 h-4 accent-violet-700">
+        <span class="text-xs font-bold text-slate-800">${esc(opt)}</span>
+      </div>
+    `;
+    div.onclick = (e) => {
+      if (e.target.tagName !== 'INPUT') {
+        const inp = div.querySelector('input');
+        inp.checked = !inp.checked;
+      }
+      div.classList.toggle('selected', div.querySelector('input').checked);
+    };
+    box.appendChild(div);
+  });
+
+  if (myPollResponse && myPollResponse.status) {
+    $('pollStatusBadge').className = 'text-xs font-extrabold text-emerald-700';$('pollStatusBadge').textContent = '✓ ' + myPollResponse.status;
+    $('boxSubmittedAck').classList.remove('hidden');$('submittedTimeText').textContent = 'Đã biểu quyết lúc: ' + (myPollResponse.updatedAt || 'trước đây');
+  }
+}
+
+async function submitPollVote() {
+  const me = hvaCurrentUser();
+  const username = String(me.username || me.userName || me.maGV || '').trim();
+  if (!username) return alert('Không xác định được phiên làm việc của Thầy/Cô.');
+
+  const nodes = [...$('pollOptionBox').querySelectorAll('input[name="poll_choice"]')];
+  const chosen = nodes.filter(n => n.checked).map(n => n.value.trim());
+
+  if (!chosen.length) return alert('Vui lòng chọn ít nhất 1 phương án biểu quyết.');
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
+
+  const btn = $('btnSubmitPoll');
+  btn.disabled = true;
+  btn.innerHTML = 'ĐANG GỬI...';
+
+  try {
+    const res = await fetch(WEB_APP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'submitSurveyPollResponse',
+        publishId: publishId,
+        surveyId: publishId,
+        username: username,
+        fullName: me.hoTen || me.fullName || username,
+        department: me.toBoPhan || me.tenTo || '',
+        status: 'ĐÃ HOÀN THÀNH',
+        answers: [{ questionId: 'Q1', question: $('pollTitle').textContent, answer: chosen }]
+      })
+    });
+    const r = await res.json();
+    if (!r.success) throw new Error(r.message || 'Lỗi gửi phản hồi.');
+    alert('Gửi biểu quyết thành công!');
+    location.reload();
+  } catch (e) {
+    alert('Lỗi: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-send-check-fill mr-1.5"></i>GỬI BIỂU QUYẾT';
+  }
+}
+
+// ==============================================================================
+// 5. TOÀN BỘ LOGIC RENDER NHÂN SỰ CHUẨN TỪ CUOCHOP_CHUAN.TXT
+// ==============================================================================
+async function loadMeetingPersonnel(){
+  const c = $('meetingPersonnelContainer');
+  if(!c) return;
+
+  c.innerHTML = '<div class="py-5 text-center text-sm text-slate-400"><i class="bi bi-arrow-repeat animate-spin mr-1"></i>Đang đồng bộ Nhân sự HVA...</div>';
+
+  try{
+    if(!window.HVAPersonnel || typeof window.HVAPersonnel.buildGroups !== 'function'){
+      throw Error('HVA_PERSONNEL_CORE_NOT_READY');
     }
+    meetingAllToData = await window.HVAPersonnel.buildGroups();
+    renderMeetingPersonnel();
+  }catch(e){
+    console.error('[HVA Personnel]', e);
+    c.innerHTML = `<div class="p-5 text-center text-sm text-red-500 font-bold">${esc(e.message)}<br><button type="button" onclick="loadMeetingPersonnel()" class="mt-3 px-3 py-2 rounded-lg border border-blue-200 text-[#0F4C81]">Thử lại</button></div>`;
+  }
+}
 
-    window.addEventListener('DOMContentLoaded', async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const isRespondView = urlParams.get('view') === 'respond' || Boolean(urlParams.get('id') || urlParams.get('publishId'));
+function hashMeetingGroup(s) {
+  let h = 0;
+  for (const ch of String(s || '')) h = ((h << 5) - h) + ch.charCodeAt(0) | 0;
+  return h;
+}
 
-      if (isRespondView) {
-        $('viewCreator').classList.add('hidden');
-        $('viewRespondent').classList.remove('hidden');
-        await initRespondentView();
-      } else {
-        $('viewCreator').classList.remove('hidden');
-        $('viewRespondent').classList.add('hidden');
-        initCreatorView();
+function meetingPersonRows(g, show) {
+  return show.map(m => `
+    <label class="flex items-center gap-3 px-3 py-2.5 rounded-xl border ${meetingSelectedUsernames.has(m.username) ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white'}">
+      <input type="checkbox" class="shrink-0 w-5 h-5 accent-[#0F4C81]" ${meetingSelectedUsernames.has(m.username) ? 'checked' : ''} onchange="toggleMeetingUser('${esc(m.username)}',this.checked)">
+      <div class="min-w-0 flex-1">
+        <div class="text-[14px] sm:text-[15px] font-extrabold text-slate-800 truncate">${esc(m.hoTen)}</div>
+        <div class="text-[12px] sm:text-[13px] font-medium text-slate-500 truncate mt-0.5">
+          ${m.lopChuNhiem ? 'GVCN ' + esc(m.lopChuNhiem) + ' · ' : ''}${esc(m.chucVu)}${m.tenTo ? ' · ' + esc(m.tenTo) : ''}
+        </div>
+      </div>
+    </label>
+  `).join('');
+}
+
+function meetingNormalGroupRow(g, kw) {
+  const mm = g.members.filter(m => [m.hoTen, m.username, m.chucVu, m.tenTo].some(v => String(v || '').toLowerCase().includes(kw)));
+  const matchG = String(g.tenTo || '').toLowerCase().includes(kw);
+  if (kw && !matchG && !mm.length) return '';
+
+  const show = kw && !matchG ? mm : g.members;
+  const all = g.members.length > 0 && g.members.every(m => meetingSelectedUsernames.has(m.username));
+  const id = 'mg_' + Math.abs(hashMeetingGroup(g.groupKey));
+
+  return `
+    <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+      <div class="min-h-[58px] px-3 sm:px-4 py-2.5 flex items-center gap-3">
+        <button type="button" onclick="$('${id}').classList.toggle('hidden')" class="min-w-0 flex-1 flex items-center gap-2 text-left">
+          <i class="bi bi-chevron-right shrink-0 text-slate-400 text-[13px]"></i>
+          <span class="min-w-0 flex-1">
+            <span class="text-[14px] sm:text-[15px] font-extrabold text-[#0F4C81]">${esc(g.tenTo)}</span>
+            <span class="ml-1 text-[12px] sm:text-[13px] font-bold text-slate-500">(${g.members.length} người)</span>
+          </span>
+        </button>
+        <label class="shrink-0 min-w-[112px] h-9 px-2.5 rounded-xl border border-slate-200 bg-white flex items-center justify-center gap-2 text-[11px] font-bold text-slate-700 cursor-pointer">
+          <input type="checkbox" class="m-0 shrink-0 w-5 h-5 accent-[#0F4C81]" ${all ? 'checked' : ''} onchange="toggleMeetingWholeGroup('${encodeURIComponent(g.groupKey)}',this.checked)">
+          <span>Chọn nhóm</span>
+        </label>
+      </div>
+      <div id="${id}" class="${kw ? '' : 'hidden'} p-2 sm:p-3 grid grid-cols-1 sm:grid-cols-2 gap-2 border-t border-slate-100 bg-slate-50/60">
+        ${meetingPersonRows(g, show)}
+      </div>
+    </div>
+  `;
+}
+
+function meetingSpecialCard(g, type, kw) {
+  const titleMatch = String(g.tenTo || '').toLowerCase().includes(kw);
+  const memberMatch = g.members.some(m => [m.hoTen, m.username, m.chucVu, m.tenTo].some(v => String(v || '').toLowerCase().includes(kw)));
+  if (kw && !titleMatch && !memberMatch) return '';
+
+  const all = g.members.length > 0 && g.members.every(m => meetingSelectedUsernames.has(m.username));
+  const config = {
+    COUNCIL: { wrap: 'border-violet-200 bg-gradient-to-r from-violet-50 to-purple-50', iconBox: 'bg-violet-100 text-violet-700', icon: 'bi-people-fill', title: 'text-violet-800', subtitle: 'BGH + 07 Tổ chuyên môn + Tổ Văn phòng', check: 'accent-violet-600', button: 'border-violet-200 text-violet-800 bg-white' },
+    CHIBO: { wrap: 'border-red-200 bg-gradient-to-r from-red-50 to-rose-50', iconBox: 'bg-red-100 text-red-600', icon: 'bi-circle-fill', title: 'text-red-700', subtitle: 'Chi bộ', check: 'accent-red-600', button: 'border-red-200 text-red-700 bg-white' },
+    BGH: { wrap: 'border-blue-200 bg-gradient-to-r from-blue-50 to-sky-50', iconBox: 'bg-blue-100 text-blue-700', icon: 'bi-person-badge-fill', title: 'text-blue-800', subtitle: 'Ban Giám hiệu', check: 'accent-blue-600', button: 'border-blue-200 text-blue-800 bg-white' }
+  }[type];
+
+  const buttonText = type === 'COUNCIL' ? 'Chọn Hội đồng' : 'Chọn nhóm';
+
+  return `
+    <div class="rounded-2xl border ${config.wrap} shadow-sm overflow-hidden">
+      <div class="px-3 sm:px-4 py-3 flex items-center gap-3">
+        <div class="shrink-0 w-10 h-10 rounded-xl ${config.iconBox} flex items-center justify-center shadow-sm">
+          <i class="bi ${config.icon} text-[18px]"></i>
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span class="text-[15px] sm:text-[16px] font-black uppercase tracking-wide ${config.title}">${esc(g.tenTo)}</span>
+            <span class="text-[12px] sm:text-[13px] font-extrabold text-slate-600">(${g.members.length} người)</span>
+          </div>
+          <div class="mt-0.5 text-[11px] sm:text-[12px] font-semibold text-slate-500">${config.subtitle}</div>
+        </div>
+        <label class="shrink-0 min-w-[118px] h-9 px-2.5 rounded-xl border ${config.button} flex items-center justify-center gap-2 text-[11px] font-bold cursor-pointer">
+          <input type="checkbox" class="m-0 shrink-0 w-5 h-5 ${config.check}" ${all ? 'checked' : ''} onchange="toggleMeetingWholeGroup('${encodeURIComponent(g.groupKey)}',this.checked)">
+          <span>${buttonText}</span>
+        </label>
+      </div>
+    </div>
+  `;
+}
+
+function meetingSection(title, icon, groups, kw) {
+  if (!groups.length) return '';
+  const rows = groups.map(g => meetingNormalGroupRow(g, kw)).join('');
+  if (!rows) return '';
+
+  return `
+    <div class="rounded-2xl border border-slate-200 overflow-hidden bg-white">
+      <div class="px-3 sm:px-4 py-2.5 bg-slate-100 border-b border-slate-200">
+        <div class="text-[12px] sm:text-[13px] font-black uppercase tracking-wide text-slate-700">
+          <i class="bi ${icon} mr-1.5"></i>${esc(title)}
+        </div>
+      </div>
+      <div class="p-2 sm:p-3 space-y-2">${rows}</div>
+    </div>
+  `;
+}
+
+function renderMeetingPersonnel(keyword = '') {
+  const c = $('meetingPersonnelContainer');
+  const kw = String(keyword || '').trim().toLowerCase();
+
+  const openedGroupIds = new Set([...c.querySelectorAll('[id^="mg_"]')].filter(el => !el.classList.contains('hidden')).map(el => el.id));
+
+  const council = meetingAllToData.find(g => g.kind === 'COUNCIL');
+  const chiBo = meetingAllToData.find(g => g.groupKey === 'CHIBO');
+  const bgh = meetingAllToData.find(g => g.groupKey === 'BGH');
+
+  const teams = meetingAllToData.filter(g => g.kind === 'TEAM');
+  const gvcn = meetingAllToData.filter(g => g.kind === 'GVCN');
+  const work = meetingAllToData.filter(g => g.kind === 'WORKGROUP');
+
+  const html = [
+    council ? meetingSpecialCard(council, 'COUNCIL', kw) : '',
+    chiBo ? meetingSpecialCard(chiBo, 'CHIBO', kw) : '',
+    bgh ? meetingSpecialCard(bgh, 'BGH', kw) : '',
+    meetingSection('Tổ / Bộ phận', 'bi-grid-3x3-gap-fill', teams, kw),
+    meetingSection('GVCN', 'bi-person-badge-fill', gvcn, kw),
+    meetingSection('Nhóm công tác khác', 'bi-collection-fill', work, kw)
+  ].join('');
+
+  c.innerHTML = html || '<div class="p-6 text-center text-sm text-slate-400">Không tìm thấy nhân sự phù hợp.</div>';
+
+  openedGroupIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('hidden');
+  });
+
+  updateMeetingSelectionUI();
+}
+
+function toggleMeetingWholeGroup(encodedKey, on) {
+  const key = decodeURIComponent(encodedKey);
+  const g = meetingAllToData.find(x => x.groupKey === key);
+  if (!g) return;
+
+  g.members.forEach(m => {
+    if (on) meetingSelectedUsernames.add(m.username);
+    else meetingSelectedUsernames.delete(m.username);
+  });
+
+  renderMeetingPersonnel($('meetingSearchNhanSu').value);
+}
+
+function toggleMeetingUser(u, on) {
+  if (on) meetingSelectedUsernames.add(u);
+  else meetingSelectedUsernames.delete(u);
+
+  const search = $('meetingSearchNhanSu');
+  if (search) search.value = '';
+  renderMeetingPersonnel('');
+}
+
+function filterMeetingNhanSu(v) {
+  renderMeetingPersonnel(v);
+}
+
+function removeAllMeetingSelections() {
+  meetingSelectedUsernames.clear();
+  renderMeetingPersonnel($('meetingSearchNhanSu').value);
+}
+
+function removeMeetingSelectedUser(username) {
+  meetingSelectedUsernames.delete(String(username || ''));
+  renderMeetingPersonnel($('meetingSearchNhanSu').value);
+}
+
+function removeMeetingSelectedGroup(encodedKey) {
+  const key = decodeURIComponent(encodedKey || '');
+  const g = meetingAllToData.find(x => x.groupKey === key);
+  if (g) g.members.forEach(m => meetingSelectedUsernames.delete(m.username));
+  renderMeetingPersonnel($('meetingSearchNhanSu').value);
+}
+
+function selectedPeople() {
+  const map = new Map();
+  meetingAllToData.forEach(g => {
+    g.members.forEach(m => {
+      if (meetingSelectedUsernames.has(m.username) && !map.has(m.username)) {
+        map.set(m.username, m);
       }
     });
+  });
+  return [...map.values()];
+}
 
-    // 1. CHUYỂN TAB TÁC VỤ THÔNG MINH
-    function setMode(m) {
-      currentMode = m;
-      document.querySelectorAll('.type-tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === m));
+function updateMeetingSelectionUI() {
+  const c = $('meetingSelectedChips');
+  c.innerHTML = '';
 
-      const meta = {
-        internal: { title: 'Tiêu đề khảo sát *', ph: 'Ví dụ: Khảo sát nhu cầu tập huấn chuyên môn năm học 2026-2027' },
-        poll: { title: 'Nội dung bình chọn / biểu quyết *', ph: 'Ví dụ: Phương án tổ chức ngày hội Tiếng Anh toàn trường' },
-        external: { title: 'Tên đợt khảo sát (theo công văn) *', ph: 'Ví dụ: Khảo sát trực tuyến theo Công văn 1234/SGDĐT' },
-        report: { title: 'Tên biểu mẫu báo cáo số liệu *', ph: 'Ví dụ: Báo cáo số liệu chuyên môn học kỳ 1' }
-      }[m];
+  if (!meetingSelectedUsernames.size) {
+    c.innerHTML = '<span class="text-[11px] text-slate-400 italic">Chưa chọn người tham dự...</span>';
+  } else {
+    const council = meetingAllToData.find(g => g.groupKey === 'COUNCIL:ALL');
+    const councilFull = council && council.members.length > 0 && council.members.every(m => meetingSelectedUsernames.has(m.username));
+    const covered = new Set();
 
-      $('titleLabel').textContent = meta.title;
-      $('title').placeholder = meta.ph;
+    if (councilFull) {
+      council.members.forEach(m => covered.add(m.username));
+      const s = document.createElement('span');
+      s.className = 'chip bg-violet-100 text-violet-800 border border-violet-200 font-bold inline-flex items-center gap-2';
+      s.innerHTML = `<span>Hội đồng (${council.members.length} người)</span><button type="button" class="chip-remove" title="Bỏ Hội đồng">×</button>`;
+      s.querySelector('button').onclick = () => removeMeetingSelectedGroup(encodeURIComponent(council.groupKey));
+      c.appendChild(s);
+    } else {
+      const selectableGroups = meetingAllToData.filter(g => g.groupKey === 'CHIBO' || g.groupKey === 'BGH' || g.kind === 'TEAM' || g.kind === 'GVCN' || g.kind === 'WORKGROUP');
+      selectableGroups.forEach(g => {
+        const full = g.members.length > 0 && g.members.every(m => meetingSelectedUsernames.has(m.username));
+        if (!full) return;
+        const hasNew = g.members.some(m => !covered.has(m.username));
+        if (!hasNew) return;
 
-      // Ẩn hiện chuyên biệt từng phần
-      $('boxExternalUrl').classList.toggle('hidden', m !== 'external');
-      $('boxInternalContent').classList.toggle('hidden', m !== 'internal');
-      $('boxPollContent').classList.toggle('hidden', m !== 'poll');
-      $('boxReportContent').classList.toggle('hidden', m !== 'report');
+        g.members.forEach(m => covered.add(m.username));
+        const s = document.createElement('span');
+        s.className = 'chip bg-indigo-50 text-indigo-700 inline-flex items-center gap-2';
+        s.innerHTML = `<span>${esc(g.tenTo)} (${g.members.length})</span><button type="button" class="chip-remove" title="Bỏ nhóm">×</button>`;
+        s.querySelector('button').onclick = () => removeMeetingSelectedGroup(encodeURIComponent(g.groupKey));
+        c.appendChild(s);
+      });
 
-      if (m === 'poll') renderPollOptions();
-      if (m === 'report') renderReportColumns();
-      if (m === 'internal' && !questions.length) addQuestion('single');
+      selectedPeople().forEach(m => {
+        if (covered.has(m.username)) return;
+        const s = document.createElement('span');
+        s.className = 'chip bg-blue-50 text-[#0F4C81] inline-flex items-center gap-2';
+        s.innerHTML = `<span>${esc(m.hoTen)}</span><button type="button" class="chip-remove" title="Bỏ">×</button>`;
+        s.querySelector('button').onclick = () => removeMeetingSelectedUser(m.username);
+        c.appendChild(s);
+      });
     }
+  }
 
-    // 2. KHỐI TẠO BÌNH CHỌN (POLL)
-    function renderPollOptions() {
-      const box = $('pollOptionList');
-      box.innerHTML = pollOptions.map((opt, i) => `
-        <div class="flex items-center gap-2">
-          <span class="w-6 text-center text-xs font-black text-violet-600">${i + 1}.</span>
-          <input class="field !min-h-[38px] !py-1 text-xs flex-1" value="${esc(opt)}" oninput="pollOptions[${i}] = this.value" placeholder="Phương án ${i + 1}...">
-          ${pollOptions.length > 2 ? `<button type="button" onclick="pollOptions.splice(${i}, 1); renderPollOptions()" class="text-slate-400 hover:text-rose-500 p-1"><i class="bi bi-x-lg"></i></button>` : ''}
-        </div>
-      `).join('');
-    }
-    function addPollOption() { pollOptions.push(''); renderPollOptions(); }
+  let groups = 0;
+  const council = meetingAllToData.find(g => g.groupKey === 'COUNCIL:ALL');
+  const councilFull = council && council.members.length > 0 && council.members.every(m => meetingSelectedUsernames.has(m.username));
+  if (councilFull) {
+    groups = 1;
+  } else {
+    groups = meetingAllToData.filter(g => g.kind !== 'COUNCIL').filter(g => g.members.length > 0 && g.members.every(m => meetingSelectedUsernames.has(m.username))).length;
+  }
 
-    // 3. KHỐI TẠO BÁO CÁO CỘT (REPORT)
-    function renderReportColumns() {
-      const box = $('reportColumnList');
-      box.innerHTML = reportColumns.map((col, i) => `
-        <div class="flex items-center gap-2">
-          <span class="w-14 text-xs font-black text-amber-700">Cột ${i + 1}:</span>
-          <input class="field !min-h-[38px] !py-1 text-xs flex-1" value="${esc(col)}" oninput="reportColumns[${i}] = this.value" placeholder="Tên chỉ tiêu số liệu...">
-          ${reportColumns.length > 1 ? `<button type="button" onclick="reportColumns.splice(${i}, 1); renderReportColumns()" class="text-slate-400 hover:text-rose-500 p-1"><i class="bi bi-x-lg"></i></button>` : ''}
-        </div>
-      `).join('');
-    }
-    function addReportColumn() { reportColumns.push(''); renderReportColumns(); }
-
-    // 4. KHỐI KHẢO SÁT NỘI BỘ (BUILDER)
-    function addQuestion(kind) {
-      questions.push({ id: ++qSeq, kind: kind || 'single', text: '', options: ['Đồng ý', 'Không đồng ý'], required: true });
-      renderQuestions();
-    }
-    function renderQuestions() {
-      const box = $('questionList');
-      if (!questions.length) {
-        box.innerHTML = '<div class="py-3 text-center text-xs text-slate-400">Chưa có câu hỏi nào.</div>';
-        return;
-      }
-      box.innerHTML = questions.map((q, idx) => `
-        <div class="rounded-xl border border-slate-200 p-3 bg-slate-50/50 space-y-2">
-          <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded bg-blue-100 text-[#075cad] flex items-center justify-center text-xs font-black">${idx + 1}</span>
-            <input class="field flex-1 !min-h-[36px]" value="${esc(q.text)}" oninput="questions[${idx}].text = this.value" placeholder="Nội dung câu hỏi...">
-            <button type="button" onclick="questions.splice(${idx}, 1); renderQuestions()" class="text-rose-500 hover:text-rose-700 p-1"><i class="bi bi-trash3"></i></button>
-          </div>
-          <div class="flex items-center gap-3">
-            <select class="field !min-h-[34px] !py-1 text-xs w-44" onchange="questions[${idx}].kind = this.value; renderQuestions()">
-              <option value="single" ${q.kind === 'single' ? 'selected' : ''}>Một lựa chọn (Radio)</option>
-              <option value="multi" ${q.kind === 'multi' ? 'selected' : ''}>Nhiều lựa chọn (Checkbox)</option>
-              <option value="text" ${q.kind === 'text' ? 'selected' : ''}>Tự luận / Trả lời ngắn</option>
-            </select>
-            <label class="flex items-center gap-1.5 text-xs font-bold text-slate-700 cursor-pointer">
-              <input type="checkbox" ${q.required ? 'checked' : ''} onchange="questions[${idx}].required = this.checked" class="w-3.5 h-3.5 accent-[#075cad]"> Bắt buộc
-            </label>
-          </div>
-          ${['single', 'multi'].includes(q.kind) ? `
-          <div class="space-y-1.5 pt-1 pl-8">
-            ${q.options.map((o, oIdx) => `
-              <div class="flex items-center gap-2">
-                <span class="text-slate-400 text-xs">${q.kind === 'multi' ? '□' : '○'}</span>
-                <input class="field !min-h-[32px] !py-1 text-xs" value="${esc(o)}" oninput="questions[${idx}].options[${oIdx}] = this.value" placeholder="Phương án ${oIdx + 1}">
-                ${q.options.length > 2 ? `<button type="button" onclick="questions[${idx}].options.splice(${oIdx}, 1); renderQuestions()" class="text-slate-400 hover:text-rose-500"><i class="bi bi-x-lg"></i></button>` : ''}
-              </div>
-            `).join('')}
-            <button type="button" onclick="questions[${idx}].options.push(''); renderQuestions()" class="text-xs font-bold text-[#075cad] mt-1"><i class="bi bi-plus-circle mr-1"></i>Thêm phương án</button>
-          </div>` : ''}
-        </div>
-      `).join('');
-    }
-
-    // 5. KHỞI TẠO TẠO PHIẾU
-    function initCreatorView() {
-      const me = currentUser();
-      const username = String(me.username || me.userName || me.maGV || '').trim();
-
-      $('creatorName').textContent = me.hoTen || me.fullName || me.name || (username ? ('Đ/c ' + username) : 'Cán bộ quản trị');
-      $('creatorTeam').textContent = me.toBoPhan || me.tenTo || me.to || 'Ban Giám hiệu';
-      $('creatorUsername').textContent = username \vert{}\vert{} 'admin';$('creatorRoleBadge').textContent = me.chucVu || me.vaiTro || 'BGH / TTCM';
-
-      const d = new Date();
-      d.setDate(d.getDate() + 2);
-      $('deadlineDate').value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-
-      setMode('internal');
-      loadPersonnelViaCore();
-    }
-
-    async function loadPersonnelViaCore() {
-      const box = $('personnelBox');
-      box.innerHTML = '<div class="text-xs text-slate-500 p-2"><i class="bi bi-arrow-repeat animate-spin mr-1"></i>Đang tải nhân sự HVA...</div>';
-      try {
-        hvaGroups = await window.HVAPersonnel.buildGroups();
-        renderPersonnel();
-      } catch (e) {
-        box.innerHTML = `<div class="text-xs text-rose-600 p-2">Lỗi nạp nhân sự: ${e.message}</div>`;
-      }
-    }
-
-    function renderPersonnel() {
-      const q = ($('peopleSearch')?.value || '').trim().toLowerCase();
-      const box = $('personnelBox');
-
-      const filtered = hvaGroups.map(g => {
-        const ms = (g.members || []).filter(m => !q || `${m.hoTen} ${m.tenTo} ${m.chucVu} ${m.username}`.toLowerCase().includes(q));
-        return { ...g, filteredMembers: ms };
-      }).filter(g => g.filteredMembers.length > 0);
-
-      if (!filtered.length) {
-        box.innerHTML = '<div class="text-xs text-slate-400 p-2">Không tìm thấy nhân sự phù hợp.</div>';
-        return;
-      }
-
-      box.innerHTML = filtered.map((g, gIdx) => {
-        const ms = g.filteredMembers;
-        const allSel = ms.length > 0 && ms.every(m => selectedRecipients.has(m.username));
-        return `
-          <div class="rounded-xl border border-slate-200 overflow-hidden bg-white">
-            <div class="p-2 bg-slate-50 flex items-center justify-between text-xs">
-              <span class="font-black text-[#075cad]">${esc(g.tenTo)} (${ms.length})</span>
-              <button type="button" onclick="toggleGroupCore(${gIdx})" class="font-bold text-blue-600 hover:underline">
-                ${allSel ? 'Bỏ chọn' : 'Chọn cả nhóm'}
-              </button>
-            </div>
-            <div class="p-2 grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-              ${ms.map(m => `
-                <label class="flex items-center gap-2 p-1 rounded hover:bg-slate-50 cursor-pointer text-xs">
-                  <input type="checkbox" ${selectedRecipients.has(m.username) ? 'checked' : ''} onchange="togglePerson('${esc(m.username)}', this.checked)" class="w-3.5 h-3.5 accent-[#075cad]">
-                  <span class="truncate"><b>${esc(m.hoTen)}</b> <span class="text-slate-400 text-[10px]">(${esc(m.chucVu)})</span></span>
-                </label>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }).join('');
-      $('recipientCount').textContent = `${selectedRecipients.size} người đã chọn`;
-    }
-
-    function togglePerson(u, on) {
-      if (on) selectedRecipients.add(u); else selectedRecipients.delete(u);
-      renderPersonnel();
-    }
-    function toggleGroupCore(idx) {
-      const g = hvaGroups[idx];
-      if (!g) return;
-      const ms = g.members || [];
-      const allSel = ms.every(m => selectedRecipients.has(m.username));
-      ms.forEach(m => allSel ? selectedRecipients.delete(m.username) : selectedRecipients.add(m.username));
-      renderPersonnel();
-    }
-
-    // 6. CHUYỂN SANG TRUNG TÂM PHÁT HÀNH
-    function goPublishing() {
-      const title = $('title').value.trim();
-      if (!title) return alert('Vui lòng nhập tiêu đề!');
-      if (!selectedRecipients.size) return alert('Vui lòng chọn ít nhất một người nhận.');
-      if (currentMode === 'external' && !$('externalUrl').value.trim()) return alert('Vui lòng nhập link khảo sát!');
-
-      const d = new Date();
-      const stamp = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${String(Date.now()).slice(-6)}`;
-      const prefix = { internal: 'KS-', poll: 'BC-', external: 'LK-', report: 'BCSL-' }[currentMode];
-      const docId = prefix + stamp;
-
-      const user = currentUser();
-      const allMap = new Map();
-      hvaGroups.forEach(g => (g.members || []).forEach(m => allMap.set(m.username, m)));
-      const rList = [...selectedRecipients].map(u => allMap.get(u) || { username: u, hoTen: u });
-
-      let finalQ = [];
-      if (currentMode === 'internal') finalQ = questions;
-      else if (currentMode === 'poll') finalQ = [{ id: 'Q1', kind: 'poll', text: title, options: pollOptions.filter(Boolean), required: true }];
-      else if (currentMode === 'report') finalQ = reportColumns.filter(Boolean).map((c, i) => ({ id: `COL_${i+1}`, kind: 'text', text: c, required: true }));
-
-      const payload = {
-        sourceModule: 'KhaoSatBinhChon',
-        docId: docId,
-        title: title,
-        summary: $('description').value.trim() || title,
-        author: user.fullName || user.hoTen || 'Ban Giám hiệu',
-        documentType: currentMode === 'poll' ? 'POLL' : 'SURVEY',
-        recipients: rList,
-        destinations: ['KhaoSatBinhChon'],
-        data: {
-          surveyId: docId,
-          objectType: currentMode === 'poll' ? 'POLL' : 'SURVEY',
-          surveyType: currentMode,
-          title: title,
-          description: $('description').value.trim(),
-          reference: $('referenceText').value.trim(),
-          externalUrl: $('externalUrl').value.trim(),
-          multiPoll: $('pollMulti') ?$('pollMulti').checked : false,
-          deadlineDate: $('deadlineDate').value,
-          deadlineTime: $('deadlineTime').value,
-          questions: finalQ
-        }
-      };
-
-      localStorage.setItem('TTDHS_CURRENT_DOC', JSON.stringify(payload));
-      location.href = 'TTPhatHanh.html';
-    }
-
-    // 7. KHỐI LÀM BÀI PHÍA GIÁO VIÊN
-    async function initRespondentView() {
-      const me = currentUser();
-      const username = String(me.username || me.userName || me.maGV || '').trim();
-
-      $('gvName').textContent = me.hoTen || me.fullName || username || 'Giáo viên HVA';
-      $('gvTeam').textContent = me.toBoPhan || me.tenTo || 'Hội đồng';
-      $('gvRole').textContent = me.chucVu || 'Giáo viên';
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
-      if (!publishId) {
-        $('surveyTitle').textContent = 'Không tìm thấy mã khảo sát!';
-        return;
-      }
-
-      try {
-        const u = new URL(getHvaGatewayUrl());
-        u.searchParams.set('action', 'getPublicationDetailV3');
-        u.searchParams.set('publishId', publishId);
-        u.searchParams.set('username', username);
-
-        const res = await fetch(u.toString(), { cache: 'no-store' });
-        const json = await res.json();
-        if (!json || !json.success) throw new Error(json?.message || 'Không tải được.');
-
-        currentSurveyData = json.payload || {};
-        userPreviousResponse = json.myResponse || null;
-
-        renderRespondentForm(currentSurveyData, userPreviousResponse);
-      } catch (err) {
-        $('surveyTitle').textContent = 'Lỗi kết nối: ' + err.message;
-      }
-    }
-
-    function renderRespondentForm(survey, myResp) {
-      const data = survey.data || survey;
-      const doc = survey.document || {};
-
-      $('surveyTitle').textContent = data.title || doc.title;
-      $('surveyDesc').textContent = data.description \vert{}\vert{} '';$('surveyAuthor').textContent = survey.sender?.fullName || 'BGH / TTCM';
-      $('surveyDeadline').textContent = [data.deadlineDate, data.deadlineTime].filter(Boolean).join(' • ') || 'Không giới hạn';
-
-      const isExternal = (data.surveyType === 'external' || /^https?:\/\//i.test(data.externalUrl));
-      const isPoll = (data.objectType === 'POLL');
-      $('surveyTypeBadge').textContent = isExternal ? 'LINK SỞ' : (isPoll ? 'BÌNH CHỌN' : 'KHẢO SÁT');
-
-      const f = $('formSurveyQuestions');
-      f.innerHTML = '';
-
-      if (isExternal) {
-        f.innerHTML = `
-          <div class="rounded-2xl border border-blue-200 bg-blue-50/70 p-5 space-y-3">
-            <div class="text-sm font-bold text-slate-800">Liên kết khảo sát chính thức</div>
-            <a href="${esc(data.externalUrl)}" target="_blank" rel="noopener" class="inline-flex items-center justify-center w-full px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow transition">
-              <i class="bi bi-box-arrow-up-right mr-2"></i>MỞ BIỂU MẪU KHẢO SÁT
-            </a>
-          </div>`;
-      } else {
-        (data.questions || []).forEach((q, idx) => {
-          const card = document.createElement('div');
-          card.className = 'card space-y-3';
-          card.innerHTML = `<div class="font-black text-sm text-slate-800"><span class="text-[#075cad]">Câu ${idx+1}:</span> ${esc(q.text)}</div>`;
-
-          const kind = String(q.kind || (isPoll ? 'poll' : 'single')).toLowerCase();
-          const oldAns = myResp?.answers?.find(a => String(a.questionId) === String(q.id))?.answer || [];
-
-          if (isPoll || kind === 'poll') {
-            const pBox = document.createElement('div');
-            pBox.className = 'space-y-2 mt-2';
-            (q.options || []).forEach(opt => {
-              const checked = oldAns.includes(opt);
-              const div = document.createElement('div');
-              div.className = `zalo-bar-item flex items-center justify-between ${checked ? 'selected' : ''}`;
-              div.innerHTML = `
-                <div class="zalo-bar-fill" style="width:${checked ? '100%' : '0%'}"></div>
-                <div class="flex items-center gap-2.5 z-10">
-                  <input type="${data.multiPoll ? 'checkbox' : 'radio'}" name="q_${q.id}" value="${esc(opt)}" ${checked ? 'checked' : ''} class="w-4 h-4 accent-[#075cad]">
-                  <span class="text-xs font-bold text-slate-800">${esc(opt)}</span>
-                </div>`;
-              div.onclick = (e) => {
-                if (e.target.tagName !== 'INPUT') {
-                  const inp = div.querySelector('input');
-                  inp.checked = !inp.checked;
-                }
-                div.classList.toggle('selected', div.querySelector('input').checked);
-              };
-              pBox.appendChild(div);
-            });
-            card.appendChild(pBox);
-          } else if (['single', 'multi'].includes(kind)) {
-            const oBox = document.createElement('div');
-            oBox.className = 'space-y-2 mt-2';
-            (q.options || []).forEach(opt => {
-              const checked = oldAns.includes(opt);
-              const lbl = document.createElement('label');
-              lbl.className = 'flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs';
-              lbl.innerHTML = `
-                <input type="${kind === 'single' ? 'radio' : 'checkbox'}" name="q_${q.id}" value="${esc(opt)}" ${checked ? 'checked' : ''} class="w-4 h-4 accent-[#075cad]">
-                <span class="font-semibold text-slate-700">${esc(opt)}</span>`;
-              oBox.appendChild(lbl);
-            });
-            card.appendChild(oBox);
-          } else {
-            const txt = document.createElement('textarea');
-            txt.name = `q_${q.id}`;
-            txt.rows = 2;
-            txt.className = 'field resize-y';
-            txt.placeholder = 'Nhập câu trả lời...';
-            txt.value = oldAns[0] || '';
-            card.appendChild(txt);
-          }
-          f.appendChild(card);
-        });
-      }
-
-      if (myResp && myResp.status) {
-        $('surveyStatusBadge').textContent = '✓ ' + myResp.status;
-        $('boxSubmittedAck').classList.remove('hidden');$('submittedTimeText').textContent = 'Đã gửi: ' + (myResp.updatedAt || 'trước đây');
-      }
-    }
-
-    async function submitSurvey(isDraft) {
-      const me = currentUser();
-      const username = String(me.username || me.userName || me.maGV || '').trim();
-      if (!username) return alert('Không xác định được phiên làm việc.');
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
-      const data = currentSurveyData?.data || {};
-      const isExternal = (data.surveyType === 'external' || /^https?:\/\//i.test(data.externalUrl));
-      const answers = [];
-
-      if (!isExternal) {
-        for (let q of (data.questions || [])) {
-          const nodes = [...$('formSurveyQuestions').querySelectorAll(`[name="q_${q.id}"]`)];
-          let chosen = (q.kind === 'text') ? [nodes[0]?.value.trim()].filter(Boolean) : nodes.filter(n => n.checked).map(n => n.value.trim());
-          if (!isDraft && q.required && !chosen.length) return alert(`Vui lòng trả lời câu: "${q.text}"`);
-          answers.push({ questionId: q.id, question: q.text, answer: chosen });
-        }
-      }
-
-      const btn = $('btnSubmitSurvey');
-      btn.disabled = true;
-      btn.innerHTML = 'ĐANG GỬI...';
-
-      try {
-        const res = await fetch(getHvaGatewayUrl(), {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            action: 'submitSurveyPollResponse',
-            publishId: publishId,
-            surveyId: publishId,
-            username: username,
-            fullName: me.hoTen || me.fullName || username,
-            department: me.toBoPhan || me.tenTo || '',
-            status: isDraft ? 'LƯU NHÁP' : 'ĐÃ HOÀN THÀNH',
-            answers: answers
-          })
-        });
-        const r = await res.json();
-        if (!r.success) throw new Error(r.message || 'Lỗi gửi.');
-        alert(isDraft ? 'Đã lưu nháp.' : 'Đã ghi nhận thành công!');
-        location.reload();
-      } catch (e) {
-        alert('Lỗi: ' + e.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = 'GỬI KẾT QUẢ';
-      }
-    }
-  </script>
+  $('meetingStatTo').textContent = `${groups} nhóm`;
+  $('meetingStatNguoi').textContent = `${meetingSelectedUsernames.size} người`;
+}
+</script>
 </body>
 </html>
