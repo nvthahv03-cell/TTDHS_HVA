@@ -2,7 +2,7 @@
  * ==============================================================================
  * TRUNG TÂM QUẢN TRỊ SỐ HVA - TRƯỜNG THPT HÒA VANG
  * BACKEND CHUYÊN BIỆT: ĐIỀU HÀNH SỐ (TTDHS ENGINE v3.0)
- * TÍCH HỢP HOÀN CHỈNH VỚI HVA_PERSONNEL.JS & TTPHATHANH.HTML
+ * TÍCH HỢP HOÀN CHỈNH: HVA_PERSONNEL.JS, QUÉT CCCD CỘT D & TỔ CÔNG TÁC S -> AD
  * ==============================================================================
  */
 
@@ -112,8 +112,24 @@ function dhsGetSheet_(sheetName) {
 }
 
 // ==============================================================================
-// 3. TƯƠNG THÍCH CHUẨN XÁC VỚI HVA_PERSONNEL.JS CORE
+// 3. TƯƠNG THÍCH CHUẨN XÁC VỚI HVA_PERSONNEL.JS CORE (CỘT D & CỘT S -> AD)
 // ==============================================================================
+function dhsGetPersonnelWorkgroups_() {
+  return dhsJSON_([
+    { name: "Chi bộ", key: "CHIBO" },
+    { name: "Hội đồng", key: "HOIDONG" },
+    { name: "Ban TTND", key: "TTND" },
+    { name: "GVCN", key: "GVCN" },
+    { name: "Liên tịch", key: "LIENTICH" },
+    { name: "Liên tịch mở rộng", key: "LIENTICH_MORONG" },
+    { name: "HĐ Thi đua - Khen thưởng", key: "THIDUA" },
+    { name: "HĐ Kỷ luật", key: "KYLUAT" },
+    { name: "BD HSG 12", key: "BD_HSG12" },
+    { name: "Tổ công tác CĐS", key: "CDS" },
+    { name: "Tổ phụ trách CSDL ngành", key: "CSDL_NGANH" }
+  ]);
+}
+
 function dhsSearchNhanSuQuick_(params) {
   const category = String(params.category || "").trim().toUpperCase();
   const q = String(params.q || "").trim().toLowerCase();
@@ -123,54 +139,77 @@ function dhsSearchNhanSuQuick_(params) {
   if (!sh) return dhsJSON_({ success: true, data: [] });
 
   const lastRow = sh.getLastRow();
-  const lastCol = Math.max(25, sh.getLastColumn());
+  const lastCol = Math.max(30, sh.getLastColumn()); // Quét đủ đến cột AD (index 29)
   if (lastRow < 7) return dhsJSON_({ success: true, data: [] });
 
-  // Tiêu đề dòng 6, dữ liệu từ dòng 7
-  const displayData = sh.getRange(7, 1, lastRow - 6, lastCol).getDisplayValues();
-  const rawData = sh.getRange(7, 1, lastRow - 6, lastCol).getValues();
-
+  const data = sh.getRange(7, 1, lastRow - 6, lastCol).getDisplayValues();
   const results = [];
 
-  for (let r = 0; r < displayData.length; r++) {
-    const maGV = String(displayData[r][1] || "").trim();         // Cột B: Mã nhân sự
-    const hoTen = String(displayData[r][2] || "").trim();        // Cột C: Họ tên
-    const chucVu = String(displayData[r][9] || "").trim();       // Cột J: Vị trí / Chức vụ
-    const toBoPhan = String(displayData[r][12] || "").trim();    // Cột M: Tổ
-    const monDay = String(displayData[r][13] || "").trim();      // Cột N: Môn
-    const username = String(displayData[r][14] || "").trim();    // Cột O: Username
+  for (let r = 0; r < data.length; r++) {
+    const row = data[r];
+    const maGV = String(row[1] || "").trim();         // Cột B: Mã nhân sự
+    const hoTen = String(row[2] || "").trim();        // Cột C: Họ tên
+    const cccd = String(row[3] || "").trim();         // Cột D: CCCD
+    const chucVu = String(row[9] || "").trim();       // Cột J: Vị trí việc làm
+    const toBoPhan = String(row[12] || "").trim();    // Cột M: Tổ
+    const monDay = String(row[13] || "").trim();      // Cột N: Môn
+    const username = String(row[14] || "").trim();    // Cột O: Username
 
-    // Nhận diện lớp GVCN (cột W - index 22)
-    let lop = String(displayData[r][22] || rawData[r][22] || "").trim();
-    if (lop.startsWith("Date(")) {
-      const m = lop.match(/Date\((\d+),(\d+),(\d+)\)/);
+    // CÁC CỘT TỔ CÔNG TÁC PHÍA SAU (S -> AD)
+    const quyenHT       = String(row[18] || "").trim(); // Cột S: Quyền hệ thống
+    const chiBoVal      = String(row[19] || "").trim(); // Cột T: Chi bộ
+    const hoiDongVal    = String(row[20] || "").trim(); // Cột U: Hội đồng
+    const ttndVal       = String(row[21] || "").trim(); // Cột V: Ban TTND
+    let lopCN           = String(row[22] || "").trim(); // Cột W: GVCN
+    const lienTichVal   = String(row[23] || "").trim(); // Cột X: Liên tịch
+    const ltMoRongVal   = String(row[24] || "").trim(); // Cột Y: Liên tịch mở rộng
+    const thiDuaVal     = String(row[25] || "").trim(); // Cột Z: HĐ Thi đua - Khen thưởng
+    const kyLuatVal     = String(row[26] || "").trim(); // Cột AA: HĐ Kỷ luật
+    const bdHSG12Val    = String(row[27] || "").trim(); // Cột AB: BD HSG 12
+    const cdsVal        = String(row[28] || "").trim(); // Cột AC: Tổ công tác CĐS
+    const csdlVal       = String(row[29] || "").trim(); // Cột AD: Tổ phụ trách CSDL ngành
+
+    if (!hoTen) continue;
+
+    // Chuẩn hóa định dạng lớp GVCN
+    if (lopCN.startsWith("Date(")) {
+      const m = lopCN.match(/Date\((\d+),(\d+),(\d+)\)/);
       if (m) {
         const mon = parseInt(m[2], 10) + 1;
         const day = parseInt(m[3], 10);
-        lop = (day >= 10 && day <= 12) ? (day + "/" + mon) : (mon + "/" + day);
+        lopCN = (day >= 10 && day <= 12) ? (day + "/" + mon) : (mon + "/" + day);
       }
     }
-    lop = lop.replace(/\s+/g, "");
+    lopCN = lopCN.replace(/\s+/g, "");
 
-    const personObj = {
+    const nhomCongTac = {};
+    if (chiBoVal) nhomCongTac["Chi bộ"] = chiBoVal;
+    if (hoiDongVal) nhomCongTac["Hội đồng"] = hoiDongVal;
+    if (ttndVal) nhomCongTac["Ban TTND"] = ttndVal;
+    if (lopCN) nhomCongTac["GVCN"] = "GVCN " + lopCN;
+    if (lienTichVal) nhomCongTac["Liên tịch"] = lienTichVal;
+    if (ltMoRongVal) nhomCongTac["Liên tịch mở rộng"] = ltMoRongVal;
+    if (thiDuaVal) nhomCongTac["Thi đua"] = thiDuaVal;
+    if (kyLuatVal) nhomCongTac["Kỷ luật"] = kyLuatVal;
+    if (bdHSG12Val) nhomCongTac["BD HSG 12"] = bdHSG12Val;
+    if (cdsVal) nhomCongTac["Tổ CĐS"] = cdsVal;
+    if (csdlVal) nhomCongTac["CSDL ngành"] = csdlVal;
+
+    const person = {
       username: username || maGV,
       maGV: maGV,
       hoTen: hoTen,
+      cccd: cccd,
       chucVu: chucVu || "Giáo viên",
       viTriViecLam: chucVu || "Giáo viên",
       to: toBoPhan,
       toBoPhan: toBoPhan,
       tenTo: toBoPhan,
       monDay: monDay,
-      lopChuNhiem: lop,
-      nhomCongTac: {
-        GVCN: lop ? "GVCN " + lop : ""
-      }
+      lopChuNhiem: lopCN,
+      nhomCongTac: nhomCongTac
     };
 
-    if (!hoTen) continue;
-
-    // Lọc theo Category của HVAPersonnel.search
     let isMatch = false;
 
     if (category === "BGH") {
@@ -178,48 +217,43 @@ function dhsSearchNhanSuQuick_(params) {
                 toBoPhan.toLowerCase() === "bgh" || 
                 chucVu.toLowerCase().includes("hiệu trưởng");
     } else if (category === "CHIBO") {
-      isMatch = chucVu.toLowerCase().includes("bí thư") || 
-                chucVu.toLowerCase().includes("chi ủy") || 
-                toBoPhan.toLowerCase().includes("chi bộ");
+      isMatch = Boolean(chiBoVal) || chucVu.toLowerCase().includes("bí thư") || toBoPhan.toLowerCase().includes("chi bộ");
     } else if (category === "TEAM") {
       const targetTeam = q.toLowerCase();
       const currentTeam = toBoPhan.toLowerCase();
-      isMatch = currentTeam === targetTeam || 
-                currentTeam.includes(targetTeam) || 
-                targetTeam.includes(currentTeam);
+      isMatch = currentTeam === targetTeam || currentTeam.includes(targetTeam) || targetTeam.includes(currentTeam);
     } else if (category === "WORKGROUP") {
       if (q.toUpperCase() === "GVCN") {
-        isMatch = Boolean(lop && /^1[012]\/\d{1,2}$/.test(lop));
+        isMatch = Boolean(lopCN && /^1[012]\/\d{1,2}$/.test(lopCN));
+      } else if (q.includes("liên tịch mở rộng") || q === "lientich_morong") {
+        isMatch = Boolean(ltMoRongVal);
+      } else if (q.includes("liên tịch") || q === "lientich") {
+        isMatch = Boolean(lienTichVal);
+      } else if (q.includes("thi đua") || q === "thidua") {
+        isMatch = Boolean(thiDuaVal);
+      } else if (q.includes("kỷ luật") || q === "kyluat") {
+        isMatch = Boolean(kyLuatVal);
+      } else if (q.includes("hsg") || q.includes("bd_hsg12")) {
+        isMatch = Boolean(bdHSG12Val);
+      } else if (q.includes("cđs") || q === "cds") {
+        isMatch = Boolean(cdsVal);
+      } else if (q.includes("csdl") || q === "csdl_nganh") {
+        isMatch = Boolean(csdlVal);
+      } else if (q.includes("ttnd") || q.includes("thanh tra")) {
+        isMatch = Boolean(ttndVal);
+      } else if (q.includes("hội đồng") || q === "hoidong") {
+        isMatch = Boolean(hoiDongVal);
       } else {
-        isMatch = chucVu.toLowerCase().includes(q) || toBoPhan.toLowerCase().includes(q);
+        isMatch = Object.values(nhomCongTac).some(v => v.toLowerCase().includes(q));
       }
     } else {
-      // Tìm kiếm tự do theo từ khóa
-      isMatch = !q || 
-                hoTen.toLowerCase().includes(q) || 
-                username.toLowerCase().includes(q) || 
-                toBoPhan.toLowerCase().includes(q);
+      isMatch = !q || hoTen.toLowerCase().includes(q) || username.toLowerCase().includes(q) || toBoPhan.toLowerCase().includes(q);
     }
 
-    if (isMatch) {
-      results.push(personObj);
-    }
+    if (isMatch) results.push(person);
   }
 
-  return dhsJSON_({
-    success: true,
-    data: results,
-    results: results
-  });
-}
-
-function dhsGetPersonnelWorkgroups_() {
-  return dhsJSON_([
-    { name: "GVCN" },
-    { name: "Tổ trưởng chuyên môn" },
-    { name: "Đoàn thanh niên" },
-    { name: "Công đoàn" }
-  ]);
+  return dhsJSON_({ success: true, data: results, results: results });
 }
 
 function dhsGetDanhSachTo_() {
@@ -230,7 +264,7 @@ function dhsGetDanhSachTo_() {
   const lastRow = sh.getLastRow();
   if (lastRow < 7) return dhsJSON_([]);
 
-  const teams = sh.getRange(7, 13, lastRow - 6, 1).getDisplayValues();
+  const teams = sh.getRange(7, 13, lastRow - 6, 1).getDisplayValues(); // Cột M: Tổ bộ phận
   const set = new Set();
   teams.forEach(t => {
     const val = String(t[0] || "").trim();
@@ -259,6 +293,7 @@ function dhsGetNhanSuTheoTo_(params) {
       list.push({
         maGV: String(data[r][1] || "").trim(),
         hoTen: String(data[r][2] || "").trim(),
+        cccd: String(data[r][3] || "").trim(),
         chucVu: String(data[r][9] || "Giáo viên").trim(),
         to: to,
         tenTo: to,
