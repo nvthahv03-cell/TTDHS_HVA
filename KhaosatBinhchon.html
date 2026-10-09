@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TTĐHS HVA - Bình chọn nhanh</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <style>
 :root{
@@ -14,6 +14,7 @@
   --hva-h-cyan:#08abc5;
   --hva-h-white:#f8fdff;
   --hva-h-line:rgba(190,238,255,.58);
+  --hva:#0F4C81;
 }
 
 .hva-pro-header{
@@ -69,7 +70,7 @@
   box-shadow:0 6px 16px rgba(0,36,78,.20),inset 0 1px 0 rgba(255,255,255,.11);
   transition:transform .14s ease,filter .14s ease,box-shadow .14s ease;
 }
-.hva-pro-back i{font-size:27px;line-height:1;-webkit-text-stroke:.28px currentColor}
+.hva-pro-back i{font-size:27px;line-height:1}
 .hva-pro-back:hover{filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 9px 20px rgba(0,35,77,.24)}
 .hva-pro-back:active{transform:translateY(2px) scale(.98)}
 
@@ -109,7 +110,7 @@
   box-shadow:0 0 0 5px rgba(25,233,138,.12),0 0 13px rgba(25,233,138,.82);
 }
 
-/* THẺ HERO USER */
+/* HERO VÀ USER CARD CHUẨN TỪ CUỘC HỌP */
 .hero-card{min-height:112px;border-radius:18px;padding:18px;display:flex;align-items:center;gap:14px;border:2px solid;box-shadow:0 8px 22px rgba(15,76,129,.12)}
 .hero-poll{color:white;border-color:#5b21b6;background:linear-gradient(125deg,#5b21b6,#7c3aed)}
 .hero-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);flex:none}
@@ -132,7 +133,7 @@
 .hva-create-usertext strong{max-width:180px;overflow:hidden;text-overflow:ellipsis;font-size:13px;font-weight:900;line-height:1.15}
 .hva-create-usertext small{max-width:180px;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-weight:600;color:rgba(235,248,255,.90)}
 
-/* PANEL & CONTROLS */
+/* PANEL & CONTROLS CHUẨN TỪ CUỘC HỌP */
 .panel-card{background:white;border:2px solid #cbd5e1;border-radius:18px;box-shadow:0 4px 14px rgba(15,23,42,.06)}
 .section-title{display:flex;align-items:center;gap:9px;margin-bottom:2px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.035em;color:#334155}
 .section-title i{width:30px;height:30px;border-radius:9px;background:#eaf3fb;color:#0F4C81;display:flex;align-items:center;justify-content:center;font-size:14px}
@@ -208,7 +209,7 @@
 <main class="max-w-6xl mx-auto p-3 sm:p-4 space-y-4 pb-24">
 
   <!-- ============================================================================== -->
-  <!-- PHẦN 1: MÀN HÌNH BGH/TTCM TẠO PHIẾU BÌNH CHỌN -->
+  <!-- PHẦN 1: MÀN HÌNH TẠO BÌNH CHỌN (BGH / TTCM) -->
   <!-- ============================================================================== -->
   <form id="pollCreateForm" class="space-y-4" onsubmit="event.preventDefault();">
     
@@ -370,10 +371,302 @@
 
 </main>
 
-<!-- SCRIPT: KẾ THỪA NGUYÊN VẸN 100% TỪ CUOCHOP_CHUAN_2.TXT (DÙNG DUY NHẤT BACKEND CŨ) -->
-<script src="HVA_Personnel.js"></script>
 <script>
-// DÙNG DUY NHẤT BACKEND CŨ ĐANG HOẠT ĐỘNG PASS CỦA TRANG CUỘC HỌP
+/* ==============================================================================
+ * BỘ LÕI HVA_PERSONNEL ĐƯỢC NHÚNG TRỰC TIẾP TẠI ĐÂY (TRÁNH LỖI FILE NGOÀI)
+ * ============================================================================== */
+(function(global){
+'use strict';
+
+function hvaPersonnelText(v){ return String(v ?? '').trim(); }
+
+function hvaPersonnelArray(data){
+  return Array.isArray(data) ? data
+    : Array.isArray(data && data.data) ? data.data
+    : Array.isArray(data && data.results) ? data.results
+    : Array.isArray(data && data.items) ? data.items
+    : [];
+}
+
+function hvaPersonnelCurrentUser(){
+  try{
+    if(typeof getSearchUser === 'function') return getSearchUser() || {};
+  }catch(e){}
+  try{
+    return JSON.parse(sessionStorage.getItem('user') || localStorage.getItem('user') || '{}') || {};
+  }catch(e){ return {}; }
+}
+
+function hvaPersonnelEnsureAuth(){
+  if(global.HVAAuthRequest && typeof global.HVAAuthRequest.get==='function'){
+    return global.HVAAuthRequest;
+  }
+
+  const TOKEN_KEY='hvaSessionToken';
+  const EXPIRES_KEY='hvaSessionExpiresAt';
+
+  function getSessionToken(){
+    return String(localStorage.getItem(TOKEN_KEY)||'').trim();
+  }
+  function getSessionExpiresAt(){
+    const n=Number(String(localStorage.getItem(EXPIRES_KEY)||'').trim());
+    return Number.isFinite(n)?n:0;
+  }
+  function getSessionState(){
+    const token=getSessionToken(), expiresAt=getSessionExpiresAt(), now=Date.now();
+    return {
+      hasToken:!!token,
+      tokenLength:token.length,
+      expiresAt,
+      expired:!!expiresAt&&expiresAt<=now,
+      validLocal:!!token&&!!expiresAt&&expiresAt>now
+    };
+  }
+  function requireLocalSession(){
+    const state=getSessionState();
+    if(!state.hasToken){
+      return '';
+    }
+    return getSessionToken();
+  }
+  function withAuthQuery(url){
+    const u=new URL(url,global.location.href);
+    const tok = requireLocalSession();
+    if(tok) u.searchParams.set('sessionToken',tok);
+    return u.toString();
+  }
+  async function authGet(url,options){
+    return fetch(withAuthQuery(url),Object.assign({},options||{},{method:'GET'}));
+  }
+
+  global.HVAAuthRequest=Object.freeze({
+    getSessionState,withAuthQuery,get:authGet
+  });
+  return global.HVAAuthRequest;
+}
+
+async function hvaPersonnelGet(action, params={}){
+  const auth=hvaPersonnelEnsureAuth();
+  const user=hvaPersonnelCurrentUser();
+  const api=global.PERSONNEL_SEARCH_API ||
+    'https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
+  const u=new URL(api);
+
+  u.searchParams.set('action',hvaPersonnelText(action));
+  if(user.username||user.userName||user.maGV){
+    u.searchParams.set('username',hvaPersonnelText(user.username||user.userName||user.maGV));
+  }
+  Object.entries(params||{}).forEach(([k,v])=>{
+    if(v!==undefined&&v!==null) u.searchParams.set(k,hvaPersonnelText(v));
+  });
+  u.searchParams.set('_',Date.now());
+
+  const r=await auth.get(u.toString(),{cache:'no-store'});
+  if(!r.ok) throw Error('HTTP '+r.status);
+  const data=await r.json();
+  if(data&&data.success===false){
+    const e=new Error(data.message||data.code||'Không tải được dữ liệu nhân sự.');
+    e.code=data.code||'PERSONNEL_API_ERROR';
+    throw e;
+  }
+  return data;
+}
+
+function normalizeHvaPerson(m, groupLabel=''){
+  m = m || {};
+  const groups = (m.nhomCongTac && typeof m.nhomCongTac === 'object') ? m.nhomCongTac : {};
+  const lop = hvaPersonnelText(m.lopChuNhiem || m.lopCN || groups.GVCN || '');
+
+  return {
+    username: hvaPersonnelText(m.username),
+    maGV: hvaPersonnelText(m.maGV || m.maNhanSu || m.id),
+    hoTen: hvaPersonnelText(m.hoTen || m.fullName || m.name),
+    cccd: hvaPersonnelText(m.cccd),
+    chucVu: hvaPersonnelText(m.chucVu || m.vaiTro || m.viTriViecLam || 'Giáo viên'),
+    viTriViecLam: hvaPersonnelText(m.viTriViecLam),
+    tenTo: hvaPersonnelText(m.to || m.toBoPhan || m.tenTo),
+    lopChuNhiem: lop,
+    nhomCongTac: m.nhomCongTac || {},
+    dienThoai: hvaPersonnelText(m.dienThoai || m.soDienThoai || m.phone),
+    ngaySinh: hvaPersonnelText(m.ngaySinh || m.birthDate),
+    groupLabel: hvaPersonnelText(groupLabel),
+    raw: m
+  };
+}
+
+function hvaPersonnelIdentity(m){
+  const u = hvaPersonnelText(m && m.username).toLowerCase();
+  if(u) return 'U:' + u;
+  const ma = hvaPersonnelText(m && m.maGV).toLowerCase();
+  if(ma) return 'M:' + ma;
+  return '';
+}
+
+function hvaPersonnelDedupe(members, groupLabel=''){
+  const map = new Map();
+  hvaPersonnelArray(members).forEach(raw=>{
+    const p = raw && raw.raw !== undefined ? raw : normalizeHvaPerson(raw, groupLabel);
+    const key = hvaPersonnelIdentity(p);
+    if(!key || map.has(key)) return;
+    if(!p.username) p.username = p.maGV;
+    map.set(key, p);
+  });
+  return [...map.values()];
+}
+
+const HVA_PERSONNEL_CACHE_PREFIX='HVA_PERSONNEL_V3:';
+const meetingPersonnelMemory=new Map();
+
+function meetingPersonnelCacheKey(action,params={}){
+  const normalized={};
+  Object.keys(params||{}).sort().forEach(k=>normalized[k]=hvaPersonnelText(params[k]));
+  return HVA_PERSONNEL_CACHE_PREFIX + hvaPersonnelText(action).toUpperCase() + ':' + JSON.stringify(normalized);
+}
+
+function getMeetingPersonnelCache(action,params={}){
+  const key=meetingPersonnelCacheKey(action,params);
+  if(meetingPersonnelMemory.has(key)) return meetingPersonnelMemory.get(key);
+  try{
+    const raw=sessionStorage.getItem(key);
+    if(raw!==null){
+      const value=JSON.parse(raw);
+      meetingPersonnelMemory.set(key,value);
+      return value;
+    }
+  }catch(e){}
+  return null;
+}
+
+function setMeetingPersonnelCache(action,params,value){
+  const key=meetingPersonnelCacheKey(action,params);
+  meetingPersonnelMemory.set(key,value);
+  try{ sessionStorage.setItem(key,JSON.stringify(value)); }catch(e){}
+  return value;
+}
+
+async function hvaPersonnelGetCached(action,params={}){
+  const hit=getMeetingPersonnelCache(action,params);
+  if(hit!==null) return hit;
+  return setMeetingPersonnelCache(action,params,await hvaPersonnelGet(action,params));
+}
+
+async function hvaPersonnelSearch(category,q=''){
+  return hvaPersonnelArray(await hvaPersonnelGetCached('searchNhanSuQuick',{
+    q:hvaPersonnelText(q),
+    category:hvaPersonnelText(category)
+  }));
+}
+
+function hvaPersonnelUnits(){
+  if(Array.isArray(window.HVA_PERSONNEL_UNITS) && window.HVA_PERSONNEL_UNITS.length){
+    return window.HVA_PERSONNEL_UNITS.map(x=>{
+      if(typeof x==='string') return {label:hvaPersonnelText(x),query:hvaPersonnelText(x)};
+      return {
+        label:hvaPersonnelText(x.label || x.name || x.value),
+        query:hvaPersonnelText(x.value || x.name || x.label)
+      };
+    }).filter(x=>x.query);
+  }
+
+  return [
+    { label:'Toán - Tin',                 query:'Toán - Tin' },
+    { label:'Ngữ văn',                    query:'Ngữ văn' },
+    { label:'Tiếng Anh',                  query:'Ngoại Ngữ' },
+    { label:'Lịch sử - Địa lí - GDKT&PL', query:'Sử - Địa - GD KT&PL' },
+    { label:'Vật lí - Công nghệ',         query:'Vật lí - Công nghệ' },
+    { label:'Hóa học',                    query:'Hóa học' },
+    { label:'Sinh - GDTC - QPAN',         query:'Sinh - GDTC - QPAN' },
+    { label:'Văn phòng',                  query:'Văn phòng' }
+  ];
+}
+
+async function hvaPersonnelWorkgroupList(){
+  const raw=await hvaPersonnelGetCached('getPersonnelWorkgroups',{});
+  return hvaPersonnelArray(raw).map(x=>{
+    if(typeof x==='string') return {name:hvaPersonnelText(x)};
+    return {...x,name:hvaPersonnelText(x.name || x.label || x.value)};
+  }).filter(x=>x.name);
+}
+
+function hvaPersonnelMakeGroup(groupKey,tenTo,kind,members){
+  return {
+    groupKey:hvaPersonnelText(groupKey),
+    tenTo:hvaPersonnelText(tenTo),
+    kind:hvaPersonnelText(kind),
+    members:hvaPersonnelDedupe(members,tenTo)
+  };
+}
+
+async function hvaPersonnelBuildGroups(){
+  const units=hvaPersonnelUnits();
+
+  const [chiBoRaw,bghRaw,workgroups,teamResults]=await Promise.all([
+    hvaPersonnelSearch('CHIBO',''),
+    hvaPersonnelSearch('BGH',''),
+    hvaPersonnelWorkgroupList(),
+    Promise.all(units.map(async unit=>({
+      name:unit.label,
+      query:unit.query,
+      raw:await hvaPersonnelSearch('TEAM',unit.query)
+    })))
+  ]);
+
+  const workResults=await Promise.all(workgroups.map(async group=>{
+    try{
+      return {name:group.name,raw:await hvaPersonnelSearch('WORKGROUP',group.name)};
+    }catch(e){
+      return {name:group.name,raw:[]};
+    }
+  }));
+
+  const groups=[];
+  groups.push(hvaPersonnelMakeGroup('CHIBO','Chi bộ','ROOT',chiBoRaw));
+  groups.push(hvaPersonnelMakeGroup('BGH','Ban Giám hiệu','ROOT',bghRaw));
+
+  teamResults.forEach(x=>{
+    groups.push(hvaPersonnelMakeGroup('TEAM:'+x.name,x.name,'TEAM',x.raw));
+  });
+
+  const councilMembers=[];
+  groups.filter(g=>g.groupKey==='BGH'||g.kind==='TEAM')
+    .forEach(g=>councilMembers.push(...g.members));
+  groups.push(hvaPersonnelMakeGroup('COUNCIL:ALL','Hội đồng','COUNCIL',councilMembers));
+
+  workResults.forEach(({name,raw})=>{
+    if(!name) return;
+    if(name.toUpperCase()==='GVCN'){
+      const mapped=hvaPersonnelDedupe(raw,'GVCN');
+      ['10','11','12'].forEach(khoi=>{
+        const members=mapped
+          .filter(m=>hvaPersonnelText(m.lopChuNhiem).startsWith(khoi+'/'))
+          .sort((a,b)=>{
+            const na=Number(hvaPersonnelText(a.lopChuNhiem).split('/')[1])||999;
+            const nb=Number(hvaPersonnelText(b.lopChuNhiem).split('/')[1])||999;
+            return na-nb||hvaPersonnelText(a.hoTen).localeCompare(hvaPersonnelText(b.hoTen),'vi');
+          });
+        groups.push(hvaPersonnelMakeGroup('GVCN:'+khoi,'GVCN khối '+khoi,'GVCN',members));
+      });
+    }else{
+      groups.push(hvaPersonnelMakeGroup('WORKGROUP:'+name,name,'WORKGROUP',raw));
+    }
+  });
+
+  return groups;
+}
+
+global.HVAPersonnel = Object.freeze({
+  text: hvaPersonnelText,
+  array: hvaPersonnelArray,
+  currentUser: hvaPersonnelCurrentUser,
+  normalize: normalizeHvaPerson,
+  buildGroups: hvaPersonnelBuildGroups
+});
+
+})(window);
+
+/* ==============================================================================
+ * LOGIC ĐIỀU HÀNH BÌNH CHỌN VÀ NHÂN SỰ CHUẨN TỪ CUỘC HỌP
+ * ============================================================================== */
 const WEB_APP_URL='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 const PERSONNEL_SEARCH_API='https://script.google.com/macros/s/AKfycbzj-6VHIUrnRfIBvzpM2R9ImU3Ikov8C49xNfB8JhcrN9kJTSBqwRgK63fea_Jbyr4U/exec';
 
@@ -386,9 +679,6 @@ let myPollResponse=null;
 const $=id=>document.getElementById(id);
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-/* =========================================================
- * 1. ADAPTER ĐỒNG BỘ DANH TÍNH TÀI KHOẢN (TỪ CUOCHOP)
- * ========================================================= */
 function getMeetingOperatorUser(){
   try{return JSON.parse(sessionStorage.getItem('user')||localStorage.getItem('user')||'{}')}
   catch(e){return{}}
@@ -403,9 +693,6 @@ function syncMeetingUserCard(){
   if(roleEl) roleEl.textContent=role;
 }
 
-/* =========================================================
- * 2. TẠO BÌNH CHỌN VÀ CHUYỂN TT PHÁT HÀNH
- * ========================================================= */
 function renderCreatorPollOptions(){
   const box=$('pollOptionCreatorList');
   box.innerHTML=creatorPollOptions.map((opt, i)=>`
@@ -496,9 +783,6 @@ function goToPublishing(){
   location.href='TTPhatHanh.html';
 }
 
-/* =========================================================
- * 3. HỆ THỐNG NHÂN SỰ NGUYÊN BẢN TỪ CUOCHOP_CHUAN_2.TXT
- * ========================================================= */
 function mapMeetingPerson(m, groupLabel){
   return window.HVAPersonnel.normalize(m, groupLabel);
 }
@@ -522,8 +806,6 @@ async function loadMeetingPersonnel(){
   }catch(e){
     console.error('[HVA Personnel]',e);
     let msg=e && e.message ? e.message : 'Không tải được Nhân sự HVA';
-    if(msg==='HVA_AUTH_REQUEST_NOT_READY') msg='Hệ thống xác thực HVA chưa sẵn sàng.';
-    if(msg==='HVA_PERSONNEL_CORE_NOT_READY') msg='Bộ nhân sự HVA chưa được nạp.';
     c.innerHTML=
       '<div class="p-5 text-center text-sm text-red-500 font-bold">'+
         esc(msg)+'<br>'+
@@ -930,9 +1212,6 @@ function updateMeetingSelectionUI() {
   $('meetingStatNguoi').textContent = `${meetingSelectedUsernames.size} người`;
 }
 
-/* =========================================================
- * 4. MÀN HÌNH GIÁO VIÊN BÌNH CHỌN TRÊN THIẾT BỊ (?view=respond)
- * ========================================================= */
 async function initRespondentPoll() {
   const me = getMeetingOperatorUser();
   const username = String(me.username || me.userName || me.maGV || '').trim();
@@ -1053,9 +1332,6 @@ async function submitPollVote() {
   }
 }
 
-/* =========================================================
- * 5. KHỞI CHẠY TỰ ĐỘNG
- * ========================================================= */
 window.addEventListener('DOMContentLoaded', async () => {
   try { syncMeetingUserCard(); } catch(e) { console.warn(e); }
 
