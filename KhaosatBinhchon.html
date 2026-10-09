@@ -85,11 +85,11 @@
     }
     .field:focus { border-color: #075cad; box-shadow: 0 0 0 3px rgba(7, 92, 173, .12); background: #fcfeff; }
     .lbl { display: block; font-size: 12px; font-weight: 800; color: #284b69; margin-bottom: 7px; }
-    .type-card { transition: .18s; border: 1.5px solid #dbe7f0; border-radius: 14px; background: #fff; cursor: pointer; }
-    .type-card:hover { border-color: #8fc5ee; transform: translateY(-1px); box-shadow: 0 8px 18px rgba(15, 93, 151, .08); }
-    .type-card.active { border-color: #075cad; background: #edf8ff; box-shadow: 0 0 0 2px rgba(7, 92, 173, .12); }
     
-    /* GIAO DIỆN BÌNH CHỌN KIỂU ZALO */
+    .type-card { transition: all .2s ease; border: 2px solid #e2e8f0; border-radius: 16px; background: #fff; cursor: pointer; }
+    .type-card:hover { border-color: #93c5fd; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(7, 92, 173, .08); }
+    .type-card.active { border-color: #075cad; background: #f0f7ff; box-shadow: 0 0 0 3px rgba(7, 92, 173, .15); }
+    
     .zalo-poll-option {
       position: relative; overflow: hidden; border: 1.5px solid #dbe7f0; border-radius: 14px;
       padding: 14px 16px; background: #fff; cursor: pointer; transition: .18s;
@@ -576,23 +576,22 @@
     </div>
 
     <!-- ============================================================================== -->
-    <!-- PHẦN 2: GIAO DIỆN TẠO KHẢO SÁT DÀNH CHO BGH & TTCM (CHUYỂN TTPHATHANH.HTML) -->
+    <!-- PHẦN 2: GIAO DIỆN TẠO KHẢO SÁT DÀNH CHO BGH & TTCM (TỰ ĐỔI THÔNG MINH THEO LOẠI) -->
     <!-- ============================================================================== -->
     <div id="viewCreator" class="space-y-4">
       
-      <!-- Khối chọn loại nghiệp vụ -->
+      <!-- Khối chọn loại nghiệp vụ (4 Card trực quan) -->
       <section class="card overflow-hidden">
-        <!-- THANH TIÊU ĐỀ & HIỂN THỊ DANH TÍNH TÀI KHOẢN ĐANG TẠO -->
-        <div class="px-4 py-3.5 border-b bg-gradient-to-r from-blue-50/60 to-slate-50/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="px-4 py-3.5 border-b bg-gradient-to-r from-blue-50/70 to-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div class="text-xs font-black text-[#075cad] uppercase tracking-wide flex items-center gap-1.5">
-              <i class="bi bi-grid-1x2-fill text-[#075cad]"></i> CHỌN LOẠI CẦN TẠO
+              <i class="bi bi-grid-1x2-fill"></i> CHỌN LOẠI CẦN TẠO
             </div>
-            <div class="text-[11px] font-medium text-slate-500 mt-0.5">Chọn nghiệp vụ để Ban Giám hiệu / TTCM phát hành</div>
+            <div class="text-[11px] font-medium text-slate-500 mt-0.5">Bấm vào từng mục để hệ thống chuyển giao diện tương ứng</div>
           </div>
 
-          <!-- KHỐI ĐỊNH DANH NGƯỜI ĐANG ĐĂNG NHẬP -->
-          <div class="flex items-center gap-2.5 bg-white border border-blue-200/80 shadow-sm rounded-xl px-3 py-1.5">
+          <!-- Huy hiệu định danh người đang phát hành -->
+          <div class="flex items-center gap-2.5 bg-white border border-blue-200/90 shadow-sm rounded-xl px-3 py-1.5">
             <div class="w-7 h-7 rounded-lg bg-[#075cad] text-white flex items-center justify-center text-xs font-black shadow-sm">
               <i class="bi bi-person-fill"></i>
             </div>
@@ -613,47 +612,66 @@
           <div class="type-card active p-3" data-mode="internal" onclick="setMode('internal')">
             <div class="w-9 h-9 rounded-xl bg-blue-50 text-[#075cad] flex items-center justify-center mb-2"><i class="bi bi-ui-checks-grid text-lg"></i></div>
             <div class="font-extrabold text-xs text-slate-800">Khảo sát của Trường</div>
-            <div class="text-[10px] text-slate-500 mt-1">HVA tự tạo phiếu, sinh mã và link tự động.</div>
+            <div class="text-[10px] text-slate-500 mt-1">Tạo phiếu trắc nghiệm, tự luận nội bộ toàn trường.</div>
           </div>
 
           <div class="type-card p-3" data-mode="poll" onclick="setMode('poll')">
             <div class="w-9 h-9 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center mb-2"><i class="bi bi-check2-square text-lg"></i></div>
             <div class="font-extrabold text-xs text-slate-800">Bình chọn nhanh</div>
-            <div class="text-[10px] text-slate-500 mt-1">Tạo bình chọn nhanh kiểu Zalo, thanh % trực quan.</div>
+            <div class="text-[10px] text-slate-500 mt-1">Bình chọn gọn nhẹ kiểu Zalo, thanh % trực quan.</div>
           </div>
 
           <div class="type-card p-3" data-mode="external" onclick="setMode('external')">
             <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2"><i class="bi bi-link-45deg text-xl"></i></div>
             <div class="font-extrabold text-xs text-slate-800">Khảo sát từ Link</div>
-            <div class="text-[10px] text-slate-500 mt-1">Triển khai link khảo sát của Sở và theo dõi tiến độ.</div>
+            <div class="text-[10px] text-slate-500 mt-1">Triển khai link của Sở và đôn đốc, theo dõi tiến độ.</div>
           </div>
 
           <div class="type-card p-3" data-mode="report" onclick="setMode('report')">
             <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-2"><i class="bi bi-table text-lg"></i></div>
             <div class="font-extrabold text-xs text-slate-800">Báo cáo số liệu</div>
-            <div class="text-[10px] text-slate-500 mt-1">Thu thập số liệu chuyên môn theo cấu trúc cột.</div>
+            <div class="text-[10px] text-slate-500 mt-1">Thu thập các trường số liệu chuyên môn theo cột.</div>
           </div>
         </div>
       </section>
 
-      <!-- Khối soạn nhanh -->
-      <section class="card space-y-3">
+      <!-- HƯỚNG DẪN TRẠNG THÁI CHẾ ĐỘ ĐANG CHỌN -->
+      <div id="modeGuideCard" class="card !p-3.5 bg-blue-50/70 border-blue-200 flex items-center gap-3">
+        <i id="modeGuideIcon" class="bi bi-info-circle-fill text-lg text-[#075cad]"></i>
+        <div class="text-xs font-semibold text-slate-700" id="modeGuideText">
+          Đang ở chế độ: <b>Khảo sát của Trường</b>. Thầy/Cô thiết lập tiêu đề và các câu hỏi trắc nghiệm/tự luận bên dưới.
+        </div>
+      </div>
+
+      <!-- Khối soạn nhanh (CHỈ HIỆN KHI LÀ KHẢO SÁT NỘI BỘ HOẶC BÌNH CHỌN) -->
+      <section id="quickInputSection" class="card space-y-3">
         <div class="text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
           <i class="bi bi-lightning-charge-fill text-amber-500"></i>Soạn nhanh nội dung
         </div>
-        <textarea id="quickText" rows="3" class="field resize-y" placeholder="Ví dụ: Khảo sát nhu cầu tập huấn AI. 1. Thầy/Cô có nhu cầu tham gia không? Có/Không. 2. Nội dung quan tâm: Soạn bài; Kiểm tra đánh giá. Chọn nhiều."></textarea>
+        <textarea id="quickText" rows="2" class="field resize-y" placeholder="Dán nội dung nhanh để máy tự bóc tách câu hỏi và phương án..."></textarea>
         <div class="flex justify-end">
-          <button type="button" onclick="applyQuick()" class="h-9 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold transition">
-            <i class="bi bi-magic mr-1"></i>TẠO PHIẾU NHANH
+          <button type="button" onclick="applyQuick()" class="h-8 px-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold transition">
+            <i class="bi bi-magic mr-1"></i>BÓC TÁCH NHANH
           </button>
         </div>
       </section>
 
-      <!-- Nội dung khảo sát -->
+      <!-- THÔNG TIN CHÍNH (BIẾN HÓA THEO CHẾ ĐỘ) -->
       <section class="card space-y-4">
         <div>
           <label class="lbl" id="titleLabel">Tiêu đề khảo sát *</label>
           <input id="title" class="field" placeholder="Ví dụ: Khảo sát thực trạng Đề án tiếng Anh năm học 2026-2027">
+        </div>
+
+        <!-- Ô NHẬP LINK KHẢO SÁT NGOÀI (CHỈ HIỆN KHI CHỌN KHẢO SÁT TỪ LINK) -->
+        <div id="externalUrlBox" class="hidden p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300 space-y-2">
+          <label class="lbl !text-emerald-900 !mb-1 flex items-center gap-1.5">
+            <i class="bi bi-link-45deg text-lg text-emerald-700"></i> Link khảo sát trực tuyến của Sở / Bộ *
+          </label>
+          <input id="externalUrl" type="url" class="field !border-emerald-300 focus:!border-emerald-600" placeholder="https://forms.gle/... hoặc link khảo sát ngoài">
+          <div class="text-[11px] font-medium text-emerald-700">
+            Giáo viên sẽ bấm vào link này để làm bài, sau đó hệ thống sẽ ghi nhận trạng thái hoàn thành.
+          </div>
         </div>
 
         <div id="fieldReference">
@@ -661,23 +679,18 @@
           <input id="referenceText" class="field" placeholder="Ví dụ: Công văn số 5492/SGDĐT-GDTrH&HSSV">
         </div>
 
-        <div id="externalUrlBox" class="hidden">
-          <label class="lbl">Link khảo sát bên ngoài *</label>
-          <input id="externalUrl" type="url" class="field" placeholder="https://forms.gle/...">
-        </div>
-
         <div>
           <label class="lbl">Mô tả / Yêu cầu thực hiện</label>
-          <textarea id="description" rows="3" class="field resize-y" placeholder="Nêu ngắn gọn mục đích, yêu cầu thực hiện đối với giáo viên..."></textarea>
+          <textarea id="description" rows="2" class="field resize-y" placeholder="Nêu ngắn gọn mục đích, đối tượng cần hoàn thành..."></textarea>
         </div>
       </section>
 
-      <!-- Danh sách câu hỏi (Builder) -->
+      <!-- KHỐI 1: CÂU HỎI TRẮC NGHIỆM / TỰ LUẬN (DÀNH CHO KHẢO SÁT TRƯỜNG) -->
       <section id="builderSection" class="card space-y-3">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <div>
-            <div id="builderTitle" class="text-xs font-extrabold text-slate-800 uppercase">Câu hỏi khảo sát</div>
-            <div id="builderSub" class="text-[11px] text-slate-500">Tự động dựng giao diện cho người trả lời</div>
+            <div class="text-xs font-extrabold text-slate-800 uppercase">Danh sách câu hỏi khảo sát</div>
+            <div class="text-[11px] text-slate-500">Tự động dựng các câu hỏi một lựa chọn, nhiều lựa chọn hoặc tự luận</div>
           </div>
           <button type="button" onclick="addQuestion()" class="h-9 px-3 rounded-xl bg-[#075cad] hover:bg-[#064b91] text-white text-xs font-extrabold transition">
             <i class="bi bi-plus-lg mr-1"></i>THÊM CÂU HỎI
@@ -686,22 +699,52 @@
         <div id="questionList" class="space-y-3"></div>
       </section>
 
-      <!-- Thời hạn & Thiết lập -->
+      <!-- KHỐI 2: THIẾT LẬP BÌNH CHỌN NHANH (CHỈ HIỆN KHI CHỌN BÌNH CHỌN) -->
+      <section id="pollSection" class="card space-y-4 hidden border-violet-200 bg-gradient-to-b from-violet-50/30 to-white">
+        <div class="border-b border-violet-100 pb-3 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-extrabold text-violet-900 uppercase">Cấu hình các phương án bình chọn</div>
+            <div class="text-[11px] text-slate-500">Người nhận sẽ bình chọn với thanh % tiến độ kiểu Zalo</div>
+          </div>
+          <label class="flex items-center gap-1.5 text-xs font-extrabold text-violet-900 cursor-pointer">
+            <input type="checkbox" id="pollMulti" class="w-4 h-4 accent-violet-600"> Cho phép chọn nhiều phương án
+          </label>
+        </div>
+
+        <div class="space-y-2" id="pollOptionBox"></div>
+        <button type="button" onclick="addPollOption()" class="text-xs font-bold text-violet-700 hover:text-violet-900 flex items-center gap-1">
+          <i class="bi bi-plus-circle-fill"></i> Thêm phương án bình chọn
+        </button>
+      </section>
+
+      <!-- KHỐI 3: CẤU HÌNH CỘT BÁO CÁO SỐ LIỆU (CHỈ HIỆN KHI CHỌN BÁO CÁO) -->
+      <section id="reportSection" class="card space-y-4 hidden border-amber-200 bg-gradient-to-b from-amber-50/30 to-white">
+        <div class="border-b border-amber-100 pb-3">
+          <div class="text-xs font-extrabold text-amber-900 uppercase">Danh mục các cột số liệu cần báo cáo</div>
+          <div class="text-[11px] text-slate-500">Giáo viên sẽ nhập số liệu tương ứng vào các cột này</div>
+        </div>
+        <div class="space-y-2" id="reportColumnBox"></div>
+        <button type="button" onclick="addReportColumn()" class="text-xs font-bold text-amber-700 hover:text-amber-900 flex items-center gap-1">
+          <i class="bi bi-plus-circle-fill"></i> Thêm cột số liệu
+        </button>
+      </section>
+
+      <!-- Thời hạn hoàn thành -->
       <section class="card space-y-3">
         <div class="text-xs font-extrabold uppercase text-slate-700 flex items-center gap-1.5">
-          <i class="bi bi-clock text-amber-500"></i>Thời hạn & Thiết lập nâng cao
+          <i class="bi bi-clock text-amber-500"></i>Thời hạn & Thiết lập
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div><label class="lbl">Hạn hoàn thành (Ngày)</label><input id="deadlineDate" type="date" class="field"></div>
           <div><label class="lbl">Giờ chốt</label><input id="deadlineTime" type="time" class="field" value="17:00"></div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2" id="advancedOptionBox">
           <label class="flex items-center justify-between p-3 rounded-xl border bg-white cursor-pointer">
-            <span><b class="block text-xs text-slate-800">Cho phép sửa câu trả lời</b><small class="text-[10px] text-slate-500">Người trả lời có thể cập nhật trước thời hạn</small></span>
+            <span><b class="block text-xs text-slate-800">Cho phép sửa câu trả lời</b><small class="text-[10px] text-slate-500">Cập nhật lại trước thời hạn</small></span>
             <input id="allowEdit" type="checkbox" checked class="w-5 h-5 accent-[#075cad]">
           </label>
           <label class="flex items-center justify-between p-3 rounded-xl border bg-white cursor-pointer">
-            <span><b class="block text-xs text-slate-800">Khảo sát ẩn danh</b><small class="text-[10px] text-slate-500">Không hiện tên người trả lời ở bảng kết quả</small></span>
+            <span><b class="block text-xs text-slate-800">Khảo sát ẩn danh</b><small class="text-[10px] text-slate-500">Ẩn danh tính ở kết quả</small></span>
             <input id="anonymous" type="checkbox" class="w-5 h-5 accent-[#075cad]">
           </label>
         </div>
@@ -710,7 +753,7 @@
       <!-- Chọn Người nhận từ Nhân sự HVA -->
       <section class="card space-y-3">
         <div class="flex items-center justify-between">
-          <div class="text-xs font-extrabold uppercase text-slate-700"><i class="bi bi-people-fill mr-1.5 text-[#075cad]"></i>Đối tượng tiếp nhận khảo sát</div>
+          <div class="text-xs font-extrabold uppercase text-slate-700"><i class="bi bi-people-fill mr-1.5 text-[#075cad]"></i>Đối tượng tiếp nhận</div>
           <span id="recipientCount" class="px-2.5 py-1 rounded-full text-[10px] font-black bg-blue-50 text-[#075cad]">0 người</span>
         </div>
         <input id="peopleSearch" oninput="renderPersonnel()" class="field" placeholder="Tìm nhanh giáo viên, tổ bộ phận...">
@@ -722,7 +765,7 @@
         <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div>
             <div class="text-sm font-black text-emerald-400"><i class="bi bi-send-check-fill mr-1.5"></i>HOÀN TẤT & PHÁT HÀNH</div>
-            <div class="text-xs text-slate-400 mt-0.5">Dữ liệu phiếu sẽ được chuyển thẳng qua TT Phát Hành để BGH / TTCM ký duyệt.</div>
+            <div class="text-xs text-slate-400 mt-0.5">Dữ liệu sẽ chuyển sang TT Phát Hành để BGH / TTCM ký duyệt và điều phối.</div>
           </div>
           <button type="button" onclick="goPublishing()" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white text-xs font-black uppercase tracking-wider shadow-lg transition">
             <i class="bi bi-send-fill mr-2"></i>CHUYỂN TT PHÁT HÀNH
@@ -737,7 +780,6 @@
   <!-- TOÀN BỘ LOGIC CONTROLLER JAVASCRIPT ĐIỀU HÀNH -->
   <!-- ============================================================================== -->
   <script>
-    // Lấy URL Web App linh hoạt từ hệ thống dùng chung (không hardcode)
     function getHvaGatewayUrl() {
       return String(
         window.HVA_API_URL || 
@@ -749,6 +791,8 @@
 
     let currentMode = 'internal';
     let questions = [];
+    let pollOptions = ['Đồng ý', 'Không đồng ý'];
+    let reportColumns = ['Số tiết dạy', 'Số học sinh tham gia'];
     let qSeq = 0;
     let hvaGroups = [];
     let selectedRecipients = new Set();
@@ -782,269 +826,108 @@
     });
 
     // ==============================================================================
-    // 2. KHỐI GIAO DIỆN PHÍA GIÁO VIÊN (LÀM KHẢO SÁT)
+    // 2. CHUYỂN ĐỔI CHẾ ĐỘ THÔNG MINH (ẨN HIỆN ĐÚNG TRƯỜNG CỦA TỪNG TÁC VỤ)
     // ==============================================================================
-    async function initRespondentView() {
-      const me = currentUser();
-      const username = String(me.username || me.userName || me.maGV || '').trim();
-      
-      $('gvName').textContent = me.hoTen || me.fullName || me.name || username || 'Giáo viên HVA';
-      $('gvTeam').textContent = me.toBoPhan || me.tenTo || me.to || 'Hội đồng';
-      $('gvRole').textContent = me.chucVu || me.viTriViecLam || 'Giáo viên';
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
-
-      if (!publishId) {
-        $('surveyTitle').textContent = 'Không tìm thấy mã khảo sát trên đường dẫn!';
-        return;
-      }
-
-      try {
-        const u = new URL(getHvaGatewayUrl());
-        u.searchParams.set('action', 'getPublicationDetailV3');
-        u.searchParams.set('publishId', publishId);
-        u.searchParams.set('username', username);
-
-        const res = await fetch(u.toString(), { cache: 'no-store' });
-        const json = await res.json();
-
-        if (!json || json.success !== true) {
-          throw new Error(json?.message || 'Không thể tải nội dung khảo sát.');
-        }
-
-        currentSurveyData = json.payload || {};
-        userPreviousResponse = json.myResponse || null;
-
-        renderSurveyToRespondent(currentSurveyData, userPreviousResponse);
-      } catch (err) {
-        console.error(err);
-        $('surveyTitle').textContent = 'Lỗi kết nối: ' + err.message;
-      }
-    }
-
-    function renderSurveyToRespondent(survey, myResp) {
-      const data = survey.data || survey;
-      const doc = survey.document || {};
-
-      $('surveyTitle').textContent = data.title || doc.title || 'Phiếu khảo sát';
-      $('surveyDesc').textContent = data.description || doc.summary || '';
-      $('surveyAuthor').textContent = survey.sender?.fullName || doc.author || 'BGH / TTCM';
-      
-      const deadline = [data.deadlineDate, data.deadlineTime].filter(Boolean).join(' • ');
-      $('surveyDeadline').textContent = deadline || 'Không giới hạn';
-
-      if (data.reference) {
-        $('surveyRefBox').classList.remove('hidden');
-        $('surveyReference').textContent = data.reference;
-      }
-
-      const isPoll = (data.objectType === 'POLL' || survey.documentType === 'POLL');
-      $('surveyTypeBadge').textContent = isPoll ? 'BÌNH CHỌN NHANH' : 'KHẢO SÁT CHUYÊN MÔN';
-
-      const qList = Array.isArray(data.questions) ? data.questions : [];
-      const formBox = $('formSurveyQuestions');
-      formBox.innerHTML = '';
-
-      qList.forEach((q, idx) => {
-        const qCard = document.createElement('div');
-        qCard.className = 'card space-y-3';
-
-        const qTitle = document.createElement('div');
-        qTitle.className = 'font-black text-sm text-slate-800 leading-snug';
-        qTitle.innerHTML = `<span class="text-[#075cad] mr-1.5">Câu ${idx + 1}:</span> ${esc(q.text)}`;
-        qCard.appendChild(qTitle);
-
-        const kind = String(q.kind || (isPoll ? 'poll' : 'single')).toLowerCase();
-        const options = Array.isArray(q.options) ? q.options.filter(x => String(x).trim()) : [];
-        const oldAnswers = myResp?.answers?.find(a => String(a.questionId) === String(q.id))?.answer || [];
-
-        if (isPoll || kind === 'poll') {
-          const pollBox = document.createElement('div');
-          pollBox.className = 'space-y-2 mt-2';
-
-          options.forEach(opt => {
-            const isChecked = oldAnswers.includes(opt);
-            const optDiv = document.createElement('div');
-            optDiv.className = `zalo-poll-option flex items-center justify-between ${isChecked ? 'selected' : ''}`;
-            optDiv.innerHTML = `
-              <div class="zalo-poll-bar" style="width: ${isChecked ? '100%' : '0%'}"></div>
-              <div class="flex items-center gap-2.5 z-10">
-                <input type="${data.multiPoll ? 'checkbox' : 'radio'}" name="q_${q.id}" value="${esc(opt)}" ${isChecked ? 'checked' : ''} class="w-4 h-4 accent-[#075cad]">
-                <span class="text-xs font-bold text-slate-800">${esc(opt)}</span>
-              </div>
-            `;
-            optDiv.onclick = (e) => {
-              if (e.target.tagName !== 'INPUT') {
-                const inp = optDiv.querySelector('input');
-                inp.checked = !inp.checked;
-              }
-              optDiv.classList.toggle('selected', optDiv.querySelector('input').checked);
-            };
-            pollBox.appendChild(optDiv);
-          });
-          qCard.appendChild(pollBox);
-        } else if (kind === 'single' || kind === 'multi') {
-          const optBox = document.createElement('div');
-          optBox.className = 'space-y-2 mt-2';
-          options.forEach(opt => {
-            const isChecked = oldAnswers.includes(opt);
-            const label = document.createElement('label');
-            label.className = 'flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition';
-            label.innerHTML = `
-              <input type="${kind === 'single' ? 'radio' : 'checkbox'}" name="q_${q.id}" value="${esc(opt)}" ${isChecked ? 'checked' : ''} class="w-4 h-4 accent-[#075cad]">
-              <span class="text-xs font-semibold text-slate-700">${esc(opt)}</span>
-            `;
-            optBox.appendChild(label);
-          });
-          qCard.appendChild(optBox);
-        } else if (kind === 'text') {
-          const oldVal = oldAnswers[0] || '';
-          const txt = document.createElement('textarea');
-          txt.name = `q_${q.id}`;
-          txt.rows = 3;
-          txt.className = 'field resize-y';
-          txt.placeholder = 'Nhập câu trả lời của Thầy/Cô tại đây...';
-          txt.value = oldVal;
-          qCard.appendChild(txt);
-        }
-
-        formBox.appendChild(qCard);
-      });
-
-      if (myResp && myResp.status) {
-        $('surveyStatusBadge').className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800';$('surveyStatusBadge').textContent = '✓ ' + myResp.status;
-        $('boxSubmittedAck').classList.remove('hidden');$('submittedTimeText').textContent = `Đã gửi khảo sát lúc: ${myResp.updatedAt || 'trước đây'}`;
-        toggleReviewMode(true);
-      }
-    }
-
-    function toggleReviewMode(isReadOnly) {
-      const inputs = $('formSurveyQuestions').querySelectorAll('input, textarea, select');
-      inputs.forEach(el => el.disabled = isReadOnly);
-
-      $('btnSaveDraft').classList.toggle('hidden', isReadOnly);
-      $('btnSubmitSurvey').classList.toggle('hidden', isReadOnly);$('btnReviewSurvey').classList.toggle('hidden', !isReadOnly);
-      
-      const allowEdit = currentSurveyData?.data?.allowEdit !== false;
-      $('btnEditSurvey').classList.toggle('hidden', !isReadOnly || !allowEdit);
-    }
-
-    async function submitSurvey(isDraft) {
-      const me = currentUser();
-      const username = String(me.username || me.userName || me.maGV || '').trim();
-      if (!username) return alert('Không xác định được phiên đăng nhập của Thầy/Cô.');
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
-
-      const form = $('formSurveyQuestions');
-      const qList = currentSurveyData?.data?.questions || [];
-      const answers = [];
-
-      for (let q of qList) {
-        const nodes = [...form.querySelectorAll(`[name="q_${q.id}"]`)];
-        let chosen = [];
-        if (q.kind === 'text') {
-          const val = nodes[0]?.value.trim();
-          if (val) chosen.push(val);
-        } else {
-          chosen = nodes.filter(n => n.checked).map(n => n.value.trim());
-        }
-
-        if (!isDraft && q.required && !chosen.length) {
-          alert(`Vui lòng hoàn thành câu hỏi: "${q.text}"`);
-          return;
-        }
-        answers.push({ questionId: q.id, question: q.text, answer: chosen });
-      }
-
-      const btn = $('btnSubmitSurvey');
-      const oldHtml = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-1"></i>ĐANG GỬI...';
-
-      try {
-        const payload = {
-          action: 'submitSurveyPollResponse',
-          publishId: publishId,
-          surveyId: publishId,
-          username: username,
-          fullName: me.hoTen || me.fullName || username,
-          department: me.toBoPhan || me.tenTo || '',
-          status: isDraft ? 'LƯU NHÁP' : 'ĐÃ HOÀN THÀNH',
-          answers: answers
-        };
-
-        const r = await fetch(getHvaGatewayUrl(), {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        const res = await r.json();
-
-        if (!res || res.success !== true) throw new Error(res?.message || 'Không gửi được phản hồi.');
-
-        alert(isDraft ? 'Đã lưu nháp câu trả lời.' : 'Gửi khảo sát thành công!');
-        location.reload();
-      } catch (err) {
-        console.error(err);
-        alert('Lỗi: ' + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = oldHtml;
-      }
-    }
-
-    // ==============================================================================
-    // 3. KHỐI GIAO DIỆN PHÍA QUẢN TRỊ (TẠO PHIẾU KHẢO SÁT)
-    // ==============================================================================
-    function initCreatorView() {
-      // 1. Nhận diện và hiển thị danh tính tài khoản đang đăng nhập
-      const me = currentUser();
-      const username = String(me.username || me.userName || me.maGV || '').trim();
-      
-      const elName = $('creatorName');
-      const elTeam = $('creatorTeam');
-      const elUser = $('creatorUsername');
-      const elBadge = $('creatorRoleBadge');
-
-      if (elName) elName.textContent = me.hoTen || me.fullName || me.name || username || 'Chưa đăng nhập';
-      if (elTeam) elTeam.textContent = me.toBoPhan || me.tenTo || me.to || 'BGH / Hội đồng';
-      if (elUser) elUser.textContent = username || '—';
-      if (elBadge) elBadge.textContent = me.chucVu || me.vaiTro || me.viTriViecLam || 'Cán bộ phát hành';
-
-      // 2. Thiết lập ngày giờ mặc định & tải nhân sự
-      const d = new Date();
-      d.setDate(d.getDate() + 2);
-      $('deadlineDate').value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-      addQuestion('single');
-      loadPersonnelViaCore();
-    }
-
     function setMode(m) {
       currentMode = m;
       document.querySelectorAll('.type-card').forEach(x => x.classList.toggle('active', x.dataset.mode === m));
-      const names = { internal: 'KHẢO SÁT CỦA TRƯỜNG', poll: 'BÌNH CHỌN NHANH', external: 'KHẢO SÁT TỪ LINK', report: 'BÁO CÁO SỐ LIỆU' };
-      $('modeBadge').textContent = names[m];$('externalUrlBox').classList.toggle('hidden', m !== 'external');
-      $('builderSection').classList.toggle('hidden', m === 'external');$('titleLabel').textContent = m === 'poll' ? 'Câu hỏi bình chọn *' : 'Tiêu đề khảo sát *';
-      $('title').placeholder = m === 'poll' ? 'Ví dụ: Thầy/Cô đồng ý phương án tổ chức nào?' : 'Ví dụ: Khảo sát thực trạng Đề án tiếng Anh';
 
-      if (m === 'poll' && (!questions.length || questions[0]?.kind !== 'poll')) {
-        questions = [];
-        addQuestion('poll');
-      } else if (m === 'internal' && (!questions.length || questions[0]?.kind === 'poll')) {
-        questions = [];
-        addQuestion('single');
-      }
-      renderQuestions();
+      const guides = {
+        internal: {
+          icon: 'bi-ui-checks-grid text-[#075cad]',
+          text: 'Chế độ <b>Khảo sát của Trường</b>: Dành cho khảo sát nội bộ, hỗ trợ soạn nhiều câu hỏi trắc nghiệm, tự luận.',
+          title: 'Tiêu đề khảo sát *',
+          ph: 'Ví dụ: Khảo sát thực trạng Đề án tiếng Anh năm học 2026-2027'
+        },
+        poll: {
+          icon: 'bi-check2-square text-violet-600',
+          text: 'Chế độ <b>Bình chọn nhanh</b>: Dành cho biểu quyết nhanh kiểu Zalo, tập trung vào 01 vấn đề với thanh % tiến độ.',
+          title: 'Nội dung bình chọn / biểu quyết *',
+          ph: 'Ví dụ: Thầy/Cô đồng ý với phương án nào về việc tổ chức Hội thao 26/3?'
+        },
+        external: {
+          icon: 'bi-link-45deg text-emerald-600',
+          text: 'Chế độ <b>Khảo sát từ Link</b>: Triển khai liên kết khảo sát của Sở/Bộ GD&ĐT, hệ thống sẽ theo dõi danh sách ai đã làm.',
+          title: 'Tên đợt khảo sát (theo công văn) *',
+          ph: 'Ví dụ: Khảo sát trực tuyến theo Công văn 1234/SGDĐT về chuyển đổi số'
+        },
+        report: {
+          icon: 'bi-table text-amber-600',
+          text: 'Chế độ <b>Báo cáo số liệu</b>: Yêu cầu các tổ/giáo viên nộp số liệu chuyên môn theo các cột định sẵn.',
+          title: 'Tên biểu mẫu báo cáo số liệu *',
+          ph: 'Ví dụ: Báo cáo số liệu bồi dưỡng thường xuyên Quý 1'
+        }
+      };
+
+      const g = guides[m];
+      $('modeGuideIcon').className = `bi ${g.icon} text-lg`;
+      $('modeGuideText').innerHTML = g.text;
+      $('titleLabel').textContent = g.title;
+      $('title').placeholder = g.ph;
+
+      // 1. Khảo sát ngoài (Link Sở)
+      $('externalUrlBox').classList.toggle('hidden', m !== 'external');
+
+      // 2. Soạn nhanh (Chỉ dùng cho khảo sát trường)
+      $('quickInputSection').classList.toggle('hidden', m !== 'internal');
+
+      // 3. Khối Builder câu hỏi (Chỉ dùng cho khảo sát trường)
+      $('builderSection').classList.toggle('hidden', m !== 'internal');
+
+      // 4. Khối Bình chọn (Chỉ dùng cho Poll)
+      $('pollSection').classList.toggle('hidden', m !== 'poll');
+
+      // 5. Khối Báo cáo cột (Chỉ dùng cho Report)
+      $('reportSection').classList.toggle('hidden', m !== 'report');
+
+      // 6. Tùy chọn nâng cao (Ẩn danh/Sửa) không áp dụng cho Link ngoài
+      $('advancedOptionBox').classList.toggle('hidden', m === 'external');
+
+      if (m === 'poll') renderPollOptions();
+      if (m === 'report') renderReportColumns();
+      if (m === 'internal') renderQuestions();
     }
 
+    // ==============================================================================
+    // 3. KHỐI LOGIC CHO TỪNG LOẠI TÁC VỤ
+    // ==============================================================================
+
+    // --- BÌNH CHỌN (POLL) ---
+    function renderPollOptions() {
+      const box = $('pollOptionBox');
+      box.innerHTML = pollOptions.map((opt, i) => `
+        <div class="flex items-center gap-2">
+          <span class="w-6 text-center text-xs font-black text-violet-600">${i + 1}.</span>
+          <input class="field !min-h-[38px] !py-1.5 text-xs flex-1" value="${esc(opt)}" oninput="pollOptions[${i}] = this.value" placeholder="Phương án ${i + 1}...">
+          ${pollOptions.length > 2 ? `<button onclick="pollOptions.splice(${i}, 1); renderPollOptions()" class="text-slate-400 hover:text-rose-500 p-1"><i class="bi bi-x-lg"></i></button>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function addPollOption() {
+      pollOptions.push('');
+      renderPollOptions();
+    }
+
+    // --- BÁO CÁO SỐ LIỆU (REPORT) ---
+    function renderReportColumns() {
+      const box = $('reportColumnBox');
+      box.innerHTML = reportColumns.map((col, i) => `
+        <div class="flex items-center gap-2">
+          <span class="w-6 text-center text-xs font-black text-amber-600">Cột ${i + 1}:</span>
+          <input class="field !min-h-[38px] !py-1.5 text-xs flex-1" value="${esc(col)}" oninput="reportColumns[${i}] = this.value" placeholder="Tên trường dữ liệu cần nộp...">
+          ${reportColumns.length > 1 ? `<button onclick="reportColumns.splice(${i}, 1); renderReportColumns()" class="text-slate-400 hover:text-rose-500 p-1"><i class="bi bi-x-lg"></i></button>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function addReportColumn() {
+      reportColumns.push('');
+      renderReportColumns();
+    }
+
+    // --- KHẢO SÁT NỘI BỘ (INTERNAL BUILDER) ---
     function addQuestion(kind) {
-      if (currentMode === 'poll') {
-        if (questions.length) return alert('Bình chọn nhanh chỉ có 1 câu hỏi.');
-        kind = 'poll';
-      }
       questions.push({ id: ++qSeq, kind: kind || 'single', text: '', options: ['Đồng ý', 'Không đồng ý'], required: true });
       renderQuestions();
     }
@@ -1057,7 +940,7 @@
     function renderQuestions() {
       const box = $('questionList');
       if (!questions.length) {
-        box.innerHTML = '<div class="py-4 text-center text-xs text-slate-400">Chưa có câu hỏi nào.</div>';
+        box.innerHTML = '<div class="py-4 text-center text-xs text-slate-400">Chưa có câu hỏi nào. Bấm "+ THÊM CÂU HỎI" ở trên.</div>';
         return;
       }
       box.innerHTML = questions.map((q, idx) => `
@@ -1065,9 +948,8 @@
           <div class="flex items-center gap-2">
             <span class="w-6 h-6 rounded-lg bg-blue-100 text-[#075cad] flex items-center justify-center text-xs font-black">${idx + 1}</span>
             <input class="field flex-1" value="${esc(q.text)}" oninput="questions[${idx}].text = this.value" placeholder="Nội dung câu hỏi...">
-            ${currentMode !== 'poll' ? `<button onclick="removeQuestion(${q.id})" class="text-rose-500 hover:text-rose-700 p-2"><i class="bi bi-trash3"></i></button>` : ''}
+            <button onclick="removeQuestion(${q.id})" class="text-rose-500 hover:text-rose-700 p-2"><i class="bi bi-trash3"></i></button>
           </div>
-          ${currentMode !== 'poll' ? `
           <div class="flex items-center gap-3">
             <select class="field !min-h-[38px] !py-1 text-xs" onchange="questions[${idx}].kind = this.value; renderQuestions()">
               <option value="single" ${q.kind === 'single' ? 'selected' : ''}>Một lựa chọn (Radio)</option>
@@ -1077,8 +959,8 @@
             <label class="flex items-center gap-1.5 text-xs font-bold text-slate-700 cursor-pointer">
               <input type="checkbox" ${q.required ? 'checked' : ''} onchange="questions[${idx}].required = this.checked" class="w-4 h-4 accent-[#075cad]"> Bắt buộc
             </label>
-          </div>` : ''}
-          ${['single', 'multi', 'poll'].includes(q.kind) ? `
+          </div>
+          ${['single', 'multi'].includes(q.kind) ? `
           <div class="space-y-1.5 pt-1">
             ${q.options.map((o, oIdx) => `
               <div class="flex items-center gap-2">
@@ -1117,11 +999,258 @@
       }
     }
 
-    // NẠP NHÂN SỰ CHUẨN XÁC QUA HVA_PERSONNEL CORE V1
+    // ==============================================================================
+    // 4. KHỐI GIAO DIỆN PHÍA GIÁO VIÊN (LÀM BÀI QUA ?view=respond)
+    // ==============================================================================
+    async function initRespondentView() {
+      const me = currentUser();
+      const username = String(me.username || me.userName || me.maGV || '').trim();
+      
+      $('gvName').textContent = me.hoTen || me.fullName || me.name || username || 'Giáo viên HVA';
+      $('gvTeam').textContent = me.toBoPhan || me.tenTo || me.to || 'Hội đồng';
+      $('gvRole').textContent = me.chucVu || me.viTriViecLam || 'Giáo viên';
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
+
+      if (!publishId) {
+        $('surveyTitle').textContent = 'Không tìm thấy mã khảo sát trên đường dẫn!';
+        return;
+      }
+
+      try {
+        const u = new URL(getHvaGatewayUrl());
+        u.searchParams.set('action', 'getPublicationDetailV3');
+        u.searchParams.set('publishId', publishId);
+        u.searchParams.set('username', username);
+
+        const res = await fetch(u.toString(), { cache: 'no-store' });
+        const json = await res.json();
+
+        if (!json || json.success !== true) throw new Error(json?.message || 'Không tải được nội dung.');
+
+        currentSurveyData = json.payload || {};
+        userPreviousResponse = json.myResponse || null;
+
+        renderSurveyToRespondent(currentSurveyData, userPreviousResponse);
+      } catch (err) {
+        console.error(err);
+        $('surveyTitle').textContent = 'Lỗi kết nối: ' + err.message;
+      }
+    }
+
+    function renderSurveyToRespondent(survey, myResp) {
+      const data = survey.data || survey;
+      const doc = survey.document || {};
+
+      $('surveyTitle').textContent = data.title || doc.title || 'Phiếu khảo sát';
+      $('surveyDesc').textContent = data.description \vert{}\vert{} doc.summary \vert{}\vert{} '';$('surveyAuthor').textContent = survey.sender?.fullName || doc.author || 'BGH / TTCM';
+      
+      const deadline = [data.deadlineDate, data.deadlineTime].filter(Boolean).join(' • ');
+      $('surveyDeadline').textContent = deadline || 'Không giới hạn';
+
+      if (data.reference) {
+        $('surveyRefBox').classList.remove('hidden');$('surveyReference').textContent = data.reference;
+      }
+
+      const isPoll = (data.objectType === 'POLL' || survey.documentType === 'POLL');
+      const isExternal = (data.surveyType === 'external' || /^https?:\/\//i.test(data.externalUrl));
+      $('surveyTypeBadge').textContent = isExternal ? 'LINK KHẢO SÁT NGOÀI' : (isPoll ? 'BÌNH CHỌN NHANH' : 'KHẢO SÁT CHUYÊN MÔN');
+
+      const formBox = $('formSurveyQuestions');
+      formBox.innerHTML = '';
+
+      if (isExternal) {
+        // Trường hợp khảo sát link ngoài
+        formBox.innerHTML = `
+          <div class="rounded-2xl border border-blue-200 bg-blue-50/70 p-5 space-y-3">
+            <div class="text-sm font-bold text-slate-800">Liên kết khảo sát chính thức</div>
+            <div class="text-xs text-slate-600">Vui lòng bấm vào nút dưới đây để chuyển tiếp sang trang khảo sát và hoàn thành biểu mẫu.</div>
+            <a href="${esc(data.externalUrl)}" target="_blank" rel="noopener" class="inline-flex items-center justify-center w-full px-5 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow-md transition">
+              <i class="bi bi-box-arrow-up-right mr-2"></i>MỞ LIÊN KẾT KHẢO SÁT
+            </a>
+          </div>
+        `;
+      } else {
+        const qList = Array.isArray(data.questions) ? data.questions : [];
+        qList.forEach((q, idx) => {
+          const qCard = document.createElement('div');
+          qCard.className = 'card space-y-3';
+
+          const qTitle = document.createElement('div');
+          qTitle.className = 'font-black text-sm text-slate-800 leading-snug';
+          qTitle.innerHTML = `<span class="text-[#075cad] mr-1.5">Câu ${idx + 1}:</span> ${esc(q.text)}`;
+          qCard.appendChild(qTitle);
+
+          const kind = String(q.kind || (isPoll ? 'poll' : 'single')).toLowerCase();
+          const options = Array.isArray(q.options) ? q.options.filter(x => String(x).trim()) : [];
+          const oldAnswers = myResp?.answers?.find(a => String(a.questionId) === String(q.id))?.answer || [];
+
+          if (isPoll || kind === 'poll') {
+            const pollBox = document.createElement('div');
+            pollBox.className = 'space-y-2 mt-2';
+
+            options.forEach(opt => {
+              const isChecked = oldAnswers.includes(opt);
+              const optDiv = document.createElement('div');
+              optDiv.className = `zalo-poll-option flex items-center justify-between ${isChecked ? 'selected' : ''}`;
+              optDiv.innerHTML = `
+                <div class="zalo-poll-bar" style="width: ${isChecked ? '100%' : '0%'}"></div>
+                <div class="flex items-center gap-2.5 z-10">
+                  <input type="${data.multiPoll ? 'checkbox' : 'radio'}" name="q_${q.id}" value="${esc(opt)}" ${isChecked ? 'checked' : ''} class="w-4 h-4 accent-[#075cad]">
+                  <span class="text-xs font-bold text-slate-800">${esc(opt)}</span>
+                </div>
+              `;
+              optDiv.onclick = (e) => {
+                if (e.target.tagName !== 'INPUT') {
+                  const inp = optDiv.querySelector('input');
+                  inp.checked = !inp.checked;
+                }
+                optDiv.classList.toggle('selected', optDiv.querySelector('input').checked);
+              };
+              pollBox.appendChild(optDiv);
+            });
+            qCard.appendChild(pollBox);
+          } else if (kind === 'single' || kind === 'multi') {
+            const optBox = document.createElement('div');
+            optBox.className = 'space-y-2 mt-2';
+            options.forEach(opt => {
+              const isChecked = oldAnswers.includes(opt);
+              const label = document.createElement('label');
+              label.className = 'flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition';
+              label.innerHTML = `
+                <input type="${kind === 'single' ? 'radio' : 'checkbox'}" name="q_${q.id}" value="${esc(opt)}" ${isChecked ? 'checked' : ''} class="w-4 h-4 accent-[#075cad]">
+                <span class="text-xs font-semibold text-slate-700">${esc(opt)}</span>
+              `;
+              optBox.appendChild(label);
+            });
+            qCard.appendChild(optBox);
+          } else if (kind === 'text') {
+            const oldVal = oldAnswers[0] || '';
+            const txt = document.createElement('textarea');
+            txt.name = `q_${q.id}`;
+            txt.rows = 3;
+            txt.className = 'field resize-y';
+            txt.placeholder = 'Nhập câu trả lời của Thầy/Cô tại đây...';
+            txt.value = oldVal;
+            qCard.appendChild(txt);
+          }
+
+          formBox.appendChild(qCard);
+        });
+      }
+
+      if (myResp && myResp.status) {
+        $('surveyStatusBadge').className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800';$('surveyStatusBadge').textContent = '✓ ' + myResp.status;
+        $('boxSubmittedAck').classList.remove('hidden');$('submittedTimeText').textContent = `Đã ghi nhận lúc: ${myResp.updatedAt || 'trước đây'}`;
+        toggleReviewMode(true);
+      }
+    }
+
+    function toggleReviewMode(isReadOnly) {
+      const inputs = $('formSurveyQuestions').querySelectorAll('input, textarea, select');
+      inputs.forEach(el => el.disabled = isReadOnly);
+
+      $('btnSaveDraft').classList.toggle('hidden', isReadOnly);
+      $('btnSubmitSurvey').classList.toggle('hidden', isReadOnly);$('btnReviewSurvey').classList.toggle('hidden', !isReadOnly);
+      
+      const allowEdit = currentSurveyData?.data?.allowEdit !== false;
+      $('btnEditSurvey').classList.toggle('hidden', !isReadOnly || !allowEdit);
+    }
+
+    async function submitSurvey(isDraft) {
+      const me = currentUser();
+      const username = String(me.username || me.userName || me.maGV || '').trim();
+      if (!username) return alert('Không xác định được phiên đăng nhập của Thầy/Cô.');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const publishId = urlParams.get('id') || urlParams.get('publishId') || '';
+
+      const form = $('formSurveyQuestions');
+      const data = currentSurveyData?.data || {};
+      const isExternal = (data.surveyType === 'external' || /^https?:\/\//i.test(data.externalUrl));
+      let answers = [];
+
+      if (!isExternal) {
+        const qList = data.questions || [];
+        for (let q of qList) {
+          const nodes = [...form.querySelectorAll(`[name="q_${q.id}"]`)];
+          let chosen = [];
+          if (q.kind === 'text') {
+            const val = nodes[0]?.value.trim();
+            if (val) chosen.push(val);
+          } else {
+            chosen = nodes.filter(n => n.checked).map(n => n.value.trim());
+          }
+
+          if (!isDraft && q.required && !chosen.length) {
+            alert(`Vui lòng hoàn thành câu hỏi: "${q.text}"`);
+            return;
+          }
+          answers.push({ questionId: q.id, question: q.text, answer: chosen });
+        }
+      }
+
+      const btn = $('btnSubmitSurvey');
+      const oldHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat animate-spin mr-1"></i>ĐANG GỬI...';
+
+      try {
+        const payload = {
+          action: 'submitSurveyPollResponse',
+          publishId: publishId,
+          surveyId: publishId,
+          username: username,
+          fullName: me.hoTen || me.fullName || username,
+          department: me.toBoPhan || me.tenTo || '',
+          status: isDraft ? 'LƯU NHÁP' : 'ĐÃ HOÀN THÀNH',
+          answers: answers
+        };
+
+        const r = await fetch(getHvaGatewayUrl(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const res = await r.json();
+
+        if (!res || res.success !== true) throw new Error(res?.message || 'Không gửi được phản hồi.');
+
+        alert(isDraft ? 'Đã lưu nháp.' : 'Hoàn thành ghi nhận!');
+        location.reload();
+      } catch (err) {
+        console.error(err);
+        alert('Lỗi: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = oldHtml;
+      }
+    }
+
+    // ==============================================================================
+    // 5. KHỞI TẠO TẠO PHIẾU (CREATOR VIEW)
+    // ==============================================================================
+    function initCreatorView() {
+      const me = currentUser();
+      const username = String(me.username || me.userName || me.maGV || '').trim();
+      
+      $('creatorName').textContent = me.hoTen || me.fullName || me.name || username || 'Chưa đăng nhập';
+      $('creatorTeam').textContent = me.toBoPhan || me.tenTo || me.to || 'BGH / Hội đồng';
+      $('creatorUsername').textContent = username \vert{}\vert{} '—';$('creatorRoleBadge').textContent = me.chucVu || me.vaiTro || me.viTriViecLam || 'Cán bộ phát hành';
+
+      const d = new Date();
+      d.setDate(d.getDate() + 2);
+      $('deadlineDate').value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      
+      addQuestion('single');
+      setMode('internal');
+      loadPersonnelViaCore();
+    }
+
     async function loadPersonnelViaCore() {
       const box = $('personnelBox');
       box.innerHTML = '<div class="text-xs text-slate-500 p-2"><i class="bi bi-arrow-repeat animate-spin mr-1.5"></i>Đang nạp dữ liệu nhân sự qua HVA Personnel Core...</div>';
-
       try {
         hvaGroups = await window.HVAPersonnel.buildGroups();
         renderPersonnel();
@@ -1189,21 +1318,46 @@
       renderPersonnel();
     }
 
-    // CHUYỂN TOÀN BỘ SANG TTPHATHANH.HTML (KHÔNG LƯU BACKEND TRỰC TIẾP TẠI ĐÂY)
+    // CHUYỂN DỮ LIỆU SANG TTPHATHANH.HTML
     function goPublishing() {
       const title = $('title').value.trim();
-      if (!title) return alert('Vui lòng nhập tiêu đề khảo sát.');
+      if (!title) return alert('Vui lòng nhập tiêu đề!');
       if (!selectedRecipients.size) return alert('Vui lòng chọn ít nhất một người nhận.');
+
+      if (currentMode === 'external' && !$('externalUrl').value.trim()) {
+        return alert('Vui lòng nhập link khảo sát bên ngoài!');
+      }
 
       const d = new Date();
       const stamp = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${String(Date.now()).slice(-6)}`;
-      const docId = (currentMode === 'poll' ? 'BC-' : 'KS-') + stamp;
+      const prefixMap = { internal: 'KS-', poll: 'BC-', external: 'LK-', report: 'BCSL-' };
+      const docId = (prefixMap[currentMode] || 'DOC-') + stamp;
 
       const user = currentUser();
       const allMembersMap = new Map();
       hvaGroups.forEach(g => (g.members || []).forEach(m => allMembersMap.set(m.username, m)));
-
       const recipientList = [...selectedRecipients].map(u => allMembersMap.get(u) || { username: u, hoTen: u });
+
+      // Đóng gói danh sách câu hỏi theo từng loại tác vụ
+      let finalQuestions = [];
+      if (currentMode === 'internal') {
+        finalQuestions = questions;
+      } else if (currentMode === 'poll') {
+        finalQuestions = [{
+          id: 'Q1',
+          kind: 'poll',
+          text: title,
+          options: pollOptions.filter(Boolean),
+          required: true
+        }];
+      } else if (currentMode === 'report') {
+        finalQuestions = reportColumns.filter(Boolean).map((col, idx) => ({
+          id: `COL_${idx + 1}`,
+          kind: 'text',
+          text: col,
+          required: true
+        }));
+      }
 
       const payload = {
         sourceModule: 'KhaoSatBinhChon',
@@ -1217,19 +1371,20 @@
         data: {
           surveyId: docId,
           objectType: currentMode === 'poll' ? 'POLL' : 'SURVEY',
+          surveyType: currentMode,
           title: title,
           description: $('description').value.trim(),
           reference: $('referenceText').value.trim(),
           externalUrl: $('externalUrl').value.trim(),
+          multiPoll: $('pollMulti') ?$('pollMulti').checked : false,
           deadlineDate: $('deadlineDate').value,
           deadlineTime: $('deadlineTime').value,
           allowEdit: $('allowEdit').checked,
           anonymous: $('anonymous').checked,
-          questions: questions
+          questions: finalQuestions
         }
       };
 
-      // Đóng gói chuyển qua TTPhatHanh
       localStorage.setItem('TTDHS_CURRENT_DOC', JSON.stringify(payload));
       location.href = 'TTPhatHanh.html';
     }
