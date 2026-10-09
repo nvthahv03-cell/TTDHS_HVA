@@ -582,12 +582,31 @@
       
       <!-- Khối chọn loại nghiệp vụ -->
       <section class="card overflow-hidden">
-        <div class="px-4 py-3 border-b bg-white/70 flex items-center justify-between">
+        <!-- THANH TIÊU ĐỀ & HIỂN THỊ DANH TÍNH TÀI KHOẢN ĐANG TẠO -->
+        <div class="px-4 py-3.5 border-b bg-gradient-to-r from-blue-50/60 to-slate-50/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div class="text-xs font-extrabold text-[#075cad] uppercase"><i class="bi bi-grid-1x2-fill mr-1.5"></i>Chọn loại cần tạo</div>
-            <div class="text-[11px] text-slate-500 mt-0.5">Chọn nhanh một nghiệp vụ để BGH / TTCM phát hành</div>
+            <div class="text-xs font-black text-[#075cad] uppercase tracking-wide flex items-center gap-1.5">
+              <i class="bi bi-grid-1x2-fill text-[#075cad]"></i> CHỌN LOẠI CẦN TẠO
+            </div>
+            <div class="text-[11px] font-medium text-slate-500 mt-0.5">Chọn nghiệp vụ để Ban Giám hiệu / TTCM phát hành</div>
           </div>
-          <span id="modeBadge" class="px-3 py-1 rounded-full text-[10px] font-black bg-blue-50 text-[#075cad]">KHẢO SÁT CỦA TRƯỜNG</span>
+
+          <!-- KHỐI ĐỊNH DANH NGƯỜI ĐANG ĐĂNG NHẬP -->
+          <div class="flex items-center gap-2.5 bg-white border border-blue-200/80 shadow-sm rounded-xl px-3 py-1.5">
+            <div class="w-7 h-7 rounded-lg bg-[#075cad] text-white flex items-center justify-center text-xs font-black shadow-sm">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            <div class="text-left leading-tight">
+              <div class="flex items-center gap-1.5">
+                <span id="creatorName" class="text-xs font-black text-slate-800">Đang nhận diện...</span>
+                <span id="creatorRoleBadge" class="text-[9.5px] font-extrabold px-1.5 py-0.5 rounded bg-blue-100 text-[#075cad]">BGH / TTCM</span>
+              </div>
+              <div class="text-[10px] font-semibold text-slate-500 mt-0.5">
+                Tổ: <span id="creatorTeam" class="font-bold text-slate-700">—</span> | 
+                TK: <span id="creatorUsername" class="font-mono text-slate-600">—</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="p-3 grid grid-cols-1 sm:grid-cols-4 gap-2.5" id="typeSelector">
@@ -981,6 +1000,21 @@
     // 3. KHỐI GIAO DIỆN PHÍA QUẢN TRỊ (TẠO PHIẾU KHẢO SÁT)
     // ==============================================================================
     function initCreatorView() {
+      // 1. Nhận diện và hiển thị danh tính tài khoản đang đăng nhập
+      const me = currentUser();
+      const username = String(me.username || me.userName || me.maGV || '').trim();
+      
+      const elName = $('creatorName');
+      const elTeam = $('creatorTeam');
+      const elUser = $('creatorUsername');
+      const elBadge = $('creatorRoleBadge');
+
+      if (elName) elName.textContent = me.hoTen || me.fullName || me.name || username || 'Chưa đăng nhập';
+      if (elTeam) elTeam.textContent = me.toBoPhan || me.tenTo || me.to || 'BGH / Hội đồng';
+      if (elUser) elUser.textContent = username || '—';
+      if (elBadge) elBadge.textContent = me.chucVu || me.vaiTro || me.viTriViecLam || 'Cán bộ phát hành';
+
+      // 2. Thiết lập ngày giờ mặc định & tải nhân sự
       const d = new Date();
       d.setDate(d.getDate() + 2);
       $('deadlineDate').value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
