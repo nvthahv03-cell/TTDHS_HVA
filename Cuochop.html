@@ -445,7 +445,10 @@
       <div class="section-title"><i class="bi bi-clock"></i><span>Thời gian - Địa điểm</span></div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div><label class="lbl">Hình thức tổ chức <b>*</b></label><select id="meetingMode" class="field" onchange="toggleMeetingMode()"><option value="OFFLINE">Trực tiếp</option><option value="ONLINE">Trực tuyến (Google Meet)</option></select></div>
-        <div id="meetingOnlineLinkWrap" class="hidden"><label class="lbl">Liên kết Google Meet <b>*</b></label><input type="url" id="meetingMeetUrl" class="field" placeholder="https://meet.google.com/xxx-xxxx-xxx" inputmode="url"><div class="mt-1 text-[10px] text-slate-500">Chỉ sử dụng liên kết Meet thật. Tạo tự động cần Backend Google Calendar.</div></div>
+        <div id="meetingOnlineLinkWrap" class="hidden"><label class="lbl">Liên kết Google Meet <b>*</b></label><input type="url" id="meetingMeetUrl" class="field" placeholder="https://meet.google.com/xxx-xxxx-xxx" inputmode="url"><div class="mt-2 flex flex-wrap items-center gap-2">
+  <button type="button" id="hvaCreateMeetBtn" onclick="hvaCreateRealGoogleMeet()" class="raised-btn raised-blue px-4" style="min-height:38px"><i class="bi bi-camera-video"></i> TẠO GOOGLE MEET</button>
+  <span id="hvaCreateMeetStatus" role="status" aria-live="polite" class="text-xs text-slate-600">Chỉ tạo khi thầy/cô nhấn nút. Cần kết nối Google Calendar.</span>
+</div></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-10 gap-3">
         <div class="lg:col-span-2"><label class="lbl">Ngày họp <b>*</b></label><input type="date" id="meetingDate" required class="field"></div>
@@ -648,6 +651,71 @@ async function generateMeetingDraftAI() {
   } finally {
     btn.disabled = false;
     btn.classList.remove('opacity-60');
+  }
+}
+
+/* Google Meet: chỉ tạo khi người dùng chủ động nhấn; không tác động chức năng phát hành. */
+let hvaMeetCreatedEventId = '';
+async function hvaCreateRealGoogleMeet() {
+  const status = $('hvaCreateMeetStatus');
+  const btn = $('hvaCreateMeetBtn');
+  const setStatus = (msg, isError) => {
+    status.textContent = msg;
+    status.className = 'text-xs ' + (isError ? 'text-red-700' : 'text-slate-600');
+  };
+  if (hvaMeetCreatedEventId) {
+    setStatus('Đã tạo sự kiện Google Calendar trong lần thao tác này. Không tạo lại để tránh trùng.', true);
+    return;
+  }
+  if ($('meetingMode').value !== 'ONLINE') {
+    setStatus('Chỉ tạo Google Meet cho cuộc họp trực tuyến.', true);
+    return;
+  }
+  const existing = $('meetingMeetUrl').value.trim();
+  if (existing) {
+    setStatus('Ô Google Meet đã có liên kết. Vui lòng kiểm tra trước khi tạo sự kiện mới.', true);
+    return;
+  }
+  const event = {
+    title:getMeetingTitle(),
+    date:$('meetingDate').value,
+    startTime:$('meetingStart').value,
+    endTime:$('meetingEnd').value,
+    content:$('meetingContent').value.trim()
+  };
+  if (!event.title || !event.date || !event.startTime || !event.endTime) {
+    setStatus('Vui lòng điền tiêu đề, ngày, giờ bắt đầu và giờ kết thúc.', true);
+    return;
+  }
+  if (event.endTime <= event.startTime) {
+    setStatus('Giờ kết thúc phải sau giờ bắt đầu.', true);
+    return;
+  }
+  const token = getMeetingSessionToken();
+  if (!token) {
+    setStatus('Phiên HVA không hợp lệ. Vui lòng đăng nhập lại.', true);
+    return;
+  }
+  if (!confirm('Tạo một sự kiện THẬT trên Google Calendar và sinh Google Meet cho cuộc họp "'+event.title+'" vào '+event.date+' lúc '+event.startTime+'?')) return;
+  btn.disabled = true;
+  setStatus('Đang yêu cầu Google Calendar tạo phòng họp...');
+  try {
+    const response = await fetch(WEB_APP_URL,{
+      method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({action:'createMeetingGoogleMeet',sessionToken:token,event:event})
+    });
+    if (!response.ok) throw Error('Backend HTTP '+response.status);
+    const result = await response.json();
+    if (result.eventId) hvaMeetCreatedEventId = String(result.eventId);
+    if (!result.success || !result.meetUrl) {
+      throw Error(result.message || 'Google chưa trả liên kết Meet.');
+    }
+    $('meetingMeetUrl').value = result.meetUrl;
+    setStatus('Đã tạo Google Meet thật. Vui lòng kiểm tra link và thông tin cuộc họp trước khi phát hành.');
+  } catch (err) {
+    setStatus('Chưa hoàn tất: '+(err.message||String(err)), true);
+  } finally {
+    if (!hvaMeetCreatedEventId) btn.disabled = false;
   }
 }
 
