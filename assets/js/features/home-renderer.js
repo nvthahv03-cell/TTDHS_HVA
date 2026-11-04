@@ -3292,7 +3292,7 @@
             const dieuHanhRoleAccess = {
                 BGH:  isAdmin || isBGH,
                 TCM:  isAdmin || isBGH || isTTCM,
-                TVP:  isAdmin || isBGH || isTTVP,
+                TVP:  isAdmin || isBGH || isTTVP, 
                 DOAN: isAdmin || isBGH || isBTDoan
             };
 
